@@ -3363,6 +3363,37 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:MRISequence",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The scanning sequence/modality that is used for a conventional MRI scan. ",
+            "rdfs:label": "MRISequence",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ExperimentalData"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:T1-weighted"
+                },
+                {
+                    "@id": "bts:T2-weighted"
+                },
+                {
+                    "@id": "bts:PD-weighted"
+                },
+                {
+                    "@id": "bts:ShortTauInversionRecovery"
+                }
+            ],
+            "sms:displayName": "MRISequence",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:T1-weighted",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
