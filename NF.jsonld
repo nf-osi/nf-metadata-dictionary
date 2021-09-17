@@ -2678,23 +2678,6 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:MRI",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "Techniques that uses magnetic fields and radiowaves to form images, typically to investigate the anatomy and physiology of the human body.",
-            "rdfs:label": "MRI",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Assay"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "MRI",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
             "@id": "bts:WesternBlot",
             "@type": "rdfs:Class",
             "rdfs:comment": "A multistep process in which a mixture of proteins is separated by gel electrophoresis",
@@ -3326,6 +3309,125 @@
                     "@id": "bts:ImmunoAssayType"
                 }
             ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ConventionalMRI",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Magnetic resonance imaging using standard protocols for high resolution structural and anatomic characterization, including T1 weighted, T2 weighted, fluid attenuated inversion recovery (FLAIR), and gadolinium-enhanced sequences. [  NCI  ]",
+            "rdfs:label": "ConventionalMRI",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Conventional MRI",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:FunctionalMRI",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The principle of functional MRI imaging is to take a series of images of an organ in quick succession and to statistically analyze the images for differences among them. Most commonly used in studies of brain function. [  NCI  ]",
+            "rdfs:label": "FunctionalMRI",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Functional MRI",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:MagneticResonanceSpectroscopy",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Detection and measurement of the resonant spectra of molecular species in a tissue or sample.",
+            "rdfs:label": "MagneticResonanceSpectroscopy",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Magnetic Resonance Spectroscopy",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:T1-weighted",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "T1-weighted",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:MRISequence"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "T1-weighted",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:T2-weighted",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "T2-weighted",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:MRISequence"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "T2-weighted",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:PD-weighted",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "PD-weighted",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:MRISequence"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "PD-weighted",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ShortTauInversionRecovery",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "ShortTauInversionRecovery",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:MRISequence"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Short Tau Inversion Recovery",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -9880,7 +9982,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 },
                 {
                     "@id": "bts:FileFormat"
@@ -10025,7 +10127,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 },
                 {
                     "@id": "bts:FileFormat"
@@ -10151,7 +10253,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 },
                 {
                     "@id": "bts:FileFormat"
@@ -10266,7 +10368,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 },
                 {
                     "@id": "bts:FileFormat"
@@ -10372,7 +10474,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 },
                 {
                     "@id": "bts:FileFormat"
@@ -10481,7 +10583,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 },
                 {
                     "@id": "bts:FileFormat"
@@ -14250,10 +14352,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:ReportMilestone",
+            "@id": "bts:ProgressReportNumber",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Indicates which milestone you're annotating data files for. Currently only required for projects funded by NTAP, GFF, and NFRI. An example: if submitting data for your 6-month milestone report for NTAP, reportMilestone=1.  Also if you are submitting data associated with your first milestone, reportMilestone =1",
-            "rdfs:label": "ReportMilestone",
+            "rdfs:comment": "Indicates which milestone you're annotating data files for. Currently only required for projects funded by NTAP, GFF, and NFRI. For GFF studies, this is the \"progress report\" timeline. An example: if submitting data for your 6-month milestone report for NTAP, progressReportNumber=1.  Also if you are submitting data associated with your first milestone, progressReportNumber =1",
+            "rdfs:label": "ProgressReportNumber",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:NF"
@@ -14294,7 +14396,7 @@
                     "@id": "bts:10"
                 }
             ],
-            "sms:displayName": "reportMilestone",
+            "sms:displayName": "progressReportNumber",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -14318,7 +14420,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 },
                 {
                     "@id": "bts:FileFormat"
@@ -14520,7 +14622,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 }
             ],
             "sms:validationRules": []
@@ -14573,6 +14675,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "comments",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:MRI",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "MRI",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "MRI",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -14787,7 +14906,7 @@
             "rdfs:label": "3",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 }
             ],
             "schema:isPartOf": {
@@ -14804,7 +14923,7 @@
             "rdfs:label": "4",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 }
             ],
             "schema:isPartOf": {
@@ -14821,7 +14940,7 @@
             "rdfs:label": "5",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 }
             ],
             "schema:isPartOf": {
@@ -14838,7 +14957,7 @@
             "rdfs:label": "6",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 }
             ],
             "schema:isPartOf": {
@@ -14855,7 +14974,7 @@
             "rdfs:label": "7",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 }
             ],
             "schema:isPartOf": {
@@ -14872,7 +14991,7 @@
             "rdfs:label": "8",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 }
             ],
             "schema:isPartOf": {
@@ -14889,7 +15008,7 @@
             "rdfs:label": "9",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 }
             ],
             "schema:isPartOf": {
@@ -14906,7 +15025,7 @@
             "rdfs:label": "10",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ReportMilestone"
+                    "@id": "bts:ProgressReportNumber"
                 }
             ],
             "schema:isPartOf": {
