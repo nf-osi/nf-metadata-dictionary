@@ -5976,6 +5976,12 @@
                 },
                 {
                     "@id": "bts:Metastatictumor"
+                },
+                {
+                    "@id": "bts:Organoid"
+                },
+                {
+                    "@id": "bts:Spheroid"
                 }
             ],
             "sms:displayName": "tissue",
@@ -14618,6 +14624,9 @@
                     "@id": "bts:Tissue"
                 },
                 {
+                    "@id": "bts:CellType"
+                },
+                {
                     "@id": "bts:Nf1Genotype"
                 },
                 {
@@ -15397,6 +15406,40 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "recurrent tumor",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Organoid",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Organoids are three-dimensional cell culture models that self-organize into complex organ-like tissues.",
+            "rdfs:label": "Organoid",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Tissue"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "organoid",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Spheroid",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Spheroids are 3D culture systems that can be used to model multicellular tumors; more broadly, spheroids can be defined as cell aggregates cultured on nonadherent substrates. ",
+            "rdfs:label": "Spheroid",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Tissue"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "spheroid",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
