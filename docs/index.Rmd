@@ -1,0 +1,271 @@
+---
+title: "NF Vocabulary / Schema"
+author: "NF-OSI DCC"
+date: "11/14/2021"
+output: 
+  html_document:
+    theme: lumen
+    css: custom.css
+    toc: true
+    toc_float: 
+      collapsed: false
+    toc_depth: 5
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(reactable)
+library(htmltools)
+
+source("graph.R")
+
+basicTable <- function(dt, columns = c("Attribute", "Description")) {
+  reactable(dt[, columns], 
+          filterable = TRUE,
+          pagination = FALSE,
+          columns = list(
+            Attribute = colDef(name = "Label", maxWidth = 250)
+          ),
+          wrap = FALSE,
+          class = "term-table"
+  )
+}
+
+expandedTable <- function(dt) {
+  row_details <- function(index) {
+    expanded <- dt[index, ]
+    detail <- div(
+      class = "detail",
+      div(class = "detail-header",  expanded$Attribute, 
+          span(class = "detail-title",  expanded$Description))
+    )
+    detail
+  }
+
+  reactable(dt[, c("Attribute", "Description")], 
+          filterable = TRUE,
+          pagination = FALSE,
+          onClick = "expand",
+          columns = list(
+            Attribute = colDef(name = "Label", maxWidth = 250)
+            # DependsOn = colDef(name = "Fields")
+          ),
+          details = row_details,
+          wrap = FALSE,
+          class = "term-table"
+  )
+}
+
+SCHEMA_CSV <- "../NF.csv"
+EXT_CLASSES_CSV <- "../ext_classes.csv"
+EXT_RELATIONS_CSV <- "../ext_relations.csv"
+```
+
+```{r process_schema_table, echo=FALSE}
+
+# To avoid overwhelming info and keep page neat, read in schema and
+# process only selected columns
+# Aside from default schematic columns, 
+# we require internal columns prefixed with `.` to have a useful table
+schema <- read.csv(SCHEMA_CSV) %>%
+  select(Attribute, Description, Valid.Values, DependsOn, Parent, 
+         Type = .Type, Root = .Root, SubclassOf = .SubclassOf)
+
+# Splits terms into Property or Class using `Type`
+# schema_class <- schema %>%
+#   filter(Type == "Class")
+
+# Not displayed yet
+# schema_prop <- schema %>%
+#  filter(Type == "Property")
+
+```
+
+## Annotation Classes
+
+### Assay Module
+
+#### Assays {.tabset .tabset-fade .tabset-pills}
+
+##### Terms
+
+```{r assays_table, echo=FALSE}
+
+assays_table <- schema %>%
+  filter(Root == "Assay") %>%
+  select(Attribute, Description, DependsOn)
+
+expandedTable(assays_table)
+
+```
+
+
+##### Relations Graph
+
+:::info
+
+This partial graph view logically relates **assays** to metadata **templates** available at the [NF Data Curator App](https://shiny.synapse.org/users/rallaway/NF_data_curator/).
+For example, assays under the classification of `Imaging_Assay` currently uses a generic `Imaging_Assay_Template` for annotation.
+More specialized templates may be made available as needed for specific assays.
+
+:::
+
+```{r schema_ext_assay_template, out.width="100%", echo=FALSE}
+
+schema_ext <- readExtSchema(SCHEMA_CSV, EXT_CLASSES_CSV)
+assay <- getNodesEdges(schema_ext, "Assay", "A", 
+                       nodes = list(color = list(A = "plum", C = "indigo"), 
+                                    font.color = list(A = "black", C = "white")))
+template <- getNodesEdges(schema_ext, "Template", "T", use_id = T, 
+                          nodes = list(color = list(A = "pink", C = "firebrick"), 
+                                       font.color = list(A = "black", C = "white")))
+g_assay_template <- c2Cluster(assay, template, "suggests", EXT_RELATIONS_CSV)
+defaultGraph(g_assay_template)
+
+```
+
+#### Platforms {.tabset .tabset-fade .tabset-pills}
+
+##### Terms
+
+```{r platforms_table, echo=FALSE}
+
+platforms_table <- schema %>%
+  filter(Parent == "platform") %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(platforms_table)
+```
+
+
+##### Relations Graph
+
+:::info
+
+This partial graph view logically relates **assays** to common **platforms**.
+
+:::
+
+*Currently in development.*
+
+### Data Module
+
+#### Data Types {.tabset .tabset-fade .tabset-pills}
+
+##### Terms
+
+```{r data_types_table, echo=FALSE}
+
+data_types_table <- schema %>%
+  filter(Parent == "dataType") %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(data_types_table)
+```
+
+##### Relations Graph
+
+:::info
+
+This partial graph view logically relates **data types** to **assays**.
+
+:::
+
+*Currently in development.*
+
+#### Data Formats {.tabset .tabset-fade .tabset-pills}
+
+##### Terms
+
+:::info
+
+Certain terms are emphasized as <div class='warning badge' display=inline>proprietary</div>, which make data less interoperable/reusable, as opposed to our <div class='good badge' display=inline>preferred</div> (open) formats.
+
+:::
+
+```{r data_formats_table, echo=FALSE}
+
+data_formats_table <- schema %>%
+  filter(Parent == "fileFormat") %>%
+  select(Attribute, Description, Note = SubclassOf)
+  
+# A little more complicated than the other tables
+reactable(data_formats_table, 
+          filterable = TRUE,
+          pagination = FALSE,
+          columns = list(
+            Attribute = colDef(name = "Label", maxWidth = 150),
+            Note = colDef(
+              maxWidth = 100,
+              cell = function(value) {
+                label <- switch(value, Preferred_Open_Format = "preferred", Proprietary_Format = "proprietary", "")
+                class <- switch(value, Preferred_Open_Format = "good", Proprietary_Format = "warning", "")
+                div(class = paste(class, "badge"), label)
+              }
+            )
+          ),
+          wrap = FALSE,
+          class = "term-table"
+  )
+
+```
+
+##### Relations Graph
+
+:::info
+
+This partial graph view logically organizes **data formats** and notes which formats are interconvertible.
+
+:::
+
+*Currently in development.*
+
+### Biospecimen Module
+
+#### Species {.tabset .tabset-fade .tabset-pills}
+
+##### Terms
+```{r species_table, echo=FALSE}
+
+species_table <- schema %>%
+  filter(Parent == "species") %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(species_table)
+```
+
+#### Specimen Type {.tabset .tabset-fade .tabset-pills}
+
+*Currently in development.*
+
+##### Terms
+
+##### Relations Graph
+
+#### Genotypes {.tabset .tabset-fade .tabset-pills}
+
+##### Terms
+```{r genotypes_table, echo=FALSE}
+
+genotypes_table <- schema %>%
+  filter(Root == "Genotype") %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(genotypes_table)
+```
+
+#### Tumor Phenotypes {.tabset .tabset-fade .tabset-pills}
+
+##### Terms
+```{r tumor_diagnosis_table, echo=FALSE}
+
+tumor_diagnosis_table <- schema %>%
+  filter(Parent == "tumorType") %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(tumor_diagnosis_table)
+```
+
+
+
