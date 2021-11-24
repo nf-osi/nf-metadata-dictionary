@@ -2748,7 +2748,7 @@
         {
             "@id": "bts:2DIncucyte",
             "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
+            "rdfs:comment": "Cell viability assay on a 2D monolayer model.",
             "rdfs:label": "2DIncucyte",
             "rdfs:subClassOf": [
                 {
@@ -2765,7 +2765,7 @@
         {
             "@id": "bts:2DCellTiter-Glo",
             "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
+            "rdfs:comment": "Cell viability assay based on detection of ATP.",
             "rdfs:label": "2DCellTiter-Glo",
             "rdfs:subClassOf": [
                 {
@@ -2782,7 +2782,7 @@
         {
             "@id": "bts:3Dmicrotissueviability",
             "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
+            "rdfs:comment": "Cell viability assay on a 3D microtissue model.",
             "rdfs:label": "3Dmicrotissueviability",
             "rdfs:subClassOf": [
                 {
@@ -2793,6 +2793,40 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "3D microtissue viability",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:2DAlamarBluefluorescence",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Cell viability assay based on detection of AlamarBlue (resazurin). Living cells reduce blue, non-fluorescent resazurin to the red, fluorescent molecule resorufin. The amount of fluorescence or absorbance is proportional to the number of living cells and corresponds to the cell’s metabolic activity. For the fluorescence-based assay, color change and fluorescence can be detected using 560/590 nm (excitation/emission).",
+            "rdfs:label": "2DAlamarBluefluorescence",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "2D AlamarBlue fluorescence",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:2DAlamarBlueabsorbance",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Cell viability assay based on detection of AlamarBlue (resazurin). Living cells reduce blue, non-fluorescent resazurin to the red, fluorescent molecule resorufin.  The amount of fluorescence or absorbance is proportional to the number of living cells and corresponds to the cell’s metabolic activity. For the absorbance-based assay, absorbance can be read at 570 nm.",
+            "rdfs:label": "2DAlamarBlueabsorbance",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "2D AlamarBlue absorbance",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -5589,6 +5623,12 @@
                 },
                 {
                     "@id": "bts:InvivoPDXviability"
+                },
+                {
+                    "@id": "bts:2DAlamarBluefluorescence"
+                },
+                {
+                    "@id": "bts:2DAlamarBlueabsorbance"
                 }
             ],
             "sms:displayName": "assay",
@@ -6062,6 +6102,9 @@
                 },
                 {
                     "@id": "bts:Spheroid"
+                },
+                {
+                    "@id": "bts:Microtissue"
                 }
             ],
             "sms:displayName": "tissue",
@@ -10684,6 +10727,9 @@
                     "@id": "bts:TimePointUnit"
                 },
                 {
+                    "@id": "bts:ExperimentId"
+                },
+                {
                     "@id": "bts:Comments"
                 }
             ],
@@ -14954,7 +15000,7 @@
         {
             "@id": "bts:MassiveSoftTissueNeurofibroma",
             "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
+            "rdfs:comment": "Massive soft tissue neurofibroma is characterized  by local infiltration and extension to multiple nerve branches,  as well as substantial overgrowth of adjacent soft tissue and  skin, which distinguishes it from its more benign variant, plexiform neurofibroma. With striking presentation and  severe dysmorphism, massive soft tissue neurofibroma is also labeled elephantiasis neuromatosa. Although considered benign it  shares similarities with malignant peripheral nerve sheath  tumors such as local infiltration and cell mitogenesis. Massive soft tissue neurofibroma is associated with significant morbidity and mortality and almost no response to  conventional chemotherapy and radiotherapy. Surgery is eventually pursued, although bleeding may be a life-threatening  complication as massive soft tissue neurofibromas are highly  vascularized.",
             "rdfs:label": "MassiveSoftTissueNeurofibroma",
             "rdfs:subClassOf": [
                 {
@@ -14971,7 +15017,7 @@
         {
             "@id": "bts:DiffuseInfiltratingNeurofibroma",
             "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
+            "rdfs:comment": "Diffuse infiltrating neurofibroma can present as slow-growing, soft tissue masses with overlying skin thickening. These le-sions infiltrate the dermis and the subcutaneous tissue and  characteristically spread along the connective tissues enveloping islands of normal fat. Some of these lesions develop fatty proliferation and can mimic lipomas,  angiolipomas, or angiomyolipomas on imaging and histological evaluation ",
             "rdfs:label": "DiffuseInfiltratingNeurofibroma",
             "rdfs:subClassOf": [
                 {
@@ -15560,6 +15606,295 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "spheroid",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Microtissue",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Microtissue usually refers to the microtissue formed by the aggregation of seed cells under the action of cell-cell or cell-extracellular matrix (ECM). Compared with traditional cell monolayer culture, cells are cultivated into a three-dimensional microstructure in a specific way. The microstructure characteristics of microtissue are similar to natural tissues and can promote cell proliferation and differentiation.",
+            "rdfs:label": "Microtissue",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Tissue"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "microtissue",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ResourceId",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A UUID for a Resource from the NF Research Tools Database",
+            "rdfs:label": "ResourceId",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DccProperty"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "resourceId",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Initiative",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Refers to a funding initiative. This annotation is usually handled by the DCC or funder, not the researcher. ",
+            "rdfs:label": "Initiative",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DccProperty"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "initiative",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:FundingAgency",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Refers to the funding organization for the generated resource. This annotation is handled by the DCC. ",
+            "rdfs:label": "FundingAgency",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DccProperty"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "fundingAgency",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:CreatedOn",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Refers to when the resource was created on the platform.",
+            "rdfs:label": "CreatedOn",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SynapseProperty"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "createdOn",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:CreatedBy",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Refers to the user who created the resource on the platform.",
+            "rdfs:label": "CreatedBy",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SynapseProperty"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "createdBy",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ModifiedBy",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Refers to a user who last modified the resource on the platform.",
+            "rdfs:label": "ModifiedBy",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SynapseProperty"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "modifiedBy",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Id",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The entity id for the resource automatically assigned by the platform.",
+            "rdfs:label": "Id",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SynapseProperty"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "id",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Etag",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A UUID assigned by the platform.",
+            "rdfs:label": "Etag",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SynapseProperty"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "etag",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ParentId",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The id of the parent resource, i.e. the parent folder on the platform. ",
+            "rdfs:label": "ParentId",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SynapseProperty"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "parentId",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:BenefactorId",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The id of the resource from which access control is inherited.",
+            "rdfs:label": "BenefactorId",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SynapseProperty"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "benefactorId",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:CurrentVersion",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "(Versionable entities only) The current version number of the resource.",
+            "rdfs:label": "CurrentVersion",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SynapseProperty"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "currentVersion",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:DataFileHandleId",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "(Files only) Refers to the id of the file. ",
+            "rdfs:label": "DataFileHandleId",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SynapseProperty"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "dataFileHandleId",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ContentSize",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "(Files only) File size calculated by the platform.",
+            "rdfs:label": "ContentSize",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SynapseProperty"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "contentSize",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Type",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Refers to the type of the resource on the platform, e.g. “file”.",
+            "rdfs:label": "Type",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SynapseProperty"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "type",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ConcreteType",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Refers to the class model the data platform uses for representing the resource. This is a low-level field set by the platform and is not a user annotation. ",
+            "rdfs:label": "ConcreteType",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SynapseProperty"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "concreteType",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ExperimentId",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "When applicable, an optional identifier that can be used to distinguish or group the experiments that generated the data; also can be used to denote internal batch reference if needed.",
+            "rdfs:label": "ExperimentId",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SageCommunity"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "experimentId",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
