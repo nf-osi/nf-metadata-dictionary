@@ -84,6 +84,13 @@ schema <- read.csv(SCHEMA_CSV) %>%
 
 ## Annotation Classes
 
+:::info
+
+These are standard terms available to NF resource contributors for annotation of their resource.
+When contributors use these terms, they are helping to label and classify their resource for improved interoperability and findability.
+
+:::
+
 ### Assay Module
 
 #### Assays {.tabset .tabset-fade .tabset-pills}
@@ -147,7 +154,7 @@ This partial graph view logically relates **assays** to common **platforms**.
 
 :::
 
-*Currently in development.*
+*Documentation currently in development.*
 
 ### Data Module
 
@@ -172,7 +179,7 @@ This partial graph view logically relates **data types** to **assays**.
 
 :::
 
-*Currently in development.*
+*Documentation currently in development.*
 
 #### Data Formats {.tabset .tabset-fade .tabset-pills}
 
@@ -219,7 +226,7 @@ This partial graph view logically organizes **data formats** and notes which for
 
 :::
 
-*Currently in development.*
+*Documentation currently in development.*
 
 ### Biospecimen Module
 
@@ -237,7 +244,7 @@ basicTable(species_table)
 
 #### Specimen Type {.tabset .tabset-fade .tabset-pills}
 
-*Currently in development.*
+*Documentation currently in development.*
 
 ##### Terms
 
@@ -267,5 +274,54 @@ tumor_diagnosis_table <- schema %>%
 basicTable(tumor_diagnosis_table)
 ```
 
+## Annotation Templates & Properties 
+
+#### Standard {.tabset .tabset-fade .tabset-pills}
+
+:::info
+
+A resource can have many annotation properties used to describe it. 
+For example, if a resource as an "assay" annotation property, contributors can give it an assay annotation.
+This is represented by the spreadsheet templates available for use; each of the columns allow contributors to say something distinct about their (data) entity. 
+Templates effectively define a profile over a collection of properties.
+Most annotation properties are "user" annotation properties -- intended for use by the resource contributors on the NF platform.
+For additional context, see also [System Annotation Properties](#reserved).
+
+:::
+
+##### Genomics Assay Template
+
+
+*Documentation currently in development.*
+
+```{r standard_properties_table, echo=FALSE, eval=FALSE}
+
+# Custom code to get unique set of properties used across all templates
+standard_properties_table <- schema %>%
+  filter(Parent %in% c("template")) %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(standard_properties_table)
+```
+
+
+#### System {#reserved .tabset .tabset-fade .tabset-pills}
+
+:::info
+
+System annotation properties also describe the resource in some way, but they are not expected to be edited directly by contributors. 
+They are computed/automated annotations set by the data platform and DCC activities.
+
+:::
+
+##### Terms
+```{r reserved_properties_table, echo=FALSE}
+
+reserved__properties_table <- schema %>%
+  filter(Root %in% c("dccProperty", "synapseProperty")) %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(reserved__properties_table)
+```
 
 
