@@ -1,3 +1,5 @@
+Latest release: https://img.shields.io/github/v/release/nf-osi/nf-metadata-dictionary?display_name=release&style=flat-square
+
 # nf-metadata-dictionary
 Versioned releases of the JSON-LD-encoded NF Metadata Dictionary. 
 
