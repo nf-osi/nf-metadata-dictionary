@@ -1,7 +1,7 @@
 ---
 title: "NF Vocabulary / Schema"
 author: "NF-OSI DCC"
-date: "11/14/2021"
+date: "Last update on `r Sys.Date()`"
 output: 
   html_document:
     theme: lumen
@@ -9,7 +9,11 @@ output:
     toc: true
     toc_float: 
       collapsed: false
-    toc_depth: 5
+    toc_depth: 4
+params:
+  schema_csv: "../NF.csv"
+  ext_classes_csv: "../ext_classes.csv"
+  ext_relations_csv: "../ext_relations.csv"
 ---
 
 ```{r setup, include=FALSE}
@@ -18,11 +22,13 @@ library(tidyverse)
 library(reactable)
 library(htmltools)
 
+
 source("graph.R")
+source("docTemplate.R")
 
 basicTable <- function(dt, columns = c("Attribute", "Description")) {
   reactable(dt[, columns], 
-          filterable = TRUE,
+          filterable = if(nrow(dt) > 20) TRUE else FALSE,
           pagination = FALSE,
           columns = list(
             Attribute = colDef(name = "Label", maxWidth = 250)
@@ -57,20 +63,44 @@ expandedTable <- function(dt) {
   )
 }
 
-SCHEMA_CSV <- "../NF.csv"
-EXT_CLASSES_CSV <- "../ext_classes.csv"
-EXT_RELATIONS_CSV <- "../ext_relations.csv"
+templateTable <- function(dt) {
+  # Reference range by linking to relevant class sections within document
+  # or returning range values in plain text
+  refRange <- function(value, index) {
+    if(grepl("#", value)) {
+      htmltools::tags$a(href = value, sub("#", "", value))
+    } else {
+      value
+    }  
+  }
+  
+  reactable(dt,
+            columns = list(
+              Field = colDef(minWidth = 180),
+              Description = colDef(minWidth = 300),
+              Required = colDef(maxWidth = 100),
+              ControlledVocab = colDef(name = "Controlled\nVocab",
+                                       cell = refRange)
+            ),
+            pagination = FALSE,
+            wrap = TRUE,
+            class = "term-table")
+}
 ```
 
 ```{r process_schema_table, echo=FALSE}
 
-# To avoid overwhelming info and keep page neat, read in schema and
-# process only selected columns
+# To avoid overwhelming info and keep page neat, process only selected columns
 # Aside from default schematic columns, 
 # we require internal columns prefixed with `.` to have a useful table
-schema <- read.csv(SCHEMA_CSV) %>%
-  select(Attribute, Description, Valid.Values, DependsOn, Parent, 
-         Type = .Type, Root = .Root, SubclassOf = .SubclassOf)
+schema <- read.csv(params$schema_csv) %>%
+  select(Attribute, Description, Required, Valid.Values, DependsOn, Parent, 
+         ID = .ID, Type = .Type, Root = .Root, SubclassOf = .SubclassOf,
+         Range = .Range, EditorNote = .EditorNote)
+
+
+# docTemplate needs the unmodified schema table
+docTemplate(schema)
 
 # Splits terms into Property or Class using `Type`
 # schema_class <- schema %>%
@@ -93,7 +123,7 @@ When contributors use these terms, they are helping to label and classify their 
 
 ### Assay Module
 
-#### Assays {.tabset .tabset-fade .tabset-pills}
+#### Assay {#Assay .tabset .tabset-fade .tabset-pills}
 
 ##### Terms
 
@@ -120,19 +150,19 @@ More specialized templates may be made available as needed for specific assays.
 
 ```{r schema_ext_assay_template, out.width="100%", echo=FALSE}
 
-schema_ext <- readExtSchema(SCHEMA_CSV, EXT_CLASSES_CSV)
+schema_ext <- readExtSchema(params$schema_csv, params$ext_classes_csv)
 assay <- getNodesEdges(schema_ext, "Assay", "A", 
                        nodes = list(color = list(A = "plum", C = "indigo"), 
                                     font.color = list(A = "black", C = "white")))
 template <- getNodesEdges(schema_ext, "Template", "T", use_id = T, 
                           nodes = list(color = list(A = "pink", C = "firebrick"), 
                                        font.color = list(A = "black", C = "white")))
-g_assay_template <- c2Cluster(assay, template, "suggests", EXT_RELATIONS_CSV)
+g_assay_template <- c2Cluster(assay, template, "suggests", params$ext_relations_csv)
 defaultGraph(g_assay_template)
 
 ```
 
-#### Platforms {.tabset .tabset-fade .tabset-pills}
+#### Platform {#Platform .tabset .tabset-fade .tabset-pills}
 
 ##### Terms
 
@@ -156,9 +186,76 @@ This partial graph view logically relates **assays** to common **platforms**.
 
 *Documentation currently in development.*
 
+#### Parameters
+
+:::info
+
+The parameters used should be specified specific to the assay and platform.
+
+:::
+
+##### NGS Parameter {#NGS_Parameter}
+
+###### Library Prep {#Library_Prep}
+
+```{r echo=FALSE}
+
+prep_params <- schema %>%
+  filter(Parent == "libraryPrep") %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(prep_params)
+```
+
+###### Library Prep Method {#Library_Preparation_Method}
+
+```{r echo=FALSE}
+
+prep_method_params <- schema %>%
+  filter(Parent == "libraryPrepMethod") %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(prep_method_params)
+```
+
+
+###### Read Pair {#Read_Pair}
+
+```{r echo=FALSE}
+
+read_params <- schema %>%
+  filter(Parent == "readPair") %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(read_params)
+```
+
+###### Read Pair Orientation {#Read_Pair_Orientation}
+
+```{r echo=FALSE}
+
+orientation_params <- schema %>%
+  filter(Parent == "readPairOrientation") %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(orientation_params)
+```
+
+###### Run Type {#Run_Type}
+```{r echo=FALSE}
+
+run_params <- schema %>%
+  filter(Parent == "runType") %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(run_params)
+```
+
+
+
 ### Data Module
 
-#### Data Types {.tabset .tabset-fade .tabset-pills}
+#### Data Type {#Data .tabset .tabset-fade .tabset-pills}
 
 ##### Terms
 
@@ -181,13 +278,13 @@ This partial graph view logically relates **data types** to **assays**.
 
 *Documentation currently in development.*
 
-#### Data Formats {.tabset .tabset-fade .tabset-pills}
+#### File Format {#File_Format .tabset .tabset-fade .tabset-pills}
 
 ##### Terms
 
 :::info
 
-Certain terms are emphasized as <div class='warning badge' display=inline>proprietary</div>, which make data less interoperable/reusable, as opposed to our <div class='good badge' display=inline>preferred</div> (open) formats.
+Certain formats are emphasized as <div class='warning badge' display=inline>proprietary</div>, which make data less interoperable/reusable, as opposed to our <div class='good badge' display=inline>preferred</div> (open) formats.
 
 :::
 
@@ -228,9 +325,30 @@ This partial graph view logically organizes **data formats** and notes which for
 
 *Documentation currently in development.*
 
-### Biospecimen Module
+### Biosample Module
 
-#### Species {.tabset .tabset-fade .tabset-pills}
+:::info
+
+Biosample combines metadata at the individual-level and specimen-level.
+Data can be linked to individual-level sample information such as sex, species, diagnosis, and genotype.
+
+:::
+
+<!-- Sample Individual --> 
+
+#### Sex {#Sex .tabset .tabset-fade .tabset-pills}
+
+##### Terms
+```{r sex_table, echo=FALSE}
+
+sex_table <- schema %>%
+  filter(Parent == "sex") %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(sex_table)
+```
+
+#### Species {#Species .tabset .tabset-fade .tabset-pills}
 
 ##### Terms
 ```{r species_table, echo=FALSE}
@@ -242,15 +360,20 @@ species_table <- schema %>%
 basicTable(species_table)
 ```
 
-#### Specimen Type {.tabset .tabset-fade .tabset-pills}
-
-*Documentation currently in development.*
+#### Diagnosis {#Diagnosis .tabset .tabset-fade .tabset-pills}
 
 ##### Terms
+```{r diagnosis_table, echo=FALSE}
 
-##### Relations Graph
+diagnosis_table <- schema %>%
+  filter(Parent == "diagnosis") %>%
+  select(Attribute, Description, DependsOn)
 
-#### Genotypes {.tabset .tabset-fade .tabset-pills}
+basicTable(diagnosis_table)
+```
+
+
+#### Genotype {#Genotype .tabset .tabset-fade .tabset-pills}
 
 ##### Terms
 ```{r genotypes_table, echo=FALSE}
@@ -262,40 +385,124 @@ genotypes_table <- schema %>%
 basicTable(genotypes_table)
 ```
 
-#### Tumor Phenotypes {.tabset .tabset-fade .tabset-pills}
-
-##### Terms
-```{r tumor_diagnosis_table, echo=FALSE}
-
-tumor_diagnosis_table <- schema %>%
-  filter(Parent == "tumorType") %>%
-  select(Attribute, Description, DependsOn)
-
-basicTable(tumor_diagnosis_table)
-```
-
-## Annotation Templates & Properties 
-
-#### Standard {.tabset .tabset-fade .tabset-pills}
 
 :::info
 
-A resource can have many annotation properties used to describe it. 
-For example, if a resource as an "assay" annotation property, contributors can give it an assay annotation.
-This is represented by the spreadsheet templates available for use; each of the columns allow contributors to say something distinct about their (data) entity. 
-Templates effectively define a profile over a collection of properties.
-Most annotation properties are "user" annotation properties -- intended for use by the resource contributors on the NF platform.
-For additional context, see also [System Annotation Properties](#reserved).
+Data can be linked to specimen-level information such as sample site (the organ or body part), specimen tissue or cell type, tumor class (if specimen is a tumor), and specimen state.
 
 :::
 
-##### Genomics Assay Template
+<!-- Sample Specimen --> 
+
+#### Sample Site {.tabset .tabset-fade .tabset-pills}
+
+##### Terms
+
+```{r sample_site_table, echo=FALSE}
+
+sample_site_table <- schema %>%
+  filter(Parent %in% c("organ", "bodyPart")) %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(sample_site_table)
+```
 
 
-*Documentation currently in development.*
+#### Sample Specimen
+
+##### Tissue {#Tissue} 
+```{r tissue_table, echo=FALSE}
+
+tissue <- schema %>%
+  filter(Parent %in% c("tissue", "cellType")) %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(tissue)
+```
+
+##### Cell / Cell Line {#Cell} 
+```{r echo=FALSE}
+
+cell_table <- schema %>%
+  filter(SubclassOf %in% c("Primary_Cell", "Cell_Line_Model")) %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(cell_table)
+```
+
+#### Specimen Dissociation {#Dissociation_Method}
+
+*Documentation in development.*
+
+#### Specimen State {#Specimen_State}
+
+*Documentation in development.*
+
+#### Tumor Class {#Tumor .tabset .tabset-fade .tabset-pills}
+
+##### Terms
+```{r tumor_table, echo=FALSE}
+
+tumor_table <- schema %>%
+  filter(Parent == "tumorType") %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(tumor_table)
+```
+
+### Experiment Module
+
+#### Gene Perturbation
+
+##### Gene Perturbation Type {#Gene_Perturbation}
+```{r echo=FALSE}
+
+perturb_type <- schema %>%
+  filter(Parent == "genePerturbationType") %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(perturb_type)
+```
+
+##### Gene Perturbation Technology {#Gene_Perturbation_Technology}
+
+```{r echo=FALSE}
+
+perturb_tech <- schema %>%
+  filter(Parent == "genePerturbationTechnology") %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(perturb_tech)
+```
+
+### Cross-ref Module
+
+:::info
+
+This is a provisional module for annotations that help cross-reference data for internal tracking and inter-database linkages.
+
+:::
+
+#### Model System {#Model_System}
+
+*Documentation in development.*
+
+## Annotation Templates
+
+:::info
+
+Annotation templates are spreadsheet templates that allow contributors to annotate resources uploaded to the repository.
+They are generated at the [NF Data Curator App](https://shiny.synapse.org/users/rallaway/NF_data_curator/).
+Templates aim to implement "minimum metadata" standards specific to the type of data/resource.
+Unless the template field is free-text, it is meant to be filled by the contributor using the ontology terms/controlled vocabulary defined here.
+For example, the "assay" property allows the contributor to use [terms under Assay](#assay).
+
+:::
+
+#### Templates for Assay Data {#Assay_Template .tabset .tabset-fade .tabset-pills}
 
 ```{r standard_properties_table, echo=FALSE, eval=FALSE}
-
+# NOT RUN
 # Custom code to get unique set of properties used across all templates
 standard_properties_table <- schema %>%
   filter(Parent %in% c("template")) %>%
@@ -304,8 +511,70 @@ standard_properties_table <- schema %>%
 basicTable(standard_properties_table)
 ```
 
+##### Genomics Assay
 
-#### System {#reserved .tabset .tabset-fade .tabset-pills}
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/Genomics_Assay_Template.csv"))
+
+```
+
+##### Proteomics Assay
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/Proteomics_Assay_Template.csv"))
+
+```
+
+##### Epigenetics Assay
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/Epigenetics_Assay_Template.csv"))
+
+```
+
+##### Imaging Assay
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/Imaging_Assay_Template.csv"))
+
+```
+
+##### MRI Assay
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/MRI_Assay_Template.csv"))
+
+```
+
+
+##### Pharmacokinetics Assay
+
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/Pharmacokinetics_Assay_Template.csv"))
+
+```
+
+##### Plate Based Reporter Assay
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/Plate_Based_Reporter_Assay_Template.csv"))
+
+```
+
+#### Other Templates {#Non_Assay_Template .tabset .tabset-fade .tabset-pills}
+
+##### Patient Timepoints
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/Patient_Timepoints_Template.csv"))
+
+```
+
+## Miscellaneous
+
+#### System Properties {#reserved .tabset .tabset-fade .tabset-pills}
 
 :::info
 
@@ -317,11 +586,11 @@ They are computed/automated annotations set by the data platform and DCC activit
 ##### Terms
 ```{r reserved_properties_table, echo=FALSE}
 
-reserved__properties_table <- schema %>%
+reserved_properties_table <- schema %>%
   filter(Root %in% c("dccProperty", "synapseProperty")) %>%
   select(Attribute, Description, DependsOn)
 
-basicTable(reserved__properties_table)
+basicTable(reserved_properties_table)
 ```
 
 
