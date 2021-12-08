@@ -5137,7 +5137,7 @@
             "rdfs:label": "SporadicSchwannoma",
             "rdfs:subClassOf": [
                 {
-                    "@id": "schema:Thing"
+                    "@id": "bts:Diagnosis"
                 }
             ],
             "schema:isPartOf": {
@@ -5991,7 +5991,7 @@
                 }
             ],
             "sms:displayName": "dataType",
-            "sms:required": "sms:false",
+            "sms:required": "sms:true",
             "sms:validationRules": []
         },
         {
@@ -9818,6 +9818,74 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Sc93.1",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Sc93.1",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Sc93.1",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:JH-2-002-CL",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Cell line derived from JHU biobank individual",
+            "rdfs:label": "JH-2-002-CL",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "JH-2-002-CL",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:JH-2-079-CL",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Cell line derived from JHU biobank individual",
+            "rdfs:label": "JH-2-079-CL",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "JH-2-079-CL",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:JH-2-103-CL",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Cell line derived from JHU biobank individual",
+            "rdfs:label": "JH-2-103-CL",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "JH-2-103-CL",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:ModelSystemName",
             "@type": "rdfs:Class",
             "rdfs:comment": "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293T (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)",
@@ -9967,10 +10035,10 @@
                     "@id": "bts:KCL025"
                 },
                 {
-                    "@id": "bts:5PNFTDiPSsvPM6"
+                    "@id": "bts:5PNFTdiPSsvPM6"
                 },
                 {
-                    "@id": "bts:5PNFTDiPSsvMM4"
+                    "@id": "bts:5PNFTdiPSsvMM4"
                 },
                 {
                     "@id": "bts:7PNFSiPSrvPM12"
@@ -10016,6 +10084,18 @@
                 },
                 {
                     "@id": "bts:S462.TY"
+                },
+                {
+                    "@id": "bts:Sc93.1"
+                },
+                {
+                    "@id": "bts:JH-2-002-CL"
+                },
+                {
+                    "@id": "bts:JH-2-079-CL"
+                },
+                {
+                    "@id": "bts:JH-2-103-CL"
                 }
             ],
             "sms:displayName": "modelSystemName",
@@ -10200,9 +10280,6 @@
                 },
                 {
                     "@id": "bts:ModelSystemName"
-                },
-                {
-                    "@id": "bts:ModelSystemStrainNomenclature"
                 },
                 {
                     "@id": "bts:GenePerturbationType"
@@ -11472,7 +11549,7 @@
         {
             "@id": "bts:ReadLength",
             "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
+            "rdfs:comment": "Number of base pairs (bp) sequenced for a read",
             "rdfs:label": "ReadLength",
             "rdfs:subClassOf": [
                 {
@@ -11483,6 +11560,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "readLength",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ReadDepth",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Average number of reads obtained",
+            "rdfs:label": "ReadDepth",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Ngs"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "readDepth",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -14661,7 +14755,7 @@
         {
             "@id": "bts:ProgressReportNumber",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Indicates which milestone you're annotating data files for. Currently only required for projects funded by NTAP, GFF, and NFRI. For GFF studies, this is the \"progress report\" timeline. An example: if submitting data for your 6-month milestone report for NTAP, progressReportNumber=1.  Also if you are submitting data associated with your first milestone, progressReportNumber =1",
+            "rdfs:comment": "Indicates milestone the  data is associated with. Currently only required for projects funded by NTAP, GFF, and NFRI. For GFF studies, this is the ‘progress report’ timeline. Example: if submitting data for the 6-month milestone report for NTAP, progressReportNumber=1.  Also if submitting data associated with first milestone, progressReportNumber =1",
             "rdfs:label": "ProgressReportNumber",
             "rdfs:subClassOf": [
                 {
@@ -14861,7 +14955,7 @@
         {
             "@id": "bts:SpecimenPreparationMethod",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Term that represents the method used to preserve the sample before preparing the sample for sequencing",
+            "rdfs:comment": "Term that represents preservation of the sample before usage in, e.g. sequencing",
             "rdfs:label": "SpecimenPreparationMethod",
             "rdfs:subClassOf": [
                 {
@@ -15984,6 +16078,40 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:5PNFTdiPSsvPM6",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "5PNFTdiPSsvPM6",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "5PNF_TdiPSsv_PM_6",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:5PNFTdiPSsvMM4",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "5PNFTdiPSsvMM4",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "5PNF_TdiPSsv_MM_4",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:+/?",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
@@ -16014,40 +16142,6 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "-/?",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:ModelSystemStrainNomenclature",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "ModelSystemStrainNomenclature",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:GenomicsAssay"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "modelSystemStrainNomenclature",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:ReadDepth",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "ReadDepth",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:GenomicsAssay"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "readDepth",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
