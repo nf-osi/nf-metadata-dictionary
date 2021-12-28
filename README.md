@@ -8,9 +8,9 @@ These releases start at v1.0.0. To see (unversioned) schema history prior to v1.
 
 Versioning (MAJOR.MINOR.PATCH) is roughly following semver.org where: 
 
-MAJOR: *In-use* parent attributes are deleted from dictionary or modified, or in-use child attributes are modified in a non-backwards compatible way (e.g. `Neurofibromatosis 1` changed to `Neurofibromatosis type 1`)
-MINOR: Concepts/parent attributes are added. 
-PATCH: Child attributes are added, or *unused* child/parent attributes are deleted/modifies, or definitions/`comments` are added/modified. 
+* MAJOR: *In-use* parent attributes are deleted from dictionary or modified, or in-use child attributes are modified in a non-backwards compatible way (e.g. `Neurofibromatosis 1` changed to `Neurofibromatosis type 1`)
+* MINOR: Concepts/parent attributes are added. 
+* PATCH: Child attributes are added, or *unused* child/parent attributes are deleted/modifies, or definitions/`comments` are added/modified. 
 
 ## Browse the metadata dictionary
 
