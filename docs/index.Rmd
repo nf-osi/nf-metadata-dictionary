@@ -24,7 +24,7 @@ library(htmltools)
 
 
 source("graph.R")
-source("docTemplate.R")
+source("docTemplate.R") 
 
 basicTable <- function(dt, columns = c("Attribute", "Description")) {
   reactable(dt[, columns], 
@@ -560,6 +560,13 @@ templateTable(read.csv("templates/Pharmacokinetics_Assay_Template.csv"))
 ```{r echo=FALSE }
 
 templateTable(read.csv("templates/Plate_Based_Reporter_Assay_Template.csv"))
+
+```
+
+##### Clinical Assay
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/Clinical_Assay_Template.csv"))
 
 ```
 
