@@ -3712,6 +3712,9 @@
                 },
                 {
                     "@id": "bts:Months"
+                },
+                {
+                    "@id": "bts:Quarters"
                 }
             ],
             "sms:displayName": "timePointUnit",
@@ -11107,6 +11110,106 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:ClinicalAssayTemplate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Annotation template for simple endpoint data from clinical assays often used in diagnostic practice or clinical trials ; may include repeated measures and a treatment/intervention context. Examples include bloodwork results (creatine assay, serum antibody assay), tumor size measurements, or medication adherence. Note that clinical data are from human individuals, therefore species should be “human”.  ",
+            "rdfs:label": "ClinicalAssayTemplate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "clinicalAssayTemplate",
+            "sms:required": "sms:true",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Filename"
+                },
+                {
+                    "@id": "bts:ProgressReportNumber"
+                },
+                {
+                    "@id": "bts:FileFormat"
+                },
+                {
+                    "@id": "bts:ResourceType"
+                },
+                {
+                    "@id": "bts:DataType"
+                },
+                {
+                    "@id": "bts:DataSubtype"
+                },
+                {
+                    "@id": "bts:Assay"
+                },
+                {
+                    "@id": "bts:Platform"
+                },
+                {
+                    "@id": "bts:IndividualID"
+                },
+                {
+                    "@id": "bts:SpecimenID"
+                },
+                {
+                    "@id": "bts:Sex"
+                },
+                {
+                    "@id": "bts:Species"
+                },
+                {
+                    "@id": "bts:Diagnosis"
+                },
+                {
+                    "@id": "bts:Nf1Genotype"
+                },
+                {
+                    "@id": "bts:Nf2Genotype"
+                },
+                {
+                    "@id": "bts:BodyPart"
+                },
+                {
+                    "@id": "bts:Tissue"
+                },
+                {
+                    "@id": "bts:CellType"
+                },
+                {
+                    "@id": "bts:TumorType"
+                },
+                {
+                    "@id": "bts:ExperimentalCondition"
+                },
+                {
+                    "@id": "bts:ExperimentalTimepoint"
+                },
+                {
+                    "@id": "bts:TimePointUnit"
+                },
+                {
+                    "@id": "bts:InChIKey"
+                },
+                {
+                    "@id": "bts:CompoundName"
+                },
+                {
+                    "@id": "bts:CompoundDose"
+                },
+                {
+                    "@id": "bts:CompoundDoseUnit"
+                },
+                {
+                    "@id": "bts:Comments"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:-/-",
             "@type": "rdfs:Class",
             "rdfs:comment": "Homozygous deletion or mutation of NF1.",
@@ -13761,6 +13864,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Quarters",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Time point unit referring to quarters in a year.",
+            "rdfs:label": "Quarters",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "quarters",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Nervetissue",
             "@type": "rdfs:Class",
             "rdfs:comment": "Portion of tissue in the nervous system which consists of neurons and glial cells, and may also contain parts of the vasculature.",
@@ -14595,31 +14715,6 @@
             },
             "sms:displayName": "NanostringGeoMx",
             "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:NF",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "NF",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "schema:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "NF",
-            "sms:required": "sms:true",
-            "sms:requiresDependency": [
-                {
-                    "@id": "bts:FileFormat"
-                },
-                {
-                    "@id": "bts:ResourceType"
-                }
-            ],
             "sms:validationRules": []
         },
         {
@@ -16013,6 +16108,74 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "experimentId",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:CompoundName",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Common name for a compound, e.g. “Selumetinib” (https://pubchem.ncbi.nlm.nih.gov/compound/10127622)",
+            "rdfs:label": "CompoundName",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SageCommunity"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "compoundName",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:CompoundDose",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A dose quantity for the treatment compound. To be used with compoundDoseUnit.",
+            "rdfs:label": "CompoundDose",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "compoundDose",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:CompoundDoseUnit",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A unit associated with the value(s) in compoundDose.",
+            "rdfs:label": "CompoundDoseUnit",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "compoundDoseUnit",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:InChIKey",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A unique hash key for a compound, e.g. for “Selumetinib”, the key is CYOHGALHFOKKQC-UHFFFAOYSA-N (https://pubchem.ncbi.nlm.nih.gov/compound/10127622#section=InChI-Key). This is a more reliable identifier than the compound name and should be used if available.",
+            "rdfs:label": "InChIKey",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SageCommunity"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "InChIKey",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
