@@ -3584,6 +3584,33 @@
                 },
                 {
                     "@id": "bts:NeurofibromawithDegenerativeAtypia"
+                },
+                {
+                    "@id": "bts:LowGradeGliomaNOS"
+                },
+                {
+                    "@id": "bts:PilocyticAstrocytoma"
+                },
+                {
+                    "@id": "bts:PilomyxoidAstrocytoma"
+                },
+                {
+                    "@id": "bts:DiffuseAstrocytoma"
+                },
+                {
+                    "@id": "bts:GlioblastomaMultiforme"
+                },
+                {
+                    "@id": "bts:AnaplasticPilocyticAstrocytoma"
+                },
+                {
+                    "@id": "bts:PleomorphicXanthoastrocytoma"
+                },
+                {
+                    "@id": "bts:Oligoastrocytoma"
+                },
+                {
+                    "@id": "bts:High-GradeGliomaNOS"
                 }
             ],
             "sms:displayName": "tumorType",
@@ -14388,10 +14415,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:LowGradeGlioma,NOS",
+            "@id": "bts:LowGradeGliomaNOS",
             "@type": "rdfs:Class",
             "rdfs:comment": "LGGNOS",
-            "rdfs:label": "LowGradeGlioma,NOS",
+            "rdfs:label": "LowGradeGliomaNOS",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:TumorType"
@@ -14400,7 +14427,7 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "Low Grade Glioma, NOS",
+            "sms:displayName": "Low Grade Glioma NOS",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -14524,10 +14551,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:High-GradeGlioma,NOS",
+            "@id": "bts:High-GradeGliomaNOS",
             "@type": "rdfs:Class",
             "rdfs:comment": "HGGNOS",
-            "rdfs:label": "High-GradeGlioma,NOS",
+            "rdfs:label": "High-GradeGliomaNOS",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:TumorType"
@@ -14536,7 +14563,7 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "High-Grade Glioma, NOS",
+            "sms:displayName": "High-Grade Glioma NOS",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -16156,6 +16183,51 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Age",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A numeric value representing age of the individual. Use with ageUnit.",
+            "rdfs:label": "Age",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "age",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:AgeUnit",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A time unit that can be used with a given age value, e.g. years.",
+            "rdfs:label": "AgeUnit",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Days"
+                },
+                {
+                    "@id": "bts:Months"
+                },
+                {
+                    "@id": "bts:Years"
+                }
+            ],
+            "sms:displayName": "ageUnit",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:LowGradeGlioma",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
@@ -16628,6 +16700,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "ethanol",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Years",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Years",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:AgeUnit"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "years",
             "sms:required": "sms:false",
             "sms:validationRules": []
         }
