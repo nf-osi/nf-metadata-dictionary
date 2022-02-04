@@ -3532,6 +3532,9 @@
             },
             "schema:rangeIncludes": [
                 {
+                    "@id": "bts:Teratoma"
+                },
+                {
                     "@id": "bts:CutaneousNeurofibroma"
                 },
                 {
@@ -3550,7 +3553,37 @@
                     "@id": "bts:LowGradeGlioma"
                 },
                 {
+                    "@id": "bts:NOS"
+                },
+                {
+                    "@id": "bts:PilocyticAstrocytoma"
+                },
+                {
+                    "@id": "bts:PilomyxoidAstrocytoma"
+                },
+                {
                     "@id": "bts:DiffuseAstrocytoma"
+                },
+                {
+                    "@id": "bts:GlioblastomaMultiforme"
+                },
+                {
+                    "@id": "bts:AnaplasticPilocyticAstrocytoma"
+                },
+                {
+                    "@id": "bts:PleomorphicXanthoastrocytoma"
+                },
+                {
+                    "@id": "bts:Oligoastrocytoma"
+                },
+                {
+                    "@id": "bts:High-GradeGlioma"
+                },
+                {
+                    "@id": "bts:NOS"
+                },
+                {
+                    "@id": "bts:Unknown"
                 },
                 {
                     "@id": "bts:AnaplasticAstrocytoma"
@@ -3565,12 +3598,6 @@
                     "@id": "bts:Meningioma"
                 },
                 {
-                    "@id": "bts:Normal"
-                },
-                {
-                    "@id": "bts:Teratoma"
-                },
-                {
                     "@id": "bts:MassiveSoftTissueNeurofibroma"
                 },
                 {
@@ -3580,10 +3607,13 @@
                     "@id": "bts:LocalizedNeurofibroma"
                 },
                 {
+                    "@id": "bts:NeurofibromawithDegenerativeAtypia"
+                },
+                {
                     "@id": "bts:Neurofibroma"
                 },
                 {
-                    "@id": "bts:NeurofibromawithDegenerativeAtypia"
+                    "@id": "bts:NotApplicable"
                 }
             ],
             "sms:displayName": "tumorType",
@@ -16169,6 +16199,40 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "Low Grade Glioma",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:NOS",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "NOS",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:TumorType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "NOS",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:High-GradeGlioma",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "High-GradeGlioma",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:TumorType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "High-Grade Glioma",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
