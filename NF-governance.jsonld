@@ -1,0 +1,3972 @@
+{
+    "@context": {
+        "bts": "http://schema.biothings.io/",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "schema:Text",
+            "@type": [
+                "schema:DataType",
+                "rdfs:Class"
+            ],
+            "rdfs:comment": "Data type: Text.",
+            "rdfs:label": "Text"
+        },
+        {
+            "@id": "schema:Number",
+            "@type": [
+                "schema:DataType",
+                "rdfs:Class"
+            ],
+            "rdfs:comment": "Data type: Number.",
+            "rdfs:label": "Number"
+        },
+        {
+            "@id": "schema:Integer",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Data type: Integer.",
+            "rdfs:label": "Integer",
+            "rdfs:subClassOf": {
+                "@id": "schema:Number"
+            }
+        },
+        {
+            "@id": "schema:Thing",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Thing",
+            "rdfs:label": "Thing",
+            "schema:isPartOf": {
+                "@id": "http://schema.org"
+            }
+        },
+        {
+            "@id": "bts:BiologicalEntity",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "BiologicalEntity",
+            "rdfs:subClassOf": {
+                "@id": "schema:Thing"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:OntologyClass",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "a concept or class in an ontology, vocabulary or thesaurus",
+            "rdfs:label": "OntologyClass",
+            "rdfs:subClassOf": {
+                "@id": "schema:Thing"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:RelationshipType",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "An OWL property used as an edge label",
+            "rdfs:label": "RelationshipType",
+            "rdfs:subClassOf": {
+                "@id": "bts:OntologyClass"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:GeneOntologyClass",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "an ontology class that describes a functional aspect of a gene, gene prodoct or complex",
+            "rdfs:label": "GeneOntologyClass",
+            "rdfs:subClassOf": {
+                "@id": "bts:OntologyClass"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:OrganismTaxon",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "OrganismTaxon",
+            "rdfs:subClassOf": {
+                "@id": "bts:OntologyClass"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:OrganismalEntity",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A named entity that is either a part of an organism, a whole organism, population or clade of organisms, excluding molecular entities",
+            "rdfs:label": "OrganismalEntity",
+            "rdfs:subClassOf": {
+                "@id": "bts:BiologicalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:IndividualOrganism",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "IndividualOrganism",
+            "rdfs:subClassOf": {
+                "@id": "bts:OrganismalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Case",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "An individual organism that has a patient role in some clinical context.",
+            "rdfs:label": "Case",
+            "rdfs:subClassOf": {
+                "@id": "bts:IndividualOrganism"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:PopulationOfIndividualOrganisms",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "PopulationOfIndividualOrganisms",
+            "rdfs:subClassOf": {
+                "@id": "bts:OrganismalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Biosample",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "Biosample",
+            "rdfs:subClassOf": {
+                "@id": "bts:OrganismalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:DiseaseOrPhenotypicFeature",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Either one of a disease or an individual phenotypic feature. Some knowledge resources such as Monarch treat these as distinct, others such as MESH conflate.",
+            "rdfs:label": "DiseaseOrPhenotypicFeature",
+            "rdfs:subClassOf": {
+                "@id": "bts:BiologicalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Disease",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "Disease",
+            "rdfs:subClassOf": {
+                "@id": "bts:DiseaseOrPhenotypicFeature"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:PhenotypicFeature",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "PhenotypicFeature",
+            "rdfs:subClassOf": {
+                "@id": "bts:DiseaseOrPhenotypicFeature"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Environment",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A feature of the environment of an organism that influences one or more phenotypic features of that organism, potentially mediated by genes",
+            "rdfs:label": "Environment",
+            "rdfs:subClassOf": {
+                "@id": "bts:BiologicalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:InformationContentEntity",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "a piece of information that typically describes some piece of biology or is used as support.",
+            "rdfs:label": "InformationContentEntity",
+            "rdfs:subClassOf": {
+                "@id": "schema:Thing"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:ConfidenceLevel",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Level of confidence in a statement",
+            "rdfs:label": "ConfidenceLevel",
+            "rdfs:subClassOf": {
+                "@id": "bts:InformationContentEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:EvidenceType",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Class of evidence that supports an association",
+            "rdfs:label": "EvidenceType",
+            "rdfs:subClassOf": {
+                "@id": "bts:InformationContentEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Publication",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Any published piece of information. Can refer to a whole publication, or to a part of it (e.g. a figure, figure legend, or section highlighted by NLP). The scope is intended to be general and include information published on the web as well as journals.",
+            "rdfs:label": "Publication",
+            "rdfs:subClassOf": {
+                "@id": "bts:InformationContentEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:MolecularEntity",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A gene, gene product, small molecule or macromolecule (including protein complex)",
+            "rdfs:label": "MolecularEntity",
+            "rdfs:subClassOf": {
+                "@id": "bts:BiologicalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:ChemicalSubstance",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "May be a chemical entity or a formulation with a chemical entity as active ingredient, or a complex material with multiple chemical entities as part",
+            "rdfs:label": "ChemicalSubstance",
+            "rdfs:subClassOf": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Drug",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A substance intended for use in the diagnosis, cure, mitigation, treatment, or prevention of disease",
+            "rdfs:label": "Drug",
+            "rdfs:subClassOf": {
+                "@id": "bts:ChemicalSubstance"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Metabolite",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Any intermediate or product resulting from metabolism. Includes primary and secondary metabolites.",
+            "rdfs:label": "Metabolite",
+            "rdfs:subClassOf": {
+                "@id": "bts:ChemicalSubstance"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:AnatomicalEntity",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A subcellular location, cell type or gross anatomical part",
+            "rdfs:label": "AnatomicalEntity",
+            "rdfs:subClassOf": {
+                "@id": "bts:OrganismalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:LifeStage",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A stage of development or growth of an organism, including post-natal adult stages",
+            "rdfs:label": "LifeStage",
+            "rdfs:subClassOf": {
+                "@id": "bts:OrganismalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:PlanetaryEntity",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Any entity or process that exists at the level of the whole planet",
+            "rdfs:label": "PlanetaryEntity",
+            "rdfs:subClassOf": {
+                "@id": "schema:Thing"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:EnvironmentalProcess",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "EnvironmentalProcess",
+            "rdfs:subClassOf": {
+                "@id": "bts:PlanetaryEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:EnvironmentalFeature",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "EnvironmentalFeature",
+            "rdfs:subClassOf": {
+                "@id": "bts:PlanetaryEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:ClinicalEntity",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Any entity or process that exists in the clinical domain and outside the biological realm. Diseases are placed under biological entities",
+            "rdfs:label": "ClinicalEntity",
+            "rdfs:subClassOf": {
+                "@id": "schema:Thing"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:ClinicalTrial",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "ClinicalTrial",
+            "rdfs:subClassOf": {
+                "@id": "bts:ClinicalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:ClinicalIntervention",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "ClinicalIntervention",
+            "rdfs:subClassOf": {
+                "@id": "bts:ClinicalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Device",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A thing made or adapted for a particular purpose, especially a piece of mechanical or electronic equipment",
+            "rdfs:label": "Device",
+            "rdfs:subClassOf": {
+                "@id": "schema:Thing"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:GenomicEntity",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "an entity that can either be directly located on a genome (gene, transcript, exon, regulatory region) or is encoded in a genome (protein)",
+            "rdfs:label": "GenomicEntity",
+            "rdfs:subClassOf": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Genome",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A genome is the sum of genetic material within a cell or virion.",
+            "rdfs:label": "Genome",
+            "rdfs:subClassOf": {
+                "@id": "bts:GenomicEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Transcript",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "An RNA synthesized on a DNA or RNA template by an RNA polymerase",
+            "rdfs:label": "Transcript",
+            "rdfs:subClassOf": {
+                "@id": "bts:GenomicEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Exon",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A region of the transcript sequence within a gene which is not removed from the primary RNA transcript by RNA splicing",
+            "rdfs:label": "Exon",
+            "rdfs:subClassOf": {
+                "@id": "bts:GenomicEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:CodingSequence",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "CodingSequence",
+            "rdfs:subClassOf": {
+                "@id": "bts:GenomicEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:MacromolecularMachine",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A union of gene, gene product, and macromolecular complex. These are the basic units of function in a cell. They either carry out individual biological activities, or they encode molecules which do this.",
+            "rdfs:label": "MacromolecularMachine",
+            "rdfs:subClassOf": {
+                "@id": "bts:GenomicEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:GeneOrGeneProduct",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "a union of genes or gene products. Frequently an identifier for one will be used as proxy for another",
+            "rdfs:label": "GeneOrGeneProduct",
+            "rdfs:subClassOf": {
+                "@id": "bts:MacromolecularMachine"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Gene",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "Gene",
+            "rdfs:subClassOf": {
+                "@id": "bts:GeneOrGeneProduct"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:GeneProduct",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The functional molecular product of a single gene. Gene products are either proteins or functional RNA molecules",
+            "rdfs:label": "GeneProduct",
+            "rdfs:subClassOf": {
+                "@id": "bts:GeneOrGeneProduct"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Protein",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A gene product that is composed of a chain of amino acid sequences and is produced by ribosome-mediated translation of mRNA",
+            "rdfs:label": "Protein",
+            "rdfs:subClassOf": {
+                "@id": "bts:GeneProduct"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:GeneProductIsoform",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "This is an abstract class that can be mixed in with different kinds of gene products to indicate that the gene product is intended to represent a specific isoform rather than a canonical or reference or generic product. The designation of canonical or reference may be arbitrary, or it may represent the superclass of all isoforms.",
+            "rdfs:label": "GeneProductIsoform",
+            "rdfs:subClassOf": {
+                "@id": "bts:GeneProduct"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:ProteinIsoform",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Represents a protein that is a specific isoform of the canonical or reference protein. See https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4114032/",
+            "rdfs:label": "ProteinIsoform",
+            "rdfs:subClassOf": {
+                "@id": "bts:Protein"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:RnaProduct",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "RnaProduct",
+            "rdfs:subClassOf": {
+                "@id": "bts:GeneProduct"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:RnaProductIsoform",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Represents a protein that is a specific isoform of the canonical or reference RNA",
+            "rdfs:label": "RnaProductIsoform",
+            "rdfs:subClassOf": {
+                "@id": "bts:RnaProduct"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:NoncodingRnaProduct",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "NoncodingRnaProduct",
+            "rdfs:subClassOf": {
+                "@id": "bts:RnaProduct"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Microrna",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "Microrna",
+            "rdfs:subClassOf": {
+                "@id": "bts:NoncodingRnaProduct"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:MacromolecularComplex",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "MacromolecularComplex",
+            "rdfs:subClassOf": {
+                "@id": "bts:MacromolecularMachine"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:GeneFamily",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "any grouping of multiple genes or gene products related by common descent",
+            "rdfs:label": "GeneFamily",
+            "rdfs:subClassOf": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Genotype",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "An information content entity that describes a genome by specifying the total variation in genomic sequence and/or gene expression, relative to some extablished background",
+            "rdfs:label": "Genotype",
+            "rdfs:subClassOf": {
+                "@id": "bts:GenomicEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Haplotype",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A set of zero or more Alleles on a single instance of a Sequence[VMC]",
+            "rdfs:label": "Haplotype",
+            "rdfs:subClassOf": {
+                "@id": "bts:GenomicEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:SequenceVariant",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "An allele that varies in its sequence from what is considered the reference allele at that locus.",
+            "rdfs:label": "SequenceVariant",
+            "rdfs:subClassOf": {
+                "@id": "bts:GenomicEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:DrugExposure",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A drug exposure is an intake of a particular chemical substance",
+            "rdfs:label": "DrugExposure",
+            "rdfs:subClassOf": {
+                "@id": "bts:Environment"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Treatment",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A treatment is targeted at a disease or phenotype and may involve multiple drug 'exposures'",
+            "rdfs:label": "Treatment",
+            "rdfs:subClassOf": {
+                "@id": "bts:Environment"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:GeographicLocation",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "a location that can be described in lat/long coordinates",
+            "rdfs:label": "GeographicLocation",
+            "rdfs:subClassOf": {
+                "@id": "bts:PlanetaryEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:GeographicLocationAtTime",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "a location that can be described in lat/long coordinates, for a particular time",
+            "rdfs:label": "GeographicLocationAtTime",
+            "rdfs:subClassOf": {
+                "@id": "bts:GeographicLocation"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Occurrent",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A processual entity",
+            "rdfs:label": "Occurrent",
+            "rdfs:subClassOf": {
+                "@id": "schema:Thing"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:BiologicalProcessOrActivity",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Either an individual molecular activity, or a collection of causally connected molecular activities",
+            "rdfs:label": "BiologicalProcessOrActivity",
+            "rdfs:subClassOf": {
+                "@id": "bts:BiologicalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:MolecularActivity",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "An execution of a molecular function carried out by a gene product or macromolecular complex.",
+            "rdfs:label": "MolecularActivity",
+            "rdfs:subClassOf": {
+                "@id": "bts:BiologicalProcessOrActivity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:ActivityAndBehavior",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Activity or behavior of any independent integral living, organization or mechanical actor in the world",
+            "rdfs:label": "ActivityAndBehavior",
+            "rdfs:subClassOf": {
+                "@id": "bts:Occurrent"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Procedure",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A series of actions conducted in a certain order or manner",
+            "rdfs:label": "Procedure",
+            "rdfs:subClassOf": {
+                "@id": "bts:Occurrent"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Phenomenon",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "a fact or situation that is observed to exist or happen, especially one whose cause or explanation is in question",
+            "rdfs:label": "Phenomenon",
+            "rdfs:subClassOf": {
+                "@id": "bts:Occurrent"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:BiologicalProcess",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "One or more causally connected executions of molecular functions",
+            "rdfs:label": "BiologicalProcess",
+            "rdfs:subClassOf": {
+                "@id": "bts:BiologicalProcessOrActivity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Pathway",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "Pathway",
+            "rdfs:subClassOf": {
+                "@id": "bts:BiologicalProcess"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:PhysiologicalProcess",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "PhysiologicalProcess",
+            "rdfs:subClassOf": {
+                "@id": "bts:BiologicalProcess"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:CellularComponent",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A location in or around a cell",
+            "rdfs:label": "CellularComponent",
+            "rdfs:subClassOf": {
+                "@id": "bts:AnatomicalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:Cell",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "Cell",
+            "rdfs:subClassOf": {
+                "@id": "bts:AnatomicalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:CellLine",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "CellLine",
+            "rdfs:subClassOf": {
+                "@id": "bts:Biosample"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:GrossAnatomicalStructure",
+            "@type": "rdfs:Class",
+            "rdfs:comment": null,
+            "rdfs:label": "GrossAnatomicalStructure",
+            "rdfs:subClassOf": {
+                "@id": "bts:AnatomicalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            }
+        },
+        {
+            "@id": "bts:ensembl",
+            "@type": "rdf:Property",
+            "rdfs:comment": "Ensembl ID for gene, protein or transcript",
+            "rdfs:label": "ensembl",
+            "schema:domainIncludes": [
+                {
+                    "@id": "bts:Transcript"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "schema:Text"
+            }
+        },
+        {
+            "@id": "bts:hgnc",
+            "@type": "rdf:Property",
+            "rdfs:comment": "HGNC ID for gene",
+            "rdfs:label": "hgnc",
+            "schema:domainIncludes": {
+                "@id": "bts:Gene"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "schema:Integer"
+            }
+        },
+        {
+            "@id": "bts:entrez",
+            "@type": "rdf:Property",
+            "rdfs:comment": "Entrez ID for gene",
+            "rdfs:label": "entrez",
+            "schema:domainIncludes": {
+                "@id": "bts:Gene"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "schema:Integer"
+            }
+        },
+        {
+            "@id": "bts:refseq",
+            "@type": "rdf:Property",
+            "rdfs:comment": "Refseq ID for gene, protein or transcript",
+            "rdfs:label": "refseq",
+            "schema:domainIncludes": [
+                {
+                    "@id": "bts:Transcript"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "schema:Text"
+            }
+        },
+        {
+            "@id": "bts:omim",
+            "@type": "rdf:Property",
+            "rdfs:comment": "Refseq ID for gene, protein or transcript",
+            "rdfs:label": "omim",
+            "schema:domainIncludes": [
+                {
+                    "@id": "bts:Disease"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "schema:Integer"
+            }
+        },
+        {
+            "@id": "bts:umls",
+            "@type": "rdf:Property",
+            "rdfs:comment": "Refseq ID for gene, protein or transcript",
+            "rdfs:label": "umls",
+            "schema:domainIncludes": {
+                "@id": "bts:Disease"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "schema:Text"
+            }
+        },
+        {
+            "@id": "bts:homologousTo",
+            "@type": "rdf:Property",
+            "rdfs:comment": "Shared ancestry between protein or gene",
+            "rdfs:label": "homologousTo",
+            "schema:domainIncludes": {
+                "@id": "bts:GeneOrGeneProduct"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:GeneOrGeneProduct"
+            }
+        },
+        {
+            "@id": "bts:molecularlyInteractsWith",
+            "@type": "rdf:Property",
+            "rdfs:comment": null,
+            "rdfs:label": "molecularlyInteractsWith",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:geneticallyInteractsWith",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two genes whose phenotypic effects are dependent on each other in some way - such that their combined phenotypic effects are the result of some interaction between the activity of their gene products. Examples include epistasis and synthetic lethality.",
+            "rdfs:label": "geneticallyInteractsWith",
+            "schema:domainIncludes": {
+                "@id": "bts:Gene"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:Gene"
+            }
+        },
+        {
+            "@id": "bts:affectsAbundanceOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one changes the amount of the other within a system of interest",
+            "rdfs:label": "affectsAbundanceOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:increasesAbundanceOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one increases the amount of the other within a system of interest",
+            "rdfs:label": "increasesAbundanceOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:decreasesAbundanceOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one decreases the amount of the other within a system of interest",
+            "rdfs:label": "decreasesAbundanceOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:affectsActivityOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one changes the activity of the other within a system of interest",
+            "rdfs:label": "affectsActivityOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:increasesActivityOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one increases the activity of the other within a system of interest",
+            "rdfs:label": "increasesActivityOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:decreasesActivityOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one decreases the activity of the other within a system of interest",
+            "rdfs:label": "decreasesActivityOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:affectsExpressionOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one changes the level of expression of the other within a system of interest",
+            "rdfs:label": "affectsExpressionOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:GenomicEntity"
+            }
+        },
+        {
+            "@id": "bts:increasesExpressionOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one increases the level of expression of the other within a system of interest",
+            "rdfs:label": "increasesExpressionOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:GenomicEntity"
+            }
+        },
+        {
+            "@id": "bts:decreasesExpressionOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one decreases the level of expression of the other within a system of interest",
+            "rdfs:label": "decreasesExpressionOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:GenomicEntity"
+            }
+        },
+        {
+            "@id": "bts:affectsFoldingOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one changes the rate or quality of folding of the other ",
+            "rdfs:label": "affectsFoldingOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:increasesFoldingOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one increases the rate or quality of folding of the other ",
+            "rdfs:label": "increasesFoldingOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:decreasesFoldingOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one decreases the rate or quality of folding of the other ",
+            "rdfs:label": "decreasesFoldingOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:affectsLocalizationOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one changes the localization of the other within a system of interest",
+            "rdfs:label": "affectsLocalizationOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:increasesLocalizationOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one increases the proper localization of the other within a system of interest",
+            "rdfs:label": "increasesLocalizationOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:decreasesLocalizationOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one decreases the proper localization of the other within a system of interest",
+            "rdfs:label": "decreasesLocalizationOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:affectsMetabolicProcessingOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one impacts the metabolic processing of the other within a system of interest",
+            "rdfs:label": "affectsMetabolicProcessingOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:increasesMetabolicProcessingOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one increases the rate of metabolic processing of the other within a system of interest",
+            "rdfs:label": "increasesMetabolicProcessingOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:decreasesMetabolicProcessingOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one decreases the rate of metabolic processing of the other within a system of interest",
+            "rdfs:label": "decreasesMetabolicProcessingOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:affectsMolecularModificationOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one leads changes in the molecular modification(s) of the other (e.g. via post-translational modifications of proteins such as the addition of phosphoryl group, or via redox reaction that adds or subtracts electrons)",
+            "rdfs:label": "affectsMolecularModificationOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:increasesMolecularModificationOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one leads to increased molecular modification(s) of the other (e.g. via post-translational modifications of proteins such as the addition of phosphoryl group, or via redox reaction that adds or subtracts electrons)",
+            "rdfs:label": "increasesMolecularModificationOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:decreasesMolecularModificationOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one leads to decreased molecular modification(s) of the other (e.g. via post-translational modifications of proteins such as the addition of phosphoryl group, or via redox reaction that adds or subtracts electrons)",
+            "rdfs:label": "decreasesMolecularModificationOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:affectsSynthesisOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one impacts the rate of chemical synthesis of the other",
+            "rdfs:label": "affectsSynthesisOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:increasesSynthesisOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one increases the rate of chemical synthesis of the other",
+            "rdfs:label": "increasesSynthesisOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:decreasesSynthesisOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one decreases the rate of chemical synthesis of the other",
+            "rdfs:label": "decreasesSynthesisOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:affectsDegradationOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one impacts the rate of degradation of the other within a system of interest",
+            "rdfs:label": "affectsDegradationOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:increasesDegradationOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one increases the rate of degradation of the other within a system of interest",
+            "rdfs:label": "increasesDegradationOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:decreasesDegradationOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one decreases the rate of degradation of the other within a system of interest",
+            "rdfs:label": "decreasesDegradationOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:affectsMutationRateOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between a molecular entity and a genomic entity where the action or effect of the molecular entity impacts the rate of mutation of the genomic entity within a system of interest",
+            "rdfs:label": "affectsMutationRateOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:GenomicEntity"
+            }
+        },
+        {
+            "@id": "bts:increasesMutationRateOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between a molecular entity and a genomic entity where the action or effect of the molecular entity increases the rate of mutation of the genomic entity within a system of interest",
+            "rdfs:label": "increasesMutationRateOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:GenomicEntity"
+            }
+        },
+        {
+            "@id": "bts:decreasesMutationRateOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between a molecular entity and a genomic entity where the action or effect of the molecular entity decreases the rate of mutation of the genomic entity within a system of interest",
+            "rdfs:label": "decreasesMutationRateOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:GenomicEntity"
+            }
+        },
+        {
+            "@id": "bts:affectsResponseTo",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one impacts the susceptibility of a biological entity or system (e.g. an organism, cell, cellular component, macromolecular machine, biological or pathological process) to the other",
+            "rdfs:label": "affectsResponseTo",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:increasesResponseTo",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one increases the susceptibility of a biological entity or system (e.g. an organism, cell, cellular component, macromolecular machine, biological or pathological process) to the other",
+            "rdfs:label": "increasesResponseTo",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:decreasesResponseTo",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one decreases the susceptibility of a biological entity or system (e.g. an organism, cell, cellular component, macromolecular machine, biological or pathological process) to the other",
+            "rdfs:label": "decreasesResponseTo",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:affectsSplicingOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between a molecular entity and an mRNA where the action or effect of the molecular entity impacts the splicing of the mRNA",
+            "rdfs:label": "affectsSplicingOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:Transcript"
+            }
+        },
+        {
+            "@id": "bts:increasesSplicingOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between a molecular entity and an mRNA where the action or effect of the molecular entity increases the proper splicing of the mRNA",
+            "rdfs:label": "increasesSplicingOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:Transcript"
+            }
+        },
+        {
+            "@id": "bts:decreasesSplicingOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between a molecular entity and an mRNA where the action or effect of the molecular entity decreases the proper splicing of the mRNA",
+            "rdfs:label": "decreasesSplicingOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:Transcript"
+            }
+        },
+        {
+            "@id": "bts:affectsStabilityOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one impacts the stability of the other within a system of interest",
+            "rdfs:label": "affectsStabilityOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:increasesStabilityOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one increases the stability of the other within a system of interest",
+            "rdfs:label": "increasesStabilityOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:decreasesStabilityOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one decreases the stability of the other within a system of interest",
+            "rdfs:label": "decreasesStabilityOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:affectsTransportOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one impacts the rate of transport of the other across some boundary in a system of interest",
+            "rdfs:label": "affectsTransportOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:increasesTransportOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one increases the rate of transport of the other across some boundary in a system of interest",
+            "rdfs:label": "increasesTransportOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:decreasesTransportOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one decreases the rate of transport of the other across some boundary in a system of interest",
+            "rdfs:label": "decreasesTransportOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:affectsSecretionOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one impacts the rate of secretion of the other out of a cell, gland, or organ",
+            "rdfs:label": "affectsSecretionOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:increasesSecretionOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one increases the rate of secretion of the other out of a cell, gland, or organ",
+            "rdfs:label": "increasesSecretionOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:decreasesSecretionOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one decreases the rate of secretion of the other out of a cell, gland, or organ",
+            "rdfs:label": "decreasesSecretionOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:affectsUptakeOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one impacts the rate of uptake of the other into of a cell, gland, or organ",
+            "rdfs:label": "affectsUptakeOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:increasesUptakeOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one increases the rate of uptake of the other into of a cell, gland, or organ",
+            "rdfs:label": "increasesUptakeOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:decreasesUptakeOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two molecular entities where the action or effect of one decreases the rate of uptake of the other into of a cell, gland, or organ",
+            "rdfs:label": "decreasesUptakeOf",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:regulates,ProcessToProcess",
+            "@type": "rdf:Property",
+            "rdfs:comment": null,
+            "rdfs:label": "regulates,ProcessToProcess",
+            "schema:domainIncludes": {
+                "@id": "bts:Occurrent"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:Occurrent"
+            }
+        },
+        {
+            "@id": "bts:regulates,EntityToEntity",
+            "@type": "rdf:Property",
+            "rdfs:comment": null,
+            "rdfs:label": "regulates,EntityToEntity",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:hasGeneProduct",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between a gene and a transcribed and/or translated product generated from it",
+            "rdfs:label": "hasGeneProduct",
+            "schema:domainIncludes": {
+                "@id": "bts:Gene"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:GeneProduct"
+            }
+        },
+        {
+            "@id": "bts:inPathwayWith",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two genes or gene products that are part of in the same biological pathway",
+            "rdfs:label": "inPathwayWith",
+            "schema:domainIncludes": {
+                "@id": "bts:GeneOrGeneProduct"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:GeneOrGeneProduct"
+            }
+        },
+        {
+            "@id": "bts:inComplexWith",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two genes or gene products that are part of (or code for products that are part of) in the same macromolecular complex",
+            "rdfs:label": "inComplexWith",
+            "schema:domainIncludes": {
+                "@id": "bts:GeneOrGeneProduct"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:GeneOrGeneProduct"
+            }
+        },
+        {
+            "@id": "bts:inCellPopulationWith",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two genes or gene products that are expressed in the same cell type or population ",
+            "rdfs:label": "inCellPopulationWith",
+            "schema:domainIncludes": {
+                "@id": "bts:GeneOrGeneProduct"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:GeneOrGeneProduct"
+            }
+        },
+        {
+            "@id": "bts:geneAssociatedWithCondition",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between a gene and a disease or phenotypic feature that the gene or its alleles/products may influence, contribute to, or correlate with",
+            "rdfs:label": "geneAssociatedWithCondition",
+            "schema:domainIncludes": {
+                "@id": "bts:Gene"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:DiseaseOrPhenotypicFeature"
+            }
+        },
+        {
+            "@id": "bts:treats",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between a therapeutic procedure or chemical substance and a disease or phenotypic feature that it is used to treat",
+            "rdfs:label": "treats",
+            "schema:domainIncludes": {
+                "@id": "bts:Treatment"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:DiseaseOrPhenotypicFeature"
+            }
+        },
+        {
+            "@id": "bts:correlatedWith",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between a disease or phenotypic feature and a measurable molecular entity that is used as an indicator of the presence or state of the disease or feature.",
+            "rdfs:label": "correlatedWith",
+            "schema:domainIncludes": {
+                "@id": "bts:DiseaseOrPhenotypicFeature"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:hasBiomarker",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between a disease or phenotypic feature and a measurable molecular entity that is used as an indicator of the presence or state of the disease or feature.",
+            "rdfs:label": "hasBiomarker",
+            "schema:domainIncludes": {
+                "@id": "bts:DiseaseOrPhenotypicFeature"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:MolecularEntity"
+            }
+        },
+        {
+            "@id": "bts:biomarkerFor",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between a measurable molecular entity and a disease or phenotypic feature, where the entity is used as an indicator of the presence or state of the disease or feature.",
+            "rdfs:label": "biomarkerFor",
+            "schema:domainIncludes": {
+                "@id": "bts:MolecularEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:DiseaseOrPhenotypicFeature"
+            }
+        },
+        {
+            "@id": "bts:expressedIn",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between a gene or gene product and an anatomical entity in which it is expressed",
+            "rdfs:label": "expressedIn",
+            "schema:domainIncludes": {
+                "@id": "bts:GeneOrGeneProduct"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:AnatomicalEntity"
+            }
+        },
+        {
+            "@id": "bts:expresses",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between an anatomical entity and gene or gene product that is expressed there",
+            "rdfs:label": "expresses",
+            "schema:domainIncludes": {
+                "@id": "bts:AnatomicalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:GeneOrGeneProduct"
+            }
+        },
+        {
+            "@id": "bts:hasPhenotype",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between a biological entity and a phenotype, where a phenotype is construed broadly as any kind of quality of an organism part, a collection of these qualities, or a change in quality or qualities (e.g. abnormally increased temperature). ",
+            "rdfs:label": "hasPhenotype",
+            "schema:domainIncludes": {
+                "@id": "bts:BiologicalEntity"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:DiseaseOrPhenotypicFeature"
+            }
+        },
+        {
+            "@id": "bts:precedes",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two processes, where one completes before the other begins",
+            "rdfs:label": "precedes",
+            "schema:domainIncludes": {
+                "@id": "bts:Occurrent"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:Occurrent"
+            }
+        },
+        {
+            "@id": "bts:subclassOf",
+            "@type": "rdf:Property",
+            "rdfs:comment": "holds between two classes where the domain class is a specialization of the range class",
+            "rdfs:label": "subclassOf",
+            "schema:domainIncludes": {
+                "@id": "bts:OntologyClass"
+            },
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": {
+                "@id": "bts:OntologyClass"
+            }
+        },
+        {
+            "@id": "bts:SynID",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Synapse id.",
+            "rdfs:label": "SynID",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Synapse"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "SynID",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:EntityLevel",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Type of Synapse entity.",
+            "rdfs:label": "EntityLevel",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Synapse"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Project"
+                },
+                {
+                    "@id": "bts:Dataset"
+                },
+                {
+                    "@id": "bts:File"
+                }
+            ],
+            "sms:displayName": "EntityLevel",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:StudyName",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "StudyName",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Synapse"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Study Name",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:PIName",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "PIName",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Synapse"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "PI Name",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:FunderSponsor",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Main funder or sponsor associated with the asset.",
+            "rdfs:label": "FunderSponsor",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Synapse"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:NTAP"
+                },
+                {
+                    "@id": "bts:CTF"
+                },
+                {
+                    "@id": "bts:GFF"
+                },
+                {
+                    "@id": "bts:None"
+                }
+            ],
+            "sms:displayName": "Funder Sponsor",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:DSP",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "DSP",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "DSP",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:EthicsDocs",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "EthicsDocs",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Ethics Docs",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:OtherDocs",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "OtherDocs",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Other Docs",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:DataUsePermission",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Data use permission",
+            "rdfs:label": "DataUsePermission",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Diseasespecificresearch"
+                },
+                {
+                    "@id": "bts:Healthormedicalorbiomedicalresearch"
+                },
+                {
+                    "@id": "bts:Generalresearchuse"
+                },
+                {
+                    "@id": "bts:Norestriction"
+                },
+                {
+                    "@id": "bts:Populationoriginsorancestryresearchonly"
+                }
+            ],
+            "sms:displayName": "Data Use Permission",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Diseasespecificresearch",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Diseasespecificresearch",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUsePermission"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "disease specific research",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Healthormedicalorbiomedicalresearch",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Healthormedicalorbiomedicalresearch",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUsePermission"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "health or medical or biomedical research",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Generalresearchuse",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Generalresearchuse",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUsePermission"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "general research use",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Norestriction",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Norestriction",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUsePermission"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "no restriction",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Populationoriginsorancestryresearchonly",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Populationoriginsorancestryresearchonly",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUsePermission"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "population origins or ancestry research only",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:DataUseModifier",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Data use modifiers indicate additional conditions for use.",
+            "rdfs:label": "DataUseModifier",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Data Use Modifier",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ClinicalCareUse",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Use is allowed for clinical use and care.",
+            "rdfs:label": "ClinicalCareUse",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "Clinical Care Use",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:CollaborationRequired",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Collaboration with primary study PI(s) is required to use data.",
+            "rdfs:label": "CollaborationRequired",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "Collaboration Required",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:EthicsApprovalRequired",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Use requires ethics approval.",
+            "rdfs:label": "EthicsApprovalRequired",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "Ethics Approval Required",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:GeneticStudiesOnly",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Use is limited to genetic studies only.",
+            "rdfs:label": "GeneticStudiesOnly",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "Genetic Studies Only",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:GeographicalRestriction",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Use limited to within a specific geographic region.",
+            "rdfs:label": "GeographicalRestriction",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Geographical Restriction",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:InstitutionSpecificRestriction",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Whether data can only be used by certain institutions.",
+            "rdfs:label": "InstitutionSpecificRestriction",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "Institution Specific Restriction",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:NoGeneralMethodsResearch",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Cannot use for general methods research.",
+            "rdfs:label": "NoGeneralMethodsResearch",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "No General Methods Research",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Non-CommercialUseOnly",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Non-commercial use only",
+            "rdfs:label": "Non-CommercialUseOnly",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "Non-Commercial Use Only",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Not-For-ProfitOrganizationUseOnly",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Non-profit organization use only",
+            "rdfs:label": "Not-For-ProfitOrganizationUseOnly",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "Not-For-Profit Organization Use Only",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Populationoriginsorancestryresearchprohibited",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Whether data use for for population origins or ancestry research is prohibited",
+            "rdfs:label": "Populationoriginsorancestryresearchprohibited",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "Population origins or ancestry research prohibited",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ProjectSpecificRestriction",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Whether there is project specific restriction.",
+            "rdfs:label": "ProjectSpecificRestriction",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "Project Specific Restriction",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ProjectSpecificRestrictionDetail",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Type of project restriction.",
+            "rdfs:label": "ProjectSpecificRestrictionDetail",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:AcceptStandardTermsofUse"
+                },
+                {
+                    "@id": "bts:IDUStatement"
+                }
+            ],
+            "sms:displayName": "Project Specific Restriction Detail",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:PublicationMoratorium",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Data user agrees not to publish results of studies until a specific date.",
+            "rdfs:label": "PublicationMoratorium",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "Publication Moratorium",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:PublicationRequired",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Data user agrees to make any results from using the data available to the larger scientific community.",
+            "rdfs:label": "PublicationRequired",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "Publication Required",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ResearchSpecificRestriction",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Use is limited to studies of a certain research type.",
+            "rdfs:label": "ResearchSpecificRestriction",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "Research Specific Restriction",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ResearchSpecificRestrictionDetail",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Type of research restriction.",
+            "rdfs:label": "ResearchSpecificRestrictionDetail",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Research Specific Restriction Detail",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ReturntoDatabaseorResource",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Whether data has to be returned to database or resource.",
+            "rdfs:label": "ReturntoDatabaseorResource",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "Return to Database or Resource",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:TimeLimitonUse",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Time period allowed for data use, after which renewal is required for continued use.",
+            "rdfs:label": "TimeLimitonUse",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:6months"
+                },
+                {
+                    "@id": "bts:12months"
+                },
+                {
+                    "@id": "bts:Notimelimitonuse"
+                }
+            ],
+            "sms:displayName": "Time Limit on Use",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:UserSpecificRestriction",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Use is limited to users of certain type.",
+            "rdfs:label": "UserSpecificRestriction",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TRUE"
+                },
+                {
+                    "@id": "bts:FALSE"
+                }
+            ],
+            "sms:displayName": "User Specific Restriction",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:UserSpecificRestrictionDetail",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Type of user that can use the data.",
+            "rdfs:label": "UserSpecificRestrictionDetail",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataUseModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:SynapseRegistered"
+                },
+                {
+                    "@id": "bts:SynapseCertified"
+                },
+                {
+                    "@id": "bts:SynapseValidated"
+                },
+                {
+                    "@id": "bts:RASaccount"
+                },
+                {
+                    "@id": "bts:ERACommonsID"
+                },
+                {
+                    "@id": "bts:ORCiD"
+                },
+                {
+                    "@id": "bts:Teammembership"
+                },
+                {
+                    "@id": "bts:Googleauthenticated"
+                },
+                {
+                    "@id": "bts:NIHSecurityTraining"
+                }
+            ],
+            "sms:displayName": "User Specific Restriction Detail",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:SourceGeography",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Where the data came from",
+            "rdfs:label": "SourceGeography",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GovernanceExtAnnotation"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Source Geography",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Jurisdiction",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Country/region under which data governance laws apply",
+            "rdfs:label": "Jurisdiction",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GovernanceExtAnnotation"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Jurisdiction",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Label",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Data label.",
+            "rdfs:label": "Label",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GovernanceExtAnnotation"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Non-HumanData"
+                },
+                {
+                    "@id": "bts:Raw"
+                },
+                {
+                    "@id": "bts:De-identified"
+                },
+                {
+                    "@id": "bts:Pseudoanonymized"
+                },
+                {
+                    "@id": "bts:Anonymized"
+                },
+                {
+                    "@id": "bts:PHI-PII"
+                }
+            ],
+            "sms:displayName": "Label",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:DataSensitivity",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Data identifiability.",
+            "rdfs:label": "DataSensitivity",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GovernanceExtAnnotation"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Synthetic"
+                },
+                {
+                    "@id": "bts:Anonymized"
+                },
+                {
+                    "@id": "bts:Metadata"
+                },
+                {
+                    "@id": "bts:HIPAASafeHarbor"
+                },
+                {
+                    "@id": "bts:HIPAAExpertde-identified"
+                },
+                {
+                    "@id": "bts:Pseudoanonymized(GDPR)"
+                },
+                {
+                    "@id": "bts:RestrictedDe-identified"
+                },
+                {
+                    "@id": "bts:Largescaleomics"
+                },
+                {
+                    "@id": "bts:SensitiveData(GDPR)"
+                },
+                {
+                    "@id": "bts:ImagesandBiometric"
+                },
+                {
+                    "@id": "bts:HIPAALimited"
+                }
+            ],
+            "sms:displayName": "Data Sensitivity",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:DataTier",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Data tier.",
+            "rdfs:label": "DataTier",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GovernanceExtAnnotation"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:ControlledAccess"
+                },
+                {
+                    "@id": "bts:Private"
+                }
+            ],
+            "sms:displayName": "Data Tier",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ReleaseDate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Release date – when data can be requested by others.",
+            "rdfs:label": "ReleaseDate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GovernanceExtAnnotation"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Release Date",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Attribution",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Acknowledgement statement.",
+            "rdfs:label": "Attribution",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GovernanceExtAnnotation"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Attribution",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:License",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "License of the data or other asset. Some licenses require attribution.",
+            "rdfs:label": "License",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GovernanceExtAnnotation"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Nonespecified"
+                }
+            ],
+            "sms:displayName": "License",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Disposition",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Handling of data after usage ends.",
+            "rdfs:label": "Disposition",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GovernanceExtAnnotation"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Delete"
+                },
+                {
+                    "@id": "bts:DeletionwithCertificateofDestruction"
+                },
+                {
+                    "@id": "bts:ReturntoContributor"
+                }
+            ],
+            "sms:displayName": "Disposition",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Synthetic",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Computational data derivative that statistically resembles the original data",
+            "rdfs:label": "Synthetic",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Anonymous"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Synthetic",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Anonymized",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Data that cannot be used alone or with other data to identify a unique individual",
+            "rdfs:label": "Anonymized",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Anonymous"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Anonymized",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Metadata",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Dataset description, file annotation, counts and summary statistics",
+            "rdfs:label": "Metadata",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:De-identified"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Metadata",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:HIPAASafeHarbor",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Data stripped of 18 direct identifieres per HIPAA rules",
+            "rdfs:label": "HIPAASafeHarbor",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:De-identified"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "HIPAA Safe Harbor",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:HIPAAExpertde-identified",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Data that an expert in statistical and scientific method has determined presents a very small risk to be used to identify an individual",
+            "rdfs:label": "HIPAAExpertde-identified",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:De-identified"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "HIPAA Expert de-identified",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Pseudoanonymized(GDPR)",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Data where individual identifiers have been replaced by a code or pseudo (false identifier)",
+            "rdfs:label": "Pseudoanonymized(GDPR)",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:De-identified"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Pseudoanonymized (GDPR)",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:RestrictedDe-identified",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "De-identified data whose usage is limited by contractual use.",
+            "rdfs:label": "RestrictedDe-identified",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:De-identified-with-Restriction"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Restricted De-identified",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Largescaleomics",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Includes genomics, metabolomics, transcriptomics, and proteomics.",
+            "rdfs:label": "Largescaleomics",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Controlled"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Large scale omics",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:SensitiveData(GDPR)",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Data relating to religion, politics, health or sex life.",
+            "rdfs:label": "SensitiveData(GDPR)",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Controlled"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Sensitive Data (GDPR)",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ImagesandBiometric",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Includes images, fingerprints, facial patterns, voice or typing cadence obtained from technical processing.",
+            "rdfs:label": "ImagesandBiometric",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Controlled"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Images and Biometric",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:HIPAALimited",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Data stripped of 16 direct identifiers but that may contain (dates, full zip code, and any age)",
+            "rdfs:label": "HIPAALimited",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Controlled-Plus"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "HIPAA Limited",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:InternalNotes",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "InternalNotes",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Other"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Internal Notes",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:IDUStatement",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Intended Data Use statement.",
+            "rdfs:label": "IDUStatement",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:InitialAccessModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "IDU Statement",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:AcceptStandardTermsofUse",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Need to accept terms of use (implemented as click-wrap) to access and use data.",
+            "rdfs:label": "AcceptStandardTermsofUse",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:InitialAccessModifier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Accept Standard Terms of Use",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:GovernanceTemplate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "GovernanceTemplate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "GovernanceTemplate",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Attribute"
+                },
+                {
+                    "@id": "bts:SynID"
+                },
+                {
+                    "@id": "bts:EntityLevel"
+                },
+                {
+                    "@id": "bts:StudyName"
+                },
+                {
+                    "@id": "bts:PIName"
+                },
+                {
+                    "@id": "bts:FunderSponsor"
+                },
+                {
+                    "@id": "bts:DSP"
+                },
+                {
+                    "@id": "bts:EthicsDocs"
+                },
+                {
+                    "@id": "bts:OtherDocs"
+                },
+                {
+                    "@id": "bts:DataUsePermission"
+                },
+                {
+                    "@id": "bts:ClinicalCareUse"
+                },
+                {
+                    "@id": "bts:CollaborationRequired"
+                },
+                {
+                    "@id": "bts:EthicsApprovalRequired"
+                },
+                {
+                    "@id": "bts:GeneticStudiesOnly"
+                },
+                {
+                    "@id": "bts:GeographicalRestriction"
+                },
+                {
+                    "@id": "bts:InstitutionSpecificRestriction"
+                },
+                {
+                    "@id": "bts:NoGeneralMethodsResearch"
+                },
+                {
+                    "@id": "bts:Non-CommercialUseOnly"
+                },
+                {
+                    "@id": "bts:Not-For-ProfitOrganizationUseOnly"
+                },
+                {
+                    "@id": "bts:Populationoriginsorancestryresearchprohibited"
+                },
+                {
+                    "@id": "bts:ProjectSpecificRestriction"
+                },
+                {
+                    "@id": "bts:ProjectSpecificRestrictionDetail"
+                },
+                {
+                    "@id": "bts:PublicationMoratorium"
+                },
+                {
+                    "@id": "bts:PublicationRequired"
+                },
+                {
+                    "@id": "bts:ResearchSpecificRestriction"
+                },
+                {
+                    "@id": "bts:ResearchSpecificRestrictionDetail"
+                },
+                {
+                    "@id": "bts:ReturntoDatabaseorResource"
+                },
+                {
+                    "@id": "bts:TimeLimitonUse"
+                },
+                {
+                    "@id": "bts:UserSpecificRestriction"
+                },
+                {
+                    "@id": "bts:UserSpecificRestrictionDetail"
+                },
+                {
+                    "@id": "bts:SourceGeography"
+                },
+                {
+                    "@id": "bts:Jurisdiction"
+                },
+                {
+                    "@id": "bts:Label"
+                },
+                {
+                    "@id": "bts:DataSensitivity"
+                },
+                {
+                    "@id": "bts:DataTier"
+                },
+                {
+                    "@id": "bts:ReleaseDate"
+                },
+                {
+                    "@id": "bts:Attribution"
+                },
+                {
+                    "@id": "bts:License"
+                },
+                {
+                    "@id": "bts:Disposition"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Project",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Project",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:EntityLevel"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Project",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Dataset",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Dataset",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:EntityLevel"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Dataset",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:File",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "File",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:EntityLevel"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "File",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:NTAP",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "NTAP",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:FunderSponsor"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "NTAP",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:CTF",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "CTF",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:FunderSponsor"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "CTF",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:GFF",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "GFF",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:FunderSponsor"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "GFF",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:None",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "None",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:FunderSponsor"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "None",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:TRUE",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "TRUE",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Diseasespecificresearch"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "TRUE",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:FALSE",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "FALSE",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Diseasespecificresearch"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "FALSE",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:6months",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "6months",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:TimeLimitonUse"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "6 months",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:12months",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "12months",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:TimeLimitonUse"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "12 months",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Notimelimitonuse",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Notimelimitonuse",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:TimeLimitonUse"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "no time limit on use",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:SynapseRegistered",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "SynapseRegistered",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:UserSpecificRestrictionDetail"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Synapse Registered",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:SynapseCertified",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "SynapseCertified",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:UserSpecificRestrictionDetail"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Synapse Certified",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:SynapseValidated",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "SynapseValidated",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:UserSpecificRestrictionDetail"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Synapse Validated",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:RASaccount",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "RASaccount",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:UserSpecificRestrictionDetail"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "RAS account",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ERACommonsID",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "ERACommonsID",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:UserSpecificRestrictionDetail"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "eRA Commons ID",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ORCiD",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "ORCiD",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:UserSpecificRestrictionDetail"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "ORCiD",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Teammembership",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Teammembership",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:UserSpecificRestrictionDetail"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Team membership",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Googleauthenticated",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Googleauthenticated",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:UserSpecificRestrictionDetail"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Google authenticated",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:NIHSecurityTraining",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "NIHSecurityTraining",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:UserSpecificRestrictionDetail"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "NIH Security Training",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Non-HumanData",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Non-HumanData",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Label"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Non-Human Data",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Raw",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Raw",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Label"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Raw",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Pseudoanonymized",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Pseudoanonymized",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Label"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Pseudoanonymized",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:PHI-PII",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "PHI-PII",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Label"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "PHI-PII",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ControlledAccess",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "ControlledAccess",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataTier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Controlled Access",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Private",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Private",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataTier"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Private",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Nonespecified",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Nonespecified",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:License"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "None specified",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Delete",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Delete",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Disposition"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Delete",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:DeletionwithCertificateofDestruction",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "DeletionwithCertificateofDestruction",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Disposition"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Deletion with Certificate of Destruction",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ReturntoContributor",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "ReturntoContributor",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Disposition"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Return to Contributor",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Attribute",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Attribute",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GovernanceTemplate"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Attribute",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        }
+    ],
+    "@id": "http://schema.biothings.io/#0.1"
+}

@@ -1,0 +1,60 @@
+Attribute,Description,Valid Values,DependsOn,Required,Source,Parent,Properties,DependsOn Component,Validation Rules,Note,NF Norm,LegalSource,Who,When,Updateable
+SynID,Synapse id.,,,TRUE,,Synapse,,,,,,,,,
+EntityLevel,Type of Synapse entity.,"Project, Dataset, File",,TRUE,,Synapse,,,,,,,,,
+Study Name,,,,TRUE,,Synapse,,,,,,,,,
+PI Name,,,,TRUE,,Synapse,,,,,,,,,
+Funder Sponsor,Main funder or sponsor associated with the asset.,"NTAP, CTF, GFF, None",,TRUE,,Synapse,,,,,,,,,
+DSP,,,,,,,,,,,,,,,
+Ethics Docs,,,,,,,,,,,,,,,
+Other Docs,,,,,,,,,,,,,,,
+Data Use Permission,Data use permission,"disease specific research, health or medical or biomedical research, general research use, no restriction, population origins or ancestry research only",,TRUE,http://purl.obolibrary.org/obo/DUO_0000001,,,,,,Only GFF-funded projects default to “disease specific research” (other funder projects may default to “health or medical or biomedical research”),Funder/NF-OSI agreement?,"F,P,I",Init,No
+disease specific research  ,,"TRUE, FALSE",,TRUE,,Data Use Permission,,,,,,,,,
+health or medical or biomedical research,,"TRUE, FALSE",,TRUE,,Data Use Permission,,,,,,,,,
+general research use,,"TRUE, FALSE",,TRUE,,Data Use Permission,,,,,,,,,
+no restriction,,"TRUE, FALSE",,TRUE,,Data Use Permission,,,,,,,,,
+population origins or ancestry research only,,"TRUE, FALSE",,TRUE,,Data Use Permission,,,,,,,,,
+Data Use Modifier,Data use modifiers indicate additional conditions for use.,,,TRUE,,,,,,,,,,,
+Clinical Care Use,Use is allowed for clinical use and care.,"TRUE, FALSE",,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+Collaboration Required,Collaboration with primary study PI(s) is required to use data.,"TRUE, FALSE",,TRUE,,Data Use Modifier,,,,,Discouraged,,,CloseOut,Yes
+Ethics Approval Required,Use requires ethics approval.,"TRUE, FALSE",,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+Genetic Studies Only,Use is limited to genetic studies only.,"TRUE, FALSE",,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+Geographical Restriction,Use limited to within a specific geographic region.,,,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+Institution Specific Restriction,Whether data can only be used by certain institutions.,"TRUE, FALSE",,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+No General Methods Research,Cannot use for general methods research.,"TRUE, FALSE",,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+Non-Commercial Use Only,Non-commercial use only,"TRUE, FALSE",,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+Not-For-Profit Organization Use Only,Non-profit organization use only,"TRUE, FALSE",,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+Population origins or ancestry research prohibited,Whether data use for for population origins or ancestry research is prohibited,"TRUE, FALSE",,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+Project Specific Restriction,Whether there is project specific restriction.,"TRUE, FALSE",,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+Project Specific Restriction Detail,Type of project restriction.,"Accept Standard Terms of Use, IDU Statement",,TRUE,,Data Use Modifier,,,,,,,,,
+Publication Moratorium,Data user agrees not to publish results of studies until a specific date.,"TRUE, FALSE",,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+Publication Required,Data user agrees to make any results from using the data available to the larger scientific community.,"TRUE, FALSE",,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+Research Specific Restriction,Use is limited to studies of a certain research type.,"TRUE, FALSE",,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+Research Specific Restriction Detail,Type of research restriction.,,,TRUE,,Data Use Modifier,,,,,,,,,
+Return to Database or Resource,Whether data has to be returned to database or resource.,"TRUE, FALSE",,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+Time Limit on Use,"Time period allowed for data use, after which renewal is required for continued use.","6 months, 12 months, no time limit on use",,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+User Specific Restriction,Use is limited to users of certain type.,"TRUE, FALSE",,TRUE,,Data Use Modifier,,,,,Most NF Synapse projects require at least Synapse registered account,,,CloseOut,Yes
+User Specific Restriction Detail,Type of user that can use the data.,"Synapse Registered, Synapse Certified, Synapse Validated, RAS account, eRA Commons ID, ORCiD, Team membership, Google authenticated, NIH Security Training",,TRUE,,Data Use Modifier,,,,,,,,CloseOut,Yes
+Source Geography,Where the data came from,,,TRUE,,Governance Ext Annotation,,,,,Varies,,,"Init, CloseOut",Yes
+Jurisdiction,Country/region under which data governance laws apply,,,TRUE,,Governance Ext Annotation,,,,,Varies,,,,
+Label,Data label.,"Non-Human Data, Raw, De-identified, Pseudoanonymized, Anonymized, PHI-PII",,TRUE,,Governance Ext Annotation,,,,,Varies,,,CloseOut,Yes
+Data Sensitivity,Data identifiability.,"Synthetic, Anonymized, Metadata, HIPAA Safe Harbor, HIPAA Expert de-identified, Pseudoanonymized (GDPR), Restricted De-identified, Large scale omics, Sensitive Data (GDPR), Images and Biometric, HIPAA Limited",,TRUE,,Governance Ext Annotation,,,,,Varies,,,"Init, CloseOut",Yes
+Data Tier,Data tier.,"Controlled Access, Private",,TRUE,,Governance Ext Annotation,,,,,Varies,,,"Init, CloseOut",Yes
+Release Date,Release date – when data can be requested by others.,,,TRUE,,Governance Ext Annotation,,,,,Generally after embargo period,,,"Init, CloseOut",Yes
+Attribution,Acknowledgement statement.,,,TRUE,,Governance Ext Annotation,,,,,Unspecified,,,"Init, CloseOut",Yes
+License,License of the data or other asset. Some licenses require attribution.,None specified,,TRUE,,Governance Ext Annotation,,,,,Unspecified,,,"Init, CloseOut",Yes
+Disposition,Handling of data after usage ends.,"Delete, Deletion with Certificate of Destruction, Return to Contributor",,TRUE,,Governance Ext Annotation,,,,,Unspecified,,,CloseOut,Yes
+Synthetic,Computational data derivative that statistically resembles the original data,,,FALSE,,Anonymous,,,,,,,,,
+Anonymized,Data that cannot be used alone or with other data to identify a unique individual,,,FALSE,,Anonymous,,,,,,,,,
+Metadata,"Dataset description, file annotation, counts and summary statistics",,,FALSE,,De-identified,,,,,,,,,
+HIPAA Safe Harbor,Data stripped of 18 direct identifieres per HIPAA rules,,,FALSE,,De-identified,,,,,,,,,
+HIPAA Expert de-identified,Data that an expert in statistical and scientific method has determined presents a very small risk to be used to identify an individual,,,FALSE,,De-identified,,,,,,,,,
+Pseudoanonymized (GDPR),Data where individual identifiers have been replaced by a code or pseudo (false identifier),,,FALSE,,De-identified,,,,,,,,,
+Restricted De-identified,De-identified data whose usage is limited by contractual use.,,,FALSE,,De-identified-with-Restriction,,,,,,,,,
+Large scale omics,"Includes genomics, metabolomics, transcriptomics, and proteomics.",,,FALSE,,Controlled,,,,,,,,,
+Sensitive Data (GDPR),"Data relating to religion, politics, health or sex life.",,,FALSE,,Controlled,,,,,,,,,
+Images and Biometric,"Includes images, fingerprints, facial patterns, voice or typing cadence obtained from technical processing.",,,FALSE,,Controlled,,,,,,,,,
+HIPAA Limited,"Data stripped of 16 direct identifiers but that may contain (dates, full zip code, and any age)",,,FALSE,,Controlled-Plus,,,,,,,,,
+Internal Notes,,,,FALSE,,Other,,,,,,,,,
+IDU Statement,Intended Data Use statement.,,,FALSE,,Initial Access Modifier,,,,,,,,,
+Accept Standard Terms of Use,Need to accept terms of use (implemented as click-wrap) to access and use data.,,,FALSE,,Initial Access Modifier,,,,,,,,,
+GovernanceTemplate,,,"Attribute, SynID, EntityLevel, Study Name, PI Name, Funder Sponsor, DSP, Ethics Docs, Other Docs , Data Use Permission, Clinical Care Use, Collaboration Required, Ethics Approval Required, Genetic Studies Only, Geographical Restriction, Institution Specific Restriction, No General Methods Research, Non-Commercial Use Only, Not-For-Profit Organization Use Only, Population origins or ancestry research prohibited, Project Specific Restriction, Project Specific Restriction Detail, Publication Moratorium, Publication Required, Research Specific Restriction, Research Specific Restriction Detail, Return to Database or Resource, Time Limit on Use, User Specific Restriction, User Specific Restriction Detail, Source Geography, Jurisdiction, Label, Data Sensitivity, Data Tier, Release Date, Attribution, License, Disposition ",,,,,,,,,,,,
