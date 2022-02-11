@@ -2020,7 +2020,7 @@
         {
             "@id": "bts:StudyName",
             "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
+            "rdfs:comment": "Study name",
             "rdfs:label": "StudyName",
             "rdfs:subClassOf": [
                 {
@@ -2030,14 +2030,14 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "Study Name",
+            "sms:displayName": "StudyName",
             "sms:required": "sms:true",
             "sms:validationRules": []
         },
         {
             "@id": "bts:PIName",
             "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
+            "rdfs:comment": "Name of PI(s)",
             "rdfs:label": "PIName",
             "rdfs:subClassOf": [
                 {
@@ -2047,7 +2047,7 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "PI Name",
+            "sms:displayName": "PIName",
             "sms:required": "sms:true",
             "sms:validationRules": []
         },
@@ -2078,14 +2078,16 @@
                     "@id": "bts:None"
                 }
             ],
-            "sms:displayName": "Funder Sponsor",
+            "sms:displayName": "FunderSponsor",
             "sms:required": "sms:true",
-            "sms:validationRules": []
+            "sms:validationRules": [
+                "list"
+            ]
         },
         {
             "@id": "bts:DSP",
             "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
+            "rdfs:comment": "Data Sharing Plan reference",
             "rdfs:label": "DSP",
             "rdfs:subClassOf": [
                 {
@@ -2102,7 +2104,7 @@
         {
             "@id": "bts:EthicsDocs",
             "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
+            "rdfs:comment": "Ethics docs link",
             "rdfs:label": "EthicsDocs",
             "rdfs:subClassOf": [
                 {
@@ -2112,14 +2114,14 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "Ethics Docs",
+            "sms:displayName": "EthicsDocs",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
             "@id": "bts:OtherDocs",
             "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
+            "rdfs:comment": "Other relevant docs",
             "rdfs:label": "OtherDocs",
             "rdfs:subClassOf": [
                 {
@@ -2129,7 +2131,7 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "Other Docs",
+            "sms:displayName": "OtherDocs",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -2180,16 +2182,8 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "schema:rangeIncludes": [
-                {
-                    "@id": "bts:TRUE"
-                },
-                {
-                    "@id": "bts:FALSE"
-                }
-            ],
             "sms:displayName": "disease specific research",
-            "sms:required": "sms:true",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -2205,16 +2199,8 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "schema:rangeIncludes": [
-                {
-                    "@id": "bts:TRUE"
-                },
-                {
-                    "@id": "bts:FALSE"
-                }
-            ],
             "sms:displayName": "health or medical or biomedical research",
-            "sms:required": "sms:true",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -2230,16 +2216,8 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "schema:rangeIncludes": [
-                {
-                    "@id": "bts:TRUE"
-                },
-                {
-                    "@id": "bts:FALSE"
-                }
-            ],
             "sms:displayName": "general research use",
-            "sms:required": "sms:true",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -2255,16 +2233,8 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "schema:rangeIncludes": [
-                {
-                    "@id": "bts:TRUE"
-                },
-                {
-                    "@id": "bts:FALSE"
-                }
-            ],
             "sms:displayName": "no restriction",
-            "sms:required": "sms:true",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -2280,16 +2250,8 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "schema:rangeIncludes": [
-                {
-                    "@id": "bts:TRUE"
-                },
-                {
-                    "@id": "bts:FALSE"
-                }
-            ],
             "sms:displayName": "population origins or ancestry research only",
-            "sms:required": "sms:true",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -2599,7 +2561,9 @@
             ],
             "sms:displayName": "Project Specific Restriction Detail",
             "sms:required": "sms:true",
-            "sms:validationRules": []
+            "sms:validationRules": [
+                "list"
+            ]
         },
         {
             "@id": "bts:PublicationMoratorium",
@@ -2852,10 +2816,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:Label",
+            "@id": "bts:GovCategory",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Data label.",
-            "rdfs:label": "Label",
+            "rdfs:comment": "Governance category",
+            "rdfs:label": "GovCategory",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:GovernanceExtAnnotation"
@@ -2884,8 +2848,93 @@
                     "@id": "bts:PHI-PII"
                 }
             ],
-            "sms:displayName": "Label",
+            "sms:displayName": "Gov Category",
             "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Non-HumanData",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Non-HumanData",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GovCategory"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Non-Human Data",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Raw",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Raw",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GovCategory"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Raw",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:De-identified",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "De-identified",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GovCategory"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "De-identified",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Pseudoanonymized",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Pseudoanonymized",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GovCategory"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Pseudoanonymized",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:PHI-PII",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "PHI-PII",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GovCategory"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "PHI-PII",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -3294,7 +3343,7 @@
             "rdfs:label": "GovernanceTemplate",
             "rdfs:subClassOf": [
                 {
-                    "@id": "schema:Thing"
+                    "@id": "bts:Template"
                 }
             ],
             "schema:isPartOf": {
@@ -3303,9 +3352,6 @@
             "sms:displayName": "GovernanceTemplate",
             "sms:required": "sms:false",
             "sms:requiresDependency": [
-                {
-                    "@id": "bts:Attribute"
-                },
                 {
                     "@id": "bts:SynID"
                 },
@@ -3400,7 +3446,7 @@
                     "@id": "bts:Jurisdiction"
                 },
                 {
-                    "@id": "bts:Label"
+                    "@id": "bts:GovCategory"
                 },
                 {
                     "@id": "bts:DataSensitivity"
@@ -3430,7 +3476,7 @@
             "rdfs:label": "Project",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:EntityLevel"
+                    "@id": "schema:Thing"
                 }
             ],
             "schema:isPartOf": {
@@ -3447,7 +3493,7 @@
             "rdfs:label": "Dataset",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:EntityLevel"
+                    "@id": "schema:Thing"
                 }
             ],
             "schema:isPartOf": {
@@ -3464,7 +3510,7 @@
             "rdfs:label": "File",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:EntityLevel"
+                    "@id": "schema:Thing"
                 }
             ],
             "schema:isPartOf": {
@@ -3481,7 +3527,7 @@
             "rdfs:label": "NTAP",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:FunderSponsor"
+                    "@id": "bts:Funder"
                 }
             ],
             "schema:isPartOf": {
@@ -3498,7 +3544,7 @@
             "rdfs:label": "CTF",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:FunderSponsor"
+                    "@id": "bts:Funder"
                 }
             ],
             "schema:isPartOf": {
@@ -3515,7 +3561,7 @@
             "rdfs:label": "GFF",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:FunderSponsor"
+                    "@id": "bts:Funder"
                 }
             ],
             "schema:isPartOf": {
@@ -3532,7 +3578,7 @@
             "rdfs:label": "None",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:FunderSponsor"
+                    "@id": "schema:Thing"
                 }
             ],
             "schema:isPartOf": {
@@ -3549,7 +3595,7 @@
             "rdfs:label": "TRUE",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:Diseasespecificresearch"
+                    "@id": "bts:ClinicalCareUse"
                 }
             ],
             "schema:isPartOf": {
@@ -3566,7 +3612,7 @@
             "rdfs:label": "FALSE",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:Diseasespecificresearch"
+                    "@id": "bts:ClinicalCareUse"
                 }
             ],
             "schema:isPartOf": {
@@ -3781,74 +3827,6 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:Non-HumanData",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "Non-HumanData",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Label"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "Non-Human Data",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:Raw",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "Raw",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Label"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "Raw",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:Pseudoanonymized",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "Pseudoanonymized",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Label"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "Pseudoanonymized",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:PHI-PII",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "PHI-PII",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Label"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "PHI-PII",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
             "@id": "bts:ControlledAccess",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
@@ -3947,23 +3925,6 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "Return to Contributor",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:Attribute",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "Attribute",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:GovernanceTemplate"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "Attribute",
             "sms:required": "sms:false",
             "sms:validationRules": []
         }
