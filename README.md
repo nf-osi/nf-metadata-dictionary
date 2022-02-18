@@ -15,3 +15,7 @@ Versioning (MAJOR.MINOR.PATCH) is roughly following semver.org concepts where:
 ## Browse the metadata dictionary
 
 You can browse the metadata dictionary here: https://nf-osi.github.io/nf-metadata-dictionary/.
+
+## License
+
+The "collection" of metadata terms in this repository is made available under a CC0 license. The individual terms and their definitions may be subject to other (permissive) licenses, please see the source for each metadata term for details. 
