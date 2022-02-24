@@ -3532,10 +3532,10 @@
             },
             "schema:rangeIncludes": [
                 {
-                    "@id": "bts:Teratoma"
+                    "@id": "bts:CutaneousNeurofibroma"
                 },
                 {
-                    "@id": "bts:CutaneousNeurofibroma"
+                    "@id": "bts:SubcutaneousNeurofibroma"
                 },
                 {
                     "@id": "bts:PlexiformNeurofibroma"
@@ -3548,6 +3548,45 @@
                 },
                 {
                     "@id": "bts:Glioma"
+                },
+                {
+                    "@id": "bts:LowGradeGlioma"
+                },
+                {
+                    "@id": "bts:DiffuseAstrocytoma"
+                },
+                {
+                    "@id": "bts:AnaplasticAstrocytoma"
+                },
+                {
+                    "@id": "bts:Glioblastoma"
+                },
+                {
+                    "@id": "bts:Schwannoma"
+                },
+                {
+                    "@id": "bts:Meningioma"
+                },
+                {
+                    "@id": "bts:Normal"
+                },
+                {
+                    "@id": "bts:Teratoma"
+                },
+                {
+                    "@id": "bts:MassiveSoftTissueNeurofibroma"
+                },
+                {
+                    "@id": "bts:DiffuseInfiltratingNeurofibroma"
+                },
+                {
+                    "@id": "bts:LocalizedNeurofibroma"
+                },
+                {
+                    "@id": "bts:Neurofibroma"
+                },
+                {
+                    "@id": "bts:NeurofibromawithDegenerativeAtypia"
                 },
                 {
                     "@id": "bts:Low-GradeGliomaNOS"
@@ -3578,48 +3617,6 @@
                 },
                 {
                     "@id": "bts:Unknown"
-                },
-                {
-                    "@id": "bts:AnaplasticAstrocytoma"
-                },
-                {
-                    "@id": "bts:Glioblastoma"
-                },
-                {
-                    "@id": "bts:Schwannoma"
-                },
-                {
-                    "@id": "bts:Meningioma"
-                },
-                {
-                    "@id": "bts:MassiveSoftTissueNeurofibroma"
-                },
-                {
-                    "@id": "bts:DiffuseInfiltratingNeurofibroma"
-                },
-                {
-                    "@id": "bts:LocalizedNeurofibroma"
-                },
-                {
-                    "@id": "bts:NeurofibromawithDegenerativeAtypia"
-                },
-                {
-                    "@id": "bts:Neurofibroma"
-                },
-                {
-                    "@id": "bts:AnaplasticPleomorphicXanthoastrocytoma"
-                },
-                {
-                    "@id": "bts:Ganglioglioma"
-                },
-                {
-                    "@id": "bts:AnaplasticGanglioglioma"
-                },
-                {
-                    "@id": "bts:OpticPathwayGlioma"
-                },
-                {
-                    "@id": "bts:NotApplicable"
                 }
             ],
             "sms:displayName": "tumorType",
@@ -14356,6 +14353,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:SubcutaneousNeurofibroma",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A neurofibroma that occurs along the peripheral nerves beneath the skin.",
+            "rdfs:label": "SubcutaneousNeurofibroma",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:TumorType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Subcutaneous Neurofibroma",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:PlexiformNeurofibroma",
             "@type": "rdfs:Class",
             "rdfs:comment": "An elongated and multinodular neurofibroma, formed when the tumor involves either multiple trunks of a plexus or multiple fascicles of a large nerve, such as the sciatic. Some plexiform neurofibromas resemble a bag of worms, others produce a massive ropy enlargement of the nerve.",
@@ -14743,74 +14757,6 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "Neurofibroma",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:AnaplasticPleomorphicXanthoastrocytoma",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "APXA",
-            "rdfs:label": "AnaplasticPleomorphicXanthoastrocytoma",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:TumorType"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "Anaplastic Pleomorphic Xanthoastrocytoma",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:Ganglioglioma",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "GNG",
-            "rdfs:label": "Ganglioglioma",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:TumorType"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "Ganglioglioma",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:AnaplasticGanglioglioma",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "AGNG",
-            "rdfs:label": "AnaplasticGanglioglioma",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:TumorType"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "Anaplastic Ganglioglioma",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:OpticPathwayGlioma",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "A glioma that affects the optic nerve. This condition can be seen in association with neurofibromatosis 1. It is most commonly seen in the pediatric age group. ",
-            "rdfs:label": "OpticPathwayGlioma",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:TumorType"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "Optic Pathway Glioma",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -16301,6 +16247,23 @@
                 }
             ],
             "sms:displayName": "ageUnit",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:LowGradeGlioma",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "LowGradeGlioma",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:TumorType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Low Grade Glioma",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
