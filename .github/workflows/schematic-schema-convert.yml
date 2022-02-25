@@ -1,0 +1,69 @@
+name: schematic-schema-convert
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches:    
+      - '**'        # matches every branch
+      - '!main'   # excludes main
+
+  workflow_dispatch:
+
+env:
+  schema_filename: NF.csv
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pip python3.8-venv libcurl4-openssl-dev
+
+      - name: Create and Activate Python Virtual Environment
+        shell: bash
+        run: |
+          python3 -m venv .venv
+          chmod 755 .venv/bin/activate
+          source .venv/bin/activate
+          
+      - name: Install Python Packages Dependencies
+        shell: bash
+        run: |
+          source .venv/bin/activate
+          pip3 install -r requirements.txt
+          
+      - name: Install Schematic
+        shell: bash
+        run: |
+          source .venv/bin/activate
+          # use 'poetry' to install schematic from the develop branch 
+          pip3 install poetry
+          git clone --single-branch --branch develop https://github.com/Sage-Bionetworks/schematic.git
+          cd schematic
+          poetry build
+          pip3 install dist/schematicpy-1.0.0-py3-none-any.whl
+     
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
+          fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+
+      - name: Create local changes
+        run: |
+          schematic schema convert $schema_filename
+    
+      - name: Commit files
+        run: |
+          git config --local user.email "nf-osi@sagebionetworks.org"
+          git config --local user.name "nf-osi[bot]"
+          git commit -m "Add changes" -a
+    
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+         branch: ${{ github.ref }}
