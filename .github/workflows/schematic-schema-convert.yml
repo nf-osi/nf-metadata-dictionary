@@ -34,7 +34,7 @@ jobs:
           python3 -m venv .venv
           chmod 755 .venv/bin/activate
           source .venv/bin/activate
-          pip3 install schematic
+          pip3 install schematicpy
           schematic schema convert $schema_filename
     
       - name: Commit files
