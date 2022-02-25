@@ -1,0 +1,50 @@
+name: schematic-schema-convert
+
+on:
+  push:
+    branches:    
+      - '**'      # matches every branch
+      - '!main'   # excludes main
+    paths:
+      - 'NF.csv'
+
+  workflow_dispatch:
+
+env:
+  schema_filename: NF.csv
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pip python3.8-venv libcurl4-openssl-dev
+      
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
+          fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository
+ 
+      - name: Install schematic and convert schema
+        shell: bash
+        run: |
+          python3 -m venv .venv
+          chmod 755 .venv/bin/activate
+          source .venv/bin/activate
+          pip3 install schematicpy
+          schematic schema convert $schema_filename
+    
+      - name: Commit files
+        run: |
+          git config --local user.email "nf-osi@sagebionetworks.org"
+          git config --local user.name "nf-osi[bot]"
+          git commit -m "Add changes" -a
+    
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+         branch: ${{ github.ref }}
