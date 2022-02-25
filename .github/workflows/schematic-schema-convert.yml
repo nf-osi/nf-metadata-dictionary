@@ -27,23 +27,14 @@ jobs:
         with:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
           fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository
-
-      - name: Create and Activate Python Virtual Environment
+ 
+      - name: Install schematic and convert schema
         shell: bash
         run: |
           python3 -m venv .venv
           chmod 755 .venv/bin/activate
           source .venv/bin/activate
-          
-      - name: Install Schematic
-        shell: bash
-        run: |
-          source .venv/bin/activate
           pip3 install schematic
-     
-      - name: Create local changes
-        run: |
-          source .venv/bin/activate
           schematic schema convert $schema_filename
     
       - name: Commit files
