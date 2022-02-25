@@ -43,6 +43,7 @@ jobs:
 
       - name: Create local changes
         run: |
+          source .venv/bin/activate
           schematic schema convert $schema_filename
     
       - name: Commit files
