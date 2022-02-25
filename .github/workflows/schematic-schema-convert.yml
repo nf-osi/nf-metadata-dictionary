@@ -36,6 +36,8 @@ jobs:
           source .venv/bin/activate
           pip3 install schematicpy
           schematic schema convert $schema_filename
+          pwd
+          ls
     
       - name: Commit files
         run: |
