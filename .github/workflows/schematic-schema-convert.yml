@@ -5,7 +5,7 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches:    
-      - '**'        # matches every branch
+      - '**'      # matches every branch
       - '!main'   # excludes main
 
   workflow_dispatch:
@@ -36,8 +36,6 @@ jobs:
           source .venv/bin/activate
           pip3 install schematicpy
           schematic schema convert $schema_filename
-          pwd
-          ls
     
       - name: Commit files
         run: |
