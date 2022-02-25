@@ -30,22 +30,11 @@ jobs:
           chmod 755 .venv/bin/activate
           source .venv/bin/activate
           
-      - name: Install Python Packages Dependencies
-        shell: bash
-        run: |
-          source .venv/bin/activate
-          pip3 install -r requirements.txt
-          
       - name: Install Schematic
         shell: bash
         run: |
           source .venv/bin/activate
-          # use 'poetry' to install schematic from the develop branch 
-          pip3 install poetry
-          git clone --single-branch --branch develop https://github.com/Sage-Bionetworks/schematic.git
-          cd schematic
-          poetry build
-          pip3 install dist/schematicpy-1.0.0-py3-none-any.whl
+          pip3 install schematic
      
       - uses: actions/checkout@v2
         with:
