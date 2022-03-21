@@ -3346,6 +3346,74 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:FTIRSpectroscopy",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Fourier transform infrared (FTIR) spectroscopy is a technique used to obtain an infrared spectrum of absorption or emission of a solid, liquid or gas. An FTIR spectrometer simultaneously collects high-resolution spectral data over a wide spectral range.",
+            "rdfs:label": "FTIRSpectroscopy",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "FTIR Spectroscopy",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Rheometry",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The study of the flow of fluids which cannot be defined by a single value of viscosity. Rheometry (synonym: rheology) is the measurement of the relationship between deformation and stress for these liquids. [ https://orcid.org/0000-0002-0640-0422 ] ",
+            "rdfs:label": "Rheometry",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "rheometry",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Gelfiltrationchromatography",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Gel filtration chromatography (synonym: gel permeation chromatography - GPC) is a type of size-exclusion chromatography (SEC), that separates analytes on the basis of size, typically in organic solvents. The technique is often used for the analysis of polymers.",
+            "rdfs:label": "Gelfiltrationchromatography",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Gel filtration chromatography",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Differentialscanningcalorimetry",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Differential scanning calorimetry (DSC) is the measurement of thermodynamic parameters (e.g. enthalpy) during a chemical or biochemical reaction of both a sample and a reference, by the known variation (step-wise or linear) of one variable, whilst a second is kept constant.",
+            "rdfs:label": "Differentialscanningcalorimetry",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "differential scanning calorimetry",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:MRISequence",
             "@type": "rdfs:Class",
             "rdfs:comment": "The scanning sequence/modality that is used for a conventional MRI scan. ",
@@ -5644,6 +5712,18 @@
                 },
                 {
                     "@id": "bts:2DAlamarBlueabsorbance"
+                },
+                {
+                    "@id": "bts:Rheometry"
+                },
+                {
+                    "@id": "bts:FTIRSpectroscopy"
+                },
+                {
+                    "@id": "bts:Differentialscanningcalorimetry"
+                },
+                {
+                    "@id": "bts:Gelfiltrationchromatography"
                 }
             ],
             "sms:displayName": "assay",
@@ -7670,7 +7750,7 @@
         {
             "@id": "bts:Rscript",
             "@type": "rdfs:Class",
-            "rdfs:comment": "R Script",
+            "rdfs:comment": "R script with expected extension “.R”.",
             "rdfs:label": "Rscript",
             "rdfs:subClassOf": [
                 {
@@ -7789,7 +7869,7 @@
         {
             "@id": "bts:Pythonscript",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Python is an interpreted, object-oriented, high-level programming language with dynamic semantics.",
+            "rdfs:comment": "Python script with expected extension “.py”. ",
             "rdfs:label": "Pythonscript",
             "rdfs:subClassOf": [
                 {
@@ -7800,6 +7880,40 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "Python script",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:MATLABscript",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A MATLAB script file with expected extension “.m”. Note that files with a “.mat” extension contains MATLAB formatted data.",
+            "rdfs:label": "MATLABscript",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:FileFormat"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "MATLAB script",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:MATLABdata",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A MATLAB formatted data file with expected extension “.mat”.",
+            "rdfs:label": "MATLABdata",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:FileFormat"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "MATLAB data",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -11069,6 +11183,129 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:SourceCodeTemplate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A template that can be used for annotating scripts or source code for a software application.",
+            "rdfs:label": "SourceCodeTemplate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Template"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "sourceCodeTemplate",
+            "sms:required": "sms:true",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Filename"
+                },
+                {
+                    "@id": "bts:ProgressReportNumber"
+                },
+                {
+                    "@id": "bts:FileFormat"
+                },
+                {
+                    "@id": "bts:ResourceType"
+                },
+                {
+                    "@id": "bts:ProgrammingLanguage"
+                },
+                {
+                    "@id": "bts:Documentation"
+                },
+                {
+                    "@id": "bts:RuntimePlatform"
+                },
+                {
+                    "@id": "bts:Comments"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ProgrammingLanguage",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A computer programming language",
+            "rdfs:label": "ProgrammingLanguage",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Python"
+                },
+                {
+                    "@id": "bts:R"
+                },
+                {
+                    "@id": "bts:MATLAB"
+                },
+                {
+                    "@id": "bts:Java"
+                },
+                {
+                    "@id": "bts:C"
+                },
+                {
+                    "@id": "bts:C++"
+                },
+                {
+                    "@id": "bts:C#"
+                },
+                {
+                    "@id": "bts:Javascript"
+                },
+                {
+                    "@id": "bts:Bash"
+                }
+            ],
+            "sms:displayName": "programmingLanguage",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:RuntimePlatform",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Runtime platform or script interpreter dependencies (e.g. Java v1, Python 2.3).",
+            "rdfs:label": "RuntimePlatform",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "runtimePlatform",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Documentation",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "URL to any documentation describing the resource and its use.",
+            "rdfs:label": "Documentation",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "documentation",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:-/-",
             "@type": "rdfs:Class",
             "rdfs:comment": "Homozygous deletion or mutation of NF1.",
@@ -13063,59 +13300,6 @@
             },
             "sms:displayName": "experimentalData",
             "sms:required": "sms:false",
-            "sms:requiresDependency": [
-                {
-                    "@id": "bts:DataType"
-                },
-                {
-                    "@id": "bts:DataSubtype"
-                },
-                {
-                    "@id": "bts:SpecimenID"
-                },
-                {
-                    "@id": "bts:IndividualID"
-                },
-                {
-                    "@id": "bts:Species"
-                },
-                {
-                    "@id": "bts:Diagnosis"
-                },
-                {
-                    "@id": "bts:IsCellLine"
-                },
-                {
-                    "@id": "bts:Sex"
-                },
-                {
-                    "@id": "bts:Tissue"
-                },
-                {
-                    "@id": "bts:TumorType"
-                },
-                {
-                    "@id": "bts:Nf1Genotype"
-                },
-                {
-                    "@id": "bts:Nf2Genotype"
-                },
-                {
-                    "@id": "bts:GenePerturbationType"
-                },
-                {
-                    "@id": "bts:GenePerturbed"
-                },
-                {
-                    "@id": "bts:ExperimentalCondition"
-                },
-                {
-                    "@id": "bts:ExperimentalTimepoint"
-                },
-                {
-                    "@id": "bts:TimePointUnit"
-                }
-            ],
             "sms:validationRules": []
         },
         {
@@ -13565,6 +13749,12 @@
                 },
                 {
                     "@id": "bts:Sf"
+                },
+                {
+                    "@id": "bts:MATLABscript"
+                },
+                {
+                    "@id": "bts:MATLABdata"
                 }
             ],
             "sms:displayName": "fileFormat",
@@ -15381,7 +15571,7 @@
         {
             "@id": "bts:Comments",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Brief free-text comments that may also be important to understanding the data. ",
+            "rdfs:comment": "Brief free-text comments that may also be important to understanding the resource.",
             "rdfs:label": "Comments",
             "rdfs:subClassOf": [
                 {
@@ -16474,6 +16664,159 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "-/?",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Python",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Python",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ProgrammingLanguage"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Python",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:R",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "R",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ProgrammingLanguage"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "R",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:MATLAB",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "MATLAB",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ProgrammingLanguage"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "MATLAB",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Java",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Java",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ProgrammingLanguage"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Java",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:C",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "C",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ProgrammingLanguage"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "C",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:C++",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "C++",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ProgrammingLanguage"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "C++",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:C#",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "C#",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ProgrammingLanguage"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "C#",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Javascript",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Javascript",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ProgrammingLanguage"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Javascript",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Bash",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Bash",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ProgrammingLanguage"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "bash",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
