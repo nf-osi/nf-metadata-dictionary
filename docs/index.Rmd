@@ -444,7 +444,7 @@ basicTable(cell_table)
 ```{r tumor_table, echo=FALSE}
 
 tumor_table <- schema %>%
-  filter(Parent == "tumorType") %>%
+  filter(Parent == "tumorType" | Parent == "Tumor") %>%
   select(Attribute, Description, DependsOn)
 
 basicTable(tumor_table)
