@@ -11511,12 +11511,84 @@
             },
             "sms:displayName": "individualID",
             "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Sex"
+                },
+                {
+                    "@id": "bts:Age"
+                },
+                {
+                    "@id": "bts:AgeUnit"
+                },
+                {
+                    "@id": "bts:Species"
+                },
+                {
+                    "@id": "bts:Diagnosis"
+                },
+                {
+                    "@id": "bts:Nf1Genotype"
+                },
+                {
+                    "@id": "bts:Nf2Genotype"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ParentSpecimenID",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor. The parentSpecimenIDcan be the same as specimenID when there is no subsectioning.",
+            "rdfs:label": "ParentSpecimenID",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "parentSpecimenID",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:SpecimenID"
+                },
+                {
+                    "@id": "bts:AliquotID"
+                },
+                {
+                    "@id": "bts:Organ"
+                },
+                {
+                    "@id": "bts:Tissue"
+                },
+                {
+                    "@id": "bts:IsCellLine"
+                },
+                {
+                    "@id": "bts:IsPrimaryCell"
+                },
+                {
+                    "@id": "bts:CellType"
+                },
+                {
+                    "@id": "bts:TumorType"
+                },
+                {
+                    "@id": "bts:SpecimenPreparationMethod"
+                },
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
             "sms:validationRules": []
         },
         {
             "@id": "bts:SpecimenID",
             "@type": "rdfs:Class",
-            "rdfs:comment": "A unique identifier (non-PII) that represents the specimen (sample) from which the data came. e.g. an ID that indicates a specific tumor specimen.",
+            "rdfs:comment": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came, e.g. an ID that distinguishes between different parts of the same parent tumor specimen. This can be the A A unique identifier (non-PII) that represents the",
             "rdfs:label": "SpecimenID",
             "rdfs:subClassOf": [
                 {
@@ -11527,6 +11599,40 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "specimenID",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:SpecimenIDSource",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Optional annotation describing where the specimen ID source derived from, e.g. the biobank providing samples or a providing lab.",
+            "rdfs:label": "SpecimenIDSource",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "specimenIDSource",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:AliquotID",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID. ",
+            "rdfs:label": "AliquotID",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "aliquotID",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -11929,6 +12035,11 @@
             },
             "sms:displayName": "age",
             "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:AgeUnit"
+                }
+            ],
             "sms:validationRules": []
         },
         {
