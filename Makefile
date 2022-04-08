@@ -1,3 +1,5 @@
+CSV := NF.csv
+
 all: collate convert
 
 collate:
@@ -7,3 +9,4 @@ collate:
 
 convert:
 	schematic schema convert ${CSV}
+
