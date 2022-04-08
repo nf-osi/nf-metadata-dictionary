@@ -10,11 +10,11 @@ library(tidyverse)
 # schema <- readExtSchema("NF.csv")
 readExtSchema <- function(schema_csv, ext_classes_csv = "ext_classes.csv") {
   schema <- read.csv(schema_csv) %>%
-    select(label = Attribute, id = .ID, Root = .Root, SubclassOf = .SubclassOf)
+    select(label = Attribute, id = .ID, Root = .Root, SubOf = .SubOf)
   
   # Extended class definitions
   ext_classes <- read.csv(ext_classes_csv) %>%
-    select(label = Attribute, id = .ID, Root = .Root, SubclassOf = .SubclassOf)
+    select(label = Attribute, id = .ID, Root = .Root, SubOf = .SubOf)
   
   ext_schema <- rbind(schema, ext_classes)
   ext_schema
@@ -38,8 +38,8 @@ getNodesEdges <- function(schema, cluster_root,
   A <- paste(prefix, "A", sep = "_")
   C <- paste(prefix, "C", sep = "_")
   nodes <- cluster %>%
-    select(id, label, SubclassOf) %>%
-    mutate(group = ifelse(SubclassOf %in% c(cluster_root, ""), A, C),
+    select(id, label, SubOf) %>%
+    mutate(group = ifelse(SubOf %in% c(cluster_root, ""), A, C),
            color = ifelse(group == A, nodes$color$A, nodes$color$C),
            font.color = ifelse(group == A, nodes$font.color$A, nodes$font.color$C)) 
   
@@ -49,8 +49,8 @@ getNodesEdges <- function(schema, cluster_root,
   }
   
   edges <- cluster %>%
-    filter(SubclassOf != "") %>% # Remove root from edges
-    select(from = id, to = SubclassOf)
+    filter(SubOf != "") %>% # Remove root from edges
+    select(from = id, to = SubOf)
   
   return(list(nodes = nodes, edges = edges))
 }
