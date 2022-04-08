@@ -3412,7 +3412,7 @@
             "rdfs:label": "CompoundScreen",
             "rdfs:subClassOf": [
                 {
-                    "@id": "schema:Thing"
+                    "@id": "bts:Assay"
                 }
             ],
             "schema:isPartOf": {
@@ -3429,7 +3429,7 @@
             "rdfs:label": "Array",
             "rdfs:subClassOf": [
                 {
-                    "@id": "schema:Thing"
+                    "@id": "bts:Assay"
                 }
             ],
             "schema:isPartOf": {
@@ -5128,65 +5128,6 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:GenePerturbationType",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "Specific way in which a single gene was perturbed in a sample",
-            "rdfs:label": "GenePerturbationType",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Cancer"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "schema:rangeIncludes": [
-                {
-                    "@id": "bts:Overexpression"
-                },
-                {
-                    "@id": "bts:Knockdown"
-                },
-                {
-                    "@id": "bts:Knockout"
-                },
-                {
-                    "@id": "bts:NotApplicable"
-                }
-            ],
-            "sms:displayName": "genePerturbationType",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:GenePerturbationTechnology",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "Technology used to perform gene perturbation",
-            "rdfs:label": "GenePerturbationTechnology",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Cancer"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "schema:rangeIncludes": [
-                {
-                    "@id": "bts:RNAi"
-                },
-                {
-                    "@id": "bts:CRISPR"
-                },
-                {
-                    "@id": "bts:CRERecombinase"
-                }
-            ],
-            "sms:displayName": "genePerturbationTechnology",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
             "@id": "bts:DrugScreenType",
             "@type": "rdfs:Class",
             "rdfs:comment": "String describing general class of drug screen",
@@ -6114,31 +6055,6 @@
             },
             "sms:displayName": "readDepth",
             "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:GenePerturbed",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "The HUGO gene symbol for the gene that is perturbed.",
-            "rdfs:label": "GenePerturbed",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:SageCommunity"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "genePerturbed",
-            "sms:required": "sms:false",
-            "sms:requiresDependency": [
-                {
-                    "@id": "bts:GenePerturbationType"
-                },
-                {
-                    "@id": "bts:GenePerturbationTechnology"
-                }
-            ],
             "sms:validationRules": []
         },
         {
@@ -10861,7 +10777,7 @@
             "sms:displayName": "tumorType",
             "sms:required": "sms:false",
             "sms:validationRules": [
-                "list"
+                "a6"
             ]
         },
         {
@@ -11384,9 +11300,7 @@
             ],
             "sms:displayName": "cellType",
             "sms:required": "sms:false",
-            "sms:validationRules": [
-                "list"
-            ]
+            "sms:validationRules": []
         },
         {
             "@id": "bts:IsMultiIndividual",
@@ -11918,9 +11832,7 @@
             ],
             "sms:displayName": "modelSystemName",
             "sms:required": "sms:false",
-            "sms:validationRules": [
-                "list"
-            ]
+            "sms:validationRules": []
         },
         {
             "@id": "bts:Nf2Genotype",
@@ -15963,7 +15875,7 @@
             "rdfs:label": "TransplantationRecipientTissue",
             "rdfs:subClassOf": [
                 {
-                    "@id": "schema:Thing"
+                    "@id": "bts:SageCommunity"
                 }
             ],
             "schema:isPartOf": {
@@ -16066,6 +15978,90 @@
             },
             "sms:displayName": "InChIKey",
             "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:GenePerturbationType",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Specific way in which a single gene was perturbed in a sample",
+            "rdfs:label": "GenePerturbationType",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Cancer"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Overexpression"
+                },
+                {
+                    "@id": "bts:Knockdown"
+                },
+                {
+                    "@id": "bts:Knockout"
+                },
+                {
+                    "@id": "bts:NotApplicable"
+                }
+            ],
+            "sms:displayName": "genePerturbationType",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:GenePerturbationTechnology",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Technology used to perform gene perturbation",
+            "rdfs:label": "GenePerturbationTechnology",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Cancer"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:RNAi"
+                },
+                {
+                    "@id": "bts:CRISPR"
+                },
+                {
+                    "@id": "bts:CRERecombinase"
+                }
+            ],
+            "sms:displayName": "genePerturbationTechnology",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:GenePerturbed",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The HUGO gene symbol for the gene that is perturbed.",
+            "rdfs:label": "GenePerturbed",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:SageCommunity"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "genePerturbed",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:GenePerturbationType"
+                },
+                {
+                    "@id": "bts:GenePerturbationTechnology"
+                }
+            ],
             "sms:validationRules": []
         },
         {
@@ -16270,7 +16266,7 @@
         {
             "@id": "bts:ImagingAssayTemplate",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Generic template for describing data from an MRI assay. This is a one-step template.",
+            "rdfs:comment": "Generic template for describing data from an imaging type assay (IHC, etc). This is a one-step template.",
             "rdfs:label": "ImagingAssayTemplate",
             "rdfs:subClassOf": [
                 {
@@ -16312,42 +16308,6 @@
                 },
                 {
                     "@id": "bts:ParentSpecimenID"
-                },
-                {
-                    "@id": "bts:Comments"
-                },
-                {
-                    "@id": "bts:Filename"
-                },
-                {
-                    "@id": "bts:ResourceType"
-                },
-                {
-                    "@id": "bts:ProgressReportNumber"
-                },
-                {
-                    "@id": "bts:DataType"
-                },
-                {
-                    "@id": "bts:Assay"
-                },
-                {
-                    "@id": "bts:Platform"
-                },
-                {
-                    "@id": "bts:IndividualID"
-                },
-                {
-                    "@id": "bts:ParentSpecimenID"
-                },
-                {
-                    "@id": "bts:ExperimentalCondition"
-                },
-                {
-                    "@id": "bts:ExperimentalTimepoint"
-                },
-                {
-                    "@id": "bts:MRISequence"
                 },
                 {
                     "@id": "bts:Comments"
@@ -16417,10 +16377,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:ImagingAssayTemplate",
+            "@id": "bts:MRIAssayTemplate",
             "@type": "rdfs:Class",
             "rdfs:comment": "Generic template for describing data from an MRI assay. This is a one-step template.",
-            "rdfs:label": "ImagingAssayTemplate",
+            "rdfs:label": "MRIAssayTemplate",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:Template"
@@ -16429,8 +16389,46 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "imagingAssayTemplate",
+            "sms:displayName": "MRIAssayTemplate",
             "sms:required": "sms:true",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Filename"
+                },
+                {
+                    "@id": "bts:ResourceType"
+                },
+                {
+                    "@id": "bts:ProgressReportNumber"
+                },
+                {
+                    "@id": "bts:DataType"
+                },
+                {
+                    "@id": "bts:Assay"
+                },
+                {
+                    "@id": "bts:Platform"
+                },
+                {
+                    "@id": "bts:IndividualID"
+                },
+                {
+                    "@id": "bts:ParentSpecimenID"
+                },
+                {
+                    "@id": "bts:ExperimentalCondition"
+                },
+                {
+                    "@id": "bts:ExperimentalTimepoint"
+                },
+                {
+                    "@id": "bts:MRISequence"
+                },
+                {
+                    "@id": "bts:Comments"
+                }
+            ],
             "sms:validationRules": []
         },
         {
@@ -17105,10 +17103,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:BiospecimenTemplate",
+            "@id": "bts:BiospecimenTemplateNormalized",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Denormalized template for describing biospecimen data that includes all individual-level data as well.",
-            "rdfs:label": "BiospecimenTemplate",
+            "rdfs:comment": "Base template for describing biospecimen-level data.",
+            "rdfs:label": "BiospecimenTemplateNormalized",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:Template"
@@ -17152,7 +17150,7 @@
                     "@id": "bts:ModelSystemName"
                 }
             ],
-            "sms:displayName": "biospecimenTemplate",
+            "sms:displayName": "biospecimenTemplate_Normalized",
             "sms:required": "sms:false",
             "sms:requiresDependency": [
                 {
@@ -17187,7 +17185,26 @@
                 },
                 {
                     "@id": "bts:ModelSystemName"
-                },
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:BiospecimenTemplate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Denormalized template for describing biospecimen data that includes all individual-level data as well.",
+            "rdfs:label": "BiospecimenTemplate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Template"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "biospecimenTemplate",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
                 {
                     "@id": "bts:IndividualID"
                 },
@@ -17198,27 +17215,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:BiospecimenTemplate",
+            "@id": "bts:DataFileComponent",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Denormalized template for describing biospecimen data that includes all individual-level data as well.",
-            "rdfs:label": "BiospecimenTemplate",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Template"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "biospecimenTemplate",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:DataFileTemplate",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "Base template for describing a data file resource that extends fileTemplate_Default with required properties dataType and dataSubtype.",
-            "rdfs:label": "DataFileTemplate",
+            "rdfs:comment": "Template component for describing a data file resource that extends fileTemplate_Default with required properties dataType and dataSubtype.",
+            "rdfs:label": "DataFileComponent",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:Template"
@@ -17247,7 +17247,7 @@
                     "@id": "bts:DataSubtype"
                 }
             ],
-            "sms:displayName": "dataFileTemplate",
+            "sms:displayName": "dataFileComponent",
             "sms:required": "sms:false",
             "sms:requiresDependency": [
                 {
@@ -17272,10 +17272,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:ExperimentTemplate",
+            "@id": "bts:ExperimentComponent",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Base template for describing core experimental parameters.",
-            "rdfs:label": "ExperimentTemplate",
+            "rdfs:comment": "Template component for describing core experimental parameters.",
+            "rdfs:label": "ExperimentComponent",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:Template"
@@ -17292,7 +17292,7 @@
                     "@id": "bts:ExperimentalTimepoint"
                 }
             ],
-            "sms:displayName": "experimentTemplate",
+            "sms:displayName": "experimentComponent",
             "sms:required": "sms:false",
             "sms:requiresDependency": [
                 {
@@ -17305,10 +17305,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:GenePerturbTemplate",
+            "@id": "bts:GenePerturbComponent",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Base template for adding genetic perturbation metadata. This applies only to some assays and does not make sense with e.g. behavioral assays.",
-            "rdfs:label": "GenePerturbTemplate",
+            "rdfs:comment": "Template component for adding genetic perturbation metadata. This applies only to some assays and does not make sense with e.g. behavioral assays.",
+            "rdfs:label": "GenePerturbComponent",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:Template"
@@ -17328,7 +17328,7 @@
                     "@id": "bts:GenePerturbationTechnology"
                 }
             ],
-            "sms:displayName": "genePerturbTemplate",
+            "sms:displayName": "genePerturbComponent",
             "sms:required": "sms:false",
             "sms:requiresDependency": [
                 {
@@ -17344,10 +17344,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:FileTemplate",
+            "@id": "bts:FileComponent",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Base template for describing some file on the NF-OSI Synapse platform.",
-            "rdfs:label": "FileTemplate",
+            "rdfs:comment": "Template component for describing some file on the NF-OSI Synapse platform.",
+            "rdfs:label": "FileComponent",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:Template"
@@ -17370,7 +17370,7 @@
                     "@id": "bts:ResourceType"
                 }
             ],
-            "sms:displayName": "fileTemplate",
+            "sms:displayName": "fileComponent",
             "sms:required": "sms:false",
             "sms:requiresDependency": [
                 {
@@ -17389,10 +17389,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:NgsTemplate",
+            "@id": "bts:NgsComponent",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Template capturing Next Gen Sequencing/genomics attributes.",
-            "rdfs:label": "NgsTemplate",
+            "rdfs:comment": "Template component capturing Next Gen Sequencing/genomics attributes.",
+            "rdfs:label": "NgsComponent",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:Template"
@@ -17433,7 +17433,7 @@
                     "@id": "bts:NucleicAcidSource"
                 }
             ],
-            "sms:displayName": "ngsTemplate",
+            "sms:displayName": "ngsComponent",
             "sms:required": "sms:false",
             "sms:requiresDependency": [
                 {
