@@ -1,7 +1,7 @@
 ---
 title: "NF Vocabulary / Schema"
 author: "NF-OSI DCC"
-date: "Last update on `r Sys.Date()`"
+date: "Last updated on `r Sys.Date()`"
 output: 
   html_document:
     theme: lumen
@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(reactable)
 library(htmltools)
-
+# library(visNetwork)
 
 source("graph.R")
 source("docTemplate.R") 
@@ -95,7 +95,7 @@ templateTable <- function(dt) {
 # we require internal columns prefixed with `.` to have a useful table
 schema <- read.csv(params$schema_csv) %>%
   select(Attribute, Description, Required, Valid.Values, DependsOn, Parent, 
-         ID = .ID, Type = .Type, Root = .Root, SubclassOf = .SubclassOf,
+         ID = .ID, Type = .Type, Root = .Root, SubOf = .SubOf,
          Range = .Range, EditorNote = .EditorNote)
 
 
@@ -148,7 +148,7 @@ More specialized templates may be made available as needed for specific assays.
 
 :::
 
-```{r schema_ext_assay_template, out.width="100%", echo=FALSE}
+```{r schema_ext_assay_template, out.width="100%", echo=FALSE, eval=TRUE}
 
 schema_ext <- readExtSchema(params$schema_csv, params$ext_classes_csv)
 assay <- getNodesEdges(schema_ext, "Assay", "A", 
@@ -166,7 +166,7 @@ defaultGraph(g_assay_template)
 
 ##### Terms
 
-```{r platforms_table, echo=FALSE}
+```{r platforms_table, echo=FALSE, eval=TRUE}
 
 platforms_table <- schema %>%
   filter(Parent == "platform") %>%
@@ -292,7 +292,7 @@ Certain formats are emphasized as <div class='warning badge' display=inline>prop
 
 data_formats_table <- schema %>%
   filter(Parent == "fileFormat") %>%
-  select(Attribute, Description, Note = SubclassOf)
+  select(Attribute, Description, Note = SubOf)
   
 # A little more complicated than the other tables
 reactable(data_formats_table, 
@@ -424,7 +424,7 @@ basicTable(tissue)
 ```{r echo=FALSE}
 
 cell_table <- schema %>%
-  filter(SubclassOf %in% c("Primary_Cell", "Cell_Line_Model")) %>%
+  filter(SubOf %in% c("Primary_Cell", "Cell_Line_Model")) %>%
   select(Attribute, Description, DependsOn)
 
 basicTable(cell_table)
@@ -475,11 +475,11 @@ perturb_tech <- schema %>%
 basicTable(perturb_tech)
 ```
 
-### Cross-ref Module
+### Cross-Module
 
 :::info
 
-This is a provisional module for annotations that help cross-reference data for internal tracking and inter-database linkages.
+This includes modules that are shared.
 
 :::
 
@@ -587,13 +587,13 @@ templateTable(read.csv("templates/Source_Code_Template.csv"))
 ```
 
 
-## Miscellaneous
+## Other
 
-#### System Properties {#reserved .tabset .tabset-fade .tabset-pills}
+#### Reserved Properties {#reserved .tabset .tabset-fade .tabset-pills}
 
 :::info
 
-System annotation properties also describe the resource in some way, but they are not expected to be edited directly by contributors. 
+Reserved annotation properties also describe the resource in some way, but they are not expected to be edited directly by contributors. 
 They are computed/automated annotations set by the data platform and DCC activities.
 
 :::
@@ -602,7 +602,7 @@ They are computed/automated annotations set by the data platform and DCC activit
 ```{r reserved_properties_table, echo=FALSE}
 
 reserved_properties_table <- schema %>%
-  filter(Root %in% c("dccProperty", "synapseProperty")) %>%
+  filter(SubOf %in% c("dccProperty", "synapseProperty")) %>%
   select(Attribute, Description, DependsOn)
 
 basicTable(reserved_properties_table)

@@ -14,7 +14,7 @@
 #' Cardinality is mentioned in #1 only, so it's not prioritized.
 docTemplate <- function(schema, savedir = "templates/") {
     templates <- schema %>%
-      filter(Root == "Template" & SubclassOf != "") %>%
+      filter(Root == "Template" & SubOf != "") %>%
       select(ID, DependsOn)
     for(template in templates$ID) {
       fields <- schema %>%

@@ -6,7 +6,7 @@ on:
       - '**'      # matches every branch
       - '!main'   # excludes main
     paths:
-      - 'NF.csv'
+      - 'modules/**'
 
   workflow_dispatch:
 
@@ -35,7 +35,7 @@ jobs:
           chmod 755 .venv/bin/activate
           source .venv/bin/activate
           pip3 install schematicpy
-          schematic schema convert $schema_filename
+          make CSV=$schema_filename
     
       - name: Commit files
         run: |
