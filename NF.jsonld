@@ -16141,6 +16141,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Component",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Category of metadata manifest; provide the same one for all items/rows.",
+            "rdfs:label": "Component",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Component",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:GenomicsAssayTemplateNormalized",
             "@type": "rdfs:Class",
             "rdfs:comment": "Generic template for describing data from a genomic type assay (RNA-seq, Exome-seq, etc) WITHOUT full individual and biospecimen data. To link individual and biospecimen metadata, an additional “biospecimenTemplate_Default” must be additionally completed with either specimenID or aliquotID available for joining. This is a two-step template.",
@@ -16156,6 +16173,9 @@
             "sms:displayName": "genomicsAssayTemplate_Normalized",
             "sms:required": "sms:true",
             "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
                 {
                     "@id": "bts:Filename"
                 },
@@ -16209,6 +16229,9 @@
             "sms:required": "sms:true",
             "sms:requiresDependency": [
                 {
+                    "@id": "bts:Component"
+                },
+                {
                     "@id": "bts:Filename"
                 },
                 {
@@ -16260,6 +16283,9 @@
             "sms:displayName": "genomicsAssayTemplate_Extended",
             "sms:required": "sms:true",
             "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
                 {
                     "@id": "bts:Filename"
                 },
@@ -16322,6 +16348,9 @@
             "sms:required": "sms:true",
             "sms:requiresDependency": [
                 {
+                    "@id": "bts:Component"
+                },
+                {
                     "@id": "bts:Filename"
                 },
                 {
@@ -16373,6 +16402,9 @@
             "sms:displayName": "imagingAssayTemplate_Extended",
             "sms:required": "sms:true",
             "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
                 {
                     "@id": "bts:Filename"
                 },
@@ -16435,6 +16467,9 @@
             "sms:required": "sms:true",
             "sms:requiresDependency": [
                 {
+                    "@id": "bts:Component"
+                },
+                {
                     "@id": "bts:Filename"
                 },
                 {
@@ -16490,6 +16525,9 @@
             "sms:required": "sms:true",
             "sms:requiresDependency": [
                 {
+                    "@id": "bts:Component"
+                },
+                {
                     "@id": "bts:Filename"
                 },
                 {
@@ -16544,6 +16582,9 @@
             "sms:displayName": "pharmacokineticsAssayTemplate",
             "sms:required": "sms:true",
             "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
                 {
                     "@id": "bts:Filename"
                 },
@@ -16606,6 +16647,9 @@
             "sms:required": "sms:true",
             "sms:requiresDependency": [
                 {
+                    "@id": "bts:Component"
+                },
+                {
                     "@id": "bts:Filename"
                 },
                 {
@@ -16660,6 +16704,9 @@
             "sms:displayName": "plateBasedReporterAssayTemplate",
             "sms:required": "sms:true",
             "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
                 {
                     "@id": "bts:Filename"
                 },
@@ -16725,6 +16772,9 @@
             "sms:required": "sms:true",
             "sms:requiresDependency": [
                 {
+                    "@id": "bts:Component"
+                },
+                {
                     "@id": "bts:IndividualID"
                 },
                 {
@@ -16749,6 +16799,9 @@
             "sms:displayName": "clinicalAssayTemplate",
             "sms:required": "sms:true",
             "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
                 {
                     "@id": "bts:Filename"
                 },
@@ -16801,6 +16854,9 @@
             "sms:displayName": "clinicalAssayTemplate_Extended",
             "sms:required": "sms:true",
             "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
                 {
                     "@id": "bts:Filename"
                 },
@@ -16860,6 +16916,9 @@
             "sms:required": "sms:true",
             "sms:requiresDependency": [
                 {
+                    "@id": "bts:Component"
+                },
+                {
                     "@id": "bts:Filename"
                 },
                 {
@@ -16909,6 +16968,9 @@
             "sms:required": "sms:true",
             "sms:requiresDependency": [
                 {
+                    "@id": "bts:Component"
+                },
+                {
                     "@id": "bts:Filename"
                 },
                 {
@@ -16946,6 +17008,9 @@
             "sms:required": "sms:true",
             "sms:requiresDependency": [
                 {
+                    "@id": "bts:Component"
+                },
+                {
                     "@id": "bts:Filename"
                 },
                 {
@@ -16982,6 +17047,9 @@
             "sms:displayName": "pdxGenomicsAssay",
             "sms:required": "sms:true",
             "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
                 {
                     "@id": "bts:Filename"
                 },
@@ -17046,6 +17114,9 @@
             "sms:displayName": "updateMilestoneReport",
             "sms:required": "sms:false",
             "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
                 {
                     "@id": "bts:Filename"
                 },
@@ -17117,6 +17188,9 @@
             "sms:displayName": "individualTemplate",
             "sms:required": "sms:false",
             "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
                 {
                     "@id": "bts:IndividualID"
                 },
@@ -17196,6 +17270,9 @@
             "sms:required": "sms:false",
             "sms:requiresDependency": [
                 {
+                    "@id": "bts:Component"
+                },
+                {
                     "@id": "bts:ParentSpecimenID"
                 },
                 {
@@ -17247,6 +17324,9 @@
             "sms:displayName": "biospecimenTemplate",
             "sms:required": "sms:false",
             "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
                 {
                     "@id": "bts:IndividualID"
                 },
