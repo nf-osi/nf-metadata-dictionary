@@ -6098,6 +6098,31 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:IsPairedEnd",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "(Legacy/deprecated annotation) Whether or not is paired-end sequencing (Yes; No). Note that this can be inferred as 'Yes' when runType=pairedEnd; current templates actually use runType to capture this info.",
+            "rdfs:label": "IsPairedEnd",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Ngs"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Yes"
+                },
+                {
+                    "@id": "bts:No"
+                }
+            ],
+            "sms:displayName": "isPairedEnd",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Head",
             "@type": "rdfs:Class",
             "rdfs:comment": "The head is the anterior-most division of the body.",
