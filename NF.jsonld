@@ -14800,7 +14800,7 @@
         {
             "@id": "bts:FailedQC",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Boolean flag indicating whether the sample or data failed QC checks (Note: TRUE = Yes; FALSE = No)",
+            "rdfs:comment": "Whether the sample or data failed QC checks (Yes; No)",
             "rdfs:label": "FailedQC",
             "rdfs:subClassOf": [
                 {
@@ -14812,10 +14812,10 @@
             },
             "schema:rangeIncludes": [
                 {
-                    "@id": "bts:TRUE"
+                    "@id": "bts:Yes"
                 },
                 {
-                    "@id": "bts:FALSE"
+                    "@id": "bts:No"
                 }
             ],
             "sms:displayName": "failedQC",
@@ -17978,40 +17978,6 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "years",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:TRUE",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "TRUE",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:FailedQC"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "TRUE",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:FALSE",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "FALSE",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:FailedQC"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "FALSE",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
