@@ -5799,7 +5799,7 @@
         {
             "@id": "bts:IsStranded",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Whether or not the library is stranded. (Note: TRUE = Yes; FALSE = No)",
+            "rdfs:comment": "Whether or not the library is stranded (Yes; No)",
             "rdfs:label": "IsStranded",
             "rdfs:subClassOf": [
                 {
@@ -5811,10 +5811,10 @@
             },
             "schema:rangeIncludes": [
                 {
-                    "@id": "bts:TRUE"
+                    "@id": "bts:Yes"
                 },
                 {
-                    "@id": "bts:FALSE"
+                    "@id": "bts:No"
                 }
             ],
             "sms:displayName": "isStranded",
@@ -6094,6 +6094,31 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "readDepth",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:IsPairedEnd",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "(Legacy/deprecated annotation) Whether or not is paired-end sequencing (Yes; No). Note that this can be inferred as 'Yes' when runType=pairedEnd; current templates actually use runType to capture this info.",
+            "rdfs:label": "IsPairedEnd",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Ngs"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Yes"
+                },
+                {
+                    "@id": "bts:No"
+                }
+            ],
+            "sms:displayName": "isPairedEnd",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -11175,7 +11200,7 @@
         {
             "@id": "bts:IsCellLine",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Boolean flag indicating whether or not sample source is a cell line. (Note: TRUE = Yes; FALSE = No)",
+            "rdfs:comment": "Whether or not sample source is a cell line (Yes; No)",
             "rdfs:label": "IsCellLine",
             "rdfs:subClassOf": [
                 {
@@ -11187,10 +11212,10 @@
             },
             "schema:rangeIncludes": [
                 {
-                    "@id": "bts:TRUE"
+                    "@id": "bts:Yes"
                 },
                 {
-                    "@id": "bts:FALSE"
+                    "@id": "bts:No"
                 }
             ],
             "sms:displayName": "isCellLine",
@@ -11200,7 +11225,7 @@
         {
             "@id": "bts:IsPrimaryCell",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Boolean flag indicating whether or not cellType is primary  (Note: TRUE = Yes; FALSE = No)",
+            "rdfs:comment": "Whether or not cellType is primary (Yes; No)",
             "rdfs:label": "IsPrimaryCell",
             "rdfs:subClassOf": [
                 {
@@ -11212,10 +11237,10 @@
             },
             "schema:rangeIncludes": [
                 {
-                    "@id": "bts:TRUE"
+                    "@id": "bts:Yes"
                 },
                 {
-                    "@id": "bts:FALSE"
+                    "@id": "bts:No"
                 }
             ],
             "sms:displayName": "isPrimaryCell",
@@ -11345,7 +11370,7 @@
         {
             "@id": "bts:IsMultiIndividual",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Boolean flag indicating whether or not a file has data for multiple individuals  (Note: TRUE = Yes; FALSE = No)",
+            "rdfs:comment": "Whether or not a file has data for multiple individuals (Yes; No)",
             "rdfs:label": "IsMultiIndividual",
             "rdfs:subClassOf": [
                 {
@@ -11357,10 +11382,10 @@
             },
             "schema:rangeIncludes": [
                 {
-                    "@id": "bts:TRUE"
+                    "@id": "bts:Yes"
                 },
                 {
-                    "@id": "bts:FALSE"
+                    "@id": "bts:No"
                 }
             ],
             "sms:displayName": "isMultiIndividual",
@@ -11370,7 +11395,7 @@
         {
             "@id": "bts:IsMultiSpecimen",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Boolean flag indicating whether or not a file has data for multiple specimens  (Note: TRUE = Yes; FALSE = No)",
+            "rdfs:comment": "Whether or not a file has data for multiple specimens (Yes; No)",
             "rdfs:label": "IsMultiSpecimen",
             "rdfs:subClassOf": [
                 {
@@ -11382,10 +11407,10 @@
             },
             "schema:rangeIncludes": [
                 {
-                    "@id": "bts:TRUE"
+                    "@id": "bts:Yes"
                 },
                 {
-                    "@id": "bts:FALSE"
+                    "@id": "bts:No"
                 }
             ],
             "sms:displayName": "isMultiSpecimen",
@@ -12061,6 +12086,31 @@
             },
             "sms:displayName": "bioSampleUsed",
             "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:IsXenograft",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Whether or not sample source is a xenograft (Yes; No)",
+            "rdfs:label": "IsXenograft",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ExperimentalData"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Yes"
+                },
+                {
+                    "@id": "bts:No"
+                }
+            ],
+            "sms:displayName": "isXenograft",
+            "sms:required": "sms:true",
             "sms:validationRules": []
         },
         {
@@ -14750,7 +14800,7 @@
         {
             "@id": "bts:FailedQC",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Boolean flag indicating whether the sample or data failed QC checks (Note: TRUE = Yes; FALSE = No)",
+            "rdfs:comment": "Whether the sample or data failed QC checks (Yes; No)",
             "rdfs:label": "FailedQC",
             "rdfs:subClassOf": [
                 {
@@ -14762,10 +14812,10 @@
             },
             "schema:rangeIncludes": [
                 {
-                    "@id": "bts:TRUE"
+                    "@id": "bts:Yes"
                 },
                 {
-                    "@id": "bts:FALSE"
+                    "@id": "bts:No"
                 }
             ],
             "sms:displayName": "failedQC",
@@ -17643,10 +17693,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:TRUE",
+            "@id": "bts:Yes",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
-            "rdfs:label": "TRUE",
+            "rdfs:label": "Yes",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:IsStranded"
@@ -17655,15 +17705,15 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "TRUE",
+            "sms:displayName": "Yes",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
-            "@id": "bts:FALSE",
+            "@id": "bts:No",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
-            "rdfs:label": "FALSE",
+            "rdfs:label": "No",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:IsStranded"
@@ -17672,7 +17722,7 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "FALSE",
+            "sms:displayName": "No",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
