@@ -5147,7 +5147,7 @@
         {
             "@id": "bts:ChromiumX",
             "@type": "rdfs:Class",
-            "rdfs:comment": "(From 10x Genomics) A single-cell platform with capability for hundreds to hundreds of thousands of cells in a single run, used for analysis of cell activity in multiple dimensions, including gene expression,\nchromatin accessibility, cell surface proteins, immune clonotype, antigen specificity, and CRISPR perturbation screens.",
+            "rdfs:comment": "(From 10x Genomics) Single-cell platform that can analyze hundreds to hundreds of thousands of cells in single run for e.g. gene expression, chromatin accessibility, cell surface proteins, immune clonotype, antigen specificity, CRISPR perturbation screens).",
             "rdfs:label": "ChromiumX",
             "rdfs:subClassOf": [
                 {
@@ -5158,6 +5158,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "Chromium X",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:EnVision2103MultiplateReader",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "EnVision 2103 Multiplate Reader",
+            "rdfs:label": "EnVision2103MultiplateReader",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Platform"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "EnVision 2103 Multiplate Reader",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -9009,6 +9026,74 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "Nf1-OPG-Arg816",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Nf2-/-Schwanncellline",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A Nf2-/- mouse schwann cell line",
+            "rdfs:label": "Nf2-/-Schwanncellline",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Nf2-/- Schwann cell line",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:HTERTarachnoid",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A human arachnoid cell line that has been used in drug screening (suitable control for hTERT NF2 arachnoid)",
+            "rdfs:label": "HTERTarachnoid",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "hTERT arachnoid",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:HTERTNF2arachnoid",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A NF2 knock-out human arachnoid cell line developed with CRISPR that has been used in drug screening",
+            "rdfs:label": "HTERTNF2arachnoid",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "hTERT NF2 arachnoid",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:HTERTmeningioma",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A human meningioma cell line that has been used in drug screening",
+            "rdfs:label": "HTERTmeningioma",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "hTERT meningioma",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
