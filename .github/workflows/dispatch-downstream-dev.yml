@@ -26,5 +26,5 @@ jobs:
           workflow: Update source model for dev
           repo: $REPO
           ref: $REF_DEV
-          token: ${{ secrets.REPO_PAT }}
+          token: ${{ secrets.SERVICE_TOKEN }}
           inputs: ${{ steps.payload.outputs.INPUT }}
