@@ -5147,7 +5147,7 @@
         {
             "@id": "bts:ChromiumX",
             "@type": "rdfs:Class",
-            "rdfs:comment": "(From 10x Genomics) A single-cell platform with capability for hundreds to hundreds of thousands of cells in a single run, used for analysis of cell activity in multiple dimensions, including gene expression,\nchromatin accessibility, cell surface proteins, immune clonotype, antigen specificity, and CRISPR perturbation screens.",
+            "rdfs:comment": "(From 10x Genomics) Single-cell platform that can analyze hundreds to hundreds of thousands of cells in single run for e.g. gene expression, chromatin accessibility, cell surface proteins, immune clonotype, antigen specificity, CRISPR perturbation screens).",
             "rdfs:label": "ChromiumX",
             "rdfs:subClassOf": [
                 {
@@ -5158,6 +5158,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "Chromium X",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:EnVision2103MultiplateReader",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "EnVision 2103 Multiplate Reader",
+            "rdfs:label": "EnVision2103MultiplateReader",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Platform"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "EnVision 2103 Multiplate Reader",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -5596,6 +5613,9 @@
                 },
                 {
                     "@id": "bts:ChromiumX"
+                },
+                {
+                    "@id": "bts:EnVision2103MultiplateReader"
                 }
             ],
             "sms:displayName": "platform",
@@ -9013,6 +9033,91 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Nf2-/-SchwannSC(mouse)(PMID26554010)",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A Nf2-/- mouse schwann cell line; see PMID:26554010",
+            "rdfs:label": "Nf2-/-SchwannSC(mouse)(PMID26554010)",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Nf2-/- Schwann SC (mouse) (PMID26554010)",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:SC4[Mouseschwannoma]",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Mouse schwannoma knock-out cell line (RRID:CVCL_JK03)",
+            "rdfs:label": "SC4[Mouseschwannoma]",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "SC4 [Mouse schwannoma]",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:AC007-hTERT",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Human arachnoid cell line",
+            "rdfs:label": "AC007-hTERT",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "AC007-hTERT",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:NF2-/-AC007-hTERT",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Knock-out cell line developed by CRISPR targeting NF2 exon 8 in AC007-hTERT",
+            "rdfs:label": "NF2-/-AC007-hTERT",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "NF2-/- AC007-hTERT",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Ben-Men-1",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Human meningioma cell line (RRID:CVCL_1959)",
+            "rdfs:label": "Ben-Men-1",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Ben-Men-1",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Male",
             "@type": "rdfs:Class",
             "rdfs:comment": "A person who belongs to the sex that normally produces sperm. The term is used to indicate biological sex distinctions, cultural gender role distinctions, or both.",
@@ -11893,6 +11998,21 @@
                 },
                 {
                     "@id": "bts:CNF98.4c"
+                },
+                {
+                    "@id": "bts:Nf2-/-SchwannSC(mouse)(PMID26554010)"
+                },
+                {
+                    "@id": "bts:SC4[Mouseschwannoma]"
+                },
+                {
+                    "@id": "bts:AC007-hTERT"
+                },
+                {
+                    "@id": "bts:NF2-/-AC007-hTERT"
+                },
+                {
+                    "@id": "bts:Ben-Men-1"
                 }
             ],
             "sms:displayName": "modelSystemName",
