@@ -24,7 +24,7 @@ jobs:
       - uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: Update source model for dev
-          repo: $REPO
-          ref: $REF_DEV
+          repo: ${{ env.REPO }}
+          ref: ${{ env.REF_DEV }}
           token: ${{ secrets.SERVICE_TOKEN }}
           inputs: ${{ steps.payload.outputs.INPUT }}
