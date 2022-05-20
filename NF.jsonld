@@ -5804,17 +5804,11 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "schema:rangeIncludes": [
-                {
-                    "@id": "bts:1"
-                },
-                {
-                    "@id": "bts:2"
-                }
-            ],
             "sms:displayName": "readPair",
             "sms:required": "sms:false",
-            "sms:validationRules": []
+            "sms:validationRules": [
+                "int"
+            ]
         },
         {
             "@id": "bts:IsStranded",
@@ -6445,6 +6439,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "nose",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Eye",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The organ of sight or vision. [ NCI ]",
+            "rdfs:label": "Eye",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Organ"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Eye",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -7316,19 +7327,19 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:Humanforeskinfibroblasts",
+            "@id": "bts:CulturedMullerglia",
             "@type": "rdfs:Class",
-            "rdfs:comment": "generic human foreskin fibroblasts, often used as a control cell in toxicology experiments",
-            "rdfs:label": "Humanforeskinfibroblasts",
+            "rdfs:comment": "Astrocyte-like radial glial cell that extends vertically throughout the retina, with the nucleus are usually in the middle of the inner nuclear layer. [ http://www.ncbi.nlm.nih.gov/pubmed/21911394 GOC : NV ]",
+            "rdfs:label": "CulturedMullerglia",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ModelSystemName"
+                    "@id": "bts:CellType"
                 }
             ],
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "human foreskin fibroblasts",
+            "sms:displayName": "cultured Muller glia",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -9118,6 +9129,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Humanforeskinfibroblasts",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "generic human foreskin fibroblasts, often used as a control cell in toxicology experiments",
+            "rdfs:label": "Humanforeskinfibroblasts",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "human foreskin fibroblasts",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Male",
             "@type": "rdfs:Class",
             "rdfs:comment": "A person who belongs to the sex that normally produces sperm. The term is used to indicate biological sex distinctions, cultural gender role distinctions, or both.",
@@ -10008,6 +10036,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Retina",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A light-sensitive membrane that lines the back wall of the eyeball. The retina is continuous with the optic nerve and this way transmits optical images to the brain. [ NCI ]",
+            "rdfs:label": "Retina",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Tissue"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "retina",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Teratoma",
             "@type": "rdfs:Class",
             "rdfs:comment": "TT",
@@ -10884,7 +10929,7 @@
                     "@id": "bts:Meningioma"
                 },
                 {
-                    "@id": "bts:MassiveSoftTissueNeurofibroma"
+                    "@id": "bts:MassiveSoftNeurofibroma"
                 },
                 {
                     "@id": "bts:DiffuseInfiltratingNeurofibroma"
@@ -11179,6 +11224,9 @@
                 },
                 {
                     "@id": "bts:Nose"
+                },
+                {
+                    "@id": "bts:Eye"
                 }
             ],
             "sms:displayName": "organ",
@@ -11296,6 +11344,9 @@
                 },
                 {
                     "@id": "bts:Microtissue"
+                },
+                {
+                    "@id": "bts:Retina"
                 }
             ],
             "sms:displayName": "tissue",
@@ -11464,6 +11515,9 @@
                 },
                 {
                     "@id": "bts:Teratoma"
+                },
+                {
+                    "@id": "bts:CulturedMullerglia"
                 }
             ],
             "sms:displayName": "cellType",
@@ -17877,6 +17931,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "none",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:MassiveSoftNeurofibroma",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "MassiveSoftNeurofibroma",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:TumorType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Massive Soft \nNeurofibroma",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
