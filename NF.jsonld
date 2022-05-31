@@ -3474,6 +3474,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:RiccardiandAblonscales",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The Riccardi and Ablon scales score severity and visibility of disease, respectively, and are commonly used as a combined assessment for NF1 patients in clinical settings. See https://doi.org/10.1001/archderm.137.11.1421 for example usage.",
+            "rdfs:label": "RiccardiandAblonscales",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Riccardi and Ablon scales",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Channel",
             "@type": "rdfs:Class",
             "rdfs:comment": "Fluorescent color labeling for an array",
@@ -5465,6 +5482,9 @@
                 },
                 {
                     "@id": "bts:MassivelyParallelReporterAssay"
+                },
+                {
+                    "@id": "bts:RiccardiandAblonscales"
                 }
             ],
             "sms:displayName": "assay",
@@ -14406,6 +14426,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Tom",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The .tom format is a specialized 3D image export format from the Vectra medical imaging systems that can optionally preserve trimmings and/or landmarks.",
+            "rdfs:label": "Tom",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:FileFormat"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "tom",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Genesymbol",
             "@type": "rdfs:Class",
             "rdfs:comment": "A unique gene name approved by an organism specific nomenclature committee.",
@@ -15444,6 +15481,9 @@
                 },
                 {
                     "@id": "bts:MATLABdata"
+                },
+                {
+                    "@id": "bts:Tom"
                 }
             ],
             "sms:displayName": "fileFormat",
