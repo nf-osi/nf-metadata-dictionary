@@ -1,10 +1,11 @@
 #' Generate template documentation
 #' 
 #' Basically tries to present a template in a conventional format similar to:
-#' 1. [Bioschema profile](https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE)
-#' 2. [FAIRplus example](https://fairplus.github.io/the-fair-cookbook/content/recipes/interoperability/transcriptomics-metadata.html#assay-metadata)
-#' 3. [Immport template doc](https://www.immport.org/shared/templateDocumentation?tab=1&template=bioSamples.txt)
-#' 4. [LINCS template doc](https://lincsproject.org/LINCS/files//2020_exp_meta_stand/General_Proteomics.pdf)
+#' 1. [GDC viewer](https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads)
+#' 2. [Bioschema profile](https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE)
+#' 3. [FAIRplus example](https://fairplus.github.io/the-fair-cookbook/content/recipes/interoperability/transcriptomics-metadata.html#assay-metadata)
+#' 4. [Immport template doc](https://www.immport.org/shared/templateDocumentation?tab=1&template=bioSamples.txt)
+#' 5. [LINCS template doc](https://lincsproject.org/LINCS/files//2020_exp_meta_stand/General_Proteomics.pdf)
 #' 
 #' In general it looks like a table with one row per property and informational columns for:
 #' - [x] controlled values (valid values for schematic) / range of property
@@ -43,12 +44,15 @@ docTemplate <- function(templates,
                             paste0("#", schema_csv[index, "Range"]), 
                             schema_csv[index, "Valid.Values"])
     
-    template_tab <- data.frame(Field = props,
+    template_tab <- data.table(Field = props,
                                Description = schema_csv[index, "Description"],
                                Required = ifelse(schema_csv[index, "Required"], "required", "optional"),
                                ControlledVocab = range,
                                # Cardinality = schema_csv[index, "Cardinality"],
                                Note = schema_csv[index, "EditorNote"])
+    
+    # Sort to show by required, then alphabetically
+    template_tab <- template_tab[order(-Required, Field), ]
     
     template_id <- templates[x]
     filepath <-  paste0(savedir, template_id, ".csv")
