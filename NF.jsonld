@@ -16786,10 +16786,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:GenomicReference",
+            "@id": "bts:AverageInsertSize",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Version of genome reference used for alignment in processing workflow",
-            "rdfs:label": "GenomicReference",
+            "rdfs:comment": "Average insert size as reported by samtools",
+            "rdfs:label": "AverageInsertSize",
             "rdfs:subClassOf": [
                 {
                     "@id": "schema:Thing"
@@ -16798,7 +16798,143 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "genomicReference",
+            "sms:displayName": "averageInsertSize",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:AverageReadLength",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Average read length collected from samtools",
+            "rdfs:label": "AverageReadLength",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "averageReadLength",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:AverageBaseQuality",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Average base quality collected from samtools",
+            "rdfs:label": "AverageBaseQuality",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "averageBaseQuality",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:PairsOnDifferentChr",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Pairs on different chromosomes collected from samtools",
+            "rdfs:label": "PairsOnDifferentChr",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "pairsOnDifferentChr",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ReadsDuplicatedPercent",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Percent of duplicated reads collected from samtools",
+            "rdfs:label": "ReadsDuplicatedPercent",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "readsDuplicatedPercent",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ReadsMappedPercent",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Percent of mapped reads collected from samtools",
+            "rdfs:label": "ReadsMappedPercent",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "readsMappedPercent",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:MeanCoverage",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Mean coverage for whole genome sequencing, or mean target coverage for whole exome and targeted sequencing, collected from Picard Tools",
+            "rdfs:label": "MeanCoverage",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "meanCoverage",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ProportionCoverage10x",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 10X or greater coverage from Picard Tools",
+            "rdfs:label": "ProportionCoverage10x",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "proportionCoverage10x",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ProportionCoverage30x",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 30X or greater coverage from Picard Tools",
+            "rdfs:label": "ProportionCoverage30x",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "proportionCoverage30x",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -17261,6 +17397,33 @@
                 },
                 {
                     "@id": "bts:ParentSpecimenID"
+                },
+                {
+                    "@id": "bts:AverageInsertSize"
+                },
+                {
+                    "@id": "bts:AverageReadLength"
+                },
+                {
+                    "@id": "bts:AverageBaseQuality"
+                },
+                {
+                    "@id": "bts:PairsOnDifferentChr"
+                },
+                {
+                    "@id": "bts:ReadsDuplicatedPercent"
+                },
+                {
+                    "@id": "bts:ReadsMappedPercent"
+                },
+                {
+                    "@id": "bts:MeanCoverage"
+                },
+                {
+                    "@id": "bts:ProportionCoverage10x"
+                },
+                {
+                    "@id": "bts:ProportionCoverage30x"
                 },
                 {
                     "@id": "bts:ReadDepth"
