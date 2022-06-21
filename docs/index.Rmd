@@ -14,10 +14,12 @@ params:
   schema_csv: "../NF.csv"
   ext_classes_csv: "../ext_classes.csv"
   ext_relations_csv: "../ext_relations.csv"
+  use_cache: false
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(data.table)
 library(tidyverse)
 library(reactable)
 library(htmltools)
@@ -100,8 +102,38 @@ schema <- read.csv(params$schema_csv) %>%
 
 
 # docTemplate needs the unmodified schema table
-docTemplate(schema)
-
+if(!params$use_cache) {
+  docTemplate(templates = c(# genomics/transcriptomics
+                            GenomicsAssayTemplate = "Genomics_Assay_Template", 
+                            WGSTemplate = "WGS_Template", 
+                            WESTemplate = "WES_Template",
+                            EpigeneticsAssayTemplate = "Epigenetics_Assay_Template",
+                            RNASeqTemplate = "RNASeq_Template",
+                            ScRNASeqTemplate = "ScRNASeq_Template",
+      
+                            # genomics/transcriptomics -- processed
+                            ProcessedAlignedReadsTemplate = "Processed_Aligned_Reads_Template",
+                            ProcessedVariantCallsTemplate = "Processed_Variant_Calls_Template",
+                            ProcessedExpressionTemplate = "Processed_Expression_Template",
+                            
+                            # proteomics
+                            ProteomicsAssayTemplate = "Proteomics_Assay_Template", 
+                            
+                            # imaging
+                            ImagingAssayTemplate = "Imaging_Assay_Template", 
+                            MRIAssayTemplate = "MRI_Assay_Template",
+                            
+                            # other
+                            PharmacokineticsAssayTemplate = "Pharmacokinetics_Assay_Template", # drug assays type
+                            PlateBasedReporterAssayTemplate = "Plate_Based_Reporter_Assay_Template",
+                            ClinicalAssayTemplate = "Clinical_Assay_Template",
+                            PatientTimepointsTemplate = "Patient_Timepoints_Template",
+                            SourceCodeTemplate = "Source_Code_Template"
+                            ),
+              schema_csv = schema
+              )
+}
+  
 # Splits terms into Property or Class using `Type`
 # schema_class <- schema %>%
 #   filter(Type == "Class")
@@ -277,6 +309,19 @@ This partial graph view logically relates **data types** to **assays**.
 :::
 
 *Documentation currently in development.*
+
+#### Data Level {#Data .tabset .tabset-fade .tabset-pills}
+
+##### Terms
+
+```{r data_subtypes_table, echo=FALSE}
+
+data_level_table <- schema %>%
+  filter(Parent == "dataSubtype") %>%
+  select(Attribute, Description, DependsOn)
+
+basicTable(data_level_table)
+```
 
 #### File Format {#File_Format .tabset .tabset-fade .tabset-pills}
 
@@ -492,17 +537,18 @@ This includes modules that are shared.
 :::info
 
 Annotation templates are spreadsheet templates that allow contributors to annotate resources uploaded to the repository.
-They are generated at the [NF Data Curator App](https://shiny.synapse.org/users/rallaway/NF_data_curator/).
-Templates aim to implement "minimum metadata" standards specific to the type of data/resource.
+See interactive use of these templates at our [NF Data Curator App](https://shiny.synapse.org/users/rallaway/NF_data_curator/).
+Templates implement "minimum metadata" standards specific to the type of data/resource (hence variants exist for assay types and "raw" vs "processed" data).
+Templates also contain common components, e.g. many will collect core sample info associated with the data.  
 Unless the template field is free-text, it is meant to be filled by the contributor using the ontology terms/controlled vocabulary defined here.
 For example, the "assay" property allows the contributor to use [terms under Assay](#assay).
 
 :::
 
-#### Templates for Assay Data {#Assay_Template .tabset .tabset-fade .tabset-pills}
+#### Genomics Assay Templates {#Genomics_Assay_Templates .tabset .tabset-fade .tabset-pills}
 
 ```{r standard_properties_table, echo=FALSE, eval=FALSE}
-# NOT RUN
+# CURRENTLY NOT RUN (eval=FALSE)
 # Custom code to get unique set of properties used across all templates
 standard_properties_table <- schema %>%
   filter(Parent %in% c("template")) %>%
@@ -511,18 +557,11 @@ standard_properties_table <- schema %>%
 basicTable(standard_properties_table)
 ```
 
-##### Genomics Assay
+##### Genomics Assay (Generic)
 
 ```{r echo=FALSE }
 
 templateTable(read.csv("templates/Genomics_Assay_Template.csv"))
-
-```
-
-##### Proteomics Assay
-```{r echo=FALSE }
-
-templateTable(read.csv("templates/Proteomics_Assay_Template.csv"))
 
 ```
 
@@ -533,7 +572,77 @@ templateTable(read.csv("templates/Epigenetics_Assay_Template.csv"))
 
 ```
 
-##### Imaging Assay
+
+##### WES Assay
+
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/WES_Template.csv"))
+
+```
+
+##### WGS Assay
+
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/WGS_Template.csv"))
+
+```
+
+##### Bulk RNA-Seq Assay
+
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/RNASeq_Template.csv"))
+
+```
+
+##### Single-cell RNA-Seq Assay
+
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/ScRNASeq_Template.csv"))
+
+```
+
+
+##### Processed Aligned Reads
+
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/Processed_Aligned_Reads_Template.csv"))
+
+```
+
+##### Processed Variant Calls
+
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/Processed_Variant_Calls_Template.csv"))
+
+```
+
+##### Processed Expression
+
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/Processed_Expression_Template.csv"))
+
+```
+
+#### Proteomics Assay Templates {#Proteomics_Assay_Templates .tabset .tabset-fade .tabset-pills}
+
+##### Proteomics Assay (Generic)
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/Proteomics_Assay_Template.csv"))
+
+```
+
+
+#### Imaging Assay Templates {#Imaging_Assay_Templates .tabset .tabset-fade .tabset-pills}
+
+##### Imaging Assay (Generic)
 ```{r echo=FALSE }
 
 templateTable(read.csv("templates/Imaging_Assay_Template.csv"))
@@ -547,6 +656,7 @@ templateTable(read.csv("templates/MRI_Assay_Template.csv"))
 
 ```
 
+#### Other Assay Templates {#Other_Assay_Templates .tabset .tabset-fade .tabset-pills}
 
 ##### Pharmacokinetics Assay
 
@@ -563,14 +673,16 @@ templateTable(read.csv("templates/Plate_Based_Reporter_Assay_Template.csv"))
 
 ```
 
-##### Clinical Assay
+#### Clinical Assay Templates {#Clinical_Assay_Templates .tabset .tabset-fade .tabset-pills}
+
+##### Clinical Assay (Generic)
 ```{r echo=FALSE }
 
 templateTable(read.csv("templates/Clinical_Assay_Template.csv"))
 
 ```
 
-#### Other Templates {#Non_Assay_Template .tabset .tabset-fade .tabset-pills}
+#### Non-Assay Templates {#Non_Assay_Template .tabset .tabset-fade .tabset-pills}
 
 ##### Patient Timepoints
 ```{r echo=FALSE }

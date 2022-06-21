@@ -5763,6 +5763,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:TargetCaptureKitID",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A unique identifier for the kit used to construct a genomic library using target capture-based techniques, which should be composed of the vendor name, kit name and kit version.",
+            "rdfs:label": "TargetCaptureKitID",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ExperimentalData"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "targetCaptureKitID",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:LibraryID",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
@@ -6231,13 +6248,13 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "readLength",
-            "sms:required": "sms:false",
+            "sms:required": "sms:true",
             "sms:validationRules": []
         },
         {
             "@id": "bts:ReadDepth",
             "@type": "rdfs:Class",
-            "rdfs:comment": "If available, coverage statistic as output from bedtools coverage or samtools stats.",
+            "rdfs:comment": "If available, the coverage statistic as output from bedtools coverage or samtools stats.",
             "rdfs:label": "ReadDepth",
             "rdfs:subClassOf": [
                 {
@@ -6273,6 +6290,40 @@
                 }
             ],
             "sms:displayName": "isPairedEnd",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:TotalReads",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "If available, the total number of reads collected from samtools.",
+            "rdfs:label": "TotalReads",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Ngs"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "totalReads",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:TargetDepth",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The targeted read depth prior to sequencing.",
+            "rdfs:label": "TargetDepth",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Ngs"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "targetDepth",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -12538,7 +12589,7 @@
         {
             "@id": "bts:GenomicVariants",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Genomic alterations, including single nucleotide polymorphisms, short indels and structural variants, in a genome sequence.",
+            "rdfs:comment": "Genomic alterations, including single nucleotide polymorphisms, short indels and structural variants. Use more specific term if possible, esp. if data is only of one specific subset.",
             "rdfs:label": "GenomicVariants",
             "rdfs:subClassOf": [
                 {
@@ -12549,6 +12600,116 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "genomicVariants",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:AlignedReads",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Aligned reads output from alignment workflows",
+            "rdfs:label": "AlignedReads",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "AlignedReads",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:SomaticVariants",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Specifically genomic variants data that includes somatic variants and excludes germline variants",
+            "rdfs:label": "SomaticVariants",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "SomaticVariants",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:AnnotatedSomaticVariants",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Specifically genomic variants data that includes somatic variants with annotations added from some annotation workflow",
+            "rdfs:label": "AnnotatedSomaticVariants",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "AnnotatedSomaticVariants",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:GermlineVariants",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Specifically genomic variants data that includes called germline variants",
+            "rdfs:label": "GermlineVariants",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "GermlineVariants",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:StructuralVariants",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Specifically genomic variants data classified as structural variants, which may be derived from specialized variant calling workflows",
+            "rdfs:label": "StructuralVariants",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "StructuralVariants",
             "sms:required": "sms:false",
             "sms:requiresDependency": [
                 {
@@ -15061,7 +15222,7 @@
         {
             "@id": "bts:DataType",
             "@type": "rdfs:Class",
-            "rdfs:comment": "A type of experimental, clinical, or other data. This typically refers to a high-level data type, that is paired with a specific assay. For example, a file of dataType of \"\"genomicVariants\"\" might have an assay value of \"\"whole genome sequencing\"\". ",
+            "rdfs:comment": "A type of experimental, clinical, or other data. This typically refers to a high-level data type that can be related to an assay type. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.",
             "rdfs:label": "DataType",
             "rdfs:subClassOf": [
                 {
@@ -15137,6 +15298,21 @@
                 },
                 {
                     "@id": "bts:Maskimage"
+                },
+                {
+                    "@id": "bts:AlignedReads"
+                },
+                {
+                    "@id": "bts:SomaticVariants"
+                },
+                {
+                    "@id": "bts:AnnotatedSomaticVariants"
+                },
+                {
+                    "@id": "bts:StructuralVariants"
+                },
+                {
+                    "@id": "bts:GermlineVariants"
                 }
             ],
             "sms:displayName": "dataType",
@@ -15146,6 +15322,40 @@
                     "@id": "bts:DataSubtype"
                 }
             ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ExpressionUnit",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Measure used for transcript expression quantification",
+            "rdfs:label": "ExpressionUnit",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ExperimentalData"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:TPM"
+                },
+                {
+                    "@id": "bts:RPKM"
+                },
+                {
+                    "@id": "bts:FPKM"
+                },
+                {
+                    "@id": "bts:Counts"
+                },
+                {
+                    "@id": "bts:Other"
+                }
+            ],
+            "sms:displayName": "expressionUnit",
+            "sms:required": "sms:true",
             "sms:validationRules": []
         },
         {
@@ -16545,6 +16755,215 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Workflow",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Name and version of the workflow used to generate/analyze the data",
+            "rdfs:label": "Workflow",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "workflow",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:WorkflowLink"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:WorkflowLink",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Workflow URL reference",
+            "rdfs:label": "WorkflowLink",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "workflowLink",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:GenomicReference",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Version of genome reference used for alignment in processing workflow",
+            "rdfs:label": "GenomicReference",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "genomicReference",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:AverageInsertSize",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Average insert size as reported by samtools",
+            "rdfs:label": "AverageInsertSize",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "averageInsertSize",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:AverageReadLength",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Average read length collected from samtools",
+            "rdfs:label": "AverageReadLength",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "averageReadLength",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:AverageBaseQuality",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Average base quality collected from samtools",
+            "rdfs:label": "AverageBaseQuality",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "averageBaseQuality",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:PairsOnDifferentChr",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Pairs on different chromosomes collected from samtools",
+            "rdfs:label": "PairsOnDifferentChr",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "pairsOnDifferentChr",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ReadsDuplicatedPercent",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Percent of duplicated reads collected from samtools",
+            "rdfs:label": "ReadsDuplicatedPercent",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "readsDuplicatedPercent",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ReadsMappedPercent",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Percent of mapped reads collected from samtools",
+            "rdfs:label": "ReadsMappedPercent",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "readsMappedPercent",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:MeanCoverage",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Mean coverage for whole genome sequencing, or mean target coverage for whole exome and targeted sequencing, collected from Picard Tools",
+            "rdfs:label": "MeanCoverage",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "meanCoverage",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ProportionCoverage10x",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 10X or greater coverage from Picard Tools",
+            "rdfs:label": "ProportionCoverage10x",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "proportionCoverage10x",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ProportionCoverage30x",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 30X or greater coverage from Picard Tools",
+            "rdfs:label": "ProportionCoverage30x",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "proportionCoverage30x",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Component",
             "@type": "rdfs:Class",
             "rdfs:comment": "Category of metadata manifest; provide the same one for all items/rows.",
@@ -16564,7 +16983,7 @@
         {
             "@id": "bts:GenomicsAssayTemplateNormalized",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Generic template for describing data from a genomic type assay (RNA-seq, Exome-seq, etc) WITHOUT full individual and biospecimen data. To link individual and biospecimen metadata, an additional “biospecimenTemplate_Default” must be additionally completed with either specimenID or aliquotID available for joining. This is a two-step template.",
+            "rdfs:comment": "Generic template for describing raw data from a genomic type assay (RNA-seq, Exome-seq, etc) WITHOUT full individual and biospecimen data. To link individual and biospecimen metadata, an additional “biospecimenTemplate_Default” must be additionally completed with either specimenID or aliquotID available for joining. This is a two-step template.",
             "rdfs:label": "GenomicsAssayTemplateNormalized",
             "rdfs:subClassOf": [
                 {
@@ -16619,7 +17038,7 @@
         {
             "@id": "bts:GenomicsAssayTemplate",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Generic denormalized template for describing data from a genomic type assay (RNA-seq, Exome-seq, etc) along with individual, biospecimen and experimental metadata. This is a one-step template.",
+            "rdfs:comment": "Generic denormalized template for describing raw data from a genomic type assay (RNA-seq, Exome-seq, etc) along with individual, biospecimen and experimental metadata. This is a one-step template.",
             "rdfs:label": "GenomicsAssayTemplate",
             "rdfs:subClassOf": [
                 {
@@ -16674,7 +17093,7 @@
         {
             "@id": "bts:GenomicsAssayTemplateExtended",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Template for describing data from a genomic type assay (RNA-seq, Exome-seq, etc) with extended properties for capturing additional metadata such as gene perturbation parameters or experimental conditions and time points. This is a one-step template.",
+            "rdfs:comment": "Template for describing raw data from a genomic type assay (RNA-seq, Exome-seq, etc) with extended properties for capturing additional metadata such as gene perturbation parameters or experimental conditions and time points. This is a one-step template.",
             "rdfs:label": "GenomicsAssayTemplateExtended",
             "rdfs:subClassOf": [
                 {
@@ -16728,6 +17147,421 @@
                 },
                 {
                     "@id": "bts:GenePerturbed"
+                },
+                {
+                    "@id": "bts:Comments"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:WGSTemplate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Template for describing raw data from Whole Genome Sequencing (WGS)",
+            "rdfs:label": "WGSTemplate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Template"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "WGSTemplate",
+            "sms:required": "sms:true",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
+                {
+                    "@id": "bts:Filename"
+                },
+                {
+                    "@id": "bts:ResourceType"
+                },
+                {
+                    "@id": "bts:ProgressReportNumber"
+                },
+                {
+                    "@id": "bts:DataType"
+                },
+                {
+                    "@id": "bts:Assay"
+                },
+                {
+                    "@id": "bts:Platform"
+                },
+                {
+                    "@id": "bts:IndividualID"
+                },
+                {
+                    "@id": "bts:ParentSpecimenID"
+                },
+                {
+                    "@id": "bts:RunType"
+                },
+                {
+                    "@id": "bts:LibraryPrep"
+                },
+                {
+                    "@id": "bts:Comments"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:WESTemplate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Template for describing raw data from Whole Exome Sequencing (WES)",
+            "rdfs:label": "WESTemplate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Template"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "WESTemplate",
+            "sms:required": "sms:true",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
+                {
+                    "@id": "bts:Filename"
+                },
+                {
+                    "@id": "bts:ResourceType"
+                },
+                {
+                    "@id": "bts:ProgressReportNumber"
+                },
+                {
+                    "@id": "bts:DataType"
+                },
+                {
+                    "@id": "bts:Assay"
+                },
+                {
+                    "@id": "bts:Platform"
+                },
+                {
+                    "@id": "bts:IndividualID"
+                },
+                {
+                    "@id": "bts:ParentSpecimenID"
+                },
+                {
+                    "@id": "bts:RunType"
+                },
+                {
+                    "@id": "bts:TargetCaptureKitID"
+                },
+                {
+                    "@id": "bts:LibraryPrep"
+                },
+                {
+                    "@id": "bts:Comments"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:RNASeqTemplate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Template for describing raw data from (bulk) RNA-sequencing",
+            "rdfs:label": "RNASeqTemplate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Template"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "RNASeqTemplate",
+            "sms:required": "sms:true",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
+                {
+                    "@id": "bts:Filename"
+                },
+                {
+                    "@id": "bts:ResourceType"
+                },
+                {
+                    "@id": "bts:ProgressReportNumber"
+                },
+                {
+                    "@id": "bts:DataType"
+                },
+                {
+                    "@id": "bts:Assay"
+                },
+                {
+                    "@id": "bts:Platform"
+                },
+                {
+                    "@id": "bts:IndividualID"
+                },
+                {
+                    "@id": "bts:ParentSpecimenID"
+                },
+                {
+                    "@id": "bts:RunType"
+                },
+                {
+                    "@id": "bts:LibraryPrep"
+                },
+                {
+                    "@id": "bts:TargetDepth"
+                },
+                {
+                    "@id": "bts:Comments"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ScRNASeqTemplate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Template for describing raw data from single-cell RNA-sequencing (scRNA-seq)",
+            "rdfs:label": "ScRNASeqTemplate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Template"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "ScRNASeqTemplate",
+            "sms:required": "sms:true",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
+                {
+                    "@id": "bts:Filename"
+                },
+                {
+                    "@id": "bts:ResourceType"
+                },
+                {
+                    "@id": "bts:ProgressReportNumber"
+                },
+                {
+                    "@id": "bts:DataType"
+                },
+                {
+                    "@id": "bts:Assay"
+                },
+                {
+                    "@id": "bts:Platform"
+                },
+                {
+                    "@id": "bts:IndividualID"
+                },
+                {
+                    "@id": "bts:ParentSpecimenID"
+                },
+                {
+                    "@id": "bts:RunType"
+                },
+                {
+                    "@id": "bts:LibraryPrep"
+                },
+                {
+                    "@id": "bts:Comments"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ProcessedAlignedReadsTemplate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Template for describing aligned reads output data (i.e. BAM)",
+            "rdfs:label": "ProcessedAlignedReadsTemplate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Template"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "ProcessedAlignedReadsTemplate",
+            "sms:required": "sms:true",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
+                {
+                    "@id": "bts:Filename"
+                },
+                {
+                    "@id": "bts:ResourceType"
+                },
+                {
+                    "@id": "bts:ProgressReportNumber"
+                },
+                {
+                    "@id": "bts:DataType"
+                },
+                {
+                    "@id": "bts:Assay"
+                },
+                {
+                    "@id": "bts:Platform"
+                },
+                {
+                    "@id": "bts:IndividualID"
+                },
+                {
+                    "@id": "bts:ParentSpecimenID"
+                },
+                {
+                    "@id": "bts:AverageInsertSize"
+                },
+                {
+                    "@id": "bts:AverageReadLength"
+                },
+                {
+                    "@id": "bts:AverageBaseQuality"
+                },
+                {
+                    "@id": "bts:PairsOnDifferentChr"
+                },
+                {
+                    "@id": "bts:ReadsDuplicatedPercent"
+                },
+                {
+                    "@id": "bts:ReadsMappedPercent"
+                },
+                {
+                    "@id": "bts:MeanCoverage"
+                },
+                {
+                    "@id": "bts:ProportionCoverage10x"
+                },
+                {
+                    "@id": "bts:ProportionCoverage30x"
+                },
+                {
+                    "@id": "bts:ReadDepth"
+                },
+                {
+                    "@id": "bts:TotalReads"
+                },
+                {
+                    "@id": "bts:Workflow"
+                },
+                {
+                    "@id": "bts:GenomicReference"
+                },
+                {
+                    "@id": "bts:Comments"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ProcessedVariantCallsTemplate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Template for describing either germline or variant calls output data (i.e. VCF/MAF)",
+            "rdfs:label": "ProcessedVariantCallsTemplate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Template"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "ProcessedVariantCallsTemplate",
+            "sms:required": "sms:true",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
+                {
+                    "@id": "bts:Filename"
+                },
+                {
+                    "@id": "bts:ResourceType"
+                },
+                {
+                    "@id": "bts:ProgressReportNumber"
+                },
+                {
+                    "@id": "bts:SpecimenID"
+                },
+                {
+                    "@id": "bts:DataType"
+                },
+                {
+                    "@id": "bts:Assay"
+                },
+                {
+                    "@id": "bts:IndividualID"
+                },
+                {
+                    "@id": "bts:Workflow"
+                },
+                {
+                    "@id": "bts:Comments"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ProcessedExpressionTemplate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Template for describing expression output data",
+            "rdfs:label": "ProcessedExpressionTemplate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Template"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "ProcessedExpressionTemplate",
+            "sms:required": "sms:true",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
+                {
+                    "@id": "bts:Filename"
+                },
+                {
+                    "@id": "bts:ResourceType"
+                },
+                {
+                    "@id": "bts:ProgressReportNumber"
+                },
+                {
+                    "@id": "bts:DataType"
+                },
+                {
+                    "@id": "bts:Assay"
+                },
+                {
+                    "@id": "bts:IndividualID"
+                },
+                {
+                    "@id": "bts:SpecimenID"
+                },
+                {
+                    "@id": "bts:Workflow"
+                },
+                {
+                    "@id": "bts:ExpressionUnit"
                 },
                 {
                     "@id": "bts:Comments"
@@ -16793,7 +17627,7 @@
         {
             "@id": "bts:ImagingAssayTemplateExtended",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Template for describing data from an imaging type assay (IHC, etc) with extended properties for capturing additional metadata such as gene perturbation parameters or experimental conditions and time points.. This is a one-step template.",
+            "rdfs:comment": "Template for describing data from an imaging type assay (IHC, etc) with extended properties for capturing additional metadata such as gene perturbation parameters or experimental conditions and time points. This is a one-step template.",
             "rdfs:label": "ImagingAssayTemplateExtended",
             "rdfs:subClassOf": [
                 {
@@ -18349,6 +19183,91 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "years",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:TPM",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "TPM",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ExpressionUnit"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "TPM",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:RPKM",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "RPKM",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ExpressionUnit"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "RPKM",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:FPKM",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "FPKM",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ExpressionUnit"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "FPKM",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Counts",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Counts",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ExpressionUnit"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Counts",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Other",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Other",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ExpressionUnit"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Other",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },

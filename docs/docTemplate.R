@@ -1,39 +1,62 @@
-#' Function to generate template documentation
+#' Generate template documentation
 #' 
-#' Creates one row per property and selected informational columns for:
-#' - marginality (required vs. recommended vs. optional; in our case, recommended/optional collapsed to optional)
-#' - controlled values / constraints on fields 
-#' - cardinality (one or many values allowed) *currently omitted, see additional notes
-#' Example related resources for what this can look like:
-#' 1. https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE
-#' 2. https://fairplus.github.io/the-fair-cookbook/content/recipes/interoperability/transcriptomics-metadata.html#assay-metadata
-#' 3. https://www.immport.org/shared/templateDocumentation?tab=1&template=bioSamples.txt
-#' 4. https://lincsproject.org/LINCS/files//2020_exp_meta_stand/General_Proteomics.pdf
-#' Marginality is mentioned in all examples.
-#' CV is mentioned for #1,2,3.
-#' Cardinality is mentioned in #1 only, so it's not prioritized.
-docTemplate <- function(schema, savedir = "templates/") {
-    templates <- schema %>%
-      filter(Root == "Template" & SubOf != "") %>%
-      select(ID, DependsOn)
-    for(template in templates$ID) {
-      fields <- schema %>%
-        filter(template == ID) %>% 
-        pull(DependsOn) %>%
-        strsplit(split = ", ?") %>% 
-        unlist()
-      index <- match(fields, schema$Attribute)
-      # ControlledVocab col is handled specially and is derived from the Range col
-      # Range is either filled with a class or blank, where blank means free text or Boolean values
-      # Bools are "controlled vocabulary" vs. true ontology terms
-      range <- dplyr::if_else(schema[index, "Range"] != "", paste0("#", schema[index, "Range"]), schema[index, "Valid.Values"])
-      template_tab <- data.frame(Field = fields,
-                                 Description = schema[index, "Description"],
-                                 Required = ifelse(schema[index, "Required"], "required", "optional"),
-                                 ControlledVocab = range,
-                                # Cardinality = schema[index, "Cardinality"],
-                                Note = schema[index, "EditorNote"])
-      write.csv(template_tab, file = paste0(savedir, template, ".csv"), row.names = F) 
+#' Basically tries to present a template in a conventional format similar to:
+#' 1. [GDC viewer](https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads)
+#' 2. [Bioschema profile](https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE)
+#' 3. [FAIRplus example](https://fairplus.github.io/the-fair-cookbook/content/recipes/interoperability/transcriptomics-metadata.html#assay-metadata)
+#' 4. [Immport template doc](https://www.immport.org/shared/templateDocumentation?tab=1&template=bioSamples.txt)
+#' 5. [LINCS template doc](https://lincsproject.org/LINCS/files//2020_exp_meta_stand/General_Proteomics.pdf)
+#' 
+#' In general it looks like a table with one row per property and informational columns for:
+#' - [x] controlled values (valid values for schematic) / range of property
+#' - [ ] marginality (required vs. recommended vs. optional)
+#' - [ ] cardinality (one or many values allowed)
+#' - [x] notes / comments
+#' 
+#' Currently, schematic templates allow modeling more on the simplistic side and 
+#' don't formally express all these, so only a few are checked.
+#' Moreover, the jsonld version encodes much less information than the csv version
+#' (jsonld conversion loses custom metadata in the csv), which is why this currently depends on both formats. 
+#' 
+#' @param templates Named vector of templates to process,
+#' where names corresponds to id without prefix (currently whatever follows "bts:"),
+#' and value is the real internal ID (in .ID).
+#' @param schema_csv Schema representation read from `.csv`.
+#' @param schema_jsonld Schema path to jsonld file.
+#' @param savedir Directory where template representations will be outputted.
+docTemplate <- function(templates,
+                        schema_csv,
+                        schema_jsonld = "../NF.jsonld",
+                        savedir = "templates/") {
+  
+  
+  for(x in names(templates)) {  # e.g. x <- "GenomicsAssayTemplate"
+    # For template, parse DependsOn to get all props present in manifest
+    props <- nfportalutils::get_dependency_from_json_schema(paste0("bts:", x), 
+                                                            schema = schema_jsonld)
+    
+    # Create the ControlledVocab aka Range col for each prop
+    # ControlledVocab col is handled specially and uses a custom Range col defined in csv
+    # For CV col we create a link to a class if the term editor has referenced a class in Range, 
+    # else we simply fall back to enumerating the valid values
+    index <- match(props, schema_csv$Attribute)
+    range <- dplyr::if_else(schema_csv[index, "Range"] != "", 
+                            paste0("#", schema_csv[index, "Range"]), 
+                            schema_csv[index, "Valid.Values"])
+    
+    template_tab <- data.table(Field = props,
+                               Description = schema_csv[index, "Description"],
+                               Required = ifelse(schema_csv[index, "Required"], "required", "optional"),
+                               ControlledVocab = range,
+                               # Cardinality = schema_csv[index, "Cardinality"],
+                               Note = schema_csv[index, "EditorNote"])
+    
+    # Sort to show by required, then alphabetically
+    template_tab <- template_tab[order(-Required, Field), ]
+    
+    template_id <- templates[x]
+    filepath <-  paste0(savedir, template_id, ".csv")
+    write.csv(template_tab, file = filepath, row.names = F)
   }
 }
 
