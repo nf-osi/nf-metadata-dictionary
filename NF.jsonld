@@ -12675,6 +12675,28 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:GermlineVariants",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Specifically genomic variants data that includes called germline variants",
+            "rdfs:label": "GermlineVariants",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "GermlineVariants",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:StructuralVariants",
             "@type": "rdfs:Class",
             "rdfs:comment": "Specifically genomic variants data classified as structural variants, which may be derived from specialized variant calling workflows",
@@ -15288,6 +15310,9 @@
                 },
                 {
                     "@id": "bts:StructuralVariants"
+                },
+                {
+                    "@id": "bts:GermlineVariants"
                 }
             ],
             "sms:displayName": "dataType",
