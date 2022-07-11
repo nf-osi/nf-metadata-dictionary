@@ -1,15 +1,11 @@
 name: schematic-ci
 
 on:
-  push:
-    branches:    
-      - '**'      # matches every branch
-      - '!main'   # excludes main
+
+  pull_request:   # default types: opened, synchronize, reopened
+    branches: [main]
     paths:
       - 'modules/**'
-
-  pull_request:
-    branches: [main]
   
   workflow_dispatch:
 
