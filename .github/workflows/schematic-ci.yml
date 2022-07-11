@@ -8,7 +8,7 @@ on:
     paths:
       - 'modules/**'
 
-  workflow_dispatch:
+  pull_request:
 
 env:
   schema_filename: NF.csv
@@ -48,3 +48,41 @@ jobs:
         with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
          branch: ${{ github.ref }}
+
+
+# Additionally test only if is a PR to avoid testing for every push
+  test:
+    name: Test with schematic 
+    if: ${{ github.event_name == 'pull_request' && github.base_ref == 'main' }}
+    needs: [build]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        schematic-version: [c8484d1, d6c8d7b]
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+          fetch-depth: 1
+
+      - name: Setup schematic
+        id: setup-schematic
+        uses: nf-osi/actions/setup-schematic@ab2581d5a9c169c2062f5cbef3d64c7020f55cfb
+        with:
+          schematic-version: ${{ matrix.schematic-version }}
+
+      - name: Test validate
+        working-directory: tests
+        continue-on-error: true
+        run: |
+          cp ../NF.jsonld NF.jsonld
+          source ${{ env.SCHEMATIC_ENV }}
+          ./test.sh
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-logs-${{ matrix.schematic-version }}
+          path: tests/*_log.txt
+
+  # TO-DO: Submit tests
