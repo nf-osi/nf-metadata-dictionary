@@ -1,4 +1,4 @@
-name: schematic-schema-convert
+name: schematic-ci
 
 on:
   push:
@@ -9,6 +9,9 @@ on:
       - 'modules/**'
 
   pull_request:
+    branches: [main]
+  
+  workflow_dispatch:
 
 env:
   schema_filename: NF.csv
@@ -63,6 +66,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:  
           fetch-depth: 1
 
       - name: Setup schematic
@@ -86,3 +90,4 @@ jobs:
           path: tests/*_log.txt
 
   # TO-DO: Submit tests
+  
