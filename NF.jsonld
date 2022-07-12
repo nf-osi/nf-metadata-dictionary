@@ -5961,11 +5961,17 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:1"
+                },
+                {
+                    "@id": "bts:2"
+                }
+            ],
             "sms:displayName": "readPair",
             "sms:required": "sms:false",
-            "sms:validationRules": [
-                "int"
-            ]
+            "sms:validationRules": []
         },
         {
             "@id": "bts:IsStranded",
@@ -11734,7 +11740,7 @@
             "sms:displayName": "cellType",
             "sms:required": "sms:false",
             "sms:validationRules": [
-                "list"
+                "list like"
             ]
         },
         {
@@ -12283,7 +12289,7 @@
             "sms:displayName": "modelSystemName",
             "sms:required": "sms:false",
             "sms:validationRules": [
-                "list"
+                "list like"
             ]
         },
         {
@@ -12426,7 +12432,9 @@
                     "@id": "bts:AgeUnit"
                 }
             ],
-            "sms:validationRules": []
+            "sms:validationRules": [
+                "num"
+            ]
         },
         {
             "@id": "bts:AgeUnit",
@@ -18961,7 +18969,7 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "Massive Soft \nNeurofibroma",
+            "sms:displayName": "Massive Soft Neurofibroma",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
