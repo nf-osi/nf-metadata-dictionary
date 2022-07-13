@@ -52,13 +52,12 @@ jobs:
 
 # Additionally test only if is a PR to avoid testing for every push
   test:
-    name: Test with schematic 
-    if: ${{ github.event_name == 'pull_request' && github.base_ref == 'main' }}
+    name: Test with schematic
     needs: [build]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        schematic-version: [c8484d1, d6c8d7b]
+        schematic-version: [develop, c8484d1, list-comma-patch]
     
     steps:
       - name: Checkout repository
