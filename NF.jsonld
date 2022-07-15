@@ -3559,6 +3559,50 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:3DImaging",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Technique to produce 3D images to visualize important structures in great detail. To produce 3D images, many scans are made, and then combined by computers to produce a 3D model, which can then be manipulated. 3D ultrasounds are produced using a somewhat similar technique.",
+            "rdfs:label": "3DImaging",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "3D Imaging",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:HighFrequencyUltrasound",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "High frequency ultrasound (HFUS) is an imaging modality that can give greater resolution of surface changes in skin (review in PMID:24583666)",
+            "rdfs:label": "HighFrequencyUltrasound",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "High Frequency Ultrasound",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Channel",
             "@type": "rdfs:Class",
             "rdfs:comment": "Fluorescent color labeling for an array",
@@ -5616,6 +5660,12 @@
                 },
                 {
                     "@id": "bts:CUT&RUN"
+                },
+                {
+                    "@id": "bts:HighFrequencyUltrasound"
+                },
+                {
+                    "@id": "bts:3DImaging"
                 }
             ],
             "sms:displayName": "assay",
