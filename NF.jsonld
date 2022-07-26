@@ -3829,6 +3829,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Non-targetingcontrol",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Use of a guide RNA that is designed to not target any gene in particular, used as a control for a targeting gRNA",
+            "rdfs:label": "Non-targetingcontrol",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GenePerturbationType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "non-targeting control",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Fr-firststrand",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
@@ -16748,6 +16765,9 @@
                 },
                 {
                     "@id": "bts:Knockout"
+                },
+                {
+                    "@id": "bts:Non-targetingcontrol"
                 },
                 {
                     "@id": "bts:NotApplicable"
