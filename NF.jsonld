@@ -15202,6 +15202,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Workflowreport",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Workflow-generated reports of analysis of primary data, usually created programmatically at completion of workflow step.",
+            "rdfs:label": "Workflowreport",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ResourceType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "workflow report",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Report",
             "@type": "rdfs:Class",
             "rdfs:comment": "a document assembled by an author for the purpose of providing information for the audience. A report is the output of a documenting process and has the objective to be consumed by a specific audience. Topic of the report is on something that has completed. A report is not a single figure. Examples of reports are journal article, patent application, grant progress report, case report (not patient record).",
@@ -15711,6 +15728,9 @@
                 },
                 {
                     "@id": "bts:Protocol"
+                },
+                {
+                    "@id": "bts:Workflowreport"
                 }
             ],
             "sms:displayName": "resourceType",
