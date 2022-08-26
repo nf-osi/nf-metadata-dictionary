@@ -17,7 +17,6 @@ jobs:
       - name: Generate input payload
         id: payload
         run: |
-          sudo apt install jq
           URL=$REPO_RAW/$GITHUB_REF_NAME/$SRC_FILE
           INPUT=$(jq -n -c --arg url "$URL" '{ source: $url}')
           echo "::set-output name=INPUT::$INPUT"
