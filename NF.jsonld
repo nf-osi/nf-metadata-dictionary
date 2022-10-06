@@ -8010,7 +8010,7 @@
         {
             "@id": "bts:NODscidgamma",
             "@type": "rdfs:Class",
-            "rdfs:comment": "These mice are most often referred to using their branded name \"\"NSG™\"\" and are extremely immunodeficient.",
+            "rdfs:comment": "These mice are most often referred to using their branded name NSG™ and are extremely immunodeficient.",
             "rdfs:label": "NODscidgamma",
             "rdfs:subClassOf": [
                 {
@@ -8021,6 +8021,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "NOD scid gamma",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:NRG",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Extremely immunodeficient mice with a targeted knockout mutation in recombination activating gene 1 (Rag1) and a complete null allele of the IL2 receptor common gamma chain.",
+            "rdfs:label": "NRG",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "NRG",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -12068,7 +12085,7 @@
                 }
             ],
             "sms:displayName": "species",
-            "sms:required": "sms:false",
+            "sms:required": "sms:true",
             "sms:validationRules": []
         },
         {
@@ -12485,6 +12502,9 @@
                 },
                 {
                     "@id": "bts:M3MPNST"
+                },
+                {
+                    "@id": "bts:NRG"
                 }
             ],
             "sms:displayName": "modelSystemName",
@@ -12842,7 +12862,7 @@
         {
             "@id": "bts:SomaticVariants",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Specifically genomic variants data that includes somatic variants and excludes germline variants",
+            "rdfs:comment": "Called somatic variants",
             "rdfs:label": "SomaticVariants",
             "rdfs:subClassOf": [
                 {
@@ -12864,7 +12884,7 @@
         {
             "@id": "bts:AnnotatedSomaticVariants",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Specifically genomic variants data that includes somatic variants with annotations added from some annotation workflow",
+            "rdfs:comment": "Somatic variants annotated with some annotation workflow",
             "rdfs:label": "AnnotatedSomaticVariants",
             "rdfs:subClassOf": [
                 {
@@ -12886,7 +12906,7 @@
         {
             "@id": "bts:GermlineVariants",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Specifically genomic variants data that includes called germline variants",
+            "rdfs:comment": "Called germline variants",
             "rdfs:label": "GermlineVariants",
             "rdfs:subClassOf": [
                 {
@@ -12897,6 +12917,28 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "GermlineVariants",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:AnnotatedGermlineVariants",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Germline variants annotated with some annotation workflow",
+            "rdfs:label": "AnnotatedGermlineVariants",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "AnnotatedGermlineVariants",
             "sms:required": "sms:false",
             "sms:requiresDependency": [
                 {
@@ -15539,6 +15581,9 @@
                 },
                 {
                     "@id": "bts:GermlineVariants"
+                },
+                {
+                    "@id": "bts:AnnotatedGermlineVariants"
                 }
             ],
             "sms:displayName": "dataType",
