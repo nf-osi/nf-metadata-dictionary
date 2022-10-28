@@ -4,18 +4,6 @@
     description: Patient ID
     attribute_type: PATIENT
     data_type: STRING
-- source: specimenID
-  target:
-    label: SAMPLE_ID
-    description: Sample ID
-    attribute_type: SAMPLE
-    data_type: STRING
-- source: age
-  target:
-    label: AGE
-    description: Age at sample collection
-    attribute_type: SAMPLE
-    data_type: NUMBER
 - source: sex
   target:
     label: SEX
@@ -34,6 +22,18 @@
     description: NF2 genotype of the patient
     attribute_type: PATIENT
     data_type: STRING
+- source: specimenID
+  target:
+    label: SAMPLE_ID
+    description: Sample ID
+    attribute_type: SAMPLE
+    data_type: STRING
+- source: age
+  target:
+    label: AGE
+    description: Age at sample collection
+    attribute_type: SAMPLE
+    data_type: NUMBER
 - source: tumorType
   target:
     label: TUMOR
@@ -42,7 +42,7 @@
     data_type: STRING
 - source: tissue
   target:
-    label: SITE_OF_TISSUE_SOURCE
-    description: Site of tissue source
+    label: TISSUE_SITE
+    description: TISSUE_SITE
     attribute_type: SAMPLE
     data_type: STRING
