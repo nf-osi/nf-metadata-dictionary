@@ -26,3 +26,11 @@ age,A numeric value representing age of the individual. Use with ageUnit.,,ageUn
 ageUnit,"A time unit that can be used with a given age value, e.g. years.","days, months, years",,FALSE,Sage Bionetworks,,,,,ageUnit,Property,Biosample,annotationProperty,biosampleAnnotation,,,
 bioSampleUsed,The biosample used.,,,,,,,,,,,,,,,,
 isXenograft,Whether or not sample source is a xenograft (Yes; No),"Yes, No",,TRUE,,experimentalData,,,,isXenograft,DataProperty,Biosample,annotationProperty,,,,
+sourceName," identifies the source from where the sample is derived. If the sample assayed is a nanoparticle sample or some chemical substance not derived from a biological material, then the corresponding source name should refer to the starting sample that was modified by a protocol for the assay.","",,TRUE,,sourceName,,,,sourceName,Property,Sample,annotationProperty,,,,
+sampleType,"Type of sample","",,FALSE,,sampleType,,,,molecularSpecies,Property,Sample,annotationProperty,,,,"Not used directly in template since each template already implicitly assumes either a biospecimen sample or chemical sample; this is a super-property for organization purposes"
+materialType,"Type of material in the characterization","nanoparticles,polymeric nanoparticles,small molecule",,FALSE,,sampleType,,,,materialType,Property,Material,annotationProperty,,,,
+pH,"Numeric value for pH sample parameter","",,FALSE,,parameter,,,,pH,Property,Sample,annotationProperty,,,,
+concentrationMaterial,"Numeric value for concentration of the material","",,FALSE,,parameter,,,,concentration,DataProperty,Sample,annotationProperty,,,,
+concentrationMaterialUnit,"Unit used for the material concentration, e.g. mg/mL","mg/mL,mM",,FALSE,,parameter,,,,concentrationUnit,Property,Sample,annotationProperty,,,,
+concentrationNaCl,"Numeric value for NaCl concentration","",,FALSE,,parameter,,,,concentrationNaCl,DataProperty,Sample,annotationProperty,,,,
+concentrationNaClUnit,"Unit used for the NaCl concentration, e.g. mM","mg/mL,mM",,FALSE,,parameter,,,,concentrationNaClUnit,Property,Sample,annotationProperty,,,,
