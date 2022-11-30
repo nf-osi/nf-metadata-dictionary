@@ -14,7 +14,7 @@ env:
   
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Install System Dependencies
@@ -54,7 +54,7 @@ jobs:
   test:
     name: Test with schematic
     needs: [build]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         schematic-version: [develop, v22.8.1, list-comma-patch]
