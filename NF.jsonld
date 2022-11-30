@@ -3669,6 +3669,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Flowcytometry",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A cytometry assay in which an input cell population is put in solution, is passed by a laser, and optical sensors are used to detect scattering of the laser light and/or fluorescence of specific markers to count and characterize the particles in solution",
+            "rdfs:label": "Flowcytometry",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "flow cytometry",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Channel",
             "@type": "rdfs:Class",
             "rdfs:comment": "Fluorescent color labeling for an array",
@@ -5823,6 +5840,9 @@
                 },
                 {
                     "@id": "bts:StaticLightScattering"
+                },
+                {
+                    "@id": "bts:Flowcytometry"
                 }
             ],
             "sms:displayName": "assay",
