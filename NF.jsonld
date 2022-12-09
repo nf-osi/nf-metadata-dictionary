@@ -3686,6 +3686,40 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Patternelectroretinogram",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Pattern electroretinogram (PERG) is an electrophysiologic ophthalmologic test that provides non-invasive objective, quantitative measurement of central retinal function. PERG is the retinal response to a pattern-reversing, black-and-white checkerboard or stripped stimulus. The PERG assesses both macular and retinal ganglion cell electrical activity and can help differentiate between diseases of macular versus optic nerve dysfunction.",
+            "rdfs:label": "Patternelectroretinogram",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Pattern electroretinogram",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Optokineticreflexassay",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The optokinetic reflex (OKR), which serves to stabilize a moving image on the retina, is a behavioral response that has many favorable attributes as a test of CNS function. The OKR requires no training, assesses the function of diverse CNS circuits, can be induced repeatedly with minimal fatigue or adaptation, and produces an electronic record that is readily and objectively quantifiable.",
+            "rdfs:label": "Optokineticreflexassay",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Optokinetic reflex assay",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Channel",
             "@type": "rdfs:Class",
             "rdfs:comment": "Fluorescent color labeling for an array",
@@ -5843,6 +5877,12 @@
                 },
                 {
                     "@id": "bts:Flowcytometry"
+                },
+                {
+                    "@id": "bts:Patternelectroretinogram"
+                },
+                {
+                    "@id": "bts:Optokineticreflexassay"
                 }
             ],
             "sms:displayName": "assay",
@@ -7182,6 +7222,28 @@
             },
             "sms:displayName": "curatedData",
             "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Characteristic",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Broad data type for measures that can encompass volume, weight, brightness, color, capacity, etc.",
+            "rdfs:label": "Characteristic",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "characteristic",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
             "sms:validationRules": []
         },
         {
@@ -9443,6 +9505,9 @@
                 },
                 {
                     "@id": "bts:AnnotatedGermlineVariants"
+                },
+                {
+                    "@id": "bts:Characteristic"
                 }
             ],
             "sms:displayName": "dataType",
@@ -19391,10 +19456,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:DynamicLightScatteringTemplate",
+            "@id": "bts:LightScatteringAssayTemplate",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Template for dynamic light scattering data adapted from ISA-TAB-Nano specs (https://wiki.nci.nih.gov/display/icr/isa-tab-nano)",
-            "rdfs:label": "DynamicLightScatteringTemplate",
+            "rdfs:comment": "Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs (https://wiki.nci.nih.gov/display/icr/isa-tab-nano)",
+            "rdfs:label": "LightScatteringAssayTemplate",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:Template"
@@ -19403,7 +19468,7 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "DynamicLightScatteringTemplate",
+            "sms:displayName": "LightScatteringAssayTemplate",
             "sms:required": "sms:false",
             "sms:requiresDependency": [
                 {
@@ -19425,6 +19490,9 @@
                     "@id": "bts:materialType"
                 },
                 {
+                    "@id": "bts:SpecimenID"
+                },
+                {
                     "@id": "bts:PH"
                 },
                 {
@@ -19438,6 +19506,9 @@
                 },
                 {
                     "@id": "bts:ConcentrationNaClUnit"
+                },
+                {
+                    "@id": "bts:Comments"
                 }
             ],
             "sms:validationRules": []
