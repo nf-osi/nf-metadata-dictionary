@@ -3720,6 +3720,57 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:SUSHI",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Fast super-resolution method that exploits sparsity in the underlying vasculature and statistical independence within the measured signals to detect slow-flowing blood, facilitating noninvasive perfusion measurements.",
+            "rdfs:label": "SUSHI",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "SUSHI",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:3Dconfocalimaging",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Confocal microscopy with 3D reconstruction of the sample tissue.",
+            "rdfs:label": "3Dconfocalimaging",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "3D confocal imaging",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:3Delectronmicroscopy",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Three-dimensional (3D) reconstruction of single, transparent objects from a collection of projection images recorded with a transmission electron microscope. It offers the opportunity to obtain 3D information on structural cellular arrangements with a high resolution.",
+            "rdfs:label": "3Delectronmicroscopy",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "3D electron microscopy",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Channel",
             "@type": "rdfs:Class",
             "rdfs:comment": "Fluorescent color labeling for an array",
@@ -5900,6 +5951,15 @@
                 },
                 {
                     "@id": "bts:Optokineticreflexassay"
+                },
+                {
+                    "@id": "bts:SUSHI"
+                },
+                {
+                    "@id": "bts:3Dconfocalimaging"
+                },
+                {
+                    "@id": "bts:3Delectronmicroscopy"
                 }
             ],
             "sms:displayName": "assay",
@@ -11181,6 +11241,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "proportionCoverage30x",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:IsFilteredReads",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Whether the reads in the processed result has been filtered by adding a 'PASS' filter or other filters as determined by the data generator",
+            "rdfs:label": "IsFilteredReads",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "isFilteredReads",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -17794,6 +17871,9 @@
                     "@id": "bts:ParentSpecimenID"
                 },
                 {
+                    "@id": "bts:IsXenograft"
+                },
+                {
                     "@id": "bts:RunType"
                 },
                 {
@@ -17847,6 +17927,9 @@
                 },
                 {
                     "@id": "bts:ParentSpecimenID"
+                },
+                {
+                    "@id": "bts:IsXenograft"
                 },
                 {
                     "@id": "bts:ExperimentalCondition"
@@ -18084,6 +18167,9 @@
                     "@id": "bts:ParentSpecimenID"
                 },
                 {
+                    "@id": "bts:IsXenograft"
+                },
+                {
                     "@id": "bts:RunType"
                 },
                 {
@@ -18222,6 +18308,9 @@
                 },
                 {
                     "@id": "bts:IndividualID"
+                },
+                {
+                    "@id": "bts:IsFilteredReads"
                 },
                 {
                     "@id": "bts:Workflow"
