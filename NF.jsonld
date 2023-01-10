@@ -11165,6 +11165,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:IsFilteredReads",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Whether the reads in the processed result has been filtered by adding a 'PASS' filter or other filters as determined by the data generator",
+            "rdfs:label": "IsFilteredReads",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "isFilteredReads",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Head",
             "@type": "rdfs:Class",
             "rdfs:comment": "The head is the anterior-most division of the body.",
@@ -17711,6 +17728,9 @@
                     "@id": "bts:ParentSpecimenID"
                 },
                 {
+                    "@id": "bts:IsXenograft"
+                },
+                {
                     "@id": "bts:RunType"
                 },
                 {
@@ -17764,6 +17784,9 @@
                 },
                 {
                     "@id": "bts:ParentSpecimenID"
+                },
+                {
+                    "@id": "bts:IsXenograft"
                 },
                 {
                     "@id": "bts:ExperimentalCondition"
@@ -18001,6 +18024,9 @@
                     "@id": "bts:ParentSpecimenID"
                 },
                 {
+                    "@id": "bts:IsXenograft"
+                },
+                {
                     "@id": "bts:RunType"
                 },
                 {
@@ -18139,6 +18165,9 @@
                 },
                 {
                     "@id": "bts:IndividualID"
+                },
+                {
+                    "@id": "bts:IsFilteredReads"
                 },
                 {
                     "@id": "bts:Workflow"
