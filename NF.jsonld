@@ -5612,6 +5612,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:PromegaGloMaxDiscover",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "(From vendor) Microplate reader with high-performance luminescence, fluorescence, UV-Visible absorbance, BRET and FRET, two-color filtered luminescence and kinetic measurement capabilities.",
+            "rdfs:label": "PromegaGloMaxDiscover",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Platform"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Promega GloMax Discover",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:DrugScreenType",
             "@type": "rdfs:Class",
             "rdfs:comment": "String describing general class of drug screen",
@@ -12738,6 +12755,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:R816X",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A pathogenic mutation in the NF1 gene (amino acid nomenclature) leading to a truncated protein",
+            "rdfs:label": "R816X",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Nf1Variant"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "R816X",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Polymericnanoparticles",
             "@type": "rdfs:Class",
             "rdfs:comment": "Polymeric nanoparticles (PNPs) are solid and spherical (in most cases) structures prepared from natural or synthetic polymers with drug delivery being known to be one of the most important biomedical applications (reference: Hirvonen et al., Nanoengineered Biomaterials for Advanced Drug Delivery, 2020)",
@@ -14332,6 +14366,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "M3 MPNST",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:HEK293",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Human Embryonic Kidney 293 cell line",
+            "rdfs:label": "HEK293",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ModelSystemName"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "HEK293",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -17012,7 +17063,7 @@
         {
             "@id": "bts:ModelSystemName",
             "@type": "rdfs:Class",
-            "rdfs:comment": "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293T (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)",
+            "rdfs:comment": "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)",
             "rdfs:label": "ModelSystemName",
             "rdfs:subClassOf": [
                 {
@@ -17286,6 +17337,9 @@
                 },
                 {
                     "@id": "bts:NRG"
+                },
+                {
+                    "@id": "bts:HEK293"
                 }
             ],
             "sms:displayName": "modelSystemName",
@@ -17365,6 +17419,49 @@
                 }
             ],
             "sms:displayName": "nf1Genotype",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Nf1Variant",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Variant (mutation) in the NF1 gene/protein in the biospecimen from which the data were derived, if known/applicable.",
+            "rdfs:label": "Nf1Variant",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Neurofibromatosis"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:R816X"
+                },
+                {
+                    "@id": "bts:E178X"
+                },
+                {
+                    "@id": "bts:L578P"
+                },
+                {
+                    "@id": "bts:R1276Q"
+                },
+                {
+                    "@id": "bts:R1513X"
+                },
+                {
+                    "@id": "bts:V1621R"
+                },
+                {
+                    "@id": "bts:R2237X"
+                },
+                {
+                    "@id": "bts:Y2264X6"
+                }
+            ],
+            "sms:displayName": "nf1Variant",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -20246,6 +20343,125 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "-/?",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:E178X",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "E178X",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Nf1Variant"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "E178X",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:L578P",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "L578P",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Nf1Variant"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "L578P",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:R1276Q",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "R1276Q",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Nf1Variant"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "R1276Q",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:R1513X",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "R1513X",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Nf1Variant"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "R1513X",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:V1621R",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "V1621R",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Nf1Variant"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "V1621R",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:R2237X",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "R2237X",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Nf1Variant"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "R2237X",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Y2264X6",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Y2264X6",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Nf1Variant"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Y2264X6",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
