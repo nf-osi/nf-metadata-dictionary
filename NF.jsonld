@@ -7394,16 +7394,21 @@
         {
             "@id": "bts:Metadata",
             "@type": "rdfs:Class",
-            "rdfs:comment": "A file of clinical, technical, or other parameters that describe a dataset.",
+            "rdfs:comment": "Data about data",
             "rdfs:label": "Metadata",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:DataSubtype"
+                    "@id": "bts:Http://purl.obolibrary.org/obo/NCITC52095"
                 }
             ],
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Informationthatdescribesanothersetofdata."
+                }
+            ],
             "sms:displayName": "metadata",
             "sms:required": "sms:false",
             "sms:validationRules": []
@@ -9211,15 +9216,13 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:ExperimentalData",
-            "@type": "rdfs:Class",
+            "@id": "bts:experimentalData",
+            "@type": "rdf:Property",
             "rdfs:comment": "Any file derived from or pertaining to a scientific experiment. experimentalData annotations should be applied, possibly disease-related",
-            "rdfs:label": "ExperimentalData",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:ResourceType"
-                }
-            ],
+            "rdfs:label": "experimentalData",
+            "schema:domainIncludes": {
+                "@id": "bts:FailedQC"
+            },
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
@@ -9298,11 +9301,11 @@
         {
             "@id": "bts:Metadata",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Data about data; information that describes another set of data.",
+            "rdfs:comment": "Data about data",
             "rdfs:label": "Metadata",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:Http://purl.obolibrary.org/obo/NCITC52095"
                 }
             ],
             "schema:isPartOf": {
@@ -9326,6 +9329,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "protocol",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Weblink",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The global address of documents and other resources on the World Wide Web.",
+            "rdfs:label": "Weblink",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ResourceType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "weblink",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -9633,11 +9653,11 @@
         {
             "@id": "bts:FailedQC",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Whether the sample or data failed QC checks (Yes; No)",
+            "rdfs:comment": "Whether the sample or data failed QC checks (Yes",
             "rdfs:label": "FailedQC",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ExperimentalData"
+                    "@id": "schema:Thing"
                 }
             ],
             "schema:isPartOf": {
@@ -9645,14 +9665,19 @@
             },
             "schema:rangeIncludes": [
                 {
+                    "@id": "bts:No)"
+                }
+            ],
+            "sms:displayName": "failedQC",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
                     "@id": "bts:Yes"
                 },
                 {
                     "@id": "bts:No"
                 }
             ],
-            "sms:displayName": "failedQC",
-            "sms:required": "sms:true",
             "sms:validationRules": []
         },
         {
@@ -9761,15 +9786,13 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:ResourceType",
-            "@type": "rdfs:Class",
+            "@id": "bts:resourceType",
+            "@type": "rdf:Property",
             "rdfs:comment": "The type of resource being stored and annotated",
-            "rdfs:label": "ResourceType",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:SageCommunity"
-                }
-            ],
+            "rdfs:label": "resourceType",
+            "schema:domainIncludes": {
+                "@id": "bts:Metadata"
+            },
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
@@ -9797,6 +9820,9 @@
                 },
                 {
                     "@id": "bts:Workflowreport"
+                },
+                {
+                    "@id": "bts:Weblink"
                 }
             ],
             "sms:displayName": "resourceType",
@@ -17809,7 +17835,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -17864,7 +17890,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -17931,7 +17957,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18007,7 +18033,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18062,7 +18088,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18120,7 +18146,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18178,7 +18204,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18245,7 +18271,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18333,7 +18359,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18385,7 +18411,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18443,7 +18469,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18495,7 +18521,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18556,7 +18582,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18614,7 +18640,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18672,7 +18698,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18733,7 +18759,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18791,7 +18817,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18883,7 +18909,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18938,7 +18964,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -18999,7 +19025,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -19051,7 +19077,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgrammingLanguage"
@@ -19091,7 +19117,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:Author"
@@ -19131,7 +19157,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -19198,7 +19224,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:ProgressReportNumber"
@@ -19459,7 +19485,7 @@
                     "@id": "bts:FileFormat"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:DataType"
@@ -19582,7 +19608,7 @@
                     "@id": "bts:FileFormat"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 }
             ],
             "sms:validationRules": []
@@ -19691,7 +19717,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:DataType"
@@ -19749,7 +19775,7 @@
                     "@id": "bts:Filename"
                 },
                 {
-                    "@id": "bts:ResourceType"
+                    "@id": "bts:resourceType"
                 },
                 {
                     "@id": "bts:DataType"
@@ -19898,6 +19924,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Informationthatdescribesanothersetofdata.",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Informationthatdescribesanothersetofdata.",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Metadata"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "information that describes another set of data.",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:TPM",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
@@ -19979,6 +20022,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "Other",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:No)",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "No)",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:FailedQC"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "No)",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
