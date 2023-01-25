@@ -3771,6 +3771,91 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Cellcompetition",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "An assay in which two or more labeled populations of cells or organoids are mixed, allowed to grow, possibly in the presence of a drug or other perturbagen. The relative quantity of the cell populations is measured at the end of the experiment.",
+            "rdfs:label": "Cellcompetition",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "cell competition",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Bodysizetraitmeasurement",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Any measurable or observable characteristic related to the overall physical magnitude of an organism.",
+            "rdfs:label": "Bodysizetraitmeasurement",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "body size trait measurement",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Twinspotassay",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Two individual and genetically different populations of cells that originate from the same mitotic recombination event; twin spots allow a direct and reliable comparison between mutant and wild-type clones, and the size of the wild-type twin can serve as a reference for comparison with the homozygous mutant clones.",
+            "rdfs:label": "Twinspotassay",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "twin spot assay",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Perineurialcellthickness",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Measuring the thickness of the cells in the perineurium, e.g. in developing Drosophila melanogaster.",
+            "rdfs:label": "Perineurialcellthickness",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "perineurial cell thickness",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Survival",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Any quantitative measurement of survival of or in an individual or study population.",
+            "rdfs:label": "Survival",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "survival",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Channel",
             "@type": "rdfs:Class",
             "rdfs:comment": "Fluorescent color labeling for an array",
@@ -5960,6 +6045,21 @@
                 },
                 {
                     "@id": "bts:3Delectronmicroscopy"
+                },
+                {
+                    "@id": "bts:Cellcompetition"
+                },
+                {
+                    "@id": "bts:Bodysizetraitmeasurement"
+                },
+                {
+                    "@id": "bts:Twinspotassay"
+                },
+                {
+                    "@id": "bts:Perineurialcellthickness"
+                },
+                {
+                    "@id": "bts:Survival"
                 }
             ],
             "sms:displayName": "assay",
@@ -9298,7 +9398,7 @@
         {
             "@id": "bts:Metadata",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Data about data; information that describes another set of data.",
+            "rdfs:comment": "Data about data, information that describes another set of data.",
             "rdfs:label": "Metadata",
             "rdfs:subClassOf": [
                 {
@@ -9326,6 +9426,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "protocol",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Weblink",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The global address of documents and other resources on the World Wide Web.",
+            "rdfs:label": "Weblink",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ResourceType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "weblink",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -9633,7 +9750,7 @@
         {
             "@id": "bts:FailedQC",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Whether the sample or data failed QC checks (Yes; No)",
+            "rdfs:comment": "Whether the sample or data failed QC checks (Yes, No)",
             "rdfs:label": "FailedQC",
             "rdfs:subClassOf": [
                 {
@@ -9797,6 +9914,9 @@
                 },
                 {
                     "@id": "bts:Workflowreport"
+                },
+                {
+                    "@id": "bts:Weblink"
                 }
             ],
             "sms:displayName": "resourceType",
@@ -18139,6 +18259,18 @@
                 },
                 {
                     "@id": "bts:ParentSpecimenID"
+                },
+                {
+                    "@id": "bts:IsXenograft"
+                },
+                {
+                    "@id": "bts:TransplantationType"
+                },
+                {
+                    "@id": "bts:TransplantationRecipientSpecies"
+                },
+                {
+                    "@id": "bts:TransplantationRecipientTissue"
                 },
                 {
                     "@id": "bts:RunType"
