@@ -2,9 +2,9 @@
 
 This directory stores mapping specifications for the NF data model in a specific YAML/JSON format:
 1. Translation of NF concepts to *other* data models/dictionaries. 
-2. Translation of messy/legacy NF Data Portal concepts to official NF concepts.
+2. Translation of messy or legacy NF Data Portal annotations to versioned, standardized NF data model concepts.
 
-These mappings help document what was done when metadata were translated or updated, e.g. in "harmonization" efforts. 
+These mappings help document what was done when metadata are translated or updated in harmonization or migration efforts. 
 The mappings themselves are in development so both format and content may change.
 Currently, the map spec is inspired by and vaguely resembles a [concept map](https://build.fhir.org/conceptmap-example.json.html), 
 though [SSOM](https://github.com/mapping-commons/sssom) was also considered. 
