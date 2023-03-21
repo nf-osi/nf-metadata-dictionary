@@ -1,7 +1,7 @@
-title: Mapping of NF data portal assay concept labels to assay labels in NF data model v6.4
-description: This translates NF data portal assay labels in use around March 2023 (Portal - Files table version 75) to new preferred labels in NF data model v6.4. (Only assay labels being translated are included.) 
-source_scope: https://www.synapse.org/#!Synapse:syn16858331.75/tables/
-target_scope: hhttps://github.com/nf-osi/nf-metadata-dictionary/releases/tag/v6.4
+title: Mapping of NF data portal assay concept labels to assay labels in NF data model v7.1.0
+description: This translates NF data portal assay labels in use around March 2023 (Portal - Files table version 76) to new preferred labels in NF data model v7.1. (Only assay labels being translated are included.) 
+source_scope: https://www.synapse.org/#!Synapse:syn16858331.76/tables/
+target_scope: hhttps://github.com/nf-osi/nf-metadata-dictionary/releases/tag/v7.1.0
 mapping:
   - source: Whole Exome Sequencing
     target:
@@ -138,7 +138,7 @@ mapping:
   - source: ATP hydrolisi rate
     target:
       label: ATPase activity assay
-   - source: ATP hydrolisis rate
+  - source: ATP hydrolisis rate
     target:
       label: ATPase activity assay
   - source: contextual conditioning behavior, in vivo bioluminescence
@@ -174,15 +174,34 @@ mapping:
   - source: Zeno Electronic Walkway 
     target:
       label: gait measurement
-- source: UPLC-MSMS
-   target: 
-     label: ultra high-performance liquid chromatography/tandem mass spectrometry
-- source: HPLC-MSMS
-   target: 
-     label: high-performance liquid chromatography/tandem mass spectrometry
-- source: LC-MSMS
-   target: 
-     label: liquid chromatography/tandem mass spectrometry
-- source: LC-MS
-   target: 
-     label: liquid chromatography/mass spectrometry
+  - source: UPLC-MSMS
+    target: 
+      label: ultra high-performance liquid chromatography/tandem mass spectrometry
+  - source: HPLC-MSMS
+    target: 
+      label: high-performance liquid chromatography/tandem mass spectrometry
+  - source: LC-MSMS
+    target: 
+      label: liquid chromatography/tandem mass spectrometry
+  - source: LC-MS
+    target: 
+      label: liquid chromatography/mass spectrometry
+  - source: Hsp90 ATPase activity
+    target: 
+      label: ATPase activity assay
+  - source: active avoidance learning behavior
+    target: 
+      label: active avoidance learning behavior assay
+  - source: Matrigel
+    target: 
+      label: Matrigel-based tumorigenesis assay
+  - source: Blu native/SDSPage/WesternBlot
+    target: 
+      label: blue native PAGE
+  - source: Calcium retention capacity
+    target: 
+      label: calcium retention capacity assay
+  - source: geneExpression
+    target: 
+      label: quantitative PCR
+      comment: This mapped one file where dataType was incorrectly used
