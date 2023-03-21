@@ -2160,23 +2160,6 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:Real-timePCR",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "An application of PCR that measures the products generated during each cycle of the polymerase chain reaction process in order to determine the starting amount of template in the reaction.",
-            "rdfs:label": "Real-timePCR",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Assay"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "real-time PCR",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
             "@id": "bts:Invivotumorgrowth",
             "@type": "rdfs:Class",
             "rdfs:comment": "The growth of a tumor measured using calipers, ruler, or another similar measurement device. See also \"\"in vivo bioluminescence\"\".",
@@ -4056,6 +4039,91 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "focus forming assay",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:BluenativePAGE",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Blue native PAGE (BN-PAGE) permits a high-resolution separation of multi-protein complexes under native conditions. ",
+            "rdfs:label": "BluenativePAGE",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "blue native PAGE",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Invitrotumorigenesis",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "An in vitro assay devised to measure tumor formation",
+            "rdfs:label": "Invitrotumorigenesis",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "in vitro tumorigenesis",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Matrigel-basedtumorigenesisassay",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "An assay in which tumor cells are loaded into a Matrigel matrix and measured for tumor formation characteristics",
+            "rdfs:label": "Matrigel-basedtumorigenesisassay",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Matrigel-based tumorigenesis assay",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Calciumretentioncapacityassay",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The CRC assay assesses Ca2+-related mitochondrial functions",
+            "rdfs:label": "Calciumretentioncapacityassay",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "calcium retention capacity assay",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:QuantitativePCR",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Quantitative PCR (Q-PCR) is used to measure the quantity of a PCR product (commonly in real-time). It quantitatively measures starting amounts of DNA, cDNA, or RNA.",
+            "rdfs:label": "QuantitativePCR",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "quantitative PCR",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -6013,9 +6081,6 @@
                     "@id": "bts:Electrochemiluminescence"
                 },
                 {
-                    "@id": "bts:Real-timePCR"
-                },
-                {
                     "@id": "bts:Invivotumorgrowth"
                 },
                 {
@@ -6340,7 +6405,19 @@
                     "@id": "bts:Activeavoidancelearningbehaviorassay"
                 },
                 {
-                    "@id": "bts:Focusformingassay"
+                    "@id": "bts:FocusformingassaybluenativePAGE"
+                },
+                {
+                    "@id": "bts:Invitrotumorigenesis"
+                },
+                {
+                    "@id": "bts:Matrigel-basedtumorigenesisassay"
+                },
+                {
+                    "@id": "bts:Calciumretentioncapacityassay"
+                },
+                {
+                    "@id": "bts:QuantitativePCR"
                 }
             ],
             "sms:displayName": "assay",
@@ -21311,6 +21388,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "combinationScreen",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:FocusformingassaybluenativePAGE",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "FocusformingassaybluenativePAGE",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "focus forming assayblue native PAGE",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
