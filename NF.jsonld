@@ -10028,6 +10028,9 @@
                     "@id": "bts:Proteomics"
                 },
                 {
+                    "@id": "bts:Particlecharacterization"
+                },
+                {
                     "@id": "bts:Kinomics"
                 },
                 {
@@ -19274,6 +19277,9 @@
                 },
                 {
                     "@id": "bts:MM"
+                },
+                {
+                    "@id": "bts:Particles/mL"
                 }
             ],
             "sms:displayName": "concentrationMaterialUnit",
@@ -21514,6 +21520,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Particlecharacterization",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Particlecharacterization",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:DataType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "particle characterization",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:TPM",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
@@ -22309,6 +22332,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "mM",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Particles/mL",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Particles/mL",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ConcentrationMaterialUnit"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "particles/mL",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
