@@ -128,7 +128,8 @@ if(!params$use_cache) {
                             PlateBasedReporterAssayTemplate = "Plate_Based_Reporter_Assay_Template",
                             ClinicalAssayTemplate = "Clinical_Assay_Template",
                             PatientTimepointsTemplate = "Patient_Timepoints_Template",
-                            SourceCodeTemplate = "Source_Code_Template"
+                            SourceCodeTemplate = "Source_Code_Template",
+                            DynamicLightScatteringTemplate = "Dynamic_Light_Scattering_Template"
                             ),
               schema_csv = schema
               )
@@ -679,6 +680,16 @@ templateTable(read.csv("templates/Plate_Based_Reporter_Assay_Template.csv"))
 ```{r echo=FALSE }
 
 templateTable(read.csv("templates/Clinical_Assay_Template.csv"))
+
+```
+
+#### Other Assays {.tabset .tabset-fade .tabset-pills}
+
+
+##### Light Scattering
+```{r echo=FALSE }
+
+templateTable(read.csv("templates/Dynamic_Light_Scattering_Template.csv"))
 
 ```
 
