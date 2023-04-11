@@ -15,48 +15,72 @@
 #' 
 #' Currently, schematic templates allow modeling more on the simplistic side and 
 #' don't formally express all these, so only a few are checked.
-#' Moreover, the jsonld version encodes much less information than the csv version
-#' (jsonld conversion loses custom metadata in the csv), which is why this currently depends on both formats. 
+#' Currently, the jsonld version loses some information when translated from the csv source
+#' (mainly the summary Range definition corresponding to https://www.w3.org/TR/rdf-schema/#ch_range and EditorNote).
 #' 
 #' @param templates Named vector of templates to process,
 #' where names corresponds to id without prefix (currently whatever follows "bts:"),
 #' and value is the real internal ID (in .ID).
-#' @param schema_csv Schema representation read from `.csv`.
-#' @param schema_jsonld Schema path to jsonld file.
+#' @param schema Schema list object parsed from a schematic jsonld.
+#' @param prefix Namespace prefix.
 #' @param savedir Directory where template representations will be outputted.
+#' @param verbose Whether to be verbose about what's going on.
 docTemplate <- function(templates,
-                        schema_csv,
-                        schema_jsonld = "../NF.jsonld",
-                        savedir = "templates/") {
+                        schema,
+                        prefix = "bts:",
+                        savedir = "templates/",
+                        verbose = TRUE) {
   
   
   for(x in names(templates)) {  # e.g. x <- "GenomicsAssayTemplate"
     # For template, parse DependsOn to get all props present in manifest
-    props <- nfportalutils::get_dependency_from_json_schema(paste0("bts:", x), 
-                                                            schema = schema_jsonld)
+    prop_ids <- nfportalutils::get_dependency_from_json_schema(paste0(prefix, x), 
+                                                               schema = schema, 
+                                                               return_labels = FALSE)
     
-    # Create the ControlledVocab aka Range col for each prop
-    # ControlledVocab col is handled specially and uses a custom Range col defined in csv
-    # For CV col we create a link to a class if the term editor has referenced a class in Range, 
-    # else we simply fall back to enumerating the valid values
-    index <- match(props, schema_csv$Attribute)
-    range <- dplyr::if_else(schema_csv[index, "Range"] != "", 
-                            paste0("#", schema_csv[index, "Range"]), 
-                            schema_csv[index, "Valid.Values"])
+    # The range of prop `assay` is anything of class `Assay` --
+    # However, the json-ld does not make this so conceptually concise for props, instead listing all possible values
+    # In the docs, we don't want to enumerate all values and instead want to create a _link_ to a class that defines the range
+    # To do this, we can infer class by look up the class of the first listed enum for that prop
+    # The range could also be inferred to be a boolean or string/integer rather than a class
+    summarize_range <- function(prop_id, schema, return_labels = FALSE) {
+     
+      enums <- nfportalutils::get_by_prop_from_json_schema(id = prop_id,
+                                                           prop = "schema:rangeIncludes",
+                                                           schema = schema,
+                                                           return_labels = FALSE)
+      if(is.null(enums)) return("")
+      if(length(enums) < 5) return(paste(gsub("bts:", "", enums), collapse = ","))
+      if("bts:Yes" %in% enums) return("Y/N")
+      enum1 <- enums[1]
+      # additional lookup class
+      class <- nfportalutils::get_by_prop_from_json_schema(enum1, 
+                                                           prop = "rdfs:subClassOf", 
+                                                           schema = schema,
+                                                           return_labels = FALSE)[[1]] 
+      if(length(class) > 1) warning(enum1, " has multiple parent classes")
+      class <- sub("bts:", "", class[1]) # use first but warn
+      class <- paste0("#", class)
+      class
+    }
     
-    template_tab <- data.table(Field = props,
-                               Description = schema_csv[index, "Description"],
-                               Required = ifelse(schema_csv[index, "Required"], "required", "optional"),
-                               ControlledVocab = range,
-                               # Cardinality = schema_csv[index, "Cardinality"],
-                               Note = schema_csv[index, "EditorNote"])
+    # because of the way schematic imports biothings without us having much control over it some ids can be duplicated (!)
+    schema <- schema[!duplicated(sapply(schema, function(x) x$`@id`))]
+    sms <- Filter(function(x) x$`@id` %in% prop_ids, schema)
+    sms <- lapply(sms, function(x) {
+      list(Field = x$`sms:displayName`,
+           Description = if(!is.null(x$`rdfs:comment`)) x$`rdfs:comment` else " ",
+           Required = if(!is.null(x$`sms:required`)) sub("sms:", "", x$`sms:required`) else "?", 
+           ValidRange = summarize_range(x$`@id`, schema))
+    })
+    tt <- rbindlist(sms)
     
     # Sort to show by required, then alphabetically
-    template_tab <- template_tab[order(-Required, Field), ]
+    tt <- tt[order(-Required, Field), ]
     
     template_id <- templates[x]
     filepath <-  paste0(savedir, template_id, ".csv")
-    write.csv(template_tab, file = filepath, row.names = F)
+    write.csv(tt, file = filepath, row.names = F)
   }
 }
 
