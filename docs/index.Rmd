@@ -21,7 +21,6 @@ params:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(data.table)
-library(tidyverse)
 library(reactable)
 library(htmltools)
 # library(visNetwork)
@@ -103,8 +102,7 @@ module_section <- function(module,
     
     cat(paste0("\n", "#### ", submodule[i], " {#", submodule_id[i], " .tabset .tabset-fade .tabset-pills}", "\n"))
     
-    table <- data %>%
-      select(Attribute, Description, DependsOn)
+    table <- data[, .(Attribute, Description, DependsOn)]
   
     print(
       tagList(
@@ -276,11 +274,11 @@ For example, the "assay" property allows the contributor to use [terms under Ass
 
 # CURRENTLY NOT RUN (eval=FALSE)
 # Custom code to get unique set of properties used across all templates
-standard_properties_table <- schema %>%
-  filter(Parent %in% c("template")) %>%
-  select(Attribute, Description, DependsOn)
-
-basicTable(standard_properties_table)
+# standard_properties_table <- schema %>%
+#   filter(Parent %in% c("template")) %>%
+#   select(Attribute, Description, DependsOn)
+# 
+# basicTable(standard_properties_table)
 ```
 
 ##### Genomics Assay (Generic)
