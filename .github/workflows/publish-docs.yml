@@ -1,0 +1,45 @@
+name: Build and publish docs to GH Pages
+
+on:
+  push:
+    branches: 
+      - main
+
+  # TODO setup conditional to build but not push
+  #pull_request:
+  #  branches: 
+  #    - main
+
+jobs:
+
+  build-and-publish:
+    runs-on: ubuntu-latest
+  
+    permissions:
+      contents: read
+      pages: write     
+      id-token: write 
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+      
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup GH Pages
+        uses: actions/configure-pages@v3
+
+      - name: Build using docker 
+        run: |
+          docker run -v $(pwd):/app ghcr.io/nf-osi/data-model-docs 
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: docs 
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2

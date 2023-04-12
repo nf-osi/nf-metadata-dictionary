@@ -1,5 +1,4 @@
 library(visNetwork)
-library(tidyverse)
 
 #-------------------------------------------------------------------------------#
 
@@ -10,7 +9,7 @@ library(tidyverse)
 # schema <- readExtSchema("NF.csv")
 readExtSchema <- function(schema_csv, ext_classes_csv = "ext_classes.csv") {
   schema <- read.csv(schema_csv) %>%
-    select(label = Attribute, id = .ID, Root = .Root, SubOf = .SubOf)
+    dplyr::select(label = Attribute, id = .ID, Root = .Root, SubOf = .SubOf)
   
   # Extended class definitions
   ext_classes <- read.csv(ext_classes_csv) %>%
@@ -32,7 +31,7 @@ getNodesEdges <- function(schema, cluster_root,
                                        font.color = list(A = "white", C = "white"))
                           ) {
   cluster <- schema %>% 
-    filter(Root == cluster_root)
+    dplyr::filter(Root == cluster_root)
   
   # Namespaces for cluster ancestor vs Children
   A <- paste(prefix, "A", sep = "_")
@@ -66,7 +65,7 @@ c2Cluster <- function(cluster_1, cluster_2, connect_by,
   # Configure between-cluster relations
   relations <- read.csv(ext_relations_csv, header = T)
   edges <- relations %>%
-    filter(property == connect_by)
+    dplyr::filter(property == connect_by)
   relations$color <- viz$color
   relations$width <- viz$width
   
