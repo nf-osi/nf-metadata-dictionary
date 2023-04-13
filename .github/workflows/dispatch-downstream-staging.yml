@@ -1,4 +1,4 @@
-name: Dispatch downstream dev
+name: Dispatch for downstream staging
 
 on:
   release:
@@ -22,7 +22,7 @@ jobs:
           echo "::set-output name=INPUT::$INPUT"
       - uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: Update source model for dev
+          workflow: Data model staging
           repo: ${{ env.REPO }}
           ref: ${{ env.REF_DEV }}
           token: ${{ secrets.SERVICE_TOKEN }}
