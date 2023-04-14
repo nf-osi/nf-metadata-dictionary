@@ -4145,6 +4145,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:Photograph",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "An image recorded by a camera.",
+            "rdfs:label": "Photograph",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Assay"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "photograph",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Channel",
             "@type": "rdfs:Class",
             "rdfs:comment": "Fluorescent color labeling for an array",
@@ -4166,23 +4183,6 @@
                 }
             ],
             "sms:displayName": "channel",
-            "sms:required": "sms:true",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:Photograph",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "An image recorded by a camera.",
-            "rdfs:label": "Photograph",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Assay"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "photograph",
             "sms:required": "sms:true",
             "sms:validationRules": []
         },
@@ -6452,6 +6452,9 @@
                 },
                 {
                     "@id": "bts:QuantitativePCR"
+                },
+                {
+                    "@id": "bts:Photograph"
                 }
             ],
             "sms:displayName": "assay",
