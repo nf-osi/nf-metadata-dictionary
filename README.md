@@ -17,7 +17,7 @@ The purpose of the metadata dictionary is to have a set of standard terms that c
 * `Source` : Preferably a URI to an ontology source term.
 If you need help, you can do a pull request and the maintainer will help fill out the rest.  
 4. If you are adding an attribute that is a valid value for another attribute, navigate to that csv file and add the term.
-5. Create a pull request (PR) and add @allaway or @anngvu as a reviewer. Creating the PR will perform an action to updae the [NF.csv](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.csv) file and the [NF.jsonld](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.jsonld) from the modules folder. **You do not need to edit the `NF.csv` or `NF.jsonld` directly because it will be done automatically**
+5. Create a pull request (PR) and add @allaway or @anngvu as a reviewer. Creating the PR will perform an action to update the [NF.csv](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.csv) file and the [NF.jsonld](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.jsonld) from the modules folder. **You do not need to edit the `NF.csv` or `NF.jsonld` directly because it will be done automatically**
 7. Make any neccessary changes after the review from an outside person, and then merge to the main branch. 
 8. Draft a versioned release [here](https://github.com/nf-osi/nf-metadata-dictionary/releases).
 9. Name the release with the the convention MAJOR.MINOR.PATCH. These releases start at v1.0.0. Versioning is roughly following semver.org concepts where: 
