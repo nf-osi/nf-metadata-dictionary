@@ -11,15 +11,13 @@ This dictionary is maintained by the NF-Open Science Initative. We welcome contr
 1. Create a new [branch](https://github.com/nf-osi/nf-metadata-dictionary/branches) in the NF-metadata-dictionary repository. (example: patch/add-attribute)
 2. Find the csv file in the new branch where the attribute belongs.  The components of the data model are organized in the folder labled [modules](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules).
 
-_e.g. As shown below, in [modules/Assay](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules/Assay) there are classes associated with assays: Assay, Assay_Parameter, Platform, etc.and the relations csv file, annotationProperty._
+_e.g. As shown below, in [modules/Assay](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules/Assay) there are classes associated with assays: Assay, Assay_Parameter, Method, and Platform and the relations csv file, annotationProperty._
 
 <img src="https://user-images.githubusercontent.com/114612268/233366709-d2bbc499-f734-4224-9862-abc92f18b236.png" alt="modules" width="400"/>
 
-3. Add the attribute to the relevant csv file by either 1) <ins>↓</ins> downloading the csv file , editing in excel and reuploading or 2) editing the raw csv.
+3. Add the attribute to the relevant csv file by either 1) <ins>↓</ins> downloading the csv file , editing in excel and reuploading or 2) editing the raw csv as shown below: 
 
-_The raw csv file looks like this_
-
-<img src="https://user-images.githubusercontent.com/114612268/233368135-88b830b0-b8c6-42c5-ac2f-01cc2e5d1333.png" alt="modules" width="1000"/>
+<img src="https://user-images.githubusercontent.com/114612268/233368135-88b830b0-b8c6-42c5-ac2f-01cc2e5d1333.png" alt="raw csv" width="1000"/>
 
 4. Complete the columns for the attribute and "commit changes" to the new branch. At a minimum, add **Attribute**, **Description**, **Valid Values** and **Source** - 
 If you need help, the maintainer will help fill out the rest after you do a pull request.
@@ -27,7 +25,7 @@ If you need help, the maintainer will help fill out the rest after you do a pull
  Attribute*** | Description*** | Valid Values | Source***
 ---|---|---|---
  Name of the new concept | A description for the concept.   | Only required if you are editing an annotationProperty.csv file, where you would be defining a new field (relation) and specifying what values are allowed to be used with this field (relation). For example, _tumorType_ is to valid values _{ Malignant Peripheral Sheath Tumor, Schwannoma, ... }_ as _eats_ is to valid values _{ pizza, sandwich, egg, ... }_.  | Preferably a URI to an ontology source term
-
+ 
 *** = Required
 
 5. Add the attribute under "Valid Values" for other attributes it pertains to. 
