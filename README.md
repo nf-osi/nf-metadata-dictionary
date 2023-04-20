@@ -2,13 +2,11 @@
 
 #### Maintenance and Contribution
 
-This section is for those who would like to be involved. 
-We welcome contributions, whether you are a professional data modeler, clinician, or student in the NF community.
-The purpose of the metadata dictionary is to have a set of standard terms that can be used to describe data. 
+The purpose of the metadata dictionary is to have a set of standard terms that can be used to describe data. We welcome contributions, whether you are a professional data modeler, clinician, or student in the NF community.
 
 #### Steps to add an attribute to the Metadata Dictionary: 
 1. Create a new [branch](https://github.com/nf-osi/nf-metadata-dictionary/branches) (example: patch/add-attribute)
-2. Go to the csv file where the attribute belongs.  The components of the data model are organized in the folder [modules](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules), e.g. in [modules/Assay](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules/Assay) we have classes and  most pertinent to assays: Assay, Assay_Parameter, Platform,etc. as well as the relations csv called "annotationProperty". 
+2. Go to the csv file where the attribute belongs.  The components of the data model are organized in the folder [modules](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules), e.g. in [modules/Assay](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules/Assay) we have classes and  most pertinent to assays: Assay, Assay_Parameter, Platform,etc. as well as the relations csv file called "annotationProperty". 
 3. Add the attribute to the relevant csv file.  
 4. Complete the columns for the attribute. At a minimum, add the following information - 
 
@@ -18,13 +16,13 @@ The purpose of the metadata dictionary is to have a set of standard terms that c
 * `Source` : Preferably a URI to an ontology source term.
 If you need help, you can do a pull request and the maintainer will help fill out the rest.  
 
-5. If you are adding an attribute that is a valid value for another attribute, navigate to that csv file and add the term.
-6. Create a pull request (PR) and add @allaway, @anngvu, or @cconrad8 as a reviewer. Creating the PR will perform an action to update the [NF.csv](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.csv) file and the [NF.jsonld](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.jsonld) from the modules folder. **You do not need to edit the `NF.csv` or `NF.jsonld` directly because it will be done automatically**
+5. If you are adding an attribute that needs to be listed in "Valid Values" for another attribute, navigate to that [csv file](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules) in the modules folder and add the term.
+6. Create a [pull request (PR)](https://github.com/nf-osi/nf-metadata-dictionary/compare) to merge the branch to "main". Add either @allaway, @anngvu, or @cconrad8 as a reviewer. Creating the PR will perform an action to update the [NF.csv](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.csv) file and the [NF.jsonld](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.jsonld) from the modules folder. **Therefore, you do not need to edit the `NF.csv` or `NF.jsonld` directly because it will be done automatically**
 
-_**if you are a contributor, please stop here and 
-7. Make any neccessary changes after the review from an outside person, and then merge to the main branch. 
-8. Draft a versioned release [here](https://github.com/nf-osi/nf-metadata-dictionary/releases).
-9. Name the release with the the convention MAJOR.MINOR.PATCH. These releases start at v1.0.0. Versioning is roughly following semver.org concepts where: 
+_**The following steps are performed only by the "maintainer"**
+7. The maintainer will make any neccessary changes and then merge the new branch that was created to the main branch. 
+8. The maintainer will [Draft a versioned release here](https://github.com/nf-osi/nf-metadata-dictionary/releases).
+9. The maintainer should name the release with the the convention MAJOR.MINOR.PATCH. These releases start at v1.0.0. Versioning is roughly following semver.org concepts where: 
 
 * MAJOR: *In-use* parent attributes are deleted from dictionary or modified, or in-use child attributes are modified in a non-backwards compatible way    (e.g. `Neurofibromatosis 1` changed to `Neurofibromatosis type 1`). 
 * MINOR: Concepts/parent attributes are added. 
@@ -41,7 +39,7 @@ But you do not have to build locally as we also have a GitHub Action workflow th
 
 ### Browse the metadata dictionary
 
-You can browse the metadata dictionary here: https://nf-osi.github.io/nf-metadata-dictionary/.
+One can browse the metadata dictionary here: https://nf-osi.github.io/nf-metadata-dictionary/.
 To see (unversioned) schema history prior to v1.0.0, please view the history in the https://github.com/nf-osi/NF_data_curator repository. 
 
 ## Help
