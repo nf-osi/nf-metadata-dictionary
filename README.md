@@ -11,13 +11,17 @@ The purpose of the metadata dictionary is to have a set of standard terms that c
 2. Go to the csv file where the attribute belongs.  The components of the data model are organized in the folder [modules](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules), e.g. in [modules/Assay](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules/Assay) we have classes and  most pertinent to assays: Assay, Assay_Parameter, Platform,etc. as well as the relations csv called "annotationProperty". 
 3. Add the attribute to the relevant csv file.  
 4. Complete the columns for the attribute. At a minimum, add the following information - 
+
 * `Attribute` : (REQUIRED) Name of the new concept.  
 * `Description` : (REQUIRED) A description for the concept.  
 * `Valid Values` : Only required if you are editing an `annotationProperty.csv` file, where you would be defining a new field (relation) and specifying what values are allowed to be used with this field (relation). For example, _tumorType_ is to valid values _{ Malignant Peripheral Sheath Tumor, Schwannoma, ... }_ as _eats_ is to valid values _{ pizza, sandwich, egg, ... }_.    
 * `Source` : Preferably a URI to an ontology source term.
 If you need help, you can do a pull request and the maintainer will help fill out the rest.  
-4. If you are adding an attribute that is a valid value for another attribute, navigate to that csv file and add the term.
-5. Create a pull request (PR) and add @allaway or @anngvu as a reviewer. Creating the PR will perform an action to update the [NF.csv](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.csv) file and the [NF.jsonld](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.jsonld) from the modules folder. **You do not need to edit the `NF.csv` or `NF.jsonld` directly because it will be done automatically**
+
+5. If you are adding an attribute that is a valid value for another attribute, navigate to that csv file and add the term.
+6. Create a pull request (PR) and add @allaway, @anngvu, or @cconrad8 as a reviewer. Creating the PR will perform an action to update the [NF.csv](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.csv) file and the [NF.jsonld](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.jsonld) from the modules folder. **You do not need to edit the `NF.csv` or `NF.jsonld` directly because it will be done automatically**
+
+_**if you are a contributor, please stop here and 
 7. Make any neccessary changes after the review from an outside person, and then merge to the main branch. 
 8. Draft a versioned release [here](https://github.com/nf-osi/nf-metadata-dictionary/releases).
 9. Name the release with the the convention MAJOR.MINOR.PATCH. These releases start at v1.0.0. Versioning is roughly following semver.org concepts where: 
