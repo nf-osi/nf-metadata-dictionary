@@ -2,7 +2,7 @@
 
 ### Maintenance and Contribution
 
-The purpose of the metadata dictionary is to provide a set of standard terms to describe data. 
+The purpose of the metadata dictionary is to provide a set of standard terms to describe data. Terms in the metadata dictionoary are used in the manifests within the [data curator app](https://sagebio.shinyapps.io/NF_data_curator/).
 This dictionary is maintained by the NF-Open Science Initative. We welcome contributions from community members, whether you are a professional data modeler, clinician, or student in the NF community.
 
 ### Steps to add an attribute to the Metadata Dictionary: 
@@ -43,24 +43,18 @@ If you need help, the maintainer will help fill out the rest after you do a pull
 * MINOR: Concepts/parent attributes are added. 
 * PATCH: Child attributes are added, or *unused* child/parent attributes are deleted/modified, or definitions/`comments` are added/modified, or `validation rules` are modified in a backwards compatible way. 
 
-10. The term is now added to the [metadata dictionary](https://nf-osi.github.io/nf-metadata-dictionary) and added to manifests in the [data curator app](https://sagebio.shinyapps.io/NF_data_curator/).
+10. **🎉 Congrats! The term is now added to the [metadata dictionary](https://nf-osi.github.io/nf-metadata-dictionary).**
 
-#### Further Information
+### Further Information
 
-#### Building Locally
+### Building Locally
 To build locally, install the [schematic](https://github.com/Sage-Bionetworks/schematic) package. 
 Test whether the module "builds" by running **make CSV=NF.csv**. 
 
-#### Browse the metadata dictionary
-
-[Browse the metadata dictionary](https://nf-osi.github.io/nf-metadata-dictionary).
-
-[See unversioned schema history prior to v1.0.0](https://github.com/nf-osi/NF_data_curator repository).
-
-#### Help
+### Help
 
 For questions or to get help contributing a term, [please create an issue](https://github.com/nf-osi/nf-metadata-dictionary/issues).
 
-##### License
+### License
 
 The "collection" of metadata terms in this repository is made available under a CC0 license. The individual terms and their definitions may be subject to other (permissive) licenses, please see the source for each metadata term for details. 
