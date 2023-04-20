@@ -178,34 +178,7 @@ When using these terms, contributors are helping to label and classify resources
 module_section("Assay", c("Assay", "Platform"))
 
 ```
-
-
-##### Relations Graph
-
-:::info
-
-This partial graph view logically relates **assays** to metadata **templates** available at the [NF Data Curator App](https://shiny.synapse.org/users/rallaway/NF_data_curator/).
-For example, assays under the classification of `Imaging_Assay` currently uses a generic `Imaging_Assay_Template` for annotation.
-More specialized templates may be made available as needed for specific assays.
-
-:::
-
-```{r schema_ext_assay_template, out.width="100%", echo=FALSE, eval=params$graph_view}
-
-schema_ext <- readExtSchema(params$schema_csv, params$ext_classes_csv)
-assay <- getNodesEdges(schema_ext, "Assay", "A", 
-                       nodes = list(color = list(A = "plum", C = "indigo"), 
-                                    font.color = list(A = "black", C = "white")))
-template <- getNodesEdges(schema_ext, "Template", "T", use_id = T, 
-                          nodes = list(color = list(A = "pink", C = "firebrick"), 
-                                       font.color = list(A = "black", C = "white")))
-g_assay_template <- c2Cluster(assay, template, "suggests", params$ext_relations_csv)
-defaultGraph(g_assay_template)
-
-```
-
-
-### Information Entity
+### Data
 
 ```{r data_module, echo=FALSE, results='asis'}
 
@@ -238,7 +211,7 @@ module_section("Sample",
 
 
 
-### Experiment
+### **Experiment**
 
 :::info
 
@@ -431,27 +404,3 @@ templateTable(read.csv("templates/Patient_Timepoints_Template.csv"))
 templateTable(read.csv("templates/Source_Code_Template.csv"))
 
 ```
-
-
-## Other
-
-#### Reserved Properties {#reserved .tabset .tabset-fade .tabset-pills}
-
-:::info
-
-Reserved annotation properties also describe the resource in some way, but they are not expected to be edited directly by contributors. 
-They are computed/automated annotations set by the data platform and DCC activities.
-
-:::
-
-##### Terms
-```{r reserved_properties_table, echo=FALSE,eval=F}
-
-reserved_properties_table <- schema %>%
-  filter(SubOf %in% c("dccProperty", "synapseProperty")) %>%
-  select(Attribute, Description, DependsOn)
-
-basicTable(reserved_properties_table)
-```
-
-
