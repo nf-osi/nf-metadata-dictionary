@@ -45,14 +45,14 @@ If you need help, the maintainer will help fill out the rest after you do a pull
 
 ### Further Information
 
-### Building Locally
+#### Building Locally
 To build locally, install the [schematic](https://github.com/Sage-Bionetworks/schematic) package. 
 Test whether the module "builds" by running **make CSV=NF.csv**. 
 
-### Help
+#### Help
 
 For questions or to get help contributing a term, [please create an issue](https://github.com/nf-osi/nf-metadata-dictionary/issues).
 
-### License
+#### License
 
 The "collection" of metadata terms in this repository is made available under a CC0 license. The individual terms and their definitions may be subject to other (permissive) licenses, please see the source for each metadata term for details. 
