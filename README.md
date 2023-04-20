@@ -51,15 +51,16 @@ If you need help, the maintainer will help fill out the rest after you do a pull
 To build locally, install the [schematic](https://github.com/Sage-Bionetworks/schematic) package. 
 Test whether the module "builds" by running **make CSV=NF.csv**. 
 
-### Browse the metadata dictionary
+#### Browse the metadata dictionary
 
-[Browse the metadata dictionary here](https://nf-osi.github.io/nf-metadata-dictionary).
-[See (unversioned) schema history prior to v1.0.0] (https://github.com/nf-osi/NF_data_curator repository).
+[Browse the metadata dictionary](https://nf-osi.github.io/nf-metadata-dictionary).
 
-## Help
+[See unversioned schema history prior to v1.0.0](https://github.com/nf-osi/NF_data_curator repository).
+
+#### Help
 
 For questions or to get help contributing a term, [please create an issue](https://github.com/nf-osi/nf-metadata-dictionary/issues).
 
-### License
+##### License
 
 The "collection" of metadata terms in this repository is made available under a CC0 license. The individual terms and their definitions may be subject to other (permissive) licenses, please see the source for each metadata term for details. 
