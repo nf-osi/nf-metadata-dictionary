@@ -1,0 +1,68 @@
+﻿# Modules are not orthogonal
+# Assays are related to sample, experiment design, output data, etc.
+
+
+# Assay module: Attributes and values that describe some assay
+Assay:
+  - name: Assay
+    src: Assay/Assay.csv  # value range for `assay`
+  - name: Platform
+    src: Assay/Platform.csv # value range for `platform`
+  - name: Method
+    src: Assay/Method.csv # value range for `platform`
+  - name: Assay_Parameter
+    src: Assay/Assay_Parameter # value range for `platform`
+
+# Data module: Attributes and values that describe data entities
+Data:
+  - name: File Format
+    src: Data/File_Format.csv # value range for `fileFormat`
+  - name: Data Class
+    src: Data/Data_Class.csv  # value range for `dataType`
+  - name: Data Level
+    src: Data/Data_Level.csv # value range for `dataSubtype`
+  - name: Resource
+    src: Data/Resource.csv # value range for `resourceType`
+
+# Experiment module: Attributes and values that describe experiment design
+# Things like "timepoints" and "targets" also make more sense with certain assays
+# In fact, assay is really part of the experiment design
+  - name: Unit
+    src: Experiment/Unit.csv  # can also be in Data/ as well, really
+  - name: Method
+    src: Experiment/Method.csv  # can also be in Data/ as well, really
+
+# Sample module: Attributes and values that describe sample inputs to an assay
+  # sample types
+Sample:
+  - name: Cell 
+    src: Sample/Cell.csv  # value range for `cellType`
+  - name: Cell_Line_Model
+    src: Sample/Cell_Line_Model.csv   # value range for `modelSystemName`
+  - name: Mouse_Model
+    src: Sample/Mouse_Model.csv # value range for `modelSystemName`
+  - name: Tissue
+    src: Sample/Tissue.csv  # value range for `tissueType`
+  - name: Tumor
+    src: Sample/Tumor.csv  # value range for `tumorType`
+  - name: Material # inorganic samples
+    src: Sample/Material.csv
+  # inherent characteristics of a sample
+  - name: Body Part
+    src: Sample/Body_Part.csv 
+  - name: Species
+    src: Sample/Species.csv 
+  - name: Genotype
+    src: Sample/Genotype.csv 
+  - name: Sex
+    src: Sample/Sex.csv 
+  # processing of sample -- perhaps belongs more in Assay than or Experiment than Sample
+  - name: Specimen Processing
+    src: Sample/Specimen_Processing.csv 
+  # processing of sample
+  - name: Specimen State
+    src: Sample/Specimen_State.csv 
+  
+  
+
+
