@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        schematic-version: [develop, v22.8.1, list-comma-patch]
+        schematic-version: [23.1.1]
     
     steps:
       - name: Checkout repository
@@ -73,16 +73,13 @@ jobs:
 
       - name: Setup schematic
         id: setup-schematic
-        uses: nf-osi/actions/setup-schematic@ab2581d5a9c169c2062f5cbef3d64c7020f55cfb
-        with:
-          schematic-version: ${{ matrix.schematic-version }}
+        run: pip3 install schematicpy==${{ matrix.schematic-version }}
 
       - name: Test validate
         working-directory: tests
         continue-on-error: true
         run: |
           cp ../NF.jsonld NF.jsonld
-          source ${{ env.SCHEMATIC_ENV }}
           ./test.sh
 
       - name: Upload test artifacts
