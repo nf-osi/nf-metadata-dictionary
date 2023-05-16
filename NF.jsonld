@@ -634,14 +634,48 @@
         {
             "@id": "bts:Genotype",
             "@type": "rdfs:Class",
-            "rdfs:comment": "An information content entity that describes a genome by specifying the total variation in genomic sequence and/or gene expression, relative to some extablished background",
+            "rdfs:comment": "TBD",
             "rdfs:label": "Genotype",
-            "rdfs:subClassOf": {
-                "@id": "bts:GenomicEntity"
-            },
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
-            }
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:-/-"
+                },
+                {
+                    "@id": "bts:+/-"
+                },
+                {
+                    "@id": "bts:+/+"
+                },
+                {
+                    "@id": "bts:Unknown"
+                },
+                {
+                    "@id": "bts:-/-"
+                },
+                {
+                    "@id": "bts:+/-"
+                },
+                {
+                    "@id": "bts:+/+"
+                },
+                {
+                    "@id": "bts:Unknown"
+                },
+                {
+                    "@id": "bts:R816X"
+                }
+            ],
+            "sms:displayName": "Genotype",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
         },
         {
             "@id": "bts:Haplotype",
@@ -838,14 +872,126 @@
         {
             "@id": "bts:Cell",
             "@type": "rdfs:Class",
-            "rdfs:comment": null,
+            "rdfs:comment": "TBD",
             "rdfs:label": "Cell",
-            "rdfs:subClassOf": {
-                "@id": "bts:AnatomicalEntity"
-            },
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
-            }
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Schwanncellprecursor"
+                },
+                {
+                    "@id": "bts:B-lymphocytes"
+                },
+                {
+                    "@id": "bts:Embryonicstemcells"
+                },
+                {
+                    "@id": "bts:IPSC"
+                },
+                {
+                    "@id": "bts:IPSC-derivedtelencephalicorganoids"
+                },
+                {
+                    "@id": "bts:GABAergicneurons"
+                },
+                {
+                    "@id": "bts:Monocytes"
+                },
+                {
+                    "@id": "bts:Microglia"
+                },
+                {
+                    "@id": "bts:Macrophages"
+                },
+                {
+                    "@id": "bts:Astrocytes"
+                },
+                {
+                    "@id": "bts:SH-SY5Y"
+                },
+                {
+                    "@id": "bts:GLUtamatergicneurons"
+                },
+                {
+                    "@id": "bts:NeuN+"
+                },
+                {
+                    "@id": "bts:NeuN-"
+                },
+                {
+                    "@id": "bts:Epithelial"
+                },
+                {
+                    "@id": "bts:Epithelial-like"
+                },
+                {
+                    "@id": "bts:Fibroblast"
+                },
+                {
+                    "@id": "bts:Round"
+                },
+                {
+                    "@id": "bts:Lymphoblast"
+                },
+                {
+                    "@id": "bts:CD8+T-Cells"
+                },
+                {
+                    "@id": "bts:Arachnoid"
+                },
+                {
+                    "@id": "bts:Meningioma"
+                },
+                {
+                    "@id": "bts:Schwannoma"
+                },
+                {
+                    "@id": "bts:Oligodendrocyte"
+                },
+                {
+                    "@id": "bts:Schwann"
+                },
+                {
+                    "@id": "bts:IPSC-derivedneuron"
+                },
+                {
+                    "@id": "bts:IPSC-derivedglia"
+                },
+                {
+                    "@id": "bts:IPSC-derivedastrocytes"
+                },
+                {
+                    "@id": "bts:Monocyte-derivedmicroglia"
+                },
+                {
+                    "@id": "bts:IPSC-derivedneuronalprogenitorcell"
+                },
+                {
+                    "@id": "bts:CD138+"
+                },
+                {
+                    "@id": "bts:CNON"
+                },
+                {
+                    "@id": "bts:Teratoma"
+                },
+                {
+                    "@id": "bts:CulturedMullerglia"
+                },
+                {
+                    "@id": "bts:DRG/nerverootneurospherecell"
+                }
+            ],
+            "sms:displayName": "Cell",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
         },
         {
             "@id": "bts:CellLine",
@@ -6070,11 +6216,11 @@
         {
             "@id": "bts:Assay",
             "@type": "rdfs:Class",
-            "rdfs:comment": "The technology used to generate the data in this file",
+            "rdfs:comment": "TBD",
             "rdfs:label": "Assay",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ExperimentalData"
+                    "@id": "schema:Thing"
                 }
             ],
             "schema:isPartOf": {
@@ -6455,20 +6601,401 @@
                 },
                 {
                     "@id": "bts:Photograph"
+                },
+                {
+                    "@id": "bts:HPLC"
+                },
+                {
+                    "@id": "bts:Elevatedplusmazetest"
+                },
+                {
+                    "@id": "bts:Openfieldtest"
+                },
+                {
+                    "@id": "bts:Rotarodperformancetest"
+                },
+                {
+                    "@id": "bts:MRNAcounts"
+                },
+                {
+                    "@id": "bts:Highcontentscreen"
+                },
+                {
+                    "@id": "bts:Immunocytochemistry"
+                },
+                {
+                    "@id": "bts:Immunofluorescence"
+                },
+                {
+                    "@id": "bts:Autoradiography"
+                },
+                {
+                    "@id": "bts:Reportergeneassay"
+                },
+                {
+                    "@id": "bts:Electrochemiluminescence"
+                },
+                {
+                    "@id": "bts:Invivotumorgrowth"
+                },
+                {
+                    "@id": "bts:Bloodchemistrymeasurement"
+                },
+                {
+                    "@id": "bts:Invivobioluminescence"
+                },
+                {
+                    "@id": "bts:Immunohistochemistry"
+                },
+                {
+                    "@id": "bts:NOMe-seq"
+                },
+                {
+                    "@id": "bts:FIA-MSMS"
+                },
+                {
+                    "@id": "bts:Ultrahigh-performanceliquidchromatography/tandemmassspectrometry"
+                },
+                {
+                    "@id": "bts:High-performanceliquidchromatography/tandemmassspectrometry"
+                },
+                {
+                    "@id": "bts:Liquidchromatography-electrochemicaldetection"
+                },
+                {
+                    "@id": "bts:RNA-seq"
+                },
+                {
+                    "@id": "bts:MiRNA-seq"
+                },
+                {
+                    "@id": "bts:Liquidchromatography/tandemmassspectrometry"
+                },
+                {
+                    "@id": "bts:Liquidchromatography/massspectrometry"
+                },
+                {
+                    "@id": "bts:LncRNA-seq"
+                },
+                {
+                    "@id": "bts:Wholeexomesequencing"
+                },
+                {
+                    "@id": "bts:Sangersequencing"
+                },
+                {
+                    "@id": "bts:ChIP-seq"
+                },
+                {
+                    "@id": "bts:RNAarray"
+                },
+                {
+                    "@id": "bts:SNParray"
+                },
+                {
+                    "@id": "bts:Methylationarray"
+                },
+                {
+                    "@id": "bts:MiRNAarray"
+                },
+                {
+                    "@id": "bts:Bisulfitesequencing"
+                },
+                {
+                    "@id": "bts:ATAC-seq"
+                },
+                {
+                    "@id": "bts:HI-C"
+                },
+                {
+                    "@id": "bts:ERRbisulfitesequencing"
+                },
+                {
+                    "@id": "bts:ISO-seq"
+                },
+                {
+                    "@id": "bts:Westernblot"
+                },
+                {
+                    "@id": "bts:Wholegenomesequencing"
+                },
+                {
+                    "@id": "bts:Polymerasechainreaction"
+                },
+                {
+                    "@id": "bts:Cellviabilityassay"
+                },
+                {
+                    "@id": "bts:2DIncucyte"
+                },
+                {
+                    "@id": "bts:2DCellTiter-Glo"
+                },
+                {
+                    "@id": "bts:3Dmicrotissueviability"
+                },
+                {
+                    "@id": "bts:2DAlamarBluefluorescence"
+                },
+                {
+                    "@id": "bts:2DAlamarBlueabsorbance"
+                },
+                {
+                    "@id": "bts:InvivoPDXviability"
+                },
+                {
+                    "@id": "bts:Atomicforcemicroscopy"
+                },
+                {
+                    "@id": "bts:Brightfieldmicroscopy"
+                },
+                {
+                    "@id": "bts:Tractionforcemicroscopy"
+                },
+                {
+                    "@id": "bts:Phase-contrastmicroscopy"
+                },
+                {
+                    "@id": "bts:Nextgenerationtargetedsequencing"
+                },
+                {
+                    "@id": "bts:MIB/MS"
+                },
+                {
+                    "@id": "bts:ScCGI-seq"
+                },
+                {
+                    "@id": "bts:MudPIT"
+                },
+                {
+                    "@id": "bts:Questionnaire"
+                },
+                {
+                    "@id": "bts:DNAopticalmapping"
+                },
+                {
+                    "@id": "bts:OxBS-seq"
+                },
+                {
+                    "@id": "bts:Ribo-seq"
+                },
+                {
+                    "@id": "bts:Positronemissiontomography"
+                },
+                {
+                    "@id": "bts:RPPA"
+                },
+                {
+                    "@id": "bts:ELISA"
+                },
+                {
+                    "@id": "bts:Longtermpotentiationassay"
+                },
+                {
+                    "@id": "bts:Localfieldpotentialrecording"
+                },
+                {
+                    "@id": "bts:Whole-cellpatchclamp"
+                },
+                {
+                    "@id": "bts:SandwichELISA"
+                },
+                {
+                    "@id": "bts:Laserspeckleimaging"
+                },
+                {
+                    "@id": "bts:Genotyping"
+                },
+                {
+                    "@id": "bts:TMTquantitation"
+                },
+                {
+                    "@id": "bts:Massspectrometry"
+                },
+                {
+                    "@id": "bts:Labelfreemassspectrometry"
+                },
+                {
+                    "@id": "bts:Cellcount"
+                },
+                {
+                    "@id": "bts:Immunoassay"
+                },
+                {
+                    "@id": "bts:ConventionalMRI"
+                },
+                {
+                    "@id": "bts:FunctionalMRI"
+                },
+                {
+                    "@id": "bts:Magneticresonancespectroscopy"
+                },
+                {
+                    "@id": "bts:FTIRspectroscopy"
+                },
+                {
+                    "@id": "bts:Rheometry"
+                },
+                {
+                    "@id": "bts:Gelfiltrationchromatography"
+                },
+                {
+                    "@id": "bts:Differentialscanningcalorimetry"
+                },
+                {
+                    "@id": "bts:Singlemoleculedrugscreenassay"
+                },
+                {
+                    "@id": "bts:Smallmoleculelibraryscreen"
+                },
+                {
+                    "@id": "bts:Combinationlibraryscreen"
+                },
+                {
+                    "@id": "bts:Combinationscreen"
+                },
+                {
+                    "@id": "bts:Compoundscreen"
+                },
+                {
+                    "@id": "bts:Array"
+                },
+                {
+                    "@id": "bts:Single-cellRNA-seq"
+                },
+                {
+                    "@id": "bts:Spatialtranscriptomics"
+                },
+                {
+                    "@id": "bts:Massivelyparallelreporterassay"
+                },
+                {
+                    "@id": "bts:RiccardiandAblonscales"
+                },
+                {
+                    "@id": "bts:Spatialfrequencydomainimaging"
+                },
+                {
+                    "@id": "bts:Opticalcoherencetomography"
+                },
+                {
+                    "@id": "bts:CUT&RUN"
+                },
+                {
+                    "@id": "bts:3Dimaging"
+                },
+                {
+                    "@id": "bts:Highfrequencyultrasound"
+                },
+                {
+                    "@id": "bts:Dynamiclightscattering"
+                },
+                {
+                    "@id": "bts:Staticlightscattering"
+                },
+                {
+                    "@id": "bts:Lightscatteringassay"
+                },
+                {
+                    "@id": "bts:Flowcytometry"
+                },
+                {
+                    "@id": "bts:Patternelectroretinogram"
+                },
+                {
+                    "@id": "bts:Optokineticreflexassay"
+                },
+                {
+                    "@id": "bts:SUSHI"
+                },
+                {
+                    "@id": "bts:3Dconfocalimaging"
+                },
+                {
+                    "@id": "bts:3Delectronmicroscopy"
+                },
+                {
+                    "@id": "bts:Cellcompetition"
+                },
+                {
+                    "@id": "bts:Bodysizetraitmeasurement"
+                },
+                {
+                    "@id": "bts:Twinspotassay"
+                },
+                {
+                    "@id": "bts:Perineurialcellthickness"
+                },
+                {
+                    "@id": "bts:Survival"
+                },
+                {
+                    "@id": "bts:Gaitmeasurement"
+                },
+                {
+                    "@id": "bts:Sorbitoldehydrogenaseactivitylevelassay"
+                },
+                {
+                    "@id": "bts:Tcellreceptorrepertoiresequencing"
+                },
+                {
+                    "@id": "bts:Cellproliferation"
+                },
+                {
+                    "@id": "bts:Oxygenconsumptionassay"
+                },
+                {
+                    "@id": "bts:Reactiveoxygenspeciesassay"
+                },
+                {
+                    "@id": "bts:ATPaseactivityassay"
+                },
+                {
+                    "@id": "bts:Noveltyresponsebehaviorassay"
+                },
+                {
+                    "@id": "bts:Contextualconditioningbehaviorassay"
+                },
+                {
+                    "@id": "bts:Activeavoidancelearningbehaviorassay"
+                },
+                {
+                    "@id": "bts:Focusformingassay"
+                },
+                {
+                    "@id": "bts:BluenativePAGE"
+                },
+                {
+                    "@id": "bts:Invitrotumorigenesis"
+                },
+                {
+                    "@id": "bts:Matrigel-basedtumorigenesisassay"
+                },
+                {
+                    "@id": "bts:Calciumretentioncapacityassay"
+                },
+                {
+                    "@id": "bts:QuantitativePCR"
+                },
+                {
+                    "@id": "bts:Clinicaldata"
+                },
+                {
+                    "@id": "bts:Photograph"
                 }
             ],
-            "sms:displayName": "assay",
+            "sms:displayName": "Assay",
             "sms:required": "sms:true",
             "sms:validationRules": []
         },
         {
             "@id": "bts:Platform",
             "@type": "rdfs:Class",
-            "rdfs:comment": "A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data.",
+            "rdfs:comment": "TBD",
             "rdfs:label": "Platform",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ExperimentalData"
+                    "@id": "schema:Thing"
                 }
             ],
             "schema:isPartOf": {
@@ -6633,10 +7160,178 @@
                 },
                 {
                     "@id": "bts:BGISEQ-500"
+                },
+                {
+                    "@id": "bts:Scale"
+                },
+                {
+                    "@id": "bts:OlympusDP80"
+                },
+                {
+                    "@id": "bts:OrbitrapFusionLumosTribrid"
+                },
+                {
+                    "@id": "bts:SpectramaxMSeries"
+                },
+                {
+                    "@id": "bts:LI-COROdysseyCLx"
+                },
+                {
+                    "@id": "bts:QExativeHF"
+                },
+                {
+                    "@id": "bts:IlluminaHiSeq3000"
+                },
+                {
+                    "@id": "bts:IlluminaHiSeq2500"
+                },
+                {
+                    "@id": "bts:IlluminaHiSeq4000"
+                },
+                {
+                    "@id": "bts:IlluminaNextSeq500"
+                },
+                {
+                    "@id": "bts:IlluminaNextSeq550"
+                },
+                {
+                    "@id": "bts:IlluminaNextSeq1000"
+                },
+                {
+                    "@id": "bts:IlluminaNextSeq2000"
+                },
+                {
+                    "@id": "bts:IlluminaHiSeq2000"
+                },
+                {
+                    "@id": "bts:IlluminaMiSeq"
+                },
+                {
+                    "@id": "bts:ZeissLSM980"
+                },
+                {
+                    "@id": "bts:AffymetrixGenome-WideHumanSNP5.0Array"
+                },
+                {
+                    "@id": "bts:AffymetrixGenome-WideHumanSNP6.0Array"
+                },
+                {
+                    "@id": "bts:PacBioRSII"
+                },
+                {
+                    "@id": "bts:IlluminaGenomeAnalyzerIIx"
+                },
+                {
+                    "@id": "bts:IlluminaHumanOmni1-Quadv1.0"
+                },
+                {
+                    "@id": "bts:Illumina1M"
+                },
+                {
+                    "@id": "bts:Illuminah650"
+                },
+                {
+                    "@id": "bts:IlluminaOmni2pt5M"
+                },
+                {
+                    "@id": "bts:IlluminaOmni5M"
+                },
+                {
+                    "@id": "bts:IlluminaMouseWG-6v2.0expressionbeadchip"
+                },
+                {
+                    "@id": "bts:Perlegen300Karray"
+                },
+                {
+                    "@id": "bts:Agilent44Karray"
+                },
+                {
+                    "@id": "bts:IlluminaWholeGenomeDASL"
+                },
+                {
+                    "@id": "bts:IlluminaHumanHap300"
+                },
+                {
+                    "@id": "bts:NanostringCounter"
+                },
+                {
+                    "@id": "bts:LTQOrbitrapXL"
+                },
+                {
+                    "@id": "bts:IlluminaHumanMethylation450"
+                },
+                {
+                    "@id": "bts:IlluminaInfiniumMethylationEPICBeadChipv1.0(850k)"
+                },
+                {
+                    "@id": "bts:IlluminaInfiniumMethylationEPICBeadChipv2.0(935k)"
+                },
+                {
+                    "@id": "bts:AffymetrixU133AB"
+                },
+                {
+                    "@id": "bts:AffymetrixHumanGene1.0STArray"
+                },
+                {
+                    "@id": "bts:AffymetrixHumanGenomeU133Plus2.0Array"
+                },
+                {
+                    "@id": "bts:IlluminaHiSeqX"
+                },
+                {
+                    "@id": "bts:BionanoIrys"
+                },
+                {
+                    "@id": "bts:InfiniumHumanOmniExpressExome"
+                },
+                {
+                    "@id": "bts:IlluminaNovaSeq6000"
+                },
+                {
+                    "@id": "bts:PacBioSequelIIeSystem"
+                },
+                {
+                    "@id": "bts:PacBioSequelIISystem"
+                },
+                {
+                    "@id": "bts:NanostringGeoMx"
+                },
+                {
+                    "@id": "bts:ChromiumX"
+                },
+                {
+                    "@id": "bts:10xVisiumSpatialGeneExpression"
+                },
+                {
+                    "@id": "bts:EnVision2103MultiplateReader"
+                },
+                {
+                    "@id": "bts:VectraH13DImagingSystem"
+                },
+                {
+                    "@id": "bts:Vevo3100ImagingSystem"
+                },
+                {
+                    "@id": "bts:CherryImagingTRACEPlatform"
+                },
+                {
+                    "@id": "bts:CherryImagingFACEPlatform"
+                },
+                {
+                    "@id": "bts:LifeVizMicroSystem"
+                },
+                {
+                    "@id": "bts:LifeVizInfinitySystem"
+                },
+                {
+                    "@id": "bts:PromegaGloMaxDiscover"
+                },
+                {
+                    "@id": "bts:BGISEQ-500"
                 }
             ],
-            "sms:displayName": "platform",
-            "sms:required": "sms:true",
+            "sms:displayName": "Platform",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -7202,6 +7897,249 @@
             },
             "sms:displayName": "targetDepth",
             "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Assay",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Assay",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Assay",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Platform",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Platform",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Platform",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Method",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Method",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:JumpingLibrary"
+                },
+                {
+                    "@id": "bts:RNAi"
+                },
+                {
+                    "@id": "bts:CRISPR"
+                },
+                {
+                    "@id": "bts:CRERecombinase"
+                },
+                {
+                    "@id": "bts:RRNAdepletion"
+                },
+                {
+                    "@id": "bts:PolyAselection"
+                },
+                {
+                    "@id": "bts:LncRNAenrichment"
+                },
+                {
+                    "@id": "bts:MiRNAenrichment"
+                },
+                {
+                    "@id": "bts:Allograft"
+                },
+                {
+                    "@id": "bts:Xenograft"
+                },
+                {
+                    "@id": "bts:Autograft"
+                },
+                {
+                    "@id": "bts:Isograft"
+                }
+            ],
+            "sms:displayName": "Method",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:AssayParameter",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "AssayParameter",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Channel"
+                },
+                {
+                    "@id": "bts:MRISequence"
+                },
+                {
+                    "@id": "bts:T1-weighted"
+                },
+                {
+                    "@id": "bts:T2-weighted"
+                },
+                {
+                    "@id": "bts:PD-weighted"
+                },
+                {
+                    "@id": "bts:ShortTauInversionRecovery"
+                },
+                {
+                    "@id": "bts:Cy5"
+                },
+                {
+                    "@id": "bts:Cy3"
+                },
+                {
+                    "@id": "bts:Overexpression"
+                },
+                {
+                    "@id": "bts:Knockdown"
+                },
+                {
+                    "@id": "bts:Knockout"
+                },
+                {
+                    "@id": "bts:Non-targetingcontrol"
+                },
+                {
+                    "@id": "bts:Fr-firststrand"
+                },
+                {
+                    "@id": "bts:TruSeqstandardtotalRNAlibrarykit"
+                },
+                {
+                    "@id": "bts:10x"
+                },
+                {
+                    "@id": "bts:CEL-seq"
+                },
+                {
+                    "@id": "bts:Drop-Seq"
+                },
+                {
+                    "@id": "bts:Smart-seq2"
+                },
+                {
+                    "@id": "bts:TruSeq"
+                },
+                {
+                    "@id": "bts:Smart-seq4"
+                },
+                {
+                    "@id": "bts:Omni-ATAC"
+                },
+                {
+                    "@id": "bts:NEBNextmRNALibraryPrepReagentSetforIllumina"
+                },
+                {
+                    "@id": "bts:IDTxGenExomeResearchPanel"
+                },
+                {
+                    "@id": "bts:IlluminaTruSeqDNANano"
+                },
+                {
+                    "@id": "bts:KAPAHyperPrepKitPCR-free"
+                },
+                {
+                    "@id": "bts:KAPARNAHyperPrepKitwithRiboErase(HMR)"
+                },
+                {
+                    "@id": "bts:GTAC@WUSTLin-houseprep"
+                },
+                {
+                    "@id": "bts:Bulkcell"
+                },
+                {
+                    "@id": "bts:Singlecell"
+                },
+                {
+                    "@id": "bts:Bulknuclei"
+                },
+                {
+                    "@id": "bts:Singlenucleus"
+                },
+                {
+                    "@id": "bts:Mitochondria"
+                },
+                {
+                    "@id": "bts:Celllysate"
+                },
+                {
+                    "@id": "bts:Nuclearextract"
+                },
+                {
+                    "@id": "bts:Mitochondria"
+                },
+                {
+                    "@id": "bts:Cytoplasm"
+                },
+                {
+                    "@id": "bts:1"
+                },
+                {
+                    "@id": "bts:2"
+                },
+                {
+                    "@id": "bts:Inward"
+                },
+                {
+                    "@id": "bts:Outward"
+                },
+                {
+                    "@id": "bts:Matching"
+                },
+                {
+                    "@id": "bts:Forward"
+                },
+                {
+                    "@id": "bts:Reverse"
+                },
+                {
+                    "@id": "bts:SingleEnd"
+                },
+                {
+                    "@id": "bts:PairedEnd"
+                }
+            ],
+            "sms:displayName": "Assay_Parameter",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -9496,6 +10434,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:NWB",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Neurodata Without Borders (NWB) is a data standard for neurophysiology data, designed to store data including from intracellular and extracellular electrophysiology experiments, data from optical physiology experiments, and tracking and stimulus data.",
+            "rdfs:label": "NWB",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:FileFormat"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "NWB",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Genesymbol",
             "@type": "rdfs:Class",
             "rdfs:comment": "A unique gene name approved by an organism specific nomenclature committee.",
@@ -10352,11 +11307,11 @@
         {
             "@id": "bts:FileFormat",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
+            "rdfs:comment": "TBD",
             "rdfs:label": "FileFormat",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:SageCommunity"
+                    "@id": "schema:Thing"
                 }
             ],
             "schema:isPartOf": {
@@ -10635,10 +11590,286 @@
                 },
                 {
                     "@id": "bts:Tom"
+                },
+                {
+                    "@id": "bts:Bashscript"
+                },
+                {
+                    "@id": "bts:Bedgraph"
+                },
+                {
+                    "@id": "bts:Ai"
+                },
+                {
+                    "@id": "bts:Idx"
+                },
+                {
+                    "@id": "bts:Idat"
+                },
+                {
+                    "@id": "bts:Bam"
+                },
+                {
+                    "@id": "bts:Bai"
+                },
+                {
+                    "@id": "bts:Excel"
+                },
+                {
+                    "@id": "bts:Powerpoint"
+                },
+                {
+                    "@id": "bts:Tif"
+                },
+                {
+                    "@id": "bts:Png"
+                },
+                {
+                    "@id": "bts:Doc"
+                },
+                {
+                    "@id": "bts:Pdf"
+                },
+                {
+                    "@id": "bts:Hdf"
+                },
+                {
+                    "@id": "bts:Fasta"
+                },
+                {
+                    "@id": "bts:Fastq"
+                },
+                {
+                    "@id": "bts:Sam"
+                },
+                {
+                    "@id": "bts:Vcf"
+                },
+                {
+                    "@id": "bts:Bcf"
+                },
+                {
+                    "@id": "bts:Maf"
+                },
+                {
+                    "@id": "bts:Bed"
+                },
+                {
+                    "@id": "bts:Chp"
+                },
+                {
+                    "@id": "bts:Cel"
+                },
+                {
+                    "@id": "bts:Sif"
+                },
+                {
+                    "@id": "bts:Tsv"
+                },
+                {
+                    "@id": "bts:Csv"
+                },
+                {
+                    "@id": "bts:Txt"
+                },
+                {
+                    "@id": "bts:Plink"
+                },
+                {
+                    "@id": "bts:Bigwig"
+                },
+                {
+                    "@id": "bts:Wiggle"
+                },
+                {
+                    "@id": "bts:Gct"
+                },
+                {
+                    "@id": "bts:Bgzip"
+                },
+                {
+                    "@id": "bts:Zip"
+                },
+                {
+                    "@id": "bts:Seg"
+                },
+                {
+                    "@id": "bts:Html"
+                },
+                {
+                    "@id": "bts:Mov"
+                },
+                {
+                    "@id": "bts:Hyperlink"
+                },
+                {
+                    "@id": "bts:Svs"
+                },
+                {
+                    "@id": "bts:Md"
+                },
+                {
+                    "@id": "bts:Flagstat"
+                },
+                {
+                    "@id": "bts:Gtf"
+                },
+                {
+                    "@id": "bts:Raw"
+                },
+                {
+                    "@id": "bts:Msf"
+                },
+                {
+                    "@id": "bts:Rmd"
+                },
+                {
+                    "@id": "bts:BednarrowPeak"
+                },
+                {
+                    "@id": "bts:BedbroadPeak"
+                },
+                {
+                    "@id": "bts:BedgappedPeak"
+                },
+                {
+                    "@id": "bts:Avi"
+                },
+                {
+                    "@id": "bts:Pzfx"
+                },
+                {
+                    "@id": "bts:Fig"
+                },
+                {
+                    "@id": "bts:Xml"
+                },
+                {
+                    "@id": "bts:Tar"
+                },
+                {
+                    "@id": "bts:Rscript"
+                },
+                {
+                    "@id": "bts:Abf"
+                },
+                {
+                    "@id": "bts:Bpm"
+                },
+                {
+                    "@id": "bts:Dat"
+                },
+                {
+                    "@id": "bts:Jpg"
+                },
+                {
+                    "@id": "bts:Locs"
+                },
+                {
+                    "@id": "bts:Sentrixdescriptorfile"
+                },
+                {
+                    "@id": "bts:Pythonscript"
+                },
+                {
+                    "@id": "bts:MATLABscript"
+                },
+                {
+                    "@id": "bts:MATLABdata"
+                },
+                {
+                    "@id": "bts:Sav"
+                },
+                {
+                    "@id": "bts:Gzip"
+                },
+                {
+                    "@id": "bts:Sdf"
+                },
+                {
+                    "@id": "bts:RData"
+                },
+                {
+                    "@id": "bts:Hic"
+                },
+                {
+                    "@id": "bts:Ab1"
+                },
+                {
+                    "@id": "bts:7z"
+                },
+                {
+                    "@id": "bts:Gff3"
+                },
+                {
+                    "@id": "bts:Json"
+                },
+                {
+                    "@id": "bts:Sqlite"
+                },
+                {
+                    "@id": "bts:Svg"
+                },
+                {
+                    "@id": "bts:Sra"
+                },
+                {
+                    "@id": "bts:Recal"
+                },
+                {
+                    "@id": "bts:Tranches"
+                },
+                {
+                    "@id": "bts:Mtx"
+                },
+                {
+                    "@id": "bts:TagAlign"
+                },
+                {
+                    "@id": "bts:Dup"
+                },
+                {
+                    "@id": "bts:DICOM"
+                },
+                {
+                    "@id": "bts:Czi"
+                },
+                {
+                    "@id": "bts:MzML"
+                },
+                {
+                    "@id": "bts:SPAR"
+                },
+                {
+                    "@id": "bts:SDAT"
+                },
+                {
+                    "@id": "bts:Nii"
+                },
+                {
+                    "@id": "bts:PAR"
+                },
+                {
+                    "@id": "bts:REC"
+                },
+                {
+                    "@id": "bts:Hdr"
+                },
+                {
+                    "@id": "bts:Img"
+                },
+                {
+                    "@id": "bts:Sf"
+                },
+                {
+                    "@id": "bts:Tom"
+                },
+                {
+                    "@id": "bts:NWB"
                 }
             ],
-            "sms:displayName": "fileFormat",
-            "sms:required": "sms:true",
+            "sms:displayName": "File Format",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -10996,6 +12227,314 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "license",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:FileFormat",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "FileFormat",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "File Format",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:DataClass",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "DataClass",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Rawcounts"
+                },
+                {
+                    "@id": "bts:Volume"
+                },
+                {
+                    "@id": "bts:Weight"
+                },
+                {
+                    "@id": "bts:PharmacokineticStudy"
+                },
+                {
+                    "@id": "bts:GenomicVariants"
+                },
+                {
+                    "@id": "bts:AlignedReads"
+                },
+                {
+                    "@id": "bts:SomaticVariants"
+                },
+                {
+                    "@id": "bts:AnnotatedSomaticVariants"
+                },
+                {
+                    "@id": "bts:GermlineVariants"
+                },
+                {
+                    "@id": "bts:AnnotatedGermlineVariants"
+                },
+                {
+                    "@id": "bts:StructuralVariants"
+                },
+                {
+                    "@id": "bts:Behaviorprocess"
+                },
+                {
+                    "@id": "bts:Metabolomics"
+                },
+                {
+                    "@id": "bts:Image"
+                },
+                {
+                    "@id": "bts:GeneExpression"
+                },
+                {
+                    "@id": "bts:IsoformExpression"
+                },
+                {
+                    "@id": "bts:Proteomics"
+                },
+                {
+                    "@id": "bts:Particlecharacterization"
+                },
+                {
+                    "@id": "bts:Kinomics"
+                },
+                {
+                    "@id": "bts:DrugScreen"
+                },
+                {
+                    "@id": "bts:DrugCombinationScreen"
+                },
+                {
+                    "@id": "bts:CellularPhysiology"
+                },
+                {
+                    "@id": "bts:ChromatinActivity"
+                },
+                {
+                    "@id": "bts:SurveyData"
+                },
+                {
+                    "@id": "bts:Network"
+                },
+                {
+                    "@id": "bts:Clinical"
+                },
+                {
+                    "@id": "bts:Immunoassay"
+                },
+                {
+                    "@id": "bts:Electrophysiology"
+                },
+                {
+                    "@id": "bts:Maskimage"
+                },
+                {
+                    "@id": "bts:CuratedData"
+                },
+                {
+                    "@id": "bts:Characteristic"
+                }
+            ],
+            "sms:displayName": "Data Class",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:DataLevel",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "DataLevel",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Normalized"
+                },
+                {
+                    "@id": "bts:DataMatrix"
+                },
+                {
+                    "@id": "bts:Raw"
+                },
+                {
+                    "@id": "bts:Processed"
+                },
+                {
+                    "@id": "bts:Metadata"
+                },
+                {
+                    "@id": "bts:Representative"
+                }
+            ],
+            "sms:displayName": "Data Level",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Resource",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Resource",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Genesymbol"
+                },
+                {
+                    "@id": "bts:Clinicaldata"
+                },
+                {
+                    "@id": "bts:Genefunction"
+                },
+                {
+                    "@id": "bts:Chemicaldescriptor"
+                },
+                {
+                    "@id": "bts:Individual"
+                },
+                {
+                    "@id": "bts:Biospecimen"
+                },
+                {
+                    "@id": "bts:Assay"
+                },
+                {
+                    "@id": "bts:Datadictionary"
+                },
+                {
+                    "@id": "bts:Manifest"
+                },
+                {
+                    "@id": "bts:Protocol"
+                },
+                {
+                    "@id": "bts:GRCh38"
+                },
+                {
+                    "@id": "bts:GRCh37"
+                },
+                {
+                    "@id": "bts:MMUL1.0"
+                },
+                {
+                    "@id": "bts:HRC"
+                },
+                {
+                    "@id": "bts:ExperimentalData"
+                },
+                {
+                    "@id": "bts:Result"
+                },
+                {
+                    "@id": "bts:Tool"
+                },
+                {
+                    "@id": "bts:Workflowreport"
+                },
+                {
+                    "@id": "bts:Report"
+                },
+                {
+                    "@id": "bts:Metadata"
+                },
+                {
+                    "@id": "bts:Protocol"
+                },
+                {
+                    "@id": "bts:Weblink"
+                }
+            ],
+            "sms:displayName": "Resource",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Unit",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Unit",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Seconds"
+                },
+                {
+                    "@id": "bts:Minutes"
+                },
+                {
+                    "@id": "bts:Hours"
+                },
+                {
+                    "@id": "bts:Days"
+                },
+                {
+                    "@id": "bts:Weeks"
+                },
+                {
+                    "@id": "bts:Months"
+                },
+                {
+                    "@id": "bts:Quarters"
+                }
+            ],
+            "sms:displayName": "Unit",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Method",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Method",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Method",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -15375,57 +16914,6 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:Cancer",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "Cancer",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "schema:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "cancer",
-            "sms:required": "sms:true",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:Neuro",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "Neuro",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "schema:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "neuro",
-            "sms:required": "sms:true",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:Neurofibromatosis",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "Neurofibromatosis",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "schema:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "neurofibromatosis",
-            "sms:required": "sms:true",
-            "sms:validationRules": []
-        },
-        {
             "@id": "bts:-/-",
             "@type": "rdfs:Class",
             "rdfs:comment": "Homozygous deletion or mutation of NF1.",
@@ -17457,18 +18945,167 @@
         {
             "@id": "bts:Tumor",
             "@type": "rdfs:Class",
-            "rdfs:comment": "General term for tumor sample – use when it is unknown when a more specific clinical classification is unknown, e.g. whether it is primary or secondary.",
+            "rdfs:comment": "TBD",
             "rdfs:label": "Tumor",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:Tissue"
+                    "@id": "schema:Thing"
                 }
             ],
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "tumor",
-            "sms:required": "sms:true",
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Teratoma"
+                },
+                {
+                    "@id": "bts:CutaneousNeurofibroma"
+                },
+                {
+                    "@id": "bts:SubcutaneousNeurofibroma"
+                },
+                {
+                    "@id": "bts:PlexiformNeurofibroma"
+                },
+                {
+                    "@id": "bts:AtypicalNeurofibroma"
+                },
+                {
+                    "@id": "bts:MalignantPeripheralNerveSheathTumor"
+                },
+                {
+                    "@id": "bts:Glioma"
+                },
+                {
+                    "@id": "bts:Low-GradeGliomaNOS"
+                },
+                {
+                    "@id": "bts:PilocyticAstrocytoma"
+                },
+                {
+                    "@id": "bts:AtypicalPilocyticAstrocytoma"
+                },
+                {
+                    "@id": "bts:PilomyxoidAstrocytoma"
+                },
+                {
+                    "@id": "bts:DiffuseAstrocytoma"
+                },
+                {
+                    "@id": "bts:GlioblastomaMultiforme"
+                },
+                {
+                    "@id": "bts:AnaplasticPilocyticAstrocytoma"
+                },
+                {
+                    "@id": "bts:PleomorphicXanthoastrocytoma"
+                },
+                {
+                    "@id": "bts:Oligoastrocytoma"
+                },
+                {
+                    "@id": "bts:High-GradeGliomaNOS"
+                },
+                {
+                    "@id": "bts:Unknown"
+                },
+                {
+                    "@id": "bts:AnaplasticAstrocytoma"
+                },
+                {
+                    "@id": "bts:Glioblastoma"
+                },
+                {
+                    "@id": "bts:Schwannoma"
+                },
+                {
+                    "@id": "bts:Meningioma"
+                },
+                {
+                    "@id": "bts:MassiveSoftTissueNeurofibroma"
+                },
+                {
+                    "@id": "bts:DiffuseInfiltratingNeurofibroma"
+                },
+                {
+                    "@id": "bts:LocalizedNeurofibroma"
+                },
+                {
+                    "@id": "bts:NeurofibromawithDegenerativeAtypia"
+                },
+                {
+                    "@id": "bts:Neurofibroma"
+                },
+                {
+                    "@id": "bts:AnaplasticPleomorphicXanthoastrocytoma"
+                },
+                {
+                    "@id": "bts:Ganglioglioma"
+                },
+                {
+                    "@id": "bts:AnaplasticGanglioglioma"
+                },
+                {
+                    "@id": "bts:OpticPathwayGlioma"
+                },
+                {
+                    "@id": "bts:NotApplicable"
+                },
+                {
+                    "@id": "bts:ColorectalAdenocarcinoma"
+                },
+                {
+                    "@id": "bts:ColorectalCarcinoma"
+                },
+                {
+                    "@id": "bts:RecurrentMPNST"
+                },
+                {
+                    "@id": "bts:JuvenileMyelomonocyticLeukemia"
+                },
+                {
+                    "@id": "bts:Sarcoma"
+                },
+                {
+                    "@id": "bts:Fibromatosis"
+                },
+                {
+                    "@id": "bts:Fibrosarcoma"
+                },
+                {
+                    "@id": "bts:NecroticNeoplasm"
+                },
+                {
+                    "@id": "bts:HemorrhagicNeoplasm"
+                },
+                {
+                    "@id": "bts:NF1-AssociatedTumor"
+                },
+                {
+                    "@id": "bts:NF2-AssociatedTumor"
+                },
+                {
+                    "@id": "bts:ANNUBP"
+                },
+                {
+                    "@id": "bts:Tumor"
+                },
+                {
+                    "@id": "bts:Metastatictumor"
+                },
+                {
+                    "@id": "bts:Metastatic/recurrenttumor"
+                },
+                {
+                    "@id": "bts:Recurrenttumor"
+                },
+                {
+                    "@id": "bts:Melanoma"
+                }
+            ],
+            "sms:displayName": "Tumor",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -17727,11 +19364,11 @@
         {
             "@id": "bts:BodyPart",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Sample location referring to a named area of the body, inclusive of gross anatomical structures and organ parts. ",
+            "rdfs:comment": "TBD",
             "rdfs:label": "BodyPart",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ExperimentalData"
+                    "@id": "schema:Thing"
                 }
             ],
             "schema:isPartOf": {
@@ -17845,10 +19482,121 @@
                 },
                 {
                     "@id": "bts:Nose"
+                },
+                {
+                    "@id": "bts:Head"
+                },
+                {
+                    "@id": "bts:Lymphnode"
+                },
+                {
+                    "@id": "bts:Kidney"
+                },
+                {
+                    "@id": "bts:Skin"
+                },
+                {
+                    "@id": "bts:Mammarygland"
+                },
+                {
+                    "@id": "bts:Nerves"
+                },
+                {
+                    "@id": "bts:Brain"
+                },
+                {
+                    "@id": "bts:Blood"
+                },
+                {
+                    "@id": "bts:Breast"
+                },
+                {
+                    "@id": "bts:Colon"
+                },
+                {
+                    "@id": "bts:Lung"
+                },
+                {
+                    "@id": "bts:Prostate"
+                },
+                {
+                    "@id": "bts:Pancreas"
+                },
+                {
+                    "@id": "bts:Ovary"
+                },
+                {
+                    "@id": "bts:Spleen"
+                },
+                {
+                    "@id": "bts:Bonemarrow"
+                },
+                {
+                    "@id": "bts:BursaOfFabricius"
+                },
+                {
+                    "@id": "bts:Nose"
+                },
+                {
+                    "@id": "bts:Eye"
+                },
+                {
+                    "@id": "bts:Mesentery"
+                },
+                {
+                    "@id": "bts:Scalp"
+                },
+                {
+                    "@id": "bts:Pelvis"
+                },
+                {
+                    "@id": "bts:Neck"
+                },
+                {
+                    "@id": "bts:Leg"
+                },
+                {
+                    "@id": "bts:Liver"
+                },
+                {
+                    "@id": "bts:Axilla"
+                },
+                {
+                    "@id": "bts:Acetabulum"
+                },
+                {
+                    "@id": "bts:Forearm"
+                },
+                {
+                    "@id": "bts:Muscle"
+                },
+                {
+                    "@id": "bts:Finger"
+                },
+                {
+                    "@id": "bts:Thoracicspine"
+                },
+                {
+                    "@id": "bts:Groin"
+                },
+                {
+                    "@id": "bts:Back"
+                },
+                {
+                    "@id": "bts:Iliacspine"
+                },
+                {
+                    "@id": "bts:Spine"
+                },
+                {
+                    "@id": "bts:Shoulder"
+                },
+                {
+                    "@id": "bts:Scapula"
                 }
             ],
-            "sms:displayName": "bodyPart",
-            "sms:required": "sms:true",
+            "sms:displayName": "Body Part",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -17947,11 +19695,11 @@
         {
             "@id": "bts:Tissue",
             "@type": "rdfs:Class",
-            "rdfs:comment": "A tissue is a mereologically maximal collection of cells that together perform physiological function.",
+            "rdfs:comment": "TBD",
             "rdfs:label": "Tissue",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ExperimentalData"
+                    "@id": "schema:Thing"
                 }
             ],
             "schema:isPartOf": {
@@ -18041,10 +19789,88 @@
                 },
                 {
                     "@id": "bts:Retina"
+                },
+                {
+                    "@id": "bts:Nervetissue"
+                },
+                {
+                    "@id": "bts:Opticnerve"
+                },
+                {
+                    "@id": "bts:Serum"
+                },
+                {
+                    "@id": "bts:Plasma"
+                },
+                {
+                    "@id": "bts:Splenocyte"
+                },
+                {
+                    "@id": "bts:Blood"
+                },
+                {
+                    "@id": "bts:Primarytumor"
+                },
+                {
+                    "@id": "bts:Embryonictissue"
+                },
+                {
+                    "@id": "bts:Meninges"
+                },
+                {
+                    "@id": "bts:Bonemarrow"
+                },
+                {
+                    "@id": "bts:BuccalMucosa"
+                },
+                {
+                    "@id": "bts:DorsalRootGanglion"
+                },
+                {
+                    "@id": "bts:Cerebralcortex"
+                },
+                {
+                    "@id": "bts:Sciaticnerve"
+                },
+                {
+                    "@id": "bts:Unspecified"
+                },
+                {
+                    "@id": "bts:Wholebrain"
+                },
+                {
+                    "@id": "bts:BuffyCoat"
+                },
+                {
+                    "@id": "bts:Normal"
+                },
+                {
+                    "@id": "bts:Connectivetissue"
+                },
+                {
+                    "@id": "bts:Tumor-adjacentnormal"
+                },
+                {
+                    "@id": "bts:PDXtissue"
+                },
+                {
+                    "@id": "bts:CDXtissue"
+                },
+                {
+                    "@id": "bts:Organoid"
+                },
+                {
+                    "@id": "bts:Spheroid"
+                },
+                {
+                    "@id": "bts:Microtissue"
+                },
+                {
+                    "@id": "bts:Retina"
                 }
             ],
-            "sms:displayName": "tissue",
-            "sms:required": "sms:true",
+            "sms:displayName": "Tissue",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -18276,11 +20102,11 @@
         {
             "@id": "bts:Sex",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other.",
+            "rdfs:comment": "TBD",
             "rdfs:label": "Sex",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ExperimentalData"
+                    "@id": "schema:Thing"
                 }
             ],
             "schema:isPartOf": {
@@ -18295,20 +20121,29 @@
                 },
                 {
                     "@id": "bts:Unknown"
+                },
+                {
+                    "@id": "bts:Male"
+                },
+                {
+                    "@id": "bts:Female"
+                },
+                {
+                    "@id": "bts:Unknown"
                 }
             ],
-            "sms:displayName": "sex",
-            "sms:required": "sms:true",
+            "sms:displayName": "Sex",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
             "@id": "bts:Species",
             "@type": "rdfs:Class",
-            "rdfs:comment": "The name of a species (typically a taxonomic group) of organism.",
+            "rdfs:comment": "TBD",
             "rdfs:label": "Species",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:ExperimentalData"
+                    "@id": "schema:Thing"
                 }
             ],
             "schema:isPartOf": {
@@ -18347,10 +20182,49 @@
                 },
                 {
                     "@id": "bts:Daniorerio"
+                },
+                {
+                    "@id": "bts:Homosapiens"
+                },
+                {
+                    "@id": "bts:Musmusculus"
+                },
+                {
+                    "@id": "bts:Musmusculus(humanized)"
+                },
+                {
+                    "@id": "bts:Rattusnorvegicus"
+                },
+                {
+                    "@id": "bts:Drosophilamelanogaster"
+                },
+                {
+                    "@id": "bts:Rhesusmacaque"
+                },
+                {
+                    "@id": "bts:Pantroglodytes"
+                },
+                {
+                    "@id": "bts:Gallusgallus"
+                },
+                {
+                    "@id": "bts:Susscrofa"
+                },
+                {
+                    "@id": "bts:Oryctolaguscuniculus"
+                },
+                {
+                    "@id": "bts:Daniorerio"
+                },
+                {
+                    "@id": "bts:Human"
+                },
+                {
+                    "@id": "bts:Mouse"
                 }
             ],
-            "sms:displayName": "species",
-            "sms:required": "sms:true",
+            "sms:displayName": "Species",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -19368,6 +21242,685 @@
             ],
             "sms:displayName": "concentrationNaClUnit",
             "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Cell",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Cell",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Cell",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:CellLineModel",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "CellLineModel",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:28cNF"
+                },
+                {
+                    "@id": "bts:3PNFFiPSsvPM2"
+                },
+                {
+                    "@id": "bts:3PNFSiPSsvMM11"
+                },
+                {
+                    "@id": "bts:5PNFTDiPSsvMM4"
+                },
+                {
+                    "@id": "bts:5PNFTDiPSsvPM6"
+                },
+                {
+                    "@id": "bts:6PNFSiPSrvPM2"
+                },
+                {
+                    "@id": "bts:7PNFSiPSrvPM12"
+                },
+                {
+                    "@id": "bts:90-8"
+                },
+                {
+                    "@id": "bts:AC007-hTERT"
+                },
+                {
+                    "@id": "bts:BJFF.6"
+                },
+                {
+                    "@id": "bts:Ben-Men-1"
+                },
+                {
+                    "@id": "bts:Dh5alpha"
+                },
+                {
+                    "@id": "bts:Dhh-Cre;NF1Arg681*/floxSchwannCells"
+                },
+                {
+                    "@id": "bts:ELK-TADLuciferaseReporterHEK293Stable"
+                },
+                {
+                    "@id": "bts:ELK-TADLuciferaseReporterHEK293StableNF1-/-"
+                },
+                {
+                    "@id": "bts:Fb93.1"
+                },
+                {
+                    "@id": "bts:GM11601"
+                },
+                {
+                    "@id": "bts:GM11602"
+                },
+                {
+                    "@id": "bts:GM23338"
+                },
+                {
+                    "@id": "bts:HBE135-E6E7"
+                },
+                {
+                    "@id": "bts:HEK293"
+                },
+                {
+                    "@id": "bts:HEK293NF1-/-Exon17#A15G629Rcrypticsplice"
+                },
+                {
+                    "@id": "bts:HEK293NF1-/-Exon17#B48G629Rcrypticsplice"
+                },
+                {
+                    "@id": "bts:HEK293NF1-/-Exon47insT#14"
+                },
+                {
+                    "@id": "bts:HEK293NF1-/-Exon52R2550X#5"
+                },
+                {
+                    "@id": "bts:HEK293NF1-/-clone2"
+                },
+                {
+                    "@id": "bts:HEK293NF1-/-withR1306XmNf1cDNA"
+                },
+                {
+                    "@id": "bts:HEK293NF1-/-withR192XmNf1cDNA"
+                },
+                {
+                    "@id": "bts:HEK293NF1-/-withR1947XmNf1cDNA"
+                },
+                {
+                    "@id": "bts:HEK293NF1-/-withR2550XmNf1cDNA"
+                },
+                {
+                    "@id": "bts:HEK293NF1-/-withR461XmNf1cDNA"
+                },
+                {
+                    "@id": "bts:HEK293NF1-/-withR681XmNf1cDNA"
+                },
+                {
+                    "@id": "bts:HEK293NF1-/-withR816XmNf1cDNA"
+                },
+                {
+                    "@id": "bts:HEK293NF1-/-withWTmNf1cDNA"
+                },
+                {
+                    "@id": "bts:HEK293NF1-/-withWTtaggedmNf1cDNA"
+                },
+                {
+                    "@id": "bts:HeLaSilenciXNF1"
+                },
+                {
+                    "@id": "bts:JH-2-002-CL"
+                },
+                {
+                    "@id": "bts:JH-2-079-CL"
+                },
+                {
+                    "@id": "bts:JH-2-103-CL"
+                },
+                {
+                    "@id": "bts:JHU2-002-CL"
+                },
+                {
+                    "@id": "bts:JHU2-002-PDX"
+                },
+                {
+                    "@id": "bts:JHU2-079-CL"
+                },
+                {
+                    "@id": "bts:JHU2-079-PDX"
+                },
+                {
+                    "@id": "bts:JHU2-103-CL"
+                },
+                {
+                    "@id": "bts:JHU2-103-PDX"
+                },
+                {
+                    "@id": "bts:KCL024"
+                },
+                {
+                    "@id": "bts:KCL025"
+                },
+                {
+                    "@id": "bts:Lis42NF11N"
+                },
+                {
+                    "@id": "bts:Lis47NF12N"
+                },
+                {
+                    "@id": "bts:M3MPNST"
+                },
+                {
+                    "@id": "bts:NCC-MPNST1-C1"
+                },
+                {
+                    "@id": "bts:NCC-MPNST2-C1"
+                },
+                {
+                    "@id": "bts:NCC-MPNST3-C1"
+                },
+                {
+                    "@id": "bts:NCC-MPNST3-X2-C1"
+                },
+                {
+                    "@id": "bts:NCC-MPNST4-C1"
+                },
+                {
+                    "@id": "bts:NCC-MPNST5-C1"
+                },
+                {
+                    "@id": "bts:NF1"
+                },
+                {
+                    "@id": "bts:NF1-R68XEmbryoniccells"
+                },
+                {
+                    "@id": "bts:NF2-/-AC007-hTERT"
+                },
+                {
+                    "@id": "bts:Nf1-/-Epitheliallungcells"
+                },
+                {
+                    "@id": "bts:Nf1-/-HEK293"
+                },
+                {
+                    "@id": "bts:Nf1-/-skin-derivedprecursorcells"
+                },
+                {
+                    "@id": "bts:Nf1Arg681*/+ES"
+                },
+                {
+                    "@id": "bts:Nf1Arg681*/Arg681*ES"
+                },
+                {
+                    "@id": "bts:Nf1Arg681*/Arg681*MEFs"
+                },
+                {
+                    "@id": "bts:Nf2-/-SchwannSC(mouse)(PMID26554010)"
+                },
+                {
+                    "@id": "bts:S462"
+                },
+                {
+                    "@id": "bts:S462.TY"
+                },
+                {
+                    "@id": "bts:S520"
+                },
+                {
+                    "@id": "bts:SC4[Mouseschwannoma]"
+                },
+                {
+                    "@id": "bts:ST88-14"
+                },
+                {
+                    "@id": "bts:STS-26T"
+                },
+                {
+                    "@id": "bts:SZ-NF1"
+                },
+                {
+                    "@id": "bts:SZ-NF2"
+                },
+                {
+                    "@id": "bts:SZ-NF4"
+                },
+                {
+                    "@id": "bts:SchwanncellNF1-/-(iPN97.4#24)"
+                },
+                {
+                    "@id": "bts:SchwanncellNF1-/-withR681XmNf1cDNA"
+                },
+                {
+                    "@id": "bts:SchwanncellNF1-/-withR816XmNf1cDNA"
+                },
+                {
+                    "@id": "bts:SchwanncellNF1-/-withWTtaggedmNf1cDNA"
+                },
+                {
+                    "@id": "bts:Schwanncelli28cNFNF1-/-(#14)"
+                },
+                {
+                    "@id": "bts:ScienCellSchwanncells"
+                },
+                {
+                    "@id": "bts:T265"
+                },
+                {
+                    "@id": "bts:WTES"
+                },
+                {
+                    "@id": "bts:YST-1"
+                },
+                {
+                    "@id": "bts:CNF00.10a"
+                },
+                {
+                    "@id": "bts:CNF04.9a"
+                },
+                {
+                    "@id": "bts:CNF97.2a"
+                },
+                {
+                    "@id": "bts:CNF97.2b"
+                },
+                {
+                    "@id": "bts:CNF98.4c"
+                },
+                {
+                    "@id": "bts:CNF98.4d"
+                },
+                {
+                    "@id": "bts:HTERTNF1ipNF00.6"
+                },
+                {
+                    "@id": "bts:HTERTNF1ipNF03.3"
+                },
+                {
+                    "@id": "bts:HTERTNF1ipNF04.4"
+                },
+                {
+                    "@id": "bts:HTERTNF1ipNF05.5"
+                },
+                {
+                    "@id": "bts:HTERTNF1ipNF05.5(Mixedclones)"
+                },
+                {
+                    "@id": "bts:HTERTNF1ipNF95.11bC"
+                },
+                {
+                    "@id": "bts:HTERTNF1ipNF95.11bC/T"
+                },
+                {
+                    "@id": "bts:HTERTNF1ipNF95.6"
+                },
+                {
+                    "@id": "bts:HTERTNF1ipn02.32λ"
+                },
+                {
+                    "@id": "bts:HTERTNF1ipn06.2A"
+                },
+                {
+                    "@id": "bts:HTERTNF1ipnNF09.4"
+                },
+                {
+                    "@id": "bts:HTERTNF1ipnNF95.11c"
+                },
+                {
+                    "@id": "bts:HTERTNF1sipnNF95.12B"
+                },
+                {
+                    "@id": "bts:HTERTSCipn02.8"
+                },
+                {
+                    "@id": "bts:HTERTSCipn97.4"
+                },
+                {
+                    "@id": "bts:HTERTipn02.32λ"
+                },
+                {
+                    "@id": "bts:HTERTipn02.8"
+                },
+                {
+                    "@id": "bts:HiPSC"
+                },
+                {
+                    "@id": "bts:HiPSC-SCP"
+                },
+                {
+                    "@id": "bts:Humanforeskinfibroblasts"
+                },
+                {
+                    "@id": "bts:I28cNF"
+                },
+                {
+                    "@id": "bts:I21cNF"
+                },
+                {
+                    "@id": "bts:I18cNF"
+                },
+                {
+                    "@id": "bts:CNF18.1a"
+                },
+                {
+                    "@id": "bts:CNF97.5"
+                },
+                {
+                    "@id": "bts:CNF99.1"
+                },
+                {
+                    "@id": "bts:IcNF99.1"
+                },
+                {
+                    "@id": "bts:IPSCNF1+/-BJFF.6bkgd"
+                },
+                {
+                    "@id": "bts:IPSCNF1WT"
+                },
+                {
+                    "@id": "bts:IPSCY489C;Exon13crypticsplice"
+                },
+                {
+                    "@id": "bts:IcNF00.10a"
+                },
+                {
+                    "@id": "bts:IcNF04.9a"
+                },
+                {
+                    "@id": "bts:IcNF97.2a"
+                },
+                {
+                    "@id": "bts:IcNF97.2b"
+                },
+                {
+                    "@id": "bts:IcNF98.4c"
+                },
+                {
+                    "@id": "bts:IcNF98.4d"
+                },
+                {
+                    "@id": "bts:SNF02.2"
+                },
+                {
+                    "@id": "bts:SNF94.3"
+                },
+                {
+                    "@id": "bts:SNF96.2"
+                },
+                {
+                    "@id": "bts:Sc93.1"
+                },
+                {
+                    "@id": "bts:NMS-2"
+                },
+                {
+                    "@id": "bts:HS-PSS"
+                },
+                {
+                    "@id": "bts:HS-Sch-2"
+                }
+            ],
+            "sms:displayName": "Cell_Line_Model",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:MouseModel",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "MouseModel",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:C57BL/6J"
+                },
+                {
+                    "@id": "bts:NODscidgamma"
+                },
+                {
+                    "@id": "bts:NRG"
+                },
+                {
+                    "@id": "bts:B6;129S2-Trp53tm1TyjNf1tm1Tyj/J"
+                },
+                {
+                    "@id": "bts:B6;129-Trp53tm1TyjNf1tm1TyjSuz12Gt(Betageo)1Khe/KcichJ"
+                },
+                {
+                    "@id": "bts:B6.129S2-Nf1tm1Tyj/J"
+                },
+                {
+                    "@id": "bts:B6.129S1-Nf1tm1Cbr/J"
+                },
+                {
+                    "@id": "bts:B6.129(Cg)-Nf1tm1Par/J"
+                },
+                {
+                    "@id": "bts:Prss56Cre;R26mT"
+                },
+                {
+                    "@id": "bts:Nf1-OPG"
+                },
+                {
+                    "@id": "bts:Nf1-OPG-Arg816"
+                }
+            ],
+            "sms:displayName": "Mouse_Model",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Tissue",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Tissue",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Tissue",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Tumor",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Tumor",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Tumor",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Material",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Material",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Polymericnanoparticles"
+                },
+                {
+                    "@id": "bts:DNA"
+                }
+            ],
+            "sms:displayName": "Material",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:BodyPart",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "BodyPart",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Body Part",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Species",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Species",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Species",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Genotype",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Genotype",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Genotype",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Sex",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Sex",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Sex",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:SpecimenProcessing",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "SpecimenProcessing",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:10xV2"
+                },
+                {
+                    "@id": "bts:FACS"
+                },
+                {
+                    "@id": "bts:FluidigmC1"
+                },
+                {
+                    "@id": "bts:Drop-seq"
+                },
+                {
+                    "@id": "bts:InDrop"
+                },
+                {
+                    "@id": "bts:Mouthpipette"
+                },
+                {
+                    "@id": "bts:Enzymatic"
+                },
+                {
+                    "@id": "bts:Mechanical"
+                }
+            ],
+            "sms:displayName": "Specimen Processing",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:SpecimenState",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "SpecimenState",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "schema:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Viablyfrozen"
+                }
+            ],
+            "sms:displayName": "Specimen State",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
