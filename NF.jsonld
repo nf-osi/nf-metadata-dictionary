@@ -8313,10 +8313,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:Hdf",
+            "@id": "bts:Hdf5",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Hierarchical Data Format (HDF) is a set of file formats (HDF4, HDF5) designed to store and organize large amounts of data",
-            "rdfs:label": "Hdf",
+            "rdfs:comment": "HDF5 is the new version, according to the HDF group, a completely different technology (https://support.hdfgroup.org/products/hdf4/ compared to HDF. An HDF5 file appears to the user as a directed graph. The nodes of this graph are the higher-level HDF5 objects that are exposed by the HDF5 APIs: Groups, Datasets, Named datatypes. Currently supported by the Python MDTraj package. HDF5 is a data model, library, and file format for storing and managing data, based on Hierarchical Data Format (HDF).",
+            "rdfs:label": "Hdf5",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:FileFormat"
@@ -8325,7 +8325,7 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "hdf",
+            "sms:displayName": "hdf5",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -9686,6 +9686,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "ome-tiff",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Dockerimage",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "A Docker image is a file, comprised of multiple layers, that is used to execute code in a Docker container. An image is essentially built from the instructions for a complete and executable version of an application, which relies on the host OS kernel.",
+            "rdfs:label": "Dockerimage",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:FileFormat"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "docker image",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -27150,6 +27167,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "bash",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Hdf",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Hdf",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:FileFormat"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "hdf",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
