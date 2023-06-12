@@ -9,7 +9,13 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 
 test_reaction <- function(pass) {
-  if(pass) ":smile:" else ":x:"
+  if(is.na(pass)) { 
+    ":zzz:" # potentially skipped tests
+  } else if(pass) {
+    ":smile:" 
+  } else { 
+    ":x:"
+  }
 }
 
 md_link <- function (url) {
@@ -37,15 +43,14 @@ knitr::kable(gen_report)
 
 pass <- "Your manifest has been validated successfully."
 config <- jsonlite::read_json("validate/config.json")
-df <- Reduce(rbind.data.frame, config$tests)
+df <- lapply(config$tests, `[`, c("manifest", "expect_pass", "expectation"))
+df <- Reduce(rbind.data.frame, df)
 val_logs <- list.files("validate/logs", full.names = TRUE)
 val_results <- lapply(val_logs, readLines)
 val_pass <- data.frame(
   manifest = gsub(".txt", ".csv", basename(val_logs)),
   pass = sapply(val_results, function(x) any(grepl(pass, x))))
-val_report <- merge(df[, c("manifest", "expect_pass", "expectation")], 
-                    val_pass,
-                    by = "manifest")
+val_report <- merge(df, val_pass, by = "manifest", all.x = TRUE)
 val_report$result <- sapply(val_report$expect_pass == val_report$pass, test_reaction)
 knitr::kable(val_report[, c("manifest", "result", "expectation")])
 ```
