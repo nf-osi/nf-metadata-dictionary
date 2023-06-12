@@ -1,16 +1,17 @@
-# For schematic local testing 
+# Dist and test artifacts 
 .synapseConfig
-config.yml
 creds.json
-
-# Dist and test artifact files
+tests/generate/creds.json
+tests/generate/NF.jsonld
+tests/generate/config.json # generated dynamically
+tests/**/logs
 publish/**
 *.schema.json
 *.manifest.csv
 *.test.xlsx
-tests/**_log.txt
 
-# IDE data and other data for code tools
+# IDE and code tools
+retold
 .idea
 .lsp
 .clj-kondo
