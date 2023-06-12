@@ -61,6 +61,8 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       SCHEMATIC_SERVICE_ACCT_CREDS: ${{ secrets.SCHEMATIC_SERVICE_ACCT_CREDS }}
+    permissions:
+      pull-requests: write
     strategy:
       matrix:
         schematic-version: [23.1.1]
@@ -85,8 +87,18 @@ jobs:
         continue-on-error: true
         run: ./run_config.sh
 
-      # TODO Test submission of data
-      # TODO Parse and summarize raw logs into clearer report
+      # TODO Step for test submission of data
+      
+      - name: Create test suite report
+        working-directory: tests
+        continue-on-error: true
+        run: docker run -v $(pwd):/tests rocker/tidyverse R -e "rmarkdown::render('tests/test-suite-report.Rmd')"
+
+      - name: Report on test suite as PR comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          message-path: |
+            test-suite-report.md
 
       - name: Upload test artifacts
         uses: actions/upload-artifact@v3
