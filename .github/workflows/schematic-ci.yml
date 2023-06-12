@@ -40,7 +40,7 @@ jobs:
           chmod 755 .venv/bin/activate
           source .venv/bin/activate
           pip3 install schematicpy
-          make CSV=$schema_filename
+          make
     
       - name: Commit files
         run: |
@@ -58,7 +58,7 @@ jobs:
   test:
     name: Test with schematic
     needs: [build]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       SCHEMATIC_SERVICE_ACCT_CREDS: ${{ secrets.SCHEMATIC_SERVICE_ACCT_CREDS }}
     permissions:
@@ -98,7 +98,7 @@ jobs:
         uses: mshick/add-pr-comment@v2
         with:
           message-path: |
-            test-suite-report.md
+            tests/test-suite-report.md
 
       - name: Upload test artifacts
         uses: actions/upload-artifact@v3
