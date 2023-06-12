@@ -6968,7 +6968,7 @@
         {
             "@id": "bts:ReadPair",
             "@type": "rdfs:Class",
-            "rdfs:comment": "The read of origin",
+            "rdfs:comment": "The read of origin, use value 1 or 2",
             "rdfs:label": "ReadPair",
             "rdfs:subClassOf": [
                 {
@@ -6981,7 +6981,8 @@
             "sms:displayName": "readPair",
             "sms:required": "sms:false",
             "sms:validationRules": [
-                "int"
+                "int",
+                "inRange 1 2 error"
             ]
         },
         {

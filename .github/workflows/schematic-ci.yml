@@ -9,8 +9,6 @@ on:
   
   workflow_dispatch:
 
-env:
-  schema_filename: NF.csv
   
 jobs:
   build:
@@ -42,7 +40,7 @@ jobs:
           chmod 755 .venv/bin/activate
           source .venv/bin/activate
           pip3 install schematicpy
-          make CSV=$schema_filename
+          make
     
       - name: Commit files
         run: |
@@ -56,16 +54,19 @@ jobs:
          github_token: ${{ secrets.GITHUB_TOKEN }}
          branch: ${{ github.event.pull_request.head.ref }}
 
-
-# Additionally test only if is a PR to avoid testing for every push
+  # Additionally test PRs
   test:
     name: Test with schematic
     needs: [build]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
+    env:
+      SCHEMATIC_SERVICE_ACCT_CREDS: ${{ secrets.SCHEMATIC_SERVICE_ACCT_CREDS }}
+    permissions:
+      pull-requests: write
     strategy:
       matrix:
         schematic-version: [23.1.1]
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -76,18 +77,33 @@ jobs:
         id: setup-schematic
         run: pip3 install schematicpy==${{ matrix.schematic-version }}
 
+      - name: Test generate
+        working-directory: tests/generate
+        continue-on-error: true
+        run: ./basic_templates.sh
+
       - name: Test validate
+        working-directory: tests/validate
+        continue-on-error: true
+        run: ./run_config.sh
+
+      # TODO Step for test submission of data
+      
+      - name: Create test suite report
         working-directory: tests
         continue-on-error: true
-        run: |
-          cp ../NF.jsonld NF.jsonld
-          ./test.sh
+        run: docker run -v $(pwd):/tests rocker/tidyverse R -e "rmarkdown::render('tests/test-suite-report.Rmd')"
+
+      - name: Report on test suite as PR comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          message-id: test-suite-report
+          message-path: |
+            tests/test-suite-report.md
 
       - name: Upload test artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test-logs-${{ matrix.schematic-version }}
-          path: tests/*_log.txt
-
-  # TO-DO: Submit tests
+          path: tests/**/logs
   

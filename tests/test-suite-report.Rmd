@@ -1,0 +1,57 @@
+---
+title: "Test Suite Report"
+output:
+  github_document:
+    html_preview: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+test_reaction <- function(pass) {
+  if(is.na(pass)) { 
+    ":zzz:" # potentially skipped tests
+  } else if(pass) {
+    ":smile:" 
+  } else { 
+    ":x:"
+  }
+}
+
+md_link <- function (url) {
+  if(length(url)) paste0("[template link]", "(",url,")") else ""
+}
+```
+
+## Template Generation
+
+```{r parse-generation-logs, echo=FALSE}
+gen_logs <- list.files("generate/logs", full.names = TRUE)
+templates <- gsub("_.*", "", basename(gen_logs))
+gen_test_results <- lapply(gen_logs, readLines)
+gen_test_links <- sapply(gen_test_results, md_link)
+gen_test_reaction <- sapply(lengths(gen_test_results), test_reaction) 
+gen_report <- data.frame(template = templates, 
+                         result = gen_test_reaction, 
+                         link = gen_test_links)
+knitr::kable(gen_report)
+```
+
+## Manifest Validation 
+
+```{r parse-validation-logs, echo=FALSE}
+
+pass <- "Your manifest has been validated successfully."
+config <- jsonlite::read_json("validate/config.json")
+df <- lapply(config$tests, `[`, c("manifest", "expect_pass", "expectation"))
+df <- Reduce(rbind.data.frame, df)
+val_logs <- list.files("validate/logs", full.names = TRUE)
+val_results <- lapply(val_logs, readLines)
+val_pass <- data.frame(
+  manifest = gsub(".txt", ".csv", basename(val_logs)),
+  pass = sapply(val_results, function(x) any(grepl(pass, x))))
+val_report <- merge(df, val_pass, by = "manifest", all.x = TRUE)
+val_report$result <- sapply(val_report$expect_pass == val_report$pass, test_reaction)
+knitr::kable(val_report[, c("manifest", "result", "expectation")])
+```
+

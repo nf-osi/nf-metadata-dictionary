@@ -1,0 +1,53 @@
+{ "meta": "Validate manifests against templates with schematic and data model. Expectations correspond to the version or version combination in reference",
+  "reference_version": { "schematic": "23.1.1"},
+  "tests": [
+    {
+      "manifest": "GenomicsAssayTemplate_0.csv",
+      "template": "GenomicsAssayTemplate",
+      "expect_pass": true,
+      "expectation": "Lists can be blank if attr not required using 'list like' rule",
+      "comment": "Both `cellType` and `modelSystemName` are 'list like' and optional. The former is completely filled out with list vals, the latter is all blanks.",
+      "issue": ["https://github.com/Sage-Bionetworks/schematic/issues/819"]
+    },
+    {
+      "manifest": "GenomicsAssayTemplate_1.csv",
+      "template": "GenomicsAssayTemplate",
+      "expect_pass": true,
+      "expectation": "Single list val works by using 'list like' rule",
+      "comment": "Enable values that are optionally lists instead of mandatory lists. `cellType` uses 'list like' and filled out as single vals (without trailing commmas)",
+      "issue": ["https://github.com/Sage-Bionetworks/schematic/issues/819"]
+    },
+    {
+      "manifest": "GenomicsAssayTemplate_2.csv",
+      "template": "GenomicsAssayTemplate",
+      "expect_pass": true,
+      "expectation": "Mixing blanks and regular list values works",
+      "comment": "Lists filled out as mixed multiple vals and blanks, i.e. only first 2 rows filled",
+      "issue": ["https://github.com/Sage-Bionetworks/schematic/issues/819"]
+    },
+    {
+      "manifest": "GenomicsAssayTemplate_3.csv",
+      "template": "GenomicsAssayTemplate",
+      "expect_pass": true,
+      "expectation": "Conditional validation for attributes is currently not supported",
+      "comment": "This is more for documentation of current unintuitive behavior that schematic doesn't actually do conditional dependencies validation. Though `ageUnit` is specified as a dependency for `age`, having `age` be filled out but `ageUnit` not completely filled out is considered OK.",
+      "issue": []
+    },
+    {
+      "manifest": "GenomicsAssayTemplate_4.csv",
+      "template": "GenomicsAssayTemplate",
+      "expect_pass": false,
+      "expectation": "A (double) value of 1.5 fails with rule int::inRange 1 2",
+      "comment": "Currently readPair is specified as int with range 1 2. Manifest includes an offending value of 1.5 for readPair",
+      "issue": []
+    },
+    {
+      "manifest": "GenomicsAssayTemplate_5.csv",
+      "template": "GenomicsAssayTemplate",
+      "expect_pass": false,
+      "expectation": "A value of 0 (outside range) fails with rule int::inRange 1 2",
+      "comment": "Currently readPair is specified as int with range 1 2. Manifest includes an offending value of 0 for readPair",
+      "issue": []
+    }
+  ]
+}
