@@ -1,0 +1,142 @@
+enums:
+  Data:
+    permissible_values:
+      immunoassay:
+        description: Laboratory test involving interaction of antigens with specific antibodies.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C16723
+      behavior process:
+        description: The action, reaction, or performance of an organism in response to external or internal stimuli.
+        meaning: hhttps://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=structural_variation
+      clinical:
+        description: Data obtained through patient examination or treatment.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C15783
+      particle characterization:
+        description: 'A series of analytical methods that provide information about entities such as composition, structure and defects. '
+        meaning: https://ontobee.org/ontology/NCIT?iri=http://purl.obolibrary.org/obo/NCIT_C62317
+      drugCombinationScreen:
+        description: Information on drug sensitivity of more than one compound
+        meaning: https://www.ncbi.nlm.nih.gov/pubmed/29344898
+      isoformExpression:
+        description: Expression of protien isoforms formed from alternative splicings or other post-translational modifications of a single gene through RNA splicing mechanisms.
+        meaning: https://en.wikipedia.org/wiki/Protein_isoform
+      proteomics:
+        description: Protein and peptide identification, especially in the study of whole proteomes of organisms.
+        meaning: https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Ftopic_0121
+      surveyData:
+        description: A data set that contains the outcome of a survey.
+        meaning: http://purl.obolibrary.org/obo/OMIABIS_0000060
+      kinomics:
+        description: Kinomics is the study of protein kinases and protein kinase signaling.
+        meaning: http://www.kinomecore.com/what-is-kinomics/
+      SomaticVariants:
+        description: Called somatic variants
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_somatic_mutation
+      Volume:
+        description: The amount of three dimensional space occupied by an object or the capacity of a space or container.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25335
+      characteristic:
+        description: Broad data type for measures that can encompass volume, weight, brightness, color, capacity, etc.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25447
+      drugScreen:
+        description: Information on drug sensitivity and molecular markers of drug response
+        meaning: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3531057/
+      geneExpression:
+        description: The analysis of levels and patterns of synthesis of gene products (proteins and functional RNA) including interpretation in functional terms of gene expression data.
+        meaning: https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Ftopic_0203
+      AlignedReads:
+        description: Aligned reads output from alignment workflows
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads
+      genomicVariants:
+        description: Genomic alterations, including single nucleotide polymorphisms, short indels and structural variants. Use more specific term if possible, esp. if data is only of one specific subset.
+        meaning: https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Foperation_3227
+      raw counts:
+        description: The number or amount of something.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25463
+      Pharmacokinetic Study:
+        description: A study of the process by which a drug is absorbed, distributed, metabolized, and eliminated by the body.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C49663
+      mask image:
+        description: Image used as the mask for an image processing operation, such as subtraction.
+        meaning: http://dicom.nema.org/resources/ontology/DCM/121321
+      chromatinActivity:
+        description: Chromatin activity that allow access of condensed genomic DNA and potentially control gene expression.
+        meaning: https://en.wikipedia.org/wiki/Chromatin_remodeling
+      StructuralVariants:
+        description: Specifically genomic variants data classified as structural variants, which may be derived from specialized variant calling workflows
+      GermlineVariants:
+        description: Called germline variants
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation
+      image:
+        description: Biological or biomedical data that has been rendered into an image.
+        meaning: https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Fdata_2968
+      network:
+        description: An interconnected system of things or people.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C61377
+      cellularPhysiology:
+        description: ''
+      metabolomics:
+        description: The systematic study of metabolites, the chemical processes they are involved, and the chemical fingerprints of specific cellular processes in a whole cell, tissue, organ or organism.
+        meaning: http://edamontology.org/topic_3172
+      AnnotatedSomaticVariants:
+        description: Somatic variants annotated with some annotation workflow
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation
+      AnnotatedGermlineVariants:
+        description: Germline variants annotated with some annotation workflow
+      Weight:
+        description: The vertical force exerted by a mass as a result of gravity.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25208
+      electrophysiology:
+        description: Data generated from an electrophysiology assay.
+        meaning: http://purl.obolibrary.org/obo/ERO_0000564
+
+  DataSubtype:
+    permissible_values:
+      normalized:
+        description: A data set that is produced as the output of a normalization data transformation.
+        meaning: http://purl.obolibrary.org/obo/OBI_0000451
+      dataMatrix:
+        description: A file of data containing multiple values for multiple samples.
+      raw:
+        description: A data file produced by an instrument, or one with very little subsequent processing.
+      processed:
+        description: A file of data generated from running one or more bioinformatics methods on a raw file.
+      metadata:
+        description: A file of clinical, technical, or other parameters that describe a dataset.
+      representative:
+        description: An activity that stands as an equivalent of something or results in an equivalent; typical of, or the same as, others in a larger group of people or things.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C67045
+
+  Metadata:
+    description: Data that provides information about other data
+    source: https://en.wikipedia.org/wiki/Metadata
+    permissible_values:
+      Descriptive Metadata: 
+        description: Descriptive information about a resource. It is used for discovery and identification. It includes elements such as title, abstract, author, and keywords.
+        comments: The `synapse_manifest.csv` files uploaded by DCA count as Descriptive Metadata
+      Structural Metadata: 
+        description: >
+          Metadata about containers of data and indicates how compound objects are put together, for example, how pages are ordered to form chapters. 
+          It describes the types, versions, relationships, and other characteristics of digital materials.
+      Administrative Metadata: 
+        description: Information to help manage a resource, like resource type, permissions, and when and how it was created.
+      Reference Metadata:
+        description: Information about the contents and quality of statistical data.
+      Statistical Metadata: 
+        description: Also called process data, may describe processes that collect, process, or produce statistical data.
+      Legal Metadata:
+        description: Provides information about the creator, copyright holder, and public licensing, if provided.
+        comments: Can apply to a file with license text.
+      Workflow Metadata: 
+        description: Process data from computational workflows. This is highly related to Statistical Metadata. 
+        comments: Coined category for use esp. with nextflow metadata files.
+
+  UnknownEnum:
+    permissible_values:
+      Unknown:
+        description: Not known, observed, recorded; or reported as unknown by the data contributor.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C17998
+
+  NotApplicableEnum:
+    permissible_values:
+      Not Applicable:
+        description: Not applicable in this context
