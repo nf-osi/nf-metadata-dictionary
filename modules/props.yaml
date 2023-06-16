@@ -91,7 +91,7 @@ slots:
     slot_uri: https://cancerdhc.github.io/ccdhmodel/v1.1/BodySite/
   cellType:
     annotations:
-      validationRules: list like
+      validationRules: 'list like'
     description: A cell type is a distinct morphological or functional form of cell.
     range: Cell
     required: false
@@ -194,7 +194,7 @@ slots:
     notes:
       - Currently no dependencies or validation rules.
     range: DataSubtype
-    required: false
+    required: true
   dataType:
     annotations:
       requiresDependency: dataSubtype
@@ -271,7 +271,7 @@ slots:
     notes:
       - Currently no dependencies or validation rules.
     range: FileFormatEnum
-    required: false
+    required: true
   fundingAgency:
     description: Refers to the funding organization for the generated resource. This annotation is handled by the DCC.
     notes:
@@ -404,7 +404,7 @@ slots:
     required: false
   modelSystemName:
     annotations:
-      validationRules: list like
+      validationRules: 'list like'
     any_of:
       - range: CellLineModel
       - range: MouseModel
