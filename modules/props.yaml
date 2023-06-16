@@ -6,7 +6,7 @@ slots:
     required: true
   Filename:
     annotations:
-      requiresDependency: entityId,fileFormat
+      requiresDependency: fileFormat
     description: The name of the file.
     required: false
   InChIKey:
@@ -288,6 +288,10 @@ slots:
       requiresDependency: genePerturbationType,genePerturbationTechnology
     description: The HUGO gene symbol for the gene that is perturbed.
     required: false
+  genePerturbationTechnology:
+    description: Technology used to perturb gene
+    required: false
+    range: GenePerturbationMethodEnum
   genomicReference:
     description: Version of genome reference used for alignment in processing workflow
     notes:
