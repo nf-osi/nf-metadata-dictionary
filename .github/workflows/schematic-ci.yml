@@ -21,32 +21,19 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
           fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository
 
-      - name: Lint source in modules 
+      - name: Setup custom build tools and make jsonld 
         shell: bash
         run: |
           bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
-          FILES=$(git diff --name-only ${{ github.event.pull_request.head.ref }} origin/main -- modules/)
-          bb utils/lint.clj --files ${FILES}
-      
-      - name: Install other deps for schematic
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y pip python3.8-venv libcurl4-openssl-dev
-      
-      - name: Install schematic and convert schema
-        shell: bash
-        run: |
-          python3 -m venv .venv
-          chmod 755 .venv/bin/activate
-          source .venv/bin/activate
-          pip3 install schematicpy
+          git clone --depth 1 https://github.com/anngvu/retold.git
           make
     
       - name: Commit files
         run: |
           git config --local user.email "nf-osi@sagebionetworks.org"
           git config --local user.name "nf-osi[bot]"
-          git commit -m "Build jsonld" -a
+          git add "NF.jsonld"
+          git commit -m "Build jsonld"
     
       - name: Push changes
         uses: ad-m/github-push-action@master
@@ -68,9 +55,9 @@ jobs:
         schematic-version: [23.1.1]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:  
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 1
 
       - name: Setup schematic
