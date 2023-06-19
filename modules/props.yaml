@@ -1,0 +1,717 @@
+slots:
+  Component:
+    description: Type of metadata template; provide the same one for all items/rows.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: true
+  Filename:
+    annotations:
+      requiresDependency: fileFormat
+    description: The name of the file.
+    required: false
+  InChIKey:
+    description: A unique hash key for a compound, e.g. for “Selumetinib”, the key is CYOHGALHFOKKQC-UHFFFAOYSA-N (https://pubchem.ncbi.nlm.nih.gov/compound/10127622#section=InChI-Key). This is a more reliable identifier than the compound name and should be used if available.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  MRISequence:
+    description: A mode used in MRI imaging
+    notes:
+      - Currently no dependencies or validation rules.
+    range: MRISequenceEnum
+    required: false
+  Resource_id:
+    description: A UUID for a Resource from the NF Research Tools Database
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  age:
+    annotations:
+      requiresDependency: ageUnit
+      validationRules: num
+    description: A numeric value representing age of the individual. Use with `ageUnit`.
+    required: false
+  ageUnit:
+    description: A time unit that can be used with a given age value, e.g. years.
+    notes:
+      - Currently no dependencies or validation rules.
+    range: TimeUnit
+    required: false
+  aliquotID:
+    description: A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  assay:
+    description: The technology used to generate the data in this file
+    notes:
+      - Currently no dependencies or validation rules.
+    range: AssayEnum
+    required: true
+  assayTarget:
+    description: The HUGO gene symbol that represents the target analyte assayed.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  author:
+    description: The author of the resource; preferably use an ORCID ID, GitHub profile link, etc., if available and a text name if not.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  averageBaseQuality:
+    description: Average base quality collected from samtools
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  averageInsertSize:
+    description: Average insert size as reported by samtools
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  averageReadLength:
+    description: Average read length collected from samtools
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  benefactorId:
+    description: The id of the resource from which access control is inherited.
+    in_subset:
+      - Synapse
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  bodySite:
+    comments:
+      - Helpful to consider where tissue/cell samples came from, e.g. something like "schwannoma" gets put in `tumorType`, but `bodySite` gives us the original location of the tumor.
+    description: Sample location referring to a named area of the body, inclusive of gross anatomical structures and organ parts.
+    notes:
+      - Currently no dependencies or validation rules.
+    range: BodyPartEnum
+    required: false
+    slot_uri: https://cancerdhc.github.io/ccdhmodel/v1.1/BodySite/
+  cellType:
+    annotations:
+      validationRules: 'list like'
+    description: A cell type is a distinct morphological or functional form of cell.
+    range: Cell
+    required: false
+  citation:
+    description: Citation (e.g. doi) that usage of data or resource should be cited with.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  comments:
+    description: Brief free-text comments that may also be important to understanding the resource.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  compoundDose:
+    annotations:
+      requiresDependency: compoundDoseUnit
+    description: A dose quantity for the treatment compound. To be used with compoundDoseUnit.
+    required: false
+  compoundDoseUnit:
+    description: A unit associated with the value(s) in compoundDose.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  compoundName:
+    annotations:
+      requiresDependency: InChIKey
+    description: Common name for a compound, e.g. “Selumetinib” (https://pubchem.ncbi.nlm.nih.gov/compound/10127622)
+    required: false
+  concentrationMaterial:
+    annotations:
+      validationRules: num
+    description: Numeric value for concentration of the material
+    required: false
+  concentrationMaterialUnit:
+    description: Unit used for the material concentration, e.g. mg/mL
+    notes:
+      - Currently no dependencies or validation rules.
+    range: ConcentrationUnit
+    required: false
+  concentrationNaCl:
+    description: Numeric value for NaCl concentration
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  concentrationNaClUnit:
+    description: Unit used for the NaCl concentration, e.g. mM
+    notes:
+      - Currently no dependencies or validation rules.
+    range: ConcentrationUnit
+    required: false
+  concreteType:
+    description: Refers to the class model the data platform uses for representing the resource. This is a low-level field set by the platform and is not a user annotation.
+    in_subset:
+      - Synapse
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  contentSize:
+    description: (Files only) File size, usually calculated by the backend.
+    in_subset:
+      - Synapse
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  contentType:
+    description: Refers to the type of content.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  createdBy:
+    description: Refers to the user who created the resource.
+    in_subset:
+      - Synapse
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  createdOn:
+    description: Refers to when the resource was created.
+    in_subset:
+      - Synapse
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  currentVersion:
+    description: (Versionable entities only) The current version number of the resource.
+    in_subset:
+      - Synapse
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  dataFileHandleId:
+    description: (Files only) Refers to the id of the file.
+    in_subset:
+      - Synapse
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  dataSubtype:
+    description: Further qualification of dataType, which may be used to indicate the state of processing of the data, aggregation of the data, or presence of metadata.
+    notes:
+      - Currently no dependencies or validation rules.
+    range: DataSubtype
+    required: true
+  dataType:
+    annotations:
+      requiresDependency: dataSubtype
+    any_of:
+      - range: Data
+      - range: Metadata
+    description: |
+      A type of data -- experimental, clinical, or other. Most typically refers to a high-level data type that can be related to an assay type.  For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.
+    required: false
+  diagnosis:
+    description: A diagnosis is the result of a medical investigation to identify a disorder from its signs and symptoms.
+    notes:
+      - Currently no dependencies or validation rules.
+    range: DiagnosisEnum
+    required: false
+  dissociationMethod:
+    description: Procedure by which a biological specimen is dissociated into individual cells or a cell suspension
+    notes:
+      - Currently no dependencies or validation rules.
+    range: DissociationMethodEnum
+    required: false
+  documentation:
+    description: URL to any documentation describing the resource and its use.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  drugScreenType:
+    description: String describing general class of drug screen
+    notes:
+      - Currently no dependencies or validation rules.
+    range: DrugScreen
+    required: false
+  etag:
+    description: Synapse employs an Optimistic Concurrency Control (OCC) scheme to handle concurrent updates. The E-Tag changes every time an entity is updated it is used to detect when a client's current representation of an entity is out-of-date.
+    in_subset:
+      - Synapse
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  experimentId:
+    description: When applicable, an optional identifier that can be used to distinguish or group the experiments that generated the data; also can be used to denote internal batch reference if needed.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  experimentalCondition:
+    description: A free-text description of the experimental condition (e.g. 5 mM doxorubicin).
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  experimentalTimepoint:
+    annotations:
+      requiresDependency: timePointUnit
+    description: The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit
+    required: false
+  expressionUnit:
+    description: Measure used for transcript expression quantification
+    enum_range:
+      - TPM
+      - RPKM
+      - FPKM
+      - Counts
+      - Other
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  failedQC:
+    description: Whether the sample or data failed QC checks (Yes, No)
+    notes:
+      - Currently no dependencies or validation rules.
+    range: BooleanEnum
+    required: false
+  fileFormat:
+    description: Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software
+    notes:
+      - Currently no dependencies or validation rules.
+    range: FileFormatEnum
+    required: true
+  fundingAgency:
+    description: Refers to the funding organization for the generated resource. This annotation is handled by the DCC.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  genePerturbationType:
+    description: Specific way in which a single gene was perturbed in a sample
+    notes:
+      - Currently no dependencies or validation rules.
+    range: GenePerturbationType
+    required: false
+  genePerturbed:
+    annotations:
+      requiresDependency: genePerturbationType,genePerturbationTechnology
+    description: The HUGO gene symbol for the gene that is perturbed.
+    required: false
+  genePerturbationTechnology:
+    description: Technology used to perturb gene
+    required: false
+    range: GenePerturbationMethodEnum
+  genomicReference:
+    description: Version of genome reference used for alignment in processing workflow
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  id:
+    description: The entity id for the resource automatically assigned by the platform.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  individualID:
+    annotations:
+      requiresDependency: sex,age,ageUnit,species,diagnosis,nf1Genotype,nf2Genotype
+    description: A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.
+    required: false
+  individualIdSource:
+    description: Database or repository to which individual ID maps
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  initiative:
+    description: 'Refers to a funding initiative. This annotation is usually handled by the DCC or funder, not the researcher. '
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  isCellLine:
+    description: Whether or not sample source is a cell line (Yes; No)
+    notes:
+      - Currently no dependencies or validation rules.
+    range: BooleanEnum
+    required: false
+  isFilteredReads:
+    description: Whether the reads in the processed result has been filtered by adding a 'PASS' filter or other filters as determined by the data generator
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  isMultiIndividual:
+    description: Whether or not a file has data for multiple individuals (Yes; No)
+    notes:
+      - Currently no dependencies or validation rules.
+    range: BooleanEnum
+    required: false
+  isMultiSpecimen:
+    description: Whether or not a file has data for multiple specimens (Yes; No)
+    notes:
+      - Currently no dependencies or validation rules.
+    range: BooleanEnum
+    required: false
+  isPairedEnd:
+    deprecated: Note that this can be inferred as 'Yes' when runType=pairedEnd; current templates actually use runType to capture this info.
+    description: (Legacy/deprecated annotation) Whether or not is paired-end sequencing (Yes; No).
+    notes:
+      - Currently no dependencies or validation rules.
+    range: BooleanEnum
+    required: false
+  isPrimaryCell:
+    description: Whether or not cellType is primary (Yes; No)
+    notes:
+      - Currently no dependencies or validation rules.
+    range: BooleanEnum
+    required: false
+  isStranded:
+    description: Whether or not the library is stranded (Yes; No)
+    notes:
+      - Currently no dependencies or validation rules.
+    range: BooleanEnum
+    required: false
+  isXenograft:
+    description: Whether or not sample source is a xenograft (Yes; No)
+    notes:
+      - Currently no dependencies or validation rules.
+    range: BooleanEnum
+    required: false
+  libraryID:
+    description: ""
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  libraryPrep:
+    annotations:
+      requiresDependency: libraryPreparationMethod,nucleicAcidSource,dissociationMethod
+    description: The general strategy by which the library was prepared
+    range: LibraryPrepEnum
+    required: false
+  libraryPreparationMethod:
+    description: Method by which library was prepared
+    notes:
+      - Currently no dependencies or validation rules.
+    range: LibraryPreparationMethodEnum
+    required: false
+  license:
+    description: Link to a license or name of license applicable for the resource.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  materialType:
+    description: Type of material in the characterization
+    enum_range:
+      - nanoparticles
+      - polymeric nanoparticles
+      - small molecule
+      - DNA
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  meanCoverage:
+    description: Mean coverage for whole genome sequencing, or mean target coverage for whole exome and targeted sequencing, collected from Picard Tools
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  modelSystemName:
+    annotations:
+      validationRules: 'list like'
+    any_of:
+      - range: CellLineModel
+      - range: MouseModel
+    description: 'A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)'
+    required: false
+  modifiedBy:
+    description: Refers to a user who last modified the resource on the platform.
+    in_subset:
+      - Synapse
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  nf1Genotype:
+    any_of:
+      - range: Genotype
+      - range: UnknownEnum
+    description: Genotype of NF1 gene in the biospecimen from which the data were derived, if known.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+    see_also:
+      - nf1Variant
+      - nf2Genotype
+  nf1Variant:
+    description: Named variant (mutation) in the NF1 gene/protein in the biospecimen from which the data were derived, if known/applicable.
+    notes:
+      - Currently no dependencies or validation rules.
+    range: NF1VariantEnum
+    required: false
+  nf2Genotype:
+    any_of:
+      - range: Genotype
+      - range: UnknownEnum
+    description: Genotype of NF2 gene in the biospecimen from which the data were derived, if known
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  nucleicAcidSource:
+    description: Source of the extracted nucleic acid used in the experiment
+    notes:
+      - Currently no dependencies or validation rules.
+    range: NucleicAcidSourceEnum
+    required: false
+  organ:
+    description: A unique macroscopic (gross) anatomic structure that performs specific functions. It is composed of various tissues. An organ is part of an anatomic system or a body region.
+    notes:
+      - Currently no dependencies or validation rules.
+    range: OrganEnum
+    required: false
+  pH:
+    description: Numeric value for pH (range 0-14)
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  pairsOnDifferentChr:
+    description: Pairs on different chromosomes collected from samtools
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  parentId:
+    description: 'The id of the parent resource, i.e. the parent folder on the platform. '
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  parentSpecimenID:
+    annotations:
+      requiresDependency: specimenID,aliquotID,organ,tissue,isCellLine,isPrimaryCell,cellType,tumorType,specimenPreparationMethod,modelSystemName
+    description: |
+      A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.
+    required: false
+  platform:
+    description: A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data.
+    notes:
+      - Currently no dependencies or validation rules.
+    range: PlatformEnum
+    required: true
+  programmingLanguage:
+    description: A computer programming language
+    enum_range:
+      - Python
+      - R
+      - MATLAB
+      - Java
+      - C
+      - C++
+      - C#
+      - Javascript
+      - bash
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  progressReportNumber:
+    description: 'Indicates milestone the  data is associated with. Currently only required for projects funded by NTAP, GFF, and NFRI. For GFF studies, this is the ‘progress report’ timeline. Example: if submitting data for the 6-month milestone report for NTAP, progressReportNumber=1.  Also if submitting data associated with first milestone, progressReportNumber =1'
+    enum_range:
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+      - "5"
+      - "6"
+      - "7"
+      - "8"
+      - "9"
+      - "10"
+      - Not Applicable
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  proportionCoverage10x:
+    description: Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 10X or greater coverage from Picard Tools
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  proportionCoverage30x:
+    description: Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 30X or greater coverage from Picard Tools
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  proteinExtractSource:
+    description: Source of the extracted protein used in the experiment
+    notes:
+      - Currently no dependencies or validation rules.
+    range: ProteinExtractSourceEnum
+    required: false
+  readDepth:
+    description: If available, the coverage statistic as output from bedtools coverage or samtools stats.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  readLength:
+    annotations:
+      validationRules: int
+    description: Number of base pairs (bp) sequenced for a read
+    required: false
+  readPair:
+    annotations:
+      validationRules: inRange 1 2
+    description: The read of origin, 1 or 2
+    required: false
+  readPairOrientation:
+    description: The relative orientation of the reads in a paired-end protocol
+    notes:
+    range: ReadPairOrientationEnum
+    required: false
+  readStrandOrigin:
+    description: The strand from which the read originates in a strand-specific protocol
+    notes:
+      - Currently no dependencies or validation rules.
+    range: ReadStrandOriginEnum
+    required: false
+  readsDuplicatedPercent:
+    description: Percent of duplicated reads collected from samtools
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  readsMappedPercent:
+    description: Percent of mapped reads collected from samtools
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  referenceSequence:
+    description: Syntactic sequences that has a role as reference of an annotation.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  referenceSet:
+    description: A set of references (e.g., canonical assembled contigs) which defines a common coordinate space for comparing reference-aligned experimental data.
+    notes:
+      - Currently no dependencies or validation rules.
+    range: ReferenceSetEnum
+    required: false
+  reporterGene:
+    description: A gene which produces an easily assayed phenotype. Often used for expression studies of heterologous promoters.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  reporterSubstance:
+    description: A biological material (clone, oligo, etc.) on an array which will report on some biosequence or biosequences.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  resourceType:
+    description: The type of resource being stored and annotated
+    notes:
+      - Currently no dependencies or validation rules.
+    range: Resource
+    required: true
+  runType:
+    annotations:
+      requiresDependency: readPair,isStranded,readPairOrientation,readStrandOrigin,readLength,readDepth
+    description: Is the sequencing run single or paired end?
+    range: RunTypeEnum
+    required: false
+  runtimePlatform:
+    description: Runtime platform or script interpreter dependencies (e.g. Java v1, Python 2.3).
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  sampleType:
+    description: Type of sample
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  sex:
+    any_of:
+      - range: SexEnum
+      - range: UnknownEnum
+      - range: NotApplicableEnum # e.g. sample is bacteria
+    description: Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  sourceName:
+    description: |
+      'Intended for non-biological samples, tf the sample is a nanoparticle sample or some chemical substance not derived from a biological material,  the corresponding source name should refer to the starting sample that was modified by a protocol for the assay.'
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  species:
+    description: The name of a species (typically a taxonomic group) of organism.
+    notes:
+      - Currently no dependencies or validation rules.
+    range: SpeciesEnum
+    required: false
+  specimenID:
+    description: A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came, e.g. an ID that distinguishes between different parts of the same parent tumor specimen. This can be the A A unique identifier (non-PII) that represents the
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  specimenIDSource:
+    description: Optional annotation describing where the specimen ID source derived from, e.g. the biobank providing samples or a providing lab.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  specimenPreparationMethod:
+    description: Term that represents preservation of the sample before usage in, e.g. sequencing
+    notes:
+      - Currently no dependencies or validation rules.
+    range: SpecimenPreparationMethodEnum
+    required: false
+  targetCaptureKitID:
+    description: A unique identifier for the kit used to construct a genomic library using target capture-based techniques, which should be composed of the vendor name, kit name and kit version.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  targetDepth:
+    description: The targeted read depth prior to sequencing.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  timePointUnit:
+    description: For timed experiments this represents the unit of time measured
+    notes:
+      - Currently no dependencies or validation rules.
+    range: TimeUnit
+    required: false
+  tissue:
+    description: A tissue is a mereologically maximal collection of cells that together perform physiological function.
+    notes:
+      - Currently no dependencies or validation rules.
+    range: TissueEnum
+    required: false
+  totalReads:
+    description: If available, the total number of reads collected from samtools.
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  transplantationRecipientSpecies:
+    description: Species into which donor tissue was grown
+    enum_range:
+      - Human
+      - Mouse
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  transplantationRecipientTissue:
+    description: Tissue into which a xenograph sample is transplanted
+    notes:
+      - Currently no dependencies or validation rules.
+    range: Tissue
+    required: false
+  transplantationType:
+    annotations:
+      requiresDependency: transplantationRecipientSpecies,transplantationRecipientTissue
+    description: Type of transplantation involved in the experiment, derived from MESH
+    range: TransplantationType
+    required: false
+  tumorType:
+    description: The type of tumor that the biospecimen used to generate the data were collected from.
+    notes:
+      - Currently no dependencies or validation rules.
+    range: Tumor
+    required: false
+  type:
+    description: Refers to the type of the resource on the platform, e.g. “file”.
+    in_subset:
+      - Synapse
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false
+  workflow:
+    annotations:
+      requiresDependency: workflowLink
+    description: Name and version of the workflow used to generate/analyze the data
+    required: false
+  workflowLink:
+    description: Workflow URL reference
+    notes:
+      - Currently no dependencies or validation rules.
+    required: false

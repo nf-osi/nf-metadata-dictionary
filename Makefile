@@ -1,12 +1,9 @@
-CSV := NF.csv
+all: convert
 
-all: collate convert
-
-collate:
-	@echo "Collating module components..."
-	head -1 modules/Assay/Assay.csv > ${CSV}
-	tail -n +2 -q modules/*/*.csv >> ${CSV}
+# TODO Implement analysis on data model changes
+analyze:
+	@echo "Analyzing data model..."
 
 convert:
-	schematic schema convert ${CSV}
+	bb ./retold/retold as-jsonld --dir modules --out NF.jsonld 
 

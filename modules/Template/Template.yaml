@@ -1,0 +1,574 @@
+classes:
+
+  Template:
+    description: A collection of fields representing some entity. 
+    comments: 
+    - Also called a manifest depending on context.
+    abstract: true
+
+  AssayDataTemplate:
+    is_a: Template
+    description: A template for describing deposited data artifacts (i.e. files) from an experiment.
+
+  SequencingDataTemplate:
+    is_a: AssayDataTemplate
+    description: A template for data from a sequencing assay.
+
+  ImagingDataTemplate:
+    is_a: AssayDataTemplate
+    description: A template for data from an imaging assay.
+  
+  ResearchToolsTemplate:
+    is_a: Template
+    description: A template for describing deposited non-data resources such as source code and protocols.
+
+  ClinicalDataTemplate:
+    is_a: Template
+    description: A template for submitting participant clinical data. 
+
+  PartialTemplate:
+    description: A template for collecting a subset of contextual data; not intended to be a standalone template but rather a subdocument. 
+
+#######################################
+# AssayDataTemplate              
+#######################################
+  
+  ScRNASeqTemplate:
+    is_a: SequencingDataTemplate
+    description: Template for describing raw data from single-cell RNA-sequencing (scRNA-seq)
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - individualID
+    - parentSpecimenID
+    - isXenograft
+    - transplantationType
+    - transplantationRecipientSpecies
+    - transplantationRecipientTissue
+    - runType
+    - libraryPrep
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  RNASeqTemplate:
+    is_a: SequencingDataTemplate
+    description: Template for describing raw data from (bulk) RNA-sequencing
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - individualID
+    - parentSpecimenID
+    - isXenograft
+    - transplantationType
+    - transplantationRecipientSpecies
+    - transplantationRecipientTissue
+    - runType
+    - libraryPrep
+    - targetDepth
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  EpigeneticsAssayTemplate:
+    is_a: SequencingDataTemplate
+    description: Generic template for describing data from an epigenetics assay.
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - individualID
+    - parentSpecimenID
+    - experimentalCondition
+    - experimentalTimepoint
+    - libraryPrep
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  BehavioralAssayTemplate:
+    is_a: AssayDataTemplate
+    description: > 
+      Generic template for describing data from behavioral/cognitive assays such as “adaptive n-back task” (for humans) or “Von Frey test” (for mice). 
+      If another modality is used as part of the assay, e.g. fMRI, that data can be linked.
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - individualID
+    - experimentalCondition
+    - experimentalTimepoint
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  LightScatteringAssayTemplate:
+    is_a: AssayDataTemplate
+    description: Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.
+    source: https://wiki.nci.nih.gov/display/icr/isa-tab-nano
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - dataType
+    - assay
+    - materialType
+    - specimenID
+    - pH
+    - concentrationMaterial
+    - concentrationMaterialUnit
+    - concentrationNaCl
+    - concentrationNaClUnit
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  PlateBasedReporterAssayTemplate:
+    is_a: AssayDataTemplate
+    description: Generic template for describing data from a plate-based reporter assay. This is a one-step template.
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - assayTarget
+    - individualID
+    - parentSpecimenID
+    - experimentalCondition
+    - experimentalTimepoint
+    - reporterGene
+    - reporterSubstance
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+
+  ClinicalAssayTemplate:
+    is_a: AssayDataTemplate
+    description: > 
+      Template for simple endpoint data from clinical assays often used in diagnostic practice or clinical trials. 
+      This can include repeated measures and a drug treatment context.
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - individualID
+    - parentSpecimenID
+    - experimentalCondition
+    - experimentalTimepoint
+    - compoundName
+    - compoundDose
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  ProcessedAlignedReadsTemplate:
+    is_a: AssayDataTemplate
+    description: Template for describing aligned reads output data (i.e. BAM)
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - individualID
+    - parentSpecimenID
+    - averageInsertSize
+    - averageReadLength
+    - averageBaseQuality
+    - pairsOnDifferentChr
+    - readsDuplicatedPercent
+    - readsMappedPercent
+    - meanCoverage
+    - proportionCoverage10x
+    - proportionCoverage30x
+    - readDepth
+    - totalReads
+    - workflow
+    - genomicReference
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  PharmacokineticsAssayTemplate:
+    is_a: AssayDataTemplate
+    description: Generic template for describing data from a pharmacokinetics assay. This is a one-step template.
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - assayTarget
+    - individualID
+    - parentSpecimenID
+    - experimentalCondition
+    - experimentalTimepoint
+    - genePerturbed
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  ProcessedExpressionTemplate:
+    is_a: AssayDataTemplate
+    description: Template for describing expression output data
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - individualID
+    - specimenID
+    - parentSpecimenID
+    - modelSystemName
+    - workflow
+    - expressionUnit
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  GenomicsAssayTemplate:
+    is_a: SequencingDataTemplate
+    description: > 
+      Generic denormalized template for describing raw data from a genomic type assay (RNA-seq, Exome-seq, etc) 
+      along with individual, biospecimen and experimental metadata.
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - individualID
+    - parentSpecimenID
+    - isXenograft
+    - transplantationType
+    - transplantationRecipientSpecies
+    - transplantationRecipientTissue
+    - runType
+    - libraryPrep
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  ProteomicsAssayTemplate:
+    is_a: AssayDataTemplate
+    description: > 
+      Generic template for describing data from a proteomics assay. 
+      Note that specialized proteomics assays may have their own template to capture more detailed information.
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - individualID
+    - parentSpecimenID
+    - experimentalCondition
+    - experimentalTimepoint
+    - proteinExtractSource
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  WGSTemplate:
+    is_a: SequencingDataTemplate
+    description: Template for describing raw data from Whole Genome Sequencing (WGS)
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - individualID
+    - parentSpecimenID
+    - runType
+    - libraryPrep
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  GenomicsAssayTemplateExtended:
+    is_a: SequencingDataTemplate
+    description: >
+      Template for describing raw data from a genomic type assay (RNA-seq, Exome-seq, etc) with extended properties 
+      for capturing additional metadata such as gene perturbation parameters or experimental conditions and time points.
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - individualID
+    - parentSpecimenID
+    - isXenograft
+    - transplantationType
+    - transplantationRecipientSpecies
+    - transplantationRecipientTissue
+    - experimentalCondition
+    - experimentalTimepoint
+    - runType
+    - libraryPrep
+    - genePerturbed
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  WESTemplate:
+    is_a: AssayDataTemplate
+    description: Template for describing raw data from Whole Exome Sequencing (WES)
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - individualID
+    - parentSpecimenID
+    - runType
+    - targetCaptureKitID
+    - libraryPrep
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  ProcessedVariantCallsTemplate:
+    is_a: AssayDataTemplate
+    description: Template for describing either germline or variant calls output data (i.e. VCF/MAF)
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - specimenID
+    - dataType
+    - assay
+    - individualID
+    - isFilteredReads
+    - workflow
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  PdxGenomicsAssay:
+    is_a: AssayDataTemplate
+    description: Template for describing PDX assay data that extends genomicsAssay.
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - individualID
+    - parentSpecimenID
+    - experimentalCondition
+    - experimentalTimepoint
+    - transplantationType
+    - genePerturbed
+    - runType
+    - libraryPrep
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  FlowCytometryTemplate:
+    is_a: AssayDataTemplate
+    description: Basic template for flow cytometry assay
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - dataType
+    - assay
+    - platform
+    - individualID
+    - specimenID
+    - cellType
+    - experimentalCondition
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+
+  ImagingAssayTemplate:
+    is_a: ImagingDataTemplate
+    description: Generic template for describing data from an imaging type assay (IHC, etc). This is a one-step template.
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - assayTarget
+    - individualID
+    - parentSpecimenID
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  MRIAssayTemplate:
+    is_a: ImagingDataTemplate
+    description: Generic template for describing data from an MRI assay. This is a one-step template.
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - progressReportNumber
+    - dataType
+    - assay
+    - platform
+    - individualID
+    - parentSpecimenID
+    - experimentalCondition
+    - experimentalTimepoint
+    - MRISequence
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+
+#######################################
+# ClinicalDataTemplate              
+#######################################
+
+  PatientTemplate:
+    is_a: ClinicalDataTemplate
+    description: >
+      Template for collecting minimal individual-level data. 
+    slots:
+    - Component
+    - individualID
+    - sex
+    - age
+    - ageUnit
+    - species
+    - diagnosis
+    - nf1Genotype
+    - nf2Genotype
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  PatientTimepointsTemplate:
+    is_a: ClinicalDataTemplate
+    description: Template for capturing individual-level data with time points. Do not use for data file annotation.
+    slots:
+    - Component
+    - individualID
+    - experimentalTimepoint
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+#######################################
+# ResearchToolsTemplate              
+#######################################
+
+  ProtocolTemplate:
+    is_a: ResearchToolsTemplate
+    description: Template for describing a protocol document. 
+    source: https://bioschema.org/profiles/LabProtocol/0.6-DRAFT-2020_12_08
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - author
+    - citation
+    - license
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  SourceCodeTemplate:
+    is_a: ResearchToolsTemplate
+    description: Template for describing scripts/other code files for an analysis or software application.
+    slots:
+    - Component
+    - Filename
+    - resourceType
+    - programmingLanguage
+    - documentation
+    - runtimePlatform
+    - license
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+
+#######################################
+# PartialTemplate              
+#######################################
+
+  UpdateMilestoneReport:
+    is_a: PartialTemplate
+    description: Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF.
+    slots:
+    - Filename
+    - resourceType
+    - progressReportNumber
+    annotations:
+      requiresComponent: ''
+      required: false
