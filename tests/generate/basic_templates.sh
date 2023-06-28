@@ -42,7 +42,7 @@ for i in ${!TEMPLATES[@]}
 do
   echo ">>>>>>> Generating ${TEMPLATES[$i]}"
   schematic manifest --config config.yml \
-  get -dt ${TEMPLATES[$i]} --title ${TITLES[$i]} -s | tee $LOG_DIR/${TEMPLATES[$i]%.*}_log.txt
+  get -dt ${TEMPLATES[$i]} --title "${TITLES[$i]}" -s | tee $LOG_DIR/${TEMPLATES[$i]%.*}_log.txt
   sleep $SLEEP_THROTTLE
 done
 
