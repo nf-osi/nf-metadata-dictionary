@@ -529,6 +529,12 @@ slots:
       - Currently no dependencies or validation rules.
     range: ProteinExtractSourceEnum
     required: false
+  protocolAssay:
+    description: >
+      Main assay type that this protocol is related to, e.g. this is a prep protocol for single-cell RNA-seq assay. This is especially helpful for newly-developed or in-house assays.
+    range: Assay
+  protocolPurpose:
+    description: Brief description of the protocol purpose.  
   readDepth:
     description: If available, the coverage statistic as output from bedtools coverage or samtools stats.
     notes:
@@ -604,7 +610,7 @@ slots:
       - Currently no dependencies or validation rules.
     required: false
   sampleType:
-    description: Type of sample
+    description: Type of sample used
     notes:
       - Currently no dependencies or validation rules.
     required: false
