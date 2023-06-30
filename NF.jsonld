@@ -935,11 +935,19 @@
     }, {
       "@id" : "bts:resourceType"
     }, {
+      "@id" : "bts:title"
+    }, {
       "@id" : "bts:author"
     }, {
       "@id" : "bts:citation"
     }, {
       "@id" : "bts:license"
+    }, {
+      "@id" : "bts:protocolAssay"
+    }, {
+      "@id" : "bts:protocolPurpose"
+    }, {
+      "@id" : "bts:sampleType"
     }, {
       "@id" : "bts:comments"
     } ],
@@ -1608,6 +1616,17 @@
     "sms:displayName" : "proportionCoverage30x",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:description",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Text describing a resource.",
+    "rdfs:label" : "description",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "description",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:compoundDoseUnit",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "A unit associated with the value(s) in compoundDose.",
@@ -1696,6 +1715,17 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "readPairOrientation"
   }, {
+    "@id" : "bts:fileSize",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Size of file in bytes.",
+    "rdfs:label" : "fileSize",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "fileSize",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:benefactorId",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "The id of the resource from which access control is inherited.",
@@ -1716,6 +1746,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "createdOn",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:protocolPurpose",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Brief description of the protocol purpose.",
+    "rdfs:label" : "protocolPurpose",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "protocolPurpose",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:reporterSubstance",
@@ -1793,6 +1834,17 @@
     "sms:displayName" : "targetDepth",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:creator",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "An entity responsible for making the resource.",
+    "rdfs:label" : "creator",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "creator",
+    "sms:required" : "sms:true"
+  }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:age",
     "schema:isPartOf" : {
@@ -1865,6 +1917,17 @@
     "rdfs:comment" : "Method by which library was prepared",
     "@type" : "rdfs:Class",
     "sms:displayName" : "libraryPreparationMethod"
+  }, {
+    "@id" : "bts:publisher",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "An entity responsible for making the resource available.",
+    "rdfs:label" : "publisher",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "publisher",
+    "sms:required" : "sms:false"
   }, {
     "@id" : "bts:averageBaseQuality",
     "@type" : "rdfs:Class",
@@ -1968,6 +2031,17 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "concentrationMaterial"
   }, {
+    "@id" : "bts:fileCount",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Number of files in the resource collection.",
+    "rdfs:label" : "fileCount",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "fileCount",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:assayTarget",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "The HUGO gene symbol that represents the target analyte assayed.",
@@ -2002,6 +2076,17 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "readLength"
   }, {
+    "@id" : "bts:studyId",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Id of study.",
+    "rdfs:label" : "studyId",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "studyId",
+    "sms:required" : "sms:true"
+  }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:Filename",
     "schema:isPartOf" : {
@@ -2031,6 +2116,17 @@
     "rdfs:comment" : "The strand from which the read originates in a strand-specific protocol",
     "@type" : "rdfs:Class",
     "sms:displayName" : "readStrandOrigin"
+  }, {
+    "@id" : "bts:series",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Which series this resource belongs to, can be a name or link.",
+    "rdfs:label" : "series",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "series",
+    "sms:required" : "sms:false"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:nf1Variant",
@@ -2666,6 +2762,17 @@
     } ],
     "sms:displayName" : "transplantationType"
   }, {
+    "@id" : "bts:yearPublished",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Year in which the resource was published.",
+    "rdfs:label" : "yearPublished",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "yearPublished",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:fundingAgency",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "Refers to the funding organization for the generated resource. This annotation is handled by the DCC.",
@@ -2759,6 +2866,17 @@
     "sms:displayName" : "runtimePlatform",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:manifestation",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "An associated phenotype characteristic.",
+    "rdfs:label" : "manifestation",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "manifestation",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:concentrationNaCl",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "Numeric value for NaCl concentration",
@@ -2846,6 +2964,17 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "materialType"
   }, {
+    "@id" : "bts:doi",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Digital object identifier of the resource.",
+    "rdfs:label" : "doi",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "doi",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:readsDuplicatedPercent",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "Percent of duplicated reads collected from samtools",
@@ -2893,6 +3022,28 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "MRISequence"
   }, {
+    "@id" : "bts:datasetSizeInBytes",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Size of dataset entity in bytes. Auto-calculated by Synapse.",
+    "rdfs:label" : "datasetSizeInBytes",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "datasetSizeInBytes",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:yearProcessed",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Year in which the resource was processed/derived.",
+    "rdfs:label" : "yearProcessed",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "yearProcessed",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:referenceSequence",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "Syntactic sequences that has a role as reference of an annotation.",
@@ -2903,6 +3054,17 @@
     },
     "sms:displayName" : "referenceSequence",
     "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:title",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Title of a resource.",
+    "rdfs:label" : "title",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "title",
+    "sms:required" : "sms:true"
   }, {
     "@id" : "bts:documentation",
     "@type" : "rdfs:Class",
@@ -2943,6 +3105,17 @@
     },
     "sms:displayName" : "proportionCoverage10x",
     "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:studyName",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Name of a study.",
+    "rdfs:label" : "studyName",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "studyName",
+    "sms:required" : "sms:true"
   }, {
     "@id" : "bts:libraryID",
     "@type" : "rdfs:Class",
@@ -2995,7 +3168,7 @@
   }, {
     "@id" : "bts:sampleType",
     "@type" : "rdfs:Class",
-    "rdfs:comment" : "Type of sample",
+    "rdfs:comment" : "Type of sample used",
     "rdfs:label" : "sampleType",
     "rdfs:subClassOf" : [ ],
     "schema:isPartOf" : {
@@ -3070,6 +3243,17 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "transplantationRecipientTissue"
   }, {
+    "@id" : "bts:datasetItemCount",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Count of files in dataset. Auto-calculated by Synapse.",
+    "rdfs:label" : "datasetItemCount",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "datasetItemCount",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:workflowLink",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "Workflow URL reference",
@@ -3112,6 +3296,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "totalReads",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:contributor",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "An entity responsible for making contributions to the resource.",
+    "rdfs:label" : "contributor",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "contributor",
     "sms:required" : "sms:false"
   }, {
     "rdfs:subClassOf" : [ ],
@@ -4058,6 +4253,17 @@
     "sms:displayName" : "parentId",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:diseaseFocus",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Disease that acts as the main topic.",
+    "rdfs:label" : "diseaseFocus",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "diseaseFocus",
+    "sms:required" : "sms:false"
+  }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:transplantationRecipientSpecies",
     "schema:isPartOf" : {
@@ -4224,6 +4430,308 @@
       "@id" : "bts:timePointUnit"
     } ],
     "sms:displayName" : "experimentalTimepoint"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:protocolAssay",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:immunoassay"
+    }, {
+      "@id" : "bts:Sangersequencing"
+    }, {
+      "@id" : "bts:ATAC-seq"
+    }, {
+      "@id" : "bts:RPPA"
+    }, {
+      "@id" : "bts:noveltyresponsebehaviorassay"
+    }, {
+      "@id" : "bts:autoradiography"
+    }, {
+      "@id" : "bts:genotyping"
+    }, {
+      "@id" : "bts:immunohistochemistry"
+    }, {
+      "@id" : "bts:highfrequencyultrasound"
+    }, {
+      "@id" : "bts:reactiveoxygenspeciesassay"
+    }, {
+      "@id" : "bts:contextualconditioningbehaviorassay"
+    }, {
+      "@id" : "bts:elevatedplusmazetest"
+    }, {
+      "@id" : "bts:lightscatteringassay"
+    }, {
+      "@id" : "bts:spatialfrequencydomainimaging"
+    }, {
+      "@id" : "bts:HI-C"
+    }, {
+      "@id" : "bts:ATPaseactivityassay"
+    }, {
+      "@id" : "bts:compoundscreen"
+    }, {
+      "@id" : "bts:quantitativePCR"
+    }, {
+      "@id" : "bts:combinationscreen"
+    }, {
+      "@id" : "bts:questionnaire"
+    }, {
+      "@id" : "bts:ChIP-seq"
+    }, {
+      "@id" : "bts:miRNAarray"
+    }, {
+      "@id" : "bts:whole-cellpatchclamp"
+    }, {
+      "@id" : "bts:2DIncucyte"
+    }, {
+      "@id" : "bts:electrochemiluminescence"
+    }, {
+      "@id" : "bts:laserspeckleimaging"
+    }, {
+      "@id" : "bts:westernblot"
+    }, {
+      "@id" : "bts:singlemoleculedrugscreenassay"
+    }, {
+      "@id" : "bts:sandwichELISA"
+    }, {
+      "@id" : "bts:massivelyparallelreporterassay"
+    }, {
+      "@id" : "bts:combinationlibraryscreen"
+    }, {
+      "@id" : "bts:invitrotumorigenesis"
+    }, {
+      "@id" : "bts:polymerasechainreaction"
+    }, {
+      "@id" : "bts:TMTquantitation"
+    }, {
+      "@id" : "bts:cellproliferation"
+    }, {
+      "@id" : "bts:reportergeneassay"
+    }, {
+      "@id" : "bts:ERRbisulfitesequencing"
+    }, {
+      "@id" : "bts:3Dimaging"
+    }, {
+      "@id" : "bts:positronemissiontomography"
+    }, {
+      "@id" : "bts:SNParray"
+    }, {
+      "@id" : "bts:differentialscanningcalorimetry"
+    }, {
+      "@id" : "bts:FTIRspectroscopy"
+    }, {
+      "@id" : "bts:functionalMRI"
+    }, {
+      "@id" : "bts:ISO-seq"
+    }, {
+      "@id" : "bts:localfieldpotentialrecording"
+    }, {
+      "@id" : "bts:cAMP-GloMaxAssay"
+    }, {
+      "@id" : "bts:magneticresonancespectroscopy"
+    }, {
+      "@id" : "bts:bluenativePAGE"
+    }, {
+      "@id" : "bts:immunocytochemistry"
+    }, {
+      "@id" : "bts:brightfieldmicroscopy"
+    }, {
+      "@id" : "bts:mRNAcounts"
+    }, {
+      "@id" : "bts:sorbitoldehydrogenaseactivitylevelassay"
+    }, {
+      "@id" : "bts:survival"
+    }, {
+      "@id" : "bts:wholeexomesequencing"
+    }, {
+      "@id" : "bts:staticlightscattering"
+    }, {
+      "@id" : "bts:immunofluorescence"
+    }, {
+      "@id" : "bts:oxygenconsumptionassay"
+    }, {
+      "@id" : "bts:rheometry"
+    }, {
+      "@id" : "bts:RNA-seq"
+    }, {
+      "@id" : "bts:lncRNA-seq"
+    }, {
+      "@id" : "bts:RiccardiandAblonscales"
+    }, {
+      "@id" : "bts:array"
+    }, {
+      "@id" : "bts:FIA-MSMS"
+    }, {
+      "@id" : "bts:HPLC"
+    }, {
+      "@id" : "bts:NOMe-seq"
+    }, {
+      "@id" : "bts:oxBS-seq"
+    }, {
+      "@id" : "bts:nextgenerationtargetedsequencing"
+    }, {
+      "@id" : "bts:RNAarray"
+    }, {
+      "@id" : "bts:jumpinglibrary"
+    }, {
+      "@id" : "bts:smallmoleculelibraryscreen"
+    }, {
+      "@id" : "bts:ribo-seq"
+    }, {
+      "@id" : "bts:patternelectroretinogram"
+    }, {
+      "@id" : "bts:highcontentscreen"
+    }, {
+      "@id" : "bts:openfieldtest"
+    }, {
+      "@id" : "bts:3Dconfocalimaging"
+    }, {
+      "@id" : "bts:gelfiltrationchromatography"
+    }, {
+      "@id" : "bts:atomicforcemicroscopy"
+    }, {
+      "@id" : "bts:invivoPDXviability"
+    }, {
+      "@id" : "bts:longtermpotentiationassay"
+    }, {
+      "@id" : "bts:ultrahigh-performanceliquidchromatography/tandemmassspectrometry"
+    }, {
+      "@id" : "bts:DNAopticalmapping"
+    }, {
+      "@id" : "bts:activeavoidancelearningbehaviorassay"
+    }, {
+      "@id" : "bts:twinspotassay"
+    }, {
+      "@id" : "bts:focusformingassay"
+    }, {
+      "@id" : "bts:rotarodperformancetest"
+    }, {
+      "@id" : "bts:methylationarray"
+    }, {
+      "@id" : "bts:2DAlamarBlueabsorbance"
+    }, {
+      "@id" : "bts:2DAlamarBluefluorescence"
+    }, {
+      "@id" : "bts:Tcellreceptorrepertoiresequencing"
+    }, {
+      "@id" : "bts:dynamiclightscattering"
+    }, {
+      "@id" : "bts:invivotumorgrowth"
+    }, {
+      "@id" : "bts:bloodchemistrymeasurement"
+    }, {
+      "@id" : "bts:photograph"
+    }, {
+      "@id" : "bts:invivobioluminescence"
+    }, {
+      "@id" : "bts:bodysizetraitmeasurement"
+    }, {
+      "@id" : "bts:3Dmicrotissueviability"
+    }, {
+      "@id" : "bts:cellcompetition"
+    }, {
+      "@id" : "bts:ELISA"
+    }, {
+      "@id" : "bts:cellviabilityassay"
+    }, {
+      "@id" : "bts:wholegenomesequencing"
+    }, {
+      "@id" : "bts:tractionforcemicroscopy"
+    }, {
+      "@id" : "bts:CUT&RUN"
+    }, {
+      "@id" : "bts:Matrigel-basedtumorigenesisassay"
+    }, {
+      "@id" : "bts:perineurialcellthickness"
+    }, {
+      "@id" : "bts:SUSHI"
+    }, {
+      "@id" : "bts:spatialtranscriptomics"
+    }, {
+      "@id" : "bts:flowcytometry"
+    }, {
+      "@id" : "bts:phase-contrastmicroscopy"
+    }, {
+      "@id" : "bts:liquidchromatography/tandemmassspectrometry"
+    }, {
+      "@id" : "bts:opticalcoherencetomography"
+    }, {
+      "@id" : "bts:liquidchromatography/massspectrometry"
+    }, {
+      "@id" : "bts:miRNA-seq"
+    }, {
+      "@id" : "bts:optokineticreflexassay"
+    }, {
+      "@id" : "bts:MIB/MS"
+    }, {
+      "@id" : "bts:liquidchromatography-electrochemicaldetection"
+    }, {
+      "@id" : "bts:massspectrometry"
+    }, {
+      "@id" : "bts:calciumretentioncapacityassay"
+    }, {
+      "@id" : "bts:labelfreemassspectrometry"
+    }, {
+      "@id" : "bts:single-cellRNA-seq"
+    }, {
+      "@id" : "bts:clinicaldata"
+    }, {
+      "@id" : "bts:gaitmeasurement"
+    }, {
+      "@id" : "bts:high-performanceliquidchromatography/tandemmassspectrometry"
+    }, {
+      "@id" : "bts:MudPIT"
+    }, {
+      "@id" : "bts:VonFreytest"
+    }, {
+      "@id" : "bts:bisulfitesequencing"
+    }, {
+      "@id" : "bts:scCGI-seq"
+    }, {
+      "@id" : "bts:3Delectronmicroscopy"
+    }, {
+      "@id" : "bts:2DCellTiter-Glo"
+    }, {
+      "@id" : "bts:cellcount"
+    }, {
+      "@id" : "bts:targetedexomesequencing"
+    }, {
+      "@id" : "bts:conventionalMRI"
+    }, {
+      "@id" : "bts:scale"
+    }, {
+      "@id" : "bts:ChildBehaviorChecklistforAges1.5-5"
+    }, {
+      "@id" : "bts:ChildBehaviorChecklistforAges6-18"
+    }, {
+      "@id" : "bts:SocialResponsivenessScale"
+    }, {
+      "@id" : "bts:SocialResponsivenessScale,SecondEdition"
+    }, {
+      "@id" : "bts:NIHToolbox"
+    }, {
+      "@id" : "bts:multi-electrodearray"
+    }, {
+      "@id" : "bts:EdUproliferationassay"
+    }, {
+      "@id" : "bts:BrdUproliferationassay"
+    }, {
+      "@id" : "bts:TIDE"
+    }, {
+      "@id" : "bts:FLIPRhigh-throughputcellularscreening"
+    }, {
+      "@id" : "bts:microrheology"
+    }, {
+      "@id" : "bts:oscillatoryrheology"
+    }, {
+      "@id" : "bts:complexIIenzymeactivityassay"
+    } ],
+    "rdfs:label" : "protocolAssay",
+    "rdfs:comment" : "Main assay type that this protocol is related to, e.g. this is a prep protocol for single-cell RNA-seq assay. This is especially helpful for newly-developed or in-house assays.\n",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "protocolAssay"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:assay",
