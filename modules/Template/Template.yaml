@@ -529,14 +529,18 @@ classes:
   ProtocolTemplate:
     is_a: ResearchToolsTemplate
     description: Template for describing a protocol document. 
-    source: https://bioschema.org/profiles/LabProtocol/0.6-DRAFT-2020_12_08
+    source: https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT
     slots:
     - Component
     - Filename
     - resourceType
+    - title
     - author
     - citation
     - license
+    - protocolAssay
+    - protocolPurpose
+    - sampleType
     - comments
     annotations:
       requiresComponent: ''
@@ -557,6 +561,38 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+
+#######################################
+# Other Artifacts           
+#######################################
+
+  DatasetTemplate:
+    is_a: Template
+    description: Template that specifies NF portal dataset properties should have for more consistent community-curated datasets.
+    notes:
+    - This is intended to be compiled to JSON schema and bound to dataset entities, NOT used in DCA.
+    - While "publisher" (repository) may seem redundant, eventually may want to have symbolic datasets like Cancer Complexity Portal that describe datasets hosted somewhere else.
+    slots:
+    - id # Synapse id used as accession for citation when no doi
+    - doi
+    - title
+    - creator
+    - contributor
+    - currentVersion
+    - description
+    - license
+    - dataType
+    - studyName
+    - studyId
+    - manifestation
+    - diseaseFocus
+    - fundingAgency
+    - series
+    - publisher
+    - yearProcessed
+    - yearPublished
+    - datasetItemCount
+    - datasetSizeInBytes
 
 #######################################
 # PartialTemplate              
