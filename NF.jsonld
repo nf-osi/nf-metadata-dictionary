@@ -3915,6 +3915,18 @@
       "@id" : "bts:B6;129-Trp53tm1TyjNf1tm1TyjSuz12Gt(Betageo)1Khe/KcichJ"
     }, {
       "@id" : "bts:B6.129(Cg)-Nf1tm1Par/J"
+    }, {
+      "@id" : "bts:GFAP-Cre;Nf1-G848R/Flox"
+    }, {
+      "@id" : "bts:GFAP-Cre;Nf1-R681X/Flox"
+    }, {
+      "@id" : "bts:GFAP-Cre;Nf1-C383X/Flox"
+    }, {
+      "@id" : "bts:Nf1-C848R/Flox"
+    }, {
+      "@id" : "bts:Nf1-R681X/Flox"
+    }, {
+      "@id" : "bts:Nf1-C383X/Flox"
     } ],
     "rdfs:label" : "modelSystemName",
     "rdfs:comment" : "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)",
@@ -5223,6 +5235,10 @@
       "@id" : "bts:PromegaGloMaxDiscover"
     }, {
       "@id" : "bts:BionanoIrys"
+    }, {
+      "@id" : "bts:LeicaAperioAT2"
+    }, {
+      "@id" : "bts:LeicaS9Stereomicroscope"
     } ],
     "rdfs:label" : "platform",
     "rdfs:comment" : "A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data.",
@@ -7592,6 +7608,28 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Bionano Irys",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:LeicaAperioAT2",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "(From vendor) The Aperio AT2 is the most compact, highest capacity, brightfield Digital Pathology scanner available.",
+    "rdfs:label" : "LeicaAperioAT2",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Leica Aperio AT2",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:LeicaS9Stereomicroscope",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "",
+    "rdfs:label" : "LeicaS9Stereomicroscope",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Leica S9 Stereomicroscope",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:R816X",
@@ -11904,6 +11942,72 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "B6.129(Cg)-Nf1tm1Par/J",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:GFAP-Cre;Nf1-G848R/Flox",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "GFAP-Cre; Nf1-G848R/Flox mice carry a germline Nf1 mutation (G848R), and the second Nf1 allele is conditionally knocked out in astrocytes, offering researchers a valuable tool to explore the specific consequences and roles of these genetic modifications in astrocytes and studies related to Nf1.",
+    "rdfs:label" : "GFAP-Cre;Nf1-G848R/Flox",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "GFAP-Cre; Nf1-G848R/Flox",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:GFAP-Cre;Nf1-R681X/Flox",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "GFAP-Cre; Nf1-R681X/Flox mice have a germline Nf1 mutation (R681X), and the second Nf1 allele is conditionally knocked out specifically in astrocytes, providing a unique model for studying the effects and functions of these genetic alterations in astrocytes and Nf1-related research.",
+    "rdfs:label" : "GFAP-Cre;Nf1-R681X/Flox",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "GFAP-Cre; Nf1-R681X/Flox",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:GFAP-Cre;Nf1-C383X/Flox",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "GFAP-Cre; Nf1-C383X/Flox mice carry a germline Nf1 mutation (C383X), and the second Nf1 allele is conditionally knocked out in astrocytes, offering researchers a valuable tool to explore the specific consequences and roles of these genetic modifications in astrocytes and studies related to Nf1.",
+    "rdfs:label" : "GFAP-Cre;Nf1-C383X/Flox",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "GFAP-Cre; Nf1-C383X/Flox",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:Nf1-C848R/Flox",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Nf1-G848R/Flox mice harbor a germline Nf1 mutation (G848R) with conditional removal of the second Nf1 allele through Cre-lox recombination, offering researchers a valuable tool to explore the consequences and functions of Nf1 gene alterations in various research studies.",
+    "rdfs:label" : "Nf1-C848R/Flox",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Nf1-C848R/Flox",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:Nf1-R681X/Flox",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Nf1-R681X/Flox mice carry a germline Nf1 mutation (R681X) with conditional removal of the second Nf1 allele via Cre-lox recombination, providing researchers with a useful model to investigate the effects and implications of Nf1 gene alterations in different experimental contexts.",
+    "rdfs:label" : "Nf1-R681X/Flox",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Nf1-R681X/Flox",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:Nf1-C383X/Flox",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Nf1-C383X/Flox mice feature a germline Nf1 mutation (R383X) with conditional removal of the second Nf1 allele through Cre-lox recombination, making them an important resource for studying the specific consequences and roles of Nf1 gene alterations in diverse research areas.",
+    "rdfs:label" : "Nf1-C383X/Flox",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Nf1-C383X/Flox",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:Sangersequencing",
