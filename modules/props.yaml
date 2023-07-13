@@ -348,7 +348,7 @@ slots:
     annotations:
       requiresDependency: sex,age,ageUnit,species,diagnosis,nf1Genotype,nf2Genotype
     description: A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.
-    required: false
+    required: true
   individualIdSource:
     description: Database or repository to which individual ID maps
     notes:
@@ -689,12 +689,12 @@ slots:
     notes:
       - Currently no dependencies or validation rules.
     range: SpeciesEnum
-    required: false
+    required: true
   specimenID:
     description: A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came, e.g. an ID that distinguishes between different parts of the same parent tumor specimen. This can be the A A unique identifier (non-PII) that represents the
     notes:
       - Currently no dependencies or validation rules.
-    required: false
+    required: true
   specimenIDSource:
     description: Optional annotation describing where the specimen ID source derived from, e.g. the biobank providing samples or a providing lab.
     notes:
