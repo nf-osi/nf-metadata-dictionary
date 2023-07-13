@@ -43,9 +43,7 @@ slots:
       - Currently no dependencies or validation rules.
     required: false
   assay:
-    description: The technology used to generate the data in this file
-    notes:
-      - Currently no dependencies or validation rules.
+    description: The technology used to generate the data in this file.
     range: AssayEnum
     required: true
   assayTarget:
@@ -127,8 +125,6 @@ slots:
     required: false
   concentrationMaterialUnit:
     description: Unit used for the material concentration, e.g. mg/mL
-    notes:
-      - Currently no dependencies or validation rules.
     range: ConcentrationUnit
     required: false
   concentrationNaCl:
@@ -159,7 +155,7 @@ slots:
   contentType:
     description: Refers to the type of content.
     notes:
-      - Currently no dependencies or validation rules.
+      - Used by schematic (entities with value = dataset) to detect which folders to surface.
     required: false
   contributor:
     description: An entity responsible for making contributions to the resource.
@@ -277,6 +273,7 @@ slots:
   experimentalTimepoint:
     annotations:
       requiresDependency: timePointUnit
+      validationRules: num
     description: The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit
     required: false
   expressionUnit:
@@ -423,7 +420,7 @@ slots:
     notes:
       - Currently no dependencies or validation rules.
     range: LibraryPreparationMethodEnum
-    required: false
+    required: true
   license:
     description: Link to a license or name of license applicable for the resource.
     notes:
@@ -501,8 +498,8 @@ slots:
     required: false
   pH:
     description: Numeric value for pH (range 0-14)
-    notes:
-      - Currently no dependencies or validation rules.
+    annotations:
+      validationRules: num
     required: false
   pairsOnDifferentChr:
     description: Pairs on different chromosomes collected from samtools
@@ -588,13 +585,13 @@ slots:
     required: false
   readDepth:
     description: If available, the coverage statistic as output from bedtools coverage or samtools stats.
-    notes:
-      - Currently no dependencies or validation rules.
-    required: false
-  readLength:
     annotations:
       validationRules: int
+    required: false
+  readLength:
     description: Number of base pairs (bp) sequenced for a read
+    annotations:
+      validationRules: int
     required: false
   readPair:
     annotations:
@@ -619,8 +616,8 @@ slots:
     required: false
   readsMappedPercent:
     description: Percent of mapped reads collected from samtools
-    notes:
-      - Currently no dependencies or validation rules.
+    annotations:
+      validationRules: num
     required: false
   referenceSequence:
     description: Syntactic sequences that has a role as reference of an annotation.
@@ -705,7 +702,7 @@ slots:
     notes:
       - Currently no dependencies or validation rules.
     range: SpecimenPreparationMethodEnum
-    required: false
+    required: true
   studyId:
     description: Id of study.
     required: true
@@ -740,8 +737,8 @@ slots:
     required: true
   totalReads:
     description: If available, the total number of reads collected from samtools.
-    notes:
-      - Currently no dependencies or validation rules.
+    annotations:
+      validationRules: int
     required: false
   transplantationRecipientSpecies:
     description: Species into which donor tissue was grown
@@ -768,7 +765,7 @@ slots:
     notes:
       - Currently no dependencies or validation rules.
     range: Tumor
-    required: false
+    required: true
   type:
     description: Refers to the type of the resource on the platform, e.g. “file”.
     in_subset:
@@ -778,9 +775,15 @@ slots:
     required: false
   yearProcessed:
     description: Year in which the resource was processed/derived.
+    annotations:
+      validationRules: int
+    notes:
+    - There is no 'year' validation rule and `date` rule requires actual date format
     required: false
   yearPublished:
     description: Year in which the resource was published.
+    annotations:
+      validationRules: int
     required: false
   workflow:
     annotations:
