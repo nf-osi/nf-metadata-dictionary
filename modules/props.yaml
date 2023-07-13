@@ -503,8 +503,8 @@ slots:
     required: false
   pairsOnDifferentChr:
     description: Pairs on different chromosomes collected from samtools
-    notes:
-      - Currently no dependencies or validation rules.
+    annotations:
+      validationRules: int
     required: false
   parentId:
     description: 'The id of the parent resource, i.e. the parent folder on the platform. '
@@ -557,13 +557,13 @@ slots:
     required: false
   proportionCoverage10x:
     description: Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 10X or greater coverage from Picard Tools
-    notes:
-      - Currently no dependencies or validation rules.
+    annotations:
+      validationRules: num
     required: false
   proportionCoverage30x:
     description: Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 30X or greater coverage from Picard Tools
-    notes:
-      - Currently no dependencies or validation rules.
+    annotations:
+      validationRules: num
     required: false
   proteinExtractSource:
     description: Source of the extracted protein used in the experiment
@@ -600,7 +600,6 @@ slots:
     required: false
   readPairOrientation:
     description: The relative orientation of the reads in a paired-end protocol
-    notes:
     range: ReadPairOrientationEnum
     required: false
   readStrandOrigin:
@@ -626,8 +625,6 @@ slots:
     required: false
   referenceSet:
     description: A set of references (e.g., canonical assembled contigs) which defines a common coordinate space for comparing reference-aligned experimental data.
-    notes:
-      - Currently no dependencies or validation rules.
     range: ReferenceSetEnum
     required: false
   reporterGene:
@@ -637,13 +634,10 @@ slots:
     required: false
   reporterSubstance:
     description: A biological material (clone, oligo, etc.) on an array which will report on some biosequence or biosequences.
-    notes:
-      - Currently no dependencies or validation rules.
+    todo: Need to make enums for this.
     required: false
   resourceType:
     description: The type of resource being stored and annotated
-    notes:
-      - Currently no dependencies or validation rules.
     range: Resource
     required: true
   runType:
@@ -654,8 +648,6 @@ slots:
     required: false
   runtimePlatform:
     description: Runtime platform or script interpreter dependencies (e.g. Java v1, Python 2.3).
-    notes:
-      - Currently no dependencies or validation rules.
     required: false
   sampleType:
     description: Type of sample used
@@ -711,8 +703,6 @@ slots:
     required: true
   targetCaptureKitID:
     description: A unique identifier for the kit used to construct a genomic library using target capture-based techniques, which should be composed of the vendor name, kit name and kit version.
-    notes:
-      - Currently no dependencies or validation rules.
     required: false
   targetDepth:
     description: The targeted read depth prior to sequencing.
@@ -762,8 +752,6 @@ slots:
     required: false
   tumorType:
     description: The type of tumor that the biospecimen used to generate the data were collected from.
-    notes:
-      - Currently no dependencies or validation rules.
     range: Tumor
     required: true
   type:
