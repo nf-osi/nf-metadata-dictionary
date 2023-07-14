@@ -334,7 +334,7 @@ slots:
   genomicReference:
     description: Version of genome reference used for alignment in processing workflow
     notes:
-      - Currently no dependencies or validation rules.
+      - Currently used with nextflow-processed data.
     required: false
   id:
     description: The entity id for the resource automatically assigned by the platform.
@@ -349,7 +349,7 @@ slots:
   individualIdSource:
     description: Database or repository to which individual ID maps
     notes:
-      - Currently no dependencies or validation rules.
+      - Legacy key used in a couple of old studies
     required: false
   initiative:
     description: 'Refers to a funding initiative. This annotation is usually handled by the DCC or funder, not the researcher. '
@@ -417,8 +417,6 @@ slots:
     required: false
   libraryPreparationMethod:
     description: Method by which library was prepared
-    notes:
-      - Currently no dependencies or validation rules.
     range: LibraryPreparationMethodEnum
     required: true
   license:
