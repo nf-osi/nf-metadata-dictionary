@@ -292,6 +292,36 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+
+    GenomicsAssayTemplateExtended:
+      is_a: SequencingDataTemplate
+      description: >
+        Genomics assay template but with additional fields for gene perturbation parameters, experimental conditions and time points.
+      slots:
+      - Component
+      - Filename
+      - resourceType
+      - progressReportNumber
+      - dataType
+      - assay
+      - platform
+      - individualID
+      - parentSpecimenID
+      - isXenograft
+      - transplantationType
+      - transplantationRecipientSpecies
+      - transplantationRecipientTissue
+      - runType
+      - libraryPrep
+      - experimentalCondition
+      - experimentalTimepoint
+      - genePerturbed
+      - genePerturbationTechnology
+      - genePerturbationType
+      - comments
+      annotations:
+        requiresComponent: ''
+        required: false
   
   ProteomicsAssayTemplate:
     is_a: AssayDataTemplate
@@ -331,35 +361,6 @@ classes:
     - parentSpecimenID
     - runType
     - libraryPrep
-    - comments
-    annotations:
-      requiresComponent: ''
-      required: false
-  
-  GenomicsAssayTemplateExtended:
-    is_a: SequencingDataTemplate
-    description: >
-      Template for describing raw data from a genomic type assay (RNA-seq, Exome-seq, etc) with extended properties 
-      for capturing additional metadata such as gene perturbation parameters or experimental conditions and time points.
-    slots:
-    - Component
-    - Filename
-    - resourceType
-    - progressReportNumber
-    - dataType
-    - assay
-    - platform
-    - individualID
-    - parentSpecimenID
-    - isXenograft
-    - transplantationType
-    - transplantationRecipientSpecies
-    - transplantationRecipientTissue
-    - experimentalCondition
-    - experimentalTimepoint
-    - runType
-    - libraryPrep
-    - genePerturbed
     - comments
     annotations:
       requiresComponent: ''
