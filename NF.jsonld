@@ -1660,16 +1660,17 @@
     } ],
     "sms:displayName" : "FlowCytometryTemplate"
   }, {
-    "@id" : "bts:proportionCoverage30x",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 30X or greater coverage from Picard Tools",
-    "rdfs:label" : "proportionCoverage30x",
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:proportionCoverage30x",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:displayName" : "proportionCoverage30x",
-    "sms:required" : "sms:false"
+    "sms:required" : "sms:false",
+    "sms:validationRules" : [ "num" ],
+    "rdfs:label" : "proportionCoverage30x",
+    "rdfs:comment" : "Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 30X or greater coverage from Picard Tools",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "proportionCoverage30x"
   }, {
     "@id" : "bts:description",
     "@type" : "rdfs:Class",
@@ -1936,7 +1937,7 @@
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:required" : "sms:false",
+    "sms:required" : "sms:true",
     "schema:rangeIncludes" : [ {
       "@id" : "bts:TruSeq"
     }, {
@@ -2052,16 +2053,17 @@
     } ],
     "sms:displayName" : "compoundDose"
   }, {
-    "@id" : "bts:readDepth",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "If available, the coverage statistic as output from bedtools coverage or samtools stats.",
-    "rdfs:label" : "readDepth",
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:readDepth",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:displayName" : "readDepth",
-    "sms:required" : "sms:false"
+    "sms:required" : "sms:false",
+    "sms:validationRules" : [ "int" ],
+    "rdfs:label" : "readDepth",
+    "rdfs:comment" : "If available, the coverage statistic as output from bedtools coverage or samtools stats.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "readDepth"
   }, {
     "@id" : "bts:InChIKey",
     "@type" : "rdfs:Class",
@@ -2260,7 +2262,7 @@
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:required" : "sms:false",
+    "sms:required" : "sms:true",
     "schema:rangeIncludes" : [ {
       "@id" : "bts:Freshcollected"
     }, {
@@ -2499,7 +2501,7 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "specimenID",
-    "sms:required" : "sms:false"
+    "sms:required" : "sms:true"
   }, {
     "@id" : "bts:comments",
     "@type" : "rdfs:Class",
@@ -2752,7 +2754,7 @@
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:required" : "sms:false",
+    "sms:required" : "sms:true",
     "schema:rangeIncludes" : [ {
       "@id" : "bts:Rattusnorvegicus"
     }, {
@@ -2817,16 +2819,17 @@
     } ],
     "sms:displayName" : "transplantationType"
   }, {
-    "@id" : "bts:yearPublished",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "Year in which the resource was published.",
-    "rdfs:label" : "yearPublished",
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:yearPublished",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:displayName" : "yearPublished",
-    "sms:required" : "sms:false"
+    "sms:required" : "sms:false",
+    "sms:validationRules" : [ "int" ],
+    "rdfs:label" : "yearPublished",
+    "rdfs:comment" : "Year in which the resource was published.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "yearPublished"
   }, {
     "@id" : "bts:fundingAgency",
     "@type" : "rdfs:Class",
@@ -3088,16 +3091,17 @@
     "sms:displayName" : "datasetSizeInBytes",
     "sms:required" : "sms:false"
   }, {
-    "@id" : "bts:yearProcessed",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "Year in which the resource was processed/derived.",
-    "rdfs:label" : "yearProcessed",
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:yearProcessed",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:displayName" : "yearProcessed",
-    "sms:required" : "sms:false"
+    "sms:required" : "sms:false",
+    "sms:validationRules" : [ "int" ],
+    "rdfs:label" : "yearProcessed",
+    "rdfs:comment" : "Year in which the resource was processed/derived.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "yearProcessed"
   }, {
     "@id" : "bts:referenceSequence",
     "@type" : "rdfs:Class",
@@ -3150,16 +3154,17 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "concentrationMaterialUnit"
   }, {
-    "@id" : "bts:proportionCoverage10x",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 10X or greater coverage from Picard Tools",
-    "rdfs:label" : "proportionCoverage10x",
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:proportionCoverage10x",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:displayName" : "proportionCoverage10x",
-    "sms:required" : "sms:false"
+    "sms:required" : "sms:false",
+    "sms:validationRules" : [ "num" ],
+    "rdfs:label" : "proportionCoverage10x",
+    "rdfs:comment" : "Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 10X or greater coverage from Picard Tools",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "proportionCoverage10x"
   }, {
     "@id" : "bts:studyName",
     "@type" : "rdfs:Class",
@@ -3246,27 +3251,29 @@
     } ],
     "sms:displayName" : "workflow"
   }, {
+    "rdfs:subClassOf" : [ ],
     "@id" : "bts:pH",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "Numeric value for pH (range 0-14)",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "sms:validationRules" : [ "num" ],
     "rdfs:label" : "pH",
-    "rdfs:subClassOf" : [ ],
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:displayName" : "pH",
-    "sms:required" : "sms:false"
-  }, {
-    "@id" : "bts:pairsOnDifferentChr",
+    "rdfs:comment" : "Numeric value for pH (range 0-14)",
     "@type" : "rdfs:Class",
-    "rdfs:comment" : "Pairs on different chromosomes collected from samtools",
-    "rdfs:label" : "pairsOnDifferentChr",
+    "sms:displayName" : "pH"
+  }, {
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:pairsOnDifferentChr",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:displayName" : "pairsOnDifferentChr",
-    "sms:required" : "sms:false"
+    "sms:required" : "sms:false",
+    "sms:validationRules" : [ "int" ],
+    "rdfs:label" : "pairsOnDifferentChr",
+    "rdfs:comment" : "Pairs on different chromosomes collected from samtools",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "pairsOnDifferentChr"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:concentrationNaClUnit",
@@ -3342,16 +3349,17 @@
     "sms:displayName" : "individualIdSource",
     "sms:required" : "sms:false"
   }, {
-    "@id" : "bts:totalReads",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "If available, the total number of reads collected from samtools.",
-    "rdfs:label" : "totalReads",
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:totalReads",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:displayName" : "totalReads",
-    "sms:required" : "sms:false"
+    "sms:required" : "sms:false",
+    "sms:validationRules" : [ "int" ],
+    "rdfs:label" : "totalReads",
+    "rdfs:comment" : "If available, the total number of reads collected from samtools.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "totalReads"
   }, {
     "@id" : "bts:contributor",
     "@type" : "rdfs:Class",
@@ -3369,7 +3377,7 @@
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:required" : "sms:false",
+    "sms:required" : "sms:true",
     "schema:rangeIncludes" : [ {
       "@id" : "bts:immunoassay"
     }, {
@@ -4033,7 +4041,7 @@
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:required" : "sms:false",
+    "sms:required" : "sms:true",
     "schema:rangeIncludes" : [ {
       "@id" : "bts:DiffuseAstrocytoma"
     }, {
@@ -4162,16 +4170,17 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "expressionUnit"
   }, {
-    "@id" : "bts:readsMappedPercent",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "Percent of mapped reads collected from samtools",
-    "rdfs:label" : "readsMappedPercent",
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:readsMappedPercent",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:displayName" : "readsMappedPercent",
-    "sms:required" : "sms:false"
+    "sms:required" : "sms:false",
+    "sms:validationRules" : [ "num" ],
+    "rdfs:label" : "readsMappedPercent",
+    "rdfs:comment" : "Percent of mapped reads collected from samtools",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "readsMappedPercent"
   }, {
     "@id" : "bts:contentType",
     "@type" : "rdfs:Class",
@@ -4200,7 +4209,7 @@
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:required" : "sms:false",
+    "sms:required" : "sms:true",
     "rdfs:label" : "individualID",
     "rdfs:comment" : "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
     "@type" : "rdfs:Class",
@@ -4492,6 +4501,7 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:required" : "sms:false",
+    "sms:validationRules" : [ "num" ],
     "rdfs:label" : "experimentalTimepoint",
     "rdfs:comment" : "The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit",
     "@type" : "rdfs:Class",
@@ -5100,7 +5110,7 @@
       "@id" : "bts:complexIIenzymeactivityassay"
     } ],
     "rdfs:label" : "assay",
-    "rdfs:comment" : "The technology used to generate the data in this file",
+    "rdfs:comment" : "The technology used to generate the data in this file.",
     "@type" : "rdfs:Class",
     "sms:displayName" : "assay"
   }, {

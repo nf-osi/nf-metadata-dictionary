@@ -43,9 +43,7 @@ slots:
       - Currently no dependencies or validation rules.
     required: false
   assay:
-    description: The technology used to generate the data in this file
-    notes:
-      - Currently no dependencies or validation rules.
+    description: The technology used to generate the data in this file.
     range: AssayEnum
     required: true
   assayTarget:
@@ -127,8 +125,6 @@ slots:
     required: false
   concentrationMaterialUnit:
     description: Unit used for the material concentration, e.g. mg/mL
-    notes:
-      - Currently no dependencies or validation rules.
     range: ConcentrationUnit
     required: false
   concentrationNaCl:
@@ -159,7 +155,7 @@ slots:
   contentType:
     description: Refers to the type of content.
     notes:
-      - Currently no dependencies or validation rules.
+      - Used by schematic (entities with value = dataset) to detect which folders to surface.
     required: false
   contributor:
     description: An entity responsible for making contributions to the resource.
@@ -214,7 +210,7 @@ slots:
       - range: Metadata
     description: |
       A type of data -- experimental, clinical, or other. Most typically refers to a high-level data type that can be related to an assay type.  For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.
-    required: false
+    required: true
   datasetSizeInBytes:
     description: Size of dataset entity in bytes. Auto-calculated by Synapse.
     in_subset:
@@ -277,6 +273,7 @@ slots:
   experimentalTimepoint:
     annotations:
       requiresDependency: timePointUnit
+      validationRules: num
     description: The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit
     required: false
   expressionUnit:
@@ -337,7 +334,7 @@ slots:
   genomicReference:
     description: Version of genome reference used for alignment in processing workflow
     notes:
-      - Currently no dependencies or validation rules.
+      - Currently used with nextflow-processed data.
     required: false
   id:
     description: The entity id for the resource automatically assigned by the platform.
@@ -348,11 +345,11 @@ slots:
     annotations:
       requiresDependency: sex,age,ageUnit,species,diagnosis,nf1Genotype,nf2Genotype
     description: A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.
-    required: false
+    required: true
   individualIdSource:
     description: Database or repository to which individual ID maps
     notes:
-      - Currently no dependencies or validation rules.
+      - Legacy key used in a couple of old studies
     required: false
   initiative:
     description: 'Refers to a funding initiative. This annotation is usually handled by the DCC or funder, not the researcher. '
@@ -420,10 +417,8 @@ slots:
     required: false
   libraryPreparationMethod:
     description: Method by which library was prepared
-    notes:
-      - Currently no dependencies or validation rules.
     range: LibraryPreparationMethodEnum
-    required: false
+    required: true
   license:
     description: Link to a license or name of license applicable for the resource.
     notes:
@@ -501,13 +496,13 @@ slots:
     required: false
   pH:
     description: Numeric value for pH (range 0-14)
-    notes:
-      - Currently no dependencies or validation rules.
+    annotations:
+      validationRules: num
     required: false
   pairsOnDifferentChr:
     description: Pairs on different chromosomes collected from samtools
-    notes:
-      - Currently no dependencies or validation rules.
+    annotations:
+      validationRules: int
     required: false
   parentId:
     description: 'The id of the parent resource, i.e. the parent folder on the platform. '
@@ -560,13 +555,13 @@ slots:
     required: false
   proportionCoverage10x:
     description: Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 10X or greater coverage from Picard Tools
-    notes:
-      - Currently no dependencies or validation rules.
+    annotations:
+      validationRules: num
     required: false
   proportionCoverage30x:
     description: Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 30X or greater coverage from Picard Tools
-    notes:
-      - Currently no dependencies or validation rules.
+    annotations:
+      validationRules: num
     required: false
   proteinExtractSource:
     description: Source of the extracted protein used in the experiment
@@ -588,13 +583,13 @@ slots:
     required: false
   readDepth:
     description: If available, the coverage statistic as output from bedtools coverage or samtools stats.
-    notes:
-      - Currently no dependencies or validation rules.
-    required: false
-  readLength:
     annotations:
       validationRules: int
+    required: false
+  readLength:
     description: Number of base pairs (bp) sequenced for a read
+    annotations:
+      validationRules: int
     required: false
   readPair:
     annotations:
@@ -603,7 +598,6 @@ slots:
     required: false
   readPairOrientation:
     description: The relative orientation of the reads in a paired-end protocol
-    notes:
     range: ReadPairOrientationEnum
     required: false
   readStrandOrigin:
@@ -619,8 +613,8 @@ slots:
     required: false
   readsMappedPercent:
     description: Percent of mapped reads collected from samtools
-    notes:
-      - Currently no dependencies or validation rules.
+    annotations:
+      validationRules: num
     required: false
   referenceSequence:
     description: Syntactic sequences that has a role as reference of an annotation.
@@ -629,8 +623,6 @@ slots:
     required: false
   referenceSet:
     description: A set of references (e.g., canonical assembled contigs) which defines a common coordinate space for comparing reference-aligned experimental data.
-    notes:
-      - Currently no dependencies or validation rules.
     range: ReferenceSetEnum
     required: false
   reporterGene:
@@ -640,13 +632,10 @@ slots:
     required: false
   reporterSubstance:
     description: A biological material (clone, oligo, etc.) on an array which will report on some biosequence or biosequences.
-    notes:
-      - Currently no dependencies or validation rules.
+    todo: Need to make enums for this.
     required: false
   resourceType:
     description: The type of resource being stored and annotated
-    notes:
-      - Currently no dependencies or validation rules.
     range: Resource
     required: true
   runType:
@@ -657,8 +646,6 @@ slots:
     required: false
   runtimePlatform:
     description: Runtime platform or script interpreter dependencies (e.g. Java v1, Python 2.3).
-    notes:
-      - Currently no dependencies or validation rules.
     required: false
   sampleType:
     description: Type of sample used
@@ -689,12 +676,12 @@ slots:
     notes:
       - Currently no dependencies or validation rules.
     range: SpeciesEnum
-    required: false
+    required: true
   specimenID:
     description: A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came, e.g. an ID that distinguishes between different parts of the same parent tumor specimen. This can be the A A unique identifier (non-PII) that represents the
     notes:
       - Currently no dependencies or validation rules.
-    required: false
+    required: true
   specimenIDSource:
     description: Optional annotation describing where the specimen ID source derived from, e.g. the biobank providing samples or a providing lab.
     notes:
@@ -705,7 +692,7 @@ slots:
     notes:
       - Currently no dependencies or validation rules.
     range: SpecimenPreparationMethodEnum
-    required: false
+    required: true
   studyId:
     description: Id of study.
     required: true
@@ -714,8 +701,6 @@ slots:
     required: true
   targetCaptureKitID:
     description: A unique identifier for the kit used to construct a genomic library using target capture-based techniques, which should be composed of the vendor name, kit name and kit version.
-    notes:
-      - Currently no dependencies or validation rules.
     required: false
   targetDepth:
     description: The targeted read depth prior to sequencing.
@@ -740,8 +725,8 @@ slots:
     required: true
   totalReads:
     description: If available, the total number of reads collected from samtools.
-    notes:
-      - Currently no dependencies or validation rules.
+    annotations:
+      validationRules: int
     required: false
   transplantationRecipientSpecies:
     description: Species into which donor tissue was grown
@@ -765,10 +750,8 @@ slots:
     required: false
   tumorType:
     description: The type of tumor that the biospecimen used to generate the data were collected from.
-    notes:
-      - Currently no dependencies or validation rules.
     range: Tumor
-    required: false
+    required: true
   type:
     description: Refers to the type of the resource on the platform, e.g. “file”.
     in_subset:
@@ -778,9 +761,15 @@ slots:
     required: false
   yearProcessed:
     description: Year in which the resource was processed/derived.
+    annotations:
+      validationRules: int
+    notes:
+    - There is no 'year' validation rule and `date` rule requires actual date format
     required: false
   yearPublished:
     description: Year in which the resource was published.
+    annotations:
+      validationRules: int
     required: false
   workflow:
     annotations:

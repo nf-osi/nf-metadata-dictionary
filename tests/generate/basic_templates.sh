@@ -28,7 +28,7 @@ echo "Getting $CONFIG to use as test config..."
 wget $CONFIG -O $TEST_CONFIG
 
 TEMPLATES=($(jq '.manifest_schemas[] | .schema_name' $TEST_CONFIG | tr -d '"'))
-TITLES=($(jq '.manifest_schemas[] | .display_name' $TEST_CONFIG | tr -d '"'))
+#TITLES=($(jq '.manifest_schemas[] | .display_name' $TEST_CONFIG | tr -d '"'))
 echo "✓ Retrieved config with ${#TEMPLATES[@]} templates..."
 
 # Setup data model
@@ -42,7 +42,7 @@ for i in ${!TEMPLATES[@]}
 do
   echo ">>>>>>> Generating ${TEMPLATES[$i]}"
   schematic manifest --config config.yml \
-  get -dt ${TEMPLATES[$i]} --title "${TITLES[$i]}" -s | tee $LOG_DIR/${TEMPLATES[$i]%.*}_log.txt
+  get -dt ${TEMPLATES[$i]} --title ${TEMPLATES[$i]} -s | tee $LOG_DIR/${TEMPLATES[$i]%.*}_log.txt
   sleep $SLEEP_THROTTLE
 done
 
