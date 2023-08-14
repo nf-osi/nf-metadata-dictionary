@@ -491,7 +491,7 @@ classes:
 
   GenericMeasuresTemplate:
     is_a: Template
-    description: Template for measures (often in a spreadsheet) for some common phenotype characteristic over time
+    description: Catch-all template for measures (often in a spreadsheet) for some other phenotype characteristic (in experimentalFactor) over time
     slots:
     - Component
     - Filename
@@ -502,6 +502,7 @@ classes:
     - platform
     - individualID
     - parentSpecimenID
+    - experimentalFactor
     - experimentalCondition
     - experimentalTimepoint
     - comments
@@ -613,6 +614,7 @@ classes:
     - yearPublished
     - datasetItemCount
     - datasetSizeInBytes
+    # - relatedDataset # not yet
 
   WorkflowReport:
     is_a: Template
@@ -624,7 +626,7 @@ classes:
     - resourceType
     - assay
     - fileFormat
-    - linkedDataset
+    - relatedDataset
     - workflow
     - workflowLink
 
