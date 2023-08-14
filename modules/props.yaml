@@ -270,6 +270,12 @@ slots:
     notes:
       - Currently no dependencies or validation rules.
     required: false
+  experimentalFactor:
+    description: An ontology concept for experimental factor measured with this data. 
+    notes:
+      - Note that this enforces a concept term from EFO (currently preferred), while the related `experimentalCondition` is free-text and much more specific. 
+    required: false
+    range: Measurement
   experimentalTimepoint:
     annotations:
       requiresDependency: timePointUnit
