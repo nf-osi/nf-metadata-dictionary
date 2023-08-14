@@ -46,7 +46,7 @@ jobs:
     name: Test with schematic
     needs: [build]
     runs-on: ubuntu-22.04
-    if: ${{ !contains(github.event.head_commit.message, '[skip tests]') }}
+    if: "!contains(toJSON(github.event.commits.*.message), '[skip tests]')"
     env:
       SCHEMATIC_SERVICE_ACCT_CREDS: ${{ secrets.SCHEMATIC_SERVICE_ACCT_CREDS }}
     permissions:
