@@ -44,9 +44,9 @@ jobs:
   # Additionally test PRs
   test:
     name: Test with schematic
+    if: "!contains( github.event.pull_request.labels.*.name, 'skip tests')"
     needs: [build]
     runs-on: ubuntu-22.04
-    if: "!contains(toJSON(github.event.commits.*.message), '[skip tests]')"
     env:
       SCHEMATIC_SERVICE_ACCT_CREDS: ${{ secrets.SCHEMATIC_SERVICE_ACCT_CREDS }}
     permissions:
