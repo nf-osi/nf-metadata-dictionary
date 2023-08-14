@@ -174,6 +174,17 @@
     "sms:displayName" : "ProteinExtractSourceEnum",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:BiologicalProcess",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "BiologicalProcess",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "BiologicalProcess",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:OrganEnum",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -348,6 +359,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "TimeUnit",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:Measurement",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "Measurement",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Measurement",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:Material",
@@ -1063,6 +1085,47 @@
     "sms:displayName" : "GenomicsAssayTemplate"
   }, {
     "rdfs:subClassOf" : [ {
+      "@id" : "bts:Template"
+    } ],
+    "@id" : "bts:GenericMeasuresTemplate",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "sms:requiresComponent" : "",
+    "rdfs:label" : "GenericMeasuresTemplate",
+    "rdfs:comment" : "Catch-all template for measures (often in a spreadsheet) for some other phenotype characteristic (in experimentalFactor) over time",
+    "@type" : "rdfs:Class",
+    "sms:requiresDependency" : [ {
+      "@id" : "bts:Component"
+    }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:resourceType"
+    }, {
+      "@id" : "bts:progressReportNumber"
+    }, {
+      "@id" : "bts:dataType"
+    }, {
+      "@id" : "bts:assay"
+    }, {
+      "@id" : "bts:platform"
+    }, {
+      "@id" : "bts:individualID"
+    }, {
+      "@id" : "bts:parentSpecimenID"
+    }, {
+      "@id" : "bts:experimentalFactor"
+    }, {
+      "@id" : "bts:experimentalCondition"
+    }, {
+      "@id" : "bts:experimentalTimepoint"
+    }, {
+      "@id" : "bts:comments"
+    } ],
+    "sms:displayName" : "GenericMeasuresTemplate"
+  }, {
+    "rdfs:subClassOf" : [ {
       "@id" : "bts:SequencingDataTemplate"
     } ],
     "@id" : "bts:WGSTemplate",
@@ -1606,6 +1669,35 @@
       "@id" : "bts:comments"
     } ],
     "sms:displayName" : "FlowCytometryTemplate"
+  }, {
+    "rdfs:subClassOf" : [ {
+      "@id" : "bts:Template"
+    } ],
+    "@id" : "bts:WorkflowReport",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "sms:requiresComponent" : null,
+    "rdfs:label" : "WorkflowReport",
+    "rdfs:comment" : "Template used for miscellaneous workflow reports and accessory files",
+    "@type" : "rdfs:Class",
+    "sms:requiresDependency" : [ {
+      "@id" : "bts:Component"
+    }, {
+      "@id" : "bts:resourceType"
+    }, {
+      "@id" : "bts:assay"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
+      "@id" : "bts:relatedDataset"
+    }, {
+      "@id" : "bts:workflow"
+    }, {
+      "@id" : "bts:workflowLink"
+    } ],
+    "sms:displayName" : "WorkflowReport"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:proportionCoverage30x",
@@ -2311,6 +2403,34 @@
     "rdfs:comment" : "A tissue is a mereologically maximal collection of cells that together perform physiological function.",
     "@type" : "rdfs:Class",
     "sms:displayName" : "tissue"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:experimentalFactor",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:braingrowthmeasurement"
+    }, {
+      "@id" : "bts:brainvolumemeasurement"
+    }, {
+      "@id" : "bts:bodyweight"
+    }, {
+      "@id" : "bts:clinicallaboratorymeasurement"
+    }, {
+      "@id" : "bts:cognitivefunctionmeasurement"
+    }, {
+      "@id" : "bts:gaitmeasurement"
+    }, {
+      "@id" : "bts:motordevelopmentmeasurement"
+    }, {
+      "@id" : "bts:painmeasurement"
+    } ],
+    "rdfs:label" : "experimentalFactor",
+    "rdfs:comment" : "An ontology concept for experimental factor measured with this data.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "experimentalFactor"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:readPair",
@@ -3081,6 +3201,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "documentation",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:relatedDataset",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Reference to a relevant dataset entity.",
+    "rdfs:label" : "relatedDataset",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "relatedDataset",
     "sms:required" : "sms:false"
   }, {
     "rdfs:subClassOf" : [ ],
@@ -8240,6 +8371,61 @@
     "sms:displayName" : "cytoplasm",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:atrophy",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "atrophy",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "atrophy",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:braindevelopment",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "braindevelopment",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "brain development",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:druginteraction",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "druginteraction",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "drug interaction",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:drugresistance",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "drugresistance",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "drug resistance",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:drugtoxicitiy",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "drugtoxicitiy",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "drug toxicitiy",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:kidney",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "One of the two bean-shaped organs located on each side of the spine in the retroperitoneum.",
@@ -10152,6 +10338,94 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "years",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:braingrowthmeasurement",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "braingrowthmeasurement",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "brain growth measurement",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:brainvolumemeasurement",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "brainvolumemeasurement",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "brain volume measurement",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:bodyweight",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "bodyweight",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "body weight",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:clinicallaboratorymeasurement",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "clinicallaboratorymeasurement",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "clinical laboratory measurement",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:cognitivefunctionmeasurement",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "cognitivefunctionmeasurement",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "cognitive function measurement",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:gaitmeasurement",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Quantification of some aspect of a person's gait such as rhythm, variability or step length",
+    "rdfs:label" : "gaitmeasurement",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "gait measurement",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:motordevelopmentmeasurement",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "motordevelopmentmeasurement",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "motor development measurement",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:painmeasurement",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "painmeasurement",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "pain measurement",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:Polymericnanoparticles",
@@ -13254,17 +13528,6 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "clinical data",
-    "sms:required" : "sms:false"
-  }, {
-    "@id" : "bts:gaitmeasurement",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "Quantification of some aspect of a person's gait such as rhythm, variability or step length",
-    "rdfs:label" : "gaitmeasurement",
-    "rdfs:subClassOf" : [ ],
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:displayName" : "gait measurement",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:high-performanceliquidchromatography/tandemmassspectrometry",

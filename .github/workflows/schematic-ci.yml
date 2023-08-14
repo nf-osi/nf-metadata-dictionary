@@ -44,6 +44,7 @@ jobs:
   # Additionally test PRs
   test:
     name: Test with schematic
+    if: "!contains( github.event.pull_request.labels.*.name, 'skip tests')"
     needs: [build]
     runs-on: ubuntu-22.04
     env:
