@@ -3630,7 +3630,7 @@
     }, {
       "@id" : "bts:skin"
     }, {
-      "@id" : "bts:Eye"
+      "@id" : "bts:eye"
     } ],
     "rdfs:label" : "organ",
     "rdfs:comment" : "A unique macroscopic (gross) anatomic structure that performs specific functions. It is composed of various tissues. An organ is part of an anatomic system or a body region.",
@@ -4081,6 +4081,10 @@
       "@id" : "bts:scapula"
     }, {
       "@id" : "bts:pelvis"
+    }, {
+      "@id" : "bts:dorsolateralprefrontalcortex"
+    }, {
+      "@id" : "bts:occcipitallobe"
     } ],
     "rdfs:label" : "bodySite",
     "rdfs:comment" : "Sample location referring to a named area of the body, inclusive of gross anatomical structures and organ parts.",
@@ -5329,6 +5333,8 @@
       "@id" : "bts:LeicaAperioAT2"
     }, {
       "@id" : "bts:LeicaS9Stereomicroscope"
+    }, {
+      "@id" : "bts:PhilipsAchieva3T"
     } ],
     "rdfs:label" : "platform",
     "rdfs:comment" : "A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data.",
@@ -5839,6 +5845,28 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "pelvis",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:dorsolateralprefrontalcortex",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "The dorsolateral prefrontal cortex (DLPFC or DL-PFC) is an area in the prefrontal cortex of the primate brain.  It is one of the most recently derived parts of the human brain. It undergoes a prolonged period of maturation which lasts into adulthood.\n",
+    "rdfs:label" : "dorsolateralprefrontalcortex",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "dorsolateral prefrontal cortex",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:occcipitallobe",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "The OCC is one of the four major lobes of the cerebral cortex and the visual processing hub.",
+    "rdfs:label" : "occcipitallobe",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "occcipital lobe",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:Unknown",
@@ -7722,6 +7750,17 @@
     "sms:displayName" : "Leica S9 Stereomicroscope",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:PhilipsAchieva3T",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Complete 3T MRI system, it offers an extremely broad clinical reach from routine head, spine and musculoskeletal imaging to the most advanced exams.",
+    "rdfs:label" : "PhilipsAchieva3T",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Philips Achieva 3T",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:R816X",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "A pathogenic mutation in the NF1 gene (amino acid nomenclature) leading to a truncated protein",
@@ -8635,15 +8674,15 @@
     "sms:displayName" : "skin",
     "sms:required" : "sms:false"
   }, {
-    "@id" : "bts:Eye",
+    "@id" : "bts:eye",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "The organ of sight or vision. [ NCI ]",
-    "rdfs:label" : "Eye",
+    "rdfs:label" : "eye",
     "rdfs:subClassOf" : [ ],
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:displayName" : "Eye",
+    "sms:displayName" : "eye",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:DiffuseAstrocytoma",
