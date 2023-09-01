@@ -339,6 +339,15 @@ slots:
     description: Method by which library was prepared
     range: LibraryPreparationMethodEnum
     required: true
+  libraryStrand: 
+    description: Strandedness of paired-end RNA-Sequencing data. This is an important parameter for RNA-seq analysis.
+    notes:
+    - Meaning originally captured with combination of readPairOrientation and readStrandOrigin.
+    - https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/
+    any_of:
+      - range: StrandednessEnum
+      - range: NotApplicableEnum
+    required: true
   license:
     description: Link to a license or name of license applicable for the resource.
     required: false
@@ -489,14 +498,16 @@ slots:
   readPair:
     annotations:
       validationRules: inRange 1 2
-    description: The read of origin, 1 or 2
+    description: The read of origin, Read 1 or Read 2
     required: false
   readPairOrientation:
     description: The relative orientation of the reads in a paired-end protocol
+    deprecated: See `libraryStrand`.
     range: ReadPairOrientationEnum
     required: false
   readStrandOrigin:
     description: The strand from which the read originates in a strand-specific protocol
+    deprecated: See `libraryStrand`.
     range: ReadStrandOriginEnum
     required: false
   readsDuplicatedPercent:
@@ -526,9 +537,9 @@ slots:
     range: Resource
     required: true
   runType:
-    annotations:
-      requiresDependency: readPair,isStranded,readPairOrientation,readStrandOrigin,readLength,readDepth
     description: Is the sequencing run single or paired end?
+    notes:
+    - https://www.cd-genomics.com/resource-single-read-vs-paired-end-sequencing.html
     range: RunTypeEnum
     required: false
   runtimePlatform:
