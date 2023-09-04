@@ -32,12 +32,15 @@ slots:
   aliquotID:
     description: A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.
     required: false
+  antibodyID:
+    description: Antibody ID such as RRID if available, otherwise use vendor ID.
+    required: false # recommended
   assay:
     description: The technology used to generate the data in this file.
     range: AssayEnum
     required: true
   assayTarget:
-    description: The HUGO gene symbol that represents the target analyte assayed.
+    description: The HUGO gene symbol that represents the target assayed.
     required: false
   author:
     description: The author of the resource; preferably use an ORCID ID, GitHub profile link, etc., if available and a text name if not.
@@ -51,10 +54,16 @@ slots:
   averageReadLength:
     description: Average read length collected from samtools
     required: false
+  batchID:
+    description: Batch identifier, can be used in any context where added batch information is helpful, such as different sequencing runs or collection times.
+    required: false
   benefactorId:
     description: The id of the resource from which access control is inherited.
     in_subset:
       - Synapse
+    required: false
+  bisulfiteConversionKitID:
+    description: Name of kit used in bisulfite conversion.
     required: false
   bodySite:
     comments:
@@ -537,9 +546,9 @@ slots:
     range: Resource
     required: true
   runType:
-    description: Is the sequencing run single or paired end?
+    description: Sequencing run type.
     notes:
-    - https://www.cd-genomics.com/resource-single-read-vs-paired-end-sequencing.html
+    - Includes some of same information as concept `library layout` in other models
     range: RunTypeEnum
     required: false
   runtimePlatform:
@@ -586,11 +595,10 @@ slots:
   studyName:
     description: Name of a study.
     required: true
-  supplementalLink:
+  supplementalAsset:
     description: >
-        URL to supplemental assets. For data, supplementals can be QC reports or other auxiliary files that supports 
-        the processing, analysis, or interpretation of the current entity.
-        For a publication, supplementals usually mean a document of additional figures and other details. 
+        URI to supplemental asset(s). For data, supplementals can be QC reports or other auxiliary files that supports 
+        the processing, analysis, or interpretation of the current entity. For a publication, supplementals usually mean a document of additional figures and other details. 
     required: false
   targetCaptureKitID:
     description: > 

@@ -9,15 +9,16 @@ classes:
 
   PartialTemplate:
     description: A template for collecting a subset of contextual data; not intended to be a standalone template but rather a subdocument. 
+    abstract: true
 
-#######################################
-# AssayDataTemplate / Sequencing             
-#######################################
+############################################################
+# Assay Data / Sequencing             
+############################################################
 
-  AssayDataTemplate:
+  BiologicalAssayDataTemplate:
     is_a: Template
     description: >
-      A template for describing deposited data artifacts (i.e. files) from an experimental assay.  
+      A template for describing deposited data artifacts (i.e. files) from an experimental assay that mainly involves biological organisms.  
       The properties defined here are things that should be collected for all files contributed to NF. 
       Subclasses define additional properties for the type of file (e.g. raw vs processed, imaging vs sequencing).
     slots:
@@ -26,87 +27,48 @@ classes:
     - dataType
     - dataSubtype
     - assay # platform added at a later level, see https://github.com/nf-osi/nf-metadata-dictionary/issues/319
+    - species
     - individualID # specimenID, aliquotID etc. are added at a later level since they don't make sense for some assay types such as behavioral assays
-    - comments
-  
-  #######################################
-  # Sequencing Data - Raw            
-  #######################################
 
-  SequencingDataTemplate:
-    is_a: AssayDataTemplate
-    description: A template for data from a sequencing assay.
+  NonBiologicalAssayDataTemplate:
+    is_a: Template
+    description: >
+      A template for describing deposited data artifacts (i.e. files) from an experimental assay that main involves non-biological samples.   
+    slots:
+    - Component
+    - resourceType
+    - dataType
+    - dataSubtype
+    - assay
+  
+  #####################################################
+  # Biological Assay Data / Sequencing / Raw            
+  #####################################################
+
+  GenomicsAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: > 
+      Template for raw data on an organism's genome. Genomics assays can provide data limited to specific regions or for the full genome.
+      They can be divided into sequencing-based vs. non-sequencing based (e.g. microarrays, optical genome mapping). 
+      While nowadays the genomics assay is synonymous with something sequencing-based, this should be kept conceptually open in the current defined properties.
+    abstract: true
+    notes:
+    - This template should only be used to fill in partial data for presumably "novel/other" genomics assays until it can be confirmed which more specific template should be used and which additional data collected. 
+    - http://purl.obolibrary.org/obo/GECKO_0000032
     slots:
     - parentSpecimenID
     - specimenID 
     - aliquotID 
     - platform
-    - runType
     - nucleicAcidSource
-    - dissociationMethod
-    - libraryPrep
-    - libraryPreparationMethod
-    - libraryStrand
-    - readPair
-    - readLength
-    - readDepth
-
-  GenomicsAssayTemplate:
-    is_a: SequencingDataTemplate
-    description: > 
-      Generic sequencing data template that is meant to cover other sequencing-type assays that don't have specified named templates. 
-    slots:
     annotations:
       requiresComponent: ''
       required: false
   
-  RNASeqTemplate:
-    is_a: SequencingDataTemplate
-    description: Template for describing raw data from (bulk) RNA-sequencing
-    slots:
-    - targetDepth
-    annotations:
-      requiresComponent: ''
-      required: false
-
-  ScRNASeqTemplate:
-    is_a: RNASeqTemplate
-    description: Template for describing raw data from single-cell RNA-seq.
-    slots:
-    - cellID
-    - supplementalLink
-    annotations:
-      requiresComponent: ''
-      required: false
-  
-  EpigeneticsAssayTemplate:
-    is_a: SequencingDataTemplate
-    description: Template for describing raw data ATAC-seq.
-    slots:
-    - 
-    - 
-    annotations:
-      requiresComponent: ''
-      required: false
-  
-  PdxGenomicsAssay:
-    is_a: AssayDataTemplate
-    description: Template for describing PDX assay data.
-    slots:
-    - transplantationType
-    - transplantationRecipientSpecies
-    - transplantationRecipientTissue
-    - modelSystemName
-    - experimentalCondition
-    - experimentalTimepoint
-    annotations:
-      requiresComponent: ''
-      required: false
-
   GenomicsAssayTemplateExtended:
-    is_a: SequencingDataTemplate
+    is_a: SequencingAssayTemplate
     description: >
-      Genomics assay template but with additional fields for gene perturbation parameters, experimental conditions and time points.
+      Genomics assay template but with experiment data for gene perturbation parameters, experimental conditions and time points.
     slots:
     - transplantationType
     - transplantationRecipientSpecies
@@ -121,18 +83,63 @@ classes:
       requiresComponent: ''
       required: false
   
+  SequencingAssayTemplate:
+    is_a: GenomicsAssayTemplate
+    description: A template for describing raw data from a sequencing assay.
+    slots:
+    - dissociationMethod
+    - runType
+    - libraryPrep
+    - libraryPreparationMethod
+    - libraryStrand
+    - readPair
+    - readLength
+    - readDepth
+    - targetDepth
+    - batchID
+  
+  RNASeqTemplate:
+    is_a: SequencingAssayTemplate
+    description: Template for describing raw data from (bulk) RNA-sequencing
+    slots:
+    annotations:
+      requiresComponent: ''
+      required: false
+
+  ScRNASeqTemplate:
+    is_a: RNASeqTemplate
+    description: Template for describing raw data from single-cell RNA-seq.
+    slots:
+    - cellID
+    - supplementalAsset
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  PdxSequencingAssayTemplate:
+    is_a: SequencingAssayTemplate
+    description: Template for describing describing raw sequencing data from PDX experiment.
+    slots:
+    - transplantationType
+    - transplantationRecipientSpecies
+    - transplantationRecipientTissue
+    - modelSystemName
+    - experimentalCondition
+    - experimentalTimepoint
+    annotations:
+      requiresComponent: ''
+      required: false
+  
   WGSTemplate:
-    is_a: SequencingDataTemplate
+    is_a: SequencingAssayTemplate
     description: Template for describing raw data from Whole Genome Sequencing (WGS)
     slots:
-
-
     annotations:
       requiresComponent: ''
       required: false
   
   WESTemplate:
-    is_a: AssayDataTemplate
+    is_a: BiologicalAssayDataTemplate
     description: Template for describing raw data from Whole Exome Sequencing (WES)
     slots:
     - targetCaptureKitID
@@ -140,28 +147,37 @@ classes:
       requiresComponent: ''
       required: false
 
-
-  #######################################
-  # Sequencing Data - Processed            
-  #######################################
-  
-  ProcessedSequencingAssay:
-    is_a: AssayDataTemplate
-    description: Sequencing data that have gone through some processing workflow.
+  EpigenomicsSequencingAssayTemplate:
+    is_a: SequencingAssayTemplate
+    description: Template for describing raw data from epigenetics sequencing assays such as bisulfite sequencing. 
     slots:
-    - workflow
-    - workflowLink
-    - genomicReference
+    - bisulfiteConversionKitID
+    annotations:
+      requiresComponent: ''
+      required: false
+
+  MethylationArrayTemplate:
+    is_a: GenomicsAssayTemplate
+    description: Template for describing raw data from methylation array.
+    slots:
+    - channel
     annotations:
       requiresComponent: ''
       required: false
   
+
+  #########################################################
+  # Biological Assay Data  / Sequencing / Processed            
+  #########################################################
+
+  
   ProcessedAlignedReadsTemplate:
-    is_a: AssayDataTemplate
+    is_a: BiologicalAssayDataTemplate
     description: >
       Template for describing aligned reads output data (i.e. BAM files).
       The QC meta are extracted from samtools stats when available and are aligned with GDC. 
     slots:
+    - genomicReference
     - averageInsertSize
     - averageReadLength
     - averageBaseQuality
@@ -173,94 +189,136 @@ classes:
     - proportionCoverage30x
     - readDepth
     - totalReads
+    - workflow
+    - workflowLink
     annotations:
       requiresComponent: ''
       required: false
   
   ProcessedVariantCallsTemplate:
-    is_a: AssayDataTemplate
+    is_a: BiologicalAssayDataTemplate
     description: Template for describing either germline or variant calls output data (i.e. VCF/MAF)
     slots:
     - isFilteredReads
+    - workflow
+    - workflowLink
     annotations:
       requiresComponent: ''
       required: false
   
   ProcessedExpressionTemplate:
-    is_a: AssayDataTemplate
-    description: Template for describing expression output data as counts or counts matrix
+    is_a: BiologicalAssayDataTemplate
+    description: Template for describing expression output data as counts or counts matrix.
     slots:
-    - modelSystemName
-    - workflow
     - expressionUnit
-    - comments
+    - workflow
+    - workflowLink
     annotations:
       requiresComponent: ''
       required: false
   
-#######################################
-# AssayDataTemplate / Proteomics          
-#######################################
+##################################################
+# Biological Assay Data / Proteomics / Raw         
+##################################################
 
   ProteomicsAssayTemplate:
-    is_a: AssayDataTemplate
+    is_a: BiologicalAssayDataTemplate
     description: > 
-      Template for describing data from the most common LC-MS type proteomics assays.
+      Template for describing raw assay data of an organism's proteome.
     slots:
     - parentSpecimenID
     - specimenID
+    - aliquotID
+    - platform
     - proteinExtractSource
     annotations:
       requiresComponent: ''
       required: false
 
-#######################################
-# AssayDataTemplate / Imaging            
-#######################################
+  MassSpecAssayTemplate:
+    is_a: ProteomicsAssayTemplate
+    description: > 
+      Template for describing raw mass-spec type assay data.
+    slots:
+    annotations:
+      requiresComponent: ''
+      required: false
+  
 
-  ImagingDataTemplate:
-    is_a: AssayDataTemplate
-    description: A template for data from an imaging assay.
-    slots:
-    - parentSpecimenID
-    - specimenID # aliquotID only for certain imaging, e.g. not applicable to images such as MRI or photography
-    
+##############################################
+# Biological Assay Data / Imaging / Raw           
+##############################################
+
   ImagingAssayTemplate:
-    is_a: ImagingDataTemplate
-    description: Generic template for describing data from an imaging type assay (IHC, etc). This is a one-step template.
+    is_a: BiologicalAssayDataTemplate
+    description: A template for describing data from an imaging assay.
     slots:
-    - Component
-    - Filename
-    - resourceType
-    - progressReportNumber
-    - dataType
-    - assay
+    # specimenID not applicable to some imaging; aliquotID not applicable to many imaging
     - platform
-    - assayTarget
-    - individualID
+    annotations:
+      requiresComponent: ''
+      required: false
+    
+  MRIAssayTemplate:
+    is_a: ImagingAssayTemplate
+    description: Template for describing data from an MRI assay.
+    slots:
+    - MRISequence
+    - experimentalCondition
+    - experimentalTimepoint
+    annotations:
+      requiresComponent: ''
+      required: false
+
+  MicroscopyAssayTemplate:
+    is_a: ImagingAssayTemplate
+    description: Template for data from a microscopy assay.
+    slots:
     - parentSpecimenID
+    - specimenID 
+    - aliquotID
+    annotations:
+      requiresComponent: ''
+      required: false
+
+  IHCAssayTemplate:
+    is_a: ImagingAssayTemplate
+    description: A template for describing data from an immunohistochemistry assay.
+    slots:
+    - parentSpecimenID
+    - specimenID 
+    - antibodyID
+    annotations:
+      requiresComponent: ''
+      required: false
+
+################################################
+# Biological Assay Data / Behavioral / Raw            
+################################################
+
+  BehavioralAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: > 
+      Template for describing data from behavioral/cognitive assays such as “adaptive n-back task” (for humans) or “Von Frey test” (for mice). 
+      If another modality is used as part of the assay, e.g. fMRI, that data can be linked.
+    slots:
+    - experimentalCondition
+    - experimentalTimepoint
+    # linkedData
     - comments
     annotations:
       requiresComponent: ''
       required: false
-  
-  MRIAssayTemplate:
-    is_a: ImagingDataTemplate
-    description: Generic template for describing data from an MRI assay. This is a one-step template.
-    slots:
-    - MRISequence
-    annotations:
-      requiresComponent: ''
-      required: false
 
-#######################################
-# AssayDataTemplate / Other             
-#######################################
+############################################
+# Biological Assay Data / Other / Raw            
+############################################
   
   PharmacokineticsAssayTemplate:
-    is_a: AssayDataTemplate
-    description: Generic template for describing data from a pharmacokinetics assay. This is a one-step template.
+    is_a: BiologicalAssayDataTemplate
+    description: Template for describing data from a pharmacokinetics assay.
     slots:
+    - platform
     - experimentalCondition
     - experimentalTimepoint
     - genePerturbed
@@ -269,48 +327,8 @@ classes:
       requiresComponent: ''
       required: false
 
-  FlowCytometryTemplate:
-    is_a: AssayDataTemplate
-    description: Basic template for flow cytometry assay
-    slots:
-    - cellType
-    annotations:
-      requiresComponent: ''
-      required: false
-
-  BehavioralAssayTemplate:
-    is_a: AssayDataTemplate
-    description: > 
-      Generic template for describing data from behavioral/cognitive assays such as “adaptive n-back task” (for humans) or “Von Frey test” (for mice). 
-      If another modality is used as part of the assay, e.g. fMRI, that data can be linked.
-    slots:
-    - platform
-    - individualID
-    - experimentalCondition
-    - experimentalTimepoint
-    - comments
-    annotations:
-      requiresComponent: ''
-      required: false
-  
-  LightScatteringAssayTemplate:
-    is_a: AssayDataTemplate
-    description: Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.
-    source: https://wiki.nci.nih.gov/display/icr/isa-tab-nano
-    slots:
-    - specimenID
-    - materialType
-    - pH
-    - concentrationMaterial
-    - concentrationMaterialUnit
-    - concentrationNaCl
-    - concentrationNaClUnit
-    annotations:
-      requiresComponent: ''
-      required: false
-  
   PlateBasedReporterAssayTemplate:
-    is_a: AssayDataTemplate
+    is_a: BiologicalAssayDataTemplate
     description: Generic template for describing data from a plate-based reporter assay. This is a one-step template.
     slots:
     - assayTarget
@@ -322,14 +340,22 @@ classes:
       requiresComponent: ''
       required: false
 
+  FlowCytometryTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Basic template for flow cytometry assay
+    slots:
+    - platform
+    - cellType
+    annotations:
+      requiresComponent: ''
+      required: false
+  
   ClinicalAssayTemplate:
-    is_a: AssayDataTemplate
+    is_a: BiologicalAssayDataTemplate
     description: > 
       Template for simple endpoint data from clinical assays often used in diagnostic practice or clinical trials. 
       This can include repeated measures and a drug treatment context.
     slots:
-    - parentSpecimenID
-    - specimenID
     - experimentalCondition
     - experimentalTimepoint
     - compoundName
@@ -339,19 +365,27 @@ classes:
       requiresComponent: ''
       required: false
 
-  GenericMeasuresTemplate:
-    is_a: Template
-    description: Catch-all template for measures (often in a spreadsheet) for some other phenotype characteristic (in experimentalFactor) over time
+  LightScatteringAssayTemplate:
+    is_a: NonBiologicalAssayDataTemplate
+    description: Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.
+    source: https://wiki.nci.nih.gov/display/icr/isa-tab-nano
     slots:
-    - Component
-    - Filename
-    - resourceType
-    - progressReportNumber
-    - dataType
-    - assay
     - platform
-    - individualID
-    - parentSpecimenID
+    - specimenID
+    - materialType
+    - pH
+    - concentrationMaterial
+    - concentrationMaterialUnit
+    - concentrationNaCl
+    - concentrationNaClUnit
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  GenericMeasuresTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Catch-all template for measures (often multi-individual level data in a spreadsheet) for some other phenotype characteristic (in experimentalFactor)
+    slots:
     - experimentalFactor
     - experimentalCondition
     - experimentalTimepoint
@@ -361,75 +395,88 @@ classes:
       required: false
 
 #######################################
-# ClinicalDataTemplate              
+# Patient Clinical Data         
 #######################################
-
-  ClinicalDataTemplate:
-    is_a: Template
-    description: A template for submitting more comprehensive participant clinical data.
   
   PatientTemplate:
-    is_a: ClinicalDataTemplate
+    is_a: Template
     description: >
-      Template for collecting minimal individual-level data. 
+      Template for collecting *minimal* individual-level data. 
     slots:
-    - Component
     - individualID
     - sex
     - age
     - ageUnit
-    - species
+    - species # should be constrained to human
     - diagnosis
     - nf1Genotype
     - nf2Genotype
     annotations:
       requiresComponent: ''
       required: false
+
+  PatientSpecimenTemplate:
+    is_a: PatientTemplate
+    description: Template for capturing specimen-level data from patients.
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - tumorType
+    - bodySite
+    annotations:
+      requiresComponent: ''
+      required: false
   
   PatientTimepointsTemplate:
-    is_a: ClinicalDataTemplate
+    is_a: PatientTemplate
     description: Template for capturing individual-level data with time points. Do not use for data file annotation.
     slots:
-    - Component
-    - individualID
+    - experimentalTimepoint
+    annotations:
+      requiresComponent: ''
+      required: false
+
+  PatientFullClinicalTemplate:
+    is_a: PatientTemplate
+    description: (WIP / not used) Template for submitting "ideal" participant clinical data in discussion with Sundby group.
+    slots:
     - experimentalTimepoint
     annotations:
       requiresComponent: ''
       required: false
   
 #######################################
-# ResearchToolsTemplate              
+# Research Tools      
 #######################################
 
-  ResearchToolsTemplate:
+  ProtocolTemplate:
     is_a: Template
-    description: A template for describing deposited non-data resources such as source code and protocols.
+    description: Template for describing a protocol document. 
+    source: https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT
     slots:
     - title
     - author
     - citation
     - license
-    - comments
-  
-  ProtocolTemplate:
-    is_a: ResearchToolsTemplate
-    description: Template for describing a protocol document. 
-    source: https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT
-    slots:
     - protocolAssay
     - protocolPurpose
     - sampleType
+    - comments
     annotations:
       requiresComponent: ''
       required: false
   
   SourceCodeTemplate:
-    is_a: ResearchToolsTemplate
+    is_a: Template
     description: Template for describing scripts/other code files for an analysis or software application.
     slots:
+    - title
+    - author
+    - citation
+    - license
     - programmingLanguage
-    - documentation
     - runtimePlatform
+    - documentation
     annotations:
       requiresComponent: ''
       required: false
@@ -466,16 +513,15 @@ classes:
     - datasetItemCount
     - datasetSizeInBytes
     # - relatedDataset # not yet
-    # - supplementalLink # link to interactive multi-qc reports or other materials related to the dataset
+    # - supplementalAsset # link to interactive multi-qc reports or other materials related to the dataset
 
   WorkflowReport:
     is_a: Template
     description: Template used for miscellaneous workflow reports and accessory files
     notes:
     - resourceType should default to "workflow report"
-    - note that dataType and dataSubtype don't apply
+    - note that `dataType` and `dataSubtype` don't apply
     slots:
-    - Component
     - resourceType
     - assay
     - fileFormat
