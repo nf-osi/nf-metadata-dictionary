@@ -1,3 +1,6 @@
+# Top-level editor notes
+# - Here [mappings](https://linkml.io/linkml/schemas/uris-and-mappings.html#mappings) indicate closely related templates in other data models
+
 classes:
 
   Template:
@@ -65,7 +68,22 @@ classes:
       requiresComponent: ''
       required: false
   
-  GenomicsAssayTemplateExtended:
+  SequencingAssayTemplate:
+    is_a: GenomicsAssayTemplate
+    description: A template for describing raw data from a sequencing assay.
+    slots:
+    - dissociationMethod
+    - runType
+    - libraryPrep
+    - libraryPreparationMethod
+    - libraryStrand
+    - readPair
+    - readLength
+    - readDepth
+    - targetDepth
+    - batchID
+
+  SequencingAssayTemplateExtended:
     is_a: SequencingAssayTemplate
     description: >
       Genomics assay template but with experiment data for gene perturbation parameters, experimental conditions and time points.
@@ -83,21 +101,6 @@ classes:
       requiresComponent: ''
       required: false
   
-  SequencingAssayTemplate:
-    is_a: GenomicsAssayTemplate
-    description: A template for describing raw data from a sequencing assay.
-    slots:
-    - dissociationMethod
-    - runType
-    - libraryPrep
-    - libraryPreparationMethod
-    - libraryStrand
-    - readPair
-    - readLength
-    - readDepth
-    - targetDepth
-    - batchID
-  
   RNASeqTemplate:
     is_a: SequencingAssayTemplate
     description: Template for describing raw data from (bulk) RNA-sequencing
@@ -105,6 +108,8 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    close_mappings:
+    - HTAN:BulkRNA-seqLevel1
 
   ScRNASeqTemplate:
     is_a: RNASeqTemplate
@@ -115,6 +120,19 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+
+  SpatialTranscriptomicsRNASeqTemplate:
+    is_a: RNASeqTemplate
+    description: Template for RNA-seq with additional metadata collecction for 10x Visium spatial transcriptomics.
+    slots:
+    - captureArea
+    - slideID
+    - slideVersion
+    annotations:
+      requiresComponent: ''
+      required: false
+    close_mappings:
+    - HTAN:10xVisiumSpatialTranscriptomics-RNA-seqLevel1
   
   PdxSequencingAssayTemplate:
     is_a: SequencingAssayTemplate
@@ -146,6 +164,8 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    close_mappings:
+    - HTAN:BulkWESLevel1
 
   EpigenomicsSequencingAssayTemplate:
     is_a: SequencingAssayTemplate
@@ -155,6 +175,8 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    close_mappings:
+    - HTAN:BulkMethylation-seqLevel1
 
   MethylationArrayTemplate:
     is_a: GenomicsAssayTemplate
@@ -164,12 +186,13 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    close_mappings:
+    - HTAN:BulkMethylation-seqLevel1
   
 
   #########################################################
   # Biological Assay Data  / Sequencing / Processed            
   #########################################################
-
   
   ProcessedAlignedReadsTemplate:
     is_a: BiologicalAssayDataTemplate
@@ -194,6 +217,8 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    close_mappings:
+    - HTAN:
   
   ProcessedVariantCallsTemplate:
     is_a: BiologicalAssayDataTemplate
@@ -205,6 +230,8 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    close_mappings:
+    - HTAN:
   
   ProcessedExpressionTemplate:
     is_a: BiologicalAssayDataTemplate
@@ -238,11 +265,14 @@ classes:
   MassSpecAssayTemplate:
     is_a: ProteomicsAssayTemplate
     description: > 
-      Template for describing raw mass-spec type assay data.
+      Template for describing raw mass spec-based assay data.
     slots:
+    - dataCollectionMode
     annotations:
       requiresComponent: ''
       required: false
+    close_mappings:
+    - HTAN:MassSpectrometryLevel1
   
 
 ##############################################
@@ -261,7 +291,7 @@ classes:
     
   MRIAssayTemplate:
     is_a: ImagingAssayTemplate
-    description: Template for describing data from an MRI assay.
+    description: Template for describing MRI data.
     slots:
     - MRISequence
     - experimentalCondition
@@ -277,20 +307,27 @@ classes:
     - parentSpecimenID
     - specimenID 
     - aliquotID
+    - objective
+    - nominalMagnification
+    - lensAperture
+    - workingDistance
+    - workingDistanceUnit
+    - immersion
     annotations:
       requiresComponent: ''
       required: false
+    close_mappings:
+    - HTAN: ImagingLevel2
 
-  IHCAssayTemplate:
-    is_a: ImagingAssayTemplate
-    description: A template for describing data from an immunohistochemistry assay.
+  IF-IHC-AssayTemplate:
+    is_a: MicroscopyAssayTemplate
+    description: Template for describing immunofluorescence or immunohistochemistry images. Can be used for CyCIF (highly multiplexed immunofluorescence imaging) data.
     slots:
-    - parentSpecimenID
-    - specimenID 
     - antibodyID
     annotations:
       requiresComponent: ''
       required: false
+  
 
 ################################################
 # Biological Assay Data / Behavioral / Raw            
@@ -321,7 +358,10 @@ classes:
     - platform
     - experimentalCondition
     - experimentalTimepoint
+    - compoundName
+    - compoundDose
     - genePerturbed
+    - modelSystemName
     - comments
     annotations:
       requiresComponent: ''
@@ -349,21 +389,6 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-  
-  ClinicalAssayTemplate:
-    is_a: BiologicalAssayDataTemplate
-    description: > 
-      Template for simple endpoint data from clinical assays often used in diagnostic practice or clinical trials. 
-      This can include repeated measures and a drug treatment context.
-    slots:
-    - experimentalCondition
-    - experimentalTimepoint
-    - compoundName
-    - compoundDose
-    - comments
-    annotations:
-      requiresComponent: ''
-      required: false
 
   LightScatteringAssayTemplate:
     is_a: NonBiologicalAssayDataTemplate
@@ -381,14 +406,18 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-  
-  GenericMeasuresTemplate:
+
+  OtherMeasureAssayTemplate:
     is_a: BiologicalAssayDataTemplate
-    description: Catch-all template for measures (often multi-individual level data in a spreadsheet) for some other phenotype characteristic (in experimentalFactor)
+    description: > 
+      Catch-all template for quantified measures often multi-individual level data in a spreadsheet. 
+      Can be simple endpoint data from clinical trials. This can include repeated measures and a drug treatment context.
     slots:
     - experimentalFactor
     - experimentalCondition
     - experimentalTimepoint
+    - compoundName
+    - compoundDose
     - comments
     annotations:
       requiresComponent: ''
@@ -415,32 +444,23 @@ classes:
       requiresComponent: ''
       required: false
 
+  PatientXTemplate:
+    is_a: PatientTemplate
+    description: (WIP / not yet used) Extended template for participant clinical data as recommended per Sundby et al.
+    slots:
+    annotations:
+      requiresComponent: ''
+      required: false
+
   PatientSpecimenTemplate:
     is_a: PatientTemplate
     description: Template for capturing specimen-level data from patients.
     slots:
     - parentSpecimenID
     - specimenID
+    - aliquotID
     - tumorType
     - bodySite
-    annotations:
-      requiresComponent: ''
-      required: false
-  
-  PatientTimepointsTemplate:
-    is_a: PatientTemplate
-    description: Template for capturing individual-level data with time points. Do not use for data file annotation.
-    slots:
-    - experimentalTimepoint
-    annotations:
-      requiresComponent: ''
-      required: false
-
-  PatientFullClinicalTemplate:
-    is_a: PatientTemplate
-    description: (WIP / not used) Template for submitting "ideal" participant clinical data in discussion with Sundby group.
-    slots:
-    - experimentalTimepoint
     annotations:
       requiresComponent: ''
       required: false

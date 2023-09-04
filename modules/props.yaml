@@ -72,6 +72,20 @@ slots:
     range: BodyPartEnum
     required: false
     slot_uri: https://cancerdhc.github.io/ccdhmodel/v1.1/BodySite/
+  captureArea:
+    description: >
+      One of the either four or two active regions where tissue can be placed on a Visium slide. Each area is intended to contain only one tissue sample. Slide areas are named consecutively from top to bottom: 
+      A1, B1, C1, D1 for Visium slides with 6.5 mm Capture Area and A, B for CytAssist slides with 11 mm Capture Area. Both CytAssist slides with 6.5 mm Capture Area and Gateway Slides contain only two slide areas, A1 and D1.
+    required: false
+    enum_range:
+    - A
+    - B
+    - C
+    - D
+    - A1
+    - B1
+    - C1
+    - D1
   cellID:
     description: Also known as cell barcode, this value can be added for single-cell experiments to identify data at the cell level.
     required: false
@@ -157,6 +171,13 @@ slots:
     in_subset:
       - Synapse
     required: false
+  dataCollectionMode:
+    description: Mode of data collection in tandem MS assays. Either DDA (data-dependent acquisition) or DIA (data-independent) acquisition.
+    enum_range:
+    - DDA
+    - DIA
+    - Other
+    required: true
   dataFileHandleId:
     description: (Files only) Refers to the id of the file.
     in_subset:
@@ -219,7 +240,6 @@ slots:
     required: false
   experimentalCondition:
     description: A free-text description of the experimental condition (e.g. 5 mM doxorubicin).
-    
     required: false
   experimentalFactor:
     description: An ontology concept for experimental factor measured with this data. 
@@ -286,6 +306,14 @@ slots:
   id:
     description: The entity id for the resource automatically assigned by the platform.
     required: false
+  immersion:
+    description: Immersion medium
+    enum_range:
+    - air
+    - oil
+    - water
+    - other
+    required: false
   individualID:
     annotations:
       requiresDependency: sex,age,ageUnit,species,diagnosis,nf1Genotype,nf2Genotype
@@ -334,6 +362,11 @@ slots:
   isXenograft:
     description: Whether or not sample source is a xenograft (Yes; No)
     range: BooleanEnum
+    required: false
+  lensAperture:
+    description: Numerical aperture of the lens. Floating point value > 0.
+    annotations:
+      validationRules: num
     required: false
   libraryID:
     description: ""
@@ -409,9 +442,17 @@ slots:
       - range: UnknownEnum
     description: Genotype of NF2 gene in the biospecimen from which the data were derived, if known
     required: false
+  nominalMagnification:
+    description: magnification of the lens as specified by the manufacturer - i.e. '60' is a 60X lens.
+    annotations:
+      validationRules: num
+    required: false
   nucleicAcidSource:
     description: Source of the extracted nucleic acid used in the experiment
     range: NucleicAcidSourceEnum
+    required: false
+  objective:
+    description: Microscope objective.
     required: false
   organ:
     description: A unique macroscopic (gross) anatomic structure that performs specific functions. It is composed of various tissues. An organ is part of an anatomic system or a body region.
@@ -564,6 +605,18 @@ slots:
       - range: NotApplicableEnum # e.g. sample is bacteria
     description: Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other.
     required: false
+  slideID:
+    description: > 
+      Unique identifier printed on the label of each Visium slide. The serial number starts with V followed by a number which can range between one through five and ends with a dash and a three digit number, such as 123.
+    required: false
+  slideVersion:
+    description: Version of imaging slide used. Slide version is critical for the analysis of the sequencing data as different slides have different capture area layouts.
+    required: false
+    enum_range:
+    - V1
+    - V2
+    - V3
+    - V4
   sourceName:
     description: >
       Intended for non-biological samples, tf the sample is a nanoparticle sample or some chemical substance not derived from a biological material, 
@@ -669,3 +722,15 @@ slots:
   workflowLink:
     description: Workflow URL reference
     required: false
+  workingDistance:
+    description: Working distance of the lens expressed as a floating point number > 0.
+    annotations:
+      validationRules: num
+      requiresDependency: workingDistanceUnit
+    required: false
+  workingDistanceUnit:
+    desctription:
+    required: false
+    range: WorkingDistanceUnitEnum
+
+  
