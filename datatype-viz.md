@@ -60,12 +60,13 @@ flowchart TB
 ## Protein Data
 
 Most protein data come from mass spectometry assays.
+Kinomics is a data subset of quantitfied prptein expression, i.e. focused on kinases.
 
 ```mermaid
 flowchart TB
 
   Other[...]-->ProteinExpression
-  Other[...]-->KinomeExpression
+  Other[...]-->Kinomics
   RawSignals-->ProteinExpression
 
   subgraph Proteomics["Proteomics (high-throughput)"]
