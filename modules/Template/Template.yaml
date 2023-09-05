@@ -1,6 +1,6 @@
 # Important editor notes
 # - Here [mappings](https://linkml.io/linkml/schemas/uris-and-mappings.html#mappings) indicate closely related templates in other data models
-# - Here [extensions] are used to keep track of which type of assay data are allowed to use this template
+# - Here `extensions.suggests` are used to track the relationship between templates and their intended application to assay data types
 # - `abstract` means the template is not meant to be used for annotation, it's just there for others to inherit props from
 
 classes:
@@ -72,19 +72,19 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-      
-  GemomicsArrayDataTemplate:
+
+  GemomicsArrayTemplate:
     is_a: GenomicsAssayTemplate
-    description: A template for describing raw data from array-based genomics data.
+    description: A template for describing raw data from raw array-based genomics data, e.g. CEL files. 
     slots:
-    - 
+    - channel
     annotations:
       requiresComponent: ''
       required: false
   
   SequencingAssayTemplate:
     is_a: GenomicsAssayTemplate
-    description: A template for describing raw data from a sequencing assay.
+    description: A catch-all template for describing raw data from a sequencing assay. If a more specific template exists, that should be used.
     slots:
     - dissociationMethod
     - runType
@@ -97,16 +97,14 @@ classes:
     - targetDepth
     - batchID
     extensions:
-      contraints:
+      suggests:
         assay:
         - ISO-seq
-        - NOMe-seq
-        - RNA-seq
-        - T cell receptor repertoire sequencing
         - miRNA-seq
+        - NOMe-seq
+        - ribo-seq
         - scCGI-seq
-        - targeted exome sequencing
-        - whole genome sequencing
+        - T cell receptor repertoire sequencing
 
   SequencingAssayTemplateExtended:
     is_a: SequencingAssayTemplate
@@ -134,11 +132,12 @@ classes:
       requiresComponent: ''
       required: false
     extensions:
-      contraints:
+      suggests:
         assay:
         - RNA-seq
+        - lncRNA-seq
     close_mappings:
-    - HTAN:BulkRNA-seqLevel1
+    - htan:BulkRNA-seqLevel1
 
   ScRNASeqTemplate:
     is_a: RNASeqTemplate
@@ -150,7 +149,7 @@ classes:
       requiresComponent: ''
       required: false
     extensions:
-      constraints:
+      suggests:
         assay:
         - single-cell RNA-seq
 
@@ -165,11 +164,11 @@ classes:
       requiresComponent: ''
       required: false
     extensions:
-      constraints:
+      suggests:
         assay:
         - spatial transcriptomics
     close_mappings:
-    - HTAN:10xVisiumSpatialTranscriptomics-RNA-seqLevel1
+    - htan:10xVisiumSpatialTranscriptomics-RNA-seqLevel1
   
   PdxSequencingAssayTemplate:
     is_a: SequencingAssayTemplate
@@ -192,17 +191,25 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    extensions:
+      suggests:
+        assay:
+        - whole genome sequencing
   
   WESTemplate:
     is_a: BiologicalAssayDataTemplate
-    description: Template for describing raw data from Whole Exome Sequencing (WES)
+    description: Template for describing raw data from Whole Exome Sequencing (WES or WXS)
     slots:
     - targetCaptureKitID
     annotations:
       requiresComponent: ''
       required: false
+    extensions:
+      suggests:
+        assay:
+        - whole exome sequencing
     close_mappings:
-    - HTAN:BulkWESLevel1
+    - htan:BulkWESLevel1
 
   EpigenomicsSequencingAssayTemplate:
     is_a: SequencingAssayTemplate
@@ -213,15 +220,16 @@ classes:
       requiresComponent: ''
       required: false
     extensions:
-      contraints:
+      suggests:
         assay:
         - ATAC-seq
         - CAPP-seq
         - CUT&RUN
         - ChIP-seq
+        - bisulfite sequencing
         - ERR bisulfite sequencing
     close_mappings:
-    - HTAN:BulkMethylation-seqLevel1
+    - htan:BulkMethylation-seqLevel1
 
   MethylationArrayTemplate:
     is_a: GenomicsAssayTemplate
@@ -231,8 +239,9 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    close_mappings:
-    - HTAN:BulkMethylation-seqLevel1
+    extensions:
+      suggests:
+        assay: methylation array
   
 
   #########################################################
@@ -263,7 +272,7 @@ classes:
       requiresComponent: ''
       required: false
     extensions:
-      contraints:
+      suggests:
         assay:
         - ATAC-seq
         - CAPP-seq
@@ -281,7 +290,7 @@ classes:
         - whole exome sequencing
         - whole genome sequencing
     close_mappings:
-    - HTAN:
+    - htan:
   
   ProcessedVariantCallsTemplate:
     is_a: BiologicalAssayDataTemplate
@@ -294,13 +303,13 @@ classes:
       requiresComponent: ''
       required: false
     extensions:
-      contraints:
+      suggests:
         assay:
         - targeted exome sequencing
         - whole exome sequencing
         - whole genome sequencing
     close_mappings:
-    - HTAN:
+    - htan:
   
   ProcessedGeneExpressionTemplate:
     is_a: BiologicalAssayDataTemplate
@@ -312,7 +321,7 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    contraints:
+    suggests:
         assay:
         - RNA-seq
         - single-cell RNA-seq
@@ -337,16 +346,33 @@ classes:
 
   MassSpecAssayTemplate:
     is_a: ProteomicsAssayTemplate
-    description: > 
-      Template for describing raw mass spec-based assay data.
+    description: Template for raw mass spec-based proteomics data.
     slots:
     - dataCollectionMode
     annotations:
       requiresComponent: ''
       required: false
+    suggests:
+        assay:
+        - mass spectrometry
+        - FIA-MSMS
+        - MudPIT
+        - TMT quantitation
+        - ultra high-performance liquid chromatography/tandem mass spectrometry
     close_mappings:
-    - HTAN:MassSpectrometryLevel1
+    - htan:MassSpectrometryLevel1
   
+  ProteomicsArrayTemplate:
+    is_a: ProteomicsAssayTemplate
+    description: Template for array- and immuno-based proteomics data.
+    slots:
+    - antibodyID
+    annotations:
+      requiresComponent: ''
+      required: false
+    suggests:
+        assay:
+        - RPPA
 
 ##############################################
 # Biological Assay Data / Imaging / Raw           
@@ -375,7 +401,7 @@ classes:
 
   MicroscopyAssayTemplate:
     is_a: ImagingAssayTemplate
-    description: Template for data from a microscopy assay.
+    description: Template for data from a microscopy data.
     slots:
     - parentSpecimenID
     - specimenID 
@@ -389,8 +415,15 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    suggests:
+        assay:
+        - 3D electron microscopy
+        - atomic force microscopy
+        - brightfield microscopy
+        - phase-contrast microscopy
+        - traction force microscopy
     close_mappings:
-    - HTAN: ImagingLevel2
+    - htan: ImagingLevel2
 
   IF-IHC-AssayTemplate:
     is_a: MicroscopyAssayTemplate
@@ -400,17 +433,20 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-  
+    suggests:
+      assay:
+      - immunofluorescence
+      - immunohistochemistry  
 
 ################################################
 # Biological Assay Data / Behavioral / Raw            
 ################################################
 
-  BehavioralAssayTemplate:
+  BehavioralCognitiveAssayTemplate:
     is_a: BiologicalAssayDataTemplate
     description: > 
-      Template for describing data from behavioral/cognitive assays such as “adaptive n-back task” (for humans) or “Von Frey test” (for mice). 
-      If another modality is used as part of the assay, e.g. fMRI, that data can be linked.
+      Template for describing task data from behavioral/cognitive assays such as “adaptive n-back task” (for humans) or “Von Frey test” (for mice). 
+      Usually the appropriate data from these assays is in spreadsheet format. If another modality is used as part of the assay, e.g. fMRI, that data can be linked.
     slots:
     - experimentalCondition
     - experimentalTimepoint
@@ -419,6 +455,18 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    suggests:
+        assay:
+        - contextual conditioning behavior assay
+        - Corsi blocks
+        - elevated plus maze test
+        - NIH Toolbox
+        - questionnaire
+        - Riccardi and Ablon scales
+        - Social Responsiveness Scale
+        - 'Social Responsiveness Scale, Second Edition'
+        - Von Frey test
+
 
 ############################################
 # Biological Assay Data / Other / Raw            
@@ -463,15 +511,13 @@ classes:
       requiresComponent: ''
       required: false
 
-  LightScatteringAssayTemplate:
+  MaterialScienceAssayTemplate:
     is_a: NonBiologicalAssayDataTemplate
-    description: Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.
-    source: https://wiki.nci.nih.gov/display/icr/isa-tab-nano
+    description: General template for describing data for a materials science assay.
     slots:
     - platform
     - specimenID
     - materialType
-    - pH
     - concentrationMaterial
     - concentrationMaterialUnit
     - concentrationNaCl
@@ -479,8 +525,29 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    suggests:
+      assay:
+      - rheometry
+  
+  LightScatteringAssayTemplate:
+    is_a: NonBiologicalAssayDataTemplate
+    description: Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.
+    source: https://wiki.nci.nih.gov/display/icr/isa-tab-nano
+    slots:
+    - pH
+    - concentrationNaCl
+    - concentrationNaClUnit
+    annotations:
+      requiresComponent: ''
+      required: false
+    suggests:
+        assay:
+        - dynamic light scattering
+        - microrheology
+        - oscillatory rheology
+        - static light scattering
 
-  OtherMeasureAssayTemplate:
+  ClinicalAssayTemplate:
     is_a: BiologicalAssayDataTemplate
     description: > 
       Catch-all template for quantified measures often multi-individual level data in a spreadsheet. 
@@ -495,6 +562,17 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    suggests:
+        assay:
+        - survival
+
+  ElectrophysiologyAssayTemplate:
+    is_a: 
+    slots:
+    suggests:
+      assay:
+      - multi-electrode array
+
 
 #######################################
 # Patient Clinical Data         
