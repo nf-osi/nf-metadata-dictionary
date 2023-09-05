@@ -1,18 +1,20 @@
-# Top-level editor notes
+# Important editor notes
 # - Here [mappings](https://linkml.io/linkml/schemas/uris-and-mappings.html#mappings) indicate closely related templates in other data models
+# - Here [extensions] are used to keep track of which type of assay data are allowed to use this template
+# - `abstract` means the template is not meant to be used for annotation, it's just there for others to inherit props from
 
 classes:
 
   Template:
-    description: A collection of fields representing some entity. 
+    abstract: true
+    description: A collection of fields representing some entity.
     comments: 
     - Also called a manifest depending on context.
-    abstract: true
 
 
   PartialTemplate:
-    description: A template for collecting a subset of contextual data; not intended to be a standalone template but rather a subdocument. 
     abstract: true
+    description: A template for collecting a subset of contextual data; not intended to be a standalone template but rather a subdocument. 
 
 ############################################################
 # Assay Data / Sequencing             
@@ -20,6 +22,7 @@ classes:
 
   BiologicalAssayDataTemplate:
     is_a: Template
+    abstract: true
     description: >
       A template for describing deposited data artifacts (i.e. files) from an experimental assay that mainly involves biological organisms.  
       The properties defined here are things that should be collected for all files contributed to NF. 
@@ -33,8 +36,10 @@ classes:
     - species
     - individualID # specimenID, aliquotID etc. are added at a later level since they don't make sense for some assay types such as behavioral assays
 
+
   NonBiologicalAssayDataTemplate:
     is_a: Template
+    abstract: true
     description: >
       A template for describing deposited data artifacts (i.e. files) from an experimental assay that main involves non-biological samples.   
     slots:
@@ -56,7 +61,7 @@ classes:
       While nowadays the genomics assay is synonymous with something sequencing-based, this should be kept conceptually open in the current defined properties.
     abstract: true
     notes:
-    - This template should only be used to fill in partial data for presumably "novel/other" genomics assays until it can be confirmed which more specific template should be used and which additional data collected. 
+    - This has been made abstract. It will allow generous validation, but it shouldn't be used for validation in most cases; real validation should use the most correct and specific template. 
     - http://purl.obolibrary.org/obo/GECKO_0000032
     slots:
     - parentSpecimenID
@@ -64,6 +69,15 @@ classes:
     - aliquotID 
     - platform
     - nucleicAcidSource
+    annotations:
+      requiresComponent: ''
+      required: false
+      
+  GemomicsArrayDataTemplate:
+    is_a: GenomicsAssayTemplate
+    description: A template for describing raw data from array-based genomics data.
+    slots:
+    - 
     annotations:
       requiresComponent: ''
       required: false
@@ -82,6 +96,17 @@ classes:
     - readDepth
     - targetDepth
     - batchID
+    extensions:
+      contraints:
+        assay:
+        - ISO-seq
+        - NOMe-seq
+        - RNA-seq
+        - T cell receptor repertoire sequencing
+        - miRNA-seq
+        - scCGI-seq
+        - targeted exome sequencing
+        - whole genome sequencing
 
   SequencingAssayTemplateExtended:
     is_a: SequencingAssayTemplate
@@ -108,6 +133,10 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    extensions:
+      contraints:
+        assay:
+        - RNA-seq
     close_mappings:
     - HTAN:BulkRNA-seqLevel1
 
@@ -120,6 +149,10 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    extensions:
+      constraints:
+        assay:
+        - single-cell RNA-seq
 
   SpatialTranscriptomicsRNASeqTemplate:
     is_a: RNASeqTemplate
@@ -131,6 +164,10 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    extensions:
+      constraints:
+        assay:
+        - spatial transcriptomics
     close_mappings:
     - HTAN:10xVisiumSpatialTranscriptomics-RNA-seqLevel1
   
@@ -175,6 +212,14 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    extensions:
+      contraints:
+        assay:
+        - ATAC-seq
+        - CAPP-seq
+        - CUT&RUN
+        - ChIP-seq
+        - ERR bisulfite sequencing
     close_mappings:
     - HTAN:BulkMethylation-seqLevel1
 
@@ -217,6 +262,24 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    extensions:
+      contraints:
+        assay:
+        - ATAC-seq
+        - CAPP-seq
+        - CUT&RUN
+        - ChIP-seq
+        - ERR bisulfite sequencing
+        - ISO-seq
+        - NOMe-seq
+        - RNA-seq
+        - T cell receptor repertoire sequencing
+        - bisulfite sequencing
+        - miRNA-seq
+        - scCGI-seq
+        - targeted exome sequencing
+        - whole exome sequencing
+        - whole genome sequencing
     close_mappings:
     - HTAN:
   
@@ -230,12 +293,18 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    extensions:
+      contraints:
+        assay:
+        - targeted exome sequencing
+        - whole exome sequencing
+        - whole genome sequencing
     close_mappings:
     - HTAN:
   
-  ProcessedExpressionTemplate:
+  ProcessedGeneExpressionTemplate:
     is_a: BiologicalAssayDataTemplate
-    description: Template for describing expression output data as counts or counts matrix.
+    description: Template for describing miRNA expression output data as counts or counts matrix.
     slots:
     - expressionUnit
     - workflow
@@ -243,6 +312,10 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+    contraints:
+        assay:
+        - RNA-seq
+        - single-cell RNA-seq
   
 ##################################################
 # Biological Assay Data / Proteomics / Raw         
