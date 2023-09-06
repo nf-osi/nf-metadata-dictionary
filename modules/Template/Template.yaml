@@ -96,8 +96,8 @@ classes:
     - readDepth
     - targetDepth
     - batchID
-    extensions:
-      suggests:
+    annotations:
+      match:
         assay:
         - ISO-seq
         - miRNA-seq
@@ -131,8 +131,7 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    extensions:
-      suggests:
+      match:
         assay:
         - RNA-seq
         - lncRNA-seq
@@ -148,8 +147,7 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    extensions:
-      suggests:
+      match:
         assay:
         - single-cell RNA-seq
 
@@ -163,8 +161,7 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    extensions:
-      suggests:
+      match:
         assay:
         - spatial transcriptomics
     close_mappings:
@@ -191,8 +188,7 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    extensions:
-      suggests:
+      match:
         assay:
         - whole genome sequencing
   
@@ -204,8 +200,7 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    extensions:
-      suggests:
+      match:
         assay:
         - whole exome sequencing
     close_mappings:
@@ -219,8 +214,7 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    extensions:
-      suggests:
+      match:
         assay:
         - ATAC-seq
         - CAPP-seq
@@ -239,8 +233,7 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    extensions:
-      suggests:
+      match:
         assay: methylation array
   
 
@@ -271,8 +264,7 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    extensions:
-      suggests:
+      match:
         assay:
         - ATAC-seq
         - CAPP-seq
@@ -290,7 +282,9 @@ classes:
         - whole exome sequencing
         - whole genome sequencing
     close_mappings:
-    - htan:
+    - htan:ScRNA-seqLevel2
+    - htan:BulkRNA-seqLevel2
+    - htan:BulkWESLevel2
   
   ProcessedVariantCallsTemplate:
     is_a: BiologicalAssayDataTemplate
@@ -302,14 +296,13 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    extensions:
-      suggests:
+      match:
         assay:
         - targeted exome sequencing
         - whole exome sequencing
         - whole genome sequencing
     close_mappings:
-    - htan:
+    - htan:BulkWESLevel3
   
   ProcessedGeneExpressionTemplate:
     is_a: BiologicalAssayDataTemplate
@@ -320,8 +313,8 @@ classes:
     - workflowLink
     annotations:
       requiresComponent: ''
-      required: false
-    suggests:
+      required: false  
+      match:
         assay:
         - RNA-seq
         - single-cell RNA-seq
@@ -351,8 +344,8 @@ classes:
     - dataCollectionMode
     annotations:
       requiresComponent: ''
-      required: false
-    suggests:
+      required: false  
+      match:
         assay:
         - mass spectrometry
         - FIA-MSMS
@@ -370,7 +363,7 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    suggests:
+      match:
         assay:
         - RPPA
 
@@ -415,7 +408,7 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    suggests:
+      match:
         assay:
         - 3D electron microscopy
         - atomic force microscopy
@@ -433,10 +426,10 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    suggests:
-      assay:
-      - immunofluorescence
-      - immunohistochemistry  
+      match:
+        assay:
+        - immunofluorescence
+        - immunohistochemistry  
 
 ################################################
 # Biological Assay Data / Behavioral / Raw            
@@ -455,7 +448,7 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    suggests:
+      match:
         assay:
         - contextual conditioning behavior assay
         - Corsi blocks
@@ -525,9 +518,9 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    suggests:
-      assay:
-      - rheometry
+      match:
+        assay:
+        - rheometry
   
   LightScatteringAssayTemplate:
     is_a: NonBiologicalAssayDataTemplate
@@ -540,7 +533,7 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    suggests:
+      match:
         assay:
         - dynamic light scattering
         - microrheology
@@ -562,14 +555,14 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-    suggests:
+      match:
         assay:
         - survival
 
   ElectrophysiologyAssayTemplate:
     is_a: 
     slots:
-    suggests:
+    match:
       assay:
       - multi-electrode array
 
