@@ -24,9 +24,8 @@ classes:
     is_a: Template
     abstract: true
     description: >
-      A template for describing deposited data artifacts (i.e. files) from an experimental assay that mainly involves biological organisms.  
-      The properties defined here are things that should be collected for all files contributed to NF. 
-      Subclasses define additional properties for the type of file (e.g. raw vs processed, imaging vs sequencing).
+      A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. 
+      This is an abstract template; "real" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing, raw vs processed).
     slots:
     - Component
     - resourceType # should be constrained to data resource types but we can't do this yet
@@ -58,7 +57,7 @@ classes:
     description: > 
       Template for raw data on an organism's genome. Genomics assays can provide data limited to specific regions or for the full genome.
       They can be divided into sequencing-based vs. non-sequencing based (e.g. microarrays, optical genome mapping). 
-      While nowadays the genomics assay is synonymous with something sequencing-based, this should be kept conceptually open in the current defined properties.
+      Nowadays the genomics assay is synonymous with something sequencing-based, this should be kept conceptually open.
     abstract: true
     notes:
     - This has been made abstract. It will allow generous validation, but it shouldn't be used for validation in most cases; real validation should use the most correct and specific template. 
@@ -73,14 +72,20 @@ classes:
       requiresComponent: ''
       required: false
 
-  GemomicsArrayTemplate:
+  GenomicsArrayTemplate:
     is_a: GenomicsAssayTemplate
-    description: A template for describing raw data from raw array-based genomics data, e.g. CEL files. 
+    description: A template for describing raw data from array-based genomics, e.g. CEL files. 
     slots:
     - channel
     annotations:
       requiresComponent: ''
       required: false
+      match:
+        assay: 
+        - microarray
+        - miRNA array
+        - RNA array
+        - SNP array
   
   SequencingAssayTemplate:
     is_a: GenomicsAssayTemplate
@@ -105,6 +110,8 @@ classes:
         - ribo-seq
         - scCGI-seq
         - T cell receptor repertoire sequencing
+        dataType:
+        - SequenceReads
 
   SequencingAssayTemplateExtended:
     is_a: SequencingAssayTemplate
@@ -123,6 +130,12 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+      match:
+        assay:
+        - RNA-seq
+        - lncRNA-seq
+        dataType:
+        - SequenceReads
   
   RNASeqTemplate:
     is_a: SequencingAssayTemplate
@@ -135,6 +148,8 @@ classes:
         assay:
         - RNA-seq
         - lncRNA-seq
+        dataType:
+        - SequenceReads
     close_mappings:
     - htan:BulkRNA-seqLevel1
 
@@ -150,6 +165,8 @@ classes:
       match:
         assay:
         - single-cell RNA-seq
+        dataType:
+        - SequenceReads
 
   SpatialTranscriptomicsRNASeqTemplate:
     is_a: RNASeqTemplate
@@ -164,6 +181,7 @@ classes:
       match:
         assay:
         - spatial transcriptomics
+        - RNA-seq
     close_mappings:
     - htan:10xVisiumSpatialTranscriptomics-RNA-seqLevel1
   
@@ -191,10 +209,12 @@ classes:
       match:
         assay:
         - whole genome sequencing
+        dataType:
+        - SequenceReads
   
   WESTemplate:
     is_a: BiologicalAssayDataTemplate
-    description: Template for describing raw data from Whole Exome Sequencing (WES or WXS)
+    description: Template for describing raw data from Whole Exome Sequencing (WES/WXS)
     slots:
     - targetCaptureKitID
     annotations:
@@ -203,6 +223,8 @@ classes:
       match:
         assay:
         - whole exome sequencing
+        dataType:
+        - SequenceReads
     close_mappings:
     - htan:BulkWESLevel1
 
@@ -217,11 +239,14 @@ classes:
       match:
         assay:
         - ATAC-seq
+        - bisulfite sequencing
         - CAPP-seq
         - CUT&RUN
         - ChIP-seq
-        - bisulfite sequencing
         - ERR bisulfite sequencing
+        - HI-C
+        - NOMe-seq
+        - oxBS-seq
     close_mappings:
     - htan:BulkMethylation-seqLevel1
 
@@ -281,6 +306,8 @@ classes:
         - targeted exome sequencing
         - whole exome sequencing
         - whole genome sequencing
+        dataType:
+        - AlignedReads
     close_mappings:
     - htan:ScRNA-seqLevel2
     - htan:BulkRNA-seqLevel2
@@ -301,6 +328,11 @@ classes:
         - targeted exome sequencing
         - whole exome sequencing
         - whole genome sequencing
+        dataType:
+        - GermlineVariants
+        - AnnotatedGermlineVariants
+        - SomaticVariants
+        - AnnotatedSomaticVariants
     close_mappings:
     - htan:BulkWESLevel3
   
@@ -316,8 +348,13 @@ classes:
       required: false  
       match:
         assay:
+        - microarray
+        - miRNA array
+        - RNA array
         - RNA-seq
         - single-cell RNA-seq
+        dataType:
+        - GeneExpression
     close_mappings:
     - htan:BulkRNA-seqLevel3
   
@@ -342,6 +379,8 @@ classes:
   MassSpecAssayTemplate:
     is_a: ProteomicsAssayTemplate
     description: Template for raw mass spec-based proteomics data.
+    notes:
+    - Technically, mass spec does not have to be considered a biological assay, but we'll classify it as such when used with a biological sample. 
     slots:
     - dataCollectionMode
     annotations:
@@ -369,6 +408,7 @@ classes:
         assay:
         - RPPA
 
+
 ##############################################
 # Biological Assay Data / Imaging / Raw           
 ##############################################
@@ -393,6 +433,10 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+      match:
+        assay:
+        - conventional MRI
+        - functional MRI
 
   MicroscopyAssayTemplate:
     is_a: ImagingAssayTemplate
@@ -441,11 +485,10 @@ classes:
     is_a: BiologicalAssayDataTemplate
     description: > 
       Template for describing task data from behavioral/cognitive assays such as “adaptive n-back task” (for humans) or “Von Frey test” (for mice). 
-      Usually the appropriate data from these assays is in spreadsheet format. If another modality is used as part of the assay, e.g. fMRI, that data can be linked.
+      Usually the appropriate data from these assays is tabular. If another modality is used as part of the assay, e.g. fMRI, that data can be linked.
     slots:
     - experimentalCondition
     - experimentalTimepoint
-    # linkedData
     - comments
     annotations:
       requiresComponent: ''
@@ -566,7 +609,11 @@ classes:
     slots:
     match:
       assay:
+      - local field potential recording
+      - long term potentiation assay
       - multi-electrode array
+      - pattern electroretinogram
+      - whole-cell patch clamp
 
 
 #######################################
