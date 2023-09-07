@@ -315,7 +315,7 @@ classes:
   
   ProcessedVariantCallsTemplate:
     is_a: BiologicalAssayDataTemplate
-    description: Template for describing either germline or variant calls output data (i.e. VCF/MAF)
+    description: Template for describing either simple germline/somatic variant calls output data (VCF/MAF) as well as structural variants (e.g. CNVs).
     slots:
     - isFilteredReads
     - workflow
@@ -328,13 +328,16 @@ classes:
         - targeted exome sequencing
         - whole exome sequencing
         - whole genome sequencing
+        - TIDE
         dataType:
         - GermlineVariants
         - AnnotatedGermlineVariants
         - SomaticVariants
         - AnnotatedSomaticVariants
+        - CopyNumberVariants
     close_mappings:
     - htan:BulkWESLevel3
+
   
   ProcessedGeneExpressionTemplate:
     is_a: BiologicalAssayDataTemplate
@@ -466,7 +469,7 @@ classes:
 
   IF-IHC-AssayTemplate:
     is_a: MicroscopyAssayTemplate
-    description: Template for describing immunofluorescence or immunohistochemistry images. Can be used for CyCIF (highly multiplexed immunofluorescence imaging) data.
+    description: Template for describing immunofluorescence or immunohistochemistry images.
     slots:
     - antibodyID
     annotations:
@@ -512,7 +515,7 @@ classes:
   
   PharmacokineticsAssayTemplate:
     is_a: BiologicalAssayDataTemplate
-    description: Template for describing data from a pharmacokinetics assay.
+    description: Template for pharmacokinetics assay data (related to compound absorption, distribution, metabolism and excretion).
     slots:
     - platform
     - experimentalCondition
@@ -525,6 +528,10 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+      match:
+        assay:
+        - 
+
 
   PlateBasedReporterAssayTemplate:
     is_a: BiologicalAssayDataTemplate
@@ -548,6 +555,10 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+      match:
+        assay:
+        - flow cytometry
+
 
   MaterialScienceAssayTemplate:
     is_a: NonBiologicalAssayDataTemplate
@@ -588,8 +599,8 @@ classes:
   ClinicalAssayTemplate:
     is_a: BiologicalAssayDataTemplate
     description: > 
-      Catch-all template for quantified measures often multi-individual level data in a spreadsheet. 
-      Can be simple endpoint data from clinical trials. This can include repeated measures and a drug treatment context.
+      Catch-all template for clinical endpoint data seen as individual-level data aggregated into tabular form. 
+      This can include repeated measures and a drug treatment context.
     slots:
     - experimentalFactor
     - experimentalCondition
@@ -603,9 +614,13 @@ classes:
       match:
         assay:
         - survival
+        - gait measurement
+        dataType:
+        - clinical
 
   ElectrophysiologyAssayTemplate:
-    is_a: 
+    is_a: BiologicalAssayDataTemplate
+    description: Template for raw electrophysiology data (voltage recordings).
     slots:
     match:
       assay:
@@ -614,6 +629,14 @@ classes:
       - multi-electrode array
       - pattern electroretinogram
       - whole-cell patch clamp
+
+
+############################################
+# Biological Assay Data / Other / Processed           
+############################################
+
+
+
 
 
 #######################################
