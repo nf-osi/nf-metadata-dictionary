@@ -40,15 +40,15 @@ classes:
   # Biological Assay Data / Sequencing / Raw            
   #####################################################
 
-  GenomicsAssayTemplate:
+  GeneticsAssayTemplate:
     is_a: BiologicalAssayDataTemplate
-    description: > 
-      Template for raw data on an organism's genome. Genomics assays can provide data limited to specific regions or for the full genome.
-      They can be divided into sequencing-based vs. non-sequencing based (e.g. microarrays, optical genome mapping). 
-      Nowadays the genomics assay is synonymous with something sequencing-based, this should be kept conceptually open.
     abstract: true
+    description: > 
+      Template for relatively raw data of RNA/DNA structure and expression. 
+      This is an abstract template encapsulating data from low-throughput to high-throughput assays, 
+      sequencing-based or non-sequencing based (e.g. microarrays, optical genome mapping). 
+      In practice, data are more specifically typed and matched to one of the templates below.
     notes:
-    - This has been made abstract. It will allow generous validation, but it shouldn't be used for validation in most cases; real validation should use the most correct and specific template. 
     - http://purl.obolibrary.org/obo/GECKO_0000032
     slots:
     - parentSpecimenID
@@ -60,27 +60,11 @@ classes:
       requiresComponent: ''
       required: false
 
-  GenomicsArrayTemplate:
-    is_a: GenomicsAssayTemplate
-    description: A template for describing raw data from array-based genomics/epigenomics. 
-    slots:
-    - channel
-    annotations:
-      requiresComponent: ''
-      required: false
-      match:
-        assay: 
-        - methylation array
-        - microarray
-        - miRNA array
-        - RNA array
-        - SNP array
-  
+
   SequencingAssayTemplate:
-    is_a: GenomicsAssayTemplate
-    description: A catch-all template for describing raw data from a sequencing assay. If a more specific template exists, that should be used.
+    is_a: GeneticsAssayTemplate
+    description: General template for raw RNA/DNA data, i.e. sequence data from a sequencing assay.
     slots:
-    - dissociationMethod
     - runType
     - libraryPrep
     - libraryPreparationMethod
@@ -96,23 +80,31 @@ classes:
         - ISO-seq
         - miRNA-seq
         - NOMe-seq
+        - next-generation sequencing
         - ribo-seq
         - scCGI-seq
         - Sanger sequencing
         - T cell receptor repertoire sequencing
-        dataType:
-        - SequenceReads
+        
 
-  SequencingAssayTemplateExtended:
+  GenomicsAssayTemplate:
     is_a: SequencingAssayTemplate
-    description: >
-      Genomics assay template but with experiment data for gene perturbation parameters, experimental conditions and time points.
+    description: Alias to SequencingAssayTemplate, use for sequence data on a large scale when there is no template available that is more specific.
+    notes:
+    - It's possible that not all raw genomics data equates to sequencing output. 
     slots:
-    - transplantationType
-    - transplantationRecipientSpecies
-    - transplantationRecipientTissue
+      requiresComponent: ''
+      required: false
+
+
+  GenomicsAssayTemplateExtended:
+    is_a: GenomicsAssayTemplate
+    description: >
+      Genomics assay template but with additional experiment data.
+    slots:
     - experimentalCondition
     - experimentalTimepoint
+    - experimentalTimepointUnit
     - genePerturbed
     - genePerturbationTechnology
     - genePerturbationType
@@ -120,12 +112,6 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
-      match:
-        assay:
-        - RNA-seq
-        - lncRNA-seq
-        dataType:
-        - SequenceReads
   
   RNASeqTemplate:
     is_a: SequencingAssayTemplate
@@ -148,6 +134,7 @@ classes:
     description: Template for describing raw data from single-cell RNA-seq.
     slots:
     - cellID
+    - dissociationMethod
     - auxiliaryAsset
     annotations:
       requiresComponent: ''
@@ -157,27 +144,10 @@ classes:
         - single-cell RNA-seq
         dataType:
         - SequenceReads
-
-  SpatialTranscriptomicsRNASeqTemplate:
-    is_a: RNASeqTemplate
-    description: Template for RNA-seq with additional metadata collecction for 10x Visium spatial transcriptomics.
-    slots:
-    - captureArea
-    - slideID
-    - slideVersion
-    annotations:
-      requiresComponent: ''
-      required: false
-      match:
-        assay:
-        - spatial transcriptomics
-        - RNA-seq
-    close_mappings:
-    - htan:10xVisiumSpatialTranscriptomics-RNA-seqLevel1
   
-  PdxSequencingAssayTemplate:
-    is_a: SequencingAssayTemplate
-    description: Template for describing describing raw sequencing data from PDX experiment.
+  PdxGenomicsAssayTemplate:
+    is_a: GenomicsAssayTemplate
+    description: Raw genomics data from patient-derived xenograft (PDX) experiment, with additional PDX-relevant metadata.
     slots:
     - transplantationType
     - transplantationRecipientSpecies
@@ -185,6 +155,7 @@ classes:
     - modelSystemName
     - experimentalCondition
     - experimentalTimepoint
+    - experimentalTimepointUnit
     annotations:
       requiresComponent: ''
       required: false
@@ -218,7 +189,7 @@ classes:
     close_mappings:
     - htan:BulkWESLevel1
 
-  EpigenomicsSequencingAssayTemplate:
+  EpigenomiscAssayTemplate:
     is_a: SequencingAssayTemplate
     description: Template for describing raw data from epigenetics sequencing assays such as bisulfite sequencing. 
     slots:
@@ -240,7 +211,33 @@ classes:
     close_mappings:
     - htan:BulkMethylation-seqLevel1
 
-  
+  EpigeneticsAssayTemplate:
+    is_a: EpigenomiscAssayTemplate
+    description: Alias for EpigenomiscAssayTemplate for backwards-compatibility.
+    slots:
+    annotations:
+      requiresComponent: ''
+      required: false
+
+  GenomicsArrayTemplate:
+    is_a: GeneticsAssayTemplate
+    description: A template for describing raw data from array-based genomics/epigenomics, e.g. CEL files.
+    slots:
+    - platform
+    - channel
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay: 
+        - array
+        - methylation array
+        - microarray
+        - miRNA array
+        - RNA array
+        - SNP array
+        dataType:
+        - geneExpression
 
   #########################################################
   # Biological Assay Data  / Sequencing / Processed            
@@ -266,6 +263,7 @@ classes:
     - totalReads
     - workflow
     - workflowLink
+    - auxiliaryAsset # more qc files
     annotations:
       requiresComponent: ''
       required: false
@@ -282,6 +280,7 @@ classes:
         - T cell receptor repertoire sequencing
         - bisulfite sequencing
         - miRNA-seq
+        - next-generation sequencing
         - scCGI-seq
         - targeted exome sequencing
         - whole exome sequencing
@@ -300,11 +299,13 @@ classes:
     - isFilteredReads
     - workflow
     - workflowLink
+    - auxiliaryAsset
     annotations:
       requiresComponent: ''
       required: false
       match:
         assay:
+        - next-generation sequencing
         - targeted exome sequencing
         - whole exome sequencing
         - whole genome sequencing
@@ -319,36 +320,14 @@ classes:
     - htan:BulkWESLevel3
 
   
-  ProcessedGeneExpressionTemplate:
-    is_a: BiologicalAssayDataTemplate
-    description: Template for describing miRNA expression output data as counts or counts matrix.
-    slots:
-    - expressionUnit
-    - workflow
-    - workflowLink
-    annotations:
-      requiresComponent: ''
-      required: false  
-      match:
-        assay:
-        - microarray
-        - miRNA array
-        - RNA array
-        - RNA-seq
-        - single-cell RNA-seq
-        dataType:
-        - GeneExpression
-    close_mappings:
-    - htan:BulkRNA-seqLevel3
-  
 ##################################################
-# Biological Assay Data / Proteomics / Raw         
+# Biological Assay Data / Proteomics     
 ##################################################
 
-  ProteomicsAssayTemplate:
+  ProteinAssayTemplate:
     is_a: BiologicalAssayDataTemplate
-    description: > 
-      Template for describing raw assay data of an organism's proteome.
+    abstract: true
+    description: Abstract template for data from some assay of protein structure and function. Data should be instantiated with more specific template. 
     slots:
     - parentSpecimenID
     - specimenID
@@ -359,8 +338,9 @@ classes:
       requiresComponent: ''
       required: false
 
+
   MassSpecAssayTemplate:
-    is_a: ProteomicsAssayTemplate
+    is_a: ProteinAssayTemplate
     description: Template for raw mass spec-based proteomics data.
     notes:
     - Technically, mass spec does not have to be considered a biological assay, but we'll classify it as such when used with a biological sample. 
@@ -381,9 +361,19 @@ classes:
         - ultra high-performance liquid chromatography/tandem mass spectrometry
     close_mappings:
     - htan:MassSpectrometryLevel1
+
+
+  ProteomicsAssayTemplate:
+    is_a: MassSpecAssayTemplate
+    description: Alias to MassSpecAssayTemplate for backwards-compatibility.
+    slots:
+    annotations:
+      requiresComponent: ''
+      required: false  
+
   
-  ProteomicsArrayTemplate:
-    is_a: ProteomicsAssayTemplate
+  ProteinArrayTemplate:
+    is_a: ProteinAssayTemplate
     description: Template for array- and immuno-based proteomics data.
     slots:
     - antibodyID
@@ -393,7 +383,36 @@ classes:
       match:
         assay:
         - RPPA
+    close_mappings:
+    - htan:RPPALevel2
 
+##############################################
+# Biological Assay Data / Processed        
+##############################################
+
+  ProcessedExpressionTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Template for quantified gene/protein expression data, which may be aggregated into matrix form.
+    slots:
+    - expressionUnit
+    - workflow
+    - workflowLink
+    annotations:
+      requiresComponent: ''
+      required: false  
+      match:
+        assay:
+        - quantitative PCR
+        - microarray
+        - miRNA array
+        - RNA array
+        - RNA-seq
+        - single-cell RNA-seq
+        dataType:
+        - geneExpression
+        - proteinExpression
+    close_mappings:
+    - htan:BulkRNA-seqLevel3
 
 ##############################################
 # Biological Assay Data / Imaging / Raw           
@@ -401,11 +420,10 @@ classes:
 
   ImagingAssayTemplate:
     is_a: BiologicalAssayDataTemplate
-    description: A template for describing data from an imaging assay.
+    description: General template for describing imaging data.
     slots:
-    # specimenID not applicable to some imaging; aliquotID not applicable to many imaging
     - platform
-    - 
+    - auxiliaryAsset
     annotations:
       requiresComponent: ''
       required: false
@@ -424,9 +442,11 @@ classes:
     is_a: ImagingAssayTemplate
     description: Template for describing MRI data.
     slots:
+    - bodySite # should be constrained to brain regions
     - MRISequence
     - experimentalCondition
     - experimentalTimepoint
+    - experimentalTimepointUnit
     annotations:
       requiresComponent: ''
       required: false
@@ -488,7 +508,7 @@ classes:
     slots:
     - experimentalFactor
     - experimentalCondition
-    - experimentalTimepoint
+    - experimentalTimepointUnit
     - compoundName
     - compoundDose
     - comments
@@ -525,6 +545,7 @@ classes:
     - experimentalFactor
     - experimentalCondition
     - experimentalTimepoint
+    - experimentalTimepointUnit
     - compoundName
     - compoundDose
     - genePerturbed
@@ -553,14 +574,16 @@ classes:
 
   PlateBasedReporterAssayTemplate:
     is_a: BiologicalAssayDataTemplate
-    description: Generic template for describing data from a plate-based reporter assay. This is a one-step template.
+    description: Generic template for describing data from a plate-based reporter assay.
     slots:
+    - specimenID
     - platform
     - assayTarget
     - compoundName
     - compoundDose
     - experimentalCondition
     - experimentalTimepoint
+    - experimentalTimepointUnit
     - reporterGene
     - reporterSubstance
     annotations:
@@ -575,16 +598,19 @@ classes:
 
   FlowCytometryTemplate:
     is_a: BiologicalAssayDataTemplate
-    description: Basic template for flow cytometry assay
+    description: Template for flow cytometry assay
     slots:
     - platform
     - cellType
+    - auxiliaryAsset
     annotations:
       requiresComponent: ''
       required: false
       match:
         assay:
         - flow cytometry
+    close_mappings:
+    - https://www.immport.org/shared/dataModelDocumentation?table=fcs_analyzed_result
 
 
   MaterialScienceAssayTemplate:
@@ -608,7 +634,7 @@ classes:
         - differential scanning calorimetry
   
   LightScatteringAssayTemplate:
-    is_a: NonBiologicalAssayDataTemplate
+    is_a: MaterialScienceAssayTemplate
     description: Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.
     source: https://wiki.nci.nih.gov/display/icr/isa-tab-nano
     slots:
@@ -627,8 +653,17 @@ classes:
 
   ElectrophysiologyAssayTemplate:
     is_a: BiologicalAssayDataTemplate
-    description: Template for raw electrophysiology data (voltage recordings).
+    description: Template for raw electrophysiology data (electrical recordings).
+    source: https://arxiv.org/pdf/1605.07673.pdf
     slots:
+    - platform
+    - bodySite # applies for electrophysiology at the body level
+    - cellType # applies for electrophysiology at the cell-level, e.g. whole-cell patch clamp
+    - recordingSource
+    - experimentalTimepoint
+    - experimentalTimepointUnit
+    - experimentalCondition
+    - auxiliaryAsset
     match:
       assay:
       - local field potential recording
@@ -636,7 +671,6 @@ classes:
       - multi-electrode array
       - pattern electroretinogram
       - whole-cell patch clamp
-
 
 
 #######################################
@@ -670,8 +704,8 @@ classes:
     - yearPublished
     - datasetItemCount
     - datasetSizeInBytes
-    # - relatedDataset # not yet
     # - auxiliaryAsset # link to interactive multi-qc reports or other materials related to the dataset
+    # - relatedDataset # not yet
 
   WorkflowReport:
     is_a: Template

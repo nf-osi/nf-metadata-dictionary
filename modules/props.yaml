@@ -568,6 +568,15 @@ slots:
     annotations:
       validationRules: num
     required: false
+  recordingSource:
+    description: Source of electrophysiology recording.
+    enum_range:
+    - electrode
+    - tetrode
+    - shank
+    - Utah array
+    - other electrode array
+    required: false
   referenceSequence:
     description: Syntactic sequences that has a role as reference of an annotation.
     required: false
