@@ -5,17 +5,6 @@
 
 classes:
 
-  Template:
-    abstract: true
-    description: A collection of fields representing some entity.
-    comments: 
-    - Also called a manifest depending on context.
-
-
-  PartialTemplate:
-    abstract: true
-    description: A template for collecting a subset of contextual data; not intended to be a standalone template but rather a subdocument. 
-
 ############################################################
 # Assay Data / Sequencing             
 ############################################################
@@ -34,7 +23,6 @@ classes:
     - assay # platform added at a later level, see https://github.com/nf-osi/nf-metadata-dictionary/issues/319
     - species
     - individualID # specimenID, aliquotID etc. are added at a later level since they don't make sense for some assay types such as behavioral assays
-
 
   NonBiologicalAssayDataTemplate:
     is_a: Template
@@ -74,7 +62,7 @@ classes:
 
   GenomicsArrayTemplate:
     is_a: GenomicsAssayTemplate
-    description: A template for describing raw data from array-based genomics, e.g. CEL files. 
+    description: A template for describing raw data from array-based genomics/epigenomics. 
     slots:
     - channel
     annotations:
@@ -82,6 +70,7 @@ classes:
       required: false
       match:
         assay: 
+        - methylation array
         - microarray
         - miRNA array
         - RNA array
@@ -109,6 +98,7 @@ classes:
         - NOMe-seq
         - ribo-seq
         - scCGI-seq
+        - Sanger sequencing
         - T cell receptor repertoire sequencing
         dataType:
         - SequenceReads
@@ -250,16 +240,6 @@ classes:
     close_mappings:
     - htan:BulkMethylation-seqLevel1
 
-  MethylationArrayTemplate:
-    is_a: GenomicsAssayTemplate
-    description: Template for describing raw data from methylation array.
-    slots:
-    - channel
-    annotations:
-      requiresComponent: ''
-      required: false
-      match:
-        assay: methylation array
   
 
   #########################################################
@@ -393,8 +373,11 @@ classes:
         assay:
         - mass spectrometry
         - FIA-MSMS
+        - label free mass spectrometry
         - MudPIT
         - TMT quantitation
+        - liquid chromatography/mass spectrometry
+        - liquid chromatography/tandem mass spectrometry
         - ultra high-performance liquid chromatography/tandem mass spectrometry
     close_mappings:
     - htan:MassSpectrometryLevel1
@@ -422,10 +405,21 @@ classes:
     slots:
     # specimenID not applicable to some imaging; aliquotID not applicable to many imaging
     - platform
+    - 
     annotations:
       requiresComponent: ''
       required: false
-    
+      match:
+      - 3D imaging
+      - high content screen # also under microscopy
+      - high frequency ultrasound
+      - in vivo bioluminescence
+      - gel filtration chromatography
+      - laser speckle imaging
+      - positron emission tomography
+      - spatial frequency domain imaging
+      - western blot
+
   MRIAssayTemplate:
     is_a: ImagingAssayTemplate
     description: Template for describing MRI data.
@@ -440,7 +434,7 @@ classes:
         assay:
         - conventional MRI
         - functional MRI
-
+  
   MicroscopyAssayTemplate:
     is_a: ImagingAssayTemplate
     description: Template for data from a microscopy data.
@@ -459,15 +453,17 @@ classes:
       required: false
       match:
         assay:
+        - 3D confocal imaging
         - 3D electron microscopy
         - atomic force microscopy
         - brightfield microscopy
+        - high content screen
         - phase-contrast microscopy
         - traction force microscopy
     close_mappings:
     - htan: ImagingLevel2
 
-  IF-IHC-AssayTemplate:
+  ImmunoMicroscopyTemplate:
     is_a: MicroscopyAssayTemplate
     description: Template for describing immunofluorescence or immunohistochemistry images.
     slots:
@@ -480,64 +476,89 @@ classes:
         - immunofluorescence
         - immunohistochemistry  
 
-################################################
-# Biological Assay Data / Behavioral / Raw            
-################################################
 
-  BehavioralCognitiveAssayTemplate:
+############################################
+# Biological Assay Data / Other           
+############################################
+
+  ClinicalAssayTemplate:
     is_a: BiologicalAssayDataTemplate
     description: > 
-      Template for describing task data from behavioral/cognitive assays such as “adaptive n-back task” (for humans) or “Von Frey test” (for mice). 
-      Usually the appropriate data from these assays is tabular. If another modality is used as part of the assay, e.g. fMRI, that data can be linked.
+      General template for typically tabular **individual-level** data. This can include repeated measures and a drug treatment context.
     slots:
+    - experimentalFactor
     - experimentalCondition
     - experimentalTimepoint
+    - compoundName
+    - compoundDose
     - comments
     annotations:
       requiresComponent: ''
       required: false
       match:
         assay:
+        - blood chemistry measurement
+        - body size trait measurement
+        - survival
         - contextual conditioning behavior assay
         - Corsi blocks
         - elevated plus maze test
+        - gait measurement
         - NIH Toolbox
         - questionnaire
         - Riccardi and Ablon scales
         - Social Responsiveness Scale
         - 'Social Responsiveness Scale, Second Edition'
         - Von Frey test
+        dataType:
+        - clinical
 
-
-############################################
-# Biological Assay Data / Other / Raw            
-############################################
-  
-  PharmacokineticsAssayTemplate:
+  GeneralMeasureDataTemplate:
     is_a: BiologicalAssayDataTemplate
-    description: Template for pharmacokinetics assay data (related to compound absorption, distribution, metabolism and excretion).
+    description: > 
+      General template for data in tabular form that aggregates tissue-level or cellular-level data.
     slots:
-    - platform
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - modelSystemName
+    - experimentalFactor
     - experimentalCondition
     - experimentalTimepoint
     - compoundName
     - compoundDose
     - genePerturbed
-    - modelSystemName
+    - genePerturbationType
+    - genePerturbationTechnology
     - comments
     annotations:
       requiresComponent: ''
       required: false
       match:
         assay:
-        - 
+        - cell competition
+        - cell count
+        - cell proliferation
+        - cell viability assay
+        - combination library screen
+        - combination screen
+        - complex II enzyme activity assay
+        - compound screen
+        - BrdU proliferation assay
+        - electrochemiluminescence
+        - focus forming assay
+        - in vivo tumor growth
+        - Matrigel-based tumorigenesis assay
 
 
   PlateBasedReporterAssayTemplate:
     is_a: BiologicalAssayDataTemplate
     description: Generic template for describing data from a plate-based reporter assay. This is a one-step template.
     slots:
+    - platform
     - assayTarget
+    - compoundName
+    - compoundDose
     - experimentalCondition
     - experimentalTimepoint
     - reporterGene
@@ -545,6 +566,12 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+      match:
+        assay:
+        - 2D AlamarBlue absorbance
+        - 2D AlamarBlue fluorescence
+        - 2D Incucyte
+        - ELISA
 
   FlowCytometryTemplate:
     is_a: BiologicalAssayDataTemplate
@@ -577,6 +604,8 @@ classes:
       match:
         assay:
         - rheometry
+        - oscillatory rheology
+        - differential scanning calorimetry
   
   LightScatteringAssayTemplate:
     is_a: NonBiologicalAssayDataTemplate
@@ -596,28 +625,6 @@ classes:
         - oscillatory rheology
         - static light scattering
 
-  ClinicalAssayTemplate:
-    is_a: BiologicalAssayDataTemplate
-    description: > 
-      Catch-all template for clinical endpoint data seen as individual-level data aggregated into tabular form. 
-      This can include repeated measures and a drug treatment context.
-    slots:
-    - experimentalFactor
-    - experimentalCondition
-    - experimentalTimepoint
-    - compoundName
-    - compoundDose
-    - comments
-    annotations:
-      requiresComponent: ''
-      required: false
-      match:
-        assay:
-        - survival
-        - gait measurement
-        dataType:
-        - clinical
-
   ElectrophysiologyAssayTemplate:
     is_a: BiologicalAssayDataTemplate
     description: Template for raw electrophysiology data (voltage recordings).
@@ -631,94 +638,9 @@ classes:
       - whole-cell patch clamp
 
 
-############################################
-# Biological Assay Data / Other / Processed           
-############################################
-
-
-
-
 
 #######################################
-# Patient Clinical Data         
-#######################################
-  
-  PatientTemplate:
-    is_a: Template
-    description: >
-      Template for collecting *minimal* individual-level data. 
-    slots:
-    - individualID
-    - sex
-    - age
-    - ageUnit
-    - species # should be constrained to human
-    - diagnosis
-    - nf1Genotype
-    - nf2Genotype
-    annotations:
-      requiresComponent: ''
-      required: false
-
-  PatientXTemplate:
-    is_a: PatientTemplate
-    description: (WIP / not yet used) Extended template for participant clinical data as recommended per Sundby et al.
-    slots:
-    annotations:
-      requiresComponent: ''
-      required: false
-
-  PatientSpecimenTemplate:
-    is_a: PatientTemplate
-    description: Template for capturing specimen-level data from patients.
-    slots:
-    - parentSpecimenID
-    - specimenID
-    - aliquotID
-    - tumorType
-    - bodySite
-    annotations:
-      requiresComponent: ''
-      required: false
-  
-#######################################
-# Research Tools      
-#######################################
-
-  ProtocolTemplate:
-    is_a: Template
-    description: Template for describing a protocol document. 
-    source: https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT
-    slots:
-    - title
-    - author
-    - citation
-    - license
-    - protocolAssay
-    - protocolPurpose
-    - sampleType
-    - comments
-    annotations:
-      requiresComponent: ''
-      required: false
-  
-  SourceCodeTemplate:
-    is_a: Template
-    description: Template for describing scripts/other code files for an analysis or software application.
-    slots:
-    - title
-    - author
-    - citation
-    - license
-    - programmingLanguage
-    - runtimePlatform
-    - documentation
-    annotations:
-      requiresComponent: ''
-      required: false
-
-#######################################
-# Other Artifacts           
+# Other Data Artifacts           
 #######################################
   
   DatasetTemplate:
@@ -765,9 +687,6 @@ classes:
     - workflow
     - workflowLink
 
-#######################################
-# PartialTemplate              
-#######################################
 
   UpdateMilestoneReport:
     is_a: PartialTemplate
