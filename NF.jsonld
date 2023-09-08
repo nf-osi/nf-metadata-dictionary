@@ -1670,19 +1670,16 @@
     "sms:displayName" : "studyId",
     "sms:required" : "sms:true"
   }, {
-    "rdfs:subClassOf" : [ ],
     "@id" : "bts:Filename",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "The name of the file.",
+    "rdfs:label" : "Filename",
+    "rdfs:subClassOf" : [ ],
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:required" : "sms:false",
-    "rdfs:label" : "Filename",
-    "rdfs:comment" : "The name of the file.",
-    "@type" : "rdfs:Class",
-    "sms:requiresDependency" : [ {
-      "@id" : "bts:fileFormat"
-    } ],
-    "sms:displayName" : "Filename"
+    "sms:displayName" : "Filename",
+    "sms:required" : "sms:false"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:readStrandOrigin",
@@ -1834,7 +1831,7 @@
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:required" : "sms:true",
+    "sms:required" : "sms:false",
     "schema:rangeIncludes" : [ {
       "@id" : "bts:first-stranded"
     }, {
@@ -2058,32 +2055,6 @@
     "rdfs:comment" : "(Legacy/deprecated annotation) Whether or not is paired-end sequencing (Yes; No).",
     "@type" : "rdfs:Class",
     "sms:displayName" : "isPairedEnd"
-  }, {
-    "rdfs:subClassOf" : [ ],
-    "@id" : "bts:timePointUnit",
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:required" : "sms:false",
-    "schema:rangeIncludes" : [ {
-      "@id" : "bts:seconds"
-    }, {
-      "@id" : "bts:minutes"
-    }, {
-      "@id" : "bts:hours"
-    }, {
-      "@id" : "bts:days"
-    }, {
-      "@id" : "bts:weeks"
-    }, {
-      "@id" : "bts:months"
-    }, {
-      "@id" : "bts:years"
-    } ],
-    "rdfs:label" : "timePointUnit",
-    "rdfs:comment" : "For timed experiments this represents the unit of time measured",
-    "@type" : "rdfs:Class",
-    "sms:displayName" : "timePointUnit"
   }, {
     "@id" : "bts:contentSize",
     "@type" : "rdfs:Class",
@@ -2485,11 +2456,6 @@
     "rdfs:label" : "transplantationType",
     "rdfs:comment" : "Type of transplantation involved in the experiment, derived from MESH",
     "@type" : "rdfs:Class",
-    "sms:requiresDependency" : [ {
-      "@id" : "bts:transplantationRecipientSpecies"
-    }, {
-      "@id" : "bts:transplantationRecipientTissue"
-    } ],
     "sms:displayName" : "transplantationType"
   }, {
     "rdfs:subClassOf" : [ ],
@@ -2548,21 +2514,16 @@
     "sms:displayName" : "meanCoverage",
     "sms:required" : "sms:false"
   }, {
-    "rdfs:subClassOf" : [ ],
     "@id" : "bts:genePerturbed",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "The HUGO gene symbol for the gene that is perturbed.",
+    "rdfs:label" : "genePerturbed",
+    "rdfs:subClassOf" : [ ],
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:required" : "sms:false",
-    "rdfs:label" : "genePerturbed",
-    "rdfs:comment" : "The HUGO gene symbol for the gene that is perturbed.",
-    "@type" : "rdfs:Class",
-    "sms:requiresDependency" : [ {
-      "@id" : "bts:genePerturbationType"
-    }, {
-      "@id" : "bts:genePerturbationTechnology"
-    } ],
-    "sms:displayName" : "genePerturbed"
+    "sms:displayName" : "genePerturbed",
+    "sms:required" : "sms:false"
   }, {
     "@id" : "bts:type",
     "@type" : "rdfs:Class",
@@ -3180,6 +3141,32 @@
     } ],
     "sms:displayName" : "dataType"
   }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:timepointUnit",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:seconds"
+    }, {
+      "@id" : "bts:minutes"
+    }, {
+      "@id" : "bts:hours"
+    }, {
+      "@id" : "bts:days"
+    }, {
+      "@id" : "bts:weeks"
+    }, {
+      "@id" : "bts:months"
+    }, {
+      "@id" : "bts:years"
+    } ],
+    "rdfs:label" : "timepointUnit",
+    "rdfs:comment" : "For timed experiments this represents the unit of time measured",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "timepointUnit"
+  }, {
     "@id" : "bts:currentVersion",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "(Versionable entities only) The current version number of the resource.",
@@ -3768,13 +3755,6 @@
     "rdfs:label" : "libraryPrep",
     "rdfs:comment" : "The general strategy by which the library was prepared",
     "@type" : "rdfs:Class",
-    "sms:requiresDependency" : [ {
-      "@id" : "bts:libraryPreparationMethod"
-    }, {
-      "@id" : "bts:nucleicAcidSource"
-    }, {
-      "@id" : "bts:dissociationMethod"
-    } ],
     "sms:displayName" : "libraryPrep"
   }, {
     "rdfs:subClassOf" : [ ],
@@ -3993,31 +3973,16 @@
     "sms:displayName" : "batchID",
     "sms:required" : "sms:false"
   }, {
-    "rdfs:subClassOf" : [ ],
     "@id" : "bts:individualID",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
+    "rdfs:label" : "individualID",
+    "rdfs:subClassOf" : [ ],
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:required" : "sms:true",
-    "rdfs:label" : "individualID",
-    "rdfs:comment" : "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
-    "@type" : "rdfs:Class",
-    "sms:requiresDependency" : [ {
-      "@id" : "bts:sex"
-    }, {
-      "@id" : "bts:age"
-    }, {
-      "@id" : "bts:ageUnit"
-    }, {
-      "@id" : "bts:species"
-    }, {
-      "@id" : "bts:diagnosis"
-    }, {
-      "@id" : "bts:nf1Genotype"
-    }, {
-      "@id" : "bts:nf2Genotype"
-    } ],
-    "sms:displayName" : "individualID"
+    "sms:displayName" : "individualID",
+    "sms:required" : "sms:true"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:failedQC",
@@ -4035,19 +4000,16 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "failedQC"
   }, {
-    "rdfs:subClassOf" : [ ],
     "@id" : "bts:compoundName",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Common name for a compound, e.g. “Selumetinib” (https://pubchem.ncbi.nlm.nih.gov/compound/10127622)",
+    "rdfs:label" : "compoundName",
+    "rdfs:subClassOf" : [ ],
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:required" : "sms:false",
-    "rdfs:label" : "compoundName",
-    "rdfs:comment" : "Common name for a compound, e.g. “Selumetinib” (https://pubchem.ncbi.nlm.nih.gov/compound/10127622)",
-    "@type" : "rdfs:Class",
-    "sms:requiresDependency" : [ {
-      "@id" : "bts:InChIKey"
-    } ],
-    "sms:displayName" : "compoundName"
+    "sms:displayName" : "compoundName",
+    "sms:required" : "sms:false"
   }, {
     "@id" : "bts:isFilteredReads",
     "@type" : "rdfs:Class",
@@ -4251,37 +4213,16 @@
     "sms:displayName" : "modifiedBy",
     "sms:required" : "sms:false"
   }, {
-    "rdfs:subClassOf" : [ ],
     "@id" : "bts:parentSpecimenID",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
+    "rdfs:label" : "parentSpecimenID",
+    "rdfs:subClassOf" : [ ],
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:required" : "sms:false",
-    "rdfs:label" : "parentSpecimenID",
-    "rdfs:comment" : "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
-    "@type" : "rdfs:Class",
-    "sms:requiresDependency" : [ {
-      "@id" : "bts:specimenID"
-    }, {
-      "@id" : "bts:aliquotID"
-    }, {
-      "@id" : "bts:organ"
-    }, {
-      "@id" : "bts:tissue"
-    }, {
-      "@id" : "bts:isCellLine"
-    }, {
-      "@id" : "bts:isPrimaryCell"
-    }, {
-      "@id" : "bts:cellType"
-    }, {
-      "@id" : "bts:tumorType"
-    }, {
-      "@id" : "bts:specimenPreparationMethod"
-    }, {
-      "@id" : "bts:modelSystemName"
-    } ],
-    "sms:displayName" : "parentSpecimenID"
+    "sms:displayName" : "parentSpecimenID",
+    "sms:required" : "sms:false"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:experimentalTimepoint",
@@ -4294,7 +4235,7 @@
     "rdfs:comment" : "The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit",
     "@type" : "rdfs:Class",
     "sms:requiresDependency" : [ {
-      "@id" : "bts:timePointUnit"
+      "@id" : "bts:timepointUnit"
     } ],
     "sms:displayName" : "experimentalTimepoint"
   }, {
@@ -5095,6 +5036,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -5118,6 +5063,8 @@
       "@id" : "bts:nf1Genotype"
     }, {
       "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
     }, {
       "@id" : "bts:parentSpecimenID"
     }, {
@@ -5148,6 +5095,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -5172,22 +5123,26 @@
     }, {
       "@id" : "bts:nf2Genotype"
     }, {
+      "@id" : "bts:modelSystemName"
+    }, {
       "@id" : "bts:experimentalFactor"
     }, {
       "@id" : "bts:experimentalCondition"
     }, {
-      "@id" : "bts:experimentalTimepointUnit"
+      "@id" : "bts:timepointUnit"
     }, {
       "@id" : "bts:compoundName"
     }, {
       "@id" : "bts:compoundDose"
+    }, {
+      "@id" : "bts:compoundDoseUnit"
     }, {
       "@id" : "bts:comments"
     } ],
     "sms:displayName" : "ClinicalAssayTemplate"
   }, {
     "rdfs:subClassOf" : [ {
-      "@id" : "bts:RNASeqTemplate"
+      "@id" : "bts:ScSequencingAssayTemplate"
     } ],
     "@id" : "bts:ScRNASeqTemplate",
     "schema:isPartOf" : {
@@ -5201,6 +5156,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -5225,6 +5184,8 @@
     }, {
       "@id" : "bts:nf2Genotype"
     }, {
+      "@id" : "bts:modelSystemName"
+    }, {
       "@id" : "bts:parentSpecimenID"
     }, {
       "@id" : "bts:specimenID"
@@ -5237,13 +5198,23 @@
     }, {
       "@id" : "bts:nucleicAcidSource"
     }, {
+      "@id" : "bts:specimenPreparationMethod"
+    }, {
+      "@id" : "bts:cellType"
+    }, {
+      "@id" : "bts:isCellLine"
+    }, {
+      "@id" : "bts:cellID"
+    }, {
+      "@id" : "bts:dissociationMethod"
+    }, {
       "@id" : "bts:runType"
+    }, {
+      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:libraryPrep"
     }, {
       "@id" : "bts:libraryPreparationMethod"
-    }, {
-      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:readPair"
     }, {
@@ -5254,12 +5225,6 @@
       "@id" : "bts:targetDepth"
     }, {
       "@id" : "bts:batchID"
-    }, {
-      "@id" : "bts:cellType"
-    }, {
-      "@id" : "bts:cellID"
-    }, {
-      "@id" : "bts:dissociationMethod"
     }, {
       "@id" : "bts:auxiliaryAsset"
     } ],
@@ -5280,6 +5245,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -5303,6 +5272,8 @@
       "@id" : "bts:nf1Genotype"
     }, {
       "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
     }, {
       "@id" : "bts:parentSpecimenID"
     }, {
@@ -5331,6 +5302,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -5355,13 +5330,13 @@
     }, {
       "@id" : "bts:nf2Genotype"
     }, {
+      "@id" : "bts:modelSystemName"
+    }, {
       "@id" : "bts:parentSpecimenID"
     }, {
       "@id" : "bts:specimenID"
     }, {
       "@id" : "bts:aliquotID"
-    }, {
-      "@id" : "bts:modelSystemName"
     }, {
       "@id" : "bts:experimentalFactor"
     }, {
@@ -5369,11 +5344,13 @@
     }, {
       "@id" : "bts:experimentalTimepoint"
     }, {
-      "@id" : "bts:experimentalTimepointUnit"
+      "@id" : "bts:timepointUnit"
     }, {
       "@id" : "bts:compoundName"
     }, {
       "@id" : "bts:compoundDose"
+    }, {
+      "@id" : "bts:compoundDoseUnit"
     }, {
       "@id" : "bts:genePerturbed"
     }, {
@@ -5466,7 +5443,7 @@
     "sms:displayName" : "MaterialScienceAssayTemplate"
   }, {
     "rdfs:subClassOf" : [ {
-      "@id" : "bts:SequencingAssayTemplate"
+      "@id" : "bts:BulkSequencingAssayTemplate"
     } ],
     "@id" : "bts:RNASeqTemplate",
     "schema:isPartOf" : {
@@ -5479,6 +5456,10 @@
     "@type" : "rdfs:Class",
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
+    }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
     }, {
       "@id" : "bts:resourceType"
     }, {
@@ -5504,6 +5485,8 @@
     }, {
       "@id" : "bts:nf2Genotype"
     }, {
+      "@id" : "bts:modelSystemName"
+    }, {
       "@id" : "bts:parentSpecimenID"
     }, {
       "@id" : "bts:specimenID"
@@ -5516,13 +5499,17 @@
     }, {
       "@id" : "bts:nucleicAcidSource"
     }, {
+      "@id" : "bts:specimenPreparationMethod"
+    }, {
+      "@id" : "bts:tissue"
+    }, {
       "@id" : "bts:runType"
+    }, {
+      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:libraryPrep"
     }, {
       "@id" : "bts:libraryPreparationMethod"
-    }, {
-      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:readPair"
     }, {
@@ -5577,6 +5564,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -5600,6 +5591,8 @@
       "@id" : "bts:nf1Genotype"
     }, {
       "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
     }, {
       "@id" : "bts:platform"
     }, {
@@ -5617,10 +5610,14 @@
     "sms:required" : "sms:false",
     "sms:requiresComponent" : "",
     "rdfs:label" : "GenomicsAssayTemplateExtended",
-    "rdfs:comment" : "Genomics assay template but with additional experiment data.\n",
+    "rdfs:comment" : "Genomics assay template but with additional experiment data.",
     "@type" : "rdfs:Class",
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
+    }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
     }, {
       "@id" : "bts:resourceType"
     }, {
@@ -5646,6 +5643,8 @@
     }, {
       "@id" : "bts:nf2Genotype"
     }, {
+      "@id" : "bts:modelSystemName"
+    }, {
       "@id" : "bts:parentSpecimenID"
     }, {
       "@id" : "bts:specimenID"
@@ -5658,13 +5657,17 @@
     }, {
       "@id" : "bts:nucleicAcidSource"
     }, {
+      "@id" : "bts:specimenPreparationMethod"
+    }, {
+      "@id" : "bts:tissue"
+    }, {
       "@id" : "bts:runType"
+    }, {
+      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:libraryPrep"
     }, {
       "@id" : "bts:libraryPreparationMethod"
-    }, {
-      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:readPair"
     }, {
@@ -5680,7 +5683,7 @@
     }, {
       "@id" : "bts:experimentalTimepoint"
     }, {
-      "@id" : "bts:experimentalTimepointUnit"
+      "@id" : "bts:timepointUnit"
     }, {
       "@id" : "bts:genePerturbed"
     }, {
@@ -5707,6 +5710,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -5730,6 +5737,8 @@
       "@id" : "bts:nf1Genotype"
     }, {
       "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
     }, {
       "@id" : "bts:parentSpecimenID"
     }, {
@@ -5760,6 +5769,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -5784,6 +5797,8 @@
     }, {
       "@id" : "bts:nf2Genotype"
     }, {
+      "@id" : "bts:modelSystemName"
+    }, {
       "@id" : "bts:parentSpecimenID"
     }, {
       "@id" : "bts:specimenID"
@@ -5796,13 +5811,17 @@
     }, {
       "@id" : "bts:nucleicAcidSource"
     }, {
+      "@id" : "bts:specimenPreparationMethod"
+    }, {
+      "@id" : "bts:tissue"
+    }, {
       "@id" : "bts:runType"
+    }, {
+      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:libraryPrep"
     }, {
       "@id" : "bts:libraryPreparationMethod"
-    }, {
-      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:readPair"
     }, {
@@ -5820,13 +5839,11 @@
     }, {
       "@id" : "bts:transplantationRecipientTissue"
     }, {
-      "@id" : "bts:modelSystemName"
-    }, {
       "@id" : "bts:experimentalCondition"
     }, {
       "@id" : "bts:experimentalTimepoint"
     }, {
-      "@id" : "bts:experimentalTimepointUnit"
+      "@id" : "bts:timepointUnit"
     } ],
     "sms:displayName" : "PdxGenomicsAssayTemplate"
   }, {
@@ -5886,6 +5903,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -5909,6 +5930,8 @@
       "@id" : "bts:nf1Genotype"
     }, {
       "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
     }, {
       "@id" : "bts:genomicReference"
     }, {
@@ -6005,7 +6028,7 @@
     "sms:displayName" : "PatientTemplate"
   }, {
     "rdfs:subClassOf" : [ {
-      "@id" : "bts:SequencingAssayTemplate"
+      "@id" : "bts:BulkSequencingAssayTemplate"
     } ],
     "@id" : "bts:EpigenomiscAssayTemplate",
     "schema:isPartOf" : {
@@ -6018,6 +6041,10 @@
     "@type" : "rdfs:Class",
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
+    }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
     }, {
       "@id" : "bts:resourceType"
     }, {
@@ -6043,6 +6070,8 @@
     }, {
       "@id" : "bts:nf2Genotype"
     }, {
+      "@id" : "bts:modelSystemName"
+    }, {
       "@id" : "bts:parentSpecimenID"
     }, {
       "@id" : "bts:specimenID"
@@ -6055,13 +6084,17 @@
     }, {
       "@id" : "bts:nucleicAcidSource"
     }, {
+      "@id" : "bts:specimenPreparationMethod"
+    }, {
+      "@id" : "bts:tissue"
+    }, {
       "@id" : "bts:runType"
+    }, {
+      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:libraryPrep"
     }, {
       "@id" : "bts:libraryPreparationMethod"
-    }, {
-      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:readPair"
     }, {
@@ -6092,6 +6125,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -6115,6 +6152,8 @@
       "@id" : "bts:nf1Genotype"
     }, {
       "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
     }, {
       "@id" : "bts:expressionUnit"
     }, {
@@ -6139,6 +6178,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -6163,6 +6206,8 @@
     }, {
       "@id" : "bts:nf2Genotype"
     }, {
+      "@id" : "bts:modelSystemName"
+    }, {
       "@id" : "bts:parentSpecimenID"
     }, {
       "@id" : "bts:specimenID"
@@ -6174,6 +6219,8 @@
       "@id" : "bts:platform"
     }, {
       "@id" : "bts:nucleicAcidSource"
+    }, {
+      "@id" : "bts:specimenPreparationMethod"
     }, {
       "@id" : "bts:channel"
     } ],
@@ -6194,6 +6241,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -6217,6 +6268,8 @@
       "@id" : "bts:nf1Genotype"
     }, {
       "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
     }, {
       "@id" : "bts:parentSpecimenID"
     }, {
@@ -6233,7 +6286,7 @@
     "sms:displayName" : "ProteomicsAssayTemplate"
   }, {
     "rdfs:subClassOf" : [ {
-      "@id" : "bts:SequencingAssayTemplate"
+      "@id" : "bts:BulkSequencingAssayTemplate"
     } ],
     "@id" : "bts:GenomicsAssayTemplate",
     "schema:isPartOf" : {
@@ -6242,10 +6295,14 @@
     "sms:required" : "sms:false",
     "sms:requiresComponent" : "",
     "rdfs:label" : "GenomicsAssayTemplate",
-    "rdfs:comment" : "Alias to SequencingAssayTemplate, use for sequence data on a large scale when there is no template available that is more specific.",
+    "rdfs:comment" : "Alias to BulkSequencingAssayTemplate, use for sequence data on a large scale when there is no template available that is more specific.",
     "@type" : "rdfs:Class",
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
+    }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
     }, {
       "@id" : "bts:resourceType"
     }, {
@@ -6271,6 +6328,8 @@
     }, {
       "@id" : "bts:nf2Genotype"
     }, {
+      "@id" : "bts:modelSystemName"
+    }, {
       "@id" : "bts:parentSpecimenID"
     }, {
       "@id" : "bts:specimenID"
@@ -6283,13 +6342,17 @@
     }, {
       "@id" : "bts:nucleicAcidSource"
     }, {
+      "@id" : "bts:specimenPreparationMethod"
+    }, {
+      "@id" : "bts:tissue"
+    }, {
       "@id" : "bts:runType"
+    }, {
+      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:libraryPrep"
     }, {
       "@id" : "bts:libraryPreparationMethod"
-    }, {
-      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:readPair"
     }, {
@@ -6318,6 +6381,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -6341,79 +6408,10 @@
       "@id" : "bts:nf1Genotype"
     }, {
       "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
     } ],
     "sms:displayName" : "BiologicalAssayDataTemplate"
-  }, {
-    "rdfs:subClassOf" : [ {
-      "@id" : "bts:GeneticsAssayTemplate"
-    } ],
-    "@id" : "bts:SequencingAssayTemplate",
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:required" : "sms:false",
-    "sms:requiresComponent" : "",
-    "rdfs:label" : "SequencingAssayTemplate",
-    "rdfs:comment" : "General template for raw RNA/DNA data, i.e. sequence data from a sequencing assay.",
-    "@type" : "rdfs:Class",
-    "sms:requiresDependency" : [ {
-      "@id" : "bts:Component"
-    }, {
-      "@id" : "bts:resourceType"
-    }, {
-      "@id" : "bts:dataType"
-    }, {
-      "@id" : "bts:dataSubtype"
-    }, {
-      "@id" : "bts:assay"
-    }, {
-      "@id" : "bts:individualID"
-    }, {
-      "@id" : "bts:species"
-    }, {
-      "@id" : "bts:sex"
-    }, {
-      "@id" : "bts:age"
-    }, {
-      "@id" : "bts:ageUnit"
-    }, {
-      "@id" : "bts:diagnosis"
-    }, {
-      "@id" : "bts:nf1Genotype"
-    }, {
-      "@id" : "bts:nf2Genotype"
-    }, {
-      "@id" : "bts:parentSpecimenID"
-    }, {
-      "@id" : "bts:specimenID"
-    }, {
-      "@id" : "bts:aliquotID"
-    }, {
-      "@id" : "bts:tumorType"
-    }, {
-      "@id" : "bts:platform"
-    }, {
-      "@id" : "bts:nucleicAcidSource"
-    }, {
-      "@id" : "bts:runType"
-    }, {
-      "@id" : "bts:libraryPrep"
-    }, {
-      "@id" : "bts:libraryPreparationMethod"
-    }, {
-      "@id" : "bts:libraryStrand"
-    }, {
-      "@id" : "bts:readPair"
-    }, {
-      "@id" : "bts:readLength"
-    }, {
-      "@id" : "bts:readDepth"
-    }, {
-      "@id" : "bts:targetDepth"
-    }, {
-      "@id" : "bts:batchID"
-    } ],
-    "sms:displayName" : "SequencingAssayTemplate"
   }, {
     "rdfs:subClassOf" : [ {
       "@id" : "bts:BiologicalAssayDataTemplate"
@@ -6430,6 +6428,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -6454,6 +6456,8 @@
     }, {
       "@id" : "bts:nf2Genotype"
     }, {
+      "@id" : "bts:modelSystemName"
+    }, {
       "@id" : "bts:parentSpecimenID"
     }, {
       "@id" : "bts:specimenID"
@@ -6465,11 +6469,13 @@
       "@id" : "bts:platform"
     }, {
       "@id" : "bts:nucleicAcidSource"
+    }, {
+      "@id" : "bts:specimenPreparationMethod"
     } ],
     "sms:displayName" : "GeneticsAssayTemplate"
   }, {
     "rdfs:subClassOf" : [ {
-      "@id" : "bts:SequencingAssayTemplate"
+      "@id" : "bts:BulkSequencingAssayTemplate"
     } ],
     "@id" : "bts:WGSTemplate",
     "schema:isPartOf" : {
@@ -6483,6 +6489,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -6507,6 +6517,8 @@
     }, {
       "@id" : "bts:nf2Genotype"
     }, {
+      "@id" : "bts:modelSystemName"
+    }, {
       "@id" : "bts:parentSpecimenID"
     }, {
       "@id" : "bts:specimenID"
@@ -6519,13 +6531,17 @@
     }, {
       "@id" : "bts:nucleicAcidSource"
     }, {
+      "@id" : "bts:specimenPreparationMethod"
+    }, {
+      "@id" : "bts:tissue"
+    }, {
       "@id" : "bts:runType"
+    }, {
+      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:libraryPrep"
     }, {
       "@id" : "bts:libraryPreparationMethod"
-    }, {
-      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:readPair"
     }, {
@@ -6538,6 +6554,95 @@
       "@id" : "bts:batchID"
     } ],
     "sms:displayName" : "WGSTemplate"
+  }, {
+    "rdfs:subClassOf" : [ {
+      "@id" : "bts:GeneticsAssayTemplate"
+    } ],
+    "@id" : "bts:ScSequencingAssayTemplate",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "sms:requiresComponent" : "",
+    "rdfs:label" : "ScSequencingAssayTemplate",
+    "rdfs:comment" : "General template for raw RNA/DNA data, i.e. sequence data from a sequencing assay.",
+    "@type" : "rdfs:Class",
+    "sms:requiresDependency" : [ {
+      "@id" : "bts:Component"
+    }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
+      "@id" : "bts:resourceType"
+    }, {
+      "@id" : "bts:dataType"
+    }, {
+      "@id" : "bts:dataSubtype"
+    }, {
+      "@id" : "bts:assay"
+    }, {
+      "@id" : "bts:individualID"
+    }, {
+      "@id" : "bts:species"
+    }, {
+      "@id" : "bts:sex"
+    }, {
+      "@id" : "bts:age"
+    }, {
+      "@id" : "bts:ageUnit"
+    }, {
+      "@id" : "bts:diagnosis"
+    }, {
+      "@id" : "bts:nf1Genotype"
+    }, {
+      "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
+    }, {
+      "@id" : "bts:parentSpecimenID"
+    }, {
+      "@id" : "bts:specimenID"
+    }, {
+      "@id" : "bts:aliquotID"
+    }, {
+      "@id" : "bts:tumorType"
+    }, {
+      "@id" : "bts:platform"
+    }, {
+      "@id" : "bts:nucleicAcidSource"
+    }, {
+      "@id" : "bts:specimenPreparationMethod"
+    }, {
+      "@id" : "bts:cellType"
+    }, {
+      "@id" : "bts:isCellLine"
+    }, {
+      "@id" : "bts:cellID"
+    }, {
+      "@id" : "bts:dissociationMethod"
+    }, {
+      "@id" : "bts:runType"
+    }, {
+      "@id" : "bts:libraryStrand"
+    }, {
+      "@id" : "bts:libraryPrep"
+    }, {
+      "@id" : "bts:libraryPreparationMethod"
+    }, {
+      "@id" : "bts:readPair"
+    }, {
+      "@id" : "bts:readLength"
+    }, {
+      "@id" : "bts:readDepth"
+    }, {
+      "@id" : "bts:targetDepth"
+    }, {
+      "@id" : "bts:batchID"
+    }, {
+      "@id" : "bts:auxiliaryAsset"
+    } ],
+    "sms:displayName" : "ScSequencingAssayTemplate"
   }, {
     "rdfs:subClassOf" : [ {
       "@id" : "bts:PartialTemplate"
@@ -6563,17 +6668,21 @@
     "rdfs:subClassOf" : [ {
       "@id" : "bts:BiologicalAssayDataTemplate"
     } ],
-    "@id" : "bts:ElectrophysiologyAssayTemplate",
+    "@id" : "bts:PharmacokineticsAssayTemplate",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
     "sms:required" : "sms:false",
-    "sms:requiresComponent" : null,
-    "rdfs:label" : "ElectrophysiologyAssayTemplate",
-    "rdfs:comment" : "Template for raw electrophysiology data (electrical recordings).",
+    "sms:requiresComponent" : "",
+    "rdfs:label" : "PharmacokineticsAssayTemplate",
+    "rdfs:comment" : "Generic template for describing data from a pharmacokinetics assay.",
     "@type" : "rdfs:Class",
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
+    }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
     }, {
       "@id" : "bts:resourceType"
     }, {
@@ -6599,6 +6708,156 @@
     }, {
       "@id" : "bts:nf2Genotype"
     }, {
+      "@id" : "bts:modelSystemName"
+    }, {
+      "@id" : "bts:parentSpecimenID"
+    }, {
+      "@id" : "bts:specimenID"
+    }, {
+      "@id" : "bts:aliquotID"
+    }, {
+      "@id" : "bts:platform"
+    }, {
+      "@id" : "bts:compoundName"
+    }, {
+      "@id" : "bts:compoundDose"
+    }, {
+      "@id" : "bts:compoundDoseUnit"
+    }, {
+      "@id" : "bts:experimentalCondition"
+    }, {
+      "@id" : "bts:experimentalTimepoint"
+    }, {
+      "@id" : "bts:timepointUnit"
+    } ],
+    "sms:displayName" : "PharmacokineticsAssayTemplate"
+  }, {
+    "rdfs:subClassOf" : [ {
+      "@id" : "bts:GeneticsAssayTemplate"
+    } ],
+    "@id" : "bts:BulkSequencingAssayTemplate",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "sms:requiresComponent" : "",
+    "rdfs:label" : "BulkSequencingAssayTemplate",
+    "rdfs:comment" : "General template for raw RNA/DNA data, i.e. sequence data from a sequencing assay.",
+    "@type" : "rdfs:Class",
+    "sms:requiresDependency" : [ {
+      "@id" : "bts:Component"
+    }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
+      "@id" : "bts:resourceType"
+    }, {
+      "@id" : "bts:dataType"
+    }, {
+      "@id" : "bts:dataSubtype"
+    }, {
+      "@id" : "bts:assay"
+    }, {
+      "@id" : "bts:individualID"
+    }, {
+      "@id" : "bts:species"
+    }, {
+      "@id" : "bts:sex"
+    }, {
+      "@id" : "bts:age"
+    }, {
+      "@id" : "bts:ageUnit"
+    }, {
+      "@id" : "bts:diagnosis"
+    }, {
+      "@id" : "bts:nf1Genotype"
+    }, {
+      "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
+    }, {
+      "@id" : "bts:parentSpecimenID"
+    }, {
+      "@id" : "bts:specimenID"
+    }, {
+      "@id" : "bts:aliquotID"
+    }, {
+      "@id" : "bts:tumorType"
+    }, {
+      "@id" : "bts:platform"
+    }, {
+      "@id" : "bts:nucleicAcidSource"
+    }, {
+      "@id" : "bts:specimenPreparationMethod"
+    }, {
+      "@id" : "bts:tissue"
+    }, {
+      "@id" : "bts:runType"
+    }, {
+      "@id" : "bts:libraryStrand"
+    }, {
+      "@id" : "bts:libraryPrep"
+    }, {
+      "@id" : "bts:libraryPreparationMethod"
+    }, {
+      "@id" : "bts:readPair"
+    }, {
+      "@id" : "bts:readLength"
+    }, {
+      "@id" : "bts:readDepth"
+    }, {
+      "@id" : "bts:targetDepth"
+    }, {
+      "@id" : "bts:batchID"
+    } ],
+    "sms:displayName" : "BulkSequencingAssayTemplate"
+  }, {
+    "rdfs:subClassOf" : [ {
+      "@id" : "bts:BiologicalAssayDataTemplate"
+    } ],
+    "@id" : "bts:ElectrophysiologyAssayTemplate",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "sms:requiresComponent" : null,
+    "rdfs:label" : "ElectrophysiologyAssayTemplate",
+    "rdfs:comment" : "Template for raw electrophysiology data (electrical recordings).",
+    "@type" : "rdfs:Class",
+    "sms:requiresDependency" : [ {
+      "@id" : "bts:Component"
+    }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
+      "@id" : "bts:resourceType"
+    }, {
+      "@id" : "bts:dataType"
+    }, {
+      "@id" : "bts:dataSubtype"
+    }, {
+      "@id" : "bts:assay"
+    }, {
+      "@id" : "bts:individualID"
+    }, {
+      "@id" : "bts:species"
+    }, {
+      "@id" : "bts:sex"
+    }, {
+      "@id" : "bts:age"
+    }, {
+      "@id" : "bts:ageUnit"
+    }, {
+      "@id" : "bts:diagnosis"
+    }, {
+      "@id" : "bts:nf1Genotype"
+    }, {
+      "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
+    }, {
       "@id" : "bts:platform"
     }, {
       "@id" : "bts:bodySite"
@@ -6609,7 +6868,7 @@
     }, {
       "@id" : "bts:experimentalTimepoint"
     }, {
-      "@id" : "bts:experimentalTimepointUnit"
+      "@id" : "bts:timepointUnit"
     }, {
       "@id" : "bts:experimentalCondition"
     }, {
@@ -6632,6 +6891,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -6655,6 +6918,8 @@
       "@id" : "bts:nf1Genotype"
     }, {
       "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
     }, {
       "@id" : "bts:platform"
     }, {
@@ -6695,6 +6960,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -6718,6 +6987,8 @@
       "@id" : "bts:nf1Genotype"
     }, {
       "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
     }, {
       "@id" : "bts:platform"
     }, {
@@ -6846,6 +7117,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -6870,6 +7145,8 @@
     }, {
       "@id" : "bts:nf2Genotype"
     }, {
+      "@id" : "bts:modelSystemName"
+    }, {
       "@id" : "bts:parentSpecimenID"
     }, {
       "@id" : "bts:specimenID"
@@ -6884,11 +7161,13 @@
     }, {
       "@id" : "bts:compoundDose"
     }, {
+      "@id" : "bts:compoundDoseUnit"
+    }, {
       "@id" : "bts:experimentalCondition"
     }, {
       "@id" : "bts:experimentalTimepoint"
     }, {
-      "@id" : "bts:experimentalTimepointUnit"
+      "@id" : "bts:timepointUnit"
     }, {
       "@id" : "bts:reporterGene"
     }, {
@@ -6911,6 +7190,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -6934,6 +7217,8 @@
       "@id" : "bts:nf1Genotype"
     }, {
       "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
     }, {
       "@id" : "bts:platform"
     }, {
@@ -6947,12 +7232,12 @@
     }, {
       "@id" : "bts:experimentalTimepoint"
     }, {
-      "@id" : "bts:experimentalTimepointUnit"
+      "@id" : "bts:timepointUnit"
     } ],
     "sms:displayName" : "MRIAssayTemplate"
   }, {
     "rdfs:subClassOf" : [ {
-      "@id" : "bts:BiologicalAssayDataTemplate"
+      "@id" : "bts:BulkSequencingAssayTemplate"
     } ],
     "@id" : "bts:WESTemplate",
     "schema:isPartOf" : {
@@ -6965,6 +7250,10 @@
     "@type" : "rdfs:Class",
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
+    }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
     }, {
       "@id" : "bts:resourceType"
     }, {
@@ -6989,6 +7278,42 @@
       "@id" : "bts:nf1Genotype"
     }, {
       "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
+    }, {
+      "@id" : "bts:parentSpecimenID"
+    }, {
+      "@id" : "bts:specimenID"
+    }, {
+      "@id" : "bts:aliquotID"
+    }, {
+      "@id" : "bts:tumorType"
+    }, {
+      "@id" : "bts:platform"
+    }, {
+      "@id" : "bts:nucleicAcidSource"
+    }, {
+      "@id" : "bts:specimenPreparationMethod"
+    }, {
+      "@id" : "bts:tissue"
+    }, {
+      "@id" : "bts:runType"
+    }, {
+      "@id" : "bts:libraryStrand"
+    }, {
+      "@id" : "bts:libraryPrep"
+    }, {
+      "@id" : "bts:libraryPreparationMethod"
+    }, {
+      "@id" : "bts:readPair"
+    }, {
+      "@id" : "bts:readLength"
+    }, {
+      "@id" : "bts:readDepth"
+    }, {
+      "@id" : "bts:targetDepth"
+    }, {
+      "@id" : "bts:batchID"
     }, {
       "@id" : "bts:targetCaptureKitID"
     } ],
@@ -7038,6 +7363,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -7062,6 +7391,8 @@
     }, {
       "@id" : "bts:nf2Genotype"
     }, {
+      "@id" : "bts:modelSystemName"
+    }, {
       "@id" : "bts:parentSpecimenID"
     }, {
       "@id" : "bts:specimenID"
@@ -7074,13 +7405,17 @@
     }, {
       "@id" : "bts:nucleicAcidSource"
     }, {
+      "@id" : "bts:specimenPreparationMethod"
+    }, {
+      "@id" : "bts:tissue"
+    }, {
       "@id" : "bts:runType"
+    }, {
+      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:libraryPrep"
     }, {
       "@id" : "bts:libraryPreparationMethod"
-    }, {
-      "@id" : "bts:libraryStrand"
     }, {
       "@id" : "bts:readPair"
     }, {
@@ -7111,6 +7446,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -7134,6 +7473,8 @@
       "@id" : "bts:nf1Genotype"
     }, {
       "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
     }, {
       "@id" : "bts:isFilteredReads"
     }, {
@@ -7185,6 +7526,10 @@
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
     }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
       "@id" : "bts:resourceType"
     }, {
       "@id" : "bts:dataType"
@@ -7208,6 +7553,8 @@
       "@id" : "bts:nf1Genotype"
     }, {
       "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:modelSystemName"
     }, {
       "@id" : "bts:platform"
     }, {
