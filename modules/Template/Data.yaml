@@ -21,8 +21,14 @@ classes:
     - dataType
     - dataSubtype
     - assay # platform added at a later level, see https://github.com/nf-osi/nf-metadata-dictionary/issues/319
-    - species
     - individualID # specimenID, aliquotID etc. are added at a later level since they don't make sense for some assay types such as behavioral assays
+    - species # one day will these will be submitted separately
+    - sex
+    - age
+    - ageUnit
+    - diagnosis
+    - nf1Genotype
+    - nf2Genotype
 
   NonBiologicalAssayDataTemplate:
     is_a: Template
@@ -53,7 +59,8 @@ classes:
     slots:
     - parentSpecimenID
     - specimenID 
-    - aliquotID 
+    - aliquotID
+    - tumorType 
     - platform
     - nucleicAcidSource
     annotations:
@@ -133,6 +140,7 @@ classes:
     is_a: RNASeqTemplate
     description: Template for describing raw data from single-cell RNA-seq.
     slots:
+    - cellType
     - cellID
     - dissociationMethod
     - auxiliaryAsset
@@ -576,7 +584,9 @@ classes:
     is_a: BiologicalAssayDataTemplate
     description: Generic template for describing data from a plate-based reporter assay.
     slots:
+    - parentSpecimenID
     - specimenID
+    - aliquotID
     - platform
     - assayTarget
     - compoundName
@@ -595,6 +605,7 @@ classes:
         - 2D AlamarBlue fluorescence
         - 2D Incucyte
         - ELISA
+        - sandwich ELISA
 
   FlowCytometryTemplate:
     is_a: BiologicalAssayDataTemplate
@@ -658,7 +669,7 @@ classes:
     slots:
     - platform
     - bodySite # applies for electrophysiology at the body level
-    - cellType # applies for electrophysiology at the cell-level, e.g. whole-cell patch clamp
+    - cellType # applies for electrophysiology at the cell level, e.g. whole-cell patch clamp
     - recordingSource
     - experimentalTimepoint
     - experimentalTimepointUnit
