@@ -3,8 +3,6 @@ slots:
     description: Type of metadata template; provide the same one for all items/rows.
     required: true
   Filename:
-    annotations:
-      requiresDependency: fileFormat
     description: The name of the file.
     required: false
   InChIKey:
@@ -110,8 +108,6 @@ slots:
     description: A unit associated with the value(s) in compoundDose.
     required: false
   compoundName:
-    annotations:
-      requiresDependency: InChIKey
     description: Common name for a compound, e.g. “Selumetinib” (https://pubchem.ncbi.nlm.nih.gov/compound/10127622)
     required: false
   concentrationMaterial:
@@ -249,7 +245,7 @@ slots:
     range: Measurement
   experimentalTimepoint:
     annotations:
-      requiresDependency: timePointUnit
+      requiresDependency: timepointUnit
       validationRules: num
     description: The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit
     required: false
@@ -290,8 +286,6 @@ slots:
     range: GenePerturbationType
     required: false
   genePerturbed:
-    annotations:
-      requiresDependency: genePerturbationType,genePerturbationTechnology
     description: The HUGO gene symbol for the gene that is perturbed.
     required: false
   genePerturbationTechnology:
@@ -315,8 +309,6 @@ slots:
     - other
     required: false
   individualID:
-    annotations:
-      requiresDependency: sex,age,ageUnit,species,diagnosis,nf1Genotype,nf2Genotype
     description: A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.
     required: true
   individualIdSource:
@@ -372,8 +364,6 @@ slots:
     description: ""
     required: false
   libraryPrep:
-    annotations:
-      requiresDependency: libraryPreparationMethod,nucleicAcidSource,dissociationMethod
     description: The general strategy by which the library was prepared
     range: LibraryPrepEnum
     required: false
@@ -389,7 +379,7 @@ slots:
     any_of:
       - range: StrandednessEnum
       - range: NotApplicableEnum
-    required: true
+    required: false
   license:
     description: Link to a license or name of license applicable for the resource.
     required: false
@@ -472,8 +462,6 @@ slots:
     description: 'The id of the parent resource, i.e. the parent folder on the platform. '
     required: false
   parentSpecimenID:
-    annotations:
-      requiresDependency: specimenID,aliquotID,organ,tissue,isCellLine,isPrimaryCell,cellType,tumorType,specimenPreparationMethod,modelSystemName
     description: |
       A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.
     required: false
@@ -598,7 +586,7 @@ slots:
   runType:
     description: Sequencing run type.
     notes:
-    - Includes some of same information as concept `library layout` in other models
+    - Includes some of same information as concept `library layout` and has been removed in favor of libraryStrand
     range: RunTypeEnum
     required: false
   runtimePlatform:
@@ -668,7 +656,7 @@ slots:
   targetDepth:
     description: The targeted read depth prior to sequencing.
     required: false
-  timePointUnit:
+  timepointUnit:
     description: For timed experiments this represents the unit of time measured
     range: TimeUnit
     required: false
@@ -696,8 +684,6 @@ slots:
     range: Tissue
     required: false
   transplantationType:
-    annotations:
-      requiresDependency: transplantationRecipientSpecies,transplantationRecipientTissue
     description: Type of transplantation involved in the experiment, derived from MESH
     range: TransplantationType
     required: false

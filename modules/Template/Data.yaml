@@ -17,6 +17,8 @@ classes:
       This is an abstract template; "real" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing, raw vs processed).
     slots:
     - Component
+    - Filename
+    - fileFormat
     - resourceType # should be constrained to data resource types but we can't do this yet
     - dataType
     - dataSubtype
@@ -29,6 +31,7 @@ classes:
     - diagnosis
     - nf1Genotype
     - nf2Genotype
+    - modelSystemName
 
   NonBiologicalAssayDataTemplate:
     is_a: Template
@@ -63,19 +66,21 @@ classes:
     - tumorType 
     - platform
     - nucleicAcidSource
+    - specimenPreparationMethod
     annotations:
       requiresComponent: ''
       required: false
 
 
-  SequencingAssayTemplate:
+  BulkSequencingAssayTemplate:
     is_a: GeneticsAssayTemplate
     description: General template for raw RNA/DNA data, i.e. sequence data from a sequencing assay.
     slots:
+    - tissue
     - runType
+    - libraryStrand
     - libraryPrep
     - libraryPreparationMethod
-    - libraryStrand
     - readPair
     - readLength
     - readDepth
@@ -94,11 +99,43 @@ classes:
         - scCGI-seq
         - Sanger sequencing
         - T cell receptor repertoire sequencing
+
+  ScSequencingAssayTemplate:
+    is_a: GeneticsAssayTemplate
+    description: General template for raw RNA/DNA data, i.e. sequence data from a sequencing assay.
+    slots:
+    - cellType
+    - isCellLine
+    - cellID
+    - dissociationMethod
+    - runType
+    - libraryStrand
+    - libraryPrep
+    - libraryPreparationMethod
+    - readPair
+    - readLength
+    - readDepth
+    - targetDepth
+    - batchID
+    - auxiliaryAsset
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - ISO-seq
+        - miRNA-seq
+        - NOMe-seq
+        - next-generation sequencing
+        - ribo-seq
+        - scCGI-seq
+        - Sanger sequencing
+        - T cell receptor repertoire sequencing
         
 
   GenomicsAssayTemplate:
-    is_a: SequencingAssayTemplate
-    description: Alias to SequencingAssayTemplate, use for sequence data on a large scale when there is no template available that is more specific.
+    is_a: BulkSequencingAssayTemplate
+    description: Alias to BulkSequencingAssayTemplate, use for sequence data on a large scale when there is no template available that is more specific.
     notes:
     - It's possible that not all raw genomics data equates to sequencing output. 
     slots:
@@ -109,12 +146,11 @@ classes:
 
   GenomicsAssayTemplateExtended:
     is_a: GenomicsAssayTemplate
-    description: >
-      Genomics assay template but with additional experiment data.
+    description: Genomics assay template but with additional experiment data.
     slots:
     - experimentalCondition
     - experimentalTimepoint
-    - experimentalTimepointUnit
+    - timepointUnit
     - genePerturbed
     - genePerturbationTechnology
     - genePerturbationType
@@ -124,7 +160,7 @@ classes:
       required: false
   
   RNASeqTemplate:
-    is_a: SequencingAssayTemplate
+    is_a: BulkSequencingAssayTemplate
     description: Template for describing raw data from (bulk) RNA-sequencing
     slots:
     annotations:
@@ -140,13 +176,9 @@ classes:
     - htan:BulkRNA-seqLevel1
 
   ScRNASeqTemplate:
-    is_a: RNASeqTemplate
+    is_a: ScSequencingAssayTemplate
     description: Template for describing raw data from single-cell RNA-seq.
     slots:
-    - cellType
-    - cellID
-    - dissociationMethod
-    - auxiliaryAsset
     annotations:
       requiresComponent: ''
       required: false
@@ -166,13 +198,13 @@ classes:
     - modelSystemName
     - experimentalCondition
     - experimentalTimepoint
-    - experimentalTimepointUnit
+    - timepointUnit
     annotations:
       requiresComponent: ''
       required: false
   
   WGSTemplate:
-    is_a: SequencingAssayTemplate
+    is_a: BulkSequencingAssayTemplate
     description: Template for describing raw data from Whole Genome Sequencing (WGS)
     slots:
     annotations:
@@ -185,7 +217,7 @@ classes:
         - SequenceReads
   
   WESTemplate:
-    is_a: BiologicalAssayDataTemplate
+    is_a: BulkSequencingAssayTemplate
     description: Template for describing raw data from Whole Exome Sequencing (WES/WXS)
     slots:
     - targetCaptureKitID
@@ -201,7 +233,7 @@ classes:
     - htan:BulkWESLevel1
 
   EpigenomiscAssayTemplate:
-    is_a: SequencingAssayTemplate
+    is_a: BulkSequencingAssayTemplate
     description: Template for describing raw data from epigenetics sequencing assays such as bisulfite sequencing. 
     slots:
     - bisulfiteConversionKitID
@@ -457,7 +489,7 @@ classes:
     - MRISequence
     - experimentalCondition
     - experimentalTimepoint
-    - experimentalTimepointUnit
+    - timepointUnit
     annotations:
       requiresComponent: ''
       required: false
@@ -519,9 +551,10 @@ classes:
     slots:
     - experimentalFactor
     - experimentalCondition
-    - experimentalTimepointUnit
+    - timepointUnit
     - compoundName
     - compoundDose
+    - compoundDoseUnit
     - comments
     annotations:
       requiresComponent: ''
@@ -556,9 +589,10 @@ classes:
     - experimentalFactor
     - experimentalCondition
     - experimentalTimepoint
-    - experimentalTimepointUnit
+    - timepointUnit
     - compoundName
     - compoundDose
+    - compoundDoseUnit
     - genePerturbed
     - genePerturbationType
     - genePerturbationTechnology
@@ -582,6 +616,30 @@ classes:
         - in vivo tumor growth
         - Matrigel-based tumorigenesis assay
 
+  PharmacokineticsAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Generic template for describing data from a pharmacokinetics assay. 
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - platform
+    - compoundName
+    - compoundDose
+    - compoundDoseUnit
+    - experimentalCondition
+    - experimentalTimepoint
+    - timepointUnit
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - 2D AlamarBlue absorbance
+        - 2D AlamarBlue fluorescence
+        - 2D Incucyte
+        - ELISA
+        - sandwich ELISA
 
   PlateBasedReporterAssayTemplate:
     is_a: BiologicalAssayDataTemplate
@@ -594,9 +652,10 @@ classes:
     - assayTarget
     - compoundName
     - compoundDose
+    - compoundDoseUnit
     - experimentalCondition
     - experimentalTimepoint
-    - experimentalTimepointUnit
+    - timepointUnit
     - reporterGene
     - reporterSubstance
     annotations:
@@ -675,7 +734,7 @@ classes:
     - cellType # applies for electrophysiology at the cell level, e.g. whole-cell patch clamp
     - recordingSource
     - experimentalTimepoint
-    - experimentalTimepointUnit
+    - timepointUnit
     - experimentalCondition
     - auxiliaryAsset
     match:
