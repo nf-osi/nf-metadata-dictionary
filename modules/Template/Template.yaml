@@ -1,0 +1,796 @@
+# Important editor notes
+# - Here [mappings](https://linkml.io/linkml/schemas/uris-and-mappings.html#mappings) indicate closely related templates in other data models
+# - Here `extensions.suggests` are used to track the relationship between templates and their intended application to assay data types
+# - `abstract` means the template is not meant to be used for annotation, it's just there for others to inherit props from
+
+classes:
+
+  Template:
+    abstract: true
+    description: A collection of fields representing some entity.
+    comments: 
+    - Also called a manifest depending on context.
+
+
+  PartialTemplate:
+    abstract: true
+    description: A template for collecting a subset of contextual data; not intended to be a standalone template but rather a subdocument. 
+
+############################################################
+# Assay Data / Sequencing             
+############################################################
+
+  BiologicalAssayDataTemplate:
+    is_a: Template
+    abstract: true
+    description: >
+      A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. 
+      This is an abstract template; "real" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing, raw vs processed).
+    slots:
+    - Component
+    - resourceType # should be constrained to data resource types but we can't do this yet
+    - dataType
+    - dataSubtype
+    - assay # platform added at a later level, see https://github.com/nf-osi/nf-metadata-dictionary/issues/319
+    - species
+    - individualID # specimenID, aliquotID etc. are added at a later level since they don't make sense for some assay types such as behavioral assays
+
+  NonBiologicalAssayDataTemplate:
+    is_a: Template
+    abstract: true
+    description: >
+      A template for describing deposited data artifacts (i.e. files) from an experimental assay that main involves non-biological samples.   
+    slots:
+    - Component
+    - resourceType
+    - dataType
+    - dataSubtype
+    - assay
+  
+  #####################################################
+  # Biological Assay Data / Sequencing / Raw            
+  #####################################################
+
+  GenomicsAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: > 
+      Template for raw data on an organism's genome. Genomics assays can provide data limited to specific regions or for the full genome.
+      They can be divided into sequencing-based vs. non-sequencing based (e.g. microarrays, optical genome mapping). 
+      Nowadays the genomics assay is synonymous with something sequencing-based, this should be kept conceptually open.
+    abstract: true
+    notes:
+    - This has been made abstract. It will allow generous validation, but it shouldn't be used for validation in most cases; real validation should use the most correct and specific template. 
+    - http://purl.obolibrary.org/obo/GECKO_0000032
+    slots:
+    - parentSpecimenID
+    - specimenID 
+    - aliquotID 
+    - platform
+    - nucleicAcidSource
+    annotations:
+      requiresComponent: ''
+      required: false
+
+  GenomicsArrayTemplate:
+    is_a: GenomicsAssayTemplate
+    description: A template for describing raw data from array-based genomics, e.g. CEL files. 
+    notes:
+    - WIP prototype. Do not add to staging yet.
+    slots:
+    - channel
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay: 
+        - microarray
+        - miRNA array
+        - RNA array
+        - SNP array
+  
+  SequencingAssayTemplate:
+    is_a: GenomicsAssayTemplate
+    description: A catch-all template for describing raw data from a sequencing assay. If a more specific template exists, that should be used.
+    slots:
+    - dissociationMethod
+    - runType
+    - libraryPrep
+    - libraryPreparationMethod
+    - libraryStrand
+    - readPair
+    - readLength
+    - readDepth
+    - targetDepth
+    - batchID
+    annotations:
+      match:
+        assay:
+        - ISO-seq
+        - miRNA-seq
+        - NOMe-seq
+        - ribo-seq
+        - scCGI-seq
+        - T cell receptor repertoire sequencing
+        dataType:
+        - SequenceReads
+
+  SequencingAssayTemplateExtended:
+    is_a: SequencingAssayTemplate
+    description: >
+      Genomics assay template but with experiment data for gene perturbation parameters, experimental conditions and time points.
+    slots:
+    - transplantationType
+    - transplantationRecipientSpecies
+    - transplantationRecipientTissue
+    - experimentalCondition
+    - experimentalTimepoint
+    - genePerturbed
+    - genePerturbationTechnology
+    - genePerturbationType
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - RNA-seq
+        - lncRNA-seq
+        dataType:
+        - SequenceReads
+  
+  RNASeqTemplate:
+    is_a: SequencingAssayTemplate
+    description: Template for describing raw data from (bulk) RNA-sequencing
+    slots:
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - RNA-seq
+        - lncRNA-seq
+        dataType:
+        - SequenceReads
+    close_mappings:
+    - htan:BulkRNA-seqLevel1
+
+  ScRNASeqTemplate:
+    is_a: RNASeqTemplate
+    description: Template for describing raw data from single-cell RNA-seq.
+    slots:
+    - cellID
+    - auxiliaryAsset
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - single-cell RNA-seq
+        dataType:
+        - SequenceReads
+
+  SpatialTranscriptomicsRNASeqTemplate:
+    is_a: RNASeqTemplate
+    description: Template for RNA-seq with additional metadata collecction for 10x Visium spatial transcriptomics.
+    notes:
+    - WIP prototype. Do not add to staging yet.
+    slots:
+    - captureArea
+    - slideID
+    - slideVersion
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - spatial transcriptomics
+        - RNA-seq
+    close_mappings:
+    - htan:10xVisiumSpatialTranscriptomics-RNA-seqLevel1
+  
+  PdxSequencingAssayTemplate:
+    is_a: SequencingAssayTemplate
+    description: Template for describing describing raw sequencing data from PDX experiment.
+    slots:
+    - transplantationType
+    - transplantationRecipientSpecies
+    - transplantationRecipientTissue
+    - modelSystemName
+    - experimentalCondition
+    - experimentalTimepoint
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  WGSTemplate:
+    is_a: SequencingAssayTemplate
+    description: Template for describing raw data from Whole Genome Sequencing (WGS)
+    slots:
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - whole genome sequencing
+        dataType:
+        - SequenceReads
+  
+  WESTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Template for describing raw data from Whole Exome Sequencing (WES/WXS)
+    slots:
+    - targetCaptureKitID
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - whole exome sequencing
+        dataType:
+        - SequenceReads
+    close_mappings:
+    - htan:BulkWESLevel1
+
+  EpigenomicsSequencingAssayTemplate:
+    is_a: SequencingAssayTemplate
+    description: Template for describing raw data from epigenetics sequencing assays such as bisulfite sequencing. 
+    slots:
+    - bisulfiteConversionKitID
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - ATAC-seq
+        - bisulfite sequencing
+        - CAPP-seq
+        - CUT&RUN
+        - ChIP-seq
+        - ERR bisulfite sequencing
+        - HI-C
+        - NOMe-seq
+        - oxBS-seq
+    close_mappings:
+    - htan:BulkMethylation-seqLevel1
+
+  MethylationArrayTemplate:
+    is_a: GenomicsAssayTemplate
+    description: Template for describing raw data from methylation array.
+    notes:
+    - WIP prototype. Do not add to staging yet.
+    slots:
+    - channel
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay: methylation array
+  
+
+  #########################################################
+  # Biological Assay Data  / Sequencing / Processed            
+  #########################################################
+  
+  ProcessedAlignedReadsTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: >
+      Template for describing aligned reads output data (i.e. BAM files).
+      The QC meta are extracted from samtools stats when available and are aligned with GDC. 
+    slots:
+    - genomicReference
+    - averageInsertSize
+    - averageReadLength
+    - averageBaseQuality
+    - pairsOnDifferentChr
+    - readsDuplicatedPercent
+    - readsMappedPercent
+    - meanCoverage
+    - proportionCoverage10x
+    - proportionCoverage30x
+    - readDepth
+    - totalReads
+    - workflow
+    - workflowLink
+    - auxiliaryAsset # potentially link to index file or reports here
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - ATAC-seq
+        - CAPP-seq
+        - CUT&RUN
+        - ChIP-seq
+        - ERR bisulfite sequencing
+        - ISO-seq
+        - NOMe-seq
+        - RNA-seq
+        - T cell receptor repertoire sequencing
+        - bisulfite sequencing
+        - miRNA-seq
+        - scCGI-seq
+        - targeted exome sequencing
+        - whole exome sequencing
+        - whole genome sequencing
+        dataType:
+        - AlignedReads
+    close_mappings:
+    - htan:ScRNA-seqLevel2
+    - htan:BulkRNA-seqLevel2
+    - htan:BulkWESLevel2
+  
+  ProcessedVariantCallsTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Template for describing either simple germline/somatic variant calls output data (VCF/MAF) as well as structural variants (e.g. CNVs).
+    slots:
+    - isFilteredReads
+    - workflow
+    - workflowLink
+    - auxiliaryAsset
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - targeted exome sequencing
+        - whole exome sequencing
+        - whole genome sequencing
+        - TIDE
+        dataType:
+        - GermlineVariants
+        - AnnotatedGermlineVariants
+        - SomaticVariants
+        - AnnotatedSomaticVariants
+        - CopyNumberVariants
+    close_mappings:
+    - htan:BulkWESLevel3
+
+  
+  ProcessedGeneExpressionTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Template for describing miRNA expression output data as counts or counts matrix.
+    slots:
+    - expressionUnit
+    - workflow
+    - workflowLink
+    - auxiliaryAsset
+    annotations:
+      requiresComponent: ''
+      required: false  
+      match:
+        assay:
+        - microarray
+        - miRNA array
+        - RNA array
+        - RNA-seq
+        - single-cell RNA-seq
+        dataType:
+        - GeneExpression
+    close_mappings:
+    - htan:BulkRNA-seqLevel3
+  
+##################################################
+# Biological Assay Data / Proteomics / Raw         
+##################################################
+
+  ProteomicsAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: > 
+      Template for describing raw assay data of an organism's proteome.
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - platform
+    - proteinExtractSource
+    annotations:
+      requiresComponent: ''
+      required: false
+
+  MassSpecAssayTemplate:
+    is_a: ProteomicsAssayTemplate
+    description: Template for raw mass spec-based proteomics data.
+    notes:
+    - Technically, mass spec does not have to be considered a biological assay, but we'll classify it as such when used with a biological sample. 
+    slots:
+    - dataCollectionMode
+    annotations:
+      requiresComponent: ''
+      required: false  
+      match:
+        assay:
+        - mass spectrometry
+        - FIA-MSMS
+        - MudPIT
+        - TMT quantitation
+        - ultra high-performance liquid chromatography/tandem mass spectrometry
+    close_mappings:
+    - htan:MassSpectrometryLevel1
+  
+  ProteomicsArrayTemplate:
+    is_a: ProteomicsAssayTemplate
+    description: Template for array- and immuno-based proteomics data.
+    slots:
+    - antibodyID
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - RPPA
+
+
+##############################################
+# Biological Assay Data / Imaging / Raw           
+##############################################
+
+  ImagingAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: A template for describing data from an imaging assay.
+    slots:
+    # specimenID not applicable to some imaging; aliquotID not applicable to many imaging
+    - platform
+    annotations:
+      requiresComponent: ''
+      required: false
+    
+  MRIAssayTemplate:
+    is_a: ImagingAssayTemplate
+    description: Template for describing MRI data.
+    slots:
+    - MRISequence
+    - experimentalCondition
+    - experimentalTimepoint
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - conventional MRI
+        - functional MRI
+
+  MicroscopyAssayTemplate:
+    is_a: ImagingAssayTemplate
+    description: Template for data from a microscopy data.
+    notes:
+    - WIP prototype to offer improved option over current ImagingAssayTemplate. Do not add to staging yet.
+    slots:
+    - parentSpecimenID
+    - specimenID 
+    - aliquotID
+    - objective
+    - nominalMagnification
+    - lensAperture
+    - workingDistance
+    - workingDistanceUnit
+    - immersion
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - 3D electron microscopy
+        - atomic force microscopy
+        - brightfield microscopy
+        - phase-contrast microscopy
+        - traction force microscopy
+    close_mappings:
+    - htan: ImagingLevel2
+
+  IF-IHC-AssayTemplate:
+    is_a: MicroscopyAssayTemplate
+    description: Template for describing immunofluorescence or immunohistochemistry images.
+    notes:
+    - WIP prototype to offer improved option over current ImagingAssayTemplate. Do not add to staging yet.
+    slots:
+    - antibodyID
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - immunofluorescence
+        - immunohistochemistry  
+
+################################################
+# Biological Assay Data / Behavioral / Raw            
+################################################
+
+  BehavioralCognitiveAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: > 
+      Template for describing task data from behavioral/cognitive assays such as “adaptive n-back task” (for humans) or “Von Frey test” (for mice). 
+      Usually the appropriate data from these assays is tabular. If another modality is used as part of the assay, e.g. fMRI, that data can be linked.
+    slots:
+    - experimentalCondition
+    - experimentalTimepoint
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - contextual conditioning behavior assay
+        - Corsi blocks
+        - elevated plus maze test
+        - NIH Toolbox
+        - questionnaire
+        - Riccardi and Ablon scales
+        - Social Responsiveness Scale
+        - 'Social Responsiveness Scale, Second Edition'
+        - Von Frey test
+
+
+############################################
+# Biological Assay Data / Other / Raw            
+############################################
+  
+  PharmacokineticsAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Template for pharmacokinetics assay data (related to compound absorption, distribution, metabolism and excretion).
+    slots:
+    - platform
+    - experimentalCondition
+    - experimentalTimepoint
+    - compoundName
+    - compoundDose
+    - genePerturbed
+    - modelSystemName
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+
+
+  PlateBasedReporterAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Generic template for describing data from a plate-based reporter assay. This is a one-step template.
+    slots:
+    - assayTarget
+    - experimentalCondition
+    - experimentalTimepoint
+    - reporterGene
+    - reporterSubstance
+    annotations:
+      requiresComponent: ''
+      required: false
+
+  FlowCytometryTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Basic template for flow cytometry assay
+    slots:
+    - platform
+    - cellType
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - flow cytometry
+
+
+  MaterialScienceAssayTemplate:
+    is_a: NonBiologicalAssayDataTemplate
+    description: General template for describing data for a materials science assay.
+    slots:
+    - platform
+    - specimenID
+    - materialType
+    - concentrationMaterial
+    - concentrationMaterialUnit
+    - concentrationNaCl
+    - concentrationNaClUnit
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - rheometry
+  
+  LightScatteringAssayTemplate:
+    is_a: NonBiologicalAssayDataTemplate
+    description: Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.
+    source: https://wiki.nci.nih.gov/display/icr/isa-tab-nano
+    slots:
+    - pH
+    - concentrationNaCl
+    - concentrationNaClUnit
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - dynamic light scattering
+        - microrheology
+        - oscillatory rheology
+        - static light scattering
+
+  ClinicalAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: > 
+      Catch-all template for clinical endpoint data seen as individual-level data aggregated into tabular form. 
+      This can include repeated measures and a drug treatment context.
+    slots:
+    - experimentalFactor
+    - experimentalCondition
+    - experimentalTimepoint
+    - compoundName
+    - compoundDose
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+        - survival
+        - gait measurement
+        dataType:
+        - clinical
+
+  ElectrophysiologyAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Template for raw electrophysiology data (voltage recordings).
+    slots:
+    match:
+      assay:
+      - local field potential recording
+      - long term potentiation assay
+      - multi-electrode array
+      - pattern electroretinogram
+      - whole-cell patch clamp
+
+
+############################################
+# Biological Assay Data / Other / Processed           
+############################################
+
+
+
+
+
+#######################################
+# Patient Clinical Data         
+#######################################
+  
+  PatientTemplate:
+    is_a: Template
+    description: >
+      Template for collecting *minimal* individual-level data. 
+    slots:
+    - individualID
+    - sex
+    - age
+    - ageUnit
+    - species # should be constrained to human
+    - diagnosis
+    - nf1Genotype
+    - nf2Genotype
+    annotations:
+      requiresComponent: ''
+      required: false
+
+  PatientXTemplate:
+    is_a: PatientTemplate
+    description: Extended template for participant clinical data as recommended per Sundby et al.
+    notes:
+    - WIP prototype. Do not add to staging yet.
+    slots:
+    annotations:
+      requiresComponent: ''
+      required: false
+
+  PatientSpecimenTemplate:
+    is_a: PatientTemplate
+    description: Template for capturing specimen-level data from patients.
+    notes:
+    - WIP prototype. Do not add to staging yet.
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - tumorType
+    - bodySite
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+#######################################
+# Research Tools      
+#######################################
+
+  ProtocolTemplate:
+    is_a: Template
+    description: Template for describing a protocol document. 
+    source: https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT
+    slots:
+    - title
+    - author
+    - citation
+    - license
+    - protocolAssay
+    - protocolPurpose
+    - sampleType
+    - comments
+    annotations:
+      requiresComponent: ''
+      required: false
+  
+  SourceCodeTemplate:
+    is_a: Template
+    description: Template for describing scripts/other code files for an analysis or software application.
+    slots:
+    - title
+    - author
+    - citation
+    - license
+    - programmingLanguage
+    - runtimePlatform
+    - documentation
+    annotations:
+      requiresComponent: ''
+      required: false
+
+#######################################
+# Other Artifacts           
+#######################################
+  
+  DatasetTemplate:
+    is_a: Template
+    description: Template that specifies NF portal dataset properties should have for more consistent community-curated datasets.
+    notes:
+    - This is intended to be compiled to JSON schema and bound to dataset entities, *not* used in DCA.
+    - While "publisher" (repository) may seem redundant, eventually may want to have symbolic datasets like Cancer Complexity Portal that describe datasets hosted somewhere else.
+    slots:
+    - id # Synapse id used as accession for citation when no doi
+    - doi
+    - title
+    - creator
+    - contributor
+    - currentVersion
+    - description
+    - license
+    - dataType
+    - studyName
+    - studyId
+    - manifestation
+    - diseaseFocus
+    - fundingAgency
+    - series
+    - publisher
+    - yearProcessed
+    - yearPublished
+    - datasetItemCount
+    - datasetSizeInBytes
+    # - relatedDataset # not yet
+    # - auxiliaryAsset # link to interactive multi-qc reports or other materials related to the dataset
+
+  WorkflowReport:
+    is_a: Template
+    description: Template used for miscellaneous workflow reports and accessory files
+    notes:
+    - resourceType should default to "workflow report"
+    - note that `dataType` and `dataSubtype` don't apply
+    slots:
+    - resourceType
+    - assay
+    - fileFormat
+    - relatedDataset
+    - workflow
+    - workflowLink
+
+#######################################
+# PartialTemplate              
+#######################################
+
+  UpdateMilestoneReport:
+    is_a: PartialTemplate
+    description: Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF.
+    slots:
+    - Filename
+    - resourceType
+    - progressReportNumber
+    annotations:
+      requiresComponent: ''
+      required: false
