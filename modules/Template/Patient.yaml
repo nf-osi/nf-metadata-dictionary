@@ -1,0 +1,49 @@
+# Important editor notes
+# - Here [mappings](https://linkml.io/linkml/schemas/uris-and-mappings.html#mappings) indicate closely related templates in other data models
+# - Here `extensions.suggests` are used to track the relationship between templates and their intended application to assay data types
+# - `abstract` means the template is not meant to be used for annotation, it's just there for others to inherit props from
+
+classes:
+
+#######################################
+# Patient Clinical Data         
+#######################################
+  
+  PatientTemplate:
+    is_a: Template
+    description: >
+      Template for collecting *minimal* individual-level data. 
+    slots:
+    - individualID
+    - sex
+    - age
+    - ageUnit
+    - species # should be constrained to human
+    - diagnosis
+    - nf1Genotype
+    - nf2Genotype
+    annotations:
+      requiresComponent: ''
+      required: false
+
+  PatientXTemplate:
+    is_a: PatientTemplate
+    description: (WIP / not yet used) Extended template for participant clinical data as recommended per Sundby et al.
+    slots:
+    annotations:
+      requiresComponent: ''
+      required: false
+
+  PatientSpecimenTemplate:
+    is_a: PatientTemplate
+    description: Template for capturing specimen-level data from patients.
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - tumorType
+    - bodySite
+    annotations:
+      requiresComponent: ''
+      required: false
+  

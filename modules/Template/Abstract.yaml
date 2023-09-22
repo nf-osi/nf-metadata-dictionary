@@ -1,0 +1,18 @@
+# Important editor notes
+# - Here [mappings](https://linkml.io/linkml/schemas/uris-and-mappings.html#mappings) indicate closely related templates in other data models
+# - Here `extensions.suggests` are used to track the relationship between templates and their intended application to assay data types
+# - `abstract` means the template is not meant to be used for annotation, it's just there for others to inherit props from
+
+classes:
+
+  Template:
+    abstract: true
+    description: A collection of fields representing some entity.
+    comments: 
+    - Also called a manifest depending on context.
+
+
+  PartialTemplate:
+    abstract: true
+    description: A template for collecting a subset of contextual data; not intended to be a standalone template but rather a subdocument. 
+

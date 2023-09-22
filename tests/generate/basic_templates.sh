@@ -24,8 +24,12 @@ else
 fi
 
 # Setup config
-echo "Getting $CONFIG to use as test config..."
-wget $CONFIG -O $TEST_CONFIG
+if [ -f "$TEST_CONFIG" ]; then
+  echo "Local $TEST_CONFIG present, running test with this local config..."
+else 
+  echo "Getting $CONFIG to use as test config..."
+  wget $CONFIG -O $TEST_CONFIG
+fi
 
 TEMPLATES=($(jq '.manifest_schemas[] | .schema_name' $TEST_CONFIG | tr -d '"'))
 #TITLES=($(jq '.manifest_schemas[] | .display_name' $TEST_CONFIG | tr -d '"'))
