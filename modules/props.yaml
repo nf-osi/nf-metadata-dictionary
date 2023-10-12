@@ -251,12 +251,7 @@ slots:
     required: false
   expressionUnit:
     description: Measure used for transcript expression quantification
-    enum_range:
-      - TPM
-      - RPKM
-      - FPKM
-      - Counts
-      - Other
+    range: ExpressionUnitEnum
     required: false
   failedQC:
     description: Whether the sample or data failed QC checks (Yes, No)
