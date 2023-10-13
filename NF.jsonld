@@ -328,17 +328,6 @@
     "sms:displayName" : "Metadata",
     "sms:required" : "sms:false"
   }, {
-    "@id" : "bts:ReferenceSetEnum",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "TBD",
-    "rdfs:label" : "ReferenceSetEnum",
-    "rdfs:subClassOf" : [ ],
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:displayName" : "ReferenceSetEnum",
-    "sms:required" : "sms:false"
-  }, {
     "@id" : "bts:ChannelEnum",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -359,6 +348,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Cell",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:GenomicReferenceEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "GenomicReferenceEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "GenomicReferenceEnum",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:Genotype",
@@ -4156,15 +4156,7 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:required" : "sms:false",
-    "schema:rangeIncludes" : [ {
-      "@id" : "bts:GRCh38"
-    }, {
-      "@id" : "bts:GRCh37"
-    }, {
-      "@id" : "bts:MMUL1.0"
-    }, {
-      "@id" : "bts:HRC"
-    } ],
+    "schema:rangeIncludes" : [ ],
     "rdfs:label" : "referenceSet",
     "rdfs:comment" : "A set of references (e.g., canonical assembled contigs) which defines a common coordinate space for comparing reference-aligned experimental data.",
     "@type" : "rdfs:Class",
@@ -12363,6 +12355,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "PacBio Sequel IIe System",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:GRCh38_Verily_v1",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "GRCh38_Verily_v1",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "GRCh38_Verily_v1",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:Cy5",
