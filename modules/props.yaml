@@ -251,12 +251,7 @@ slots:
     required: false
   expressionUnit:
     description: Measure used for transcript expression quantification
-    enum_range:
-      - TPM
-      - RPKM
-      - FPKM
-      - Counts
-      - Other
+    range: ExpressionUnitEnum
     required: false
   failedQC:
     description: Whether the sample or data failed QC checks (Yes, No)
@@ -296,6 +291,9 @@ slots:
     description: Version of genome reference used for alignment in processing workflow
     notes:
       - Currently used with nextflow-processed data.
+    required: true
+  genomicReferenceLink:
+    description: Link to genome reference data file used for alignment in processing workflow
     required: false
   id:
     description: The entity id for the resource automatically assigned by the platform.
@@ -712,6 +710,7 @@ slots:
     annotations:
       requiresDependency: workflowLink
     description: Name and version of the workflow used to generate/analyze the data
+    range: WorkflowEnum
     required: false
   workflowLink:
     description: Workflow URL reference

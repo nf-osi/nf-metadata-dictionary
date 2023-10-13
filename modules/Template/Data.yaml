@@ -74,7 +74,7 @@ classes:
 
   BulkSequencingAssayTemplate:
     is_a: GeneticsAssayTemplate
-    description: General template for raw RNA/DNA data, i.e. sequence data from a sequencing assay.
+    description: General template for raw (level 1) RNA/DNA data, i.e. sequence data from a sequencing assay.
     slots:
     - tissue
     - runType
@@ -289,10 +289,11 @@ classes:
   ProcessedAlignedReadsTemplate:
     is_a: BiologicalAssayDataTemplate
     description: >
-      Template for describing aligned reads output data (i.e. BAM files).
-      The QC meta are extracted from samtools stats when available and are aligned with GDC. 
+      Template for describing aligned reads (e.g. BAM/CRAM files) from a sequencing assay.
+      The QC meta are extracted from samtools stats when available and are the same metrics preferred by GDC. 
     slots:
     - genomicReference
+    - genomicReferenceLink
     - averageInsertSize
     - averageReadLength
     - averageBaseQuality

@@ -6,34 +6,33 @@ enums:
         meaning: http://purl.obolibrary.org/obo/NCIT_C16723
       behavior process:
         description: The action, reaction, or performance of an organism in response to external or internal stimuli.
-        meaning: hhttps://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=structural_variation
       clinical:
         description: Data related to patient diagnosis, demographics, exposures, laboratory tests, and family relationships
-        meaning: https://docs.gdc.cancer.gov/Encyclopedia/pages/Clinical_Data
+        source: https://docs.gdc.cancer.gov/Encyclopedia/pages/Clinical_Data
       demographics:
         description: The statistical characterization of human populations or segments of human populations (e.g., characterization by age, sex, race, or income).
         meaning: http://purl.obolibrary.org/obo/NCIT_C16495
       particle characterization:
-        description: 'A series of analytical methods that provide information about entities such as composition, structure and defects. '
-        meaning: https://ontobee.org/ontology/NCIT?iri=http://purl.obolibrary.org/obo/NCIT_C62317
+        description: Data providing information about entities such as composition, structure and defects.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C62317
       drugCombinationScreen:
         description: Information on drug sensitivity of more than one compound
-        meaning: https://www.ncbi.nlm.nih.gov/pubmed/29344898
+        source: https://www.ncbi.nlm.nih.gov/pubmed/29344898
       isoformExpression:
         description: Expression of protein isoforms formed from alternative splicings or other post-translational modifications of a single gene through RNA splicing mechanisms.
-        meaning: https://en.wikipedia.org/wiki/Protein_isoform
+        source: https://en.wikipedia.org/wiki/Protein_isoform
       proteomics:
         description: Protein and peptide identification, especially in the study of whole proteomes of organisms.
-        meaning: https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Ftopic_0121
+        meaning: http://edamontology.org/topic_0121
       surveyData:
         description: A data set that contains the outcome of a survey.
         meaning: http://purl.obolibrary.org/obo/OMIABIS_0000060
       kinomics:
         description: Kinomics is the study of protein kinases and protein kinase signaling.
-        meaning: http://www.kinomecore.com/what-is-kinomics/
+        source: http://www.kinomecore.com/what-is-kinomics/
       SomaticVariants:
         description: Called somatic variants
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_somatic_mutation
+        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_somatic_mutation
       Volume:
         description: The amount of three dimensional space occupied by an object or the capacity of a space or container.
         meaning: http://purl.obolibrary.org/obo/NCIT_C25335
@@ -42,16 +41,22 @@ enums:
         meaning: http://purl.obolibrary.org/obo/NCIT_C25447
       drugScreen:
         description: Information on drug sensitivity and molecular markers of drug response
-        meaning: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3531057/
+        source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3531057/
       geneExpression:
         description: The analysis of levels and patterns of synthesis of gene products (proteins and functional RNA) including interpretation in functional terms of gene expression data.
-        meaning: https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Ftopic_0203
+        meaning: http://edamontology.org/topic_0203
       AlignedReads:
         description: Aligned reads output from alignment workflows
         meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads
+      genomicFeatures:
+        description: Data of sequence feature (continuous extent of biological sequence) that is of genomic origin.
+        meaning: http://purl.obolibrary.org/obo/GENO_0000481
+        see_also: gff3 (file format)
       genomicVariants:
-        description: Genomic alterations, including single nucleotide polymorphisms, short indels and structural variants. Use more specific term if possible, esp. if data is only of one specific subset.
-        meaning: https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Foperation_3227
+        description: >
+          Genomic alterations, including single nucleotide polymorphisms, short indels and structural variants.
+          Use more specific term if possible, esp. if data is only of one specific subset.
+        meaning: http://edamontology.org/operation_3227
       raw counts:
         description: The number or amount of something.
         meaning: http://purl.obolibrary.org/obo/NCIT_C25463
@@ -65,7 +70,8 @@ enums:
         description: Chromatin activity that allow access of condensed genomic DNA and potentially control gene expression.
         meaning: https://en.wikipedia.org/wiki/Chromatin_remodeling
       StructuralVariants:
-        description: Specifically genomic variants data classified as structural variants, which may be derived from specialized variant calling workflows
+        description: Genomic variants data that covers deletions, duplications, CNVs, insertions, inversions, and translocations, which may be derived from specialized variant calling workflows.
+        source: hhttps://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=structural_variation
       GermlineVariants:
         description: Called germline variants
         meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation
@@ -74,7 +80,7 @@ enums:
         meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=copy_number_variation
       image:
         description: Biological or biomedical data that has been rendered into an image.
-        meaning: https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Fdata_2968
+        meaning: http://edamontology.org/data_2968
       network:
         description: An interconnected system of things or people.
         meaning: http://purl.obolibrary.org/obo/NCIT_C61377
@@ -93,9 +99,15 @@ enums:
         meaning: http://purl.obolibrary.org/obo/NCIT_C25208
       electrophysiology:
         description: Data generated from an electrophysiology assay.
-        meaning: http://purl.obolibrary.org/obo/ERO_0000564
+        notes:
+        - ERO has been deprecated and direct URIs no longer work.
+        source: https://bioportal.bioontology.org/ontologies/ERO/?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FERO_0000564&jump_to_nav=true
       audio transcript:
         description: ''
+      dataIndex:
+        description: A data index is information used to help with retrieval of some other data, especially large-scale data that would benefit from such an index. Very common formats are .bai and .tbi.
+        meaning: http://edamontology.org/data_0955
+
 
   DataSubtype:
     permissible_values:

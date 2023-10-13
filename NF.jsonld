@@ -108,6 +108,17 @@
     "sms:displayName" : "GenePerturbationEnum",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:WorkflowEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "WorkflowEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "WorkflowEnum",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:BooleanEnum",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "Boolean data as Yes/No enums",
@@ -205,6 +216,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "BiologicalProcess",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:ExpressionUnitEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Quantification units for gene expression.",
+    "rdfs:label" : "ExpressionUnitEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "ExpressionUnitEnum",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:OrganEnum",
@@ -306,17 +328,6 @@
     "sms:displayName" : "Metadata",
     "sms:required" : "sms:false"
   }, {
-    "@id" : "bts:ReferenceSetEnum",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "TBD",
-    "rdfs:label" : "ReferenceSetEnum",
-    "rdfs:subClassOf" : [ ],
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:displayName" : "ReferenceSetEnum",
-    "sms:required" : "sms:false"
-  }, {
     "@id" : "bts:ChannelEnum",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -337,6 +348,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Cell",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:GenomicReferenceEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "GenomicReferenceEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "GenomicReferenceEnum",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:Genotype",
@@ -1214,6 +1236,17 @@
     "rdfs:comment" : "Whether or not the library is stranded (Yes; No)",
     "@type" : "rdfs:Class",
     "sms:displayName" : "isStranded"
+  }, {
+    "@id" : "bts:genomicReferenceLink",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Link to genome reference data file used for alignment in processing workflow",
+    "rdfs:label" : "genomicReferenceLink",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "genomicReferenceLink",
+    "sms:required" : "sms:false"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:programmingLanguage",
@@ -2245,6 +2278,8 @@
     }, {
       "@id" : "bts:csv"
     }, {
+      "@id" : "bts:ctab"
+    }, {
       "@id" : "bts:czi"
     }, {
       "@id" : "bts:dat"
@@ -2293,6 +2328,8 @@
     }, {
       "@id" : "bts:jpg"
     }, {
+      "@id" : "bts:js"
+    }, {
       "@id" : "bts:json"
     }, {
       "@id" : "bts:locs"
@@ -2324,6 +2361,8 @@
       "@id" : "bts:pzfx"
     }, {
       "@id" : "bts:raw"
+    }, {
+      "@id" : "bts:rds"
     }, {
       "@id" : "bts:recal"
     }, {
@@ -2370,6 +2409,8 @@
       "@id" : "bts:wiggle"
     }, {
       "@id" : "bts:xml"
+    }, {
+      "@id" : "bts:yaml"
     }, {
       "@id" : "bts:zip"
     } ],
@@ -2939,6 +2980,35 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:CNVkit"
+    }, {
+      "@id" : "bts:DeepVariant"
+    }, {
+      "@id" : "bts:DESeq2"
+    }, {
+      "@id" : "bts:FastQC"
+    }, {
+      "@id" : "bts:FreeBayes"
+    }, {
+      "@id" : "bts:GATKBaseRecalibration"
+    }, {
+      "@id" : "bts:GATKMarkDuplicates"
+    }, {
+      "@id" : "bts:MultiQC"
+    }, {
+      "@id" : "bts:Mutect2"
+    }, {
+      "@id" : "bts:Sarek"
+    }, {
+      "@id" : "bts:STARandSalmon"
+    }, {
+      "@id" : "bts:Strelka2"
+    }, {
+      "@id" : "bts:StringTie"
+    }, {
+      "@id" : "bts:TrimGalore"
+    } ],
     "rdfs:label" : "workflow",
     "rdfs:comment" : "Name and version of the workflow used to generate/analyze the data",
     "@type" : "rdfs:Class",
@@ -3107,6 +3177,8 @@
     }, {
       "@id" : "bts:AlignedReads"
     }, {
+      "@id" : "bts:genomicFeatures"
+    }, {
       "@id" : "bts:genomicVariants"
     }, {
       "@id" : "bts:rawcounts"
@@ -3140,6 +3212,8 @@
       "@id" : "bts:electrophysiology"
     }, {
       "@id" : "bts:audiotranscript"
+    }, {
+      "@id" : "bts:dataIndex"
     }, {
       "@id" : "bts:DescriptiveMetadata"
     }, {
@@ -3209,7 +3283,7 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "genomicReference",
-    "sms:required" : "sms:false"
+    "sms:required" : "sms:true"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:dataSubtype",
@@ -3921,6 +3995,10 @@
     }, {
       "@id" : "bts:Counts"
     }, {
+      "@id" : "bts:RawCounts"
+    }, {
+      "@id" : "bts:NormalizedCounts"
+    }, {
       "@id" : "bts:Other"
     } ],
     "rdfs:label" : "expressionUnit",
@@ -4078,15 +4156,7 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:required" : "sms:false",
-    "schema:rangeIncludes" : [ {
-      "@id" : "bts:GRCh38"
-    }, {
-      "@id" : "bts:GRCh37"
-    }, {
-      "@id" : "bts:MMUL1.0"
-    }, {
-      "@id" : "bts:HRC"
-    } ],
+    "schema:rangeIncludes" : [ ],
     "rdfs:label" : "referenceSet",
     "rdfs:comment" : "A set of references (e.g., canonical assembled contigs) which defines a common coordinate space for comparing reference-aligned experimental data.",
     "@type" : "rdfs:Class",
@@ -5948,7 +6018,7 @@
     "sms:required" : "sms:false",
     "sms:requiresComponent" : "",
     "rdfs:label" : "ProcessedAlignedReadsTemplate",
-    "rdfs:comment" : "Template for describing aligned reads output data (i.e. BAM files). The QC meta are extracted from samtools stats when available and are aligned with GDC. \n",
+    "rdfs:comment" : "Template for describing aligned reads (e.g. BAM/CRAM files) from a sequencing assay. The QC meta are extracted from samtools stats when available and are the same metrics preferred by GDC. \n",
     "@type" : "rdfs:Class",
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
@@ -5984,6 +6054,8 @@
       "@id" : "bts:modelSystemName"
     }, {
       "@id" : "bts:genomicReference"
+    }, {
+      "@id" : "bts:genomicReferenceLink"
     }, {
       "@id" : "bts:averageInsertSize"
     }, {
@@ -6792,7 +6864,7 @@
     "sms:required" : "sms:false",
     "sms:requiresComponent" : "",
     "rdfs:label" : "BulkSequencingAssayTemplate",
-    "rdfs:comment" : "General template for raw RNA/DNA data, i.e. sequence data from a sequencing assay.",
+    "rdfs:comment" : "General template for raw (level 1) RNA/DNA data, i.e. sequence data from a sequencing assay.",
     "@type" : "rdfs:Class",
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
@@ -7951,6 +8023,17 @@
     "sms:displayName" : "Georgia Institute of Technology",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:ctab",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "ctab",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "ctab",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:astrocytes",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -8435,6 +8518,17 @@
     "sms:displayName" : "Diffuse Astrocytoma",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:Strelka2",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "Strelka2",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Strelka2",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:T2-weighted",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -8499,6 +8593,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "plasma",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:js",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "js",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "js",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:+/-",
@@ -9104,6 +9209,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "tumor",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:GATKBaseRecalibration",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "GATKBaseRecalibration",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "GATK BaseRecalibration",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:FACE-QAppearance-relatedDistress",
@@ -9918,6 +10034,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "msf",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:FreeBayes",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "FreeBayes",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "FreeBayes",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:UniversityofKansas",
@@ -11482,6 +11609,17 @@
     "sms:displayName" : "metastatic/recurrent tumor",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:dataIndex",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "dataIndex",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "dataIndex",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:sqlite",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -11678,6 +11816,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "shoulder",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:yaml",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "yaml",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "yaml",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:BuccalMucosa",
@@ -11999,6 +12148,17 @@
     "sms:displayName" : "PacBio RS II",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:NormalizedCounts",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "NormalizedCounts",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Normalized Counts",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:UniversityofMaryland,EasternShore",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -12195,6 +12355,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "PacBio Sequel IIe System",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:GRCh38_Verily_v1",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "GRCh38_Verily_v1",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "GRCh38_Verily_v1",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:Cy5",
@@ -13407,6 +13578,17 @@
     "sms:displayName" : "Anaplastic Pilocytic Astrocytoma",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:DESeq2",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "DESeq2",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "DESeq2",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:iPSC",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -13515,6 +13697,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "cNF04.9a",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:Sarek",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "Sarek",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Sarek",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:FordhamUniversity",
@@ -14131,6 +14324,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Illumina Infinium MethylationEPIC BeadChip v2.0 (935k)",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:DeepVariant",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "DeepVariant",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "DeepVariant",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:scCGI-seq",
@@ -15167,6 +15371,17 @@
     "sms:displayName" : "embryonic tissue",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:MultiQC",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "MultiQC",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "MultiQC",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:StructuralVariants",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -15693,6 +15908,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "CUNY, Queens College",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:RawCounts",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "RawCounts",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Raw Counts",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:UniversityofNebraska,MedicalCenter",
@@ -16232,6 +16458,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Python script",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:STARandSalmon",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "STARandSalmon",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "STAR and Salmon",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:UniversityofCentralFlorida",
@@ -17873,6 +18110,17 @@
     "sms:displayName" : "Illumina Omni2pt5M",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:FastQC",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "FastQC",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "FastQC",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:JH-2-002-CL",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -18819,6 +19067,17 @@
     "sms:displayName" : "Recurrent MPNST",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:genomicFeatures",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "genomicFeatures",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "genomicFeatures",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:seg",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -19688,6 +19947,17 @@
     "sms:displayName" : "Baylor University",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:Mutect2",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "Mutect2",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Mutect2",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:DiffuseInfiltratingNeurofibroma",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -19710,6 +19980,17 @@
     "sms:displayName" : "powerpoint",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:TrimGalore",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "TrimGalore",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "TrimGalore",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:hTERTNF1ipn02.32λ",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -19719,6 +20000,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "hTERT NF1 ipn02.3 2λ",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:GATKMarkDuplicates",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "GATKMarkDuplicates",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "GATK MarkDuplicates",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:UniversityofWisconsin-Madison",
@@ -19864,6 +20156,17 @@
     "sms:displayName" : "University of Alabama, Huntsville",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:CNVkit",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "CNVkit",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "CNVkit",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:doc",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -19895,6 +20198,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Cutaneous Neurofibroma",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:rds",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "rds",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "rds",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:UniversityofTulsa",
@@ -19950,6 +20264,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "University of Missouri, Kansas City",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:StringTie",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "StringTie",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "StringTie",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:UniversityofMinnesota,Duluth",
