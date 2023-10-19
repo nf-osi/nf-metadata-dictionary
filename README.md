@@ -83,7 +83,7 @@ slots:
 Here, `required` defines globally whether this slot *must* be filled out. 
 For example, `specimenID` is required, and is included for assay data class definitions that involve a specimen. 
 For that reason, it is not included at all in individual-level assay data (e.g. behavioral/psychological data). 
-Situations where one has trouble filling in values for a required slot might indicate that the template being used doesn't actually "fit" the type of data/entity, and an additional one needs to be defined.  
+Note: In situations where "the data meets the template", issues with a required slot might indicate that the template being used doesn't actually "fit" the type of data/entity, and an additional one needs to be defined.  
 
 
 #### Enum
