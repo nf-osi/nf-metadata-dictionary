@@ -37,10 +37,25 @@ Classes can be built upon, so subclasses inherit properties from a parent class.
 
 ##### Example: Class
 
-Here is an small-ish base class definition:
+Here is an small-ish base class definition for a patient:
 
 ```
-TODO: find best example
+  PatientTemplate:
+    is_a: Template
+    description: >
+      Template for collecting *minimal* individual-level patient data. 
+    slots:
+    - individualID
+    - sex
+    - age
+    - ageUnit
+    - species # should be constrained to human
+    - diagnosis
+    - nf1Genotype
+    - nf2Genotype
+    annotations:
+      requiresComponent: ''
+      required: false
 ```
 
 #### Slots
