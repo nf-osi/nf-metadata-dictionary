@@ -107,7 +107,7 @@ Aside from meta specific to each type (class, slot, or enum) above, terms have c
 - `description`: Description to help understand the term.
 - `meaning`: This is a highly recommended and should be an **ontology URI that the term maps to**.
 - `source`: This can be used to supplement `meaning`, but it's most often used when an ontology URI does not exist.
-  It provides a reference such as a publication. For example, a very novel assay will not have a real ontology concept anyway but will likely be described in a paper.
+  It provides a reference such as a publication. For example, a very novel assay might not have a real ontology concept yet but will likely be described in a paper.
 - `notes`: Internal editor notes.
 
 
