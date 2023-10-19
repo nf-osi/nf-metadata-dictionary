@@ -183,6 +183,9 @@ slots:
     description: Further qualification of dataType, which may be used to indicate the state of processing of the data, aggregation of the data, or presence of metadata.
     range: DataSubtype
     required: true
+  dataStatus:
+    description: Status of data in a study.
+    required: true
   dataType:
     annotations:
       requiresDependency: dataSubtype
@@ -570,6 +573,9 @@ slots:
     description: A set of references (e.g., canonical assembled contigs) which defines a common coordinate space for comparing reference-aligned experimental data.
     range: ReferenceSetEnum
     required: false
+  relatedStudies:
+    description: Studies similar to the current study.
+    required: false
   reporterGene:
     description: A gene which produces an easily assayed phenotype. Often used for expression studies of heterologous promoters.
     required: false
@@ -642,6 +648,9 @@ slots:
     required: true
   studyName:
     description: Name of a study.
+    required: true
+  studyStatus:
+    description: Status of a study.
     required: true
   auxiliaryAsset:
     description: >
