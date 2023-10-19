@@ -2,15 +2,114 @@
 
 ### Maintenance and Contribution
 
-The purpose of the metadata dictionary is to provide a set of standard terms to describe data. Terms in the metadata dictionoary are used in the manifests within the [data curator app](https://dca.app.sagebionetworks.org/). 
-
+The purpose of the data model is to provide a set of standard concepts and structure that help to describe and manage data. 
+Terms in the metadata dictionary are used in the manifests within the [data curator app](https://dca.app.sagebionetworks.org/). 
 This dictionary is maintained by the NF-Open Science Initative. We welcome contributions from community members, whether you are a professional data modeler, clinician, or student in the NF community.
 
-## Maintenance and Contribution
+### Data Model Framework
 
-The purpose of the metadata dictionary is to provide a set of standard terms to describe data. Terms in the metadata dictionary are used in the manifests within the [data curator app](https://dca.app.sagebionetworks.org/).
+The data model is maintained as a subset of the YAML-based **Linked Data Modeling Language ([LinkML](https://linkml.io/linkml/))** that is compatible with our internal tool [schematic](https://github.com/sage-bionetworks/schematic). 
+This subset of LinkML should be easy to get started with.
 
-This dictionary is maintained by the NF-Open Science Initiative. We welcome contributions from community members, whether you are a professional data modeler, clinician, or student in the NF community.
+#### The 10-minute Intro
+
+The data model primarily models different types of biological data and patients/samples and uses templates that collects information for these entities. 
+(It may helpful to also read about [Entity-Relation Model](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model).)
+
+To do this the building blocks are:
+
+| LinkML term        | Schematic Note | Other Note |
+| ------------------ | -------------  |------------|
+| Class              | Usually corresponds to "Component"; schematic uses definition to make a "manifest"                                  | Also known as "template"
+| Slot               | Schematic calls these "attributes"; the range can be typical types (string, int, etc.) or enumerations (below) | Also known as "property"
+| Enum (enumeration) | Schematic calls these "valid values"                                                                                | Also known as "controlled values"  
+
+Classes depend on slots being defined, and some slots depend on enumerated values being defined. 
+If a class uses a slot that is not defined, the model will error when trying to build; and same with a slot that uses an enumeration.
+Slots can be reused across classes; and same with enumerations for slot. 
+For example, `unit` can be reused across any class entities that needs to capture unit information.
+
+#### Classes
+
+Classes have slots (properties). 
+All classes are grouped under `modules/Template`. 
+Classes can be built upon, so subclasses inherit properties from a parent class. 
+
+##### Example: Class
+
+Here is an small-ish base class definition:
+
+```
+TODO: find best example
+```
+
+#### Slots
+
+Slots have a range, which can be a basic data type such as "string" and "integer", or a set of controlled values (see Enum). 
+If the range of a slot is not explicit defined, it defaults to "string" (basically free text).
+All slots are in the file `modules/props.yaml`. 
+
+##### Example slots
+
+```
+slots:
+  #...more above
+  tissue:
+    description: Association with some tissue (a mereologically maximal collection of cells that together perform physiological function).
+    range: TissueEnum # Take a look at TissueEnum below
+    required: false
+  title:
+    description: Title of a resource.
+    meaning: https://www.w3.org/TR/vocab-dcat-3/#Property:resource_title
+    required: true
+  # ...more below
+```
+
+Here, `required` defines globally whether this slot *must* be filled out.
+
+#### Enum
+
+An enumeration is a set of controlled values. 
+Enums are most of the files `modules`, everything except for what's in `Templates` and `props.yaml`.
+
+##### Example: Tissue enumeration
+
+```
+enums:
+  TissueEnum:
+    permissible_values:
+      cerebral cortex:
+        description: The outer layer of the cerebrum composed of neurons and unmyelinated nerve fibers. It is responsible for memory, attention, consciousness and other higher levels of mental function.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C12443
+      bone marrow:
+        description: The soft, fatty, vascular tissue that fills most bone cavities and is the source of red blood cells and many white blood cells.
+        meaning: http://purl.obolibrary.org/obo/BTO_0000141
+     #...more below
+```
+
+##### Example: Boolean Enumeration (commonly reused) 
+
+```
+enums:
+  BooleanEnum: 
+    description: 'Boolean values as Yes/No enums'
+    permissible_values:
+      'Yes':
+        description: 'True'
+      'No':
+        description: 'False'
+```
+
+#### General meta to describe classes, slots, and enums
+
+Aside from meta specific to each type (class, slot, or enum) above, terms have common meta, where the most prominent are summarized here:
+
+- `description`: Description to help understand the term.
+- `meaning`: This is a highly recommended and should be an ontology URI that the term maps to.
+- `source`: This can be used in combination with `meaning` or when an ontology URI does not exist.
+  It provides a reference such as a publication. For example, a very novel assay will not have a real ontology concept anyway but will likely be described in a paper.
+- `notes`: Internal editor notes.
+
 
 ### Steps to add an attribute to the Metadata Dictionary: 
 
