@@ -2103,6 +2103,17 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "isPairedEnd"
   }, {
+    "@id" : "bts:dataStatus",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Status of data in a study.",
+    "rdfs:label" : "dataStatus",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "dataStatus",
+    "sms:required" : "sms:true"
+  }, {
     "@id" : "bts:contentSize",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "(Files only) File size, usually calculated by the backend.",
@@ -4022,6 +4033,17 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "readsMappedPercent"
   }, {
+    "@id" : "bts:studyStatus",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Status of a study.",
+    "rdfs:label" : "studyStatus",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "studyStatus",
+    "sms:required" : "sms:true"
+  }, {
     "@id" : "bts:contentType",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "Refers to the type of content.",
@@ -4651,6 +4673,8 @@
       "@id" : "bts:wholegenomesequencing"
     }, {
       "@id" : "bts:whole-cellpatchclamp"
+    }, {
+      "@id" : "bts:STRprofile"
     } ],
     "rdfs:label" : "protocolAssay",
     "rdfs:comment" : "Main assay type that this protocol is related to, e.g. this is a prep protocol for single-cell RNA-seq assay. This is especially helpful for newly-developed or in-house assays.\n",
@@ -4984,6 +5008,8 @@
       "@id" : "bts:wholegenomesequencing"
     }, {
       "@id" : "bts:whole-cellpatchclamp"
+    }, {
+      "@id" : "bts:STRprofile"
     } ],
     "rdfs:label" : "assay",
     "rdfs:comment" : "The technology used to generate the data in this file.",
@@ -4999,6 +5025,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "averageReadLength",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:relatedStudies",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Studies similar to the current study.",
+    "rdfs:label" : "relatedStudies",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "relatedStudies",
     "sms:required" : "sms:false"
   }, {
     "rdfs:subClassOf" : [ ],
@@ -12075,6 +12112,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Localized Neurofibroma",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:STRprofile",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "STRprofile",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "STR profile",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:NeuN+",
