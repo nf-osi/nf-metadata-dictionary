@@ -35,7 +35,7 @@ Classes have slots (properties).
 All classes are grouped under `modules/Template`. 
 Classes can be built upon, so subclasses inherit properties from a parent class. 
 
-##### Example: Class
+##### Example: Base patient class
 
 Here is an small-ish base class definition for a patient:
 
@@ -102,7 +102,7 @@ enums:
      #...more below
 ```
 
-##### Example: Boolean Enumeration (commonly reused) 
+##### Example: Boolean enumeration (commonly reused) 
 
 ```
 enums:
