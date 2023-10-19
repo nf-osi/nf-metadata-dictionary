@@ -116,8 +116,13 @@ Aside from meta specific to each type (class, slot, or enum) above, terms have c
 1. Create a new [branch](https://github.com/nf-osi/nf-metadata-dictionary/branches) in the NF-metadata-dictionary repository. (example: patch/add-attribute)
 2. Find the yaml file in the new branch where the attribute belongs. The components of the data model are organized in the folder labeled [modules](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules).
 
-3. Create a [pull request (PR)](https://github.com/nf-osi/nf-metadata-dictionary/compare) to merge the branch to "main". Add either @allaway, @anngvu, or @cconrad8 as a reviewer. Creating the PR will perform an action to update the [NF.csv](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.csv) file and the [NF.jsonld](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.jsonld) from the modules folder.
-
+3. Create a [pull request (PR)](https://github.com/nf-osi/nf-metadata-dictionary/compare) to merge the branch to "main". Add either @allaway, @anngvu, or @cconrad8 as a reviewer. Creating the PR will:  
+   i. Build the [NF.jsonld](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.jsonld) from the module source files. This is the format needed by schematic.
+   **Therefore, you do not need to edit the `NF.jsonld` directly, because it will be done automatically by our service bot.**
+   
+   ii. If build succeeds, also run some tests to make sure all looks good/generate previews. After some minutes, a test report will appear in the PR that hopefully looks like this:
+   
+   <img width="464" alt="image" src="https://github.com/nf-osi/nf-metadata-dictionary/assets/32753274/067f65ff-e39d-4b45-abae-ef22cf7df5eb">
 4. Make any necessary changes and then merge the new branch that was created to the main branch.
 5. [Draft a versioned release here](https://github.com/nf-osi/nf-metadata-dictionary/releases).
 6. Name the release with the convention MAJOR.MINOR.PATCH. These releases start at v1.0.0. Versioning is roughly following [semantic versioning](semver.org) concepts where: 
