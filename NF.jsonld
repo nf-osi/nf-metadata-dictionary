@@ -2061,7 +2061,7 @@
       "@id" : "bts:centimeter"
     } ],
     "rdfs:label" : "workingDistanceUnit",
-    "rdfs:comment" : "TBD",
+    "rdfs:comment" : "Unit for working distance.",
     "@type" : "rdfs:Class",
     "sms:displayName" : "workingDistanceUnit"
   }, {
@@ -2187,6 +2187,17 @@
     "rdfs:comment" : "Technology used to perturb gene",
     "@type" : "rdfs:Class",
     "sms:displayName" : "genePerturbationTechnology"
+  }, {
+    "@id" : "bts:relatedResource",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "A related resource.",
+    "rdfs:label" : "relatedResource",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "relatedResource",
+    "sms:required" : "sms:false"
   }, {
     "@id" : "bts:specimenID",
     "@type" : "rdfs:Class",
@@ -5029,7 +5040,7 @@
   }, {
     "@id" : "bts:relatedStudies",
     "@type" : "rdfs:Class",
-    "rdfs:comment" : "Studies similar to the current study.",
+    "rdfs:comment" : "Studies similar to the current study. Subproperty of `relatedResource`.",
     "rdfs:label" : "relatedStudies",
     "rdfs:subClassOf" : [ ],
     "schema:isPartOf" : {

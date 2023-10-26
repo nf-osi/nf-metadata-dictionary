@@ -72,8 +72,12 @@ templateTable <- function(dt) {
   # Reference range by linking to relevant class sections within document
   # or returning range values in plain text
   refRange <- function(value, index) {
-    if(grepl("#", value)) {
-      htmltools::tags$a(href = value, sub("#", "", value))
+    values <- strsplit(value, split = "|", fixed = TRUE)[[1]]
+    if(any(grepl("#", values))) {
+      htmltools::div(
+        lapply(values, function(value) htmltools::p(
+          htmltools::tags$a(href = value, sub("#", "", value)), " "))
+        )
     } else {
       value
     }  
@@ -81,11 +85,17 @@ templateTable <- function(dt) {
   
   reactable(dt,
             columns = list(
-              Field = colDef(minWidth = 180),
+              Field = colDef(minWidth = 180,
+                             cell = function(value, index) { div(style = list(fontWeight = 600), value)}),
               Description = colDef(minWidth = 300),
               Required = colDef(maxWidth = 100),
               ValidRange = colDef(name = "Valid Range", cell = refRange)
             ),
+            rowStyle = function(index) {
+              if (dt[index, "Required"]) {
+                list(background = "lemonchiffon")
+                }
+              },
             pagination = FALSE,
             wrap = TRUE,
             class = "term-table")
@@ -96,19 +106,26 @@ module_section <- function(module,
                            submodule, 
                            submodule_id = submodule) {
   
-  for(i in seq_along(submodule)) {
-    file <- glue::glue("../modules/{module}/{submodule[i]}.csv")
-    data <- fread(file)
+  file <- glue::glue("../modules/{module}/{submodule}.yaml")
+  data <- yaml::read_yaml(file)
+  
+  for(key in submodule_id) {
+    data <- data$enums[[key]]$permissible_values
     
-    cat(paste0("\n", "#### ", submodule[i], " {#", submodule_id[i], " .tabset .tabset-fade .tabset-pills}", "\n"))
+    cat(paste0("\n", "#### ", key, " {#", key, " .tabset .tabset-fade .tabset-pills}", "\n"))
     
-    table <- data[, .(Attribute, Description, DependsOn)]
+    table <- rbindlist(data, fill = TRUE, idcol = "Attribute")
+    setnames(table, "description", "Description", skip_absent = TRUE)
+     if(!"Description" %in% names(table)) table[, Description := ""]
+    
+    table <- table[, .(Attribute, Description)]
   
     print(
       tagList(
         expandedTable(table), tags$br()))
   }
 }
+
 
 ```
 
@@ -117,8 +134,6 @@ module_section <- function(module,
 schema <- jsonlite::read_json(params$schema_json)
 schema <- schema$`@graph`
 
-# docTemplate needs the unmodified schema table
-# this can be factored out as an external config
 if(!params$use_cache) {
   templates <- c(# genomics/transcriptomics
                 GenomicsAssayTemplate = "Genomics_Assay_Template", 
@@ -144,7 +159,8 @@ if(!params$use_cache) {
                 PharmacokineticsAssayTemplate = "Pharmacokinetics_Assay_Template", # drug assays type
                 PlateBasedReporterAssayTemplate = "Plate_Based_Reporter_Assay_Template",
                 ClinicalAssayTemplate = "Clinical_Assay_Template",
-                PatientTimepointsTemplate = "Patient_Timepoints_Template",
+                # PatientTimepointsTemplate = "Patient_Timepoints_Template",
+                ProtocolTemplate = "Protocol_Template",
                 SourceCodeTemplate = "Source_Code_Template",
                 LightScatteringAssayTemplate = "Light_Scattering_Assay_Template")
   
@@ -161,100 +177,6 @@ if(!params$use_cache) {
 
 ```
 
-## Annotation Classes
-
-:::info
-
-These are standard terms available to NF resource contributors for annotation of their resource. 
-Terms are grouped into modules. 
-When using these terms, contributors are helping to label and classify resources for improved interoperability and findability.
-
-:::
-
-### Assay 
-
-```{r tables, echo=FALSE,results='asis'}
-
-module_section("Assay", c("Assay", "Platform"))
-
-```
-
-
-##### Relations Graph
-
-:::info
-
-This partial graph view logically relates **assays** to metadata **templates** available at the [NF Data Curator App](https://shiny.synapse.org/users/rallaway/NF_data_curator/).
-For example, assays under the classification of `Imaging_Assay` currently uses a generic `Imaging_Assay_Template` for annotation.
-More specialized templates may be made available as needed for specific assays.
-
-:::
-
-```{r schema_ext_assay_template, out.width="100%", echo=FALSE, eval=params$graph_view}
-
-schema_ext <- readExtSchema(params$schema_csv, params$ext_classes_csv)
-assay <- getNodesEdges(schema_ext, "Assay", "A", 
-                       nodes = list(color = list(A = "plum", C = "indigo"), 
-                                    font.color = list(A = "black", C = "white")))
-template <- getNodesEdges(schema_ext, "Template", "T", use_id = T, 
-                          nodes = list(color = list(A = "pink", C = "firebrick"), 
-                                       font.color = list(A = "black", C = "white")))
-g_assay_template <- c2Cluster(assay, template, "suggests", params$ext_relations_csv)
-defaultGraph(g_assay_template)
-
-```
-
-
-### Information Entity
-
-```{r data_module, echo=FALSE, results='asis'}
-
-module_section("Data", 
-               c("Resource", "Data_Class", "File_Format"),
-               c("ResourceType", "DataType", "FileFormat"))
-
-```
-
-
-### Sample
-
-:::info
-
-Sample typically refers to a **biosample**, but on some rare occasions can refer to an inorganic sample from which data are generated.
-For biosamples, there is a distinction between individual-level and specimen-level data.
-Data can be linked to individual-level sample information such as sex, species, diagnosis, and genotype.
-Data can be linked to specimen-level information such as sample site (the organ or body part), specimen tissue or cell type, tumor class (if specimen is a tumor), and specimen state.
-
-:::
-
-
-```{r sample_module, echo=FALSE, results='asis'}
-
-module_section("Sample", 
-              c("Body_Part", "Sex", "Species", "Disease", "Genotype", "Tissue", "Tumor", "Cell", "Cell_Line_Model", "Mouse_Model", "Specimen_Processing"),
-              c("Organ", "Sex", "Species", "Diagnosis", "Genotype", "Tissue", "Tumor", "CellType", "ModelSystemName", "ModelSystemName", "SpecimenProcessingMethod"))
-
-```
-
-
-
-### Experiment
-
-:::info
-
-Terminology to help characterize experiment.
-
-:::
-
-```{r biosample_module, echo=FALSE, results='asis'}
-
-module_section("Experiment", 
-              c("Unit"),
-              c("TimePointUnit"))
-
-```
-
-
 ## Annotation Templates
 
 :::info
@@ -263,23 +185,19 @@ Annotation templates are spreadsheet templates that allow contributors to annota
 See interactive use of these templates at our [NF Data Curator App](https://shiny.synapse.org/users/rallaway/NF_data_curator/).
 Templates implement "minimum metadata" standards specific to the type of data/resource (hence variants exist for assay types and "raw" vs "processed" data).
 Templates also contain common components, e.g. many will collect core sample info associated with the data.  
+
 Unless the template field is free-text, it is meant to be filled by the contributor using the ontology terms/controlled vocabulary defined here.
 For example, the "assay" property allows the contributor to use [terms under Assay](#assay).
 
 :::
 
-#### Genomics Assay Templates {#Genomics_Assay_Templates .tabset .tabset-fade .tabset-pills}
+#### Genomics Assay Data Templates {#Genomics_Assay_Templates .tabset .tabset-fade .tabset-pills}
 
-```{r standard_properties_table, echo=FALSE, eval=FALSE}
+:::info
 
-# CURRENTLY NOT RUN (eval=FALSE)
-# Custom code to get unique set of properties used across all templates
-# standard_properties_table <- schema %>%
-#   filter(Parent %in% c("template")) %>%
-#   select(Attribute, Description, DependsOn)
-# 
-# basicTable(standard_properties_table)
-```
+Raw or processed data files from a genomics assay should be annotated using one of these templates.  
+
+:::
 
 ##### Genomics Assay (Generic)
 
@@ -418,10 +336,10 @@ templateTable(read.csv("templates/Light_Scattering_Assay_Template.csv"))
 
 #### Non-Assay Templates {#Non_Assay_Template .tabset .tabset-fade .tabset-pills}
 
-##### Patient Timepoints
+##### Protocol
 ```{r echo=FALSE }
 
-templateTable(read.csv("templates/Patient_Timepoints_Template.csv"))
+templateTable(read.csv("templates/Protocol_Template.csv"))
 
 ```
 
@@ -429,6 +347,165 @@ templateTable(read.csv("templates/Patient_Timepoints_Template.csv"))
 ```{r echo=FALSE }
 
 templateTable(read.csv("templates/Source_Code_Template.csv"))
+
+```
+
+
+## Annotation Vocabulary
+
+:::info
+
+These are standard terms available to NF resource contributors for annotation of their resource. 
+Terms are grouped into modules. 
+When using these terms, contributors are helping to label and classify resources using standard semantics for improved interoperability and findability.
+
+:::
+
+### Assay 
+
+```{r assay, echo=FALSE,results='asis'}
+
+module_section("Assay", "Assay", "AssayEnum")
+
+```
+
+```{r platform, echo=FALSE,results='asis'}
+
+module_section("Assay", "Platform", "PlatformEnum")
+
+```
+
+##### Relations Graph
+
+:::info
+
+This partial graph view logically relates **assays** to metadata **templates** available at the [NF Data Curator App](https://shiny.synapse.org/users/rallaway/NF_data_curator/).
+For example, assays under the classification of `Imaging_Assay` currently uses a generic `Imaging_Assay_Template` for annotation.
+More specialized templates may be made available as needed for specific assays.
+
+:::
+
+```{r schema_ext_assay_template, out.width="100%", echo=FALSE, eval=params$graph_view}
+
+schema_ext <- readExtSchema(params$schema_csv, params$ext_classes_csv)
+assay <- getNodesEdges(schema_ext, "Assay", "A", 
+                       nodes = list(color = list(A = "plum", C = "indigo"), 
+                                    font.color = list(A = "black", C = "white")))
+template <- getNodesEdges(schema_ext, "Template", "T", use_id = T, 
+                          nodes = list(color = list(A = "pink", C = "firebrick"), 
+                                       font.color = list(A = "black", C = "white")))
+g_assay_template <- c2Cluster(assay, template, "suggests", params$ext_relations_csv)
+defaultGraph(g_assay_template)
+
+```
+
+
+### Information Entity
+
+```{r resource, echo=FALSE, results='asis'}
+
+module_section("Data", "Resource", "Resource")
+```
+
+```{r data, echo=FALSE, results='asis'}
+
+module_section("Data", "Data", "Data")
+```
+
+```{r datasubtype, echo=FALSE, results='asis'}
+
+module_section("Data", "Data", "DataSubtype")
+```
+
+
+```{r fileformat, echo=FALSE, results='asis'}
+
+module_section("Data", "FileFormat", "FileFormatEnum")
+```
+
+
+### Sample
+
+:::info
+
+Sample typically refers to a **biosample**, but on some rare occasions can refer to an inorganic sample from which data are generated.
+For biosamples, there is a distinction between individual-level and specimen-level data.
+Data can be linked to individual-level sample information such as sex, species, diagnosis, and genotype.
+Data can be linked to specimen-level information such as sample site (the organ or body part), specimen tissue or cell type, tumor class (if specimen is a tumor), and specimen state.
+
+:::
+
+
+```{r sample_tissue, echo=FALSE, results='asis'}
+
+module_section("Sample", "Tissue", "TissueEnum")
+
+```
+
+
+```{r sample_tumor, echo=FALSE, results='asis'}
+
+module_section("Sample", "Tumor", "Tumor")
+
+```
+
+```{r sample_sex, echo=FALSE, results='asis'}
+
+module_section("Sample", "Sex", "SexEnum")
+
+```
+
+```{r sample_diagonosis, echo=FALSE, results='asis'}
+
+module_section("Sample", "Diagnosis", "DiagnosisEnum")
+
+```
+
+
+```{r sample_genotype, echo=FALSE, results='asis'}
+
+module_section("Sample", "Genotype", "Genotype")
+
+```
+
+
+```{r sample_species, echo=FALSE, results='asis'}
+
+module_section("Sample", "Species", "SpeciesEnum")
+
+```
+
+```{r sample_cell, echo=FALSE, results='asis'}
+
+module_section("Sample", "Cell", "Cell")
+
+```
+
+```{r sample_cellmodel, echo=FALSE, results='asis'}
+
+module_section("Sample", "CellLineModel", "CellLineModel")
+
+```
+
+
+```{r sample_mousemodel, echo=FALSE, results='asis'}
+
+module_section("Sample", "MouseModel", "MouseModel")
+
+```
+
+
+### Experiment
+
+:::info
+
+Terminology to help characterize experiment.
+
+:::
+
+```{r biosample_module, echo=FALSE, results='asis'}
+
+module_section("Experiment", "Unit", "TimeUnit")
 
 ```
 
