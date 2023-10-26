@@ -6,8 +6,10 @@ on:
       - main
     paths:
       - 'modules/**'
+      - 'docs/**'
+      - '.github/workflows/publish-docs.yml'
 
-  # TODO setup conditional to build but not push
+  # TODO check that docs can be rebuilt for PRs
   #pull_request:
   #  branches: 
   #    - main
