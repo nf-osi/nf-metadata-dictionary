@@ -573,8 +573,11 @@ slots:
     description: A set of references (e.g., canonical assembled contigs) which defines a common coordinate space for comparing reference-aligned experimental data.
     range: ReferenceSetEnum
     required: false
+  relatedResource: 
+    description: A related resource.
+    required: false
   relatedStudies:
-    description: Studies similar to the current study.
+    description: Studies similar to the current study. Subproperty of `relatedResource`.
     required: false
   reporterGene:
     description: A gene which produces an easily assayed phenotype. Often used for expression studies of heterologous promoters.
@@ -731,7 +734,7 @@ slots:
       requiresDependency: workingDistanceUnit
     required: false
   workingDistanceUnit:
-    desctription:
+    description: Unit for working distance.
     required: false
     range: WorkingDistanceUnitEnum
 
