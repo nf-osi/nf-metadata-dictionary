@@ -515,17 +515,6 @@
     "sms:displayName" : "CuratedDataEnum",
     "sms:required" : "sms:false"
   }, {
-    "@id" : "bts:TissueEnum",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "TBD",
-    "rdfs:label" : "TissueEnum",
-    "rdfs:subClassOf" : [ ],
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:displayName" : "TissueEnum",
-    "sms:required" : "sms:false"
-  }, {
     "@id" : "bts:Institution",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -546,6 +535,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "ReadStrandOriginEnum",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:SpecimenTypeEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "SpecimenTypeEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "SpecimenTypeEnum",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:GenePerturbationTechnologyEnum",
@@ -1942,68 +1942,6 @@
     "sms:displayName" : "captureArea"
   }, {
     "rdfs:subClassOf" : [ ],
-    "@id" : "bts:tissue",
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:required" : "sms:false",
-    "schema:rangeIncludes" : [ {
-      "@id" : "bts:cerebralcortex"
-    }, {
-      "@id" : "bts:bonemarrow"
-    }, {
-      "@id" : "bts:plasma"
-    }, {
-      "@id" : "bts:DorsalRootGanglion"
-    }, {
-      "@id" : "bts:opticnerve"
-    }, {
-      "@id" : "bts:tumor-adjacentnormal"
-    }, {
-      "@id" : "bts:serum"
-    }, {
-      "@id" : "bts:spheroid"
-    }, {
-      "@id" : "bts:sciaticnerve"
-    }, {
-      "@id" : "bts:meninges"
-    }, {
-      "@id" : "bts:nervetissue"
-    }, {
-      "@id" : "bts:BuccalMucosa"
-    }, {
-      "@id" : "bts:embryonictissue"
-    }, {
-      "@id" : "bts:wholebrain"
-    }, {
-      "@id" : "bts:microtissue"
-    }, {
-      "@id" : "bts:retina"
-    }, {
-      "@id" : "bts:CDXtissue"
-    }, {
-      "@id" : "bts:organoid"
-    }, {
-      "@id" : "bts:splenocyte"
-    }, {
-      "@id" : "bts:blood"
-    }, {
-      "@id" : "bts:connectivetissue"
-    }, {
-      "@id" : "bts:primarytumor"
-    }, {
-      "@id" : "bts:PDXtissue"
-    }, {
-      "@id" : "bts:BuffyCoat"
-    }, {
-      "@id" : "bts:normal"
-    } ],
-    "rdfs:label" : "tissue",
-    "rdfs:comment" : "A tissue is a mereologically maximal collection of cells that together perform physiological function.",
-    "@type" : "rdfs:Class",
-    "sms:displayName" : "tissue"
-  }, {
-    "rdfs:subClassOf" : [ ],
     "@id" : "bts:experimentalFactor",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
@@ -2566,6 +2504,17 @@
     "sms:displayName" : "fundingAgency",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:transplantationRecipient",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "into which a xenograph sample is transplanted",
+    "rdfs:label" : "transplantationRecipient",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "transplantationRecipient",
+    "sms:required" : "sms:false"
+  }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:nucleicAcidSource",
     "schema:isPartOf" : {
@@ -3086,16 +3035,66 @@
     "sms:displayName" : "concentrationNaClUnit"
   }, {
     "rdfs:subClassOf" : [ ],
-    "@id" : "bts:transplantationRecipientTissue",
+    "@id" : "bts:specimenType",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
     "sms:required" : "sms:false",
-    "schema:rangeIncludes" : [ ],
-    "rdfs:label" : "transplantationRecipientTissue",
-    "rdfs:comment" : "Tissue into which a xenograph sample is transplanted",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:cerebralcortex"
+    }, {
+      "@id" : "bts:bonemarrow"
+    }, {
+      "@id" : "bts:plasma"
+    }, {
+      "@id" : "bts:DorsalRootGanglion"
+    }, {
+      "@id" : "bts:opticnerve"
+    }, {
+      "@id" : "bts:tumor-adjacentnormal"
+    }, {
+      "@id" : "bts:serum"
+    }, {
+      "@id" : "bts:spheroid"
+    }, {
+      "@id" : "bts:sciaticnerve"
+    }, {
+      "@id" : "bts:meninges"
+    }, {
+      "@id" : "bts:nervetissue"
+    }, {
+      "@id" : "bts:BuccalMucosa"
+    }, {
+      "@id" : "bts:embryonictissue"
+    }, {
+      "@id" : "bts:wholebrain"
+    }, {
+      "@id" : "bts:microtissue"
+    }, {
+      "@id" : "bts:retina"
+    }, {
+      "@id" : "bts:CDXtissue"
+    }, {
+      "@id" : "bts:organoid"
+    }, {
+      "@id" : "bts:splenocyte"
+    }, {
+      "@id" : "bts:blood"
+    }, {
+      "@id" : "bts:connectivetissue"
+    }, {
+      "@id" : "bts:primarytumor"
+    }, {
+      "@id" : "bts:PDXtissue"
+    }, {
+      "@id" : "bts:BuffyCoat"
+    }, {
+      "@id" : "bts:normal"
+    } ],
+    "rdfs:label" : "specimenType",
+    "rdfs:comment" : "The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory substances.\n",
     "@type" : "rdfs:Class",
-    "sms:displayName" : "transplantationRecipientTissue"
+    "sms:displayName" : "specimenType"
   }, {
     "@id" : "bts:datasetItemCount",
     "@type" : "rdfs:Class",
@@ -4233,7 +4232,7 @@
       "@id" : "bts:Mouse"
     } ],
     "rdfs:label" : "transplantationRecipientSpecies",
-    "rdfs:comment" : "Species into which donor tissue was grown",
+    "rdfs:comment" : "Species into which donor  was grown",
     "@type" : "rdfs:Class",
     "sms:displayName" : "transplantationRecipientSpecies"
   }, {
@@ -5703,7 +5702,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -5871,7 +5870,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -6033,7 +6032,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -6318,7 +6317,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -6596,7 +6595,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -6799,7 +6798,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -7071,7 +7070,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -7611,7 +7610,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -7727,7 +7726,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
