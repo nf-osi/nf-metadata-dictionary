@@ -673,7 +673,9 @@ slots:
   specimenType:
     description: >
         The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory substances.
-    range: SpecimenTypeEnum
+    enum_range: 
+    - Tissue
+    - OrganismSubstance
     required: false
   title:
     description: Title of a resource.
@@ -690,9 +692,9 @@ slots:
       - Human
       - Mouse
     required: false
-  transplantationRecipient:
-    description:  into which a xenograph sample is transplanted
-    range: 
+  transplantationRecipientTissue:
+    description: Tissue into which a xenograph sample is transplanted
+    range: Tissue
     required: false
   transplantationType:
     description: Type of transplantation involved in the experiment, derived from MESH
