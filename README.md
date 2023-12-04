@@ -69,9 +69,9 @@ All slots are in the file `modules/props.yaml`.
 ```
 slots:
   #...more above
-  tissue:
+  specimenType:
     description: Association with some tissue (a mereologically maximal collection of cells that together perform physiological function).
-    range: TissueEnum # Take a look at TissueEnum below
+    range: SpecimenTypeEnum # Take a look at SpecimenTypeEnum below
     required: false
   title:
     description: Title of a resource.
@@ -91,11 +91,11 @@ Note: In situations where "the data meets the template", issues with a required 
 An enumeration is a set of controlled values. 
 Enums are most of the files `modules`, everything except for what's in `Templates` and `props.yaml`.
 
-##### Example: Tissue enumeration
+##### Example: SpecimenType enumeration
 
 ```
 enums:
-  TissueEnum:
+  SpecimenTypeEnum:
     permissible_values:
       cerebral cortex:
         description: The outer layer of the cerebrum composed of neurons and unmyelinated nerve fibers. It is responsible for memory, attention, consciousness and other higher levels of mental function.

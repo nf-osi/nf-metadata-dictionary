@@ -207,6 +207,17 @@
     "sms:displayName" : "StrandednessEnum",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:OrganismSubstance",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "This preferred root in the UBERON ontology is meant to cover organism-produced substances (bodily secretions and excreta) commonly used as assay specimens.",
+    "rdfs:label" : "OrganismSubstance",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "OrganismSubstance",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:BiologicalProcess",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -293,6 +304,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "LibraryPrepEnum",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:Tissue",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Tissue is a group of cells that have similar structure and that function together as a unit.",
+    "rdfs:label" : "Tissue",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Tissue",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:DataSubtype",
@@ -513,17 +535,6 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "CuratedDataEnum",
-    "sms:required" : "sms:false"
-  }, {
-    "@id" : "bts:TissueEnum",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "TBD",
-    "rdfs:label" : "TissueEnum",
-    "rdfs:subClassOf" : [ ],
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:displayName" : "TissueEnum",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:Institution",
@@ -1541,6 +1552,8 @@
       "@id" : "bts:TruSeq"
     }, {
       "@id" : "bts:TruSeqstandardtotalRNAlibrarykit"
+    }, {
+      "@id" : "bts:unknown"
     } ],
     "rdfs:label" : "libraryPreparationMethod",
     "rdfs:comment" : "Method by which library was prepared",
@@ -1940,68 +1953,6 @@
     "rdfs:comment" : "One of the either four or two active regions where tissue can be placed on a Visium slide. Each area is intended to contain only one tissue sample. Slide areas are named consecutively from top to bottom:  A1, B1, C1, D1 for Visium slides with 6.5 mm Capture Area and A, B for CytAssist slides with 11 mm Capture Area. Both CytAssist slides with 6.5 mm Capture Area and Gateway Slides contain only two slide areas, A1 and D1.\n",
     "@type" : "rdfs:Class",
     "sms:displayName" : "captureArea"
-  }, {
-    "rdfs:subClassOf" : [ ],
-    "@id" : "bts:tissue",
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:required" : "sms:false",
-    "schema:rangeIncludes" : [ {
-      "@id" : "bts:cerebralcortex"
-    }, {
-      "@id" : "bts:bonemarrow"
-    }, {
-      "@id" : "bts:plasma"
-    }, {
-      "@id" : "bts:DorsalRootGanglion"
-    }, {
-      "@id" : "bts:opticnerve"
-    }, {
-      "@id" : "bts:tumor-adjacentnormal"
-    }, {
-      "@id" : "bts:serum"
-    }, {
-      "@id" : "bts:spheroid"
-    }, {
-      "@id" : "bts:sciaticnerve"
-    }, {
-      "@id" : "bts:meninges"
-    }, {
-      "@id" : "bts:nervetissue"
-    }, {
-      "@id" : "bts:BuccalMucosa"
-    }, {
-      "@id" : "bts:embryonictissue"
-    }, {
-      "@id" : "bts:wholebrain"
-    }, {
-      "@id" : "bts:microtissue"
-    }, {
-      "@id" : "bts:retina"
-    }, {
-      "@id" : "bts:CDXtissue"
-    }, {
-      "@id" : "bts:organoid"
-    }, {
-      "@id" : "bts:splenocyte"
-    }, {
-      "@id" : "bts:blood"
-    }, {
-      "@id" : "bts:connectivetissue"
-    }, {
-      "@id" : "bts:primarytumor"
-    }, {
-      "@id" : "bts:PDXtissue"
-    }, {
-      "@id" : "bts:BuffyCoat"
-    }, {
-      "@id" : "bts:normal"
-    } ],
-    "rdfs:label" : "tissue",
-    "rdfs:comment" : "A tissue is a mereologically maximal collection of cells that together perform physiological function.",
-    "@type" : "rdfs:Class",
-    "sms:displayName" : "tissue"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:experimentalFactor",
@@ -3091,11 +3042,129 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:required" : "sms:false",
-    "schema:rangeIncludes" : [ ],
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:cerebralcortex"
+    }, {
+      "@id" : "bts:bonemarrow"
+    }, {
+      "@id" : "bts:plasma"
+    }, {
+      "@id" : "bts:DorsalRootGanglion"
+    }, {
+      "@id" : "bts:opticnerve"
+    }, {
+      "@id" : "bts:tumor-adjacentnormal"
+    }, {
+      "@id" : "bts:serum"
+    }, {
+      "@id" : "bts:spheroid"
+    }, {
+      "@id" : "bts:sciaticnerve"
+    }, {
+      "@id" : "bts:meninges"
+    }, {
+      "@id" : "bts:nervetissue"
+    }, {
+      "@id" : "bts:BuccalMucosa"
+    }, {
+      "@id" : "bts:embryonictissue"
+    }, {
+      "@id" : "bts:wholebrain"
+    }, {
+      "@id" : "bts:microtissue"
+    }, {
+      "@id" : "bts:retina"
+    }, {
+      "@id" : "bts:CDXtissue"
+    }, {
+      "@id" : "bts:organoid"
+    }, {
+      "@id" : "bts:splenocyte"
+    }, {
+      "@id" : "bts:blood"
+    }, {
+      "@id" : "bts:connectivetissue"
+    }, {
+      "@id" : "bts:primarytumor"
+    }, {
+      "@id" : "bts:PDXtissue"
+    }, {
+      "@id" : "bts:BuffyCoat"
+    } ],
     "rdfs:label" : "transplantationRecipientTissue",
     "rdfs:comment" : "Tissue into which a xenograph sample is transplanted",
     "@type" : "rdfs:Class",
     "sms:displayName" : "transplantationRecipientTissue"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:specimenType",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:cerebralcortex"
+    }, {
+      "@id" : "bts:bonemarrow"
+    }, {
+      "@id" : "bts:plasma"
+    }, {
+      "@id" : "bts:DorsalRootGanglion"
+    }, {
+      "@id" : "bts:opticnerve"
+    }, {
+      "@id" : "bts:tumor-adjacentnormal"
+    }, {
+      "@id" : "bts:serum"
+    }, {
+      "@id" : "bts:spheroid"
+    }, {
+      "@id" : "bts:sciaticnerve"
+    }, {
+      "@id" : "bts:meninges"
+    }, {
+      "@id" : "bts:nervetissue"
+    }, {
+      "@id" : "bts:BuccalMucosa"
+    }, {
+      "@id" : "bts:embryonictissue"
+    }, {
+      "@id" : "bts:wholebrain"
+    }, {
+      "@id" : "bts:microtissue"
+    }, {
+      "@id" : "bts:retina"
+    }, {
+      "@id" : "bts:CDXtissue"
+    }, {
+      "@id" : "bts:organoid"
+    }, {
+      "@id" : "bts:splenocyte"
+    }, {
+      "@id" : "bts:blood"
+    }, {
+      "@id" : "bts:connectivetissue"
+    }, {
+      "@id" : "bts:primarytumor"
+    }, {
+      "@id" : "bts:PDXtissue"
+    }, {
+      "@id" : "bts:BuffyCoat"
+    }, {
+      "@id" : "bts:saliva"
+    }, {
+      "@id" : "bts:mucus"
+    }, {
+      "@id" : "bts:urine"
+    }, {
+      "@id" : "bts:stool"
+    }, {
+      "@id" : "bts:sweat"
+    } ],
+    "rdfs:label" : "specimenType",
+    "rdfs:comment" : "The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory substances.\n",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "specimenType"
   }, {
     "@id" : "bts:datasetItemCount",
     "@type" : "rdfs:Class",
@@ -4233,7 +4302,7 @@
       "@id" : "bts:Mouse"
     } ],
     "rdfs:label" : "transplantationRecipientSpecies",
-    "rdfs:comment" : "Species into which donor tissue was grown",
+    "rdfs:comment" : "Species into which donor  was grown",
     "@type" : "rdfs:Class",
     "sms:displayName" : "transplantationRecipientSpecies"
   }, {
@@ -5189,6 +5258,10 @@
       "@id" : "bts:Caliper"
     }, {
       "@id" : "bts:TOOsonixSystemONE-M"
+    }, {
+      "@id" : "bts:MGIT-series"
+    }, {
+      "@id" : "bts:NotApplicable"
     } ],
     "rdfs:label" : "platform",
     "rdfs:comment" : "A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data.",
@@ -5703,7 +5776,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -5871,7 +5944,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -6033,7 +6106,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -6318,7 +6391,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -6596,7 +6669,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -6799,7 +6872,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -7071,7 +7144,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -7611,7 +7684,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -7727,7 +7800,7 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
-      "@id" : "bts:tissue"
+      "@id" : "bts:specimenType"
     }, {
       "@id" : "bts:runType"
     }, {
@@ -10563,6 +10636,17 @@
     "sms:displayName" : "Illinois Institute of Technology",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:stool",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "stool",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "stool",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:Nf1-/-skin-derivedprecursorcells",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -11795,6 +11879,17 @@
     "sms:displayName" : "Bowling Green State University",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:urine",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "urine",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "urine",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:UniversityofToledo",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -12035,6 +12130,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "shoulder",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:sweat",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "sweat",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "sweat",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:yaml",
@@ -13058,17 +13164,6 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "calcium retention capacity assay",
-    "sms:required" : "sms:false"
-  }, {
-    "@id" : "bts:normal",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "TBD",
-    "rdfs:label" : "normal",
-    "rdfs:subClassOf" : [ ],
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:displayName" : "normal",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:HS-PSS",
@@ -15117,6 +15212,17 @@
     "sms:displayName" : "SZ-NF4",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:saliva",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "saliva",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "saliva",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:sorbitoldehydrogenaseactivitylevelassay",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -16228,6 +16334,17 @@
     "sms:displayName" : "oxBS-seq",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:mucus",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "mucus",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "mucus",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:Interview",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -16457,6 +16574,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Texas Tech University of Health Sciences Center",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:MGIT-series",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "MGIT-series",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "MGI T-series",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:InfiniumHumanOmniExpressExome",
@@ -16831,6 +16959,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "American University",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:unknown",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "unknown",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "unknown",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:positronemissiontomography",

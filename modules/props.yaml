@@ -65,7 +65,7 @@ slots:
     required: false
   bodySite:
     comments:
-      - Helpful to consider where tissue/cell samples came from, e.g. something like "schwannoma" gets put in `tumorType`, but `bodySite` gives us the original location of the tumor.
+      - Helpful to consider where /cell samples came from, e.g. something like "schwannoma" gets put in `tumorType`, but `bodySite` gives us the original location of the tumor.
     description: Sample location referring to a named area of the body, inclusive of gross anatomical structures and organ parts.
     range: BodyPartEnum
     required: false
@@ -670,9 +670,12 @@ slots:
     description: For timed experiments this represents the unit of time measured
     range: TimeUnit
     required: false
-  tissue:
-    description: A tissue is a mereologically maximal collection of cells that together perform physiological function.
-    range: TissueEnum
+  specimenType:
+    description: >
+        The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory substances.
+    any_of: 
+    - range: Tissue
+    - range: OrganismSubstance
     required: false
   title:
     description: Title of a resource.
@@ -684,7 +687,7 @@ slots:
       validationRules: int
     required: false
   transplantationRecipientSpecies:
-    description: Species into which donor tissue was grown
+    description: Species into which donor  was grown
     enum_range:
       - Human
       - Mouse
