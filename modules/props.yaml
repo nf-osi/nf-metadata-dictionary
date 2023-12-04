@@ -673,9 +673,9 @@ slots:
   specimenType:
     description: >
         The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory substances.
-    enum_range: 
-    - Tissue
-    - OrganismSubstance
+    any_of: 
+    - range: Tissue
+    - range: OrganismSubstance
     required: false
   title:
     description: Title of a resource.
