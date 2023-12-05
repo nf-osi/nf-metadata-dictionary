@@ -1,8 +1,7 @@
 #!/bin/bash
 # Test generate GoogleSheets templates
 
-CONFIG=https://raw.githubusercontent.com/nf-osi/NF_data_curator/staging/www/config.json
-TEST_CONFIG=config.json
+TEST_CONFIG=../../dca-template-config.json
 CREDS=creds.json
 DATA_MODEL_PATH=../../NF.jsonld
 DATA_MODEL=NF.jsonld
@@ -23,17 +22,10 @@ else
   exit 1
 fi
 
-# Setup config
-if [ -f "$TEST_CONFIG" ]; then
-  echo "Local $TEST_CONFIG present, running test with this local config..."
-else 
-  echo "Getting $CONFIG to use as test config..."
-  wget $CONFIG -O $TEST_CONFIG
-fi
 
 TEMPLATES=($(jq '.manifest_schemas[] | .schema_name' $TEST_CONFIG | tr -d '"'))
 #TITLES=($(jq '.manifest_schemas[] | .display_name' $TEST_CONFIG | tr -d '"'))
-echo "✓ Retrieved config with ${#TEMPLATES[@]} templates..."
+echo "✓ Using config with ${#TEMPLATES[@]} templates..."
 
 # Setup data model
 cp $DATA_MODEL_PATH $DATA_MODEL

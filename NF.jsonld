@@ -1545,6 +1545,8 @@
     }, {
       "@id" : "bts:Omni-ATAC"
     }, {
+      "@id" : "bts:QuantSeqFWDV2withUDI"
+    }, {
       "@id" : "bts:Smart-seq2"
     }, {
       "@id" : "bts:Smart-seq4"
@@ -1687,7 +1689,7 @@
   }, {
     "@id" : "bts:assayTarget",
     "@type" : "rdfs:Class",
-    "rdfs:comment" : "The HUGO gene symbol that represents the target assayed.",
+    "rdfs:comment" : "Target of the assay such as a HUGO gene symbol, cell type, or tissue region depending on the capabilities of the assay.",
     "rdfs:label" : "assayTarget",
     "rdfs:subClassOf" : [ ],
     "schema:isPartOf" : {
@@ -5877,6 +5879,8 @@
     }, {
       "@id" : "bts:platform"
     }, {
+      "@id" : "bts:assayTarget"
+    }, {
       "@id" : "bts:auxiliaryAsset"
     } ],
     "sms:displayName" : "ImagingAssayTemplate"
@@ -7288,6 +7292,8 @@
     }, {
       "@id" : "bts:platform"
     }, {
+      "@id" : "bts:assayTarget"
+    }, {
       "@id" : "bts:auxiliaryAsset"
     }, {
       "@id" : "bts:parentSpecimenID"
@@ -7362,6 +7368,8 @@
       "@id" : "bts:comments"
     }, {
       "@id" : "bts:platform"
+    }, {
+      "@id" : "bts:assayTarget"
     }, {
       "@id" : "bts:auxiliaryAsset"
     }, {
@@ -7606,6 +7614,8 @@
       "@id" : "bts:comments"
     }, {
       "@id" : "bts:platform"
+    }, {
+      "@id" : "bts:assayTarget"
     }, {
       "@id" : "bts:auxiliaryAsset"
     }, {
@@ -20160,6 +20170,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "10",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:QuantSeqFWDV2withUDI",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "QuantSeqFWDV2withUDI",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "QuantSeq FWD V2 with UDI",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:B6.129(Cg)-Nf1tm1Par/J",
