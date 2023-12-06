@@ -1,5 +1,5 @@
 title: NF data dictionary to cBioPortal data dictionary for public clinical data
-description: This maps NF data elements at the variable level to cBioPortal data dictionary for the set of clinical elements that will be made public on the cBioPortal platform.
+description: This maps the limited number of NF clinical data elements to cBioPortal clinical data elements.
 source_scope: https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.jsonld
 target_scope: https://github.com/cBioPortal/clinical-data-dictionary/blob/master/docs/resource_uri_to_clinical_attribute_mapping.txt
 mapping:
@@ -49,5 +49,11 @@ mapping:
     target:
       label: TISSUE_SITE
       description: Site of tissue collection
+      attribute_type: SAMPLE
+      data_type: STRING
+  - source: cellType
+    target:
+      label: CELL_TYPE
+      description: Cell type
       attribute_type: SAMPLE
       data_type: STRING
