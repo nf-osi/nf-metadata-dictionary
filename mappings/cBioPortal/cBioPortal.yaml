@@ -1,5 +1,5 @@
 title: NF data dictionary to cBioPortal data dictionary for public clinical data
-description: This maps NF data elements at the variable level to cBioPortal data dictionary for the set of clinical elements that will be made public on the cBioPortal platform.
+description: This maps the limited number of NF clinical data elements to cBioPortal clinical data elements.
 source_scope: https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.jsonld
 target_scope: https://github.com/cBioPortal/clinical-data-dictionary/blob/master/docs/resource_uri_to_clinical_attribute_mapping.txt
 mapping:
@@ -9,45 +9,60 @@ mapping:
       description: Patient ID
       attribute_type: [PATIENT,SAMPLE]
       data_type: STRING
+      required: false
   - source: sex
     target:
       label: SEX
       description: Sex of the patient
       attribute_type: PATIENT
       data_type: STRING
+      required: false
   - source: nf1Genotype
     target:
       label: NF1_GENOTYPE
       description: NF1 genotype of the patient
       attribute_type: PATIENT
       data_type: STRING
+      required: false
   - source: nf2Genotype
     target:
       label: NF2_GENOTYPE
       description: NF2 genotype of the patient
       attribute_type: PATIENT
       data_type: STRING
+      required: false
   - source: specimenID
     target:
       label: SAMPLE_ID
       description: Sample ID
       attribute_type: SAMPLE
       data_type: STRING
+      required: true
   - source: age
     target:
       label: AGE
       description: Age of patient
       attribute_type: PATIENT
       data_type: NUMBER
+      required: false
   - source: tumorType
     target:
       label: TUMOR
       description: Tumor type
       attribute_type: SAMPLE
       data_type: STRING
+      required: false
   - source: tissue
     target:
       label: TISSUE_SITE
       description: Site of tissue collection
       attribute_type: SAMPLE
       data_type: STRING
+      required: false
+  - source: cellType
+    target:
+      label: CELL_TYPE
+      description: Cell type
+      attribute_type: SAMPLE
+      data_type: STRING
+      required: false
