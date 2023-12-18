@@ -14,7 +14,7 @@ classes:
     abstract: true
     description: >
       A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. 
-      This is an abstract template; "real" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing, raw vs processed).
+      This is an abstract template; "real" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing).
     slots:
     - Component
     - Filename
@@ -366,7 +366,64 @@ classes:
     close_mappings:
     - htan:BulkWESLevel3
 
-  
+#################################################
+# Biological Assay Data / Processed / Aggregated       
+#################################################
+    
+
+  ProcessedExpressionTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Template for quantified gene/protein expression data that are still represented as one file per sample.
+    slots:
+    - expressionUnit
+    - workflow
+    - workflowLink
+    - auxiliaryAsset
+    annotations:
+      requiresComponent: ''
+      required: false  
+      match:
+        assay:
+        - quantitative PCR
+        - microarray
+        - miRNA array
+        - RNA array
+        - RNA-seq
+        - single-cell RNA-seq
+        dataType:
+        - geneExpression # .sf
+        - proteinExpression
+    close_mappings:
+    - htan:BulkRNA-seqLevel3
+
+  ProcessedMergedDataTemplate:
+    description: > 
+      Further processed data with multiple samples aggregated into one file.
+      This may be also be known as level-4 data. Unlike level-2 and level-3 data, individual-level attributes such as age and sex are no longer surfaced on the data file directly.
+    slots:
+    - Component
+    - Filename
+    - fileFormat
+    - resourceType
+    - dataType
+    - dataSubtype
+    - workflow
+    - workflowLink
+    - auxiliaryAsset
+    - assay
+    annotations:
+      requiresComponent: ''
+      required: false  
+      match:
+        dataType:
+        - AnnotatedSomaticVariants # merged MAFs
+        - AnnotatedGermlineVariants # merged MAFs
+        - geneExpresssion # TSVs
+    close_mappings:
+    - https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aggregated_somatic_mutation
+    - https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=gene_expression
+
+
 ##################################################
 # Biological Assay Data / Proteomics     
 ##################################################
@@ -433,33 +490,6 @@ classes:
     close_mappings:
     - htan:RPPALevel2
 
-##############################################
-# Biological Assay Data / Processed        
-##############################################
-
-  ProcessedExpressionTemplate:
-    is_a: BiologicalAssayDataTemplate
-    description: Template for quantified gene/protein expression data, which may be aggregated into matrix form.
-    slots:
-    - expressionUnit
-    - workflow
-    - workflowLink
-    annotations:
-      requiresComponent: ''
-      required: false  
-      match:
-        assay:
-        - quantitative PCR
-        - microarray
-        - miRNA array
-        - RNA array
-        - RNA-seq
-        - single-cell RNA-seq
-        dataType:
-        - geneExpression
-        - proteinExpression
-    close_mappings:
-    - htan:BulkRNA-seqLevel3
 
 ##############################################
 # Biological Assay Data / Imaging / Raw           
