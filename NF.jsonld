@@ -6445,7 +6445,7 @@
     "sms:required" : "sms:false",
     "sms:requiresComponent" : "",
     "rdfs:label" : "ProcessedExpressionTemplate",
-    "rdfs:comment" : "Template for quantified gene/protein expression data, which may be aggregated into matrix form.",
+    "rdfs:comment" : "Template for quantified gene/protein expression data that are still represented as one file per sample.",
     "@type" : "rdfs:Class",
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
@@ -6491,6 +6491,8 @@
       "@id" : "bts:workflow"
     }, {
       "@id" : "bts:workflowLink"
+    }, {
+      "@id" : "bts:auxiliaryAsset"
     } ],
     "sms:displayName" : "ProcessedExpressionTemplate"
   }, {
@@ -6721,7 +6723,7 @@
     "sms:required" : "sms:false",
     "sms:requiresComponent" : null,
     "rdfs:label" : "BiologicalAssayDataTemplate",
-    "rdfs:comment" : "A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples.  This is an abstract template; \"real\" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing, raw vs processed).\n",
+    "rdfs:comment" : "A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples.  This is an abstract template; \"real\" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing).\n",
     "@type" : "rdfs:Class",
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
@@ -6913,6 +6915,39 @@
       "@id" : "bts:batchID"
     } ],
     "sms:displayName" : "WGSTemplate"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:ProcessedMergedDataTemplate",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "sms:requiresComponent" : "",
+    "rdfs:label" : "ProcessedMergedDataTemplate",
+    "rdfs:comment" : "Further processed data with multiple samples aggregated into one file. This may be also be known as level-4 data. Unlike level-2 and level-3 data, individual-level attributes such as age and sex are no longer surfaced on the data file directly.\n",
+    "@type" : "rdfs:Class",
+    "sms:requiresDependency" : [ {
+      "@id" : "bts:Component"
+    }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
+      "@id" : "bts:resourceType"
+    }, {
+      "@id" : "bts:dataType"
+    }, {
+      "@id" : "bts:dataSubtype"
+    }, {
+      "@id" : "bts:workflow"
+    }, {
+      "@id" : "bts:workflowLink"
+    }, {
+      "@id" : "bts:auxiliaryAsset"
+    }, {
+      "@id" : "bts:assay"
+    } ],
+    "sms:displayName" : "ProcessedMergedDataTemplate"
   }, {
     "rdfs:subClassOf" : [ {
       "@id" : "bts:GeneticsAssayTemplate"
