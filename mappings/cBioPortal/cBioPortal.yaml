@@ -24,6 +24,20 @@ mapping:
       attribute_type: PATIENT
       data_type: STRING
       required: false
+  - source: nf1GermlineMutation
+    target:
+      label: NF1_GERMLINE
+      description: NF1 germline mutation present
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+  - source: nf1SomaticMutation
+    target:
+      label: NF1_SOMATIC
+      description: NF1 somatic mutation present
+      attribute_type: SAMPLE
+      data_type: STRING
+      required: false
   - source: nf2Genotype
     target:
       label: NF2_GENOTYPE
