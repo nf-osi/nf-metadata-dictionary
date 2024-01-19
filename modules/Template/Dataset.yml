@@ -1,0 +1,33 @@
+#######################################
+# Portal Table Schemas          
+#######################################  
+  
+  DatasetTemplate:
+    is_a: Template
+    description: Template that specifies NF portal dataset properties should have for more consistent community-curated datasets.
+    notes:
+    - This is intended to be compiled to JSON schema and bound to dataset entities, *not* used in DCA.
+    - While "publisher" (repository) may seem redundant, eventually may want to have symbolic datasets like Cancer Complexity Portal that describe datasets hosted somewhere else.
+    slots:
+    - id # Synapse id used as accession for citation when no doi
+    - doi
+    - title
+    - creator
+    - contributor
+    - currentVersion
+    - description
+    - license
+    - dataType
+    - studyName
+    - studyId
+    - manifestation
+    - diseaseFocus
+    - fundingAgency
+    - series
+    - publisher
+    - yearProcessed
+    - yearPublished
+    - datasetItemCount
+    - datasetSizeInBytes
+    - auxiliaryAsset # link to interactive multi-qc reports or other materials related to the dataset
+    # - relatedDataset # not yet
