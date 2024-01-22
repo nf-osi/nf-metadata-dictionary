@@ -1,0 +1,36 @@
+#######################################
+# Portal          
+#######################################
+
+classes:
+  PortalDataset:
+    description: >
+      A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets. 
+    notes:
+    - The compiled JSON schema for this should be bound to [Dataset](https://rest-docs.synapse.org/rest/org/sagebionetworks/repo/model/table/Dataset.html) entities, not folders. 
+    - While "publisher" (repository) may seem redundant given that all Datasets are obviously on Synapse, it's for explicit compatibility with DataCite, and eventually may want to have "symbolic" datasets like Cancer Complexity Portal that list datasets hosted somewhere else.
+    slots:
+    # Properties set by Synapse/not editable meta are commented out but included for reference bc they do show up in the portal
+    # - id
+    # - currentVersion
+    # - doi (if minted)
+    # - datasetItemCount # Set by Synapse, not editable meta
+    # - datasetSizeInBytes 
+    - title
+    - creator # createdBy is set by Synapse, not always the same as what we want
+    - contributor
+    - description
+    - license
+    - dataType
+    - studyName
+    - studyId
+    - manifestation
+    - diseaseFocus
+    - fundingAgency
+    - series
+    - publisher
+    - yearProcessed
+    - yearPublished
+    - auxiliaryAsset # link to interactive multi-qc reports or other materials related to the dataset
+    # - relatedDataset # potentially, like relatedStudies, not implemented yet
+
