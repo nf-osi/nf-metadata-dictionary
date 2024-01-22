@@ -17,6 +17,16 @@ slots:
   Resource_id:
     description: A UUID for a Resource from the NF Research Tools Database
     required: false
+  accessRequirements:
+    description: Statement describing access requirements for an entity.
+    in_subset:
+      - portal
+    required: false
+  acknowledgementStatements:
+    description: Statement describing how usage of something should be acknowledged.
+    in_subset:
+      - portal
+    required: false
   age:
     annotations:
       requiresDependency: ageUnit
@@ -143,13 +153,17 @@ slots:
     required: false
   contributor:
     description: An entity responsible for making contributions to the resource.
-    meaning: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#contributor
+    in_subset:
+      - portal
+    see_also: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#contributor
     required: false
   creator:
     description: An entity responsible for making the resource.
     notes:
     - Recommended practice is to identify the creator with a URI. If this is not possible or feasible, a literal value that identifies the creator may be provided.
-    meaning: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#creator
+    see_also: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#creator
+    in_subset:
+      - portal
     required: true
   createdBy:
     description: Refers to the user who created the resource.
@@ -163,7 +177,7 @@ slots:
     required: false
   currentVersion:
     description: (Versionable entities only) The current version number of the resource.
-    meaning: https://www.w3.org/TR/vocab-dcat-3/#Property:resource_version
+    see_also: https://www.w3.org/TR/vocab-dcat-3/#Property:resource_version
     in_subset:
       - Synapse
     required: false
@@ -184,8 +198,11 @@ slots:
     range: DataSubtype
     required: true
   dataStatus:
-    description: Status of data in a study.
+    description: Overall status of data in a study.
+    in_subset:
+      - portal
     required: true
+    range: DataStatusEnum
   dataType:
     annotations:
       requiresDependency: dataSubtype
@@ -193,7 +210,11 @@ slots:
       - range: Data
       - range: Metadata
     description: |
-      A type of data -- experimental, clinical, or other. Most typically refers to a high-level data type that can be related to an assay type.  For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.
+      Links an entity to data types that the entity represents/contains. 
+      This is closely tied to the assay property. 
+      For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.
+    in_subset:
+      - portal
     required: true
   datasetSizeInBytes:
     description: Size of dataset entity in bytes. Auto-calculated by Synapse.
@@ -207,6 +228,8 @@ slots:
     required: false
   description:
     description: Text describing a resource.
+    in_subset:
+      - portal
     required: false
   diagnosis:
     description: A diagnosis is the result of a medical investigation to identify a disorder from its signs and symptoms.
@@ -214,6 +237,8 @@ slots:
     required: false
   diseaseFocus:
     description: Disease that acts as the main topic.
+    in_subset:
+      - portal
     required: false
   dissociationMethod:
     description: Procedure by which a biological specimen is dissociated into individual cells or a cell suspension
@@ -278,6 +303,8 @@ slots:
     required: true
   fundingAgency:
     description: Refers to the funding organization for the generated resource. This annotation is handled by the DCC.
+    in_subset:
+      - portal
     required: false
   genePerturbationType:
     description: Specific way in which a single gene was perturbed in a sample
@@ -297,6 +324,9 @@ slots:
     required: true
   genomicReferenceLink:
     description: Link to genome reference data file used for alignment in processing workflow
+    required: false
+  grantDOI:
+    description: Doi of a grant (e.g. in ProposalCentral) that can be associated with the entity.
     required: false
   id:
     description: The entity id for the resource automatically assigned by the platform.
@@ -321,7 +351,11 @@ slots:
     description: 'Refers to a funding initiative. This annotation is usually handled by the DCC or funder, not the researcher.'
     required: false
   institution:
-    description: Institution (organization)
+    description: Link to affiliated institution (organization).
+    required: false
+    range: Institution
+  institutions:
+    description: Same as institution.
     required: false
     range: Institution
   isCellLine:
@@ -383,12 +417,16 @@ slots:
     required: true
   license:
     description: Link to a license or name of license applicable for the resource.
+    in_subset:
+      - portal
     required: false
   relatedDataset:
     description: Reference to a relevant dataset entity.
     required: false
   manifestation:
     description: An associated phenotype characteristic.
+    in_subset:
+      - portal
     required: false
   materialType:
     description: Type of material in the characterization
@@ -530,7 +568,9 @@ slots:
     required: false
   publisher:
     description: An entity responsible for making the resource available.
-    meaning: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/publisher
+    in_subset:
+      - portal
+    see_also: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/publisher
     required: false
   readDepth:
     description: If available, the coverage statistic as output from bedtools coverage or samtools stats.
@@ -635,8 +675,10 @@ slots:
       the corresponding source name should refer to the starting sample that was modified by a protocol for the assay.
     required: false
   series:
-    description: Which series this resource belongs to, can be a name or link.
-    meaning: http://www.w3.org/ns/dcat#inSeries
+    description: Title of a custom series that this resource is part of, if any.
+    in_subset:
+      - portal
+    see_also: http://www.w3.org/ns/dcat#inSeries
     required: false
   species:
     description: The name of a species (typically a taxonomic group) of organism.
@@ -656,16 +698,40 @@ slots:
     required: true
   studyId:
     description: Id of study.
+    in_subset:
+      - portal
     required: true
   studyName:
     description: Name of a study.
+    in_subset:
+      - portal
+    required: true
+  studyFileviewId:
+    description: Links a Synapse project to its fileview.
+    in_subset:
+      - portal
+    required: false
+  studyLeads:
+    description: Individuals with lead roles in a study.
+    in_subset:
+      - portal
     required: true
   studyStatus:
     description: Status of a study.
+    in_subset:
+      - portal
+    required: true
+    range: StudyStatusEnum
+  summary:
+    description: A short description (an abstract).
+    in_subset:
+      - portal
     required: true
   auxiliaryAsset:
     description: >
         URI to supplemental asset(s), e.g. QC reports or other auxiliary files to support the processing, analysis, or interpretation of the current entity.
+    in_subset:
+      - portal
     required: false
   targetCaptureKitID:
     description: > 
@@ -687,7 +753,9 @@ slots:
     required: false
   title:
     description: Title of a resource.
-    meaning: https://www.w3.org/TR/vocab-dcat-3/#Property:resource_title
+    in_subset:
+      - portal
+    see_also: https://www.w3.org/TR/vocab-dcat-3/#Property:resource_title
     required: true
   totalReads:
     description: If available, the total number of reads collected from samtools.
@@ -718,14 +786,20 @@ slots:
       - Synapse
     required: false
   yearProcessed:
-    description: Year in which the resource was processed/derived.
+    description: >
+      Year in which the resource was processed/derived, if applicable. 
+      This is only required for data processed by NF-OSI for tracking purposes, optional for community-contributed datasets. 
+    in_subset:
+      - portal
     annotations:
       validationRules: int
     notes:
     - There is no 'year' validation rule and `date` rule requires actual date format
     required: false
   yearPublished:
-    description: Year in which the resource was published.
+    description: Year in which the resource was published/generally made available.
+    in_subset:
+      - portal
     annotations:
       validationRules: int
     required: false
