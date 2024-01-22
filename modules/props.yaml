@@ -23,7 +23,7 @@ slots:
       - portal
     required: false
   acknowledgementStatements:
-    description: Statement describing how usage of something should be acknowledged.
+    description: Statement describing how resource use should be acknowledged.
     in_subset:
       - portal
     required: false
@@ -156,6 +156,7 @@ slots:
     in_subset:
       - portal
     see_also: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#contributor
+    range: string
     required: false
   creator:
     description: An entity responsible for making the resource.
@@ -164,6 +165,7 @@ slots:
     see_also: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#creator
     in_subset:
       - portal
+    range: string
     required: true
   createdBy:
     description: Refers to the user who created the resource.
@@ -209,9 +211,9 @@ slots:
     any_of:
       - range: Data
       - range: Metadata
-    description: |
-      Links an entity to data types that the entity represents/contains. 
-      This is closely tied to the assay property. 
+    description: >
+      Links an entity to data types that the entity represents/contains.
+      This is closely tied to the assay property.
       For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.
     in_subset:
       - portal
@@ -230,6 +232,7 @@ slots:
     description: Text describing a resource.
     in_subset:
       - portal
+    range: string
     required: false
   diagnosis:
     description: A diagnosis is the result of a medical investigation to identify a disorder from its signs and symptoms.
@@ -239,6 +242,7 @@ slots:
     description: Disease that acts as the main topic.
     in_subset:
       - portal
+    range: string
     required: false
   dissociationMethod:
     description: Procedure by which a biological specimen is dissociated into individual cells or a cell suspension
@@ -305,6 +309,7 @@ slots:
     description: Refers to the funding organization for the generated resource. This annotation is handled by the DCC.
     in_subset:
       - portal
+    range: string
     required: false
   genePerturbationType:
     description: Specific way in which a single gene was perturbed in a sample
@@ -327,6 +332,9 @@ slots:
     required: false
   grantDOI:
     description: Doi of a grant (e.g. in ProposalCentral) that can be associated with the entity.
+    in_subset:
+      - portal
+    range: string
     required: false
   id:
     description: The entity id for the resource automatically assigned by the platform.
@@ -348,14 +356,13 @@ slots:
       - Legacy key used in a couple of old studies
     required: false
   initiative:
-    description: 'Refers to a funding initiative. This annotation is usually handled by the DCC or funder, not the researcher.'
+    description: Refers to a funding initiative. Typically handled by the DCC.
+    in_subset:
+      - portal
+    range: string
     required: false
   institution:
-    description: Link to affiliated institution (organization).
-    required: false
-    range: Institution
-  institutions:
-    description: Same as institution.
+    description: Link to affiliated institution.
     required: false
     range: Institution
   isCellLine:
@@ -419,6 +426,7 @@ slots:
     description: Link to a license or name of license applicable for the resource.
     in_subset:
       - portal
+    range: string
     required: false
   relatedDataset:
     description: Reference to a relevant dataset entity.
@@ -427,6 +435,7 @@ slots:
     description: An associated phenotype characteristic.
     in_subset:
       - portal
+    range: string
     required: false
   materialType:
     description: Type of material in the characterization
@@ -571,6 +580,7 @@ slots:
     in_subset:
       - portal
     see_also: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/publisher
+    range: string
     required: false
   readDepth:
     description: If available, the coverage statistic as output from bedtools coverage or samtools stats.
@@ -626,6 +636,10 @@ slots:
     required: false
   relatedStudies:
     description: Studies similar to the current study. Subproperty of `relatedResource`.
+    multivalued: true
+    in_subset:
+      - portal
+    range: string
     required: false
   reporterGene:
     description: A gene which produces an easily assayed phenotype. Often used for expression studies of heterologous promoters.
@@ -679,6 +693,7 @@ slots:
     in_subset:
       - portal
     see_also: http://www.w3.org/ns/dcat#inSeries
+    range: string
     required: false
   species:
     description: The name of a species (typically a taxonomic group) of organism.
@@ -700,19 +715,23 @@ slots:
     description: Id of study.
     in_subset:
       - portal
+    range: string
     required: true
   studyName:
     description: Name of a study.
     in_subset:
       - portal
+    range: string
     required: true
   studyFileviewId:
     description: Links a Synapse project to its fileview.
     in_subset:
       - portal
+    range: string
     required: false
   studyLeads:
     description: Individuals with lead roles in a study.
+    multivalued: true
     in_subset:
       - portal
     required: true
@@ -726,6 +745,7 @@ slots:
     description: A short description (an abstract).
     in_subset:
       - portal
+    range: string
     required: true
   auxiliaryAsset:
     description: >
@@ -756,6 +776,7 @@ slots:
     in_subset:
       - portal
     see_also: https://www.w3.org/TR/vocab-dcat-3/#Property:resource_title
+    range: string
     required: true
   totalReads:
     description: If available, the total number of reads collected from samtools.
@@ -791,6 +812,7 @@ slots:
       This is only required for data processed by NF-OSI for tracking purposes, optional for community-contributed datasets. 
     in_subset:
       - portal
+    range: integer
     annotations:
       validationRules: int
     notes:
@@ -800,6 +822,7 @@ slots:
     description: Year in which the resource was published/generally made available.
     in_subset:
       - portal
+    range: integer
     annotations:
       validationRules: int
     required: false

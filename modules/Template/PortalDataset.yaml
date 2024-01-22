@@ -2,6 +2,8 @@
 # Portal          
 #######################################
 
+# Note: this template definition uses the alternate syntax with 'attribute'
+
 classes:
   PortalDataset:
     description: >
@@ -9,28 +11,45 @@ classes:
     notes:
     - The compiled JSON schema for this should be bound to [Dataset](https://rest-docs.synapse.org/rest/org/sagebionetworks/repo/model/table/Dataset.html) entities, not folders. 
     - While "publisher" (repository) may seem redundant given that all Datasets are obviously on Synapse, it's for explicit compatibility with DataCite, and eventually may want to have "symbolic" datasets like Cancer Complexity Portal that list datasets hosted somewhere else.
-    slots:
-    # Properties set by Synapse/not editable meta are commented out but included for reference bc they do show up in the portal
+    attributes:
+    # Meta set by Synapse/not editable as annotations are commented out but included for reference bc they do show up in the portal
+    # - name
     # - id
     # - currentVersion
     # - doi (if minted)
-    # - datasetItemCount # Set by Synapse, not editable meta
+    # - createdBy # user id/handle, creator allows setting name more explicitly for citations
+    # - datasetItemCount
     # - datasetSizeInBytes 
-    - title
-    - creator # createdBy is set by Synapse, not always the same as what we want
-    - contributor
-    - description
-    - license
-    - dataType
-    - studyName
-    - studyId
-    - manifestation
-    - diseaseFocus
-    - fundingAgency
-    - series
-    - publisher
-    - yearProcessed
-    - yearPublished
-    - auxiliaryAsset # link to interactive multi-qc reports or other materials related to the dataset
-    # - relatedDataset # potentially, like relatedStudies, not implemented yet
+    # - publisher # should be autoset as Synapse
+      title:
+        range: string
+      creator:
+        range: string
+      contributor:
+        range: string
+        multivalued: true
+      description:
+        range: string
+      license:
+        range: string
+      dataType:
+        range: Data
+        multivalued: true
+      studyId:
+        range: string
+      manifestation:
+        range: string
+        multivalued: true
+      diseaseFocus:
+        range: string
+        multivalued: true
+      fundingAgency:
+        range: string
+        multivalued: true
+      series:
+        range: string
+      yearProcessed:
+        range: integer
+      yearPublished:
+        range: integer
 
