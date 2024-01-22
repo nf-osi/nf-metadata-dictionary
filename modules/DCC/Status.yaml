@@ -1,0 +1,31 @@
+enums:
+  DataStatusEnum:
+    title: Data Status
+    permissible_values:
+      Data Not Expected: 
+        description: Data is not expected for the project.
+      Data Pending: 
+        description: There is no data yet in the project because it is still being generated or has not yet been uploaded yet.
+      Under Embargo: 
+        description: Data is present in the project but not accessible to anyone outside the project admins. 
+        notes: 
+        - When data is first uploaded, the status should change from “Data Pending” to “Under Embargo”.
+      Rolling Release: 
+        description: Some data is available for download for the project via rolling release.
+      Partially Available: 
+        description: Some data is available for download for the project.
+      Available: 
+        description: Data is fully available for download for the project (with fulfillment of any governance requirements).
+
+  
+  StudyStatusEnum:
+    title: Study Status
+    permissible_values:
+      Active: 
+        description: The project is in the performance period between grant start and grant end dates.
+      Completed: 
+        description: The project has reached the grant end date and research activities completed.
+      Withdrawn: 
+        description: The project was planned/started but not completed (withdrawn for various reasons).
+
+
