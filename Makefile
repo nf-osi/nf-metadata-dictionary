@@ -16,7 +16,7 @@ PortalDataset:
 	gen-json-schema --inline --no-metadata --not-closed temp.yaml > tmp.json
 	rm relevant_props.yaml relevant_enums.yaml temp.yaml
 	json-dereference -s tmp.json -o tmp.json
-	jq '{ schema: { "$$schema": "http://json-schema.org/draft-07/schema#", "$$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portaldataset", properties: ."$$defs".PortalDataset.properties }}' tmp.json > registered-json-schemas/PortalDataset.json
+	jq '{ schema: { "$$schema": "http://json-schema.org/draft-07/schema#", "$$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portaldataset", properties: ."$$defs".PortalDataset.properties, required: ."$$defs".PortalDataset.required }}' tmp.json > registered-json-schemas/PortalDataset.json
 	rm tmp.json
 	@echo "--- Saved registered-json-schemas/PortalDataset.json ---"
 
@@ -28,7 +28,7 @@ PortalStudy:
 	gen-json-schema --inline --no-metadata --not-closed temp.yaml > tmp.json
 	rm relevant_enums.yaml temp.yaml
 	json-dereference -s tmp.json -o tmp.json
-	jq '{ schema: { "$$schema": "http://json-schema.org/draft-07/schema#", "$$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalstudy", properties: ."$$defs".PortalStudy.properties }}' tmp.json > registered-json-schemas/PortalStudy.json
+	jq '{ schema: { "$$schema": "http://json-schema.org/draft-07/schema#", "$$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalstudy", properties: ."$$defs".PortalStudy.properties, required: ."$$defs".PortalStudy.required }}' tmp.json > registered-json-schemas/PortalStudy.json
 	rm tmp.json
 	@echo "--- Saved registered-json-schemas/PortalStudy.json ---"
 

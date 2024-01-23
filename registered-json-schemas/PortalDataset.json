@@ -73,7 +73,7 @@
         "type": "array"
       },
       "license": {
-        "description": "Data licenses.",
+        "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
         "enum": [
           "UNKNOWN",
           "RESTRICTED-USE",
@@ -113,6 +113,14 @@
       "yearPublished": {
         "type": "integer"
       }
-    }
+    },
+    "required": [
+      "title",
+      "creator",
+      "license",
+      "dataType",
+      "studyId",
+      "fundingAgency"
+    ]
   }
 }

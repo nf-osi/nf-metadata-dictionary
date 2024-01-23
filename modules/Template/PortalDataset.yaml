@@ -12,19 +12,22 @@ classes:
     - The compiled JSON schema for this should be bound to [Dataset](https://rest-docs.synapse.org/rest/org/sagebionetworks/repo/model/table/Dataset.html) entities, not folders. 
     - While "publisher" (repository) may seem redundant given that all Datasets are obviously on Synapse, it's for explicit compatibility with DataCite, and eventually may want to have "symbolic" datasets like Cancer Complexity Portal that list datasets hosted somewhere else.
     attributes:
-    # Meta set by Synapse/not editable as annotations are commented out but included for reference bc they do show up in the portal
+    # Meta autoset by Synapse or technically should not edit via annotations are commented out
     # - name
     # - id
+    # - count
     # - currentVersion
     # - doi (if minted)
     # - createdBy # user id/handle, creator allows setting name more explicitly for citations
     # - datasetItemCount
     # - datasetSizeInBytes 
-    # - publisher # should be autoset as Synapse
+    # - publisher # should be autoset
       title:
         range: string
+        required: true
       creator:
         range: string
+        required: true
       contributor:
         range: string
         multivalued: true
@@ -34,11 +37,14 @@ classes:
         required: false
       license:
         range: License
+        required: true
       dataType:
         range: Data
         multivalued: true
+        required: true
       studyId:
         range: string
+        required: true
       manifestation:
         range: string
         multivalued: true
@@ -46,9 +52,11 @@ classes:
       diseaseFocus:
         range: string
         multivalued: true
+        required: false
       fundingAgency:
         range: string
         multivalued: true
+        required: true
       series:
         range: string
         required: false
