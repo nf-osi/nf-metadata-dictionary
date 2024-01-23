@@ -69,6 +69,13 @@
       },
       "diseaseFocus": {
         "items": {
+          "description": "",
+          "enum": [
+            "Neurofibromatosis type 1",
+            "Neurofibromatosis type 2",
+            "Multiple"
+          ],
+          "title": "DiseaseFocusEnum",
           "type": "string"
         },
         "type": "array"
@@ -77,7 +84,10 @@
         "type": "string"
       },
       "grantDOI": {
-        "type": "string"
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
       },
       "initiative": {
         "type": "string"
@@ -422,7 +432,10 @@
         "type": "string"
       },
       "studyLeads": {
-        "type": "string"
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
       },
       "studyName": {
         "type": "string"
@@ -441,6 +454,17 @@
         "type": "string"
       }
     },
-    "required": null
+    "required": [
+      "studyId",
+      "studyName",
+      "studyLeads",
+      "summary",
+      "institutions",
+      "fundingAgency",
+      "initiative",
+      "studyStatus",
+      "dataStatus",
+      "studyFileviewId"
+    ]
   }
 }

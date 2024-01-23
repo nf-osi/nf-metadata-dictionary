@@ -12,41 +12,60 @@ classes:
     attributes:
       studyId:
         range: string
+        required: true
       studyName:
         range: string
+        required: true
       studyLeads: # this combines both PIs and other data contributors, which is a distinction in the DSP
         range: string
+        multivalued: true
+        required: true
       summary:
         range: string
+        required: true
       institutions:
         range: Institution
         multivalued: true
+        required: true
       fundingAgency:
         range: string
+        required: true
       initiative:
         range: string
+        required: true
       studyStatus:
         range: StudyStatusEnum
+        required: true
       dataStatus:
         range: DataStatusEnum
+        required: true
       dataType:
         range: Data
         multivalued: true
+        required: false
       manifestation:
         range: string
         multivalued: true
+        required: false
       diseaseFocus:
-        range: string
+        range: DiseaseFocusEnum
         multivalued: true
+        required: false
       relatedStudies:
         range: string
         multivalued: true
+        required: false
       grantDOI:
         range: string
+        multivalued: true
+        required: false
       accessRequirements:
         range: string
+        required: false
       acknowledgementStatements:
         range: string
+        required: false
       studyFileviewId:
         range: string
+        required: true
 
