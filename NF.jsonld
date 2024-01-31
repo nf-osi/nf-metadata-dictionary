@@ -4478,10 +4478,6 @@
     }, {
       "@id" : "bts:2DAlamarBluefluorescence"
     }, {
-      "@id" : "bts:2DCellTiter-Glo"
-    }, {
-      "@id" : "bts:2DIncucyte"
-    }, {
       "@id" : "bts:3Dconfocalimaging"
     }, {
       "@id" : "bts:3Delectronmicroscopy"
@@ -4626,6 +4622,8 @@
     }, {
       "@id" : "bts:electrochemiluminescence"
     }, {
+      "@id" : "bts:electrophoreticlightscattering"
+    }, {
       "@id" : "bts:elevatedplusmazetest"
     }, {
       "@id" : "bts:FACE-QAppearance-relatedDistress"
@@ -4639,6 +4637,8 @@
       "@id" : "bts:gaitmeasurement"
     }, {
       "@id" : "bts:gelfiltrationchromatography"
+    }, {
+      "@id" : "bts:gelpermeationchromatography"
     }, {
       "@id" : "bts:genotyping"
     }, {
@@ -4655,6 +4655,8 @@
       "@id" : "bts:immunofluorescence"
     }, {
       "@id" : "bts:immunohistochemistry"
+    }, {
+      "@id" : "bts:insilicosynthesis"
     }, {
       "@id" : "bts:invitrotumorigenesis"
     }, {
@@ -4717,6 +4719,8 @@
       "@id" : "bts:noveltyresponsebehaviorassay"
     }, {
       "@id" : "bts:openfieldtest"
+    }, {
+      "@id" : "bts:opticaltomography"
     }, {
       "@id" : "bts:opticalcoherencetomography"
     }, {
@@ -4825,10 +4829,6 @@
     }, {
       "@id" : "bts:2DAlamarBluefluorescence"
     }, {
-      "@id" : "bts:2DCellTiter-Glo"
-    }, {
-      "@id" : "bts:2DIncucyte"
-    }, {
       "@id" : "bts:3Dconfocalimaging"
     }, {
       "@id" : "bts:3Delectronmicroscopy"
@@ -4973,6 +4973,8 @@
     }, {
       "@id" : "bts:electrochemiluminescence"
     }, {
+      "@id" : "bts:electrophoreticlightscattering"
+    }, {
       "@id" : "bts:elevatedplusmazetest"
     }, {
       "@id" : "bts:FACE-QAppearance-relatedDistress"
@@ -4986,6 +4988,8 @@
       "@id" : "bts:gaitmeasurement"
     }, {
       "@id" : "bts:gelfiltrationchromatography"
+    }, {
+      "@id" : "bts:gelpermeationchromatography"
     }, {
       "@id" : "bts:genotyping"
     }, {
@@ -5002,6 +5006,8 @@
       "@id" : "bts:immunofluorescence"
     }, {
       "@id" : "bts:immunohistochemistry"
+    }, {
+      "@id" : "bts:insilicosynthesis"
     }, {
       "@id" : "bts:invitrotumorigenesis"
     }, {
@@ -5064,6 +5070,8 @@
       "@id" : "bts:noveltyresponsebehaviorassay"
     }, {
       "@id" : "bts:openfieldtest"
+    }, {
+      "@id" : "bts:opticaltomography"
     }, {
       "@id" : "bts:opticalcoherencetomography"
     }, {
@@ -5179,7 +5187,13 @@
     },
     "sms:required" : "sms:true",
     "schema:rangeIncludes" : [ {
+      "@id" : "bts:2DCellTiter-Glo"
+    }, {
+      "@id" : "bts:2DIncucyte"
+    }, {
       "@id" : "bts:XF24ExtracellularFluxAnalyzer"
+    }, {
+      "@id" : "bts:ZeissLSM"
     }, {
       "@id" : "bts:ZeissLSM980"
     }, {
@@ -5245,11 +5259,15 @@
     }, {
       "@id" : "bts:IlluminaOmni5M"
     }, {
+      "@id" : "bts:IVISSpectrumInVivoImagingSystem"
+    }, {
       "@id" : "bts:AffymetrixGenome-WideHumanSNP6.0Array"
     }, {
       "@id" : "bts:LifeVizMicroSystem"
     }, {
       "@id" : "bts:10xVisiumSpatialGeneExpression"
+    }, {
+      "@id" : "bts:MalvernZetasizer"
     }, {
       "@id" : "bts:NanostringGeoMx"
     }, {
@@ -5318,6 +5336,8 @@
       "@id" : "bts:TOOsonixSystemONE-M"
     }, {
       "@id" : "bts:MGIT-series"
+    }, {
+      "@id" : "bts:VarioskanLUX"
     }, {
       "@id" : "bts:NotApplicable"
     } ],
@@ -9395,6 +9415,17 @@
     "sms:displayName" : "University of Puerto Rico, Medical Sciences Campus",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:gelpermeationchromatography",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "gelpermeationchromatography",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "gel permeation chromatography",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:MedicalCollegeofWisconsin",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -9734,6 +9765,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "sandwich ELISA",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:ZeissLSM",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "ZeissLSM",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Zeiss LSM",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:YST-1",
@@ -11936,6 +11978,17 @@
     "sms:displayName" : "drugCombinationScreen",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:electrophoreticlightscattering",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "electrophoreticlightscattering",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "electrophoretic light scattering",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:teratoma",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -12297,6 +12350,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "icNF04.9a",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:VarioskanLUX",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "VarioskanLUX",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Varioskan LUX",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:ChromiumX",
@@ -14156,6 +14220,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "B1",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:opticaltomography",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "opticaltomography",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "optical tomography",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:NewJerseyInstituteofTechnology",
@@ -18899,6 +18974,17 @@
     "sms:displayName" : "University of Michigan, Ann Arbor",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:insilicosynthesis",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "insilicosynthesis",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "in silico synthesis",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:WestVirginiaUniversity",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -20032,6 +20118,17 @@
     "sms:displayName" : "kidney",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:IVISSpectrumInVivoImagingSystem",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "IVISSpectrumInVivoImagingSystem",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "IVIS Spectrum In Vivo Imaging System",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:RiceUniversity",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -20283,6 +20380,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "University College of London",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:MalvernZetasizer",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "MalvernZetasizer",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Malvern Zetasizer",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:MATLABscript",

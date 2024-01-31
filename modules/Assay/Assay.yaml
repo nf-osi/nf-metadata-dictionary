@@ -7,14 +7,6 @@ enums:
       2D AlamarBlue fluorescence:
         description: Cell viability assay based on detection of AlamarBlue (resazurin). Living cells reduce blue, non-fluorescent resazurin to the red, fluorescent molecule resorufin. The amount of fluorescence or absorbance is proportional to the number of living cells and corresponds to the cell’s metabolic activity. For the fluorescence-based assay, color change and fluorescence can be detected using 560/590 nm (excitation/emission).
         meaning: https://www.thermofisher.com/us/en/home/life-science/cell-analysis/fluorescence-microplate-assays/microplate-assays-cell-viability/alamarblue-assay-cell-viability.html
-      2D CellTiter-Glo:
-        description: Cell viability assay based on detection of ATP.
-        todo:
-        - This should be subsumed under `cell viability assay`, can add CellTiter-Go as platform.
-        meaning: https://www.promega.com/products/cell-health-assays/cell-viability-and-cytotoxicity-assays/celltiter_glo-2_0-assay/?catNum=G9241
-      2D Incucyte:
-        description: Cell viability assay on a 2D monolayer model.
-        meaning: https://www.essenbioscience.com/en/resources/documents/
       3D confocal imaging:
         description: Confocal microscopy with 3D reconstruction of the sample tissue.
         meaning: https://pubmed.ncbi.nlm.nih.gov/34331281
@@ -251,6 +243,11 @@ enums:
         description: A method in which electromagnetic radiation, in the form of light emission, is generated from an electrochemical reaction in a solution.
         meaning: http://purl.obolibrary.org/obo/NCIT_C111193
         source: https://www.mesoscale.com/en/technical_resources/our_technology/ecl
+      electrophoretic light scattering:
+        description: Subtype of dynamic light scattering, used to measure electrophoretic mobility.
+        see_also:
+        - dynamic light scattering
+        source: https://en.wikipedia.org/wiki/Electrophoretic_light_scattering
       elevated plus maze test:
         description: A method which utilizes an experimental apparatus consisting of four arms, usually two enclosed and two open, in the shape of a plus (+) upon which the test animal can walk. The maze is elevated a set distance, for example 40 to 60 centimeters, above the floor or platform upon which the apparatus sits.
         meaning: http://purl.obolibrary.org/obo/MMO_0000262
@@ -278,6 +275,9 @@ enums:
           'Gel filtration chromatography (synonym: gel permeation chromatography - GPC) is a type of size-exclusion chromatography (SEC), that separates analytes on the basis of size, typically in organic solvents. 
           The technique is often used for the analysis of polymers.'
         meaning: http://purl.obolibrary.org/obo/CHMO_0001011
+      gel permeation chromatography:
+        description: AKA size exclusion chromatography (GPC/SEC), this assay is a type of high performance liquid chromatography used to determine the molecular weight distributions of polymers.
+        source: https://www.agilent.com/cs/library/primers/Public/5990-6969EN%20GPC%20SEC%20Chrom%20Guide.pdf
       genotyping:
         description: The determination of the DNA sequence of an individual.
         meaning: http://purl.obolibrary.org/obo/NCIT_C45447
@@ -300,6 +300,9 @@ enums:
       immunohistochemistry:
         description: An immunostaining assay to detect and potentially localize antigens within the cells of a tissue section
         meaning: http://purl.obolibrary.org/obo/OBI_0001986
+      in silico synthesis:
+        description: Synthesis of molecules and compounds (e.g. drug candidates) via simulation or other system outside of a live biological system.
+        source: Sage Bionetworks
       in vitro tumorigenesis:
         description: An in vitro assay devised to measure tumor formation
       in vivo PDX viability:
@@ -397,9 +400,20 @@ enums:
       open field test:
         description: A test utilizing an enclosure consisting of a single area bordered by clear or opaque walls, used to measure movement, exploratory behavior, etc of an experimental subject.
         meaning: http://purl.obolibrary.org/obo/MMO_0000258
+      optical tomography:
+        description: >
+          Optical tomography is a form of computed tomography that creates a digital volumetric model of an object by reconstructing images made from light transmitted and scattered through an object.
+          Subtypes are diffuse optical tomography, time-of-flight diffuse optical tomography, fluorescence molecular tomography, confocal diffuse tomography, optical coherence tomography.
+        source: https://en.wikipedia.org/wiki/Optical_tomography
       optical coherence tomography:
-        description: Optical Coherence Tomography (OCT) combines the principles of ultrasound with the imaging performance of a microscope. OCT uses infrared light waves that reflect off the internal microstructure within the biological tissues. The frequencies and bandwidths of infrared light are orders of magnitude higher than medical ultrasound signals, resulting in greatly increased image resolution, 8-25 times greater than any existing modality. In addition to providing high-level resolutions for the evaluation of microanatomic structures OCT is also able to provide information regarding tissue composition
+        description: >
+          Optical Coherence Tomography (OCT) combines the principles of ultrasound with the imaging performance of a microscope. 
+          OCT uses infrared light waves that reflect off the internal microstructure within the biological tissues. 
+          The frequencies and bandwidths of infrared light are orders of magnitude higher than medical ultrasound signals, resulting in greatly increased image resolution, 8-25 times greater than any existing modality. 
+          In addition to providing high-level resolutions for the evaluation of microanatomic structures OCT is also able to provide information regarding tissue composition.
+          OCT is most widely used in ophthalmology.
         meaning: http://purl.obolibrary.org/obo/NCIT_C20828
+        source: https://en.wikipedia.org/wiki/Optical_coherence_tomography
       optokinetic reflex assay:
         description: The optokinetic reflex (OKR), which serves to stabilize a moving image on the retina, is a behavioral response that has many favorable attributes as a test of CNS function. The OKR requires no training, assesses the function of diverse CNS circuits, can be induced repeatedly with minimal fatigue or adaptation, and produces an electronic record that is readily and objectively quantifiable.
         meaning: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0002055
