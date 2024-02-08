@@ -603,6 +603,17 @@
     "sms:displayName" : "License",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:AccessTypeEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "AccessTypeEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "AccessTypeEnum",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:GenePerturbationTechnologyEnum",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -1403,6 +1414,24 @@
     },
     "sms:displayName" : "benefactorId",
     "sms:required" : "sms:false"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:accessType",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:true",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PublicAccess"
+    }, {
+      "@id" : "bts:OpenAccess"
+    }, {
+      "@id" : "bts:ControlledAccess"
+    } ],
+    "rdfs:label" : "accessType",
+    "rdfs:comment" : "Indicates access type / possible procedures needed for access to the resource.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "accessType"
   }, {
     "@id" : "bts:createdOn",
     "@type" : "rdfs:Class",
@@ -13285,6 +13314,17 @@
     "sms:displayName" : "University of Texas, Austin",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:OpenAccess",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "OpenAccess",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Open Access",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:ColorectalAdenocarcinoma",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -15100,6 +15140,17 @@
     "sms:displayName" : "scCGI-seq",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:ControlledAccess",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "ControlledAccess",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Controlled Access",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:ELK-TADLuciferaseReporterHEK293Stable",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -15747,6 +15798,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "gel filtration chromatography",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:PublicAccess",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "PublicAccess",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Public Access",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:B6;129S2-Trp53tm1TyjNf1tm1Tyj/J",
