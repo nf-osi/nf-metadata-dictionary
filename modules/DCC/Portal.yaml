@@ -1,4 +1,16 @@
 enums:
+  AccessTypeEnum:
+    title: Access types
+    permissible_values:
+      Public Access:
+        description: Access without any additional steps/requirements, without even needing a Synapse account.
+      Open Access:
+        description: Access without any additional steps/requirements as long as you are logged in to Synapse. 
+      Controlled Access:
+        description: > 
+          Access is restricted and only available after fulfilling specific requirements, such as submitting a research statement or getting approval directly from the data owner through Synapse.
+          Note that for datasets, if any component file is under controlled access, the entire dataset is considered to be under controlled access.
+  
   DataStatusEnum:
     title: Data Status
     permissible_values:
