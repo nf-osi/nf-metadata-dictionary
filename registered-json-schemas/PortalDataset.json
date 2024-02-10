@@ -10,7 +10,7 @@
           "Open Access",
           "Controlled Access"
         ],
-        "title": "AccessTypeEnum",
+        "title": "accessType",
         "type": "string"
       },
       "assay": {
@@ -176,7 +176,7 @@
           "whole-cell patch clamp",
           "STR profile"
         ],
-        "title": "AssayEnum",
+        "title": "assay",
         "type": "string"
       },
       "contributor": {
@@ -231,7 +231,8 @@
           "title": "Data",
           "type": "string"
         },
-        "type": "array"
+        "type": "array",
+        "title": "dataType"
       },
       "description": {
         "type": "string"
@@ -252,9 +253,19 @@
       },
       "fundingAgency": {
         "items": {
+          "description": "",
+          "enum": [
+            "NTAP",
+            "CTF",
+            "GFF",
+            "Independent",
+            "Other"
+          ],
+          "title": "FundingAgencyEnum",
           "type": "string"
         },
-        "type": "array"
+        "type": "array",
+        "title": "fundingAgency"
       },
       "license": {
         "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
@@ -273,21 +284,62 @@
           "CC BY-NC-SA",
           "CC BY-NC-ND"
         ],
-        "title": "License",
+        "title": "license",
         "type": "string"
       },
       "manifestation": {
         "items": {
+          "description": "",
+          "enum": [
+            "Plexiform Neurofibroma",
+            "MPNST",
+            "Cutaneous Neurofibroma",
+            "Schwannoma",
+            "Low Grade Glioma",
+            "High Grade Glioma",
+            "Meningioma",
+            "ANNUBP",
+            "Glioma",
+            "JMML",
+            "SMN",
+            "Atypical Neurofibroma",
+            "Behavioral",
+            "Quality of Life",
+            "Vision Loss",
+            "Memory",
+            "Cognition",
+            "Pain"
+          ],
+          "title": "ManifestationEnum",
           "type": "string"
         },
-        "type": "array"
+        "type": "array",
+        "title": "manifestation"
       },
       "series": {
         "type": "string"
       },
       "species": {
-        "items": {},
-        "type": "array"
+        "items": {
+          "description": "",
+          "enum": [
+            "Rattus norvegicus",
+            "Gallus gallus",
+            "Pan troglodytes",
+            "Mus musculus (humanized)",
+            "Homo sapiens",
+            "Danio rerio",
+            "Drosophila melanogaster",
+            "Rhesus macaque",
+            "Sus scrofa",
+            "Oryctolagus cuniculus",
+            "Mus musculus"
+          ],
+          "title": "SpeciesEnum",
+          "type": "string"
+        },
+        "type": "array",
+        "title": "species"
       },
       "studyId": {
         "type": "string"
