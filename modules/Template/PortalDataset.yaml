@@ -36,12 +36,14 @@ classes:
         range: string
         required: false
       accessType:
+        title: accessType
         range: AccessTypeEnum
         required: true
       license:
         range: License
         required: true
       assay:
+        title: assay
         range: AssayEnum
         required: false # not applicable for curated data, e.g. dataset of compounds from a database and then enhanced for machine learning or other exploration  
       dataType:
@@ -64,7 +66,7 @@ classes:
         multivalued: true
         required: true
       fundingAgency:
-        range: string
+        range: FundingAgencyEnum
         multivalued: true
         required: true
       series:
