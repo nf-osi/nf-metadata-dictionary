@@ -11,7 +11,7 @@ convert:
 # LinkML output needs to be dereferenced bc Synapse doesn't suppport full specs such as $defs
 PortalDataset:
 	yq '.slots |= with_entries(select(.value.in_subset[] == "portal"))' modules/props.yaml > relevant_props.yaml
-	yq '. *= load("modules/Data/Data.yaml")' modules/DCC/Portal.yaml > relevant_enums.yaml
+	yq ea '. as $$item ireduce ({}; . * $$item )' modules/Data/Data.yaml modules/Assay/Assay.yaml modules/DCC/Portal.yaml > relevant_enums.yaml
 	cat header.yaml relevant_props.yaml relevant_enums.yaml modules/Template/PortalDataset.yaml > temp.yaml
 	gen-json-schema --inline --no-metadata --not-closed temp.yaml > tmp.json
 	rm relevant_props.yaml relevant_enums.yaml temp.yaml
