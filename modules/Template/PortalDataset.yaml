@@ -1,0 +1,81 @@
+#######################################
+# Portal          
+#######################################
+
+# Note: this template definition uses the alternate syntax with 'attribute'
+
+classes:
+  PortalDataset:
+    description: >
+      A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets. 
+    notes:
+    - The compiled JSON schema for this should be bound to [Dataset](https://rest-docs.synapse.org/rest/org/sagebionetworks/repo/model/table/Dataset.html) entities, not folders. 
+    - While "publisher" (repository) may seem redundant given that all Datasets are obviously on Synapse, it's for explicit compatibility with DataCite, and eventually may want to have "symbolic" datasets like Cancer Complexity Portal that list datasets hosted somewhere else.
+    attributes:
+    # Meta autoset by Synapse or technically should not edit via annotations are commented out
+    # - name
+    # - id
+    # - count
+    # - currentVersion
+    # - doi (if minted)
+    # - createdBy # user id/handle, creator allows setting name more explicitly for citations
+    # - datasetItemCount
+    # - datasetSizeInBytes 
+    # - publisher # should be autoset
+      title:
+        range: string
+        required: true
+      creator:
+        range: string
+        required: true
+      contributor:
+        range: string
+        multivalued: true
+        required: false
+      description:
+        range: string
+        required: false
+      accessType:
+        title: accessType
+        range: AccessTypeEnum
+        required: true
+      license:
+        range: License
+        required: true
+      assay:
+        title: assay
+        range: AssayEnum
+        required: false # not applicable for curated data, e.g. dataset of compounds from a database and then enhanced for machine learning or other exploration  
+      dataType:
+        range: Data
+        multivalued: true
+        required: true
+      species:
+        range: SpeciesEnum
+        multivalued: true
+        required: false # not all datasets from assays that use biological samples
+      studyId:
+        range: string
+        required: true
+      manifestation:
+        range: ManifestationEnum
+        multivalued: true
+        required: false
+      diseaseFocus:
+        range: DiseaseFocusEnum
+        multivalued: true
+        required: true
+      fundingAgency:
+        range: FundingAgencyEnum
+        multivalued: true
+        required: true
+      series:
+        range: string
+        required: false
+      yearProcessed:
+        range: integer
+        required: false
+      yearPublished:
+        range: integer
+        required: false
+

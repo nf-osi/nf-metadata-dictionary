@@ -2,9 +2,15 @@
 
 ### Maintenance and Contribution
 
-The purpose of the data model is to provide a set of standard concepts and structure that help to describe and manage data. 
-Terms in the metadata dictionary are used in the manifests within the [data curator app](https://dca.app.sagebionetworks.org/). 
-This dictionary is maintained by the NF-Open Science Initative. We welcome contributions from community members, whether you are a professional data modeler, clinician, or student in the NF community.
+This data model, maintained by the NF-Open Science Initative, provides standard concepts and structure to help describe and manage data and other resources in the NF-OSI community. 
+
+One can reference the data model to understand things such as:
+- What type of entities there are (e.g. RNA-seq files vs image files, files vs datasets)
+- What metadata properties exist for these different types, to help understand and use a data resource
+- What are the preferred/standard labels for something as defined by community input and our data managers (e.g. prefer "NF2-related schwannomatosis" vs the now-deprecated "Neurofibromatosis type 2")
+
+Terms in the metadata dictionary are used in the manifests within the [Data Curator App](https://dca.app.sagebionetworks.org/). 
+We welcome contributions from community members, whether you are a professional data modeler, clinician, or student in the NF community.
 
 ### Data Model Framework
 
