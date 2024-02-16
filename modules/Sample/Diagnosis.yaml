@@ -19,3 +19,163 @@ enums:
           Most schwannomas originate from the eighth cranial nerve, whereas neurofibromas more commonly arise along the spinal nerve roots.
         notes:
         - Not in NCIT as of 2023-06-07
+  
+  AgeGroupEnum:
+    permissible_values:
+      infancy:
+      childhood:
+      adolescence:
+      adulthood:
+      unknown:
+  
+  InheritanceEnum:
+    permissible_values:
+      parent affected:
+      parent not affected:
+      unknown:
+  
+  MosaicismEnum:
+    permissible_values:
+      mosaic:
+      not mosaic:
+      unknown:
+  
+  GermlineMutation:
+    permissible_values:
+      not tested:
+      tested but unknown:
+      
+  VitalStatusEnum:
+    permissible_values:
+      alive:
+      deceased:
+      unknown:
+  
+  WHOPerformanceStatusScores:
+    description: https://www.ncbi.nlm.nih.gov/books/NBK97482/
+    permissible_values:
+      '0':
+      '1':
+      '2':
+      '3':
+      '4':
+
+  PainEnum:
+    permissible_values:
+      not a problem:
+      occasional:
+      disabling:
+  
+  TumorTreatmentEnum:
+    permissible_values:
+      no specific therapy:
+      chemotherapy:
+      surgery:
+      radiation:
+      targeted therapy:
+      clinical trial:
+  
+  ManifestationEnum:
+    description: Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.
+    permissible_values:
+      absent:
+      present:
+      unknown:
+
+  NeurofibromaManifestationEnum:
+    description: Enumerations describing how neurofibromas can manifest more generally.
+    permissible_values:
+      absent:
+      scattered:
+      dense:
+      unknown:
+
+  SpinalNeuromaManifestationEnum:
+    description: Enumerations describing the manifestation of spinal neurofibromas, combining information on presence and the cervical locations.
+    permissible_values:
+      not imaged:
+      absent:
+      levels 1-3:
+      all levels:
+  
+  PlexiformNeurofibromaManifestationEnum:
+    description: Enumerations describing the manifestation of plexiform neurofibromas, combining information on presence and the certainty via MRI imaging technique.
+    permissible_values:
+      present:
+      absent by MRI:
+      absent clinically - no MRI:
+      unknown:
+
+  OpticGliomaManifestationEnum:
+    description: Enumerations describing the manifestation of optic gliomas, combining information on presence, symptoms, and treatment.
+    permissible_values:
+      absent:
+      present - asymptomatic:
+      present - symptomatic - not treated:
+      present - symptomatic - treated:
+      unknown:
+  
+  PubertyOnsetEnum:
+    permissible_values:
+      prebubertal:
+      precocious:
+      normal:
+      late:
+
+  Percentiles-2SD:
+    description: Enumerations corresponding to 3 bins using 2 standard deviations as a cutoff.
+    permissible_values:
+      '< 5th centile':
+      '5th-95th centile':
+      '> 95th centile':
+
+  BinaryImagingDiagnosisEnum:
+    description: Enumerations describing the manifestation of tumors confirmed via imaging with mainly absent or present being the most relevant result.
+    permissible_values:
+      not imaged:
+      absent by imaging:
+      present:
+      unknown:
+  
+  MultipleImagingDiagnosisEnum:
+    description: Enumerations describing the manifestation of tumors confirmed via imaging with one or multiple sites being the most relevant result.
+    permissible_values:
+      not imaged:
+      absent by imaging:
+      single:
+      multiple:
+      unknown:
+
+  LateralManifestationEnum:
+    description: Enumerations describing the manifestation of tumors confirmed via imaging (MRI or other), where lateral information is most relevant.
+    permissible_values:
+      not imaged:
+      absent by imaging:
+      unilateral:
+      bilateral:
+      unknown:
+
+
+  SchwannomaManifestationEnum:
+    description: Enumerations describing the manifestation of schwannomas.
+    permissible_values:
+      single:
+      scattered:
+      dense:
+      unknown:
+  
+  NonvestibularSchwannomaManifestationEnum:
+    permissible_values:
+      only by imaging evidence:
+      '1 pathogically confirmed':
+      '2 or more, at least 1 pathogically confirmed':
+      unknown:
+
+
+
+
+    
+
+
+
+
