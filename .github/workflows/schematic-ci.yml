@@ -16,7 +16,7 @@ jobs:
     if: ${{ !contains(github.event.head_commit.message, '[skip schematic]') }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
@@ -45,27 +45,33 @@ jobs:
   # Additionally test PRs
   test:
     name: Test with schematic
-    if: "!contains( github.event.pull_request.labels.*.name, 'skip tests')"
     needs: [build]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     env:
       SCHEMATIC_SERVICE_ACCT_CREDS: ${{ secrets.SCHEMATIC_SERVICE_ACCT_CREDS }}
     permissions:
       pull-requests: write
     strategy:
       matrix:
-        schematic-version: [23.9.1]
+        schematic-version: [24.1.1]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 1
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12' 
+      
       - name: Setup schematic
         id: setup-schematic
-        run: pip3 install schematicpy==${{ matrix.schematic-version }}
+        run: pip install schematicpy==${{ matrix.schematic-version }}
 
+      - name: Sanity-check successful installation and version
+        run: pip show schematicpy
+      
       - name: Test generate
         working-directory: tests/generate
         continue-on-error: true
