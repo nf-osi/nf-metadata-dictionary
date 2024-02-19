@@ -766,6 +766,24 @@
     "sms:required" : "sms:false"
   }, {
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:mosaicism",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:mosaic"
+    }, {
+      "@id" : "bts:notmosaic"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "mosaicism",
+    "rdfs:comment" : "Whether individual is mosaic.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "mosaicism"
+  }, {
+    "rdfs:subClassOf" : [ ],
     "@id" : "bts:readPairOrientation",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
@@ -796,6 +814,56 @@
     "sms:displayName" : "fileSize",
     "sms:required" : "sms:false"
   }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:dermalSchwannoma",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "dermalSchwannoma",
+    "rdfs:comment" : "Characterization of the manifestation of Dermal schwannoma.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "dermalSchwannoma"
+  }, {
     "@id" : "bts:benefactorId",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "The id of the resource from which access control is inherited.",
@@ -806,6 +874,28 @@
     },
     "sms:displayName" : "benefactorId",
     "sms:required" : "sms:false"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:spinalSchwannoma",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:notimaged"
+    }, {
+      "@id" : "bts:absentbyimaging"
+    }, {
+      "@id" : "bts:single"
+    }, {
+      "@id" : "bts:multiple"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "spinalSchwannoma",
+    "rdfs:comment" : "Characterization of the manifestation of Spinal schwannoma.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "spinalSchwannoma"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:accessType",
@@ -824,6 +914,48 @@
     "rdfs:comment" : "Indicates access type / possible procedures needed for access to the resource.",
     "@type" : "rdfs:Class",
     "sms:displayName" : "accessType"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:spinalNeurofibromas",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:notimaged"
+    }, {
+      "@id" : "bts:absent"
+    }, {
+      "@id" : "bts:levels1-3"
+    }, {
+      "@id" : "bts:alllevels"
+    } ],
+    "rdfs:label" : "spinalNeurofibromas",
+    "rdfs:comment" : "Characterization of the manifestation of Spinal neurofibromas.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "spinalNeurofibromas"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:opticGlioma",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:absent"
+    }, {
+      "@id" : "bts:present-asymptomatic"
+    }, {
+      "@id" : "bts:present-symptomatic-nottreated"
+    }, {
+      "@id" : "bts:present-symptomatic-treated"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "opticGlioma",
+    "rdfs:comment" : "Characterization of the manifestation of Optic glioma.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "opticGlioma"
   }, {
     "@id" : "bts:createdOn",
     "@type" : "rdfs:Class",
@@ -858,6 +990,56 @@
     "rdfs:comment" : "Doi of a grant (e.g. in ProposalCentral) that can be associated with the entity.",
     "@type" : "rdfs:Class",
     "sms:displayName" : "grantDOI"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:breastCancer",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "breastCancer",
+    "rdfs:comment" : "Characterization of the manifestation of Breast cancer.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "breastCancer"
   }, {
     "@id" : "bts:reporterSubstance",
     "@type" : "rdfs:Class",
@@ -932,14 +1114,24 @@
     "schema:rangeIncludes" : [ {
       "@id" : "bts:Neurofibromatosistype1"
     }, {
-      "@id" : "bts:Neurofibromatosistype2"
-    }, {
       "@id" : "bts:Schwannomatosis"
+    }, {
+      "@id" : "bts:NF2-relatedschwannomatosis"
+    }, {
+      "@id" : "bts:SMARCB1-relatedschwannomatosis"
+    }, {
+      "@id" : "bts:LZTR1-relatedschwannomatosis"
+    }, {
+      "@id" : "bts:22q-relatedschwannomatosis"
+    }, {
+      "@id" : "bts:Schwannomatosis-NOS"
+    }, {
+      "@id" : "bts:Schwannomatosis-NEC"
     }, {
       "@id" : "bts:SporadicSchwannoma"
     } ],
     "rdfs:label" : "diagnosis",
-    "rdfs:comment" : "A diagnosis is the result of a medical investigation to identify a disorder from its signs and symptoms.",
+    "rdfs:comment" : "Diagnosis for the individual given signs and symptoms. Use the most specific diagnosis term that applies.",
     "@type" : "rdfs:Class",
     "sms:displayName" : "diagnosis"
   }, {
@@ -1111,6 +1303,56 @@
     "sms:required" : "sms:false"
   }, {
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:otherTumors",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "otherTumors",
+    "rdfs:comment" : "Characterization of the manifestation of other tumors.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "otherTumors"
+  }, {
+    "rdfs:subClassOf" : [ ],
     "@id" : "bts:genePerturbationType",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
@@ -1121,6 +1363,24 @@
     "rdfs:comment" : "Specific way in which a single gene was perturbed in a sample",
     "@type" : "rdfs:Class",
     "sms:displayName" : "genePerturbationType"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:painStatus",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:notaproblem"
+    }, {
+      "@id" : "bts:occasional"
+    }, {
+      "@id" : "bts:disabling"
+    } ],
+    "rdfs:label" : "painStatus",
+    "rdfs:comment" : "Pain status rating.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "painStatus"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:compoundDose",
@@ -1218,6 +1478,30 @@
     "sms:displayName" : "readLength"
   }, {
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:tumorTreatmentStatus",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:nospecifictherapy"
+    }, {
+      "@id" : "bts:chemotherapy"
+    }, {
+      "@id" : "bts:surgery"
+    }, {
+      "@id" : "bts:radiation"
+    }, {
+      "@id" : "bts:targetedtherapy"
+    }, {
+      "@id" : "bts:clinicaltrial"
+    } ],
+    "rdfs:label" : "tumorTreatmentStatus",
+    "rdfs:comment" : "Tumor treatment status for the individual.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "tumorTreatmentStatus"
+  }, {
+    "rdfs:subClassOf" : [ ],
     "@id" : "bts:studyId",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
@@ -1239,6 +1523,26 @@
     },
     "sms:displayName" : "Filename",
     "sms:required" : "sms:false"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:diffuseDermalNeurofibromas",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:absent"
+    }, {
+      "@id" : "bts:scattered"
+    }, {
+      "@id" : "bts:dense"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "diffuseDermalNeurofibromas",
+    "rdfs:comment" : "Characterization of the manifestation of Diffuse dermal neurofibromas.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "diffuseDermalNeurofibromas"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:readStrandOrigin",
@@ -1407,6 +1711,56 @@
     "sms:displayName" : "libraryStrand"
   }, {
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:GIST",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "GIST",
+    "rdfs:comment" : "Characterization of the manifestation of Gastrointestinal stromal tumor (GIST).",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "GIST"
+  }, {
+    "rdfs:subClassOf" : [ ],
     "@id" : "bts:immersion",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
@@ -1483,6 +1837,24 @@
     "sms:displayName" : "experimentalFactor"
   }, {
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:stature",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:<5thcentile"
+    }, {
+      "@id" : "bts:5th-95thcentile"
+    }, {
+      "@id" : "bts:>95thcentile"
+    } ],
+    "rdfs:label" : "stature",
+    "rdfs:comment" : "Stature of the individual.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "stature"
+  }, {
+    "rdfs:subClassOf" : [ ],
     "@id" : "bts:readPair",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
@@ -1516,6 +1888,56 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "workingDistanceUnit"
   }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:nonopticGlioma",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "nonopticGlioma",
+    "rdfs:comment" : "Characterization of the manifestation of Nonoptic glioma.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "nonopticGlioma"
+  }, {
     "@id" : "bts:antibodyID",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "Antibody ID such as RRID if available, otherwise use vendor ID.",
@@ -1539,6 +1961,28 @@
     "sms:required" : "sms:false"
   }, {
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:vestibularSchwannoma",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:notimaged"
+    }, {
+      "@id" : "bts:absentbyimaging"
+    }, {
+      "@id" : "bts:unilateral"
+    }, {
+      "@id" : "bts:bilateral"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "vestibularSchwannoma",
+    "rdfs:comment" : "Characterization of the manifestation of Vestibular schwannoma.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "vestibularSchwannoma"
+  }, {
+    "rdfs:subClassOf" : [ ],
     "@id" : "bts:isPairedEnd",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
@@ -1553,6 +1997,26 @@
     "rdfs:comment" : "(Legacy/deprecated annotation) Whether or not is paired-end sequencing (Yes; No).",
     "@type" : "rdfs:Class",
     "sms:displayName" : "isPairedEnd"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:numberOfSchwannomas",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:single"
+    }, {
+      "@id" : "bts:scattered"
+    }, {
+      "@id" : "bts:dense"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "numberOfSchwannomas",
+    "rdfs:comment" : "Number of schwannomas.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "numberOfSchwannomas"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:dataStatus",
@@ -1932,6 +2396,56 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "nf2Genotype"
   }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:peripheralNeuropathy",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "peripheralNeuropathy",
+    "rdfs:comment" : "Characterization of the manifestation of Peripheral neuropathy.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "peripheralNeuropathy"
+  }, {
     "@id" : "bts:Component",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "Type of metadata template; provide the same one for all items/rows.",
@@ -1942,6 +2456,56 @@
     },
     "sms:displayName" : "Component",
     "sms:required" : "sms:true"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:scoliosis",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "scoliosis",
+    "rdfs:comment" : "Characterization of the manifestation of Scoliosis.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "scoliosis"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:species",
@@ -2034,6 +2598,76 @@
     "sms:displayName" : "fundingAgency"
   }, {
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:intellectualDisability",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "intellectualDisability",
+    "rdfs:comment" : "Characterization of the manifestation of Intellectual disability.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "intellectualDisability"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:plexiformNeurofibromas",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:present"
+    }, {
+      "@id" : "bts:absentbyMRI"
+    }, {
+      "@id" : "bts:absentclinically-noMRI"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "plexiformNeurofibromas",
+    "rdfs:comment" : "Characterization of the manifestation of Plexiform neurofibromas.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "plexiformNeurofibromas"
+  }, {
+    "rdfs:subClassOf" : [ ],
     "@id" : "bts:nucleicAcidSource",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
@@ -2110,6 +2744,56 @@
     "sms:displayName" : "runtimePlatform",
     "sms:required" : "sms:false"
   }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:MPNST",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "MPNST",
+    "rdfs:comment" : "Characterization of the manifestation of MPNST.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "MPNST"
+  }, {
     "@id" : "bts:nf1SomaticMutation",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "NF1 somatic mutation. Subproperty of nf1Variant.",
@@ -2132,6 +2816,106 @@
     "rdfs:comment" : "An associated phenotype characteristic.",
     "@type" : "rdfs:Class",
     "sms:displayName" : "manifestation"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:aqueductalStenosis",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "aqueductalStenosis",
+    "rdfs:comment" : "Characterization of the manifestation of aqueductal stenosis.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "aqueductalStenosis"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:IrisLischNodules",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "IrisLischNodules",
+    "rdfs:comment" : "Characterization of the manifestation of Iris Lisch Nodules.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "IrisLischNodules"
   }, {
     "@id" : "bts:concentrationNaCl",
     "@type" : "rdfs:Class",
@@ -2231,6 +3015,56 @@
     "sms:displayName" : "auxiliaryAsset",
     "sms:required" : "sms:false"
   }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:heartDefect",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "heartDefect",
+    "rdfs:comment" : "Characterization of the manifestation of Heart defect.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "heartDefect"
+  }, {
     "@id" : "bts:doi",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "Digital object identifier of the resource.",
@@ -2252,6 +3086,56 @@
     },
     "sms:displayName" : "readsDuplicatedPercent",
     "sms:required" : "sms:false"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:pheochromocytoma",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "pheochromocytoma",
+    "rdfs:comment" : "Characterization of the manifestation of Pheochromocytoma.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "pheochromocytoma"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:isMultiSpecimen",
@@ -2299,6 +3183,28 @@
     },
     "sms:displayName" : "datasetSizeInBytes",
     "sms:required" : "sms:false"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:diagnosisAgeGroup",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:infancy"
+    }, {
+      "@id" : "bts:childhood"
+    }, {
+      "@id" : "bts:adolescence"
+    }, {
+      "@id" : "bts:adulthood"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "diagnosisAgeGroup",
+    "rdfs:comment" : "Age group of the individual at the time of diagnosis.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "diagnosisAgeGroup"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:yearProcessed",
@@ -2357,6 +3263,24 @@
     },
     "sms:displayName" : "relatedDataset",
     "sms:required" : "sms:false"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:inheritance",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:parentaffected"
+    }, {
+      "@id" : "bts:parentnotaffected"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "inheritance",
+    "rdfs:comment" : "Describes whether known inheritance from a parent.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "inheritance"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:concentrationMaterialUnit",
@@ -2902,6 +3826,28 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "timepointUnit"
   }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:WHOPerformanceStatus",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:0"
+    }, {
+      "@id" : "bts:1"
+    }, {
+      "@id" : "bts:2"
+    }, {
+      "@id" : "bts:3"
+    }, {
+      "@id" : "bts:4"
+    } ],
+    "rdfs:label" : "WHOPerformanceStatus",
+    "rdfs:comment" : "Score on the WHO scale describing patient's functional abilities.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "WHOPerformanceStatus"
+  }, {
     "@id" : "bts:currentVersion",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "(Versionable entities only) The current version number of the resource.",
@@ -3000,6 +3946,56 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "organ"
   }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:learningDisability",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "learningDisability",
+    "rdfs:comment" : "Characterization of the manifestation of Learning disability.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "learningDisability"
+  }, {
     "@id" : "bts:id",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "The entity id for the resource automatically assigned by the platform.",
@@ -3039,6 +4035,56 @@
     "sms:required" : "sms:false"
   }, {
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:lenticularOpacity",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "lenticularOpacity",
+    "rdfs:comment" : "Characterization of the manifestation of Lenticular opacity.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "lenticularOpacity"
+  }, {
+    "rdfs:subClassOf" : [ ],
     "@id" : "bts:drugScreenType",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
@@ -3068,6 +4114,56 @@
     },
     "sms:displayName" : "experimentalCondition",
     "sms:required" : "sms:false"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:cafeaulaitMacules",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "cafeaulaitMacules",
+    "rdfs:comment" : "Characterization of cafe-au-lait macules.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "cafeaulaitMacules"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:modelSystemName",
@@ -3387,6 +4483,26 @@
     "sms:displayName" : "modelSystemName"
   }, {
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:dermalNeurofibromas",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:absent"
+    }, {
+      "@id" : "bts:scattered"
+    }, {
+      "@id" : "bts:dense"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "dermalNeurofibromas",
+    "rdfs:comment" : "Characterization of the manifestation of Dermal neurofibromas.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "dermalNeurofibromas"
+  }, {
+    "rdfs:subClassOf" : [ ],
     "@id" : "bts:proteinExtractSource",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
@@ -3473,6 +4589,56 @@
     "rdfs:comment" : "Sample location referring to a named area of the body, inclusive of gross anatomical structures and organ parts.",
     "@type" : "rdfs:Class",
     "sms:displayName" : "bodySite"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:longBoneDysplasia",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "longBoneDysplasia",
+    "rdfs:comment" : "Characterization of the manifestation of Long bone dysplasia.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "longBoneDysplasia"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:libraryPrep",
@@ -3622,6 +4788,26 @@
     "sms:displayName" : "workingDistance"
   }, {
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:nonvestibularCranialSchwannoma",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:notimaged"
+    }, {
+      "@id" : "bts:absentbyimaging"
+    }, {
+      "@id" : "bts:present"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "nonvestibularCranialSchwannoma",
+    "rdfs:comment" : "Characterization of the manifestation of Nonvestibular cranial schwannoma.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "nonvestibularCranialSchwannoma"
+  }, {
+    "rdfs:subClassOf" : [ ],
     "@id" : "bts:expressionUnit",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
@@ -3648,6 +4834,26 @@
     "sms:displayName" : "expressionUnit"
   }, {
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:pubertyOnset",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:prebubertal"
+    }, {
+      "@id" : "bts:precocious"
+    }, {
+      "@id" : "bts:normal"
+    }, {
+      "@id" : "bts:late"
+    } ],
+    "rdfs:label" : "pubertyOnset",
+    "rdfs:comment" : "Puberty onset.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "pubertyOnset"
+  }, {
+    "rdfs:subClassOf" : [ ],
     "@id" : "bts:readsMappedPercent",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
@@ -3658,6 +4864,56 @@
     "rdfs:comment" : "Percent of mapped reads collected from samtools",
     "@type" : "rdfs:Class",
     "sms:displayName" : "readsMappedPercent"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:glomusTumor",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "glomusTumor",
+    "rdfs:comment" : "Characterization of the manifestation of Glomus tumor.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "glomusTumor"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:studyStatus",
@@ -3676,6 +4932,126 @@
     "rdfs:comment" : "Status of a study.",
     "@type" : "rdfs:Class",
     "sms:displayName" : "studyStatus"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:sphenoidDysplasia",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "sphenoidDysplasia",
+    "rdfs:comment" : "Characterization of the manifestation of Sphenoid dysplasia.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "sphenoidDysplasia"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:nonvestibularSchwannomas",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:onlybyimagingevidence"
+    }, {
+      "@id" : "bts:1pathogicallyconfirmed"
+    }, {
+      "@id" : "bts:2ormore,atleast1pathogicallyconfirmed"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "nonvestibularSchwannomas",
+    "rdfs:comment" : "Characterization of the manifestation of Nonvestibular schwannomas.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "nonvestibularSchwannomas"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:skinFoldFreckling",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "skinFoldFreckling",
+    "rdfs:comment" : "Characterization of skin fold freckling.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "skinFoldFreckling"
   }, {
     "@id" : "bts:contentType",
     "@type" : "rdfs:Class",
@@ -3698,6 +5074,76 @@
     },
     "sms:displayName" : "objective",
     "sms:required" : "sms:false"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:leukemia",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "leukemia",
+    "rdfs:comment" : "Characterization of the manifestation of Leukemia.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "leukemia"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:subcutaneousNodularNeurofibromas",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:absent"
+    }, {
+      "@id" : "bts:scattered"
+    }, {
+      "@id" : "bts:dense"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "subcutaneousNodularNeurofibromas",
+    "rdfs:comment" : "Characterization of the manifestation of Subcutaneous nodular neurofibromas.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "subcutaneousNodularNeurofibromas"
   }, {
     "@id" : "bts:averageInsertSize",
     "@type" : "rdfs:Class",
@@ -3758,6 +5204,56 @@
     "rdfs:comment" : "Whether the sample or data failed QC checks (Yes, No)",
     "@type" : "rdfs:Class",
     "sms:displayName" : "failedQC"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:vascularDisease",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "vascularDisease",
+    "rdfs:comment" : "Characterization of the manifestation of Vascular disease.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "vascularDisease"
   }, {
     "@id" : "bts:compoundName",
     "@type" : "rdfs:Class",
@@ -3831,6 +5327,56 @@
     "rdfs:comment" : "A set of references (e.g., canonical assembled contigs) which defines a common coordinate space for comparing reference-aligned experimental data.",
     "@type" : "rdfs:Class",
     "sms:displayName" : "referenceSet"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:attentionDeficitDisorder",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:PlexiformNeurofibroma"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:CutaneousNeurofibroma"
+    }, {
+      "@id" : "bts:Schwannoma"
+    }, {
+      "@id" : "bts:LowGradeGlioma"
+    }, {
+      "@id" : "bts:HighGradeGlioma"
+    }, {
+      "@id" : "bts:Meningioma"
+    }, {
+      "@id" : "bts:ANNUBP"
+    }, {
+      "@id" : "bts:Glioma"
+    }, {
+      "@id" : "bts:JMML"
+    }, {
+      "@id" : "bts:SMN"
+    }, {
+      "@id" : "bts:AtypicalNeurofibroma"
+    }, {
+      "@id" : "bts:BreastCancer"
+    }, {
+      "@id" : "bts:Behavioral"
+    }, {
+      "@id" : "bts:QualityofLife"
+    }, {
+      "@id" : "bts:VisionLoss"
+    }, {
+      "@id" : "bts:Memory"
+    }, {
+      "@id" : "bts:Cognition"
+    }, {
+      "@id" : "bts:Pain"
+    } ],
+    "rdfs:label" : "attentionDeficitDisorder",
+    "rdfs:comment" : "Characterization of the manifestation of Attention Deficit Disorder.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "attentionDeficitDisorder"
   }, {
     "@id" : "bts:parentId",
     "@type" : "rdfs:Class",
@@ -4012,6 +5558,24 @@
       "@id" : "bts:timepointUnit"
     } ],
     "sms:displayName" : "experimentalTimepoint"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:vitalStatus",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:alive"
+    }, {
+      "@id" : "bts:deceased"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "vitalStatus",
+    "rdfs:comment" : "Vital status of the patient.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "vitalStatus"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:protocolAssay",
@@ -4705,6 +6269,28 @@
     "sms:displayName" : "assay"
   }, {
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:meningioma",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:notimaged"
+    }, {
+      "@id" : "bts:absentbyimaging"
+    }, {
+      "@id" : "bts:single"
+    }, {
+      "@id" : "bts:multiple"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "meningioma",
+    "rdfs:comment" : "Characterization of the manifestation of Meningioma.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "meningioma"
+  }, {
+    "rdfs:subClassOf" : [ ],
     "@id" : "bts:studyFileviewId",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
@@ -4726,6 +6312,26 @@
     },
     "sms:displayName" : "averageReadLength",
     "sms:required" : "sms:false"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:gliomaOrEpendymoma",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:notimaged"
+    }, {
+      "@id" : "bts:absentbyimaging"
+    }, {
+      "@id" : "bts:present"
+    }, {
+      "@id" : "bts:unknown"
+    } ],
+    "rdfs:label" : "gliomaOrEpendymoma",
+    "rdfs:comment" : "Characterization of the manifestation of Glioma or ependymoma.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "gliomaOrEpendymoma"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:relatedStudies",
@@ -4962,6 +6568,17 @@
     "sms:displayName" : "FileFormatEnum",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:MultipleImagingDiagnosisEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Enumerations describing the manifestation of tumors confirmed via imaging with one or multiple sites being the most relevant result.",
+    "rdfs:label" : "MultipleImagingDiagnosisEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "MultipleImagingDiagnosisEnum",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:SexEnum",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -4982,6 +6599,28 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "MRISequenceEnum",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:AgeGroupEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "AgeGroupEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "AgeGroupEnum",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:TumorTreatmentEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "TumorTreatmentEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "TumorTreatmentEnum",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:PlatformEnum",
@@ -5017,6 +6656,17 @@
     "sms:displayName" : "GenePerturbationEnum",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:SpinalNeuromaManifestationEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Enumerations describing the manifestation of spinal neurofibromas, combining information on presence and the cervical locations.",
+    "rdfs:label" : "SpinalNeuromaManifestationEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "SpinalNeuromaManifestationEnum",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:WorkflowEnum",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -5039,6 +6689,17 @@
     "sms:displayName" : "BooleanEnum",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:PubertyOnsetEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "PubertyOnsetEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "PubertyOnsetEnum",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:GenePerturbationMethodEnum",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -5059,6 +6720,28 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Data",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:PlexiformNeurofibromaManifestationEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Enumerations describing the manifestation of plexiform neurofibromas, combining information on presence and the certainty via MRI imaging technique.",
+    "rdfs:label" : "PlexiformNeurofibromaManifestationEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "PlexiformNeurofibromaManifestationEnum",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:BinaryImagingDiagnosisEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Enumerations describing the manifestation of tumors confirmed via imaging with mainly absent or present being the most relevant result.",
+    "rdfs:label" : "BinaryImagingDiagnosisEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "BinaryImagingDiagnosisEnum",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:SpeciesEnum",
@@ -5092,6 +6775,28 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "ProteinExtractSourceEnum",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:VitalStatusEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "VitalStatusEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "VitalStatusEnum",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:MosaicismEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "MosaicismEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "MosaicismEnum",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:WorkingDistanceUnitEnum",
@@ -5171,6 +6876,17 @@
     "sms:displayName" : "Tumor",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:WHOPerformanceStatusScores",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "https://www.ncbi.nlm.nih.gov/books/NBK97482/",
+    "rdfs:label" : "WHOPerformanceStatusScores",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "WHOPerformanceStatusScores",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:ConcentrationUnit",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -5204,6 +6920,17 @@
     "sms:displayName" : "ReadPairOrientationEnum",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:LateralManifestationEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Enumerations describing the manifestation of tumors confirmed via imaging (MRI or other), where lateral information is most relevant.",
+    "rdfs:label" : "LateralManifestationEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "LateralManifestationEnum",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:LibraryPrepEnum",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -5213,6 +6940,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "LibraryPrepEnum",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:Percentiles-2SD",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Enumerations corresponding to 3 bins using 2 standard deviations as a cutoff.",
+    "rdfs:label" : "Percentiles-2SD",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "Percentiles-2SD",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:Tissue",
@@ -5402,6 +7140,28 @@
     "sms:displayName" : "ManifestationEnum",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:SchwannomaManifestationEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Enumerations describing the manifestation of schwannomas.",
+    "rdfs:label" : "SchwannomaManifestationEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "SchwannomaManifestationEnum",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:OpticGliomaManifestationEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Enumerations describing the manifestation of optic gliomas, combining information on presence, symptoms, and treatment.",
+    "rdfs:label" : "OpticGliomaManifestationEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "OpticGliomaManifestationEnum",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:TransplantationType",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -5468,6 +7228,17 @@
     "sms:displayName" : "MouseModel",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:GermlineMutation",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "GermlineMutation",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "GermlineMutation",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:AssayEnum",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -5488,6 +7259,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "CuratedDataEnum",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:NonvestibularSchwannomaManifestationEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "NonvestibularSchwannomaManifestationEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "NonvestibularSchwannomaManifestationEnum",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:DataStatusEnum",
@@ -5523,6 +7305,17 @@
     "sms:displayName" : "ReadStrandOriginEnum",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:PainEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "PainEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "PainEnum",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:License",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
@@ -5532,6 +7325,28 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "License",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:NeurofibromaManifestationEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "Enumerations describing how neurofibromas can manifest more generally.",
+    "rdfs:label" : "NeurofibromaManifestationEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "NeurofibromaManifestationEnum",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:InheritanceEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "InheritanceEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "InheritanceEnum",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:AccessTypeEnum",
@@ -5922,47 +7737,6 @@
     "sms:displayName" : "GeneralMeasureDataTemplate"
   }, {
     "rdfs:subClassOf" : [ {
-      "@id" : "bts:PatientTemplate"
-    } ],
-    "@id" : "bts:PatientSpecimenTemplate",
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:required" : "sms:false",
-    "sms:requiresComponent" : "",
-    "rdfs:label" : "PatientSpecimenTemplate",
-    "rdfs:comment" : "Template for capturing specimen-level data from patients.",
-    "@type" : "rdfs:Class",
-    "sms:requiresDependency" : [ {
-      "@id" : "bts:individualID"
-    }, {
-      "@id" : "bts:sex"
-    }, {
-      "@id" : "bts:age"
-    }, {
-      "@id" : "bts:ageUnit"
-    }, {
-      "@id" : "bts:species"
-    }, {
-      "@id" : "bts:diagnosis"
-    }, {
-      "@id" : "bts:nf1Genotype"
-    }, {
-      "@id" : "bts:nf2Genotype"
-    }, {
-      "@id" : "bts:parentSpecimenID"
-    }, {
-      "@id" : "bts:specimenID"
-    }, {
-      "@id" : "bts:aliquotID"
-    }, {
-      "@id" : "bts:tumorType"
-    }, {
-      "@id" : "bts:bodySite"
-    } ],
-    "sms:displayName" : "PatientSpecimenTemplate"
-  }, {
-    "rdfs:subClassOf" : [ {
       "@id" : "bts:NonBiologicalAssayDataTemplate"
     } ],
     "@id" : "bts:MaterialScienceAssayTemplate",
@@ -6098,6 +7872,33 @@
     "@type" : "rdfs:Class",
     "sms:requiresDependency" : [ ],
     "sms:displayName" : "Template"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:BiospecimenTemplate",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "sms:requiresComponent" : "",
+    "rdfs:label" : "BiospecimenTemplate",
+    "rdfs:comment" : "Specimen-level data, whether from human or animal.",
+    "@type" : "rdfs:Class",
+    "sms:requiresDependency" : [ {
+      "@id" : "bts:individualID"
+    }, {
+      "@id" : "bts:parentSpecimenID"
+    }, {
+      "@id" : "bts:specimenID"
+    }, {
+      "@id" : "bts:aliquotID"
+    }, {
+      "@id" : "bts:tumorType"
+    }, {
+      "@id" : "bts:bodySite"
+    }, {
+      "@id" : "bts:experimentalCondition"
+    } ],
+    "sms:displayName" : "BiospecimenTemplate"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:PartialTemplate",
@@ -6599,37 +8400,6 @@
       "@id" : "bts:comments"
     } ],
     "sms:displayName" : "ProtocolTemplate"
-  }, {
-    "rdfs:subClassOf" : [ {
-      "@id" : "bts:Template"
-    } ],
-    "@id" : "bts:PatientTemplate",
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:required" : "sms:false",
-    "sms:requiresComponent" : "",
-    "rdfs:label" : "PatientTemplate",
-    "rdfs:comment" : "Template for collecting *minimal* individual-level data. \n",
-    "@type" : "rdfs:Class",
-    "sms:requiresDependency" : [ {
-      "@id" : "bts:individualID"
-    }, {
-      "@id" : "bts:sex"
-    }, {
-      "@id" : "bts:age"
-    }, {
-      "@id" : "bts:ageUnit"
-    }, {
-      "@id" : "bts:species"
-    }, {
-      "@id" : "bts:diagnosis"
-    }, {
-      "@id" : "bts:nf1Genotype"
-    }, {
-      "@id" : "bts:nf2Genotype"
-    } ],
-    "sms:displayName" : "PatientTemplate"
   }, {
     "rdfs:subClassOf" : [ {
       "@id" : "bts:BulkSequencingAssayTemplate"
@@ -7729,17 +9499,15 @@
     } ],
     "sms:displayName" : "ImmunoMicroscopyTemplate"
   }, {
-    "rdfs:subClassOf" : [ {
-      "@id" : "bts:PatientTemplate"
-    } ],
-    "@id" : "bts:PatientXTemplate",
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:AnimalIndividualTemplate",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
     "sms:required" : "sms:false",
     "sms:requiresComponent" : "",
-    "rdfs:label" : "PatientXTemplate",
-    "rdfs:comment" : "(WIP / not yet used) Extended template for participant clinical data as recommended per Sundby et al.",
+    "rdfs:label" : "AnimalIndividualTemplate",
+    "rdfs:comment" : "Template for non-human individual-level data.",
     "@type" : "rdfs:Class",
     "sms:requiresDependency" : [ {
       "@id" : "bts:individualID"
@@ -7750,15 +9518,25 @@
     }, {
       "@id" : "bts:ageUnit"
     }, {
-      "@id" : "bts:species"
-    }, {
       "@id" : "bts:diagnosis"
+    }, {
+      "@id" : "bts:diagnosisAgeGroup"
+    }, {
+      "@id" : "bts:inheritance"
+    }, {
+      "@id" : "bts:mosaicism"
     }, {
       "@id" : "bts:nf1Genotype"
     }, {
       "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:germlineMutation"
+    }, {
+      "@id" : "bts:species"
+    }, {
+      "@id" : "bts:modelSystemName"
     } ],
-    "sms:displayName" : "PatientXTemplate"
+    "sms:displayName" : "AnimalIndividualTemplate"
   }, {
     "rdfs:subClassOf" : [ {
       "@id" : "bts:BiologicalAssayDataTemplate"
@@ -8111,6 +9889,127 @@
     } ],
     "sms:displayName" : "EpigeneticsAssayTemplate"
   }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:HumanIndividualTemplate",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "sms:requiresComponent" : "",
+    "rdfs:label" : "HumanIndividualTemplate",
+    "rdfs:comment" : "Data of biosamples from human patients. Adapted from Table 2 of http://nrs.harvard.edu/urn-3:HUL.InstRepos:32725809. This template should be used when biosamples are from NF patients to provides a more valuable characterization and make additional gene-phenotype insights possible.\n",
+    "@type" : "rdfs:Class",
+    "sms:requiresDependency" : [ {
+      "@id" : "bts:individualID"
+    }, {
+      "@id" : "bts:sex"
+    }, {
+      "@id" : "bts:age"
+    }, {
+      "@id" : "bts:ageUnit"
+    }, {
+      "@id" : "bts:diagnosis"
+    }, {
+      "@id" : "bts:diagnosisAgeGroup"
+    }, {
+      "@id" : "bts:inheritance"
+    }, {
+      "@id" : "bts:mosaicism"
+    }, {
+      "@id" : "bts:nf1Genotype"
+    }, {
+      "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:germlineMutation"
+    }, {
+      "@id" : "bts:species"
+    }, {
+      "@id" : "bts:vitalStatus"
+    }, {
+      "@id" : "bts:WHOPerformanceStatus"
+    }, {
+      "@id" : "bts:painStatus"
+    }, {
+      "@id" : "bts:tumorTreatmentStatus"
+    }, {
+      "@id" : "bts:cafeaulaitMacules"
+    }, {
+      "@id" : "bts:skinFoldFreckling"
+    }, {
+      "@id" : "bts:IrisLischNodules"
+    }, {
+      "@id" : "bts:dermalNeurofibromas"
+    }, {
+      "@id" : "bts:subcutaneousNodularNeurofibromas"
+    }, {
+      "@id" : "bts:diffuseDermalNeurofibromas"
+    }, {
+      "@id" : "bts:spinalNeurofibromas"
+    }, {
+      "@id" : "bts:plexiformNeurofibromas"
+    }, {
+      "@id" : "bts:opticGlioma"
+    }, {
+      "@id" : "bts:heartDefect"
+    }, {
+      "@id" : "bts:vascularDisease"
+    }, {
+      "@id" : "bts:pubertyOnset"
+    }, {
+      "@id" : "bts:stature"
+    }, {
+      "@id" : "bts:peripheralNeuropathy"
+    }, {
+      "@id" : "bts:aqueductalStenosis"
+    }, {
+      "@id" : "bts:longBoneDysplasia"
+    }, {
+      "@id" : "bts:sphenoidDysplasia"
+    }, {
+      "@id" : "bts:scoliosis"
+    }, {
+      "@id" : "bts:intellectualDisability"
+    }, {
+      "@id" : "bts:learningDisability"
+    }, {
+      "@id" : "bts:attentionDeficitDisorder"
+    }, {
+      "@id" : "bts:pheochromocytoma"
+    }, {
+      "@id" : "bts:glomusTumor"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:nonopticGlioma"
+    }, {
+      "@id" : "bts:GIST"
+    }, {
+      "@id" : "bts:leukemia"
+    }, {
+      "@id" : "bts:breastCancer"
+    }, {
+      "@id" : "bts:otherTumors"
+    }, {
+      "@id" : "bts:vestibularSchwannoma"
+    }, {
+      "@id" : "bts:meningioma"
+    }, {
+      "@id" : "bts:gliomaOrEpendymoma"
+    }, {
+      "@id" : "bts:spinalSchwannoma"
+    }, {
+      "@id" : "bts:dermalSchwannoma"
+    }, {
+      "@id" : "bts:nonvestibularCranialSchwannoma"
+    }, {
+      "@id" : "bts:lenticularopacity"
+    }, {
+      "@id" : "bts:nonvestibularSchwannomas"
+    }, {
+      "@id" : "bts:numberOfSchwannomas"
+    } ],
+    "sms:displayName" : "HumanIndividualTemplate"
+  }, {
     "rdfs:subClassOf" : [ {
       "@id" : "bts:BiologicalAssayDataTemplate"
     } ],
@@ -8340,6 +10239,17 @@
     "sms:displayName" : "sNF94.3",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:unilateral",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "unilateral",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "unilateral",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:ColumbiaU.intheCityofNewYork",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -8560,6 +10470,17 @@
     "sms:displayName" : "University of Texas, Arlington",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:absentclinically-noMRI",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "absentclinically-noMRI",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "absent clinically - no MRI",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:csi",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -8723,6 +10644,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "audio transcript",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:scattered",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "scattered",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "scattered",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:MIB/MS",
@@ -9539,6 +11471,17 @@
     "sms:displayName" : "SUNY, Downstate Health Sciences University",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:parentaffected",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "parentaffected",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "parent affected",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:SC4[Mouseschwannoma]",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -9781,6 +11724,17 @@
     "sms:displayName" : "University of Illinois, Chicago",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:2ormore,atleast1pathogicallyconfirmed",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "2ormore,atleast1pathogicallyconfirmed",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "2 or more, at least 1 pathogically confirmed",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:Drosophilamelanogaster",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -9911,6 +11865,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "FACE-Q Appearance-related Distress",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:precocious",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "precocious",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "precocious",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:xml",
@@ -10947,6 +12912,17 @@
     "sms:displayName" : "mM",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:surgery",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "surgery",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "surgery",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:UniversityofMiami",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -11077,6 +13053,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Illinois Institute of Technology",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:nottested",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "nottested",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "not tested",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:stool",
@@ -11211,6 +13198,17 @@
     "sms:displayName" : "small molecule library screen",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:absentbyimaging",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "absentbyimaging",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "absent by imaging",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:PhilipsAchieva3T",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -11330,6 +13328,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "traction force microscopy",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:<5thcentile",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "<5thcentile",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "< 5th centile",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:hTERTNF1ipNF95.6",
@@ -11915,6 +13924,17 @@
     "sms:displayName" : "Pleomorphic Xanthoastrocytoma",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:targetedtherapy",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "targetedtherapy",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "targeted therapy",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:MercerUniversity",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -12432,6 +14452,17 @@
     "sms:displayName" : "metastatic/recurrent tumor",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:occasional",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "occasional",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "occasional",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:dataIndex",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -12740,6 +14771,17 @@
     "sms:displayName" : "Schwann cell i28cNF NF1 -/- (#14)",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:>95thcentile",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : ">95thcentile",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "> 95th centile",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:StanfordUniversity",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -12850,6 +14892,17 @@
     "sms:displayName" : "University of Dayton",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:notaproblem",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "notaproblem",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "not a problem",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:flowcytometry",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -12870,6 +14923,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "ST88-14",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:adolescence",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "adolescence",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "adolescence",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:massivelyparallelreporterassay",
@@ -12991,6 +15055,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Brigham Young University, Provo",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:dense",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "dense",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "dense",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:clinicaldata",
@@ -13268,6 +15343,17 @@
     "sms:displayName" : "University of North Carolina, Charlotte",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:clinicaltrial",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "clinicaltrial",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "clinical trial",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:DescriptiveMetadata",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -13277,6 +15363,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Descriptive Metadata",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:5th-95thcentile",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "5th-95thcentile",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "5th-95th centile",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:PacBioSequelIIeSystem",
@@ -13510,6 +15607,17 @@
     "sms:displayName" : "Virginia Polytechnic Institute and State University",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:adulthood",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "adulthood",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "adulthood",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:scalp",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -13664,6 +15772,17 @@
     "sms:displayName" : "University of California, Santa Cruz",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:alllevels",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "alllevels",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "all levels",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:tetrode",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -13741,6 +15860,17 @@
     "sms:displayName" : "Zeno Electronic Walkway",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:present-asymptomatic",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "present-asymptomatic",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "present - asymptomatic",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:CincinnatiChildren'sHospitalMedicalCenter",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -13794,6 +15924,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "calcium retention capacity assay",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:normal",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "normal",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "normal",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:MemorialSloaneKetteringCancerCenter",
@@ -13950,6 +16091,17 @@
     "sms:displayName" : "allograft",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:levels1-3",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "levels1-3",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "levels 1-3",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:SchwanncellNF1-/-withWTtaggedmNf1cDNA",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -14003,6 +16155,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Nanostring GeoMx",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:testedbutunknown",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "testedbutunknown",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "tested but unknown",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:RockefellerUniversity",
@@ -14289,17 +16452,6 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Illumina Infinium MethylationEPIC BeadChip v1.0 (850k)",
-    "sms:required" : "sms:false"
-  }, {
-    "@id" : "bts:Neurofibromatosistype2",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "TBD",
-    "rdfs:label" : "Neurofibromatosistype2",
-    "rdfs:subClassOf" : [ ],
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:displayName" : "Neurofibromatosis type 2",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:i18cNF",
@@ -15820,6 +17972,17 @@
     "sms:displayName" : "Fibrosarcoma",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:present-symptomatic-treated",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "present-symptomatic-treated",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "present - symptomatic - treated",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:BGISEQ-500",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -15895,6 +18058,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "B",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:late",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "late",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "late",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:MalignantPeripheralNerveSheathTumor",
@@ -16062,6 +18236,17 @@
     "sms:displayName" : "Illumina TruSeq DNA Nano",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:mosaic",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "mosaic",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "mosaic",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:Drop-Seq",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -16227,6 +18412,17 @@
     "sms:displayName" : "cNF97.5",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:absentbyMRI",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "absentbyMRI",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "absent by MRI",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:NTAP",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -16335,6 +18531,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Affymetrix Human Gene 1.0 ST Array",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:notimaged",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "notimaged",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "not imaged",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:Children'sDermatologyLifeQualityIndexQuestionnaire",
@@ -16478,6 +18685,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Pilocytic Astrocytoma",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:childhood",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "childhood",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "childhood",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:UniversityofSouthFlorida,SaintPetersburg",
@@ -18394,6 +20612,17 @@
     "sms:displayName" : "Nf1-C383X/Flox",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:0",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "0",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "0",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:Memory",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -19010,6 +21239,17 @@
     "sms:displayName" : "CDX tissue",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:present",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "present",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "present",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:FIA-MSMS",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -19384,6 +21624,17 @@
     "sms:displayName" : "conventional MRI",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:onlybyimagingevidence",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "onlybyimagingevidence",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "only by imaging evidence",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:patternelectroretinogram",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -19428,6 +21679,17 @@
     "sms:displayName" : "JH-2-002-CL",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:single",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "single",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "single",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:millimeter",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -19470,6 +21732,28 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Rhesus macaque",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:notmosaic",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "notmosaic",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "not mosaic",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:1pathogicallyconfirmed",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "1pathogicallyconfirmed",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "1 pathogically confirmed",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:overexpression",
@@ -19525,6 +21809,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Langston University",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:disabling",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "disabling",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "disabling",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:bam",
@@ -20055,6 +22350,17 @@
     "sms:displayName" : "Marshall University",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:alive",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "alive",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "alive",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:JHU2-079-PDX",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -20176,6 +22482,17 @@
     "sms:displayName" : "Southern Methodist University",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:bilateral",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "bilateral",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "bilateral",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:UniformedServicesUniversityoftheHealthSciences",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -20229,6 +22546,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "HEK293 NF1 -/- with R681X mNf1 cDNA",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:parentnotaffected",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "parentnotaffected",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "parent not affected",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:demographics",
@@ -20295,6 +22623,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "Spectramax M Series",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:infancy",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "infancy",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "infancy",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:RutgersStateUniversityofNewJersey,NewBrunswick",
@@ -20451,6 +22790,17 @@
     "sms:displayName" : "University of Tennessee, Health Science Center",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:present-symptomatic-nottreated",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "present-symptomatic-nottreated",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "present - symptomatic - not treated",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:RensselaerPolytechnicInstitute",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -20493,6 +22843,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "University of New Orleans",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:absent",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "absent",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "absent",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:AuburnUniversity,Auburn",
@@ -21155,6 +23516,17 @@
     "sms:displayName" : "Hemorrhagic Neoplasm",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:nospecifictherapy",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "nospecifictherapy",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "no specific therapy",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:rawcounts",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -21232,6 +23604,17 @@
     "sms:displayName" : "Illumina MouseWG-6 v2.0 expression beadchip",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:prebubertal",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "prebubertal",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "prebubertal",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:neuropsychologicalassessment",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -21263,6 +23646,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "cNF98.4d",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:deceased",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "deceased",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "deceased",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:Susscrofa",
@@ -21903,6 +24297,17 @@
     "sms:displayName" : "FLIPR high-throughput cellular screening",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:radiation",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "radiation",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "radiation",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:EutropicsPharmaceuticals",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -22024,6 +24429,17 @@
     "sms:displayName" : "Nf1-R681X/Flox",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:chemotherapy",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "chemotherapy",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "chemotherapy",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:iPSC-derivedneuron",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -22044,6 +24460,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "hTERT NF1 ipNF04.4",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:multiple",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "multiple",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "multiple",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:dorsolateralprefrontalcortex",
