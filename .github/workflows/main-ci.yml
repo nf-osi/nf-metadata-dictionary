@@ -1,4 +1,4 @@
-name: schematic-ci
+name: main-ci
 
 on:
 
@@ -13,7 +13,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-20.04
-    if: ${{ !contains(github.event.head_commit.message, '[skip schematic]') }}
 
     steps:
       - uses: actions/checkout@v4
@@ -28,20 +27,44 @@ jobs:
           bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
           git clone --depth 1 https://github.com/anngvu/retold.git
           make
+  
+      - name: Install LinkML and regenerate registered jsons for Superdataset, PortalDataset, etc
+        run: |
+          pip install linkml
+          make Dataset
+          make Superdataset
+          make PortalDataset
+          make PortalStudy
+        
+      - name: Check changes in any of the schema files
+        run: |
+          if git diff-index --quiet HEAD --; then
+            echo 'FOLLOWUP_COMMIT=true' >> $GITHUB_ENV
+          else
+            echo 'FOLLOWUP_COMMIT=false' >> $GITHUB_ENV
+          fi
     
       - name: Commit files
+        if: ${{ env.FOLLOWUP_COMMIT == true }}
         run: |
           git config --local user.email "nf-osi@sagebionetworks.org"
           git config --local user.name "nf-osi[bot]"
-          git add "NF.jsonld"
-          git commit -m "Build jsonld"
+          git add .
+          git commit -m "Rebuild NF.jsonld or json files"
     
       - name: Push changes
+        if: ${{ env.FOLLOWUP_COMMIT == true }}
         uses: ad-m/github-push-action@master
         with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
          branch: ${{ github.event.pull_request.head.ref }}
-
+      
+      - name: Add build update message
+        uses: mshick/add-pr-comment@v2
+        with:
+          message-id: build-message
+          message: "The last commit commit triggered a build update: ${{ env.FOLLOWUP_COMMIT }}"
+  
   # Additionally test PRs
   test:
     name: Test with schematic
