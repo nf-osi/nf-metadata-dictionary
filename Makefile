@@ -46,3 +46,4 @@ Dataset:
 
 Superdataset:
 	enum=$$(./utils/enumerate.sh assay); jq --argjson enum "$$enum" '.properties.assay.enum = $$enum' registered-json-schemas/Superdataset.json > temp.json && mv temp.json registered-json-schemas/Superdataset.json
+
