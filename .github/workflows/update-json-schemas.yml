@@ -24,15 +24,16 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Plug in assay values into dataset and superdataset
+      - name: Regen dataset and superdataset with potentially new assay values
         run: |
-          
+          make datasetfolder
+          make superdatasetfolder
 
       - name: Install LinkML and regenerate PortalDataset and PortalStudy
         run: |
           pip install linkml
-          make PortalDataset
-          make PortalStudy
+          make portaldataset
+          make portalstudy
       
       - name: Check changes in any of the schema files
         run: |
@@ -62,4 +63,3 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh pr create -B main -H registered-schemas-update-${{ github.run_id }} --title "Registered schemas update" --body "Some JSON schemas have been rebuilt"           
-      
