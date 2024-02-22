@@ -50,7 +50,7 @@ jobs:
           git config --local user.email "nf-osi@sagebionetworks.org"
           git config --local user.name "nf-osi[bot]"
           git add .
-          git commit -m "Rebuild NF.jsonld or json files"
+          git commit -m "Rebuild NF.jsonld, json"
     
       - name: Push changes
         if: ${{ env.FOLLOWUP_COMMIT == true }}
@@ -59,11 +59,11 @@ jobs:
          github_token: ${{ secrets.GITHUB_TOKEN }}
          branch: ${{ github.event.pull_request.head.ref }}
       
-      - name: Add build update message
-        uses: mshick/add-pr-comment@v2
-        with:
-          message-id: build-message
-          message: "The last commit commit triggered a build update: ${{ env.FOLLOWUP_COMMIT }}"
+#      - name: Build confirmation message
+#        uses: mshick/add-pr-comment@v2
+#        with:
+#          message-id: build-message
+#          message: "You made some changes in the last commit that triggered rebuild: ${{ env.FOLLOWUP_COMMIT }}"
   
   # Additionally test PRs
   test:
