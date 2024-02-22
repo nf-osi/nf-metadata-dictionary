@@ -36,17 +36,8 @@ jobs:
           make Superdataset
           make PortalDataset
           make PortalStudy
-        
-      - name: Check changes in any of the schema files
-        run: |
-          if git diff-index --quiet HEAD --; then
-            echo 'FOLLOWUP_COMMIT=true' >> $GITHUB_ENV
-          else
-            echo 'FOLLOWUP_COMMIT=false' >> $GITHUB_ENV
-          fi
     
       - name: Commit files
-        if: ${{ env.FOLLOWUP_COMMIT == true }}
         run: |
           git config --local user.email "nf-osi@sagebionetworks.org"
           git config --local user.name "nf-osi[bot]"
@@ -54,7 +45,6 @@ jobs:
           git commit -m "Rebuild NF.jsonld, json"
     
       - name: Push changes
-        if: ${{ env.FOLLOWUP_COMMIT == true }}
         uses: ad-m/github-push-action@master
         with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
