@@ -29,7 +29,6 @@ PortalDataset:
 	@echo "--- Saved registered-json-schemas/PortalDataset.json ---"
 
 
-
 # yq '.slots |= with_entries(select(.value.in_subset[] == "portal"))' modules/props.yaml > relevant_props.yaml
 PortalStudy:
 	yq eval-all '. as $$item ireduce ({}; . * $$item )' modules/Data/Data.yaml modules/DCC/Portal.yaml modules/Other/Organization.yaml > relevant_enums.yaml
@@ -41,3 +40,9 @@ PortalStudy:
 	rm tmp.json
 	@echo "--- Saved registered-json-schemas/PortalStudy.json ---"
 
+DatasetFolder:
+	enum=$$(./utils/enumerate.sh assay); jq --argjson enum "$$enum" '.properties.assay.enum = $$enum' registered-json-schemas/dataset.json > temp.json && mv temp.json registered-json-schemas/dataset.json
+
+
+SuperdatasetFolder:
+	enum=$$(./utils/enumerate.sh assay); jq --argjson enum "$$enum" '.properties.assay.enum = $$enum' registered-json-schemas/superdataset.json > temp.json && mv temp.json registered-json-schemas/superdataset.json
