@@ -28,9 +28,10 @@ jobs:
           git clone --depth 1 https://github.com/anngvu/retold.git
           make
   
-      - name: Install LinkML and regenerate registered jsons for Superdataset, PortalDataset, etc
+      - name: Install tools and regenerate registered jsons for Superdataset, PortalDataset, etc
         run: |
           pip install linkml
+          npm install -g json-dereference-cli
           make Dataset
           make Superdataset
           make PortalDataset
