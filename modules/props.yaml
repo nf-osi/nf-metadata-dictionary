@@ -648,9 +648,14 @@ slots:
     see_also:
       - nf1Variant
       - nf2Genotype
+  germlineMutationIndicator:
+    description: Indicates a summary testing result for individual's germline mutation only.
+    range: TestSummaryEnum    
   germlineMutation:
-    description: The individual's detected germline mutation.
-    notes: This is free-text field that possibly suggests *any* mutations could be put here, while nf1GermlineMutation, etc. are more specific in terms of disease. 
+    description: The individual's actual germline mutation.
+    notes: 
+    - More sensitive information than germlineMutationIndicator. 
+    - Free-text field that possibly suggests *any* mutations could be put here, while nf1GermlineMutation, etc. are more specific in terms of disease. 
   nf1GermlineMutation:
     description: NF1 germline mutation.
     notes: 
