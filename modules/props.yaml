@@ -8,7 +8,7 @@ slots:
   GIST:
     description: Characterization of the manifestation of Gastrointestinal stromal
       tumor (GIST).
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
   InChIKey:
     description: >
@@ -20,12 +20,12 @@ slots:
     required: false
   IrisLischNodules:
     description: Characterization of the manifestation of Iris Lisch Nodules.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Iris Lisch nodules
   MPNST:
     description: Characterization of the manifestation of MPNST.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: MPNST
   MRISequence:
@@ -75,7 +75,7 @@ slots:
     required: false
   aqueductalStenosis:
     description: Characterization of the manifestation of aqueductal stenosis.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Aqueductal stenosis
   assay:
@@ -88,7 +88,7 @@ slots:
     required: false
   attentionDeficitDisorder:
     description: Characterization of the manifestation of Attention Deficit Disorder.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Attention deficit disorder
   author:
@@ -137,12 +137,12 @@ slots:
     slot_uri: https://cancerdhc.github.io/ccdhmodel/v1.1/BodySite/
   breastCancer:
     description: Characterization of the manifestation of Breast cancer.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Breast cancer
   cafeaulaitMacules:
     description: Characterization of cafe-au-lait macules.
-    range: ManifestationEnum
+    range: PresenceEnum
     title: Six or more cafe-au-lait macules
   captureArea:
     description: >
@@ -316,7 +316,7 @@ slots:
     title: Dermal neurofibromas
   dermalSchwannoma:
     description: Characterization of the manifestation of Dermal schwannoma.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Dermal schwannoma
   description:
@@ -452,7 +452,7 @@ slots:
     title: Glioma or ependymoma
   glomusTumor:
     description: Characterization of the manifestation of Glomus tumor.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Glomus tumor
   grantDOI:
@@ -464,7 +464,7 @@ slots:
     required: false
   heartDefect:
     description: Characterization of the manifestation of Heart defect.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Heart defect
   id:
@@ -503,7 +503,7 @@ slots:
     required: false
   intellectualDisability:
     description: Characterization of the manifestation of Intellectual disability.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Intellectual disability
   isCellLine:
@@ -544,7 +544,7 @@ slots:
     required: false
   learningDisability:
     description: Characterization of the manifestation of Learning disability.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Learning disability
   lensAperture:
@@ -554,12 +554,12 @@ slots:
     required: false
   lenticularOpacity:
     description: Characterization of the manifestation of Lenticular opacity.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Lenticular opacity
   leukemia:
     description: Characterization of the manifestation of Leukemia.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Leukemia
   libraryID:
@@ -592,7 +592,7 @@ slots:
     required: false
   longBoneDysplasia:
     description: Characterization of the manifestation of Long bone dysplasia.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Long bone dysplasia
   manifestation:
@@ -648,18 +648,16 @@ slots:
     see_also:
       - nf1Variant
       - nf2Genotype
+  germlineMutation:
+    description: The individual's detected germline mutation.
+    notes: This is free-text field that possibly suggests *any* mutations could be put here, while nf1GermlineMutation, etc. are more specific in terms of disease. 
   nf1GermlineMutation:
-    description: NF1 germline mutation. Subproperty of nf1Variant.
-    notes: Usually a supplemental clinical data property.
+    description: NF1 germline mutation.
+    notes: 
+    - Unlike nf1Variant, this is free-text and not constrained to enumerated values of known variants, making it more flexible for new mutations and different nomenclatures.
     required: false
   nf1SomaticMutation:
-    description: NF1 somatic mutation. Subproperty of nf1Variant.
-    notes: Usually a supplemental clinical data property.
-    required: false
-  nf1Variant:
-    description: Named variant (mutation) in the NF1 gene/protein in the biospecimen
-      from which the data were derived, if known/applicable.
-    range: NF1VariantEnum
+    description: NF1 somatic mutation, i.e. in tumor samples.
     required: false
   nf2Genotype:
     any_of:
@@ -676,7 +674,7 @@ slots:
     required: false
   nonopticGlioma:
     description: Characterization of the manifestation of Nonoptic glioma.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Nonoptic glioma
   nonvestibularCranialSchwannoma:
@@ -714,7 +712,7 @@ slots:
     required: false
   otherTumors:
     description: Characterization of the manifestation of other tumors.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Other tumors
   pH:
@@ -740,12 +738,12 @@ slots:
     required: false
   peripheralNeuropathy:
     description: Characterization of the manifestation of Peripheral neuropathy.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Peripheral neuropathy
   pheochromocytoma:
     description: Characterization of the manifestation of Pheochromocytoma.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Pheochromocytoma
   platform:
@@ -924,7 +922,7 @@ slots:
     required: false
   scoliosis:
     description: Characterization of the manifestation of Scoliosis.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Scoliosis
   series:
@@ -944,7 +942,7 @@ slots:
     required: false
   skinFoldFreckling:
     description: Characterization of skin fold freckling.
-    range: ManifestationEnum
+    range: PresenceEnum
     title: Skin fold freckling
   slideID:
     description: >
@@ -1001,7 +999,7 @@ slots:
     required: false
   sphenoidDysplasia:
     description: Characterization of the manifestation of Sphenoid dysplasia.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Sphenoid dysplasia
   spinalNeurofibromas:
@@ -1116,7 +1114,7 @@ slots:
     required: false
   vascularDisease:
     description: Characterization of the manifestation of Vascular disease.
-    range: ManifestationEnum
+    range: PresenceEnum
     required: false
     title: Vascular disease
   vestibularSchwannoma:
