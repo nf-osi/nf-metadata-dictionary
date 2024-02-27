@@ -1766,6 +1766,22 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "nonopticGlioma"
   }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:germlineMutationIndicator",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:nottested"
+    }, {
+      "@id" : "bts:testedbutunknown"
+    } ],
+    "rdfs:label" : "germlineMutationIndicator",
+    "rdfs:comment" : "Indicates a summary testing result for individual's germline mutation only.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "germlineMutationIndicator"
+  }, {
     "@id" : "bts:antibodyID",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "Antibody ID such as RRID if available, otherwise use vendor ID.",
@@ -4385,7 +4401,7 @@
   }, {
     "@id" : "bts:germlineMutation",
     "@type" : "rdfs:Class",
-    "rdfs:comment" : "The individual's detected germline mutation.",
+    "rdfs:comment" : "The individual's actual germline mutation.",
     "rdfs:label" : "germlineMutation",
     "rdfs:subClassOf" : [ ],
     "schema:isPartOf" : {
@@ -5919,6 +5935,17 @@
     "sms:displayName" : "GenePerturbationEnum",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:TestSummaryEnum",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "TestSummaryEnum",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "TestSummaryEnum",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:SpinalNeuromaManifestationEnum",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "Enumerations describing the manifestation of spinal neurofibromas, combining information on presence and the cervical locations.",
@@ -6489,17 +6516,6 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "MouseModel",
-    "sms:required" : "sms:false"
-  }, {
-    "@id" : "bts:GermlineMutation",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "TBD",
-    "rdfs:label" : "GermlineMutation",
-    "rdfs:subClassOf" : [ ],
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:displayName" : "GermlineMutation",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:AssayEnum",
@@ -9194,7 +9210,7 @@
     }, {
       "@id" : "bts:nf2Genotype"
     }, {
-      "@id" : "bts:germlineMutation"
+      "@id" : "bts:germlineMutationIndicator"
     }, {
       "@id" : "bts:species"
     }, {
