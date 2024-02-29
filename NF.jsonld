@@ -7660,6 +7660,127 @@
     } ],
     "sms:displayName" : "ProcessedAlignedReadsTemplate"
   }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:HumanCohortTemplate",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "sms:requiresComponent" : "",
+    "rdfs:label" : "HumanCohortTemplate",
+    "rdfs:comment" : "Data of biosamples from human patients. Adapted from Table 2 of http://nrs.harvard.edu/urn-3:HUL.InstRepos:32725809. This template should be used when biosamples are from NF patients to provides a more valuable characterization and make additional gene-phenotype insights possible.\n",
+    "@type" : "rdfs:Class",
+    "sms:requiresDependency" : [ {
+      "@id" : "bts:individualID"
+    }, {
+      "@id" : "bts:sex"
+    }, {
+      "@id" : "bts:age"
+    }, {
+      "@id" : "bts:ageUnit"
+    }, {
+      "@id" : "bts:diagnosis"
+    }, {
+      "@id" : "bts:diagnosisAgeGroup"
+    }, {
+      "@id" : "bts:inheritance"
+    }, {
+      "@id" : "bts:mosaicism"
+    }, {
+      "@id" : "bts:nf1Genotype"
+    }, {
+      "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:germlineMutationIndicator"
+    }, {
+      "@id" : "bts:species"
+    }, {
+      "@id" : "bts:vitalStatus"
+    }, {
+      "@id" : "bts:WHOPerformanceStatus"
+    }, {
+      "@id" : "bts:painStatus"
+    }, {
+      "@id" : "bts:tumorTreatmentStatus"
+    }, {
+      "@id" : "bts:cafeaulaitMacules"
+    }, {
+      "@id" : "bts:skinFoldFreckling"
+    }, {
+      "@id" : "bts:IrisLischNodules"
+    }, {
+      "@id" : "bts:dermalNeurofibromas"
+    }, {
+      "@id" : "bts:subcutaneousNodularNeurofibromas"
+    }, {
+      "@id" : "bts:diffuseDermalNeurofibromas"
+    }, {
+      "@id" : "bts:spinalNeurofibromas"
+    }, {
+      "@id" : "bts:plexiformNeurofibromas"
+    }, {
+      "@id" : "bts:opticGlioma"
+    }, {
+      "@id" : "bts:heartDefect"
+    }, {
+      "@id" : "bts:vascularDisease"
+    }, {
+      "@id" : "bts:pubertyOnset"
+    }, {
+      "@id" : "bts:stature"
+    }, {
+      "@id" : "bts:peripheralNeuropathy"
+    }, {
+      "@id" : "bts:aqueductalStenosis"
+    }, {
+      "@id" : "bts:longBoneDysplasia"
+    }, {
+      "@id" : "bts:sphenoidDysplasia"
+    }, {
+      "@id" : "bts:scoliosis"
+    }, {
+      "@id" : "bts:intellectualDisability"
+    }, {
+      "@id" : "bts:learningDisability"
+    }, {
+      "@id" : "bts:attentionDeficitDisorder"
+    }, {
+      "@id" : "bts:pheochromocytoma"
+    }, {
+      "@id" : "bts:glomusTumor"
+    }, {
+      "@id" : "bts:MPNST"
+    }, {
+      "@id" : "bts:nonopticGlioma"
+    }, {
+      "@id" : "bts:GIST"
+    }, {
+      "@id" : "bts:leukemia"
+    }, {
+      "@id" : "bts:breastCancer"
+    }, {
+      "@id" : "bts:otherTumors"
+    }, {
+      "@id" : "bts:vestibularSchwannoma"
+    }, {
+      "@id" : "bts:meningioma"
+    }, {
+      "@id" : "bts:gliomaOrEpendymoma"
+    }, {
+      "@id" : "bts:spinalSchwannoma"
+    }, {
+      "@id" : "bts:dermalSchwannoma"
+    }, {
+      "@id" : "bts:nonvestibularCranialSchwannoma"
+    }, {
+      "@id" : "bts:lenticularopacity"
+    }, {
+      "@id" : "bts:nonvestibularSchwannomas"
+    }, {
+      "@id" : "bts:numberOfSchwannomas"
+    } ],
+    "sms:displayName" : "HumanCohortTemplate"
+  }, {
     "rdfs:subClassOf" : [ {
       "@id" : "bts:Template"
     } ],
@@ -9178,127 +9299,6 @@
       "@id" : "bts:bisulfiteConversionKitID"
     } ],
     "sms:displayName" : "EpigeneticsAssayTemplate"
-  }, {
-    "rdfs:subClassOf" : [ ],
-    "@id" : "bts:HumanIndividualTemplate",
-    "schema:isPartOf" : {
-      "@id" : "http://schema.biothings.io/"
-    },
-    "sms:required" : "sms:false",
-    "sms:requiresComponent" : "",
-    "rdfs:label" : "HumanIndividualTemplate",
-    "rdfs:comment" : "Data of biosamples from human patients. Adapted from Table 2 of http://nrs.harvard.edu/urn-3:HUL.InstRepos:32725809. This template should be used when biosamples are from NF patients to provides a more valuable characterization and make additional gene-phenotype insights possible.\n",
-    "@type" : "rdfs:Class",
-    "sms:requiresDependency" : [ {
-      "@id" : "bts:individualID"
-    }, {
-      "@id" : "bts:sex"
-    }, {
-      "@id" : "bts:age"
-    }, {
-      "@id" : "bts:ageUnit"
-    }, {
-      "@id" : "bts:diagnosis"
-    }, {
-      "@id" : "bts:diagnosisAgeGroup"
-    }, {
-      "@id" : "bts:inheritance"
-    }, {
-      "@id" : "bts:mosaicism"
-    }, {
-      "@id" : "bts:nf1Genotype"
-    }, {
-      "@id" : "bts:nf2Genotype"
-    }, {
-      "@id" : "bts:germlineMutationIndicator"
-    }, {
-      "@id" : "bts:species"
-    }, {
-      "@id" : "bts:vitalStatus"
-    }, {
-      "@id" : "bts:WHOPerformanceStatus"
-    }, {
-      "@id" : "bts:painStatus"
-    }, {
-      "@id" : "bts:tumorTreatmentStatus"
-    }, {
-      "@id" : "bts:cafeaulaitMacules"
-    }, {
-      "@id" : "bts:skinFoldFreckling"
-    }, {
-      "@id" : "bts:IrisLischNodules"
-    }, {
-      "@id" : "bts:dermalNeurofibromas"
-    }, {
-      "@id" : "bts:subcutaneousNodularNeurofibromas"
-    }, {
-      "@id" : "bts:diffuseDermalNeurofibromas"
-    }, {
-      "@id" : "bts:spinalNeurofibromas"
-    }, {
-      "@id" : "bts:plexiformNeurofibromas"
-    }, {
-      "@id" : "bts:opticGlioma"
-    }, {
-      "@id" : "bts:heartDefect"
-    }, {
-      "@id" : "bts:vascularDisease"
-    }, {
-      "@id" : "bts:pubertyOnset"
-    }, {
-      "@id" : "bts:stature"
-    }, {
-      "@id" : "bts:peripheralNeuropathy"
-    }, {
-      "@id" : "bts:aqueductalStenosis"
-    }, {
-      "@id" : "bts:longBoneDysplasia"
-    }, {
-      "@id" : "bts:sphenoidDysplasia"
-    }, {
-      "@id" : "bts:scoliosis"
-    }, {
-      "@id" : "bts:intellectualDisability"
-    }, {
-      "@id" : "bts:learningDisability"
-    }, {
-      "@id" : "bts:attentionDeficitDisorder"
-    }, {
-      "@id" : "bts:pheochromocytoma"
-    }, {
-      "@id" : "bts:glomusTumor"
-    }, {
-      "@id" : "bts:MPNST"
-    }, {
-      "@id" : "bts:nonopticGlioma"
-    }, {
-      "@id" : "bts:GIST"
-    }, {
-      "@id" : "bts:leukemia"
-    }, {
-      "@id" : "bts:breastCancer"
-    }, {
-      "@id" : "bts:otherTumors"
-    }, {
-      "@id" : "bts:vestibularSchwannoma"
-    }, {
-      "@id" : "bts:meningioma"
-    }, {
-      "@id" : "bts:gliomaOrEpendymoma"
-    }, {
-      "@id" : "bts:spinalSchwannoma"
-    }, {
-      "@id" : "bts:dermalSchwannoma"
-    }, {
-      "@id" : "bts:nonvestibularCranialSchwannoma"
-    }, {
-      "@id" : "bts:lenticularopacity"
-    }, {
-      "@id" : "bts:nonvestibularSchwannomas"
-    }, {
-      "@id" : "bts:numberOfSchwannomas"
-    } ],
-    "sms:displayName" : "HumanIndividualTemplate"
   }, {
     "rdfs:subClassOf" : [ {
       "@id" : "bts:BiologicalAssayDataTemplate"
