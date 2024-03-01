@@ -49,12 +49,7 @@ jobs:
         with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
          branch: ${{ github.event.pull_request.head.ref }}
-      
-#      - name: Build confirmation message
-#        uses: mshick/add-pr-comment@v2
-#        with:
-#          message-id: build-message
-#          message: "You made some changes in the last commit that triggered rebuild: ${{ env.FOLLOWUP_COMMIT }}"
+
   
   # Additionally test PRs
   test:
