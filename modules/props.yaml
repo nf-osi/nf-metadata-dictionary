@@ -5,6 +5,11 @@ slots:
   Filename:
     description: The name of the file.
     required: false
+  GIST:
+    description: Characterization of the manifestation of Gastrointestinal stromal
+      tumor (GIST).
+    range: PresenceEnum
+    required: false
   InChIKey:
     description: >
       A unique hash key for a compound, e.g. for “Selumetinib”, the key
@@ -13,6 +18,16 @@ slots:
       is a more reliable identifier than the compound name and should be used if
       available.
     required: false
+  IrisLischNodules:
+    description: Characterization of the manifestation of Iris Lisch Nodules.
+    range: PresenceEnum
+    required: false
+    title: Iris Lisch nodules
+  MPNST:
+    description: Characterization of the manifestation of MPNST.
+    range: PresenceEnum
+    required: false
+    title: MPNST
   MRISequence:
     description: A mode used in MRI imaging
     range: MRISequenceEnum
@@ -20,6 +35,10 @@ slots:
   Resource_id:
     description: A UUID for a Resource from the NF Research Tools Database
     required: false
+  WHOPerformanceStatus:
+    description: Score on the WHO scale describing patient's functional abilities.
+    range: WHOPerformanceStatusScores
+    title: WHO performance status
   accessRequirements:
     description: Statement describing access requirements for an entity.
     in_subset:
@@ -54,6 +73,11 @@ slots:
   antibodyID:
     description: Antibody ID such as RRID if available, otherwise use vendor ID.
     required: false
+  aqueductalStenosis:
+    description: Characterization of the manifestation of aqueductal stenosis.
+    range: PresenceEnum
+    required: false
+    title: Aqueductal stenosis
   assay:
     description: The technology used to generate the data in this file.
     range: AssayEnum
@@ -62,6 +86,11 @@ slots:
     description: Target of the assay such as a HUGO gene symbol, cell type, or
       tissue region depending on the capabilities of the assay.
     required: false
+  attentionDeficitDisorder:
+    description: Characterization of the manifestation of Attention Deficit Disorder.
+    range: PresenceEnum
+    required: false
+    title: Attention deficit disorder
   author:
     description: The author of the resource; preferably use an ORCID ID, GitHub
       profile link, etc., if available and a text name if not.
@@ -106,6 +135,15 @@ slots:
     range: BodyPartEnum
     required: false
     slot_uri: https://cancerdhc.github.io/ccdhmodel/v1.1/BodySite/
+  breastCancer:
+    description: Characterization of the manifestation of Breast cancer.
+    range: PresenceEnum
+    required: false
+    title: Breast cancer
+  cafeaulaitMacules:
+    description: Characterization of cafe-au-lait macules.
+    range: PresenceEnum
+    title: Six or more cafe-au-lait macules
   captureArea:
     description: >
       One of the either four or two active regions where tissue can be
@@ -271,6 +309,16 @@ slots:
     in_subset:
       - Synapse
     required: false
+  dermalNeurofibromas:
+    description: Characterization of the manifestation of Dermal neurofibromas.
+    range: NeurofibromaManifestationEnum
+    required: false
+    title: Dermal neurofibromas
+  dermalSchwannoma:
+    description: Characterization of the manifestation of Dermal schwannoma.
+    range: PresenceEnum
+    required: false
+    title: Dermal schwannoma
   description:
     description: Text describing a resource.
     in_subset:
@@ -278,10 +326,18 @@ slots:
     range: string
     required: false
   diagnosis:
-    description: A diagnosis is the result of a medical investigation to identify a
-      disorder from its signs and symptoms.
+    description: Diagnosis for the individual given signs and symptoms. Use the most specific diagnosis term that applies.
     range: DiagnosisEnum
     required: false
+  diagnosisAgeGroup:
+    description: Age group of the individual at the time of diagnosis.
+    range: AgeGroupEnum
+    title: Diagnosis age group
+  diffuseDermalNeurofibromas:
+    description: Characterization of the manifestation of Diffuse dermal neurofibromas.
+    range: NeurofibromaManifestationEnum
+    required: false
+    title: Diffuse dermal neurofibromas
   diseaseFocus:
     description: Disease that acts as the main topic.
     in_subset:
@@ -389,6 +445,16 @@ slots:
     description: Link to genome reference data file used for alignment in processing
       workflow
     required: false
+  gliomaOrEpendymoma:
+    description: Characterization of the manifestation of Glioma or ependymoma.
+    range: BinaryImagingDiagnosisEnum
+    required: false
+    title: Glioma or ependymoma
+  glomusTumor:
+    description: Characterization of the manifestation of Glomus tumor.
+    range: PresenceEnum
+    required: false
+    title: Glomus tumor
   grantDOI:
     description: Doi of a grant (e.g. in ProposalCentral) that can be associated
       with the entity.
@@ -396,6 +462,11 @@ slots:
       - portal
     range: string
     required: false
+  heartDefect:
+    description: Characterization of the manifestation of Heart defect.
+    range: PresenceEnum
+    required: false
+    title: Heart defect
   id:
     description: The entity id for the resource automatically assigned by the platform.
     required: false
@@ -416,6 +487,10 @@ slots:
     notes:
       - Legacy key used in a couple of old studies
     required: false
+  inheritance:
+    description: Describes whether known inheritance from a parent.
+    range: InheritanceEnum
+    title: Inheritance
   initiative:
     description: Refers to a funding initiative. Typically handled by the DCC.
     in_subset:
@@ -426,6 +501,11 @@ slots:
     description: Link to affiliated institution.
     range: Institution
     required: false
+  intellectualDisability:
+    description: Characterization of the manifestation of Intellectual disability.
+    range: PresenceEnum
+    required: false
+    title: Intellectual disability
   isCellLine:
     description: Whether or not sample source is a cell line (Yes; No)
     range: BooleanEnum
@@ -462,11 +542,26 @@ slots:
     description: Whether or not sample source is a xenograft (Yes; No)
     range: BooleanEnum
     required: false
+  learningDisability:
+    description: Characterization of the manifestation of Learning disability.
+    range: PresenceEnum
+    required: false
+    title: Learning disability
   lensAperture:
     annotations:
       validationRules: num
     description: Numerical aperture of the lens. Floating point value > 0.
     required: false
+  lenticularOpacity:
+    description: Characterization of the manifestation of Lenticular opacity.
+    range: PresenceEnum
+    required: false
+    title: Lenticular opacity
+  leukemia:
+    description: Characterization of the manifestation of Leukemia.
+    range: PresenceEnum
+    required: false
+    title: Leukemia
   libraryID:
     description: ''
     required: false
@@ -495,6 +590,11 @@ slots:
       - portal
     range: string
     required: false
+  longBoneDysplasia:
+    description: Characterization of the manifestation of Long bone dysplasia.
+    range: PresenceEnum
+    required: false
+    title: Long bone dysplasia
   manifestation:
     description: An associated phenotype characteristic.
     in_subset:
@@ -513,6 +613,11 @@ slots:
     description: Mean coverage for whole genome sequencing, or mean target coverage
       for whole exome and targeted sequencing, collected from Picard Tools
     required: false
+  meningioma:
+    description: Characterization of the manifestation of Meningioma.
+    range: MultipleImagingDiagnosisEnum
+    required: false
+    title: Meningioma
   modelSystemName:
     annotations:
       validationRules: list like
@@ -529,6 +634,10 @@ slots:
     in_subset:
       - Synapse
     required: false
+  mosaicism:
+    description: Whether individual is mosaic.
+    range: MosaicismEnum
+    title: Mosaicism
   nf1Genotype:
     any_of:
       - range: Genotype
@@ -539,18 +648,21 @@ slots:
     see_also:
       - nf1Variant
       - nf2Genotype
+  germlineMutationIndicator:
+    description: Indicates a summary testing result for individual's germline mutation only.
+    range: TestSummaryEnum    
+  germlineMutation:
+    description: The individual's actual germline mutation.
+    notes: 
+    - More sensitive information than germlineMutationIndicator. 
+    - Free-text field that possibly suggests *any* mutations could be put here, while nf1GermlineMutation, etc. are more specific in terms of disease. 
   nf1GermlineMutation:
-    description: NF1 germline mutation. Subproperty of nf1Variant.
-    notes: Usually a supplemental clinical data property.
+    description: NF1 germline mutation.
+    notes: 
+    - Unlike nf1Variant, this is free-text and not constrained to enumerated values of known variants, making it more flexible for new mutations and different nomenclatures.
     required: false
   nf1SomaticMutation:
-    description: NF1 somatic mutation. Subproperty of nf1Variant.
-    notes: Usually a supplemental clinical data property.
-    required: false
-  nf1Variant:
-    description: Named variant (mutation) in the NF1 gene/protein in the biospecimen
-      from which the data were derived, if known/applicable.
-    range: NF1VariantEnum
+    description: NF1 somatic mutation, i.e. in tumor samples.
     required: false
   nf2Genotype:
     any_of:
@@ -565,24 +677,58 @@ slots:
     description: magnification of the lens as specified by the manufacturer - i.e.
       '60' is a 60X lens.
     required: false
+  nonopticGlioma:
+    description: Characterization of the manifestation of Nonoptic glioma.
+    range: PresenceEnum
+    required: false
+    title: Nonoptic glioma
+  nonvestibularCranialSchwannoma:
+    description: Characterization of the manifestation of Nonvestibular cranial schwannoma.
+    range: BinaryImagingDiagnosisEnum
+    required: false
+    title: Nonvestibular cranial schwannoma
+  nonvestibularSchwannomas:
+    description: Characterization of the manifestation of Nonvestibular schwannomas.
+    range: NonvestibularSchwannomaManifestationEnum
+    required: false
+    title: Nonvestibular schwannomas
   nucleicAcidSource:
     description: Source of the extracted nucleic acid used in the experiment
     range: NucleicAcidSourceEnum
     required: false
+  numberOfSchwannomas:
+    description: Number of schwannomas.
+    range: SchwannomaManifestationEnum
+    required: false
+    title: Number of schwannomas
   objective:
     description: Microscope objective.
     required: false
+  opticGlioma:
+    description: Characterization of the manifestation of Optic glioma.
+    range: OpticGliomaManifestationEnum
+    required: false
+    title: Optic glioma
   organ:
     description: A unique macroscopic (gross) anatomic structure that performs
       specific functions. It is composed of various tissues. An organ is part of
       an anatomic system or a body region.
     range: OrganEnum
     required: false
+  otherTumors:
+    description: Characterization of the manifestation of other tumors.
+    range: PresenceEnum
+    required: false
+    title: Other tumors
   pH:
     annotations:
       validationRules: num
     description: Numeric value for pH (range 0-14)
     required: false
+  painStatus:
+    description: Pain status rating.
+    range: PainEnum
+    title: Pain status
   pairsOnDifferentChr:
     annotations:
       validationRules: int
@@ -595,11 +741,26 @@ slots:
     description: |
       A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.
     required: false
+  peripheralNeuropathy:
+    description: Characterization of the manifestation of Peripheral neuropathy.
+    range: PresenceEnum
+    required: false
+    title: Peripheral neuropathy
+  pheochromocytoma:
+    description: Characterization of the manifestation of Pheochromocytoma.
+    range: PresenceEnum
+    required: false
+    title: Pheochromocytoma
   platform:
     description: A sequencing platform, microscope, spectroscope/plate reader, or
       other platform for collecting data.
     range: PlatformEnum
     required: true
+  plexiformNeurofibromas:
+    description: Characterization of the manifestation of Plexiform neurofibromas.
+    range: PlexiformNeurofibromaManifestationEnum
+    required: false
+    title: Plexiform neurofibromas
   programmingLanguage:
     description: A computer programming language
     enum_range:
@@ -660,6 +821,11 @@ slots:
   protocolPurpose:
     description: Brief description of the protocol purpose.
     required: false
+  pubertyOnset:
+    description: Puberty onset.
+    range: PubertyOnsetEnum
+    required: false
+    title: Puberty onset
   publisher:
     description: An entity responsible for making the resource available.
     in_subset:
@@ -759,6 +925,11 @@ slots:
   sampleType:
     description: Type of sample used
     required: false
+  scoliosis:
+    description: Characterization of the manifestation of Scoliosis.
+    range: PresenceEnum
+    required: false
+    title: Scoliosis
   series:
     description: Title of a custom series that this resource is part of, if any.
     in_subset:
@@ -774,6 +945,10 @@ slots:
     description: Phenotypic expression of chromosomal makeup that defines a study
       subject as male, female, or other.
     required: false
+  skinFoldFreckling:
+    description: Characterization of skin fold freckling.
+    range: PresenceEnum
+    title: Skin fold freckling
   slideID:
     description: >
       Unique identifier printed on the label of each Visium slide. The
@@ -827,6 +1002,26 @@ slots:
       includes particular types of cellular molecules, cells, tissues, organs,
       body fluids, embryos, and body excretory substances.
     required: false
+  sphenoidDysplasia:
+    description: Characterization of the manifestation of Sphenoid dysplasia.
+    range: PresenceEnum
+    required: false
+    title: Sphenoid dysplasia
+  spinalNeurofibromas:
+    description: Characterization of the manifestation of Spinal neurofibromas.
+    range: SpinalNeuromaManifestationEnum
+    required: false
+    title: Spinal neurofibromas
+  spinalSchwannoma:
+    description: Characterization of the manifestation of Spinal schwannoma.
+    range: MultipleImagingDiagnosisEnum
+    required: false
+    title: Spinal schwannoma
+  stature:
+    description: Stature of the individual.
+    range: Percentiles-2SD
+    required: false
+    title: Stature
   studyFileviewId:
     description: Links a Synapse project to its fileview.
     in_subset:
@@ -857,6 +1052,12 @@ slots:
       - portal
     range: StudyStatusEnum
     required: true
+  subcutaneousNodularNeurofibromas:
+    description: Characterization of the manifestation of Subcutaneous nodular
+      neurofibromas.
+    range: NeurofibromaManifestationEnum
+    required: false
+    title: Subcutaneous nodular neurofibromas
   summary:
     description: A short description (an abstract).
     in_subset:
@@ -902,6 +1103,10 @@ slots:
     description: Type of transplantation involved in the experiment, derived from MESH
     range: TransplantationType
     required: false
+  tumorTreatmentStatus:
+    description: Tumor treatment status for the individual.
+    range: TumorTreatmentEnum
+    title: Tumor treatment status
   tumorType:
     description: The type of tumor that the biospecimen used to generate the data
       were collected from.
@@ -912,6 +1117,20 @@ slots:
     in_subset:
       - Synapse
     required: false
+  vascularDisease:
+    description: Characterization of the manifestation of Vascular disease.
+    range: PresenceEnum
+    required: false
+    title: Vascular disease
+  vestibularSchwannoma:
+    description: Characterization of the manifestation of Vestibular schwannoma.
+    range: LateralManifestationEnum
+    required: false
+    title: Vestibular schwannoma
+  vitalStatus:
+    description: Vital status of the patient.
+    range: VitalStatusEnum
+    title: Vital status
   workflow:
     annotations:
       requiresDependency: workflowLink
