@@ -1,0 +1,58 @@
+# When updates are merged into main, propagate data model updates to various places:
+# 1. dcc-site uses assay, etc. for drop-down options; triggers a workflow in dcc-site that creates a PR to pull in new terms.
+# 2. The Synapse schema registry has schemas for the NF entities such as portal studies and datasets. Push updated JSON schemas to the Synapse registry.
+# 
+# Highly related but to be handled by separate workflow:
+# Update data model version in DCA-prod for official releases (instead of every merge into main)
+
+name: Propagate data model updates
+
+on:
+  push:
+    branches: 
+      - main
+    paths:
+      - NF.jsonld
+      
+env:
+  REPO: nf-osi/dcc-site
+  REF: refs/heads/main
+  SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
+      
+jobs:
+  trigger-sync:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Dispatch update workflow for dcc-site
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Handle data model update
+          repo: ${{ env.REPO }}
+          ref: ${{ env.REF }}
+          token: ${{ secrets.SERVICE_TOKEN }}
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      
+      - name: Push to Synapse schema registry only JSON schemas that changed
+        run: |
+          CHANGED=$(git diff --name-only HEAD HEAD~1 registered-json-schemas)
+          for FILE in $CHANGED
+          do
+            REQUEST_BODY=$(jq '. + { concreteType: "org.sagebionetworks.repo.model.schema.CreateSchemaRequest", dryRun: false }' $FILE)
+            RESPONSE=$(curl -X POST https://repo-prod.prod.sagebase.org/repo/v1/schema/type/create/async/start \
+            -H "Authorization: Bearer $SYNAPSE_AUTH_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "$REQUEST_BODY")
+            
+            # Will error if token not within response
+            TOKEN=$( echo $RESPONSE | jq -e -r '.token')
+            sleep 1
+            STATUS=$(curl "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/create/async/get/$TOKEN" \
+            -H "Authorization: Bearer $SYNAPSE_AUTH_TOKEN")
+
+            echo $STATUS | jq -e '.newVersionInfo'
+          done
+

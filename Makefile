@@ -29,7 +29,6 @@ PortalDataset:
 	@echo "--- Saved registered-json-schemas/PortalDataset.json ---"
 
 
-
 # yq '.slots |= with_entries(select(.value.in_subset[] == "portal"))' modules/props.yaml > relevant_props.yaml
 PortalStudy:
 	yq eval-all '. as $$item ireduce ({}; . * $$item )' modules/Data/Data.yaml modules/DCC/Portal.yaml modules/Other/Organization.yaml > relevant_enums.yaml
@@ -40,4 +39,11 @@ PortalStudy:
 	jq '{ schema: { "$$schema": "http://json-schema.org/draft-07/schema#", "$$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalstudy", properties: ."$$defs".PortalStudy.properties, required: ."$$defs".PortalStudy.required }}' tmp.json > registered-json-schemas/PortalStudy.json
 	rm tmp.json
 	@echo "--- Saved registered-json-schemas/PortalStudy.json ---"
+
+Dataset:
+	enum=$$(./utils/enumerate.sh assay); jq --argjson enum "$$enum" '.properties.assay.enum = $$enum' registered-json-schemas/Dataset.json > temp.json && mv temp.json registered-json-schemas/Dataset.json
+
+
+Superdataset:
+	enum=$$(./utils/enumerate.sh assay); jq --argjson enum "$$enum" '.properties.assay.enum = $$enum' registered-json-schemas/Superdataset.json > temp.json && mv temp.json registered-json-schemas/Superdataset.json
 
