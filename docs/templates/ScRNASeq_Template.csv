@@ -1,8 +1,8 @@
 "Field","Description","Required","ValidRange"
 "Component","Type of metadata template; provide the same one for all items/rows.","true","#"
 "assay","The technology used to generate the data in this file.","true","#AssayEnum"
-"dataSubtype","Further qualification of dataType, which may be used to indicate the state of processing of the data, aggregation of the data, or presence of metadata.","true","#DataSubtype"
-"dataType","A type of data -- experimental, clinical, or other. Most typically refers to a high-level data type that can be related to an assay type.  For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.
+"dataSubtype","Further qualification of dataType, which may be used to indicate the state of processing of the data, aggregation of the data, or presence of metadata.","true","#DataSubtypeEnum"
+"dataType","Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.
 ","true","#Data|#Metadata"
 "fileFormat","Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software","true","#FileFormatEnum"
 "individualID","A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.","true","#"
@@ -24,7 +24,8 @@
 "batchID","Batch identifier, can be used in any context where added batch information is helpful, such as different sequencing runs or collection times.","false","#"
 "cellID","Also known as cell barcode, this value can be added for single-cell experiments to identify data at the cell level.","false","#"
 "cellType","A cell type is a distinct morphological or functional form of cell.","false","#Cell"
-"diagnosis","A diagnosis is the result of a medical investigation to identify a disorder from its signs and symptoms.","false","#DiagnosisEnum"
+"comments","Brief free-text comments that may also be important to understanding the resource.","false","#"
+"diagnosis","Diagnosis for the individual given signs and symptoms. Use the most specific diagnosis term that applies.","false","#DiagnosisEnum"
 "dissociationMethod","Procedure by which a biological specimen is dissociated into individual cells or a cell suspension","false","#DissociationMethodEnum"
 "isCellLine","Whether or not sample source is a cell line (Yes; No)","false","#BooleanEnum"
 "libraryPrep","The general strategy by which the library was prepared","false","#LibraryPrepEnum"
@@ -32,6 +33,7 @@
 "nf1Genotype","Genotype of NF1 gene in the biospecimen from which the data were derived, if known.","false","#Genotype|#UnknownEnum"
 "nf2Genotype","Genotype of NF2 gene in the biospecimen from which the data were derived, if known","false","#Genotype|#UnknownEnum"
 "nucleicAcidSource","Source of the extracted nucleic acid used in the experiment","false","#NucleicAcidSourceEnum"
+"organ","A unique macroscopic (gross) anatomic structure that performs specific functions. It is composed of various tissues. An organ is part of an anatomic system or a body region.","false","#OrganEnum"
 "parentSpecimenID","A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.
 ","false","#"
 "readDepth","If available, the coverage statistic as output from bedtools coverage or samtools stats.","false","#"
