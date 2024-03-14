@@ -2734,6 +2734,81 @@
     "sms:displayName" : "UpdateMilestoneReport"
   }, {
     "rdfs:subClassOf" : [ {
+      "@id" : "bts:GenomicsArrayTemplate"
+    } ],
+    "@id" : "bts:MethylationArrayTemplate",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:false",
+    "sms:requiresComponent" : "",
+    "rdfs:label" : "MethylationArrayTemplate",
+    "rdfs:comment" : "Template for raw data files (idat) from DNA methylation arrays.",
+    "@type" : "rdfs:Class",
+    "sms:requiresDependency" : [ {
+      "@id" : "bts:Component"
+    }, {
+      "@id" : "bts:Filename"
+    }, {
+      "@id" : "bts:fileFormat"
+    }, {
+      "@id" : "bts:resourceType"
+    }, {
+      "@id" : "bts:dataType"
+    }, {
+      "@id" : "bts:dataSubtype"
+    }, {
+      "@id" : "bts:assay"
+    }, {
+      "@id" : "bts:individualID"
+    }, {
+      "@id" : "bts:species"
+    }, {
+      "@id" : "bts:sex"
+    }, {
+      "@id" : "bts:age"
+    }, {
+      "@id" : "bts:ageUnit"
+    }, {
+      "@id" : "bts:diagnosis"
+    }, {
+      "@id" : "bts:nf1Genotype"
+    }, {
+      "@id" : "bts:nf2Genotype"
+    }, {
+      "@id" : "bts:tumorType"
+    }, {
+      "@id" : "bts:modelSystemName"
+    }, {
+      "@id" : "bts:organ"
+    }, {
+      "@id" : "bts:comments"
+    }, {
+      "@id" : "bts:parentSpecimenID"
+    }, {
+      "@id" : "bts:specimenID"
+    }, {
+      "@id" : "bts:aliquotID"
+    }, {
+      "@id" : "bts:platform"
+    }, {
+      "@id" : "bts:nucleicAcidSource"
+    }, {
+      "@id" : "bts:specimenPreparationMethod"
+    }, {
+      "@id" : "bts:channel"
+    }, {
+      "@id" : "bts:chipID"
+    }, {
+      "@id" : "bts:chipPosition"
+    }, {
+      "@id" : "bts:plateName"
+    }, {
+      "@id" : "bts:plateWell"
+    } ],
+    "sms:displayName" : "MethylationArrayTemplate"
+  }, {
+    "rdfs:subClassOf" : [ {
       "@id" : "bts:BiologicalAssayDataTemplate"
     } ],
     "@id" : "bts:PharmacokineticsAssayTemplate",
@@ -5524,6 +5599,17 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "isPairedEnd"
   }, {
+    "@id" : "bts:plateName",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "User-specified identifier of the plate used to prepare the sample for analysis.",
+    "rdfs:label" : "plateName",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "plateName",
+    "sms:required" : "sms:false"
+  }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:numberOfSchwannomas",
     "schema:isPartOf" : {
@@ -6129,6 +6215,22 @@
     },
     "sms:displayName" : "meanCoverage",
     "sms:required" : "sms:false"
+  }, {
+    "rdfs:subClassOf" : [ ],
+    "@id" : "bts:channel",
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:required" : "sms:true",
+    "schema:rangeIncludes" : [ {
+      "@id" : "bts:Cy3"
+    }, {
+      "@id" : "bts:Cy5"
+    } ],
+    "rdfs:label" : "channel",
+    "rdfs:comment" : "Color channel used to generate data file.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "channel"
   }, {
     "@id" : "bts:genePerturbed",
     "@type" : "rdfs:Class",
@@ -7676,6 +7778,28 @@
     "@type" : "rdfs:Class",
     "sms:displayName" : "dermalNeurofibromas"
   }, {
+    "@id" : "bts:plateWell",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "User-specified identifier for the specific well of the plate used to prepare the sample for analysis.",
+    "rdfs:label" : "plateWell",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "plateWell",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:chipID",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "User-specified identifier for the chip used to perform the methylation microarray.",
+    "rdfs:label" : "chipID",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "chipID",
+    "sms:required" : "sms:false"
+  }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:proteinExtractSource",
     "schema:isPartOf" : {
@@ -8889,6 +9013,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "bisulfiteConversionKitID",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:chipPosition",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "User-specified identifier for the specific position on the chip that the sample was loaded into to perform the methylation microarray.",
+    "rdfs:label" : "chipPosition",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "chipPosition",
     "sms:required" : "sms:false"
   }, {
     "rdfs:subClassOf" : [ ],
