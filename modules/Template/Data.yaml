@@ -285,6 +285,23 @@ classes:
         dataType:
         - geneExpression
 
+  MethylationArrayTemplate:
+    is_a: GenomicsArrayTemplate
+    description: Template for raw data files (idat) from DNA methylation arrays.
+    source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=raw_methylation_array
+    slots:
+    - chipID
+    - chipPosition
+    - plateName
+    - plateWell
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay: 
+        - methylation array
+
+
   #########################################################
   # Biological Assay Data  / Sequencing / Processed            
   #########################################################
