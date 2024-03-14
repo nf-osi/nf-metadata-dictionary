@@ -220,7 +220,7 @@
   }, {
     "@id" : "bts:Data",
     "@type" : "rdfs:Class",
-    "rdfs:comment" : "TBD",
+    "rdfs:comment" : "What the data (file) contains.",
     "rdfs:label" : "Data",
     "rdfs:subClassOf" : [ ],
     "schema:isPartOf" : {
@@ -7117,6 +7117,10 @@
       "@id" : "bts:genomicVariants"
     }, {
       "@id" : "bts:rawcounts"
+    }, {
+      "@id" : "bts:RawIntensities"
+    }, {
+      "@id" : "bts:NormalizedIntensities"
     }, {
       "@id" : "bts:PharmacokineticStudy"
     }, {
@@ -21286,6 +21290,17 @@
     "sms:displayName" : "University of Washington, Seattle",
     "sms:required" : "sms:false"
   }, {
+    "@id" : "bts:NormalizedIntensities",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "NormalizedIntensities",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "NormalizedIntensities",
+    "sms:required" : "sms:false"
+  }, {
     "@id" : "bts:LTQOrbitrapXL",
     "@type" : "rdfs:Class",
     "rdfs:comment" : "TBD",
@@ -21856,6 +21871,17 @@
       "@id" : "http://schema.biothings.io/"
     },
     "sms:displayName" : "bed gappedPeak",
+    "sms:required" : "sms:false"
+  }, {
+    "@id" : "bts:RawIntensities",
+    "@type" : "rdfs:Class",
+    "rdfs:comment" : "TBD",
+    "rdfs:label" : "RawIntensities",
+    "rdfs:subClassOf" : [ ],
+    "schema:isPartOf" : {
+      "@id" : "http://schema.biothings.io/"
+    },
+    "sms:displayName" : "RawIntensities",
     "sms:required" : "sms:false"
   }, {
     "@id" : "bts:AnnotatedSomaticVariants",
