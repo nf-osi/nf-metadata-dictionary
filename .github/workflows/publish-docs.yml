@@ -4,16 +4,23 @@ on:
   push:
     branches: 
       - main
-      - docs/staging
+    paths:
+      - 'modules/**'
+      - 'docs/**'
+      - '.github/workflows/publish-docs.yml'
+  pull_request:
+    branches: 
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
     paths:
       - 'modules/**'
       - 'docs/**'
       - '.github/workflows/publish-docs.yml'
 
-  # TODO check that docs can be rebuilt for PRs
-  #pull_request:
-  #  branches: 
-  #    - main
 
 jobs:
 
@@ -21,30 +28,30 @@ jobs:
     runs-on: ubuntu-latest
   
     permissions:
-      contents: read
+      contents: write
       pages: write     
-      id-token: write 
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      id-token: write
       
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup GH Pages
-        uses: actions/configure-pages@v3
-
       - name: Build using docker 
         run: |
-          docker run -v $(pwd):/app ghcr.io/nf-osi/data-model-docs 
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: docs 
+          docker run -v $(pwd):/app ghcr.io/nf-osi/data-model-docs    
       
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+      - name: Deploy preview for PRs
+        if: github.event_name == 'pull_request'
+        id: preview-deployment
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./docs
+          umbrella-dir: ./docs/pr-preview
+
+      - name: Deploy 🚀
+        if: github.event_name != 'pull_request'
+        id: prod-deployment
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: docs
