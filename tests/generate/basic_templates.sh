@@ -6,7 +6,7 @@ CREDS=creds.json
 DATA_MODEL_PATH=../../NF.jsonld
 DATA_MODEL=NF.jsonld
 LOG_DIR=logs
-SLEEP_THROTTLE=17 # API rate-limiting, need to better figure out dynamically based on # of templates
+SLEEP_THROTTLE=20 # API rate-limiting, need to better figure out dynamically based on # of templates
 
 # Setup for creds
 # If testing locally, it might already be in folder; 
