@@ -172,6 +172,20 @@ slots:
     description: A cell type is a distinct morphological or functional form of cell.
     range: Cell
     required: false
+  channel:
+    description: Color channel used to generate data file.
+    required: true
+    range: ChannelEnum
+    source: Genomic Data Commons
+  chipID:
+    description: User-specified identifier for the chip used to perform the methylation microarray.
+    required: false
+    source: Genomic Data Commons
+  chipPosition:
+    description: User-specified identifier for the specific position on the chip that 
+      the sample was loaded into to perform the methylation microarray.
+    required: false
+    source: Genomic Data Commons
   citation:
     description: Citation (e.g. doi) that usage of data or resource should be cited with.
     required: false
@@ -751,6 +765,14 @@ slots:
     range: PresenceEnum
     required: false
     title: Pheochromocytoma
+  plateName:
+    description: User-specified identifier of the plate used to prepare the sample for analysis.
+    required: false
+    source: Genomic Data Commons
+  plateWell:
+    description: User-specified identifier for the specific well of the plate used to prepare the sample for analysis.
+    required: false
+    source: Genomic Data Commons
   platform:
     description: A sequencing platform, microscope, spectroscope/plate reader, or
       other platform for collecting data.

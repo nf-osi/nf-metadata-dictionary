@@ -1,5 +1,6 @@
 enums:
   Data:
+    description: What the data (file) contains.
     permissible_values:
       immunoassay:
         description: Laboratory test involving interaction of antigens with specific antibodies.
@@ -60,6 +61,10 @@ enums:
       raw counts:
         description: The number or amount of something.
         meaning: http://purl.obolibrary.org/obo/NCIT_C25463
+      RawIntensities:
+        description: Raw intensity values from the instrument.
+      NormalizedIntensities:
+        description: Normalized intensity values from the instrument/machine.
       Pharmacokinetic Study:
         description: A study of the process by which a drug is absorbed, distributed, metabolized, and eliminated by the body.
         meaning: http://purl.obolibrary.org/obo/NCIT_C49663
@@ -71,7 +76,7 @@ enums:
         meaning: https://en.wikipedia.org/wiki/Chromatin_remodeling
       StructuralVariants:
         description: Genomic variants data that covers deletions, duplications, CNVs, insertions, inversions, and translocations, which may be derived from specialized variant calling workflows.
-        source: hhttps://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=structural_variation
+        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=structural_variation
       GermlineVariants:
         description: Called germline variants
         meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation
