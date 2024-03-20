@@ -40,9 +40,14 @@ classes:
     is_a: Template
     abstract: true
     description: >
-      A template for describing deposited data artifacts (i.e. files) from an experimental assay that main involves non-biological samples.   
+      Describes data artifacts (i.e. files) from an experimental/physical-sciences assay 
+      where input specimens are more at the level of synthesized molecules or inorganic materials.
+    notes:
+    - Name of this base abstraction is not great, may need to revise.
     slots:
     - Component
+    - Filename
+    - fileFormat
     - resourceType
     - dataType
     - dataSubtype
