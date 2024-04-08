@@ -4,6 +4,7 @@
 "dataSubtype","Further qualification of dataType, which may be used to indicate the state of processing of the data, aggregation of the data, or presence of metadata.","true","#DataSubtypeEnum"
 "dataType","Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.
 ","true","#Data|#Metadata"
+"diagnosis","Diagnosis for the individual given signs and symptoms. Use the most specific diagnosis term that applies.","true","#DiagnosisEnum"
 "fileFormat","Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software","true","#FileFormatEnum"
 "individualID","A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.","true","#"
 "libraryPreparationMethod","Method by which library was prepared","true","#LibraryPreparationMethodEnum"
@@ -21,7 +22,6 @@
 "aliquotID","A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.","false","#"
 "batchID","Batch identifier, can be used in any context where added batch information is helpful, such as different sequencing runs or collection times.","false","#"
 "comments","Brief free-text comments that may also be important to understanding the resource.","false","#"
-"diagnosis","Diagnosis for the individual given signs and symptoms. Use the most specific diagnosis term that applies.","false","#DiagnosisEnum"
 "libraryPrep","The general strategy by which the library was prepared","false","#LibraryPrepEnum"
 "modelSystemName","A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)","false","#CellLineModel|#MouseModel"
 "nf1Genotype","Genotype of NF1 gene in the biospecimen from which the data were derived, if known.","false","#Genotype|#UnknownEnum"
