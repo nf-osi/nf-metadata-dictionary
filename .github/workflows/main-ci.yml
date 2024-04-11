@@ -12,7 +12,7 @@ on:
   
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
@@ -62,7 +62,7 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        schematic-version: [24.1.1]
+        schematic-version: [24.2.1]
 
     steps:
       - uses: actions/checkout@v4
@@ -76,7 +76,7 @@ jobs:
       
       - name: Setup schematic
         id: setup-schematic
-        run: pip install schematicpy==${{ matrix.schematic-version }}
+        run: pip install schematicpy==${{ matrix.schematic-version }} ipython==8.18.1
 
       - name: Sanity-check successful installation and version
         run: pip show schematicpy
