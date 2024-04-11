@@ -9,7 +9,7 @@ One can reference the data model to understand things such as:
 - What metadata properties exist for these different types, to help understand and use a data resource
 - What are the preferred/standard labels for something as defined by community input and our data managers (e.g. prefer "NF2-related schwannomatosis" vs the now-deprecated "Neurofibromatosis type 2")
 
-Terms in the metadata dictionary are used in the manifests within the [Data Curator App](https://dca.app.sagebionetworks.org/). 
+Terms in the metadata dictionary are used in the manifests within the [Data Curator App](https://dca.app.sagebionetworks.org/) and on the [NF Data Portal](nf.synapse.org). 
 We welcome contributions from community members, whether you are a professional data modeler, clinician, or student in the NF community.
 
 ### Data Model Framework
