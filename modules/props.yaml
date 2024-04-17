@@ -59,9 +59,7 @@ slots:
   age:
     annotations:
       requiresDependency: ageUnit
-      validationRules: 
-      - num
-      - required
+      pattern: ^(\s*|\d+)$
     description: A numeric value representing age of the individual. Use with `ageUnit`.
     required: false
   ageUnit:
