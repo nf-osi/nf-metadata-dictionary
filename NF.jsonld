@@ -4592,16 +4592,17 @@
     "sms:displayName" : "batchID",
     "sms:required" : "sms:false"
   }, {
-    "@id" : "bts:individualID",
-    "@type" : "rdfs:Class",
-    "rdfs:comment" : "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
-    "rdfs:label" : "individualID",
     "rdfs:subClassOf" : [ ],
+    "@id" : "bts:individualID",
     "schema:isPartOf" : {
       "@id" : "http://schema.biothings.io/"
     },
-    "sms:displayName" : "individualID",
-    "sms:required" : "sms:true"
+    "sms:required" : "sms:true",
+    "sms:validationRules" : [ "list like" ],
+    "rdfs:label" : "individualID",
+    "rdfs:comment" : "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
+    "@type" : "rdfs:Class",
+    "sms:displayName" : "individualID"
   }, {
     "rdfs:subClassOf" : [ ],
     "@id" : "bts:failedQC",
