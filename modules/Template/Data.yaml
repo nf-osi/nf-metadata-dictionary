@@ -201,12 +201,8 @@ classes:
     description: Files contain raw data output from the NanoString GeoMx DSP Pipeline. These can include RCC or DCC Files.
     source: https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.csv
     slots:
-    - librarySelectionMethod
     - libraryPrep
-    - geoMxDSPLibraryPreparationKitVendor
-    - geoMxDSPLibraryPreparationKitVersion
-    - SynapseIDOfGeoMxLabWorksheetile
-    - SoftwareAndVersion
+    - libraryPreparationMethod
     annotations:
       requiresComponent: ''
       required: false
@@ -217,7 +213,6 @@ classes:
         - SequenceReads
     close_mappings:
     - htan:NanoStringGeoMxDSPSpatialTranscriptomicsLevel1
-
         
   PdxGenomicsAssayTemplate:
     is_a: GenomicsAssayTemplate
