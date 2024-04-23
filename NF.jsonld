@@ -6887,7 +6887,7 @@
     "sms:displayName" : "ClinicalAssayTemplate"
   }, {
     "rdfs:subClassOf" : [ {
-      "@id" : "bts:GeneticsAssayTemplate"
+      "@id" : "bts:ScSequencingAssayTemplate"
     } ],
     "@id" : "bts:ScRNASeqTemplate",
     "schema:isPartOf" : {
@@ -6896,7 +6896,7 @@
     "sms:required" : "sms:false",
     "sms:requiresComponent" : "",
     "rdfs:label" : "ScRNASeqTemplate",
-    "rdfs:comment" : "Files contain raw data output from the NanoString GeoMx DSP Pipeline. These can include RCC or DCC Files.",
+    "rdfs:comment" : "Template for describing raw data from single-cell RNA-seq.",
     "@type" : "rdfs:Class",
     "sms:requiresDependency" : [ {
       "@id" : "bts:Component"
@@ -6949,9 +6949,33 @@
     }, {
       "@id" : "bts:specimenPreparationMethod"
     }, {
+      "@id" : "bts:cellType"
+    }, {
+      "@id" : "bts:isCellLine"
+    }, {
+      "@id" : "bts:cellID"
+    }, {
+      "@id" : "bts:dissociationMethod"
+    }, {
+      "@id" : "bts:runType"
+    }, {
+      "@id" : "bts:libraryStrand"
+    }, {
       "@id" : "bts:libraryPrep"
     }, {
       "@id" : "bts:libraryPreparationMethod"
+    }, {
+      "@id" : "bts:readPair"
+    }, {
+      "@id" : "bts:readLength"
+    }, {
+      "@id" : "bts:readDepth"
+    }, {
+      "@id" : "bts:targetDepth"
+    }, {
+      "@id" : "bts:batchID"
+    }, {
+      "@id" : "bts:auxiliaryAsset"
     } ],
     "sms:displayName" : "ScRNASeqTemplate"
   }, {
