@@ -1113,6 +1113,13 @@ slots:
       validationRules: int
     description: If available, the total number of reads collected from samtools.
     required: false
+  transcriptomicsAssay:
+    description: To indicate trascript profiling method for tandem-type assays such as spatial transcriptomics.
+    enum_range:
+    # this is a subset from, hard-coded here
+    - RNA-seq
+    - 
+    required: true
   transplantationRecipientSpecies:
     description: Species into which donor  was grown
     enum_range:
