@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'modules/**'
+      - '.github/workflows/main-ci.yml'
   
   workflow_dispatch:
 
@@ -47,7 +48,7 @@ jobs:
             git commit -m "Rebuild NF.jsonld, json"
           else 
             echo "Changes in src modules did not affect final jsonld or json artifacts"
-            echo "Note that tests will still be run in the next step"
+            echo "Note that tests will still be run in the next job"
           fi
     
       - name: Push changes
@@ -59,7 +60,7 @@ jobs:
   
   # Additionally test PRs
   test:
-    name: Test with schematic
+    name: Test with schematic current version
     needs: [build]
     runs-on: ubuntu-latest
     env:
@@ -68,7 +69,7 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        schematic-version: [24.4.1]
+        schematic-version: [24.4.1]  # cannot actually do parallel/concurrent testing and need to do sequential because of API rate limits
 
     steps:
       - uses: actions/checkout@v4
@@ -86,7 +87,7 @@ jobs:
 
       - name: Sanity-check successful installation and version
         run: pip show schematicpy
-      
+
       - name: Test generate
         working-directory: tests/generate
         continue-on-error: true
@@ -102,12 +103,12 @@ jobs:
       - name: Create test suite report
         working-directory: tests
         continue-on-error: true
-        run: docker run -v $(pwd):/tests rocker/tidyverse R -e "rmarkdown::render('tests/test-suite-report.Rmd')"
+        run: docker run -v $(pwd):/tests -e SCHEMATIC=${{ matrix.schematic-version }} rocker/tidyverse R -e "rmarkdown::render('tests/test-suite-report.Rmd')"
 
       - name: Report on test suite as PR comment
         uses: mshick/add-pr-comment@v2
         with:
-          message-id: test-suite-report
+          message-id: test-suite-report-${{ matrix.schematic-version }}
           message-path: |
             tests/test-suite-report.md
 
