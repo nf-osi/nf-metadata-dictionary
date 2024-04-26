@@ -20,7 +20,7 @@ for i in ${!MANIFESTS[@]}
 do
   echo ">>>>>>> Testing ${MANIFESTS[$i]} "
   schematic model --config config.yml \
-  validate -mp ${MANIFESTS[$i]} -dt ${TEMPLATES[$i]} -rr 2>&1 | tee $LOG_DIR/${MANIFESTS[$i]%.*}.txt
+  validate -mp ${MANIFESTS[$i]} -dt ${TEMPLATES[$i]} 2>&1 | tee $LOG_DIR/${MANIFESTS[$i]%.*}.txt
 done
 
 echo "Cleaning up test fixtures and intermediates..."
