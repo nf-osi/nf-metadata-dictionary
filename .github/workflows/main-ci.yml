@@ -113,7 +113,7 @@ jobs:
             tests/test-suite-report.md
 
       - name: Upload test artifacts
-        uses: actions/upload-artifact@v3
+        uses:  actions/upload-artifact@v4
         with:
           name: test-logs-${{ matrix.schematic-version }}
           path: tests/**/logs
