@@ -37,12 +37,18 @@ jobs:
           make PortalDataset
           make PortalStudy
     
-      - name: Commit files
+      - name: Commit files if there are changes
         run: |
-          git config --local user.email "nf-osi@sagebionetworks.org"
-          git config --local user.name "nf-osi[bot]"
-          git add .
-          git commit -m "Rebuild NF.jsonld, json"
+          if [[ $(git diff --exit-code) ]]; then 
+            echo "Changes in src modules affect final jsonld or json artifacts and will be committed"
+            git config --local user.email "nf-osi@sagebionetworks.org"
+            git config --local user.name "nf-osi[bot]"
+            git add .
+            git commit -m "Rebuild NF.jsonld, json"
+          else 
+            echo "Changes in src modules did not affect final jsonld or json artifacts"
+            echo "Note that tests will still be run in the next step"
+          fi
     
       - name: Push changes
         uses: ad-m/github-push-action@master
