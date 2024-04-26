@@ -194,8 +194,27 @@ classes:
         assay:
         - single-cell RNA-seq
         dataType:
-        - SequenceReads
-  
+        - geneExpression
+
+    #Saving this for later/more time to think through
+    #GeoMXSpatialTranscriptomicsTemplate:
+    #is_a: GeneticsAssayTemplate
+    #description: Files contain raw data output from the NanoString GeoMx DSP Pipeline. These can include RCC or DCC Files.
+    #source: https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.csv
+    #slots:
+    #- libraryPrep
+    #- libraryPreparationMethod
+    #annotations:
+    #  requiresComponent: ''
+    #  required: false
+    #  match:
+    #    assay:
+    #    - spatial transcriptomics
+    #    dataType:
+    #    - SequenceReads
+    #close_mappings:
+    #- htan:NanoStringGeoMxDSPSpatialTranscriptomicsLevel1
+        
   PdxGenomicsAssayTemplate:
     is_a: GenomicsAssayTemplate
     description: Raw genomics data from patient-derived xenograft (PDX) experiment, with additional PDX-relevant metadata.
@@ -287,8 +306,7 @@ classes:
         - miRNA array
         - RNA array
         - SNP array
-        dataType:
-        - geneExpression
+        - NanoString nCounter Analysis System
 
   MethylationArrayTemplate:
     is_a: GenomicsArrayTemplate
