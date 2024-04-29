@@ -13,7 +13,8 @@ Details are in the following dedicated sections.
 
 #### Test GENERATION of templates
 
-> Note: This can be run independently, i.e. it *does not* on any other tests here (though it does depend on the JSON-LD build).
+> [!NOTE]
+> This can be run independently, i.e. it *does not* on any other tests here (though it does depend on the JSON-LD build).
 
 This means means checking expectations that:
 - [x] Templates can be generated at all with the version of `schematic` used, for the current JSON-LD data model. 
@@ -48,9 +49,15 @@ To test **advanced** generation as described above we additionally need:
 
 - (in `tests/generate/`) `./basic_templates.sh` (generate basic blank GoogleSheets templates)
 
-#### Test VALIDATION of manifests against their templates (:heavy_check_mark: IMPLEMENTED)
+#### Test VALIDATION of manifests against their templates
 
-> Note: This can be run independently, i.e. it *does not* depend on test GENERATION.
+> [!NOTE]
+> This can be run independently, i.e. it *does not* depend on test GENERATION.
+
+> [!TIP]
+> The test script should match the parameters used by your DCA config.
+> The script included here may not match your DCC's configuration, modify as needed if reusing.
+> For example, some DCCs use Great Expectations rules, some don't, and this is controlled by the `-rr` flag. 
 
 Question: Why do testing in addition to [the tests](https://github.com/Sage-Bionetworks/schematic/tree/develop/tests/data/mock_manifests) run by `schematic`?  
 Answer: We sometimes have issues that are not covered by those tests or that we want to check specifically in the context of our own templates. 
@@ -78,7 +85,8 @@ Not to be confused with test generation section above, generative testing means 
 
 #### Test SUBMISSION of manifests
 
-> Note: This *does* depend on the VALIDATION test suite being run, because only passing manifests from that will be submitted.  
+> [!NOTE]
+> This *does* depend on the VALIDATION test suite being run, because only passing manifests from that will be submitted.  
 Currently, we have partial implementation as noted in the checked features below.
 
 This means checking that:
@@ -88,21 +96,18 @@ This means checking that:
   - Blank values in the manifest become "NA" -- https://github.com/Sage-Bionetworks/schematic/issues/733
   - "NA" string value become `null` even though we may want to preserve "NA" -- https://github.com/Sage-Bionetworks/schematic/issues/821 + [internal thread](https://sagebionetworks.slack.com/archives/C01ANC02U59/p1681769606510569?thread_ts=1681769370.017039&cid=C01ANC02U59)
 
-The test script will need to do several things:
-- Submit the `.csv` manifest(s) via schematic.
-- After submission (if submission is successful), pull annotations from the entities and does expectation checks on each key-value.
+The test script functionality:
+- Given valid `.csv` manifest(s), create entities in the manifest, and then update the manifest with the `entityId`s to test submit via schematic, then cleans up (deletes) mock entities.
+- (TODO) After submission (if submission is successful), pull annotations from the entities and does expectation checks on each key-value.
 
 ##### Test fixtures
 
 To test submission we need:
-- Synapse entities to be mock-annotated and checked, e.g. in [NF-test/annotations](https://www.synapse.org/#!Synapse:syn32530621)
-- Manifest to submit for entities
+- valid manifest(s)  -- these are reused from the VALIDATION fixtures.
+- a `config.json` that tells which dev/playground project to use, etc.
 
-
-### TODOs - General
+### General Testing TODO Ideas and Other Tips
 
 - Testing can transition to using the schematic API service once it's ready (especially for template generation).
-- Improve test log output/parse and format results to have clearer summary of outcomes without having to read raw test logs  
-- Reuse more code between tests
-- See if test scripts can be generalized/reused for other projects
+- How test scripts can be generalized/reused for other projects
 - Main script to run through test suite in sequence 
