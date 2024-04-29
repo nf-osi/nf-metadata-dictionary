@@ -1,4 +1,4 @@
-## Test documentation (WIP)
+## Test documentation
 
 This describes the testing framework for the data model. 
 The test suite is organized by functionality: 
@@ -6,8 +6,8 @@ The test suite is organized by functionality:
 - Test VALIDATION of manifests against templates
 - Test SUBMISSION of manifests
 
-Tests are pretty self-contained (don't depend on output from other tests) and should be run in their respective directory.
-Details are in the following dedicated sections.
+Tests are *mostly* self-contained (don't depend on output from other tests) and should be run in their respective directory.
+Exceptions and details are noted in the following dedicated sections.
 
 ### Test suite
 
@@ -87,11 +87,11 @@ Not to be confused with test generation section above, generative testing means 
 
 > [!NOTE]
 > This *does* depend on the VALIDATION test suite being run, because only passing manifests from that will be submitted.  
-Currently, we have partial implementation as noted in the checked features below.
+Currently, we have partial implementation as seen in the checked features below.
 
 This means checking that:
 - [x] Valid manifests can be submitted at all. There have been cases where valid manifests are validated OK but unable to be submitted. 
-- [ ] Manifest data are transferred as expected to Synapse (e.g. no weird conversions of types or truncation of data). This is the more complicated part and requires querying the data that have been transferred to Synapse for comparison. Example issues: 
+- [ ] Manifest data are transferred as expected to Synapse (e.g. no weird conversions of types or truncation of data). This is the most complicated functionality across the test suite and requires querying the data that have been transferred to Synapse for comparison. Example issues: 
   - Integers are uploaded as doubles https://github.com/Sage-Bionetworks/schematic/issues/664
   - Blank values in the manifest become "NA" -- https://github.com/Sage-Bionetworks/schematic/issues/733
   - "NA" string value become `null` even though we may want to preserve "NA" -- https://github.com/Sage-Bionetworks/schematic/issues/821 + [internal thread](https://sagebionetworks.slack.com/archives/C01ANC02U59/p1681769606510569?thread_ts=1681769370.017039&cid=C01ANC02U59)
