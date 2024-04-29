@@ -90,8 +90,10 @@ Not to be confused with test generation section above, generative testing means 
 Currently, we have partial implementation as seen in the checked features below.
 
 This means checking that:
-- [x] Valid manifests can be submitted at all. There have been cases where valid manifests are validated OK but unable to be submitted. 
-- [ ] Manifest data are transferred as expected to Synapse (e.g. no weird conversions of types or truncation of data). This is the most complicated functionality across the test suite and requires querying the data that have been transferred to Synapse for comparison. Example issues: 
+- [x] Valid manifests can be submitted at all. There have been cases where valid manifests are validated OK but unable to be submitted.
+      Many times it is a cloud service issue if using the public schematic API, so testing submission with the pure client (without the cloud layer) helps better resolve the issue.  
+- [ ] Manifest data are transferred as expected to Synapse (e.g. no weird conversions of types or truncation of data).
+      This is the most complicated functionality across the test suite and requires querying the data that have been transferred to Synapse for comparison. Example issues: 
   - Integers are uploaded as doubles https://github.com/Sage-Bionetworks/schematic/issues/664
   - Blank values in the manifest become "NA" -- https://github.com/Sage-Bionetworks/schematic/issues/733
   - "NA" string value become `null` even though we may want to preserve "NA" -- https://github.com/Sage-Bionetworks/schematic/issues/821 + [internal thread](https://sagebionetworks.slack.com/archives/C01ANC02U59/p1681769606510569?thread_ts=1681769370.017039&cid=C01ANC02U59)
