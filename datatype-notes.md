@@ -16,7 +16,7 @@ Data type can contain some information about the possible assay modality + how p
 
 The `dataSubtype` values "raw", "processed", etc. can absolutely be derived from `dataSubtype` using known relationships. "Level" appears to be another system that provides somewhat more granular and understandable number-based labels for how derived or processed the data type is. 
 
-**Unfortunately, working out the terminology and relationships can be more difficult with other data types.**
+These relationships should be viewed as a graph, such as the [GDC one](https://gdc.cancer.gov/developers/gdc-data-model). **Unfortunately, working out the terminology and relationships can be more difficult with other data types.**
 
 The diagrams below show some examples. A lower-placed entity B with an arrow from A should be read as "B can be processed/derived from A". 
 
