@@ -107,6 +107,7 @@ jobs:
         # Need to set up csvtool for use in test environment
         run: |
           sudo apt install csvtool
+          printf "[authentication]\nSYNAPSE_AUTH_TOKEN=$SYNAPSE_AUTH_TOKEN" > .synapseConfig
           ./test_submit.sh
       
       - name: Create test suite report
