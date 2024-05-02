@@ -98,7 +98,13 @@ jobs:
         continue-on-error: true
         run: ./run_config.sh
 
-      # TODO Step for test submission of data
+      - name: Test submit
+        working-directory: tests/submit
+        continue-on-error: true
+        # Need to set up csvtool for use in test environment
+        run: |
+          sudo apt install csvtool
+          ./test_submit.sh
       
       - name: Create test suite report
         working-directory: tests
