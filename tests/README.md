@@ -6,33 +6,38 @@ The test suite is organized by functionality:
 - Test VALIDATION of manifests against templates
 - Test SUBMISSION of manifests
 
-Tests are *mostly* self-contained (don't depend on output from other tests) and should be run in their respective directory.
-Exceptions and details are noted in the following dedicated sections.
+Tests are *mostly* self-contained (don't depend on output from other tests) and should be run in their respective directory;
+the exceptions and details are in the following sections.
+
+These correspond to [`schematic manifest get`](https://sage-schematic.readthedocs.io/en/develop/cli_reference.html#schematic-manifest-get), [`schematic model validate`](https://sage-schematic.readthedocs.io/en/develop/cli_reference.html#schematic-model-validate), and [`schematic model submit`](https://sage-schematic.readthedocs.io/en/develop/cli_reference.html#schematic-model-submit), respectively.
+Tests are pretty self-contained (don't depend on output from other tests) and should be run in their respective directory.
+Details are in the following dedicated sections.
 
 ### Test suite
 
-#### Test GENERATION of templates
+#### Test GENERATION of manifest templates
 
 > [!NOTE]
 > This can be run independently, i.e. it *does not* on any other tests here (though it does depend on the JSON-LD build).
 
 This means means checking expectations that:
 - [x] Templates can be generated at all with the version of `schematic` used, for the current JSON-LD data model. 
-- [x] Templates look as expected when generated:
-    - As a basic blank template not referring to any specific files
-    - As a template instance with unannotated data filenames filled in
-    - As a template for data files with *existing* annotations pulled in,
-        - where existing annotations are compatible
-        - where existing annotations are incompatible (schema changes have happened in-between)
+- [x] Templates look as expected when generated for a new dataset of a particular data type (no existing annotations).
+- [ ] Templates look as expected when generated for a dataset of a particular data type when pulling in existing annotations. 
 
 At the most basic template generation mode, failures with a given version of `schematic` could mean:
-- Version of `schematic` is too old and doesn't support whatever new validation rule/feature used in the model. This gives us information on the minimum compatible version.
+- Version of `schematic` is too old and doesn't support whatever new validation rule syntax/feature used in the model. This gives us information on the minimum compatible version.
 - Version of `schematic` is too new and contains *breaking changes* that won't work with the current data model.  
 - There's a problem with the data model such as a missing entity. For example, if a template uses a property (key) but that property is undefined in the data model so the schematic will complain at template generation time. 
 
 At a more complicated template generation mode (with existing data involved), failures could mean:
 - The template has been updated in a way that is not compatible with past versions/hard to handle. That means that a contributor trying to update their data with this new template will run into an error as well.
 - Edge cases that's hard to handle within data model itself. Example: data has been annotated outside of DCA and doesn't conform to a template so schematic is confused when generating a template. 
+
+###### Note on "advanced" manifest template generation
+
+Manifests templates can be generated with values filled in from previous submissions, instead of a blank template with just entity ids/names. 
+However, this mode is not currently tested. It is also more DCC-variable, because existing values can be sourced from annotations, tables, or files as several different sources of truth.
 
 ##### Test fixtures
 
@@ -90,8 +95,9 @@ Not to be confused with test generation section above, generative testing means 
 Currently, we have partial implementation as seen in the checked features below.
 
 This means checking that:
-- [x] Valid manifests can be submitted at all. There have been cases where valid manifests are validated OK but unable to be submitted.
-      Many times it is a cloud service issue if using the public schematic API, so testing submission with the pure client (without the cloud layer) helps better resolve the issue.  
+- [x] Valid manifests can be submitted at all. There have been cases where valid manifests are validated OK but unable to be submitted. Sometimes it could be a cloud service issue when using the public schematic API; testing submission with the pure client (without the cloud layer) helps better distinguish where the error is coming from. Example issues:
+      - https://github.com/Sage-Bionetworks/data_curator/issues/393
+      - https://sagebionetworks.jira.com/browse/FDS-1968
 - [ ] Manifest data are transferred as expected to Synapse (e.g. no weird conversions of types or truncation of data).
       This is the most complicated functionality across the test suite and requires querying the data that have been transferred to Synapse for comparison. Example issues: 
   - Integers are uploaded as doubles https://github.com/Sage-Bionetworks/schematic/issues/664
@@ -105,8 +111,8 @@ The test script functionality:
 ##### Test fixtures
 
 To test submission we need:
-- valid manifest(s)  -- these are reused from the VALIDATION fixtures.
-- a `config.json` that tells which dev/playground project to use, etc.
+- valid manifest(s)  -- these are reused from VALIDATION fixtures.
+- a `config.json` to specify Synapse test project and paths to validation fixtures
 
 ### General Testing TODO Ideas and Other Tips
 
