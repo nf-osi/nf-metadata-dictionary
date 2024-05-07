@@ -60,7 +60,7 @@ To test **advanced** generation as described above we additionally need:
 > This can be run independently, i.e. it *does not* depend on test GENERATION.
 
 > [!TIP]
-> The test script should match the parameters used by your DCA config.
+> The test script should match the parameters used by your [DCA config](https://github.com/Sage-Bionetworks/data_curator_config/).
 > The script included here may not match your DCC's configuration, modify as needed if reusing.
 > For example, some DCCs use Great Expectations rules, some don't, and this is controlled by the `-rr` flag. 
 
