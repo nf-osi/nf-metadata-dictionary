@@ -41,17 +41,38 @@ knitr::kable(gen_report)
 
 ```{r parse-validation-logs, echo=FALSE}
 
-pass <- "Your manifest has been validated successfully."
+#' Read logs to check success based on some consistent output message,
+#' and summarizes as `data.frame` with cols `manifest` and `pass`.
+#' @param log_dir Log directory with text log files. 
+#' @param pass_phrase Log output phrase that indicates success.
+check_logs <- function(log_dir, pass_phrase) {
+  logs <- list.files(log_dir, full.names = TRUE)
+  results <- lapply(logs, readLines)
+  pass <- data.frame(
+    manifest = gsub(".txt.*", ".csv", basename(logs)),
+    pass = sapply(results, function(x) any(grepl(pass_phrase, x))))
+  pass
+}
+
+  
+  
 config <- jsonlite::read_json("validate/config.json")
 df <- lapply(config$tests, `[`, c("manifest", "expect_pass", "expectation"))
 df <- Reduce(rbind.data.frame, df)
-val_logs <- list.files("validate/logs", full.names = TRUE)
-val_results <- lapply(val_logs, readLines)
-val_pass <- data.frame(
-  manifest = gsub(".txt", ".csv", basename(val_logs)),
-  pass = sapply(val_results, function(x) any(grepl(pass, x))))
+val_pass <- check_logs(log_dir = "validate/logs",
+                       pass_phrase =  "Your manifest has been validated successfully.")
 val_report <- merge(df, val_pass, by = "manifest", all.x = TRUE)
 val_report$result <- sapply(val_report$expect_pass == val_report$pass, test_reaction)
 knitr::kable(val_report[, c("manifest", "result", "expectation")])
 ```
 
+## Manifest Submission
+
+```{r parse-submission-logs, echo=FALSE}
+
+sub_pass <- check_logs(log_dir = "submit/logs",
+                       pass_phrase = "Associated manifest file with dataset on Synapse.")
+sub_report <- sub_pass
+sub_report$pass <- sapply(sub_report$pass, test_reaction)
+knitr::kable(sub_report)
+```
