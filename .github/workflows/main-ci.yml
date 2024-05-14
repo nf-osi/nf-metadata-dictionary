@@ -10,6 +10,8 @@ on:
   
   workflow_dispatch:
 
+env:
+  SCHEMATIC_VERSION: 24.5.1
   
 jobs:
   build:
@@ -28,6 +30,13 @@ jobs:
           bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
           git clone --depth 1 https://github.com/anngvu/retold.git
           make
+
+      - name: Setup schematic and do another convert pass
+        id: schematic-convert
+        run: |
+          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}  ipython==8.18.1
+          pip show schematicpy
+          schematic schema convert NF.jsonld
   
       - name: Install tools and regenerate registered jsons for Superdataset, PortalDataset, etc
         run: |
@@ -67,9 +76,10 @@ jobs:
       SCHEMATIC_SERVICE_ACCT_CREDS: ${{ secrets.SCHEMATIC_SERVICE_ACCT_CREDS }}
     permissions:
       pull-requests: write
-    strategy:
-      matrix:
-        schematic-version: [24.4.1]  # cannot actually do parallel/concurrent testing and need to do sequential because of API rate limits
+    # strategy:
+    #  matrix:  
+    # cannot actually do parallel/concurrent testing because of API rate limits, 
+    # so we currently only test with one schematic version because it takes much too long with sequential
 
     steps:
       - uses: actions/checkout@v4
@@ -83,7 +93,7 @@ jobs:
       
       - name: Setup schematic
         id: setup-schematic
-        run: pip install schematicpy==${{ matrix.schematic-version }} ipython==8.18.1
+        run: pip install schematicpy==${{ env.SCHEMATIC_VERSION }}  ipython==8.18.1
 
       - name: Sanity-check successful installation and version
         run: pip show schematicpy
@@ -113,18 +123,18 @@ jobs:
       - name: Create test suite report
         working-directory: tests
         continue-on-error: true
-        run: docker run -v $(pwd):/tests -e SCHEMATIC=${{ matrix.schematic-version }} rocker/tidyverse R -e "rmarkdown::render('tests/test-suite-report.Rmd')"
+        run: docker run -v $(pwd):/tests -e SCHEMATIC=${{ env.SCHEMATIC_VERSION }} rocker/tidyverse R -e "rmarkdown::render('tests/test-suite-report.Rmd')"
 
       - name: Report on test suite as PR comment
         uses: mshick/add-pr-comment@v2
         with:
-          message-id: test-suite-report-${{ matrix.schematic-version }}
+          message-id: test-suite-report-${{ env.SCHEMATIC_VERSION }}
           message-path: |
             tests/test-suite-report.md
 
       - name: Upload test artifacts
         uses:  actions/upload-artifact@v4
         with:
-          name: test-logs-${{ matrix.schematic-version }}
+          name: test-logs-${{ env.SCHEMATIC_VERSION }}
           path: tests/**/logs
   
