@@ -93,10 +93,9 @@ jobs:
       
       - name: Setup schematic
         id: setup-schematic
-        run: pip install schematicpy==${{ env.SCHEMATIC_VERSION }}  ipython==8.18.1
-
-      - name: Sanity-check successful installation and version
-        run: pip show schematicpy
+        run: |
+          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}  ipython==8.18.1
+          pip show schematicpy
 
       - name: Test generate
         working-directory: tests/generate
