@@ -24,13 +24,26 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
           fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository
 
+      - name: Get skip flags
+        id: check_skip_flags
+        run: echo "HEAD_COMMIT_MESSAGE=$(git show -s --format=%s)" >> "$GITHUB_OUTPUT"
+      
       - name: Setup custom build tools and make jsonld 
         shell: bash
         run: |
           bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
           git clone --depth 1 https://github.com/anngvu/retold.git
           make
-
+  
+      - name: Install tools and regenerate registered jsons for Superdataset, PortalDataset, etc
+        run: |
+          pip install linkml
+          npm install -g json-dereference-cli
+          make Dataset
+          make Superdataset
+          make PortalDataset
+          make PortalStudy
+      
       # Set up supported python.
       - uses: actions/setup-python@v5
         with:
@@ -42,15 +55,6 @@ jobs:
           pip install schematicpy==${{ env.SCHEMATIC_VERSION }}  ipython==8.18.1
           pip show schematicpy
           schematic schema convert NF.jsonld
-  
-      - name: Install tools and regenerate registered jsons for Superdataset, PortalDataset, etc
-        run: |
-          pip install linkml
-          npm install -g json-dereference-cli
-          make Dataset
-          make Superdataset
-          make PortalDataset
-          make PortalStudy
     
       - name: Commit files if there are changes
         run: |
@@ -70,6 +74,7 @@ jobs:
         with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
          branch: ${{ github.event.pull_request.head.ref }}
+      
 
   
   # Additionally test PRs
@@ -81,6 +86,7 @@ jobs:
       SCHEMATIC_SERVICE_ACCT_CREDS: ${{ secrets.SCHEMATIC_SERVICE_ACCT_CREDS }}
     permissions:
       pull-requests: write
+    if: ${{ !contains(needs.check_skip_flags.outputs.HEAD_COMMIT_MESSAGE, '[skip tests]') }}
     # strategy:
     #  matrix:  
     # cannot actually do parallel/concurrent testing because of API rate limits, 
