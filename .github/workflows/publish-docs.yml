@@ -31,7 +31,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Build using docker 
+      - name: Build using docker
+        if: github.event.action != 'closed'  
         run: |
           docker run -v $(pwd):/app ghcr.io/nf-osi/data-model-docs    
       
