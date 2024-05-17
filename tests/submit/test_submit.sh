@@ -67,9 +67,16 @@ do
   --hide_blanks \
   --manifest_record_type "file_only" \
   --file_annotations_upload \
-  --data_model_labels "display_label" \
   --table_column_names "display_name" \
   --annotation_keys "display_label" 2>&1 | tee $LOG_DIR/${M}.log
+
+  echo "Downloading the just-submitted metadata for logging and analysis..."
+  for i in ${IDS[@]}
+    do
+    synapse -p $SYNAPSE_AUTH_TOKEN get-annotations --id $i >> $LOG_DIR/${M%.*}-${DATASET_FOLDER}_tmp.json
+    done
+
+  cat $LOG_DIR/${M%.*}-${DATASET_FOLDER}_tmp.json | jq -n [inputs] > $LOG_DIR/${M%.*}-${DATASET_FOLDER}.json
 
   echo "Removing test dataset..."
   synapse  -p $SYNAPSE_AUTH_TOKEN delete $DATASET_FOLDER

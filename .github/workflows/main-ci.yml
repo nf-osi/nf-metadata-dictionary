@@ -10,10 +10,12 @@ on:
   
   workflow_dispatch:
 
+env:
+  SCHEMATIC_VERSION: 24.5.1
   
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -22,6 +24,10 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
           fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository
 
+      - name: Get skip flags
+        id: check_skip_flags
+        run: echo "HEAD_COMMIT_MESSAGE=$(git show -s --format=%s)" >> "$GITHUB_OUTPUT"
+      
       - name: Setup custom build tools and make jsonld 
         shell: bash
         run: |
@@ -37,6 +43,18 @@ jobs:
           make Superdataset
           make PortalDataset
           make PortalStudy
+      
+      # Set up supported python.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12' 
+      
+      - name: Setup schematic and do another convert pass
+        id: schematic-convert
+        run: |
+          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}  ipython==8.18.1
+          pip show schematicpy
+          schematic schema convert NF.jsonld
     
       - name: Commit files if there are changes
         run: |
@@ -56,6 +74,7 @@ jobs:
         with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
          branch: ${{ github.event.pull_request.head.ref }}
+      
 
   
   # Additionally test PRs
@@ -67,9 +86,11 @@ jobs:
       SCHEMATIC_SERVICE_ACCT_CREDS: ${{ secrets.SCHEMATIC_SERVICE_ACCT_CREDS }}
     permissions:
       pull-requests: write
-    strategy:
-      matrix:
-        schematic-version: [24.4.1]  # cannot actually do parallel/concurrent testing and need to do sequential because of API rate limits
+    if: ${{ !contains(needs.check_skip_flags.outputs.HEAD_COMMIT_MESSAGE, '[skip tests]') }}
+    # strategy:
+    #  matrix:  
+    # cannot actually do parallel/concurrent testing because of API rate limits, 
+    # so we currently only test with one schematic version because it takes much too long with sequential
 
     steps:
       - uses: actions/checkout@v4
@@ -83,10 +104,9 @@ jobs:
       
       - name: Setup schematic
         id: setup-schematic
-        run: pip install schematicpy==${{ matrix.schematic-version }} ipython==8.18.1
-
-      - name: Sanity-check successful installation and version
-        run: pip show schematicpy
+        run: |
+          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}  ipython==8.18.1
+          pip show schematicpy
 
       - name: Test generate
         working-directory: tests/generate
@@ -113,18 +133,18 @@ jobs:
       - name: Create test suite report
         working-directory: tests
         continue-on-error: true
-        run: docker run -v $(pwd):/tests -e SCHEMATIC=${{ matrix.schematic-version }} rocker/tidyverse R -e "rmarkdown::render('tests/test-suite-report.Rmd')"
+        run: docker run -v $(pwd):/tests -e SCHEMATIC=${{ env.SCHEMATIC_VERSION }} rocker/tidyverse R -e "rmarkdown::render('tests/test-suite-report.Rmd')"
 
       - name: Report on test suite as PR comment
         uses: mshick/add-pr-comment@v2
         with:
-          message-id: test-suite-report-${{ matrix.schematic-version }}
+          message-id: test-suite-report-${{ env.SCHEMATIC_VERSION }}
           message-path: |
             tests/test-suite-report.md
 
       - name: Upload test artifacts
         uses:  actions/upload-artifact@v4
         with:
-          name: test-logs-${{ matrix.schematic-version }}
+          name: test-logs-${{ env.SCHEMATIC_VERSION }}
           path: tests/**/logs
   

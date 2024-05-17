@@ -45,8 +45,8 @@ knitr::kable(gen_report)
 #' and summarizes as `data.frame` with cols `manifest` and `pass`.
 #' @param log_dir Log directory with text log files. 
 #' @param pass_phrase Log output phrase that indicates success.
-check_logs <- function(log_dir, pass_phrase) {
-  logs <- list.files(log_dir, full.names = TRUE)
+check_logs <- function(log_dir, pass_phrase, pattern = "log$|txt$") {
+  logs <- list.files(log_dir, pattern = pattern, full.names = TRUE)
   results <- lapply(logs, readLines)
   pass <- data.frame(
     manifest = gsub(".txt.*", ".csv", basename(logs)),
