@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 env:
-  SCHEMATIC_VERSION: 24.5.1
+  SCHEMATIC_VERSION: 24.5.1 # please update .devcontainer as well until this can be set globally somewhere...
   
 jobs:
   build:
@@ -51,6 +51,8 @@ jobs:
       
       - name: Setup schematic and do another convert pass
         id: schematic-convert
+        # Note: remove ipython==8.18.1 workaround for future release mentioned in 
+        # https://sagebionetworks.slack.com/archives/C050YD75QRL/p1715357806542429?thread_ts=1715357453.519969&cid=C050YD75QRL
         run: |
           pip install schematicpy==${{ env.SCHEMATIC_VERSION }}  ipython==8.18.1
           pip show schematicpy
