@@ -91,6 +91,29 @@ For example, `specimenID` is required, and is included for assay data class defi
 For that reason, it is not included at all in individual-level assay data (e.g. behavioral/psychological data). 
 Note: In situations where "the data meets the template", issues with a required slot might indicate that the template being used doesn't actually "fit" the type of data/entity, and an additional one needs to be defined.  
 
+##### Validation rules
+
+Validation rules are used with slots/attributes. 
+We use schematic validation syntax exactly as documented in [this Confluence doc](https://sagebionetworks.jira.com/wiki/spaces/SCHEM/pages/2645262364/Data+Model+Validation+Rules).
+
+Here is an example of a simple validation rule:
+
+```
+age:
+    annotations:
+      requiresDependency: ageUnit
+      validationRules: num
+    description: A numeric value representing age of the individual. Use with `ageUnit`.
+    required: false
+```
+
+Here is an example of a more complicated [combination rule](https://sagebionetworks.jira.com/wiki/spaces/SCHEM/pages/2645262364/Data+Model+Validation+Rules#Rule-Combinations):
+```
+readPair:
+    annotations:
+      validationRules: int::inRange 1 2
+...
+```
 
 #### Enum
 
@@ -111,6 +134,7 @@ enums:
         meaning: http://purl.obolibrary.org/obo/BTO_0000141
      #...more below
 ```
+
 
 ##### Example: Boolean enumeration (commonly reused) 
 
