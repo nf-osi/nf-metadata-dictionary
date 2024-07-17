@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 env:
-  SCHEMATIC_VERSION: 24.5.1 # please update .devcontainer as well until this can be set globally somewhere...
+  SCHEMATIC_VERSION: 24.7.1 # please update .devcontainer as well until this can be set globally somewhere...
   
 jobs:
   build:
@@ -107,7 +107,7 @@ jobs:
       - name: Setup schematic
         id: setup-schematic
         run: |
-          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}  ipython==8.18.1
+          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}
           pip show schematicpy
 
       - name: Test generate
