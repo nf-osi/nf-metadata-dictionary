@@ -86,7 +86,7 @@ jobs:
       SCHEMATIC_SERVICE_ACCT_CREDS: ${{ secrets.SCHEMATIC_SERVICE_ACCT_CREDS }}
     permissions:
       pull-requests: write
-    if: ${{ !contains(needs.check_skip_flags.outputs.HEAD_COMMIT_MESSAGE, '[skip tests]') }}
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip tests') }}
     # strategy:
     #  matrix:  
     # cannot actually do parallel/concurrent testing because of API rate limits, 

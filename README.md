@@ -169,7 +169,7 @@ Aside from meta specific to each type (class, slot, or enum) above, terms have c
    i. Build the [NF.jsonld](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.jsonld) from the module source files. This is the format needed by schematic.
    **Therefore, you do not need to edit the `NF.jsonld` directly, because it will be done automatically by our service bot.**
    
-   ii. If build succeeds, also run some tests to make sure all looks good/generate previews. After some minutes, a test report will appear in the PR that hopefully looks like this:
+   ii. If build succeeds, also run some tests to make sure all looks good/generate previews. After some minutes, a test report will appear in the PR that hopefully looks like the below with generated manifest and test results. Note: Trivial changes can skip tests by labeling the PR with https://github.com/nf-osi/nf-metadata-dictionary/labels/skip%20tests.
    
    <img width="464" alt="image" src="https://github.com/nf-osi/nf-metadata-dictionary/assets/32753274/067f65ff-e39d-4b45-abae-ef22cf7df5eb">
 4. Make any necessary changes and then merge the new branch that was created to the main branch.
