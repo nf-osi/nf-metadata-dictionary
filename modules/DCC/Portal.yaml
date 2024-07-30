@@ -1,16 +1,24 @@
 enums:
   AccessTypeEnum:
-    title: Access types
+    title: Access type
+    notes:
+    - Historically has been used with `accessTeam` especially if "PRIVATE".
+    - All files have to qualify to be labeled as such, e.g. a single Controlled Access file will make the dataset Controlled Access.
+    - This is not personalized to the user. They will have to evaluate it from their perspective, we are not dynamically rendering this.
+    - See also https://github.com/PAIR-code/datacardsplaybook/blob/main/templates/DataCardsExtendedTemplate.md#access-type
     permissible_values:
       Public Access:
-        description: Access without any additional steps/requirements, without even needing a Synapse account.
-      Open Access:
         description: Access without any additional steps/requirements as long as you are logged in to Synapse.
+      Open Access:
+        description: Access without any additional steps/requirements without even needing to be logged in to Synapse account.
       Controlled Access:
         description: > 
           Access is restricted and only available after fulfilling specific requirements, such as submitting a research statement or getting approval directly from the data owner through Synapse.
           Note that for datasets, if any component file is under controlled access, the entire dataset is considered to be under controlled access.
+      Private Access:
+        description: Not accessible outside the project admins and study team -- check whether you are on an access team or contact the PI/admin of access team to request access.
   
+
   DataStatusEnum:
     title: Data Status
     permissible_values:

@@ -8918,6 +8918,9 @@
                 },
                 {
                     "@id": "bts:ControlledAccess"
+                },
+                {
+                    "@id": "bts:PrivateAccess"
                 }
             ],
             "sms:displayName": "accessType",
@@ -8972,6 +8975,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "Controlled Access",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:PrivateAccess",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "PrivateAccess",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:AccessType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Private Access",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
