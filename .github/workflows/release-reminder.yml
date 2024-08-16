@@ -1,0 +1,38 @@
+# Create issue at beginning of the month
+name: Data model release reminder
+
+on:
+  schedule:
+    # Run at 08:00 on the first Monday of each month
+    - cron: '00 08 1-7 * 1'
+
+jobs:
+  create_issue:
+    name: Create data model release issue
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Create release issue
+        run: |
+          gh issue create \
+            --title "$TITLE" \
+            --label "$LABELS" \
+            --body "$BODY"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TITLE: Monthly Data Model Release
+          # ASSIGNEE: # to be assigned at standup/review
+          LABELS: release
+          BODY: |
+            ### Purpose
+            
+            Remember to create at least one release for the data model this month.
+
+            ### Checklist
+
+            - [ ] Review last schematic tests or test current state of data model on DCA staging 
+            - [ ] Check if anything else needs to be squeezed into this release
+            - [ ] Release data model
+            - [ ] Update DCA production config downstream
