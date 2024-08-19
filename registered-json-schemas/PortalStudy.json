@@ -4,10 +4,16 @@
     "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalstudy",
     "properties": {
       "accessRequirements": {
-        "type": "string"
+        "type": [
+          "string",
+          "null"
+        ]
       },
       "acknowledgementStatements": {
-        "type": "string"
+        "type": [
+          "string",
+          "null"
+        ]
       },
       "dataStatus": {
         "description": "",
@@ -67,7 +73,10 @@
           "title": "Data",
           "type": "string"
         },
-        "type": "array"
+        "type": [
+          "array",
+          "null"
+        ]
       },
       "diseaseFocus": {
         "items": {
@@ -85,7 +94,10 @@
           "title": "DiseaseFocusEnum",
           "type": "string"
         },
-        "type": "array"
+        "type": [
+          "array",
+          "null"
+        ]
       },
       "fundingAgency": {
         "type": "string"
@@ -94,7 +106,10 @@
         "items": {
           "type": "string"
         },
-        "type": "array"
+        "type": [
+          "array",
+          "null"
+        ]
       },
       "initiative": {
         "type": "string"
@@ -436,13 +451,19 @@
         "items": {
           "type": "string"
         },
-        "type": "array"
+        "type": [
+          "array",
+          "null"
+        ]
       },
       "relatedStudies": {
         "items": {
           "type": "string"
         },
-        "type": "array"
+        "type": [
+          "array",
+          "null"
+        ]
       },
       "studyFileviewId": {
         "type": "string"

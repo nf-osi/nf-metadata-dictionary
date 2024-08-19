@@ -79,6 +79,7 @@
           "calcium retention capacity assay",
           "cell competition",
           "cell count",
+          "cell painting",
           "cell proliferation",
           "cell viability assay",
           "clinical data",
@@ -196,7 +197,10 @@
         "items": {
           "type": "string"
         },
-        "type": "array"
+        "type": [
+          "array",
+          "null"
+        ]
       },
       "creator": {
         "type": "string"
@@ -250,7 +254,10 @@
         "title": "dataType"
       },
       "description": {
-        "type": "string"
+        "type": [
+          "string",
+          "null"
+        ]
       },
       "diseaseFocus": {
         "items": {
@@ -333,11 +340,17 @@
           "title": "ManifestationEnum",
           "type": "string"
         },
-        "type": "array",
+        "type": [
+          "array",
+          "null"
+        ],
         "title": "manifestation"
       },
       "series": {
-        "type": "string"
+        "type": [
+          "string",
+          "null"
+        ]
       },
       "species": {
         "items": {
@@ -358,7 +371,10 @@
           "title": "SpeciesEnum",
           "type": "string"
         },
-        "type": "array",
+        "type": [
+          "array",
+          "null"
+        ],
         "title": "species"
       },
       "studyId": {
@@ -371,13 +387,22 @@
         "items": {
           "type": "string"
         },
-        "type": "array"
+        "type": [
+          "array",
+          "null"
+        ]
       },
       "yearProcessed": {
-        "type": "integer"
+        "type": [
+          "integer",
+          "null"
+        ]
       },
       "yearPublished": {
-        "type": "integer"
+        "type": [
+          "integer",
+          "null"
+        ]
       }
     },
     "required": [
