@@ -37,7 +37,7 @@ jobs:
   
       - name: Install tools and regenerate registered jsons for Superdataset, PortalDataset, etc
         run: |
-          pip install linkml
+          pip install linkml==v1.8.1
           npm install -g json-dereference-cli
           make Dataset
           make Superdataset
