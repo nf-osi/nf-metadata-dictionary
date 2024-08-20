@@ -10,7 +10,13 @@ One can reference the data model to understand things such as:
 - What are the preferred/standard labels for something as defined by community input and our data managers (e.g. prefer "NF2-related schwannomatosis" vs the now-deprecated "Neurofibromatosis type 2")
 
 Terms in the metadata dictionary are used in the manifests within the [Data Curator App](https://dca.app.sagebionetworks.org/) and on the [NF Data Portal](nf.synapse.org). 
-We welcome contributions from community members, whether you are a professional data modeler, clinician, or student in the NF community.
+We welcome contributions from community members, whether you are a professional data modeler, researcher, or student in the NF community.
+
+- For external contributors somewhat familiar with editing code source files directly:
+After learning about the data model framework below, you can edit the files in the GitHub UI or create a Codespace on main using our devcontainer setup.
+- Other ways to contribute:
+Create an [issue](https://github.com/nf-osi/nf-metadata-dictionary/issues) to add or revise new terms, templates, and relationships. 
+
 
 ### Data Model Framework
 

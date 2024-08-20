@@ -118,6 +118,7 @@ classes:
     - dissociationMethod
     - runType
     - libraryStrand
+    - libraryKitID
     - libraryPrep
     - libraryPreparationMethod
     - readPair
@@ -171,6 +172,10 @@ classes:
     is_a: BulkSequencingAssayTemplate
     description: Template for describing raw data from (bulk) RNA-sequencing
     slots:
+    - genePerturbed
+    - genePerturbationType
+    - genePerturbationTechnology
+    - experimentalCondition
     annotations:
       requiresComponent: ''
       required: false
