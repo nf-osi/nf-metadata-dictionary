@@ -13642,6 +13642,9 @@
                 },
                 {
                     "@id": "bts:YearPublished"
+                },
+                {
+                    "@id": "bts:IsGlobalFeatured"
                 }
             ],
             "sms:validationRules": []
@@ -13799,6 +13802,23 @@
             "sms:validationRules": [
                 "int"
             ]
+        },
+        {
+            "@id": "bts:IsGlobalFeatured",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "IsGlobalFeatured",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "isGlobalFeatured",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
         },
         {
             "@id": "bts:FlowCytometryTemplate",
