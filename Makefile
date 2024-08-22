@@ -40,10 +40,6 @@ PortalStudy:
 	rm tmp.json
 	@echo "--- Saved registered-json-schemas/PortalStudy.json ---"
 
-Dataset:
-	enum=$$(./utils/enumerate.sh assay); jq --argjson enum "$$enum" '.properties.assay.enum = $$enum' registered-json-schemas/Dataset.json > temp.json && mv temp.json registered-json-schemas/Dataset.json
-
-
 Superdataset:
-	enum=$$(./utils/enumerate.sh assay); jq --argjson enum "$$enum" '.properties.assay.enum = $$enum' registered-json-schemas/Superdataset.json > temp.json && mv temp.json registered-json-schemas/Superdataset.json
+	jq '.schema += input' registered-json-schemas/PortalDataset.json registered-json-schemas/super_rules.json > registered-json-schemas/Superdataset.json
 
