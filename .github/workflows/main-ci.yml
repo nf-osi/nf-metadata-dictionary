@@ -39,9 +39,9 @@ jobs:
         run: |
           pip install linkml==v1.8.1
           npm install -g json-dereference-cli
-          make Superdataset
           make PortalDataset
           make PortalStudy
+          make Superdataset
       
       # Set up supported python.
       - uses: actions/setup-python@v5
