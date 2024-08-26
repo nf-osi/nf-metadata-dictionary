@@ -1,5 +1,40 @@
 <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/nf-osi/nf-metadata-dictionary?label=latest%20release&display_name=release&style=flat-square">  <img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/nf-osi/nf-metadata-dictionary?style=flat-square&color=orange">  <img alt="GitHub" src="https://img.shields.io/github/license/nf-osi/nf-metadata-dictionary?style=flat-square&color=red">
 
+### Data Model Artifacts 
+
+- `modules/*.yaml`: These are source files. Refer to [Data Model Framework](#data-model-framework) for editing guidelines.
+- `NF.jsonld`: This is the main output format used for distribution and downstream apps (Data Curator App).
+- `registered-json-schemas/*.json`: These are `.json` serializations for a subset of the data model, for native functionality with Synapse platform or wherever .json seralization is preferred.
+
+
+```mermaid
+graph LR
+    A[modules/*.yaml] --> B[retold]
+    B --> C[NF.jsonld]
+    C --> D[schematic]
+    D --> E[NF.jsonld]
+    A --> L[LinkML]
+    L --> J[*.json]
+
+class B,D tools
+    
+    %% Legend
+    subgraph Legend
+        G[Files]
+        H[Tools]
+    end
+
+style A fill:white,stroke:#333,stroke-width:2px;
+style C fill:white,stroke:#333,stroke-width:2px;
+style E fill:white,stroke:#333,stroke-width:2px;
+style G fill:white,stroke:#333,stroke-width:2px;
+style J fill:white,stroke:#333,stroke-width:2px;
+style B fill:#aaf,stroke:#333,stroke-width:2px
+style D fill:#aaf,stroke:#333,stroke-width:2px
+style H fill:#aaf,stroke:#333,stroke-width:2px
+style L fill:#aaf,stroke:#333,stroke-width:2px
+```
+
 ### Maintenance and Contribution
 
 This data model, maintained by the NF-Open Science Initative, provides standard concepts and structure to help describe and manage data and other resources in the NF-OSI community. 
