@@ -2,9 +2,12 @@
 
 ### Data Model Artifacts 
 
+The data model is compiled and released as several different artifacts using various tooling. 
+The figure below provides an overview; refer to the `Makefile` for details of the underlying processing.
+
 - `modules/*.yaml`: These are source files. Refer to [Data Model Framework](#data-model-framework) for editing guidelines.
 - `NF.jsonld`: This is the main output format used for distribution and downstream apps (Data Curator App).
-- `registered-json-schemas/*.json`: These are `.json` serializations for a subset of the data model, for native functionality with Synapse platform or wherever .json seralization is preferred.
+- `registered-json-schemas/*.json`: These are JSON serializations for a subset of the data model, for native functionality with Synapse platform or wherever JSON seralization is preferred.
 
 
 ```mermaid
