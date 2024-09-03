@@ -41,5 +41,5 @@ PortalStudy:
 	@echo "--- Saved registered-json-schemas/PortalStudy.json ---"
 
 Superdataset:
-	jq '.schema += input | .schema["$$id"] = "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-superdataset"' registered-json-schemas/PortalDataset.json registered-json-schemas/super_rules.json > registered-json-schemas/Superdataset.json
+	jq '.schema += input | del('.schema.required') | .schema["$$id"] = "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-superdataset"' registered-json-schemas/PortalDataset.json registered-json-schemas/super_rules.json > registered-json-schemas/Superdataset.json
 
