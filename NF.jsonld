@@ -8355,7 +8355,7 @@
                     "@id": "bts:IntellectualDisability"
                 },
                 {
-                    "@id": "bts:MPNST"
+                    "@id": "bts:MPNSTCharacterization"
                 },
                 {
                     "@id": "bts:AqueductalStenosis"
@@ -8648,7 +8648,7 @@
                     "@id": "bts:IntellectualDisability"
                 },
                 {
-                    "@id": "bts:MPNST"
+                    "@id": "bts:MPNSTCharacterization"
                 },
                 {
                     "@id": "bts:AqueductalStenosis"
@@ -8743,7 +8743,7 @@
                     "@id": "bts:IntellectualDisability"
                 },
                 {
-                    "@id": "bts:MPNST"
+                    "@id": "bts:MPNSTCharacterization"
                 },
                 {
                     "@id": "bts:AqueductalStenosis"
@@ -15884,6 +15884,34 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:MPNSTCharacterization",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Characterization of the manifestation of MPNST.",
+            "rdfs:label": "MPNSTCharacterization",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:Absent"
+                },
+                {
+                    "@id": "bts:Present"
+                },
+                {
+                    "@id": "bts:Unknown"
+                }
+            ],
+            "sms:displayName": "MPNSTCharacterization",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:NucleicAcidSource",
             "@type": "rdfs:Class",
             "rdfs:comment": "Source of the extracted nucleic acid used in the experiment",
@@ -16149,34 +16177,6 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "runtimePlatform",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:MPNST",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "MPNST",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "schema:rangeIncludes": [
-                {
-                    "@id": "bts:Absent"
-                },
-                {
-                    "@id": "bts:Present"
-                },
-                {
-                    "@id": "bts:Unknown"
-                }
-            ],
-            "sms:displayName": "MPNST",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -36749,7 +36749,7 @@
                     "@id": "bts:GlomusTumor"
                 },
                 {
-                    "@id": "bts:MPNST"
+                    "@id": "bts:MPNSTCharacterization"
                 },
                 {
                     "@id": "bts:NonopticGlioma"
@@ -39122,6 +39122,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "Low Grade Glioma",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:MPNST",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "MPNST",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "MPNST",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
