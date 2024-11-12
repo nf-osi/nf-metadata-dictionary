@@ -282,7 +282,6 @@ classes:
         - bisulfite sequencing
         - CAPP-seq
         - CUT&RUN
-        - ChIP-seq
         - ERR bisulfite sequencing
         - HI-C
         - NOMe-seq
@@ -297,6 +296,20 @@ classes:
     annotations:
       requiresComponent: ''
       required: false
+
+  ChIPSeqTemplate:
+    is_a: EpigenomicsAssayTemplate
+    description: Template for describing raw data from ChIP-Seq assays, typically used to identify DNA-protein interactions.
+    slots:
+      - antibodyID
+      - platform
+      - peakCallingAlgorithm # This is not in the modules/props.yaml file. Should we add a new property?
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+          - ChIP-seq
 
   GenomicsArrayTemplate:
     is_a: GeneticsAssayTemplate
