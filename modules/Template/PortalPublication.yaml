@@ -1,0 +1,71 @@
+#######################################
+# Portal          
+#######################################
+
+# Note: this template definition uses the alternate syntax with 'attribute'
+
+classes:
+  PortalPublication:
+    description: >
+      A slightly more specialized publication concept intended for the specific scope of the NF Portal.
+    notes:
+    - This structure is based on a CSV file from MC2 annotations with customized fields as attributes.
+    attributes:
+      component:
+        range: string
+        required: true
+      publicationGrantNumber:
+        range: string
+        required: true
+      publicationConsortiumName:
+        range: string
+        required: true
+      publicationThemeName:
+        range: string
+        required: true
+      publicationDoi:
+        range: string
+        required: true
+      publicationJournal:
+        range: string
+        required: true
+      pubmedId:
+        range: integer
+        required: true
+      pubmedUrl:
+        range: string
+        required: true
+      publicationTitle:
+        range: string
+        required: true
+      publicationYear:
+        range: integer
+        required: true
+      publicationKeywords:
+        range: string
+        multivalued: true
+        required: false
+      publicationAuthors:
+        range: string
+        multivalued: true
+        required: false
+      publicationAbstract:
+        range: string
+        required: true
+      publicationAssay:
+        range: string
+        multivalued: true
+        required: false
+      publicationTumorType:
+        range: string
+        required: false
+      publicationTissue:
+        range: string
+        required: false
+      publicationDatasetAlias:
+        range: string
+        multivalued: true
+        required: false
+      publicationAccessibility:
+        range: string
+        required: true
