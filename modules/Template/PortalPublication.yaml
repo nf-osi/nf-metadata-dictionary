@@ -5,67 +5,66 @@
 # Note: this template definition uses the alternate syntax with 'attribute'
 
 classes:
-  PortalPublication:
+  PublicationTemplate:
+    is_a: Template
     description: >
-      A slightly more specialized publication concept intended for the specific scope of the NF Portal.
+      A generalized data model template for Publications to be hopefully used across dccs
     notes:
     - This structure is based on a CSV file from MC2 annotations with customized fields as attributes.
     attributes:
-      component:
+      grantNumber:
         range: string
         required: true
-      publicationGrantNumber:
+      consortiumName:
         range: string
         required: true
-      publicationConsortiumName:
+      themeName:
         range: string
         required: true
-      publicationThemeName:
+      doi:
         range: string
         required: true
-      publicationDoi:
+      journal:
         range: string
         required: true
-      publicationJournal:
-        range: string
-        required: true
-      pubmedId:
+      pmid:
         range: integer
         required: true
       pubmedUrl:
         range: string
         required: true
-      publicationTitle:
+      title:
         range: string
         required: true
-      publicationYear:
+      year:
         range: integer
         required: true
-      publicationKeywords:
+      diseaseFocus:
         range: string
         multivalued: true
         required: false
-      publicationAuthors:
+      authors:
         range: string
         multivalued: true
         required: false
-      publicationAbstract:
+      abstract:
         range: string
         required: true
-      publicationAssay:
+      assay:
         range: string
         multivalued: true
         required: false
-      publicationTumorType:
+      accessibility:
         range: string
-        required: false
-      publicationTissue:
+        required: true
+
+  NFPublication:
+    is_a: PublicationTemplate
+    description: A slightly more specialized publication concept intended for the specific scope of the NF Portal.
+    attributes:
+      studyUse:
         range: string
-        required: false
-      publicationDatasetAlias:
-        range: string
-        multivalued: true
-        required: false
-      publicationAccessibility:
+        required: true
+      nfType:
         range: string
         required: true
