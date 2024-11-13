@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalpublication",
+  "PortalPublication": {
+    "additionalProperties": false,
+    "description": "A slightly more specialized publication concept intended for the specific scope of the NF Portal.",
+    "properties": {
+      "component": {
+        "type": "string"
+      },
+      "publicationAbstract": {
+        "type": "string"
+      },
+      "publicationAccessibility": {
+        "type": "string"
+      },
+      "publicationAssay": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "publicationAuthors": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "publicationConsortiumName": {
+        "type": "string"
+      },
+      "publicationDatasetAlias": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "publicationDoi": {
+        "type": "string"
+      },
+      "publicationGrantNumber": {
+        "type": "string"
+      },
+      "publicationJournal": {
+        "type": "string"
+      },
+      "publicationKeywords": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "publicationThemeName": {
+        "type": "string"
+      },
+      "publicationTissue": {
+        "type": "string"
+      },
+      "publicationTitle": {
+        "type": "string"
+      },
+      "publicationTumorType": {
+        "type": "string"
+      },
+      "publicationYear": {
+        "type": "integer"
+      },
+      "pubmedId": {
+        "type": "integer"
+      },
+      "pubmedUrl": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "component",
+      "publicationGrantNumber",
+      "publicationConsortiumName",
+      "publicationThemeName",
+      "publicationDoi",
+      "publicationJournal",
+      "pubmedId",
+      "pubmedUrl",
+      "publicationTitle",
+      "publicationYear",
+      "publicationAbstract",
+      "publicationAccessibility"
+    ],
+    "title": "PortalPublication",
+    "type": "object"
+  }
+}

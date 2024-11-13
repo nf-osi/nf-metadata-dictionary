@@ -43,3 +43,8 @@ PortalStudy:
 Superdataset:
 	jq '.schema += input | del('.schema.required') | .schema["$$id"] = "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-superdataset"' registered-json-schemas/PortalDataset.json registered-json-schemas/super_rules.json > registered-json-schemas/Superdataset.json
 
+PortalPublication:
+	cat header.yaml modules/Template/PortalPublication.yaml > temp.yaml
+	gen-json-schema --top-class=PortalPublication --no-metadata --not-closed temp.yaml > tmp.json
+	jq '{ "$$schema": "http://json-schema.org/draft-07/schema#", "$$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalpublication", PortalPublication: ."$$defs".PortalPublication }' tmp.json > registered-json-schemas/PortalPublication.json
+	rm tmp.json temp.yaml
