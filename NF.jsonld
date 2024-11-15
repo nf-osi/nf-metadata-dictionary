@@ -36368,6 +36368,133 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:EpigenomicsAssayTemplate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Template for describing raw data from epigenetics sequencing assays such as bisulfite sequencing.",
+            "rdfs:label": "EpigenomicsAssayTemplate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:BulkSequencingAssayTemplate"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "EpigenomicsAssayTemplate",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Component"
+                },
+                {
+                    "@id": "bts:Filename"
+                },
+                {
+                    "@id": "bts:FileFormat"
+                },
+                {
+                    "@id": "bts:ResourceType"
+                },
+                {
+                    "@id": "bts:DataType"
+                },
+                {
+                    "@id": "bts:DataSubtype"
+                },
+                {
+                    "@id": "bts:Assay"
+                },
+                {
+                    "@id": "bts:IndividualID"
+                },
+                {
+                    "@id": "bts:Species"
+                },
+                {
+                    "@id": "bts:Sex"
+                },
+                {
+                    "@id": "bts:Age"
+                },
+                {
+                    "@id": "bts:AgeUnit"
+                },
+                {
+                    "@id": "bts:Diagnosis"
+                },
+                {
+                    "@id": "bts:Nf1Genotype"
+                },
+                {
+                    "@id": "bts:Nf2Genotype"
+                },
+                {
+                    "@id": "bts:TumorType"
+                },
+                {
+                    "@id": "bts:ModelSystemName"
+                },
+                {
+                    "@id": "bts:Organ"
+                },
+                {
+                    "@id": "bts:Comments"
+                },
+                {
+                    "@id": "bts:ParentSpecimenID"
+                },
+                {
+                    "@id": "bts:SpecimenID"
+                },
+                {
+                    "@id": "bts:AliquotID"
+                },
+                {
+                    "@id": "bts:Platform"
+                },
+                {
+                    "@id": "bts:NucleicAcidSource"
+                },
+                {
+                    "@id": "bts:SpecimenPreparationMethod"
+                },
+                {
+                    "@id": "bts:SpecimenType"
+                },
+                {
+                    "@id": "bts:RunType"
+                },
+                {
+                    "@id": "bts:LibraryStrand"
+                },
+                {
+                    "@id": "bts:LibraryPrep"
+                },
+                {
+                    "@id": "bts:LibraryPreparationMethod"
+                },
+                {
+                    "@id": "bts:ReadPair"
+                },
+                {
+                    "@id": "bts:ReadLength"
+                },
+                {
+                    "@id": "bts:ReadDepth"
+                },
+                {
+                    "@id": "bts:TargetDepth"
+                },
+                {
+                    "@id": "bts:BatchID"
+                },
+                {
+                    "@id": "bts:BisulfiteConversionKitID"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:LightScatteringAssayTemplate",
             "@type": "rdfs:Class",
             "rdfs:comment": "Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.",
@@ -36575,32 +36702,120 @@
             "sms:required": "sms:false",
             "sms:requiresDependency": [
                 {
-                    "@id": "bts:AntibodyID"
+                    "@id": "bts:Component"
+                },
+                {
+                    "@id": "bts:Filename"
+                },
+                {
+                    "@id": "bts:FileFormat"
+                },
+                {
+                    "@id": "bts:ResourceType"
+                },
+                {
+                    "@id": "bts:DataType"
+                },
+                {
+                    "@id": "bts:DataSubtype"
+                },
+                {
+                    "@id": "bts:Assay"
+                },
+                {
+                    "@id": "bts:IndividualID"
+                },
+                {
+                    "@id": "bts:Species"
+                },
+                {
+                    "@id": "bts:Sex"
+                },
+                {
+                    "@id": "bts:Age"
+                },
+                {
+                    "@id": "bts:AgeUnit"
+                },
+                {
+                    "@id": "bts:Diagnosis"
+                },
+                {
+                    "@id": "bts:Nf1Genotype"
+                },
+                {
+                    "@id": "bts:Nf2Genotype"
+                },
+                {
+                    "@id": "bts:TumorType"
+                },
+                {
+                    "@id": "bts:ModelSystemName"
+                },
+                {
+                    "@id": "bts:Organ"
+                },
+                {
+                    "@id": "bts:Comments"
+                },
+                {
+                    "@id": "bts:ParentSpecimenID"
+                },
+                {
+                    "@id": "bts:SpecimenID"
+                },
+                {
+                    "@id": "bts:AliquotID"
                 },
                 {
                     "@id": "bts:Platform"
                 },
                 {
+                    "@id": "bts:NucleicAcidSource"
+                },
+                {
+                    "@id": "bts:SpecimenPreparationMethod"
+                },
+                {
+                    "@id": "bts:SpecimenType"
+                },
+                {
+                    "@id": "bts:RunType"
+                },
+                {
+                    "@id": "bts:LibraryStrand"
+                },
+                {
+                    "@id": "bts:LibraryPrep"
+                },
+                {
+                    "@id": "bts:LibraryPreparationMethod"
+                },
+                {
+                    "@id": "bts:ReadPair"
+                },
+                {
+                    "@id": "bts:ReadLength"
+                },
+                {
+                    "@id": "bts:ReadDepth"
+                },
+                {
+                    "@id": "bts:TargetDepth"
+                },
+                {
+                    "@id": "bts:BatchID"
+                },
+                {
+                    "@id": "bts:BisulfiteConversionKitID"
+                },
+                {
+                    "@id": "bts:AntibodyID"
+                },
+                {
                     "@id": "bts:PeakCallingAlgorithm"
                 }
             ],
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:EpigenomicsAssayTemplate",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "EpigenomicsAssayTemplate",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "EpigenomicsAssayTemplate",
-            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -36840,133 +37055,6 @@
                 },
                 {
                     "@id": "bts:Comments"
-                }
-            ],
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:EpigenomiscAssayTemplate",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "Template for describing raw data from epigenetics sequencing assays such as bisulfite sequencing.",
-            "rdfs:label": "EpigenomiscAssayTemplate",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:BulkSequencingAssayTemplate"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "EpigenomiscAssayTemplate",
-            "sms:required": "sms:false",
-            "sms:requiresDependency": [
-                {
-                    "@id": "bts:Component"
-                },
-                {
-                    "@id": "bts:Filename"
-                },
-                {
-                    "@id": "bts:FileFormat"
-                },
-                {
-                    "@id": "bts:ResourceType"
-                },
-                {
-                    "@id": "bts:DataType"
-                },
-                {
-                    "@id": "bts:DataSubtype"
-                },
-                {
-                    "@id": "bts:Assay"
-                },
-                {
-                    "@id": "bts:IndividualID"
-                },
-                {
-                    "@id": "bts:Species"
-                },
-                {
-                    "@id": "bts:Sex"
-                },
-                {
-                    "@id": "bts:Age"
-                },
-                {
-                    "@id": "bts:AgeUnit"
-                },
-                {
-                    "@id": "bts:Diagnosis"
-                },
-                {
-                    "@id": "bts:Nf1Genotype"
-                },
-                {
-                    "@id": "bts:Nf2Genotype"
-                },
-                {
-                    "@id": "bts:TumorType"
-                },
-                {
-                    "@id": "bts:ModelSystemName"
-                },
-                {
-                    "@id": "bts:Organ"
-                },
-                {
-                    "@id": "bts:Comments"
-                },
-                {
-                    "@id": "bts:ParentSpecimenID"
-                },
-                {
-                    "@id": "bts:SpecimenID"
-                },
-                {
-                    "@id": "bts:AliquotID"
-                },
-                {
-                    "@id": "bts:Platform"
-                },
-                {
-                    "@id": "bts:NucleicAcidSource"
-                },
-                {
-                    "@id": "bts:SpecimenPreparationMethod"
-                },
-                {
-                    "@id": "bts:SpecimenType"
-                },
-                {
-                    "@id": "bts:RunType"
-                },
-                {
-                    "@id": "bts:LibraryStrand"
-                },
-                {
-                    "@id": "bts:LibraryPrep"
-                },
-                {
-                    "@id": "bts:LibraryPreparationMethod"
-                },
-                {
-                    "@id": "bts:ReadPair"
-                },
-                {
-                    "@id": "bts:ReadLength"
-                },
-                {
-                    "@id": "bts:ReadDepth"
-                },
-                {
-                    "@id": "bts:TargetDepth"
-                },
-                {
-                    "@id": "bts:BatchID"
-                },
-                {
-                    "@id": "bts:BisulfiteConversionKitID"
                 }
             ],
             "sms:validationRules": []
@@ -38533,11 +38621,11 @@
         {
             "@id": "bts:EpigeneticsAssayTemplate",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Alias for EpigenomiscAssayTemplate for backwards-compatibility.",
+            "rdfs:comment": "Alias for EpigenomicsAssayTemplate for backwards-compatibility.",
             "rdfs:label": "EpigeneticsAssayTemplate",
             "rdfs:subClassOf": [
                 {
-                    "@id": "bts:EpigenomiscAssayTemplate"
+                    "@id": "bts:EpigenomicsAssayTemplate"
                 }
             ],
             "schema:isPartOf": {
