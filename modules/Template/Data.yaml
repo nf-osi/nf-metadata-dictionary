@@ -268,7 +268,7 @@ classes:
     close_mappings:
     - htan:BulkWESLevel1
 
-  EpigenomiscAssayTemplate:
+  EpigenomicsAssayTemplate:
     is_a: BulkSequencingAssayTemplate
     description: Template for describing raw data from epigenetics sequencing assays such as bisulfite sequencing. 
     slots:
@@ -282,7 +282,6 @@ classes:
         - bisulfite sequencing
         - CAPP-seq
         - CUT&RUN
-        - ChIP-seq
         - ERR bisulfite sequencing
         - HI-C
         - NOMe-seq
@@ -291,12 +290,26 @@ classes:
     - htan:BulkMethylation-seqLevel1
 
   EpigeneticsAssayTemplate:
-    is_a: EpigenomiscAssayTemplate
-    description: Alias for EpigenomiscAssayTemplate for backwards-compatibility.
+    is_a: EpigenomicsAssayTemplate
+    description: Alias for EpigenomicsAssayTemplate for backwards-compatibility.
     slots:
     annotations:
       requiresComponent: ''
       required: false
+
+  ChIPSeqTemplate:
+    is_a: EpigenomicsAssayTemplate
+    description: Template for describing raw data from ChIP-Seq assays, typically used to identify DNA-protein interactions.
+    slots:
+      - antibodyID
+      - platform
+      - peakCallingAlgorithm
+    annotations:
+      requiresComponent: ''
+      required: false
+      match:
+        assay:
+          - ChIP-seq
 
   GenomicsArrayTemplate:
     is_a: GeneticsAssayTemplate

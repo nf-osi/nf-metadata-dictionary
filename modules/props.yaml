@@ -1196,3 +1196,19 @@ slots:
       - portal
     range: integer
     required: false
+  peakCallingAlgorithm:
+    description: A list of commonly used peak-calling algorithms for ChIP-Seq data analysis.
+    enum_range:
+      - MACS2
+      - SICER
+      - HOMER
+      - Genrich
+      - PeakRanger
+      - SEACR
+      - GEM
+      - MUSIC
+      - BroadPeak
+      - SWEMBL
+      - FSeq
+      - ZINBA
+    required: false
