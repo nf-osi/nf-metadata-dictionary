@@ -1,3 +1,26 @@
+id: https://w3id.org/nfosi/
+name: nfosi
+
+default_curi_maps:
+  - semweb_context
+prefixes:
+  personinfo: https://w3id.org/linkml/examples/personinfo/
+  linkml: https://w3id.org/linkml/
+  schema: http://schema.org/
+  rdfs: http://www.w3.org/2000/01/rdf-schema#
+  prov: http://www.w3.org/ns/prov#
+  htan: https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld
+
+default_prefix: nf
+
+emit_prefixes:
+  - rdf
+  - rdfs
+  - xsd
+  - skos
+imports:
+  - linkml:types
+
 #######################################
 # Portal          
 #######################################
@@ -15,6 +38,12 @@ classes:
       grantNumber:
         range: string
         required: true
+      consortiumName:
+        range: string
+        required: true
+      themeName:
+        range: string
+        required: true
       doi:
         range: string
         required: true
@@ -24,39 +53,41 @@ classes:
       pmid:
         range: integer
         required: true
+      pubmedUrl:
+        range: string
+        required: true
       title:
         range: string
         required: true
       year:
         range: integer
         required: true
-      author:
+      diseaseFocus:
+        range: string
+        multivalued: true
+        required: false
+      authors:
         range: string
         multivalued: true
         required: false
       abstract:
         range: string
         required: true
-      accessibility:
-        range: string
-        required: true
-
-  PortalPublication:
-    is_a: PublicationTemplate
-    description: A slightly more specialized publication concept intended for the specific scope of the NF Portal.
-    attributes:
-      studyUse:
-        range: PublicationEnum
-        required: true
-      diseaseFocus:
-        range: string
-        multivalued: true
-        required: false
       assay:
         range: string
         multivalued: true
         required: false
-      dataset:
+      accessibility:
         range: string
-        multivalued: true
-        required: false
+        required: true
+
+  NFPublication:
+    is_a: PublicationTemplate
+    description: A slightly more specialized publication concept intended for the specific scope of the NF Portal.
+    attributes:
+      studyUse:
+        range: string
+        required: true
+      nfType:
+        range: string
+        required: true
