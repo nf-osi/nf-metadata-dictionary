@@ -94,6 +94,9 @@ slots:
   author:
     description: The author of the resource; preferably use an ORCID ID, GitHub
       profile link, etc., if available and a text name if not.
+    range: string
+    in_subset:
+      - portal
     required: false
   auxiliaryAsset:
     description: >
@@ -188,10 +191,16 @@ slots:
     source: Genomic Data Commons
   citation:
     description: Citation (e.g. doi) that usage of data or resource should be cited with.
+    range: string
+    in_subset:
+      - portal
     required: false
   comments:
     description: Brief free-text comments that may also be important to
       understanding the resource.
+    range: string
+    in_subset:
+    - registered
     required: false
   compoundDose:
     annotations:
@@ -841,9 +850,14 @@ slots:
       prep protocol for single-cell RNA-seq assay. This is especially helpful
       for newly-developed or in-house assays.
     range: AssayEnum
+    in_subset:
+      - registered
     required: false
   protocolPurpose:
     description: Brief description of the protocol purpose.
+    range: string
+    in_subset:
+      - registered
     required: false
   pubertyOnset:
     description: Puberty onset.
@@ -948,6 +962,9 @@ slots:
     required: false
   sampleType:
     description: Type of sample used
+    range: string
+    in_subset:
+    - registered
     required: false
   scoliosis:
     description: Characterization of the manifestation of Scoliosis.
