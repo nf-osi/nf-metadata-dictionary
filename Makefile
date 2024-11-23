@@ -40,6 +40,16 @@ PortalStudy:
 	rm tmp.json
 	@echo "--- Saved registered-json-schemas/PortalStudy.json ---"
 
+Protocol:
+	yq '.slots |= with_entries(select(.value.in_subset[] == "portal" or .value.in_subset[] == "registered"))' modules/props.yaml > relevant_props.yaml
+	yq ea '. as $$item ireduce ({}; . * $$item )' modules/Data/Data.yaml modules/Assay/Assay.yaml > relevant_enums.yaml
+	cat header.yaml relevant_props.yaml relevant_enums.yaml modules/Template/Protocol.yaml > temp.yaml
+	gen-json-schema --inline --no-metadata --not-closed temp.yaml > tmp.json
+	json-dereference -s tmp.json -o tmp.json
+	jq '.["$$defs"].ProtocolTemplate' tmp.json > registered-json-schemas/Protocol.json
+	rm -f temp.yaml tmp.json 
+	@echo "--- Saved registered-json-schemas/Protocol.json ---"
+
 Superdataset:
 	jq '.schema += input | del('.schema.required') | .schema["$$id"] = "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-superdataset"' registered-json-schemas/PortalDataset.json registered-json-schemas/super_rules.json > registered-json-schemas/Superdataset.json
 
