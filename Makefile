@@ -47,7 +47,7 @@ Protocol:
 	gen-json-schema --inline --no-metadata --not-closed temp.yaml > tmp.json
 	json-dereference -s tmp.json -o tmp.json
 	jq '.["$$defs"].ProtocolTemplate' tmp.json > registered-json-schemas/Protocol.json
-	rm -f temp.yaml tmp.json 
+	rm -f relevant_props.yaml relevant_enums.yaml temp.yaml tmp.json 
 	@echo "--- Saved registered-json-schemas/Protocol.json ---"
 
 Superdataset:
