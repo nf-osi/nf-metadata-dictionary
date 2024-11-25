@@ -1,3 +1,26 @@
+id: https://w3id.org/nfosi/
+name: nfosi
+
+default_curi_maps:
+  - semweb_context
+prefixes:
+  personinfo: https://w3id.org/linkml/examples/personinfo/
+  linkml: https://w3id.org/linkml/
+  schema: http://schema.org/
+  rdfs: http://www.w3.org/2000/01/rdf-schema#
+  prov: http://www.w3.org/ns/prov#
+  htan: https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld
+
+default_prefix: nf
+
+emit_prefixes:
+  - rdf
+  - rdfs
+  - xsd
+  - skos
+imports:
+  - linkml:types
+
 #######################################
 # Portal          
 #######################################
@@ -58,3 +81,21 @@ classes:
         range: string
         multivalued: true
         required: false
+enums:
+  PublicationTypeEnum:
+    permissible_values:
+      Primary:
+        description: This publication is used as a primary publication for the dataset
+        meaning: 
+      Secondary:
+        description: This publication is used as a secondary publication for the dataset
+        meaning: 
+
+  PublicationAccessibilityEnum:
+    permissible_values:
+      Open Access:
+        description: This publication is open access
+        meaning: 
+      Restricted Access:
+        description: This publication is restricted access
+        meaning: 
