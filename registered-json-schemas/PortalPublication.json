@@ -1,0 +1,120 @@
+{
+  "additionalProperties": false,
+  "description": "A slightly more specialized publication concept intended for the specific scope of the NF Portal.",
+  "properties": {
+    "abstract": {
+      "title": "Abstract",
+      "type": "string"
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "description": "",
+      "enum": [
+        "Open Access",
+        "Restricted Access"
+      ],
+      "type": "string"
+    },
+    "author": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Author(s)",
+      "type": "array"
+    },
+    "dataset": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Linked Datasets",
+      "type": "array"
+    },
+    "diseaseFocus": {
+      "items": {
+        "description": "",
+        "enum": [
+          "Neurofibromatosis type 1",
+          "NF2-related schwannomatosis",
+          "SMARCB1-related schwannomatosis",
+          "LZTR1-related schwannomatosis",
+          "22q-related schwannomatosis",
+          "Schwannomatosis-NOS",
+          "Schwannomatosis-NEC",
+          "Multiple"
+        ],
+        "title": "Disease Focus",
+        "type": "string"
+      },
+      "title": "Disease Focus",
+      "type": "array"
+    },
+    "doi": {
+      "title": "Digital Object Identifier",
+      "type": "string"
+    },
+    "fundingAgency": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Linked Funder(s)",
+      "type": "array"
+    },
+    "grantNumber": {
+      "title": "Grant Number",
+      "type": "string"
+    },
+    "journal": {
+      "title": "Journal",
+      "type": "string"
+    },
+    "manifestation": {
+      "title": "Manifestation",
+      "type": "string"
+    },
+    "pmid": {
+      "title": "PubMed ID",
+      "type": "string"
+    },
+    "publicationType": {
+      "description": "Type of publication in relation to the linked study on the NF Portal. A primary publication is the main publication for the study and may describe data or resources generated from the study. A secondary publication references or describes reuse of resources for the linked study.\n",
+      "title": "Publication Type",
+      "enum": [
+        "Primary",
+        "Secondary"
+      ],
+      "type": "string"
+    },
+    "studyId": {
+      "title": "Linked Study ID",
+      "type": "string"
+    },
+    "studyName": {
+      "title": "Linked Study Name",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "year": {
+      "title": "Year",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "publicationType",
+    "fundingAgency",
+    "studyId",
+    "studyName",
+    "doi",
+    "journal",
+    "pmid",
+    "title",
+    "year",
+    "author",
+    "abstract"
+  ],
+  "title": "PortalPublication",
+  "type": "object",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalpublication"
+}
