@@ -5,86 +5,66 @@
     "additionalProperties": false,
     "description": "A slightly more specialized publication concept intended for the specific scope of the NF Portal.",
     "properties": {
-      "component": {
+      "abstract": {
         "type": "string"
       },
-      "publicationAbstract": {
+      "accessibility": {
         "type": "string"
       },
-      "publicationAccessibility": {
-        "type": "string"
-      },
-      "publicationAssay": {
+      "assay": {
         "items": {
           "type": "string"
         },
         "type": "array"
       },
-      "publicationAuthors": {
+      "author": {
         "items": {
           "type": "string"
         },
         "type": "array"
       },
-      "publicationConsortiumName": {
-        "type": "string"
-      },
-      "publicationDatasetAlias": {
+      "dataset": {
         "items": {
           "type": "string"
         },
         "type": "array"
       },
-      "publicationDoi": {
-        "type": "string"
-      },
-      "publicationGrantNumber": {
-        "type": "string"
-      },
-      "publicationJournal": {
-        "type": "string"
-      },
-      "publicationKeywords": {
+      "diseaseFocus": {
         "items": {
           "type": "string"
         },
         "type": "array"
       },
-      "publicationThemeName": {
+      "doi": {
         "type": "string"
       },
-      "publicationTissue": {
+      "grantNumber": {
         "type": "string"
       },
-      "publicationTitle": {
+      "journal": {
         "type": "string"
       },
-      "publicationTumorType": {
+      "pmid": {
         "type": "string"
       },
-      "publicationYear": {
+      "studyUse": {},
+      "title": {
+        "type": "string"
+      },
+      "year": {
         "type": "integer"
-      },
-      "pubmedId": {
-        "type": "integer"
-      },
-      "pubmedUrl": {
-        "type": "string"
       }
     },
     "required": [
-      "component",
-      "publicationGrantNumber",
-      "publicationConsortiumName",
-      "publicationThemeName",
-      "publicationDoi",
-      "publicationJournal",
-      "pubmedId",
-      "pubmedUrl",
-      "publicationTitle",
-      "publicationYear",
-      "publicationAbstract",
-      "publicationAccessibility"
+      "studyUse",
+      "grantNumber",
+      "doi",
+      "journal",
+      "pmid",
+      "title",
+      "year",
+      "abstract",
+      "accessibility"
     ],
     "title": "PortalPublication",
     "type": "object"
