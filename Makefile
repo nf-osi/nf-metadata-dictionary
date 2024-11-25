@@ -44,8 +44,10 @@ Superdataset:
 	jq '.schema += input | del('.schema.required') | .schema["$$id"] = "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-superdataset"' registered-json-schemas/PortalDataset.json registered-json-schemas/super_rules.json > registered-json-schemas/Superdataset.json
 
 PortalPublication:
-	cat header.yaml modules/Template/PortalPublication.yaml modules/Other/PublicationEnum.yaml > temp.yaml
-	gen-json-schema --top-class=PortalPublication --no-metadata --not-closed temp.yaml > tmp.json
-	jq '{ "$$schema": "http://json-schema.org/draft-07/schema#", "$$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalpublication", PortalPublication: ."$$defs".PortalPublication }' tmp.json > registered-json-schemas/PortalPublication.json
-	rm tmp.json temp.yaml
+	yq ea '. as $$item ireduce ({}; . * $$item )' modules/DCC/Portal.yaml modules/Other/PublicationEnum.yaml > relevant_enums.yaml
+	cat header.yaml modules/Template/PortalPublication.yaml relevant_enums.yaml > temp.yaml
+	gen-json-schema --top-class=PortalPublication --no-metadata --not-closed --title-from=title temp.yaml > tmp.json
+	json-dereference -s tmp.json -o tmp.json
+	jq '."$$defs".PortalPublication | ."$$id"="https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalpublication"' tmp.json > registered-json-schemas/PortalPublication.json
+	rm -f tmp.json temp.yaml relevant_enums.yaml
 	@echo "--- Saved registered-json-schemas/PortalPublication.json ---"

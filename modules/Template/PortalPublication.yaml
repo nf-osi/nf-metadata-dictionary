@@ -11,50 +11,79 @@ classes:
     - This structure is based on a CSV file from MC2 annotations with customized fields as attributes.
     attributes:
       grantNumber:
+        title: Grant Number
         range: string
-        required: true
+        required: false
       doi:
+        title: Digital Object Identifier
         range: string
         required: true
       journal:
+        title: Journal
         range: string
         required: true
       pmid:
+        title: PubMed ID
         range: string
         required: true
       title:
+        title: Title
         range: string
         required: true
       year:
+        title: Year
         range: integer
         required: true
       author:
+        title: Author(s)
         range: string
         multivalued: true
-        required: false
+        required: true
       abstract:
+        title: Abstract
         range: string
         required: true
       accessibility:
+        title: Accessibility
         range: PublicationAccessibilityEnum
-        required: true
+        required: false
 
   PortalPublication:
     is_a: PublicationTemplate
     description: A slightly more specialized publication concept intended for the specific scope of the NF Portal.
     attributes:
-      studyUse:
+      publicationType:
+        title: Publication Type
+        description: >
+          Type of publication in relation to the linked study on the NF Portal.
+          A primary publication is the main publication for the study and may describe data or resources generated from the study.
+          A secondary publication references or describes reuse of resources for the linked study.
         range: PublicationTypeEnum
         required: true
       diseaseFocus:
+        title: Disease Focus
         range: DiseaseFocusEnum
         multivalued: true
         required: false
       dataset:
+        title: Linked Datasets
         range: string
         multivalued: true
+        required: false
+      manifestation:
+        title: Manifestation
+        range: string
         required: false
       fundingAgency:
+        title: Linked Funder(s)
         range: string
         multivalued: true
-        required: false
+        required: true
+      studyId:
+        title: Linked Study ID
+        range: string
+        required: true
+      studyName: 
+        title: Linked Study Name
+        range: string
+        required: true
