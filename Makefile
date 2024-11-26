@@ -32,7 +32,7 @@ PortalStudy:
 
 Protocol:
 	yq '.slots |= with_entries(select(.value.in_subset[] == "portal" or .value.in_subset[] == "registered"))' modules/props.yaml > relevant_props.yaml
-	yq ea '. as $$item ireduce ({}; . * $$item )' modules/Data/Data.yaml modules/Assay/Assay.yaml > relevant_enums.yaml
+	yq ea '. as $$item ireduce ({}; . * $$item )' modules/Data/Data.yaml modules/DCC/Portal.yaml modules/Assay/Assay.yaml > relevant_enums.yaml
 	cat header.yaml relevant_props.yaml relevant_enums.yaml modules/Template/Protocol.yaml > temp.yaml
 	gen-json-schema --inline --no-metadata --not-closed --title-from=title temp.yaml > tmp.json
 	json-dereference -s tmp.json -o tmp.json

@@ -22,7 +22,23 @@
     },
     "license": {
       "description": "Link to a license or name of license applicable for the resource.",
-      "title": "License"
+      "title": "License",
+      "enum": [
+        "UNKNOWN",
+        "RESTRICTED-USE",
+        "Public Domain",
+        "CC-0",
+        "ODC-PDDL",
+        "CC-BY",
+        "ODC-BY",
+        "ODC-ODbL",
+        "CC BY-SA",
+        "CC BY-NC",
+        "CC BY-ND",
+        "CC BY-NC-SA",
+        "CC BY-NC-ND"
+      ],
+      "type": "string"
     },
     "protocolAssay": {
       "description": "Main assay type that this protocol is related to, e.g. this is a prep protocol for single-cell RNA-seq assay. This is especially helpful for newly-developed or in-house assays.\n",
