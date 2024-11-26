@@ -16711,7 +16711,7 @@
         {
             "@id": "bts:Protocol",
             "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
+            "rdfs:comment": "Template for describing a protocol document.",
             "rdfs:label": "Protocol",
             "rdfs:subClassOf": [
                 {
@@ -16721,8 +16721,34 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "protocol",
+            "sms:displayName": "Protocol",
             "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Title"
+                },
+                {
+                    "@id": "bts:Author"
+                },
+                {
+                    "@id": "bts:Citation"
+                },
+                {
+                    "@id": "bts:License"
+                },
+                {
+                    "@id": "bts:ProtocolAssay"
+                },
+                {
+                    "@id": "bts:ProtocolPurpose"
+                },
+                {
+                    "@id": "bts:SampleType"
+                },
+                {
+                    "@id": "bts:Comments"
+                }
+            ],
             "sms:validationRules": []
         },
         {
@@ -37632,49 +37658,6 @@
             },
             "sms:displayName": "lenticularopacity",
             "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:ProtocolTemplate",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "Template for describing a protocol document.",
-            "rdfs:label": "ProtocolTemplate",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Template"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "ProtocolTemplate",
-            "sms:required": "sms:false",
-            "sms:requiresDependency": [
-                {
-                    "@id": "bts:Title"
-                },
-                {
-                    "@id": "bts:Author"
-                },
-                {
-                    "@id": "bts:Citation"
-                },
-                {
-                    "@id": "bts:License"
-                },
-                {
-                    "@id": "bts:ProtocolAssay"
-                },
-                {
-                    "@id": "bts:ProtocolPurpose"
-                },
-                {
-                    "@id": "bts:SampleType"
-                },
-                {
-                    "@id": "bts:Comments"
-                }
-            ],
             "sms:validationRules": []
         },
         {
