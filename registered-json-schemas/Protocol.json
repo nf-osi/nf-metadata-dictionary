@@ -1,25 +1,32 @@
 {
   "additionalProperties": false,
-  "description": "Template for describing a protocol document.",
+  "description": "Describes protocol document based on https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT.",
   "properties": {
     "author": {
       "description": "The author of the resource; preferably use an ORCID ID, GitHub profile link, etc., if available and a text name if not.",
-      "type": "string"
+      "items": {
+        "type": "string"
+      },
+      "title": "Author(s)",
+      "type": "array"
     },
     "citation": {
       "description": "Citation (e.g. doi) that usage of data or resource should be cited with.",
+      "title": "Citation",
       "type": "string"
     },
     "comments": {
       "description": "Brief free-text comments that may also be important to understanding the resource.",
+      "title": "Comments",
       "type": "string"
     },
     "license": {
       "description": "Link to a license or name of license applicable for the resource.",
-      "type": "string"
+      "title": "License"
     },
     "protocolAssay": {
       "description": "Main assay type that this protocol is related to, e.g. this is a prep protocol for single-cell RNA-seq assay. This is especially helpful for newly-developed or in-house assays.\n",
+      "title": "Protocol assay",
       "enum": [
         "2D AlamarBlue absorbance",
         "2D AlamarBlue fluorescence",
@@ -209,15 +216,16 @@
         "word recognition score",
         "STR profile"
       ],
-      "title": "AssayEnum",
       "type": "string"
     },
     "protocolPurpose": {
       "description": "Brief description of the protocol purpose.",
+      "title": "Protocol purpose",
       "type": "string"
     },
     "sampleType": {
       "description": "Type of sample used",
+      "title": "Sample type",
       "type": "string"
     },
     "title": {
