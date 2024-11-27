@@ -92,8 +92,13 @@ slots:
     required: false
     title: Attention deficit disorder
   author:
+    title: Author(s)
     description: The author of the resource; preferably use an ORCID ID, GitHub
       profile link, etc., if available and a text name if not.
+    range: string
+    multivalued: true
+    in_subset:
+      - portal
     required: false
   auxiliaryAsset:
     description: >
@@ -187,11 +192,19 @@ slots:
     required: false
     source: Genomic Data Commons
   citation:
+    title: Citation
     description: Citation (e.g. doi) that usage of data or resource should be cited with.
+    range: string
+    in_subset:
+      - portal
     required: false
   comments:
+    title: Comments
     description: Brief free-text comments that may also be important to
       understanding the resource.
+    range: string
+    in_subset:
+    - registered
     required: false
   compoundDose:
     annotations:
@@ -601,10 +614,11 @@ slots:
       - https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/
     required: true
   license:
+    title: License
     description: Link to a license or name of license applicable for the resource.
     in_subset:
       - portal
-    range: string
+    range: License
     required: false
   longBoneDysplasia:
     description: Characterization of the manifestation of Long bone dysplasia.
@@ -836,14 +850,21 @@ slots:
     range: ProteinExtractSourceEnum
     required: false
   protocolAssay:
+    title: Protocol assay
     description: >
       Main assay type that this protocol is related to, e.g. this is a
       prep protocol for single-cell RNA-seq assay. This is especially helpful
       for newly-developed or in-house assays.
     range: AssayEnum
+    in_subset:
+      - registered
     required: false
   protocolPurpose:
+    title: Protocol purpose
     description: Brief description of the protocol purpose.
+    range: string
+    in_subset:
+      - registered
     required: false
   pubertyOnset:
     description: Puberty onset.
@@ -947,7 +968,11 @@ slots:
       Python 2.3).
     required: false
   sampleType:
+    title: Sample type
     description: Type of sample used
+    range: string
+    in_subset:
+    - registered
     required: false
   scoliosis:
     description: Characterization of the manifestation of Scoliosis.

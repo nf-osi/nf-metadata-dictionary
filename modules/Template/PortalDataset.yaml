@@ -23,66 +23,82 @@ classes:
     # - datasetSizeInBytes 
     # - publisher # should be autoset
       title:
+        title: Title
         range: string
         required: true
       creator:
+        title: Creator
         range: string
         required: true
       contributor:
+        title: Contributor(s)
         range: string
         multivalued: true
         required: false
       description:
+        title: Description
         range: string
         required: false
       accessType:
-        title: accessType
+        title: Access Type
         range: AccessTypeEnum
         required: true
       license:
+        title: License
         range: License
         required: true
       assay:
-        title: assay
+        title: Assay
         range: AssayEnum
         required: false # not applicable for curated data, e.g. dataset of compounds from a database and then enhanced for machine learning or other exploration  
       dataType:
+        title: Data Type
         range: Data
         multivalued: true
         required: true
       species:
+        title: Species
         range: SpeciesEnum
         multivalued: true
         required: false # not all datasets from assays that use biological samples
       studyId:
+        title: Study ID
         range: string
         required: true
       manifestation:
+        title: Manifestation(s)
         range: ManifestationEnum
         multivalued: true
         required: false
       diseaseFocus:
+        title: Disease Focus
         range: DiseaseFocusEnum
         multivalued: true
         required: true
       fundingAgency:
+        title: Funding Agency
         range: FundingAgencyEnum
         multivalued: true
         required: true
       series:
+        title: Catalog Series
         range: string
         required: false
       visualizeDataOn:
+        title: Visualize Data On
         range: string
         multivalued: true
         required: false
       yearProcessed:
+        title: Year Processed
         range: integer
         required: false
       yearPublished:
+        title: Year Published
         range: integer
         required: false
       includedInDataCatalog:
+        title: Included In Data Catalog
         range: string
         required: false
 

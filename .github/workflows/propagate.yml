@@ -39,20 +39,4 @@ jobs:
       - name: Push to Synapse schema registry only JSON schemas that changed
         run: |
           CHANGED=$(git diff --name-only HEAD HEAD~1 registered-json-schemas)
-          for FILE in $CHANGED
-          do
-            REQUEST_BODY=$(jq '. + { concreteType: "org.sagebionetworks.repo.model.schema.CreateSchemaRequest", dryRun: false }' $FILE)
-            RESPONSE=$(curl -X POST https://repo-prod.prod.sagebase.org/repo/v1/schema/type/create/async/start \
-            -H "Authorization: Bearer $SYNAPSE_AUTH_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d "$REQUEST_BODY")
-            
-            # Will error if token not within response
-            TOKEN=$( echo $RESPONSE | jq -e -r '.token')
-            sleep 1
-            STATUS=$(curl "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/create/async/get/$TOKEN" \
-            -H "Authorization: Bearer $SYNAPSE_AUTH_TOKEN")
-
-            echo $STATUS | jq -e '.newVersionInfo'
-          done
-
+          .github/workflows/register-schema.sh $CHANGED

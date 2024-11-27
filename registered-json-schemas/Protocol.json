@@ -1,21 +1,48 @@
 {
   "additionalProperties": false,
-  "description": "A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets.",
+  "description": "Describes protocol document based on https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT.",
   "properties": {
-    "accessType": {
-      "title": "Access Type",
-      "description": "",
+    "author": {
+      "description": "The author of the resource; preferably use an ORCID ID, GitHub profile link, etc., if available and a text name if not.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Author(s)",
+      "type": "array"
+    },
+    "citation": {
+      "description": "Citation (e.g. doi) that usage of data or resource should be cited with.",
+      "title": "Citation",
+      "type": "string"
+    },
+    "comments": {
+      "description": "Brief free-text comments that may also be important to understanding the resource.",
+      "title": "Comments",
+      "type": "string"
+    },
+    "license": {
+      "description": "Link to a license or name of license applicable for the resource.",
+      "title": "License",
       "enum": [
-        "Public Access",
-        "Open Access",
-        "Controlled Access",
-        "Private Access"
+        "UNKNOWN",
+        "RESTRICTED-USE",
+        "Public Domain",
+        "CC-0",
+        "ODC-PDDL",
+        "CC-BY",
+        "ODC-BY",
+        "ODC-ODbL",
+        "CC BY-SA",
+        "CC BY-NC",
+        "CC BY-ND",
+        "CC BY-NC-SA",
+        "CC BY-NC-ND"
       ],
       "type": "string"
     },
-    "assay": {
-      "title": "Assay",
-      "description": "",
+    "protocolAssay": {
+      "description": "Main assay type that this protocol is related to, e.g. this is a prep protocol for single-cell RNA-seq assay. This is especially helpful for newly-developed or in-house assays.\n",
+      "title": "Protocol assay",
       "enum": [
         "2D AlamarBlue absorbance",
         "2D AlamarBlue fluorescence",
@@ -207,219 +234,25 @@
       ],
       "type": "string"
     },
-    "contributor": {
-      "items": {
-        "type": "string"
-      },
-      "title": "Contributor(s)",
-      "type": "array"
-    },
-    "creator": {
-      "title": "Creator",
+    "protocolPurpose": {
+      "description": "Brief description of the protocol purpose.",
+      "title": "Protocol purpose",
       "type": "string"
     },
-    "dataType": {
-      "items": {
-        "description": "What the data (file) contains.",
-        "enum": [
-          "immunoassay",
-          "behavior process",
-          "clinical",
-          "demographics",
-          "particle characterization",
-          "drugCombinationScreen",
-          "isoformExpression",
-          "proteomics",
-          "surveyData",
-          "kinomics",
-          "SomaticVariants",
-          "Volume",
-          "characteristic",
-          "drugScreen",
-          "geneExpression",
-          "AlignedReads",
-          "genomicFeatures",
-          "genomicVariants",
-          "raw counts",
-          "RawIntensities",
-          "NormalizedIntensities",
-          "Pharmacokinetic Study",
-          "mask image",
-          "chromatinActivity",
-          "StructuralVariants",
-          "GermlineVariants",
-          "CopyNumberVariants",
-          "image",
-          "network",
-          "cellularPhysiology",
-          "metabolomics",
-          "AnnotatedSomaticVariants",
-          "AnnotatedGermlineVariants",
-          "Weight",
-          "electrophysiology",
-          "audio transcript",
-          "dataIndex"
-        ],
-        "title": "Data",
-        "type": "string"
-      },
-      "title": "Data Type",
-      "type": "array"
-    },
-    "description": {
-      "title": "Description",
-      "type": "string"
-    },
-    "diseaseFocus": {
-      "items": {
-        "description": "",
-        "enum": [
-          "Neurofibromatosis type 1",
-          "NF2-related schwannomatosis",
-          "SMARCB1-related schwannomatosis",
-          "LZTR1-related schwannomatosis",
-          "22q-related schwannomatosis",
-          "Schwannomatosis-NOS",
-          "Schwannomatosis-NEC",
-          "Multiple"
-        ],
-        "title": "Disease Focus",
-        "type": "string"
-      },
-      "title": "Disease Focus",
-      "type": "array"
-    },
-    "fundingAgency": {
-      "items": {
-        "description": "",
-        "enum": [
-          "NTAP",
-          "CTF",
-          "GFF",
-          "Independent",
-          "Other"
-        ],
-        "title": "FundingAgencyEnum",
-        "type": "string"
-      },
-      "title": "Funding Agency",
-      "type": "array"
-    },
-    "includedInDataCatalog": {
-      "title": "Included In Data Catalog",
-      "type": "string"
-    },
-    "license": {
-      "title": "License",
-      "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
-      "enum": [
-        "UNKNOWN",
-        "RESTRICTED-USE",
-        "Public Domain",
-        "CC-0",
-        "ODC-PDDL",
-        "CC-BY",
-        "ODC-BY",
-        "ODC-ODbL",
-        "CC BY-SA",
-        "CC BY-NC",
-        "CC BY-ND",
-        "CC BY-NC-SA",
-        "CC BY-NC-ND"
-      ],
-      "type": "string"
-    },
-    "manifestation": {
-      "items": {
-        "description": "",
-        "enum": [
-          "Plexiform Neurofibroma",
-          "MPNST",
-          "Cutaneous Neurofibroma",
-          "Schwannoma",
-          "Low Grade Glioma",
-          "High Grade Glioma",
-          "Meningioma",
-          "ANNUBP",
-          "Glioma",
-          "JMML",
-          "SMN",
-          "Atypical Neurofibroma",
-          "Breast Cancer",
-          "Behavioral",
-          "Quality of Life",
-          "Vision Loss",
-          "Memory",
-          "Cognition",
-          "Pain"
-        ],
-        "title": "ManifestationEnum",
-        "type": "string"
-      },
-      "title": "Manifestation(s)",
-      "type": "array"
-    },
-    "series": {
-      "title": "Catalog Series",
-      "type": "string"
-    },
-    "species": {
-      "items": {
-        "description": "",
-        "enum": [
-          "Rattus norvegicus",
-          "Gallus gallus",
-          "Pan troglodytes",
-          "Mus musculus (humanized)",
-          "Homo sapiens",
-          "Danio rerio",
-          "Drosophila melanogaster",
-          "Rhesus macaque",
-          "Sus scrofa",
-          "Oryctolagus cuniculus",
-          "Mus musculus"
-        ],
-        "title": "SpeciesEnum",
-        "type": "string"
-      },
-      "title": "Species",
-      "type": "array"
-    },
-    "studyId": {
-      "title": "Study ID",
+    "sampleType": {
+      "description": "Type of sample used",
+      "title": "Sample type",
       "type": "string"
     },
     "title": {
-      "title": "Title",
+      "description": "Title of a resource.",
       "type": "string"
-    },
-    "visualizeDataOn": {
-      "items": {
-        "type": "string"
-      },
-      "title": "Visualize Data On",
-      "type": "array"
-    },
-    "yearProcessed": {
-      "title": "Year Processed",
-      "type": "integer"
-    },
-    "yearPublished": {
-      "title": "Year Published",
-      "type": "integer"
     }
   },
   "required": [
-    "title",
-    "creator",
-    "accessType",
-    "license",
-    "dataType",
-    "studyId",
-    "diseaseFocus",
-    "fundingAgency"
+    "title"
   ],
-  "title": "PortalDataset",
+  "title": "Protocol",
   "type": "object",
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portaldataset"
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-protocol"
 }
