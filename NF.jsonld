@@ -18028,6 +18028,105 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:EpidemiologyMetric",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Common metrics used in epidemiology studies.",
+            "rdfs:label": "EpidemiologyMetric",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:StandardizedIncidenceRatio"
+                },
+                {
+                    "@id": "bts:IncidenceRate"
+                },
+                {
+                    "@id": "bts:MortalityRate"
+                },
+                {
+                    "@id": "bts:StandardizedMortalityRatio"
+                }
+            ],
+            "sms:displayName": "epidemiologyMetric",
+            "sms:required": "sms:true",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:StandardizedIncidenceRatio",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "StandardizedIncidenceRatio",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:EpidemiologyMetric"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Standardized Incidence Ratio",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:IncidenceRate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "IncidenceRate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:EpidemiologyMetric"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Incidence Rate",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:MortalityRate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "MortalityRate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:EpidemiologyMetric"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Mortality Rate",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:StandardizedMortalityRatio",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "StandardizedMortalityRatio",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:EpidemiologyMetric"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Standardized Mortality Ratio",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:SampleType",
             "@type": "rdfs:Class",
             "rdfs:comment": "Type of sample used",
@@ -19548,7 +19647,7 @@
                     "@id": "bts:DataIndex"
                 },
                 {
-                    "@id": "bts:StandardizedIncidenceRatio"
+                    "@id": "bts:AggregatedData"
                 },
                 {
                     "@id": "bts:DescriptiveMetadata"
@@ -20200,10 +20299,10 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:StandardizedIncidenceRatio",
+            "@id": "bts:AggregatedData",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
-            "rdfs:label": "StandardizedIncidenceRatio",
+            "rdfs:label": "AggregatedData",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:DataType"
@@ -20212,7 +20311,7 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "StandardizedIncidenceRatio",
+            "sms:displayName": "AggregatedData",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -26855,6 +26954,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "batchID",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:PopulationCoverage",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Describes population coverage of the present data.",
+            "rdfs:label": "PopulationCoverage",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "populationCoverage",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -37820,6 +37936,40 @@
                 },
                 {
                     "@id": "bts:PeakCallingAlgorithm"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:EpidemiologyDataTemplate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "For aggregated data from defined populations or cohorts, used in/derived from epidemiology studies.",
+            "rdfs:label": "EpidemiologyDataTemplate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Template"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "EpidemiologyDataTemplate",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:ResourceType"
+                },
+                {
+                    "@id": "bts:DataType"
+                },
+                {
+                    "@id": "bts:FileFormat"
+                },
+                {
+                    "@id": "bts:PopulationCoverage"
+                },
+                {
+                    "@id": "bts:EpidemiologyMetric"
                 }
             ],
             "sms:validationRules": []
