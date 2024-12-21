@@ -788,7 +788,6 @@ classes:
     close_mappings:
     - https://www.immport.org/shared/dataModelDocumentation?table=fcs_analyzed_result
 
-
   MaterialScienceAssayTemplate:
     is_a: NonBiologicalAssayDataTemplate
     description: General template for describing data for a materials science assay.
@@ -852,7 +851,17 @@ classes:
 #######################################
 # Other Data Artifacts           
 #######################################
-
+  
+  EpidemiologyDataTemplate:
+    is_a: Template
+    description: For aggregated data from defined populations or cohorts, used in/derived from epidemiology studies.
+    slots:
+     - resourceType
+     - dataType
+     - fileFormat
+     - populationCoverage
+     - epidemiologyMetric
+    
   WorkflowReport:
     is_a: Template
     description: Template used for miscellaneous workflow reports and accessory files

@@ -386,6 +386,14 @@ slots:
     description: String describing general class of drug screen
     range: DrugScreen
     required: false
+  epidemiologyMetric:
+    description: Common metrics used in epidemiology studies.
+    required: true
+    enum_range:
+    - Standardized Incidence Ratio
+    - Incidence Rate
+    - Mortality Rate
+    - Standardized Mortality Ratio
   etag:
     description: Synapse employs an Optimistic Concurrency Control (OCC) scheme to
       handle concurrent updates. The E-Tag changes every time an entity is
@@ -799,6 +807,9 @@ slots:
     range: PlexiformNeurofibromaManifestationEnum
     required: false
     title: Plexiform neurofibromas
+  populationCoverage:
+    description: Describes population coverage of the present data.
+    required: false
   programmingLanguage:
     description: A computer programming language
     enum_range:
