@@ -10,12 +10,14 @@ convert:
 
 # Example generation of manifests as Excel using LinkML -- each manifest is a sheet with dropdowns where appropriate
 # We DON'T normally use these products, but this step is useful to provide as example for some
+# There seems to be a bug where enum_range seems to be handled correctly, but this is relevant for only small set of attributes
+# where we can migrate to using defined enums instead of inlined enums
 ManifestLinkMLDemo:
 	yq eval-all '. as $$item ireduce ({}; . * $$item )' header.yaml modules/props.yaml modules/**/*.yaml > merged.yaml
 	yq 'del(.. | select(has("annotations")).annotations)' merged.yaml > merged_no_extra_meta.yaml
 	yq 'del(.. | select(has("enum_range")).enum_range)' merged_no_extra_meta.yaml > merged_final.yaml
 	gen-excel merged_final.yaml
-	rm -rf merged_final.yaml
+	rm -rf merged**.yaml
 	
 
 # Recompile certain json schemas with LinkML with selective import of props, enums, and template 
