@@ -7,6 +7,16 @@ analyze:
 convert:
 	bb ./retold/retold as-jsonld --dir modules --out NF.jsonld 
 
+
+# Example generation of manifests as Excel using LinkML -- each manifest is a sheet with dropdowns where appropriate
+# We DON'T normally use these products, but this step is useful to provide as example for some
+ManifestLinkMLDemo:
+	yq eval-all '. as $$item ireduce ({}; . * $$item )' header.yaml modules/props.yaml modules/**/*.yaml > merged.yaml
+	yq 'del(.. | select(has("annotations")).annotations)' merged.yaml > merged_no_extra_meta.yaml
+	yq 'del(.. | select(has("enum_range")).enum_range)' merged_no_extra_meta.yaml > merged_final.yaml
+	gen-excel merged_final.yaml
+	
+
 # Recompile certain json schemas with LinkML with selective import of props, enums, and template 
 # LinkML output needs to be dereferenced bc Synapse doesn't suppport full specs such as $defs
 PortalDataset:
@@ -53,11 +63,3 @@ PortalPublication:
 	rm -f tmp.json temp.yaml relevant_enums.yaml
 	@echo "--- Saved registered-json-schemas/PortalPublication.json ---"
 
-PortalPublication:
-	yq ea '. as $$item ireduce ({}; . * $$item )' modules/DCC/Portal.yaml modules/Other/PublicationEnum.yaml > relevant_enums.yaml
-	cat header.yaml modules/Template/PortalPublication.yaml relevant_enums.yaml > temp.yaml
-	gen-json-schema --top-class=PortalPublication --no-metadata --not-closed --title-from=title temp.yaml > tmp.json
-	json-dereference -s tmp.json -o tmp.json
-	jq '."$$defs".PortalPublication | ."$$id"="https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalpublication"' tmp.json > registered-json-schemas/PortalPublication.json
-	rm -f tmp.json temp.yaml relevant_enums.yaml
-	@echo "--- Saved registered-json-schemas/PortalPublication.json ---"
