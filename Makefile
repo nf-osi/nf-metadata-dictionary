@@ -16,8 +16,8 @@ ManifestLinkMLDemo:
 	yq eval-all '. as $$item ireduce ({}; . * $$item )' header.yaml modules/props.yaml modules/**/*.yaml > merged.yaml
 	yq 'del(.. | select(has("annotations")).annotations)' merged.yaml > merged_no_extra_meta.yaml
 	yq 'del(.. | select(has("enum_range")).enum_range)' merged_no_extra_meta.yaml > merged_final.yaml
-	gen-excel merged_final.yaml
-	rm -rf merged**.yaml
+#	gen-excel merged_final.yaml
+#	rm -rf merged**.yaml
 	
 
 # Recompile certain json schemas with LinkML with selective import of props, enums, and template 
