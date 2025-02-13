@@ -73,6 +73,14 @@ mapping:
       attribute_type: SAMPLE
       data_type: STRING
       required: false
+  - source: organ
+    target:
+      label: TISSUE_SITE
+      description: Site of tissue collection
+      attribute_type: SAMPLE
+      data_type: STRING
+      required: false
+    comments: organ should be superseded by tissue but may be present in older data
   - source: cellType
     target:
       label: CELL_TYPE
