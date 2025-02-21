@@ -36,5 +36,14 @@ jobs:
 
             - [ ] Review last schematic tests or test current state of data model on DCA staging 
             - [ ] Check if any other updates should be put into this release so they don't have to wait until the next
-            - [ ] Create new release
-            - [ ] Update DCA production config downstream
+            - [ ] Create new release at https://github.com/nf-osi/nf-metadata-dictionary/releases
+            - [ ] If new version affects user-facing templates*, update DCA production config downstream at https://github.com/Sage-Bionetworks/data_curator_config/tree/prod/NF-OSI
+
+            * Occasionally, releases only include changes in draft templates or other non user-facing data model changes like mappings and comments.
+            
+            ### Working rotation
+
+            - Jan, May, Sep: @anngvu 
+            - Feb, June, Oct: @aditya-nath-sage 
+            - Mar, Jul, Nov: @changtotheintothemoon 
+            - Apr, Aug, Dec: @cconrad8 
