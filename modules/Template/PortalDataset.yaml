@@ -82,24 +82,28 @@ classes:
         required: true
       series:
         title: Data Series
-        range: string
+        range: DataSeriesEnum
         description: Datasets may belong to a curated series. This should be assigned by staff only.
         required: false
       visualizeDataOn:
         title: Visualize Data On
+        description: Link(s) to where data may be visualized in a separate application.
         range: string
         multivalued: true
         required: false
       yearProcessed:
         title: Year Processed
+        description: Year data were processed. Typically only used for processed data type and when data series is "NF-OSI Processed Data".
         range: integer
         required: false
       yearPublished:
         title: Year Published
+        description: Year data were published/available on Synapse.
         range: integer
         required: false
       includedInDataCatalog:
         title: Included In Data Catalog
+        description: Link(s) to known data catalog(s) the dataset is included in.
         range: DataCatalogEnum
         required: false
 
