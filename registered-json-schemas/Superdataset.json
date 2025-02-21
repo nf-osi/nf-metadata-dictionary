@@ -307,7 +307,11 @@
       "type": "array"
     },
     "includedInDataCatalog": {
+      "description": "Link(s) to known data catalog(s) the dataset is included in.",
       "title": "Included In Data Catalog",
+      "enum": [
+        "https://www.synapse.org/DataCatalog:0"
+      ],
       "type": "string"
     },
     "license": {
@@ -361,7 +365,11 @@
       "type": "array"
     },
     "series": {
-      "title": "Catalog Series",
+      "description": "Datasets may belong to a curated series. This should be assigned by staff only.",
+      "title": "Data Series",
+      "enum": [
+        "NF-OSI Processed Data"
+      ],
       "type": "string"
     },
     "species": {
@@ -395,6 +403,7 @@
       "type": "string"
     },
     "visualizeDataOn": {
+      "description": "Link(s) to where data may be visualized in a separate application.",
       "items": {
         "type": "string"
       },
@@ -402,10 +411,12 @@
       "type": "array"
     },
     "yearProcessed": {
+      "description": "Year data were processed. Typically only used for processed data type and when data series is \"NF-OSI Processed Data\".",
       "title": "Year Processed",
       "type": "integer"
     },
     "yearPublished": {
+      "description": "Year data were published/available on Synapse.",
       "title": "Year Published",
       "type": "integer"
     }
