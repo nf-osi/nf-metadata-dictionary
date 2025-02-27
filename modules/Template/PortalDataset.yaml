@@ -1,5 +1,5 @@
 #######################################
-# Portal          
+# Portal
 #######################################
 
 # Note: this template definition uses the alternate syntax with 'attribute'
@@ -7,9 +7,9 @@
 classes:
   PortalDataset:
     description: >
-      A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets. 
+      A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets.
     notes:
-    - The compiled JSON schema for this should be bound to [Dataset](https://rest-docs.synapse.org/rest/org/sagebionetworks/repo/model/table/Dataset.html) entities, not folders. 
+    - The compiled JSON schema for this should be bound to [Dataset](https://rest-docs.synapse.org/rest/org/sagebionetworks/repo/model/table/Dataset.html) entities, not folders.
     - While "publisher" (repository) may seem redundant given that all Datasets are obviously on Synapse, it's for explicit compatibility with DataCite, and eventually may want to have "symbolic" datasets like Cancer Complexity Portal that list datasets hosted somewhere else.
     attributes:
     # Meta autoset by Synapse or technically should not edit via annotations are commented out
@@ -20,7 +20,7 @@ classes:
     # - doi (if minted)
     # - createdBy # user id/handle, creator allows setting name more explicitly for citations
     # - datasetItemCount
-    # - datasetSizeInBytes 
+    # - datasetSizeInBytes
     # - publisher # should be autoset
       name:
         title: Name
@@ -58,12 +58,12 @@ classes:
       measurementTechnique:
         title: Measurement Technique
         range: AssayEnum
-        required: false # not applicable for curated data, e.g. dataset of compounds from a database and then enhanced for machine learning or other exploration  
-      keywords: 
+        required: false # not applicable for curated data, e.g. dataset of compounds from a database and then enhanced for machine learning or other exploration
+      keywords:
         title: Keywords
         range: string
         required: true
-      subject: 
+      subject:
         title: Subject
         range: string
         required: false
@@ -122,15 +122,14 @@ classes:
         description: Link(s) to known data catalog(s) the dataset is included in.
         range: DataCatalogEnum
         required: false
-    dataUseModifiers:
+      dataUseModifiers:
         title: Data Use Modifiers
-        description: List of data use ontolgoy (DUO) terms that are true for dataset. 
+        description: List of data use ontolgoy (DUO) terms that are true for dataset.
         range: DuoEnum
         multivalued: true
         required: false
-    conditionsOfAccess:
+      conditionsOfAccess:
         title: User Specific Restriction
         description: Additional requirements a user may need. This could include registering, updating their profile, joining a Synapse Team, or using specific authentication methods like 2FA or RAS.
         range: string
         required: false
-    
