@@ -22,10 +22,14 @@ classes:
     # - datasetItemCount
     # - datasetSizeInBytes 
     # - publisher # should be autoset
-      title:
-        title: Title
+      name:
+        title: Name
         range: string
         required: true
+      alternateName:
+        title: Alternate Name
+        range: string
+        required: false
       creator:
         title: Creator
         range: string
@@ -47,10 +51,22 @@ classes:
         title: License
         range: License
         required: true
-      assay:
-        title: Assay
+      countryOfOrigin:
+        title: Country of Origin
+        range: string
+        required: false
+      measurementTechnique:
+        title: Measurement Technique
         range: AssayEnum
         required: false # not applicable for curated data, e.g. dataset of compounds from a database and then enhanced for machine learning or other exploration  
+      keywords: 
+        title: Keywords
+        range: string
+        required: true
+      subject: 
+        title: Subject
+        range: string
+        required: false
       dataType:
         title: Data Type
         range: Data
@@ -75,8 +91,8 @@ classes:
         range: DiseaseFocusEnum
         multivalued: true
         required: true
-      fundingAgency:
-        title: Funding Agency
+      funder:
+        title: Funder
         range: FundingAgencyEnum
         multivalued: true
         required: true
@@ -96,9 +112,9 @@ classes:
         description: Year data were processed. Typically only used for processed data type and when data series is "NF-OSI Processed Data".
         range: integer
         required: false
-      yearPublished:
-        title: Year Published
-        description: Year data were published/available on Synapse.
+      datePublished:
+        title: Date Published
+        description: Date data were published/available on Synapse.
         range: integer
         required: false
       includedInDataCatalog:
@@ -106,14 +122,15 @@ classes:
         description: Link(s) to known data catalog(s) the dataset is included in.
         range: DataCatalogEnum
         required: false
-    DataUseModifiers:
+    dataUseModifiers:
         title: Data Use Modifiers
         description: List of data use ontolgoy (DUO) terms that are true for dataset. 
         range: DuoEnum
         multivalued: true
         required: false
-    UserSpecificRestriction:
+    conditionsOfAccess:
         title: User Specific Restriction
         description: Additional requirements a user may need. This could include registering, updating their profile, joining a Synapse Team, or using specific authentication methods like 2FA or RAS.
         range: string
         required: false
+    
