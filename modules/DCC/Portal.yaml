@@ -12,40 +12,40 @@ enums:
       Open Access:
         description: Access without any additional steps/requirements without even needing to be logged in to Synapse account.
       Controlled Access:
-        description: > 
+        description: >
           Access is restricted and only available after fulfilling specific requirements, such as submitting a research statement or getting approval directly from the data owner through Synapse.
           Note that for datasets, if any component file is under controlled access, the entire dataset is considered to be under controlled access.
       Private Access:
         description: Not accessible outside the project admins and study team -- check whether you are on an access team or contact the PI/admin of access team to request access.
-  
+
 
   DataStatusEnum:
     title: Data Status
     permissible_values:
-      Data Not Expected: 
+      Data Not Expected:
         description: Data is not expected for the project.
-      Data Pending: 
+      Data Pending:
         description: There is no data yet in the project because it is still being generated or has not yet been uploaded yet.
-      Under Embargo: 
-        description: Data is present in the project but not accessible to anyone outside the project admins and study team. 
-        notes: 
+      Under Embargo:
+        description: Data is present in the project but not accessible to anyone outside the project admins and study team.
+        notes:
         - When data is first uploaded, the status should change from “Data Pending” to “Under Embargo”.
-      Rolling Release: 
-        description: This project has an ongoing cycle of incoming data that is released in batches. 
-      Partially Available: 
+      Rolling Release:
+        description: This project has an ongoing cycle of incoming data that is released in batches.
+      Partially Available:
         description: Some data is available for download for the project.
-      Available: 
+      Available:
         description: Data is fully available for download for the project (with fulfillment of any governance requirements).
 
-  
+
   StudyStatusEnum:
     title: Study Status
     permissible_values:
-      Active: 
+      Active:
         description: The project is in the performance period between grant start and grant end dates.
-      Completed: 
+      Completed:
         description: The project has reached the grant end date and all intended data has been generated and uploaded.
-      Withdrawn: 
+      Withdrawn:
         description: The project was planned/started but not completed (withdrawn for various reasons).
 
   DiseaseFocusEnum:
@@ -59,7 +59,7 @@ enums:
       Schwannomatosis-NOS:
       Schwannomatosis-NEC:
       Multiple:
-  
+
   DataCatalogEnum:
     permissible_values:
       'https://www.synapse.org/DataCatalog:0':
@@ -67,55 +67,56 @@ enums:
   DataSeriesEnum:
     permissible_values:
       NF-OSI Processed Data:
-DuoEnum: 
-  title: Data Use Modifiers
-  permissible_values: 
-    CC:
-      description: Clinical Care Use
-    COL:
-      description: Collaboration Required - PI Contact information required
-    DS:
-      description: Disease Specific Research - Provide detail [DOID] or [MONDO]
-    IRB:
-      description: Ethics Approval Required - User prompted to provide IRB/IEC approval
-    GRU:
-      description: General Research Use
-    GSO:
-      description: Genetic Studies Only
-    GS:
-      description: Geographical Restriction - Provide country restriction [ISO 3166⍺2]
-    HMB:
-      description: Health or Medical or Biomedical Research
-    IS:
-      description: Institution Specific Restriction - Name Institution [ror.org]
-    NMDS:
-      description: No General Methods Research
-    NRES:
-      description: No Restriction - Data is available under Open or Anonymous access
-    NPUNCU:
-      description: Not-for-Profit, Non-Commercial Use Only
-    NCU:
-      description: Non-Commercial Use Only
-    NPU:
-      description: Not-for-Profit Organisation Use Only
-    POA:
-      description: Population Origins or Ancestry Research Only - User must describe research use in IDU statement
-    NPOA:
-      description: Population Origins or Ancestry Research Prohibited
-    PS:
-      description: Project Specific Restriction - User prompted to provide IDU statement
-    MOR:
-      description: Publication Moratorium - Provide date [ISO 8601]
-    PUB:
-      description: Publication Required
-    RS:
-      description: Research Specific Restrictions - Provide detail
-    RTN:
-      description: Return to Database or Resource
-    TS:
-      description: Time Limit on Use - Provide date [ISO 8601]
-    US:
-      description: User Specific Restriction - User may be required to register, enhance their profile, join a Synapse Team, or have a specific authentication, e.g., 2FA or RAS
+
+  DuoEnum:
+    title: Data Use Modifiers
+    permissible_values:
+      CC:
+        description: Clinical Care Use
+      COL:
+        description: Collaboration Required - PI Contact information required
+      DS:
+        description: Disease Specific Research - Provide detail [DOID] or [MONDO]
+      IRB:
+        description: Ethics Approval Required - User prompted to provide IRB/IEC approval
+      GRU:
+        description: General Research Use
+      GSO:
+        description: Genetic Studies Only
+      GS:
+        description: Geographical Restriction - Provide country restriction [ISO 3166⍺2]
+      HMB:
+        description: Health or Medical or Biomedical Research
+      IS:
+        description: Institution Specific Restriction - Name Institution [ror.org]
+      NMDS:
+        description: No General Methods Research
+      NRES:
+        description: No Restriction - Data is available under Open or Anonymous access
+      NPUNCU:
+        description: Not-for-Profit, Non-Commercial Use Only
+      NCU:
+        description: Non-Commercial Use Only
+      NPU:
+        description: Not-for-Profit Organisation Use Only
+      POA:
+        description: Population Origins or Ancestry Research Only - User must describe research use in IDU statement
+      NPOA:
+        description: Population Origins or Ancestry Research Prohibited
+      PS:
+        description: Project Specific Restriction - User prompted to provide IDU statement
+      MOR:
+        description: Publication Moratorium - Provide date [ISO 8601]
+      PUB:
+        description: Publication Required
+      RS:
+        description: Research Specific Restrictions - Provide detail
+      RTN:
+        description: Return to Database or Resource
+      TS:
+        description: Time Limit on Use - Provide date [ISO 8601]
+      US:
+        description: User Specific Restriction - User may be required to register, enhance their profile, join a Synapse Team, or have a specific authentication, e.g., 2FA or RAS
 
   FundingAgencyEnum:
     permissible_values:
@@ -147,7 +148,7 @@ DuoEnum:
       Memory:
       Cognition:
       Pain:
-  
+
 
   License:
     description: License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.
@@ -157,11 +158,11 @@ DuoEnum:
     - https://the-turing-way.netlify.app/reproducible-research/licensing/licensing-data.html
     - https://help.figshare.com/article/what-is-the-most-appropriate-licence-for-my-research
     permissible_values:
-      UNKNOWN: 
+      UNKNOWN:
         description: The license for the dataset is not known.
       RESTRICTED-USE:
         description: Contact the data creator regarding restricted usage of the data.
-      Public Domain: 
+      Public Domain:
         description: Technically not a license, the public domain mark relinquishes all rights to a dataset and dedicates the dataset to the public domain.
         source: https://creativecommons.org/public-domain/pdm/
       CC-0:
@@ -169,7 +170,7 @@ DuoEnum:
         description: A Creative Commons license and is like a public domain dedication. The copyright holder surrenders rights in a dataset using this license.
         source: https://creativecommons.org/publicdomain/zero/1.0/
       ODC-PDDL:
-        title: Open Data Commons Public Domain Dedication and License 
+        title: Open Data Commons Public Domain Dedication and License
         description: >
           This license is one of the Open Data Commons licenses and is like a public domain dedication.
           The copyright holder surrenders rights in a dataset using this license.
@@ -178,46 +179,45 @@ DuoEnum:
         title: Creative Commons Attribution 4.0 International
         description: This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset so long as they give credit to the copyright holder.
         source: https://creativecommons.org/licenses/by/4.0/
-      ODC-BY: 
+      ODC-BY:
         title: Open Data Commons Attribution License
         description: This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder.
         source: https://opendatacommons.org/licenses/by/
-      ODC-ODbL:  
+      ODC-ODbL:
         title: Open Data Commons Open Database License
-        description: > 
-          This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit 
+        description: >
+          This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit
           to the copyright holder and distribute any additions, transformation or changes to the dataset.
         source: https://opendatacommons.org/licenses/odbl/
       CC BY-SA:
         title: Creative Commons Attribution-ShareAlike 4.0 International
-        description: > 
-          This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset as long as they give credit 
+        description: >
+          This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset as long as they give credit
           to the copyright holder and distribute any additions, transformations or changes to the dataset under this same https://creativecommons.org/licenses/by/4.0/
         source: https://creativecommons.org/licenses/by-nc-sa/4.0/
       CC BY-NC:
         title: Creative Commons Attribution-NonCommercial 4.0 International
         description: >
-          This license is one of the Creative Commons licenses and allows users to share and adapt the dataset if they give credit 
+          This license is one of the Creative Commons licenses and allows users to share and adapt the dataset if they give credit
           to the copyright holder and do not use the dataset for any commercial purposes.
         source: https://creativecommons.org/licenses/by-nc/4.0/
       CC BY-ND:
         title: Creative Commons Attribution-NoDerivatives 4.0 International
         description: >
-          This license is one of the Creative Commons licenses and allows users to share the dataset if they give credit to copyright holder, 
-          but they cannot make any additions, transformations or changes to the dataset under this license. 
+          This license is one of the Creative Commons licenses and allows users to share the dataset if they give credit to copyright holder,
+          but they cannot make any additions, transformations or changes to the dataset under this license.
         source: https://creativecommons.org/licenses/by-nd/4.0/
       CC BY-NC-SA:
         title: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
         description: >
-          This license is one of the Creative Commons licenses and allows users to share the dataset only if they 
-          (1) give credit to the copyright holder, (2) do not use the dataset for any commercial purposes, and 
+          This license is one of the Creative Commons licenses and allows users to share the dataset only if they
+          (1) give credit to the copyright holder, (2) do not use the dataset for any commercial purposes, and
           (3) distribute any additions, transformations or changes to the dataset under this same license.
         source: https://creativecommons.org/licenses/by-nc-sa/4.0/
       CC BY-NC-ND:
         title: Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
         description: >
-          This license is one of the Creative Commons licenses and allows users to use only your unmodified dataset if they give credit 
-          to the copyright holder and do not share it for commercial purposes. 
+          This license is one of the Creative Commons licenses and allows users to use only your unmodified dataset if they give credit
+          to the copyright holder and do not share it for commercial purposes.
           Users cannot make any additions, transformations or changes to the dataset under this license.
         source: https://creativecommons.org/licenses/by-nc-nd/4.0/
-      
