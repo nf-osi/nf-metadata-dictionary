@@ -106,4 +106,14 @@ classes:
         description: Link(s) to known data catalog(s) the dataset is included in.
         range: DataCatalogEnum
         required: false
-
+    DataUseModifiers:
+        title: Data Use Modifiers
+        description: List of data use ontolgoy (DUO) terms that are true for dataset. 
+        range: DuoEnum
+        multivalued: true
+        required: false
+    UserSpecificRestriction:
+        title: User Specific Restriction
+        description: Additional requirements a user may need. This could include registering, updating their profile, joining a Synapse Team, or using specific authentication methods like 2FA or RAS.
+        range: string
+        required: false
