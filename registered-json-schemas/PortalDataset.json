@@ -13,8 +13,223 @@
       ],
       "type": "string"
     },
-    "assay": {
-      "title": "Assay",
+    "alternateName": {
+      "title": "Alternate Name",
+      "type": "string"
+    },
+    "conditionsOfAccess": {
+      "description": "Additional requirements a user may need. This could include registering, updating their profile, joining a Synapse Team, or using specific authentication methods like 2FA or RAS.",
+      "title": "User Specific Restriction",
+      "type": "string"
+    },
+    "contributor": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Contributor(s)",
+      "type": "array"
+    },
+    "countryOfOrigin": {
+      "title": "Country of Origin",
+      "type": "string"
+    },
+    "creator": {
+      "title": "Creator",
+      "type": "string"
+    },
+    "dataType": {
+      "items": {
+        "description": "What the data (file) contains.",
+        "enum": [
+          "immunoassay",
+          "behavior process",
+          "clinical",
+          "demographics",
+          "particle characterization",
+          "drugCombinationScreen",
+          "isoformExpression",
+          "proteomics",
+          "surveyData",
+          "kinomics",
+          "SomaticVariants",
+          "Volume",
+          "characteristic",
+          "drugScreen",
+          "geneExpression",
+          "AlignedReads",
+          "genomicFeatures",
+          "genomicVariants",
+          "raw counts",
+          "RawIntensities",
+          "NormalizedIntensities",
+          "Pharmacokinetic Study",
+          "mask image",
+          "chromatinActivity",
+          "StructuralVariants",
+          "GermlineVariants",
+          "CopyNumberVariants",
+          "image",
+          "network",
+          "cellularPhysiology",
+          "metabolomics",
+          "AnnotatedSomaticVariants",
+          "AnnotatedGermlineVariants",
+          "Weight",
+          "electrophysiology",
+          "audio transcript",
+          "dataIndex",
+          "AggregatedData"
+        ],
+        "title": "Data",
+        "type": "string"
+      },
+      "title": "Data Type",
+      "type": "array"
+    },
+    "dataUseModifiers": {
+      "description": "List of data use ontolgoy (DUO) terms that are true for dataset.",
+      "items": {
+        "description": "",
+        "enum": [
+          "CC",
+          "COL",
+          "DS",
+          "IRB",
+          "GRU",
+          "GSO",
+          "GS",
+          "HMB",
+          "IS",
+          "NMDS",
+          "NRES",
+          "NPUNCU",
+          "NCU",
+          "NPU",
+          "POA",
+          "NPOA",
+          "PS",
+          "MOR",
+          "PUB",
+          "RS",
+          "RTN",
+          "TS",
+          "US"
+        ],
+        "title": "Data Use Modifiers",
+        "type": "string"
+      },
+      "title": "Data Use Modifiers",
+      "type": "array"
+    },
+    "datePublished": {
+      "description": "Date data were published/available on Synapse.",
+      "title": "Date Published",
+      "type": "integer"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "diseaseFocus": {
+      "items": {
+        "description": "",
+        "enum": [
+          "Neurofibromatosis type 1",
+          "NF2-related schwannomatosis",
+          "SMARCB1-related schwannomatosis",
+          "LZTR1-related schwannomatosis",
+          "22q-related schwannomatosis",
+          "Schwannomatosis-NOS",
+          "Schwannomatosis-NEC",
+          "Multiple"
+        ],
+        "title": "Disease Focus",
+        "type": "string"
+      },
+      "title": "Disease Focus",
+      "type": "array"
+    },
+    "funder": {
+      "items": {
+        "description": "",
+        "enum": [
+          "NTAP",
+          "CTF",
+          "GFF",
+          "NIH-NCI",
+          "Independent",
+          "Other"
+        ],
+        "title": "FundingAgencyEnum",
+        "type": "string"
+      },
+      "title": "Funder",
+      "type": "array"
+    },
+    "includedInDataCatalog": {
+      "description": "Link(s) to known data catalog(s) the dataset is included in.",
+      "title": "Included In Data Catalog",
+      "enum": [
+        "https://www.synapse.org/DataCatalog:0"
+      ],
+      "type": "string"
+    },
+    "keywords": {
+      "title": "Keywords",
+      "type": "string"
+    },
+    "license": {
+      "title": "License",
+      "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
+      "enum": [
+        "UNKNOWN",
+        "RESTRICTED-USE",
+        "Public Domain",
+        "CC-0",
+        "ODC-PDDL",
+        "CC-BY",
+        "ODC-BY",
+        "ODC-ODbL",
+        "CC BY-SA",
+        "CC BY-NC",
+        "CC BY-ND",
+        "CC BY-NC-SA",
+        "CC BY-NC-ND"
+      ],
+      "type": "string"
+    },
+    "manifestation": {
+      "items": {
+        "description": "",
+        "enum": [
+          "Plexiform Neurofibroma",
+          "MPNST",
+          "Cutaneous Neurofibroma",
+          "Schwannoma",
+          "Low Grade Glioma",
+          "High Grade Glioma",
+          "Meningioma",
+          "ANNUBP",
+          "Glioma",
+          "JMML",
+          "SMN",
+          "Atypical Neurofibroma",
+          "Breast Cancer",
+          "Behavioral",
+          "Quality of Life",
+          "Vision Loss",
+          "Memory",
+          "Cognition",
+          "Pain"
+        ],
+        "title": "ManifestationEnum",
+        "type": "string"
+      },
+      "title": "Manifestation(s)",
+      "type": "array"
+    },
+    "measurementTechnique": {
+      "title": "Measurement Technique",
       "description": "",
       "enum": [
         "2D AlamarBlue absorbance",
@@ -207,162 +422,9 @@
       ],
       "type": "string"
     },
-    "contributor": {
-      "items": {
-        "type": "string"
-      },
-      "title": "Contributor(s)",
-      "type": "array"
-    },
-    "creator": {
-      "title": "Creator",
+    "name": {
+      "title": "Name",
       "type": "string"
-    },
-    "dataType": {
-      "items": {
-        "description": "What the data (file) contains.",
-        "enum": [
-          "immunoassay",
-          "behavior process",
-          "clinical",
-          "demographics",
-          "particle characterization",
-          "drugCombinationScreen",
-          "isoformExpression",
-          "proteomics",
-          "surveyData",
-          "kinomics",
-          "SomaticVariants",
-          "Volume",
-          "characteristic",
-          "drugScreen",
-          "geneExpression",
-          "AlignedReads",
-          "genomicFeatures",
-          "genomicVariants",
-          "raw counts",
-          "RawIntensities",
-          "NormalizedIntensities",
-          "Pharmacokinetic Study",
-          "mask image",
-          "chromatinActivity",
-          "StructuralVariants",
-          "GermlineVariants",
-          "CopyNumberVariants",
-          "image",
-          "network",
-          "cellularPhysiology",
-          "metabolomics",
-          "AnnotatedSomaticVariants",
-          "AnnotatedGermlineVariants",
-          "Weight",
-          "electrophysiology",
-          "audio transcript",
-          "dataIndex",
-          "AggregatedData"
-        ],
-        "title": "Data",
-        "type": "string"
-      },
-      "title": "Data Type",
-      "type": "array"
-    },
-    "description": {
-      "title": "Description",
-      "type": "string"
-    },
-    "diseaseFocus": {
-      "items": {
-        "description": "",
-        "enum": [
-          "Neurofibromatosis type 1",
-          "NF2-related schwannomatosis",
-          "SMARCB1-related schwannomatosis",
-          "LZTR1-related schwannomatosis",
-          "22q-related schwannomatosis",
-          "Schwannomatosis-NOS",
-          "Schwannomatosis-NEC",
-          "Multiple"
-        ],
-        "title": "Disease Focus",
-        "type": "string"
-      },
-      "title": "Disease Focus",
-      "type": "array"
-    },
-    "fundingAgency": {
-      "items": {
-        "description": "",
-        "enum": [
-          "NTAP",
-          "CTF",
-          "GFF",
-          "Independent",
-          "Other"
-        ],
-        "title": "FundingAgencyEnum",
-        "type": "string"
-      },
-      "title": "Funding Agency",
-      "type": "array"
-    },
-    "includedInDataCatalog": {
-      "description": "Link(s) to known data catalog(s) the dataset is included in.",
-      "title": "Included In Data Catalog",
-      "enum": [
-        "https://www.synapse.org/DataCatalog:0"
-      ],
-      "type": "string"
-    },
-    "license": {
-      "title": "License",
-      "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
-      "enum": [
-        "UNKNOWN",
-        "RESTRICTED-USE",
-        "Public Domain",
-        "CC-0",
-        "ODC-PDDL",
-        "CC-BY",
-        "ODC-BY",
-        "ODC-ODbL",
-        "CC BY-SA",
-        "CC BY-NC",
-        "CC BY-ND",
-        "CC BY-NC-SA",
-        "CC BY-NC-ND"
-      ],
-      "type": "string"
-    },
-    "manifestation": {
-      "items": {
-        "description": "",
-        "enum": [
-          "Plexiform Neurofibroma",
-          "MPNST",
-          "Cutaneous Neurofibroma",
-          "Schwannoma",
-          "Low Grade Glioma",
-          "High Grade Glioma",
-          "Meningioma",
-          "ANNUBP",
-          "Glioma",
-          "JMML",
-          "SMN",
-          "Atypical Neurofibroma",
-          "Breast Cancer",
-          "Behavioral",
-          "Quality of Life",
-          "Vision Loss",
-          "Memory",
-          "Cognition",
-          "Pain"
-        ],
-        "title": "ManifestationEnum",
-        "type": "string"
-      },
-      "title": "Manifestation(s)",
-      "type": "array"
     },
     "series": {
       "description": "Datasets may belong to a curated series. This should be assigned by staff only.",
@@ -398,8 +460,8 @@
       "title": "Study ID",
       "type": "string"
     },
-    "title": {
-      "title": "Title",
+    "subject": {
+      "title": "Subject",
       "type": "string"
     },
     "visualizeDataOn": {
@@ -414,22 +476,18 @@
       "description": "Year data were processed. Typically only used for processed data type and when data series is \"NF-OSI Processed Data\".",
       "title": "Year Processed",
       "type": "integer"
-    },
-    "yearPublished": {
-      "description": "Year data were published/available on Synapse.",
-      "title": "Year Published",
-      "type": "integer"
     }
   },
   "required": [
-    "title",
+    "name",
     "creator",
     "accessType",
     "license",
+    "keywords",
     "dataType",
     "studyId",
     "diseaseFocus",
-    "fundingAgency"
+    "funder"
   ],
   "title": "PortalDataset",
   "type": "object",
