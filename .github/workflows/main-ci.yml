@@ -33,7 +33,7 @@ jobs:
         run: |
           bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
           git clone --depth 1 https://github.com/anngvu/retold.git
-          make
+          make -B
   
       - name: Install tools and regenerate registered jsons for Superdataset, PortalDataset, etc
         run: |
