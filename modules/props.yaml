@@ -466,7 +466,7 @@ slots:
     required: false
   genePerturbationType:
     description: Specific way in which a single gene was perturbed in a sample
-    range: GenePerturbationType
+    range: GenePerturbationTechnologyEnum
     required: false
   genePerturbed:
     description: The HUGO gene symbol for the gene that is perturbed.
@@ -939,7 +939,7 @@ slots:
     description: A set of references (e.g., canonical assembled contigs) which
       defines a common coordinate space for comparing reference-aligned
       experimental data.
-    range: ReferenceSetEnum
+    range: GenomicReferenceEnum
     required: false
   relatedDataset:
     description: Reference to a relevant dataset entity.

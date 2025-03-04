@@ -4214,6 +4214,17 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:CRERecombinase"
+                },
+                {
+                    "@id": "bts:CRISPR"
+                },
+                {
+                    "@id": "bts:RNAi"
+                }
+            ],
             "sms:displayName": "genePerturbationType",
             "sms:required": "sms:false",
             "sms:validationRules": []
@@ -22597,6 +22608,66 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:CRERecombinase",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "CRERecombinase",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GenePerturbationType"
+                },
+                {
+                    "@id": "bts:GenePerturbationTechnology"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "CRE Recombinase",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:CRISPR",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "CRISPR",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GenePerturbationType"
+                },
+                {
+                    "@id": "bts:GenePerturbationTechnology"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "CRISPR",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:RNAi",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "RNAi",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:GenePerturbationTechnology"
+                },
+                {
+                    "@id": "bts:GenePerturbationType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "RNAi",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:Notaproblem",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
@@ -24406,57 +24477,6 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "contentSize",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:RNAi",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "RNAi",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:GenePerturbationTechnology"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "RNAi",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:CRISPR",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "CRISPR",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:GenePerturbationTechnology"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "CRISPR",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:CRERecombinase",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "CRERecombinase",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:GenePerturbationTechnology"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "CRE Recombinase",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -34215,7 +34235,109 @@
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:GRCh38"
+                },
+                {
+                    "@id": "bts:GRCh38VerilyV1"
+                },
+                {
+                    "@id": "bts:GRCh37"
+                },
+                {
+                    "@id": "bts:MMUL1.0"
+                },
+                {
+                    "@id": "bts:HRC"
+                }
+            ],
             "sms:displayName": "referenceSet",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:GRCh38",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "GRCh38",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ReferenceSet"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "GRCh38",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:GRCh38VerilyV1",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "GRCh38VerilyV1",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ReferenceSet"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "GRCh38_Verily_v1",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:GRCh37",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "GRCh37",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ReferenceSet"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "GRCh37",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:MMUL1.0",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "MMUL1.0",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ReferenceSet"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "MMUL1.0",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:HRC",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "HRC",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ReferenceSet"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "HRC",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -40515,23 +40637,6 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:GRCh38",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "GRCh38",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "GRCh38",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
             "@id": "bts:NMDS",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
@@ -40651,23 +40756,6 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:GRCh37",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "GRCh37",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "GRCh37",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
             "@id": "bts:Drugtoxicity",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
@@ -40753,23 +40841,6 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:MMUL1.0",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "MMUL1.0",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "MMUL1.0",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
             "@id": "bts:Secondary",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
@@ -40851,23 +40922,6 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "Quality of Life",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:GRCh38VerilyV1",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "GRCh38VerilyV1",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "GRCh38_Verily_v1",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -41463,23 +41517,6 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "R816X",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:HRC",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "HRC",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "HRC",
             "sms:required": "sms:false",
             "sms:validationRules": []
         }
