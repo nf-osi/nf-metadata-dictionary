@@ -33,12 +33,12 @@ jobs:
         run: |
           bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
           git clone --depth 1 https://github.com/anngvu/retold.git
+          pip install linkml==v1.8.1
+          npm install -g json-dereference-cli
           make -B
   
       - name: Install tools and regenerate registered jsons for Superdataset, PortalDataset, etc
         run: |
-          pip install linkml==v1.8.1
-          npm install -g json-dereference-cli
           make PortalDataset
           make PortalStudy
           make Superdataset
