@@ -2158,11 +2158,61 @@ enums:
   DataSeriesEnum:
     permissible_values:
       NF-OSI Processed Data:
+  DuoEnum:
+    title: Data Use Modifiers
+    permissible_values:
+      CC:
+        description: Clinical Care Use
+      COL:
+        description: Collaboration Required - PI Contact information required
+      DS:
+        description: Disease Specific Research - Provide detail [DOID] or [MONDO]
+      IRB:
+        description: Ethics Approval Required - User prompted to provide IRB/IEC approval
+      GRU:
+        description: General Research Use
+      GSO:
+        description: Genetic Studies Only
+      GS:
+        description: Geographical Restriction - Provide country restriction [ISO 3166⍺2]
+      HMB:
+        description: Health or Medical or Biomedical Research
+      IS:
+        description: Institution Specific Restriction - Name Institution [ror.org]
+      NMDS:
+        description: No General Methods Research
+      NRES:
+        description: No Restriction - Data is available under Open or Anonymous access
+      NPUNCU:
+        description: Not-for-Profit, Non-Commercial Use Only
+      NCU:
+        description: Non-Commercial Use Only
+      NPU:
+        description: Not-for-Profit Organisation Use Only
+      POA:
+        description: Population Origins or Ancestry Research Only - User must describe research use in IDU statement
+      NPOA:
+        description: Population Origins or Ancestry Research Prohibited
+      PS:
+        description: Project Specific Restriction - User prompted to provide IDU statement
+      MOR:
+        description: Publication Moratorium - Provide date [ISO 8601]
+      PUB:
+        description: Publication Required
+      RS:
+        description: Research Specific Restrictions - Provide detail
+      RTN:
+        description: Return to Database or Resource
+      TS:
+        description: Time Limit on Use - Provide date [ISO 8601]
+      US:
+        description: User Specific Restriction - User may be required to register, enhance their profile, join a Synapse Team, or have a specific authentication, e.g., 2FA or RAS
   FundingAgencyEnum:
     permissible_values:
       NTAP:
       CTF:
       GFF:
+      NIH-NCI:
       Independent:
       Other:
   ManifestationEnum:
@@ -2222,35 +2272,37 @@ enums:
       ODC-ODbL:
         title: Open Data Commons Open Database License
         description: >
-          This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit  to the copyright holder and distribute any additions, transformation or changes to the dataset.
+          This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformation or changes to the dataset.
 
         source: https://opendatacommons.org/licenses/odbl/
       CC BY-SA:
         title: Creative Commons Attribution-ShareAlike 4.0 International
         description: >
-          This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset as long as they give credit  to the copyright holder and distribute any additions, transformations or changes to the dataset under this same https://creativecommons.org/licenses/by/4.0/
+          This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformations or changes to the dataset under this same https://creativecommons.org/licenses/by/4.0/
 
         source: https://creativecommons.org/licenses/by-nc-sa/4.0/
       CC BY-NC:
         title: Creative Commons Attribution-NonCommercial 4.0 International
         description: >
-          This license is one of the Creative Commons licenses and allows users to share and adapt the dataset if they give credit  to the copyright holder and do not use the dataset for any commercial purposes.
+          This license is one of the Creative Commons licenses and allows users to share and adapt the dataset if they give credit to the copyright holder and do not use the dataset for any commercial purposes.
 
         source: https://creativecommons.org/licenses/by-nc/4.0/
       CC BY-ND:
         title: Creative Commons Attribution-NoDerivatives 4.0 International
-        description: "This license is one of the Creative Commons licenses and allows users to share the dataset if they give credit to copyright holder,  but they cannot make any additions, transformations or changes to the dataset under this license. \n"
+        description: >
+          This license is one of the Creative Commons licenses and allows users to share the dataset if they give credit to copyright holder, but they cannot make any additions, transformations or changes to the dataset under this license.
+
         source: https://creativecommons.org/licenses/by-nd/4.0/
       CC BY-NC-SA:
         title: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
         description: >
-          This license is one of the Creative Commons licenses and allows users to share the dataset only if they  (1) give credit to the copyright holder, (2) do not use the dataset for any commercial purposes, and  (3) distribute any additions, transformations or changes to the dataset under this same license.
+          This license is one of the Creative Commons licenses and allows users to share the dataset only if they (1) give credit to the copyright holder, (2) do not use the dataset for any commercial purposes, and (3) distribute any additions, transformations or changes to the dataset under this same license.
 
         source: https://creativecommons.org/licenses/by-nc-sa/4.0/
       CC BY-NC-ND:
         title: Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
         description: >
-          This license is one of the Creative Commons licenses and allows users to use only your unmodified dataset if they give credit  to the copyright holder and do not share it for commercial purposes.  Users cannot make any additions, transformations or changes to the dataset under this license.
+          This license is one of the Creative Commons licenses and allows users to use only your unmodified dataset if they give credit to the copyright holder and do not share it for commercial purposes. Users cannot make any additions, transformations or changes to the dataset under this license.
 
         source: https://creativecommons.org/licenses/by-nc-nd/4.0/
   Data:
@@ -5278,7 +5330,9 @@ classes:
       - resourceType
       - progressReportNumber
   PortalDataset:
-    description: "A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets. \n"
+    description: >
+      A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets.
+
     notes:
       - The compiled JSON schema for this should be bound to [Dataset](https://rest-docs.synapse.org/rest/org/sagebionetworks/repo/model/table/Dataset.html) entities, not folders.
       - While "publisher" (repository) may seem redundant given that all Datasets are obviously on Synapse, it's for explicit compatibility with DataCite, and eventually may want to have "symbolic" datasets like Cancer Complexity Portal that list datasets hosted somewhere else.
@@ -5291,12 +5345,16 @@ classes:
       # - doi (if minted)
       # - createdBy # user id/handle, creator allows setting name more explicitly for citations
       # - datasetItemCount
-      # - datasetSizeInBytes 
+      # - datasetSizeInBytes
       # - publisher # should be autoset
-      title:
-        title: Title
+      name:
+        title: Name
         range: string
         required: true
+      alternateName:
+        title: Alternate Name
+        range: string
+        required: false
       creator:
         title: Creator
         range: string
@@ -5318,10 +5376,22 @@ classes:
         title: License
         range: License
         required: true
-      assay:
-        title: Assay
+      countryOfOrigin:
+        title: Country of Origin
+        range: string
+        required: false
+      measurementTechnique:
+        title: Measurement Technique
         range: AssayEnum
-        required: false # not applicable for curated data, e.g. dataset of compounds from a database and then enhanced for machine learning or other exploration  
+        required: false # not applicable for curated data, e.g. dataset of compounds from a database and then enhanced for machine learning or other exploration
+      keywords:
+        title: Keywords
+        range: string
+        required: true
+      subject:
+        title: Subject
+        range: string
+        required: false
       dataType:
         title: Data Type
         range: Data
@@ -5346,8 +5416,8 @@ classes:
         range: DiseaseFocusEnum
         multivalued: true
         required: true
-      fundingAgency:
-        title: Funding Agency
+      funder:
+        title: Funder
         range: FundingAgencyEnum
         multivalued: true
         required: true
@@ -5367,15 +5437,26 @@ classes:
         description: Year data were processed. Typically only used for processed data type and when data series is "NF-OSI Processed Data".
         range: integer
         required: false
-      yearPublished:
-        title: Year Published
-        description: Year data were published/available on Synapse.
+      datePublished:
+        title: Date Published
+        description: Date data were published/available on Synapse.
         range: integer
         required: false
       includedInDataCatalog:
         title: Included In Data Catalog
         description: Link(s) to known data catalog(s) the dataset is included in.
         range: DataCatalogEnum
+        required: false
+      dataUseModifiers:
+        title: Data Use Modifiers
+        description: List of data use ontolgoy (DUO) terms that are true for dataset.
+        range: DuoEnum
+        multivalued: true
+        required: false
+      conditionsOfAccess:
+        title: User Specific Restriction
+        description: Additional requirements a user may need. This could include registering, updating their profile, joining a Synapse Team, or using specific authentication methods like 2FA or RAS.
+        range: string
         required: false
   PublicationTemplate:
     description: A generalized data model template for Publications to be hopefully used across dccs
