@@ -14,12 +14,12 @@
       "type": "string"
     },
     "alternateName": {
-      "description": "Altername name may contain characters disallowed in name and can be used for search and discovery improvement.",
+      "description": "An altername name that can be used for search and discovery improvement.",
       "title": "Alternate Name",
       "type": "string"
     },
     "conditionsOfAccess": {
-      "description": "Additional requirements a user may need. This could include registering, updating their profile, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown.",
+      "description": "Additional requirements a user may need outside of Data Use Modifiers. This could include additional registration, updating profile information, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown.",
       "title": "User Specific Restriction",
       "type": "string"
     },
@@ -40,11 +40,12 @@
       "type": "array"
     },
     "creator": {
-      "description": "Organization or person that is creator of the dataset. Default is the organization \"NF-OSI\".",
+      "description": "Organization or person that is creator of the dataset. Default is the PI of the project and/or the user who created all files in the dataset.",
       "title": "Creator",
       "type": "string"
     },
     "dataType": {
+      "description": "Reflects the data types of files within the dataset.",
       "items": {
         "description": "What the data (file) contains.",
         "enum": [
@@ -94,7 +95,7 @@
       "type": "array"
     },
     "dataUseModifiers": {
-      "description": "List of data use ontology (DUO) terms that are true for dataset. Omit property if not applicable/unknown.",
+      "description": "List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Omit property if not applicable/unknown.",
       "items": {
         "description": "",
         "enum": [
@@ -134,6 +135,7 @@
       "type": "integer"
     },
     "description": {
+      "description": "Blurb for the dataset; should be no more than 500 characters.",
       "title": "Description",
       "type": "string"
     },
@@ -239,7 +241,7 @@
       "type": "array"
     },
     "measurementTechnique": {
-      "description": "Assay used to generate original data. Omit if not applicable (for curated data or derived data, e.g. dataset of compounds from a database and then enhanced for machine learning or other exploration).",
+      "description": "Assay used to generate original data. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).",
       "title": "Measurement Technique",
       "enum": [
         "2D AlamarBlue absorbance",
@@ -432,11 +434,6 @@
       ],
       "type": "string"
     },
-    "name": {
-      "description": "Names may only contain letters, numbers, spaces, underscores, hyphens, periods, plus signs, apostrophes, and parentheses.",
-      "title": "Name",
-      "type": "string"
-    },
     "series": {
       "description": "Datasets may belong to a curated series. Should be assigned by staff only; omit property if not applicable/unknown.",
       "title": "Data Series",
@@ -469,12 +466,20 @@
       "type": "array"
     },
     "studyId": {
+      "description": "Identifier for the study (project) from which the dataset was derived.",
       "title": "Study ID",
       "type": "string"
     },
     "subject": {
-      "description": "Subject term for the dataset; use the Library of Congress Subject Headings (LCSH) scheme.",
+      "description": "Applicable subject term(s) for dataset cataloging; use the Library of Congress Subject Headings (LCSH) scheme.",
+      "items": {
+        "type": "string"
+      },
       "title": "Subject",
+      "type": "array"
+    },
+    "title": {
+      "title": "Title",
       "type": "string"
     },
     "visualizeDataOn": {
