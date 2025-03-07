@@ -22,20 +22,19 @@ classes:
     # - datasetItemCount
     # - datasetSizeInBytes
     # - publisher # should be autoset
-      name:
-        title: Name
+      title:
+        title: Title
         range: string
-        description: Names may only contain letters, numbers, spaces, underscores, hyphens, periods, plus signs, apostrophes, and parentheses.
         required: true
       alternateName:
         title: Alternate Name
-        description: Altername name may contain characters disallowed in name and can be used for search and discovery improvement.
+        description: An altername name that can be used for search and discovery improvement.
         range: string
         required: false
       creator:
         title: Creator
         range: string
-        description: Organization or person that is creator of the dataset. Default is the organization "NF-OSI".
+        description: Organization or person that is creator of the dataset. Default is the PI of the project and/or the user who created all files in the dataset.
         required: true
       contributor:
         title: Contributor(s)
@@ -46,6 +45,7 @@ classes:
       description:
         title: Description
         range: string
+        description: Blurb for the dataset; should be no more than 500 characters.
         required: false
       accessType:
         title: Access Type
@@ -66,7 +66,7 @@ classes:
       measurementTechnique:
         title: Measurement Technique
         range: AssayEnum
-        description: Assay used to generate original data. Omit if not applicable (for curated data or derived data, e.g. dataset of compounds from a database and then enhanced for machine learning or other exploration).
+        description: Assay used to generate original data. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).
       keywords:
         title: Keywords
         range: string
@@ -75,11 +75,13 @@ classes:
       subject:
         title: Subject
         range: string
-        description: Subject term for the dataset; use the Library of Congress Subject Headings (LCSH) scheme. 
+        description: Applicable subject term(s) for dataset cataloging; use the Library of Congress Subject Headings (LCSH) scheme.
+        multivalued: true 
         required: false
       dataType:
         title: Data Type
         range: Data
+        description: Reflects the data types of files within the dataset.
         multivalued: true
         required: true
       species:
@@ -91,6 +93,7 @@ classes:
       studyId:
         title: Study ID
         range: string
+        description: Identifier for the study (project) from which the dataset was derived.
         required: true
       manifestation:
         title: Manifestation(s)
@@ -136,12 +139,12 @@ classes:
         required: false
       dataUseModifiers:
         title: Data Use Modifiers
-        description: List of data use ontology (DUO) terms that are true for dataset. Omit property if not applicable/unknown.
+        description: List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Omit property if not applicable/unknown.
         range: DuoEnum
         multivalued: true
         required: false
       conditionsOfAccess:
         title: User Specific Restriction
-        description: Additional requirements a user may need. This could include registering, updating their profile, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown.
+        description: Additional requirements a user may need outside of Data Use Modifiers. This could include additional registration, updating profile information, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown.
         range: string
         required: false
