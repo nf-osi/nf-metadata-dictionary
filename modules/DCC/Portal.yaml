@@ -71,83 +71,83 @@ enums:
   DuoEnum:
     title: Data Use Modifiers
     permissible_values:
-      CC:
+      Clinical Care Use:
         description: Clinical Care Use
-      COL:
+      Collaboration Required:
         description: Collaboration Required - PI Contact information required
-      DS:
+      Disease Specific Research:
         description: Disease Specific Research - Provide detail [DOID] or [MONDO]
-      IRB:
+      Ethics Approval Required:
         description: Ethics Approval Required - User prompted to provide IRB/IEC approval
-      GRU:
+      General Research Use:
         description: General Research Use
-      GSO:
+      Genetic Studies Only:
         description: Genetic Studies Only
-      GS:
+      Geographical Restriction:
         description: Geographical Restriction - Provide country restriction [ISO 3166⍺2]
-      HMB:
+      Health or Medical or Biomedical Research:
         description: Health or Medical or Biomedical Research
-      IS:
+      Institution Specific Restriction:
         description: Institution Specific Restriction - Name Institution [ror.org]
-      NMDS:
+      No General Methods Research:
         description: No General Methods Research
-      NRES:
+      No Restriction:
         description: No Restriction - Data is available under Open or Anonymous access
-      NPUNCU:
+      Not-for-Profit Non-Commercial Use Only:
         description: Not-for-Profit, Non-Commercial Use Only
-      NCU:
+      Non-Commercial Use Only:
         description: Non-Commercial Use Only
-      NPU:
+      Not-for-Profit Organisation Use Only:
         description: Not-for-Profit Organisation Use Only
-      POA:
+      Population Origins or Ancestry Research Only:
         description: Population Origins or Ancestry Research Only - User must describe research use in IDU statement
-      NPOA:
+      Population Origins or Ancestry Research Prohibited:
         description: Population Origins or Ancestry Research Prohibited
-      PS:
+      Project Specific Restriction:
         description: Project Specific Restriction - User prompted to provide IDU statement
-      MOR:
+      Publication Moratorium:
         description: Publication Moratorium - Provide date [ISO 8601]
-      PUB:
+      Publication Required:
         description: Publication Required
-      RS:
+      Research Specific Restrictions:
         description: Research Specific Restrictions - Provide detail
-      RTN:
+      Return to Database or Resource:
         description: Return to Database or Resource
-      TS:
+      Time Limit on Use:
         description: Time Limit on Use - Provide date [ISO 8601]
-      US:
+      User Specific Restriction:
         description: User Specific Restriction - User may be required to register, enhance their profile, join a Synapse Team, or have a specific authentication, e.g., 2FA or RAS
 
   FundingAgencyEnum:
     permissible_values:
-      NTAP:
       CTF:
       GFF:
+      NTAP:
       NIH-NCI:
       Independent:
       Other:
 
   ManifestationEnum:
     permissible_values:
-      Plexiform Neurofibroma:
-      MPNST:
-      Cutaneous Neurofibroma:
-      Schwannoma:
-      Low Grade Glioma:
-      High Grade Glioma:
-      Meningioma:
-      ANNUBP:
-      Glioma:
-      JMML:
-      SMN:
+      Aneurysmal Bone Cyst (ANNUBP):
       Atypical Neurofibroma:
-      Breast Cancer:
       Behavioral:
-      Quality of Life:
-      Vision Loss:
-      Memory:
+      Breast Cancer:
       Cognition:
+      Cutaneous Neurofibroma:
+      Glioma:
+      High-Grade Glioma:
+      Juvenile Myelomonocytic Leukemia (JMML):
+      Low-Grade Glioma:
+      Meningioma:
+      Memory:
+      Malignant Peripheral Nerve Sheath Tumor (MPNST):
       Pain:
+      Plexiform Neurofibroma:
+      Quality of Life:
+      Schwannoma:
+      Spinal Meningioma (SMN):
+      Vision Loss:
 
 
   License:
@@ -160,8 +160,6 @@ enums:
     permissible_values:
       UNKNOWN:
         description: The license for the dataset is not known.
-      RESTRICTED-USE:
-        description: Contact the data creator regarding restricted usage of the data.
       Public Domain:
         description: Technically not a license, the public domain mark relinquishes all rights to a dataset and dedicates the dataset to the public domain.
         source: https://creativecommons.org/public-domain/pdm/
