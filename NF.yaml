@@ -5350,18 +5350,22 @@ classes:
       name:
         title: Name
         range: string
+        description: Names may only contain letters, numbers, spaces, underscores, hyphens, periods, plus signs, apostrophes, and parentheses.
         required: true
       alternateName:
         title: Alternate Name
+        description: Altername name may contain characters disallowed in name and can be used for search and discovery improvement.
         range: string
         required: false
       creator:
         title: Creator
         range: string
+        description: Organization or person that is creator of the dataset. Default is the organization "NF-OSI".
         required: true
       contributor:
         title: Contributor(s)
         range: string
+        description: Organization(s) or person(s) that contributed to the dataset.
         multivalued: true
         required: false
       description:
@@ -5371,26 +5375,32 @@ classes:
       accessType:
         title: Access Type
         range: AccessTypeEnum
+        description: Access type for the dataset.
         required: true
       license:
         title: License
         range: License
+        description: Unless information for license is clear, this should default to UNKNOWN.
         required: true
       countryOfOrigin:
         title: Country of Origin
         range: string
+        description: Origin of individuals from which data were generated. Omit if not applicable/unknown.
+        multivalued: true
         required: false
       measurementTechnique:
         title: Measurement Technique
         range: AssayEnum
-        required: false # not applicable for curated data, e.g. dataset of compounds from a database and then enhanced for machine learning or other exploration
+        description: Assay used to generate original data. Omit if not applicable (for curated data or derived data, e.g. dataset of compounds from a database and then enhanced for machine learning or other exploration).
       keywords:
         title: Keywords
         range: string
+        multivalued: true
         required: true
       subject:
         title: Subject
         range: string
+        description: Subject term for the dataset; use the Library of Congress Subject Headings (LCSH) scheme.
         required: false
       dataType:
         title: Data Type
@@ -5400,6 +5410,7 @@ classes:
       species:
         title: Species
         range: SpeciesEnum
+        description: Species of the organism(s) from which the data were generated. Omit property if not applicable, such as for data like compounds or other non-biological data.
         multivalued: true
         required: false # not all datasets from assays that use biological samples
       studyId:
@@ -5409,6 +5420,7 @@ classes:
       manifestation:
         title: Manifestation(s)
         range: ManifestationEnum
+        description: Refers to the phenotype(s) studied in the dataset. Omit if not applicable.
         multivalued: true
         required: false
       diseaseFocus:
@@ -5424,17 +5436,17 @@ classes:
       series:
         title: Data Series
         range: DataSeriesEnum
-        description: Datasets may belong to a curated series. This should be assigned by staff only.
+        description: Datasets may belong to a curated series. Should be assigned by staff only; omit property if not applicable/unknown.
         required: false
       visualizeDataOn:
         title: Visualize Data On
-        description: Link(s) to where data may be visualized in a separate application.
+        description: Link(s) to where data may be visualized in a separate application. Omit property if not applicable/unknown.
         range: string
         multivalued: true
         required: false
       yearProcessed:
         title: Year Processed
-        description: Year data were processed. Typically only used for processed data type and when data series is "NF-OSI Processed Data".
+        description: Year data were processed. Only for processed data type and when data series is "NF-OSI Processed Data"; omit if not applicable/unknown.
         range: integer
         required: false
       datePublished:
@@ -5449,13 +5461,13 @@ classes:
         required: false
       dataUseModifiers:
         title: Data Use Modifiers
-        description: List of data use ontolgoy (DUO) terms that are true for dataset.
+        description: List of data use ontology (DUO) terms that are true for dataset. Omit property if not applicable/unknown.
         range: DuoEnum
         multivalued: true
         required: false
       conditionsOfAccess:
         title: User Specific Restriction
-        description: Additional requirements a user may need. This could include registering, updating their profile, joining a Synapse Team, or using specific authentication methods like 2FA or RAS.
+        description: Additional requirements a user may need. This could include registering, updating their profile, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown.
         range: string
         required: false
   PublicationTemplate:
