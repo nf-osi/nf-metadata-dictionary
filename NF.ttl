@@ -11,22 +11,22 @@
 
 <https://w3id.org/synapse/nfosi/vocab/nfosi> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace schema1: ;
+    sh:declare [ sh:namespace rdfs: ;
+            sh:prefix "rdfs" ],
+        [ sh:namespace linkml: ;
+            sh:prefix "linkml" ],
+        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
+            sh:prefix "nf" ],
+        [ sh:namespace schema1: ;
             sh:prefix "schema" ],
         [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
             sh:prefix "personinfo" ],
-        [ sh:namespace prov: ;
-            sh:prefix "prov" ],
-        [ sh:namespace linkml: ;
-            sh:prefix "linkml" ],
         [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
             sh:prefix "htan" ],
+        [ sh:namespace prov: ;
+            sh:prefix "prov" ],
         [ sh:namespace skos: ;
-            sh:prefix "skos" ],
-        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
-            sh:prefix "nf" ],
-        [ sh:namespace rdfs: ;
-            sh:prefix "rdfs" ] ;
+            sh:prefix "skos" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
@@ -168,7 +168,7 @@
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-03-04T20:19:23"^^xsd:dateTime ;
+    linkml:generation_date "2025-03-07T22:21:25"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -344,11 +344,11 @@
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__license>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__manifestation>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__measurementTechnique>,
-        <https://w3id.org/synapse/nfosi/vocab/portalDataset__name>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__series>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__species>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__studyId>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__subject>,
+        <https://w3id.org/synapse/nfosi/vocab/portalDataset__title>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__visualizeDataOn>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/portalPublication__dataset>,
@@ -460,8 +460,8 @@
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-03-04T20:19:22"^^xsd:dateTime ;
-    linkml:source_file_size 295444 ;
+    linkml:source_file_date "2025-03-07T22:21:23"^^xsd:dateTime ;
+    linkml:source_file_size 297651 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,
@@ -551,6 +551,8 @@
     linkml:meaning <https://web.expasy.org/cellosaurus/CVCL_1B47> .
 
 <https://w3id.org/synapse/nfosi/vocab/AC007-hTERT> skos:definition "Human arachnoid cell line" .
+
+<https://w3id.org/synapse/nfosi/vocab/ANNUBP> skos:definition "Atypical neurofibromatous neoplasms of uncertain biologic potential is a provisional classification for lesions displaying at least two features: atypia, loss of neurofibroma architecture, high cellularity, and/or mitotic activity >1/50 but <3/10 high power fields. They can be inconsistently diagnosed as atypical neurofibroma or low-grade MPNST. See https://pubmed.ncbi.nlm.nih.gov/28551330/." .
 
 <https://w3id.org/synapse/nfosi/vocab/ATAC-seq> skos:definition "Open chromatin regions measured by sequencing DNA after assay for transposase-accessible chromatin (ATAC) treatment" ;
     linkml:meaning <http://purl.obolibrary.org/obo/OBI_0002039> .
@@ -693,8 +695,6 @@
     skos:definition "Cancer Personalized Profiling by deep sequencing (CAPP-seq) is a novel blood-based assay that uses next-generating sequencing to quantitate circulating tumor DNA (ctDNA)" ;
     linkml:meaning <http://www.ebi.ac.uk/efo/EFO_0008672> .
 
-<https://w3id.org/synapse/nfosi/vocab/CC> skos:definition "Clinical Care Use" .
-
 <https://w3id.org/synapse/nfosi/vocab/CC%20BY-NC> dcterms:source <https://creativecommons.org/licenses/by-nc/4.0/> ;
     dcterms:title "Creative Commons Attribution-NonCommercial 4.0 International" ;
     skos:definition """This license is one of the Creative Commons licenses and allows users to share and adapt the dataset if they give credit to the copyright holder and do not use the dataset for any commercial purposes.
@@ -745,8 +745,6 @@
 <https://w3id.org/synapse/nfosi/vocab/CNVkit> dcterms:source <https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004873> .
 
 <https://w3id.org/synapse/nfosi/vocab/CODEX> skos:definition "CODEX imaging." .
-
-<https://w3id.org/synapse/nfosi/vocab/COL> skos:definition "Collaboration Required - PI Contact information required" .
 
 <https://w3id.org/synapse/nfosi/vocab/CUNY%2C%20City%20College> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
@@ -821,7 +819,11 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Cleveland%20State%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
+<https://w3id.org/synapse/nfosi/vocab/Clinical%20Care%20Use> skos:definition "Clinical Care Use" .
+
 <https://w3id.org/synapse/nfosi/vocab/Cold%20Spring%20Harbor%20Laboratory> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
+
+<https://w3id.org/synapse/nfosi/vocab/Collaboration%20Required> skos:definition "Collaboration Required - PI Contact information required" .
 
 <https://w3id.org/synapse/nfosi/vocab/Colorado%20State%20University%2C%20Fort%20Collins> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
@@ -871,8 +873,6 @@
 
 <https://w3id.org/synapse/nfosi/vocab/DRG/nerve%20root%20neurosphere%20cell> skos:definition "Dorsal root ganglia/nerve root neurosphere cells (DNSCs) are cultured from embryonic DRGs/nerve roots and have been used in in vitro sphere assays to study the origin of para-spinal neurofibromas. See reference PMC4254535" .
 
-<https://w3id.org/synapse/nfosi/vocab/DS> skos:definition "Disease Specific Research - Provide detail [DOID] or [MONDO]" .
-
 <https://w3id.org/synapse/nfosi/vocab/Danio%20rerio> skos:definition "Danio rerio with taxonomy ID: 7955 and Genbank common name: zebrafish" ;
     linkml:meaning <https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=7955&lvl=3&lin=f&keep=1&srchmode=1&unlock> .
 
@@ -898,6 +898,8 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Diffuse%20Infiltrating%20Neurofibroma> skos:definition "Diffuse infiltrating neurofibroma can present as slow-growing, soft tissue masses with overlying skin thickening. These le-sions infiltrate the dermis and the subcutaneous tissue and  characteristically spread along the connective tissues enveloping islands of normal fat. Some of these lesions develop fatty proliferation and can mimic lipomas,  angiolipomas, or angiomyolipomas on imaging and histological evaluation " ;
     linkml:meaning <https://doi.org/10.1007/s00256-014-1965-8> .
+
+<https://w3id.org/synapse/nfosi/vocab/Disease%20Specific%20Research> skos:definition "Disease Specific Research - Provide detail [DOID] or [MONDO]" .
 
 <https://w3id.org/synapse/nfosi/vocab/Dorsal%20Root%20Ganglion> skos:definition "Ganglion with sensory function within the vertebral column." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C12462> .
@@ -939,6 +941,8 @@
 <https://w3id.org/synapse/nfosi/vocab/Emory%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/EnVision%202103%20Multiplate%20Reader> skos:definition "EnVision 2103 Multiplate Reader" .
+
+<https://w3id.org/synapse/nfosi/vocab/Ethics%20Approval%20Required> skos:definition "Ethics Approval Required - User prompted to provide IRB/IEC approval" .
 
 <https://w3id.org/synapse/nfosi/vocab/FACE-Q%20Appearance-related%20Distress> skos:definition """This 8-item scale measures appearance-related distress in people seeking cosmetic treatments for the body or the face.  Item ask someone to agree/disagree with statements about feelings (e.g., unhappy, stressed, down) and behaviors, such as avoiding being around people.
 """ ;
@@ -1057,12 +1061,6 @@
 <https://w3id.org/synapse/nfosi/vocab/GRCh38_Verily_v1> dcterms:source <https://cloud.google.com/life-sciences/docs/resources/public-datasets/reference-genomes> ;
     skos:definition "Custom build of Genome Reference Consortium Human Build 38 by Verily (company)" .
 
-<https://w3id.org/synapse/nfosi/vocab/GRU> skos:definition "General Research Use" .
-
-<https://w3id.org/synapse/nfosi/vocab/GS> skos:definition "Geographical Restriction - Provide country restriction [ISO 3166⍺2]" .
-
-<https://w3id.org/synapse/nfosi/vocab/GSO> skos:definition "Genetic Studies Only" .
-
 <https://w3id.org/synapse/nfosi/vocab/GTAC%40WUSTL%20in-house%20prep> skos:definition "Non-stranded library prep that uses a TruSeq-like (in-house) library design (includes cDNA generation, end-repair, A-tailing, ligation, and PCR amplification with unique dual indexing)" .
 
 <https://w3id.org/synapse/nfosi/vocab/Gallus%20gallus> skos:definition "The common domestic fowl, Chicken." ;
@@ -1070,6 +1068,12 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Ganglioglioma> skos:definition "GNG" ;
     linkml:meaning <https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GNG> .
+
+<https://w3id.org/synapse/nfosi/vocab/General%20Research%20Use> skos:definition "General Research Use" .
+
+<https://w3id.org/synapse/nfosi/vocab/Genetic%20Studies%20Only> skos:definition "Genetic Studies Only" .
+
+<https://w3id.org/synapse/nfosi/vocab/Geographical%20Restriction> skos:definition "Geographical Restriction - Provide country restriction [ISO 3166⍺2]" .
 
 <https://w3id.org/synapse/nfosi/vocab/George%20Mason%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
@@ -1126,8 +1130,6 @@
 <https://w3id.org/synapse/nfosi/vocab/HI-C> skos:definition "Chromatin interactions detected by HI-C protocol" ;
     linkml:meaning <http://www.ebi.ac.uk/efo/EFO_0007693> .
 
-<https://w3id.org/synapse/nfosi/vocab/HMB> skos:definition "Health or Medical or Biomedical Research" .
-
 <https://w3id.org/synapse/nfosi/vocab/HPLC> skos:definition """Frequently referred to simply as HPLC, this form of column chromatography is used frequently in biochemistry.  The analyte is forced through a column by liquid at high pressure, which decreases the time the separated components remain on the stationary phase.
 """ ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C16434> .
@@ -1150,6 +1152,8 @@
 <https://w3id.org/synapse/nfosi/vocab/Harvard%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/HeLa%20SilenciX%20NF1> skos:definition "HeLa cervical cancer cells with stable (EBV-based siRNA) knockdown of the NF1 gene." .
+
+<https://w3id.org/synapse/nfosi/vocab/Health%20or%20Medical%20or%20Biomedical%20Research> skos:definition "Health or Medical or Biomedical Research" .
 
 <https://w3id.org/synapse/nfosi/vocab/Hemorrhagic%20Neoplasm> skos:definition "A neoplasm with hemorrhagic findings." ;
     skos:editorialNote "This is based after the NCIT term 'Necrotic Neoplasm' to accomodate records using only 'hemorrhage' for tumor description -- it may be of limited usefulness long-term." .
@@ -1174,10 +1178,6 @@
     skos:definition "" .
 
 <https://w3id.org/synapse/nfosi/vocab/IMBA%20-%20Institute%20of%20Molecular%20Biotechnology> linkml:meaning <https://ror.org/01zqrxf85> .
-
-<https://w3id.org/synapse/nfosi/vocab/IRB> skos:definition "Ethics Approval Required - User prompted to provide IRB/IEC approval" .
-
-<https://w3id.org/synapse/nfosi/vocab/IS> skos:definition "Institution Specific Restriction - Name Institution [ror.org]" .
 
 <https://w3id.org/synapse/nfosi/vocab/ISO-seq> skos:definition "Full isoform sequencing" .
 
@@ -1292,6 +1292,8 @@
 <https://w3id.org/synapse/nfosi/vocab/Institut%20d%27Investigaci%C3%B3%20Biom%C3%A9dica%20de%20Bellvitge> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/Institut%20d%27Investigaci%C3%B3%20en%20Ci%C3%A8ncies%20de%20la%20Salut%20Germans%20Trias%20i%20Pujol> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
+
+<https://w3id.org/synapse/nfosi/vocab/Institution%20Specific%20Restriction> skos:definition "Institution Specific Restriction - Name Institution [ror.org]" .
 
 <https://w3id.org/synapse/nfosi/vocab/Interview> skos:definition "A conversation with an individual regarding his or her background and other personal and professional details, opinions on specific subjects posed by the interviewer, etc." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C16751> .
@@ -1420,8 +1422,6 @@
 <https://w3id.org/synapse/nfosi/vocab/MMUL1.0> dcterms:source <https://jul2016.archive.ensembl.org/Macaca_mulatta/Info/Index> ;
     skos:definition "Ensembl preliminary assembly Macaca mulatta" .
 
-<https://w3id.org/synapse/nfosi/vocab/MOR> skos:definition "Publication Moratorium - Provide date [ISO 8601]" .
-
 <https://w3id.org/synapse/nfosi/vocab/MPEG-4> skos:definition "A digital multimedia container format most commonly used to store video and audio." ;
     linkml:meaning <http://edamontology.org/format_3997> .
 
@@ -1517,8 +1517,6 @@
 
 <https://w3id.org/synapse/nfosi/vocab/NCI%20Center%20for%20Cancer%20Research> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
-<https://w3id.org/synapse/nfosi/vocab/NCU> skos:definition "Non-Commercial Use Only" .
-
 <https://w3id.org/synapse/nfosi/vocab/NEBNext%20mRNA%20Library%20Prep%20Reagent%20Set%20for%20Illumina> dcterms:source <https://www.neb.com/products/e6100-nebnext-mrna-library-prep-reagent-set-for-illumina> ;
     skos:definition "NEBNext mRNA Library Prep Reagent Set for Illumina" .
 
@@ -1538,8 +1536,6 @@
 <https://w3id.org/synapse/nfosi/vocab/NIH%20Toolbox> skos:definition "A comprehensive set of neuro-behavioral measures that assess cognitive, emotional, sensory, and motor functions\"" ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C154482> .
 
-<https://w3id.org/synapse/nfosi/vocab/NMDS> skos:definition "No General Methods Research" .
-
 <https://w3id.org/synapse/nfosi/vocab/NMS-2> skos:definition "Malignant peripheral nerve sheath tumor cell line" ;
     linkml:meaning <https://www.cellosaurus.org/CVCL_4662> .
 
@@ -1548,14 +1544,6 @@
 
 <https://w3id.org/synapse/nfosi/vocab/NOMe-seq> skos:definition "Nucleosome Occupancy and Methylome Sequencing" ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C106053> .
-
-<https://w3id.org/synapse/nfosi/vocab/NPOA> skos:definition "Population Origins or Ancestry Research Prohibited" .
-
-<https://w3id.org/synapse/nfosi/vocab/NPU> skos:definition "Not-for-Profit Organisation Use Only" .
-
-<https://w3id.org/synapse/nfosi/vocab/NPUNCU> skos:definition "Not-for-Profit, Non-Commercial Use Only" .
-
-<https://w3id.org/synapse/nfosi/vocab/NRES> skos:definition "No Restriction - Data is available under Open or Anonymous access" .
 
 <https://w3id.org/synapse/nfosi/vocab/NRG> skos:definition "Extremely immunodeficient mice with a targeted knockout mutation in recombination activating gene 1 (Rag1) and a complete null allele of the IL2 receptor common gamma chain." ;
     linkml:meaning <https://www.jax.org/strain/007799> .
@@ -1631,7 +1619,13 @@
 
 <https://w3id.org/synapse/nfosi/vocab/No> skos:definition "False" .
 
+<https://w3id.org/synapse/nfosi/vocab/No%20General%20Methods%20Research> skos:definition "No General Methods Research" .
+
+<https://w3id.org/synapse/nfosi/vocab/No%20Restriction> skos:definition "No Restriction - Data is available under Open or Anonymous access" .
+
 <https://w3id.org/synapse/nfosi/vocab/Nodular%20Neurofibroma> skos:definition "TBD" .
+
+<https://w3id.org/synapse/nfosi/vocab/Non-Commercial%20Use%20Only> skos:definition "Non-Commercial Use Only" .
 
 <https://w3id.org/synapse/nfosi/vocab/Noonan%20Syndrome> skos:definition "A rare, highly variable, multisystemic disorder mainly characterized by short stature, distinctive facial features, congenital heart defects, cardiomyopathy and an increased risk to develop tumors in childhood." ;
     linkml:meaning <http://www.orpha.net/ORDO/Orphanet_648> .
@@ -1655,6 +1649,10 @@
 <https://w3id.org/synapse/nfosi/vocab/Northern%20Illinois%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/Northwestern%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
+
+<https://w3id.org/synapse/nfosi/vocab/Not-for-Profit%20Non-Commercial%20Use%20Only> skos:definition "Not-for-Profit, Non-Commercial Use Only" .
+
+<https://w3id.org/synapse/nfosi/vocab/Not-for-Profit%20Organisation%20Use%20Only> skos:definition "Not-for-Profit Organisation Use Only" .
 
 <https://w3id.org/synapse/nfosi/vocab/Nova%20Southeastern%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
@@ -1719,14 +1717,8 @@
 
 <https://w3id.org/synapse/nfosi/vocab/PDX%20tissue> skos:definition "Patient derived xenograft tissue" .
 
-<https://w3id.org/synapse/nfosi/vocab/POA> skos:definition "Population Origins or Ancestry Research Only - User must describe research use in IDU statement" .
-
 <https://w3id.org/synapse/nfosi/vocab/PROMIS%20Cognitive%20Function> skos:definition "The PROMIS Cognitive Function and Cognitive Function Abilities Subset item banks assess patient-perceived cognitive deficits." ;
     linkml:meaning <http://www.healthmeasures.net/images/PROMIS/manuals/PROMIS_Cognitive_Function_Scoring_Manual.pdf> .
-
-<https://w3id.org/synapse/nfosi/vocab/PS> skos:definition "Project Specific Restriction - User prompted to provide IDU statement" .
-
-<https://w3id.org/synapse/nfosi/vocab/PUB> skos:definition "Publication Required" .
 
 <https://w3id.org/synapse/nfosi/vocab/PacBio%20RS%20II> dcterms:source <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL21311> ;
     skos:definition "PacBio RS II" .
@@ -1781,6 +1773,10 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Polymeric%20nanoparticles> skos:definition "Polymeric nanoparticles (PNPs) are solid and spherical (in most cases) structures prepared from natural or synthetic polymers with drug delivery being known to be one of the most important biomedical applications (reference: Hirvonen et al., Nanoengineered Biomaterials for Advanced Drug Delivery, 2020)" .
 
+<https://w3id.org/synapse/nfosi/vocab/Population%20Origins%20or%20Ancestry%20Research%20Only> skos:definition "Population Origins or Ancestry Research Only - User must describe research use in IDU statement" .
+
+<https://w3id.org/synapse/nfosi/vocab/Population%20Origins%20or%20Ancestry%20Research%20Prohibited> skos:definition "Population Origins or Ancestry Research Prohibited" .
+
 <https://w3id.org/synapse/nfosi/vocab/Portland%20State%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/Prairie%20View%20A%26M%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
@@ -1790,6 +1786,8 @@
 <https://w3id.org/synapse/nfosi/vocab/Princeton%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/Private%20Access> skos:definition "Not accessible outside the project admins and study team -- check whether you are on an access team or contact the PI/admin of access team to request access." .
+
+<https://w3id.org/synapse/nfosi/vocab/Project%20Specific%20Restriction> skos:definition "Project Specific Restriction - User prompted to provide IDU statement" .
 
 <https://w3id.org/synapse/nfosi/vocab/Promega%20GloMax%20Discover> dcterms:source <https://www.promega.com/products/microplate-readers-fluorometers-luminometers/microplate-readers/glomax-discover-system/?catNum=GM3000> ;
     skos:definition "(From vendor) Microplate reader with high-performance luminescence, fluorescence, UV-Visible absorbance, BRET and FRET, two-color filtered luminescence and kinetic measurement capabilities." .
@@ -1805,6 +1803,10 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Public%20Domain> dcterms:source <https://creativecommons.org/public-domain/pdm/> ;
     skos:definition "Technically not a license, the public domain mark relinquishes all rights to a dataset and dedicates the dataset to the public domain." .
+
+<https://w3id.org/synapse/nfosi/vocab/Publication%20Moratorium> skos:definition "Publication Moratorium - Provide date [ISO 8601]" .
+
+<https://w3id.org/synapse/nfosi/vocab/Publication%20Required> skos:definition "Publication Required" .
 
 <https://w3id.org/synapse/nfosi/vocab/Purdue%20University%2C%20West%20Lafayette> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
@@ -1833,8 +1835,6 @@
 <https://w3id.org/synapse/nfosi/vocab/REC> dcterms:source <https://nipy.org/nibabel/reference/nibabel.parrec.html> ;
     skos:definition "This is yet another MRI image format generated by Philips scanners. It is an ASCII header (PAR) plus a binary blob (REC)." .
 
-<https://w3id.org/synapse/nfosi/vocab/RESTRICTED-USE> skos:definition "Contact the data creator regarding restricted usage of the data." .
-
 <https://w3id.org/synapse/nfosi/vocab/RNA%20array> skos:definition "RNA measurements captured by array technology" ;
     linkml:meaning <http://purl.obolibrary.org/obo/OBI_0001463> .
 
@@ -1847,10 +1847,6 @@
 
 <https://w3id.org/synapse/nfosi/vocab/RPPA> skos:definition "Reverse phase protein array (RPPA) is a an assay that measures multiple protein expression levels in a large number of biological samples simultaneously using high quality antibodies" ;
     linkml:meaning <http://www.bioassayontology.org/bao#BAO_0010030> .
-
-<https://w3id.org/synapse/nfosi/vocab/RS> skos:definition "Research Specific Restrictions - Provide detail" .
-
-<https://w3id.org/synapse/nfosi/vocab/RTN> skos:definition "Return to Database or Resource" .
 
 <https://w3id.org/synapse/nfosi/vocab/Rattus%20norvegicus> skos:definition "Rattus with taxonomy ID:10116 and Genbank common name: Norway rat" ;
     linkml:meaning <https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=10116&lvl=3&lin=f&keep=1&srchmode=1&unlock> .
@@ -1866,7 +1862,11 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Rensselaer%20Polytechnic%20Institute> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
+<https://w3id.org/synapse/nfosi/vocab/Research%20Specific%20Restrictions> skos:definition "Research Specific Restrictions - Provide detail" .
+
 <https://w3id.org/synapse/nfosi/vocab/Restricted%20Access> skos:definition "This publication is restricted access" .
+
+<https://w3id.org/synapse/nfosi/vocab/Return%20to%20Database%20or%20Resource> skos:definition "Return to Database or Resource" .
 
 <https://w3id.org/synapse/nfosi/vocab/Rhesus%20macaque> skos:definition "Macaca mulatta with taxonomy ID: 9544 and Genbank common name: Rhesus monkey" ;
     linkml:meaning <https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9544&lvl=3&p=has_linkout&p=blast_url&p=genome_blast&p=mapview&lin=f&keep=1&srchmode=1&unlock> .
@@ -2108,8 +2108,6 @@
 
 <https://w3id.org/synapse/nfosi/vocab/TPM> skos:definition "Transcript per million" .
 
-<https://w3id.org/synapse/nfosi/vocab/TS> skos:definition "Time Limit on Use - Provide date [ISO 8601]" .
-
 <https://w3id.org/synapse/nfosi/vocab/Temple%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/Tennessee%20State%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
@@ -2131,6 +2129,8 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Thomas%20Jefferson%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
+<https://w3id.org/synapse/nfosi/vocab/Time%20Limit%20on%20Use> skos:definition "Time Limit on Use - Provide date [ISO 8601]" .
+
 <https://w3id.org/synapse/nfosi/vocab/Toshiba%20Vantage%20Titan%201.5T> dcterms:source <https://www.oncologysystems.com/inventory/medical-equipment-for-sale/used-mri-systems/toshiba-vantage-titan-wide-bore-1-5t-mri-systems> .
 
 <https://w3id.org/synapse/nfosi/vocab/TriKinetics%20activity%20monitoring> dcterms:source <https://trikinetics.com/> ;
@@ -2151,8 +2151,6 @@
 <https://w3id.org/synapse/nfosi/vocab/Tuskegee%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/UNKNOWN> skos:definition "The license for the dataset is not known." .
-
-<https://w3id.org/synapse/nfosi/vocab/US> skos:definition "User Specific Restriction - User may be required to register, enhance their profile, join a Synapse Team, or have a specific authentication, e.g., 2FA or RAS" .
 
 <https://w3id.org/synapse/nfosi/vocab/Under%20Embargo> skos:definition "Data is present in the project but not accessible to anyone outside the project admins and study team." ;
     skos:editorialNote "When data is first uploaded, the status should change from “Data Pending” to “Under Embargo”." .
@@ -2402,6 +2400,8 @@
 <https://w3id.org/synapse/nfosi/vocab/University%20of%20Wyoming> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/Unstranded> skos:definition "Either read 1 or read 2 can align to the RNA strand." .
+
+<https://w3id.org/synapse/nfosi/vocab/User%20Specific%20Restriction> skos:definition "User Specific Restriction - User may be required to register, enhance their profile, join a Synapse Team, or have a specific authentication, e.g., 2FA or RAS" .
 
 <https://w3id.org/synapse/nfosi/vocab/Utah%20State%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
@@ -3936,8 +3936,6 @@
 <https://w3id.org/synapse/nfosi/vocab/zip> skos:definition "zip is a format standard of a digital entity that is conformant with the PKWARE .ZIP file format specification" ;
     linkml:meaning <http://purl.obolibrary.org/obo/OBI_0000325> .
 
-<https://w3id.org/synapse/nfosi/vocab/ANNUBP> skos:definition "Atypical neurofibromatous neoplasms of uncertain biologic potential is a provisional classification for lesions displaying at least two features: atypia, loss of neurofibroma architecture, high cellularity, and/or mitotic activity >1/50 but <3/10 high power fields. They can be inconsistently diagnosed as atypical neurofibroma or low-grade MPNST. See https://pubmed.ncbi.nlm.nih.gov/28551330/." .
-
 <https://w3id.org/synapse/nfosi/vocab/Atypical%20Neurofibroma> skos:definition "A neurofibroma characterized by the presence of cellular pleomorphism." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C41426> .
 
@@ -4016,6 +4014,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/alternateName> a linkml:SlotDefinition ;
     dcterms:title "Alternate Name" ;
+    skos:definition "An altername name that can be used for search and discovery improvement." ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
 
 <https://w3id.org/synapse/nfosi/vocab/blood> skos:definition "A fluid that is composed of blood plasma and erythrocytes.",
@@ -4037,16 +4036,18 @@
 
 <https://w3id.org/synapse/nfosi/vocab/conditionsOfAccess> a linkml:SlotDefinition ;
     dcterms:title "User Specific Restriction" ;
-    skos:definition "Additional requirements a user may need. This could include registering, updating their profile, joining a Synapse Team, or using specific authentication methods like 2FA or RAS." ;
+    skos:definition "Additional requirements a user may need outside of Data Use Modifiers. This could include additional registration, updating profile information, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown." ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
 
 <https://w3id.org/synapse/nfosi/vocab/countryOfOrigin> a linkml:SlotDefinition ;
     dcterms:title "Country of Origin" ;
+    skos:definition "Origin of individuals from which data were generated. Omit if not applicable/unknown." ;
+    linkml:multivalued true ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
 
 <https://w3id.org/synapse/nfosi/vocab/dataUseModifiers> a linkml:SlotDefinition ;
     dcterms:title "Data Use Modifiers" ;
-    skos:definition "List of data use ontolgoy (DUO) terms that are true for dataset." ;
+    skos:definition "List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Omit property if not applicable/unknown." ;
     linkml:multivalued true ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/DuoEnum> .
 
@@ -4104,11 +4105,13 @@
 
 <https://w3id.org/synapse/nfosi/vocab/keywords> a linkml:SlotDefinition ;
     dcterms:title "Keywords" ;
+    linkml:multivalued true ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:required true .
 
 <https://w3id.org/synapse/nfosi/vocab/measurementTechnique> a linkml:SlotDefinition ;
     dcterms:title "Measurement Technique" ;
+    skos:definition "Assay used to generate original data. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia)." ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/AssayEnum> .
 
 <https://w3id.org/synapse/nfosi/vocab/metadata> skos:definition "A file of clinical, technical, or other parameters that describe a dataset.",
@@ -4118,11 +4121,6 @@
 <https://w3id.org/synapse/nfosi/vocab/mitochondria> dcterms:source <https://github.com/HumanCellAtlas/metadata-schema/blob/master/json_schema/type/process/sequencing/library_preparation_process.json> ;
     skos:definition "Mitochondria only" .
 
-<https://w3id.org/synapse/nfosi/vocab/name> a linkml:SlotDefinition ;
-    dcterms:title "Name" ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:required true .
-
 <https://w3id.org/synapse/nfosi/vocab/pmid> a linkml:SlotDefinition ;
     dcterms:title "PubMed ID" ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
@@ -4130,6 +4128,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__accessType> a linkml:SlotDefinition ;
     dcterms:title "Access Type" ;
+    skos:definition "Access type for the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "accessType" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4140,6 +4139,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__alternateName> a linkml:SlotDefinition ;
     dcterms:title "Alternate Name" ;
+    skos:definition "An altername name that can be used for search and discovery improvement." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "alternateName" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4149,7 +4149,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__conditionsOfAccess> a linkml:SlotDefinition ;
     dcterms:title "User Specific Restriction" ;
-    skos:definition "Additional requirements a user may need. This could include registering, updating their profile, joining a Synapse Team, or using specific authentication methods like 2FA or RAS." ;
+    skos:definition "Additional requirements a user may need outside of Data Use Modifiers. This could include additional registration, updating profile information, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "conditionsOfAccess" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4159,6 +4159,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__contributor> a linkml:SlotDefinition ;
     dcterms:title "Contributor(s)" ;
+    skos:definition "Organization(s) or person(s) that contributed to the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "contributor" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4169,15 +4170,18 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__countryOfOrigin> a linkml:SlotDefinition ;
     dcterms:title "Country of Origin" ;
+    skos:definition "Origin of individuals from which data were generated. Omit if not applicable/unknown." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "countryOfOrigin" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
+    linkml:multivalued true ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/countryOfOrigin> .
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__creator> a linkml:SlotDefinition ;
     dcterms:title "Creator" ;
+    skos:definition "Organization or person that is creator of the dataset. Default is the PI of the project and/or the user who created all files in the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "creator" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4188,6 +4192,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__dataType> a linkml:SlotDefinition ;
     dcterms:title "Data Type" ;
+    skos:definition "Reflects the data types of files within the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "dataType" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4199,7 +4204,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__dataUseModifiers> a linkml:SlotDefinition ;
     dcterms:title "Data Use Modifiers" ;
-    skos:definition "List of data use ontolgoy (DUO) terms that are true for dataset." ;
+    skos:definition "List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Omit property if not applicable/unknown." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "dataUseModifiers" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4220,6 +4225,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__description> a linkml:SlotDefinition ;
     dcterms:title "Description" ;
+    skos:definition "Blurb for the dataset; should be no more than 500 characters." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "description" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4264,6 +4270,7 @@
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "keywords" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
+    linkml:multivalued true ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:required true ;
@@ -4271,6 +4278,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__license> a linkml:SlotDefinition ;
     dcterms:title "License" ;
+    skos:definition "Unless information for license is clear, this should default to UNKNOWN." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "license" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4281,6 +4289,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__manifestation> a linkml:SlotDefinition ;
     dcterms:title "Manifestation(s)" ;
+    skos:definition "Refers to the phenotype(s) studied in the dataset. Omit if not applicable." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "manifestation" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4291,6 +4300,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__measurementTechnique> a linkml:SlotDefinition ;
     dcterms:title "Measurement Technique" ;
+    skos:definition "Assay used to generate original data. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia)." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "measurementTechnique" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4298,19 +4308,9 @@
     linkml:range <https://w3id.org/synapse/nfosi/vocab/AssayEnum> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/measurementTechnique> .
 
-<https://w3id.org/synapse/nfosi/vocab/portalDataset__name> a linkml:SlotDefinition ;
-    dcterms:title "Name" ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    skos:prefLabel "name" ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:required true ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/name> .
-
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__series> a linkml:SlotDefinition ;
     dcterms:title "Data Series" ;
-    skos:definition "Datasets may belong to a curated series. This should be assigned by staff only." ;
+    skos:definition "Datasets may belong to a curated series. Should be assigned by staff only; omit property if not applicable/unknown." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "series" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4320,6 +4320,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__species> a linkml:SlotDefinition ;
     dcterms:title "Species" ;
+    skos:definition "Species of the organism(s) from which the data were generated. Omit property if not applicable, such as for data like compounds or other non-biological data." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "species" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4330,6 +4331,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__studyId> a linkml:SlotDefinition ;
     dcterms:title "Study ID" ;
+    skos:definition "Identifier for the study (project) from which the dataset was derived." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "studyId" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4340,16 +4342,28 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__subject> a linkml:SlotDefinition ;
     dcterms:title "Subject" ;
+    skos:definition "Applicable subject term(s) for dataset cataloging; use the Library of Congress Subject Headings (LCSH) scheme." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "subject" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
+    linkml:multivalued true ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/subject> .
 
+<https://w3id.org/synapse/nfosi/vocab/portalDataset__title> a linkml:SlotDefinition ;
+    dcterms:title "Title" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "title" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/title> .
+
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__visualizeDataOn> a linkml:SlotDefinition ;
     dcterms:title "Visualize Data On" ;
-    skos:definition "Link(s) to where data may be visualized in a separate application." ;
+    skos:definition "Link(s) to where data may be visualized in a separate application. Omit property if not applicable/unknown." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "visualizeDataOn" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4360,7 +4374,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__yearProcessed> a linkml:SlotDefinition ;
     dcterms:title "Year Processed" ;
-    skos:definition "Year data were processed. Typically only used for processed data type and when data series is \"NF-OSI Processed Data\"." ;
+    skos:definition "Year data were processed. Only for processed data type and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "yearProcessed" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4645,11 +4659,13 @@
 
 <https://w3id.org/synapse/nfosi/vocab/subject> a linkml:SlotDefinition ;
     dcterms:title "Subject" ;
+    skos:definition "Applicable subject term(s) for dataset cataloging; use the Library of Congress Subject Headings (LCSH) scheme." ;
+    linkml:multivalued true ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
 
 <https://w3id.org/synapse/nfosi/vocab/visualizeDataOn> a linkml:SlotDefinition ;
     dcterms:title "Visualize Data On" ;
-    skos:definition "Link(s) to where data may be visualized in a separate application." ;
+    skos:definition "Link(s) to where data may be visualized in a separate application. Omit property if not applicable/unknown." ;
     linkml:multivalued true ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
 
@@ -6136,29 +6152,29 @@
 <https://w3id.org/synapse/nfosi/vocab/DuoEnum> dcterms:title "Data Use Modifiers" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/DuoEnum> ;
-    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/CC>,
-        <https://w3id.org/synapse/nfosi/vocab/COL>,
-        <https://w3id.org/synapse/nfosi/vocab/DS>,
-        <https://w3id.org/synapse/nfosi/vocab/GRU>,
-        <https://w3id.org/synapse/nfosi/vocab/GS>,
-        <https://w3id.org/synapse/nfosi/vocab/GSO>,
-        <https://w3id.org/synapse/nfosi/vocab/HMB>,
-        <https://w3id.org/synapse/nfosi/vocab/IRB>,
-        <https://w3id.org/synapse/nfosi/vocab/IS>,
-        <https://w3id.org/synapse/nfosi/vocab/MOR>,
-        <https://w3id.org/synapse/nfosi/vocab/NCU>,
-        <https://w3id.org/synapse/nfosi/vocab/NMDS>,
-        <https://w3id.org/synapse/nfosi/vocab/NPOA>,
-        <https://w3id.org/synapse/nfosi/vocab/NPU>,
-        <https://w3id.org/synapse/nfosi/vocab/NPUNCU>,
-        <https://w3id.org/synapse/nfosi/vocab/NRES>,
-        <https://w3id.org/synapse/nfosi/vocab/POA>,
-        <https://w3id.org/synapse/nfosi/vocab/PS>,
-        <https://w3id.org/synapse/nfosi/vocab/PUB>,
-        <https://w3id.org/synapse/nfosi/vocab/RS>,
-        <https://w3id.org/synapse/nfosi/vocab/RTN>,
-        <https://w3id.org/synapse/nfosi/vocab/TS>,
-        <https://w3id.org/synapse/nfosi/vocab/US> .
+    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/Clinical%20Care%20Use>,
+        <https://w3id.org/synapse/nfosi/vocab/Collaboration%20Required>,
+        <https://w3id.org/synapse/nfosi/vocab/Disease%20Specific%20Research>,
+        <https://w3id.org/synapse/nfosi/vocab/Ethics%20Approval%20Required>,
+        <https://w3id.org/synapse/nfosi/vocab/General%20Research%20Use>,
+        <https://w3id.org/synapse/nfosi/vocab/Genetic%20Studies%20Only>,
+        <https://w3id.org/synapse/nfosi/vocab/Geographical%20Restriction>,
+        <https://w3id.org/synapse/nfosi/vocab/Health%20or%20Medical%20or%20Biomedical%20Research>,
+        <https://w3id.org/synapse/nfosi/vocab/Institution%20Specific%20Restriction>,
+        <https://w3id.org/synapse/nfosi/vocab/No%20General%20Methods%20Research>,
+        <https://w3id.org/synapse/nfosi/vocab/No%20Restriction>,
+        <https://w3id.org/synapse/nfosi/vocab/Non-Commercial%20Use%20Only>,
+        <https://w3id.org/synapse/nfosi/vocab/Not-for-Profit%20Non-Commercial%20Use%20Only>,
+        <https://w3id.org/synapse/nfosi/vocab/Not-for-Profit%20Organisation%20Use%20Only>,
+        <https://w3id.org/synapse/nfosi/vocab/Population%20Origins%20or%20Ancestry%20Research%20Only>,
+        <https://w3id.org/synapse/nfosi/vocab/Population%20Origins%20or%20Ancestry%20Research%20Prohibited>,
+        <https://w3id.org/synapse/nfosi/vocab/Project%20Specific%20Restriction>,
+        <https://w3id.org/synapse/nfosi/vocab/Publication%20Moratorium>,
+        <https://w3id.org/synapse/nfosi/vocab/Publication%20Required>,
+        <https://w3id.org/synapse/nfosi/vocab/Research%20Specific%20Restrictions>,
+        <https://w3id.org/synapse/nfosi/vocab/Return%20to%20Database%20or%20Resource>,
+        <https://w3id.org/synapse/nfosi/vocab/Time%20Limit%20on%20Use>,
+        <https://w3id.org/synapse/nfosi/vocab/User%20Specific%20Restriction> .
 
 <https://w3id.org/synapse/nfosi/vocab/FundingAgencyEnum> skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/FundingAgencyEnum> ;
@@ -6213,7 +6229,6 @@
         <https://w3id.org/synapse/nfosi/vocab/ODC-ODbL>,
         <https://w3id.org/synapse/nfosi/vocab/ODC-PDDL>,
         <https://w3id.org/synapse/nfosi/vocab/Public%20Domain>,
-        <https://w3id.org/synapse/nfosi/vocab/RESTRICTED-USE>,
         <https://w3id.org/synapse/nfosi/vocab/UNKNOWN> .
 
 <https://w3id.org/synapse/nfosi/vocab/MPNSTCharacterization> a linkml:SlotDefinition ;
@@ -6237,24 +6252,24 @@
 
 <https://w3id.org/synapse/nfosi/vocab/ManifestationEnum> skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/ManifestationEnum> ;
-    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/ANNUBP>,
+    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/Aneurysmal%20Bone%20Cyst%20%28ANNUBP%29>,
         <https://w3id.org/synapse/nfosi/vocab/Atypical%20Neurofibroma>,
         <https://w3id.org/synapse/nfosi/vocab/Behavioral>,
         <https://w3id.org/synapse/nfosi/vocab/Breast%20Cancer>,
         <https://w3id.org/synapse/nfosi/vocab/Cognition>,
         <https://w3id.org/synapse/nfosi/vocab/Cutaneous%20Neurofibroma>,
         <https://w3id.org/synapse/nfosi/vocab/Glioma>,
-        <https://w3id.org/synapse/nfosi/vocab/High%20Grade%20Glioma>,
-        <https://w3id.org/synapse/nfosi/vocab/JMML>,
-        <https://w3id.org/synapse/nfosi/vocab/Low%20Grade%20Glioma>,
-        <https://w3id.org/synapse/nfosi/vocab/MPNST>,
+        <https://w3id.org/synapse/nfosi/vocab/High-Grade%20Glioma>,
+        <https://w3id.org/synapse/nfosi/vocab/Juvenile%20Myelomonocytic%20Leukemia%20%28JMML%29>,
+        <https://w3id.org/synapse/nfosi/vocab/Low-Grade%20Glioma>,
+        <https://w3id.org/synapse/nfosi/vocab/Malignant%20Peripheral%20Nerve%20Sheath%20Tumor%20%28MPNST%29>,
         <https://w3id.org/synapse/nfosi/vocab/Memory>,
         <https://w3id.org/synapse/nfosi/vocab/Meningioma>,
         <https://w3id.org/synapse/nfosi/vocab/Pain>,
         <https://w3id.org/synapse/nfosi/vocab/Plexiform%20Neurofibroma>,
         <https://w3id.org/synapse/nfosi/vocab/Quality%20of%20Life>,
-        <https://w3id.org/synapse/nfosi/vocab/SMN>,
         <https://w3id.org/synapse/nfosi/vocab/Schwannoma>,
+        <https://w3id.org/synapse/nfosi/vocab/Spinal%20Meningioma%20%28SMN%29>,
         <https://w3id.org/synapse/nfosi/vocab/Vision%20Loss> .
 
 <https://w3id.org/synapse/nfosi/vocab/MultipleImagingDiagnosisEnum> skos:definition "Enumerations describing the manifestation of tumors confirmed via imaging with one or multiple sites being the most relevant result." ;
@@ -7608,7 +7623,8 @@
 <https://w3id.org/synapse/nfosi/vocab/accessType> a linkml:SlotDefinition ;
     dcterms:title "Access Type" ;
     rdfs:seeAlso <https://w3id.org/synapse/nfosi/vocab/accessRequirements> ;
-    skos:definition "Indicates access type / possible procedures needed for access to the resource." ;
+    skos:definition "Access type for the dataset.",
+        "Indicates access type / possible procedures needed for access to the resource." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/accessType> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/AccessTypeEnum> ;
@@ -7707,7 +7723,8 @@
 <https://w3id.org/synapse/nfosi/vocab/contributor> a linkml:SlotDefinition ;
     dcterms:title "Contributor(s)" ;
     rdfs:seeAlso <https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#contributor> ;
-    skos:definition "An entity responsible for making contributions to the resource." ;
+    skos:definition "An entity responsible for making contributions to the resource.",
+        "Organization(s) or person(s) that contributed to the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/contributor> ;
     linkml:multivalued true ;
@@ -7717,7 +7734,8 @@
 <https://w3id.org/synapse/nfosi/vocab/creator> a linkml:SlotDefinition ;
     dcterms:title "Creator" ;
     rdfs:seeAlso <https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#creator> ;
-    skos:definition "An entity responsible for making the resource." ;
+    skos:definition "An entity responsible for making the resource.",
+        "Organization or person that is creator of the dataset. Default is the PI of the project and/or the user who created all files in the dataset." ;
     skos:editorialNote "Recommended practice is to identify the creator with a URI. If this is not possible or feasible, a literal value that identifies the creator may be provided." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/creator> ;
@@ -7745,7 +7763,8 @@
 
 <https://w3id.org/synapse/nfosi/vocab/description> a linkml:SlotDefinition ;
     dcterms:title "Description" ;
-    skos:definition "Text describing a resource." ;
+    skos:definition "Blurb for the dataset; should be no more than 500 characters.",
+        "Text describing a resource." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/description> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
@@ -7916,7 +7935,7 @@
 <https://w3id.org/synapse/nfosi/vocab/series> a linkml:SlotDefinition ;
     dcterms:title "Data Series" ;
     rdfs:seeAlso dcat:inSeries ;
-    skos:definition "Datasets may belong to a curated series. This should be assigned by staff only.",
+    skos:definition "Datasets may belong to a curated series. Should be assigned by staff only; omit property if not applicable/unknown.",
         "Title of a custom series that this resource is part of, if any." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/series> ;
@@ -7977,7 +7996,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/yearProcessed> a linkml:SlotDefinition ;
     dcterms:title "Year Processed" ;
-    skos:definition "Year data were processed. Typically only used for processed data type and when data series is \"NF-OSI Processed Data\".",
+    skos:definition "Year data were processed. Only for processed data type and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
         """Year in which the resource was processed/derived, if applicable.  This is only required for data processed by NF-OSI for tracking purposes, optional for community-contributed datasets. 
 """ ;
     skos:editorialNote "There is no 'year' validation rule and `date` rule requires actual date format" ;
@@ -8657,7 +8676,8 @@
 
 <https://w3id.org/synapse/nfosi/vocab/license> a linkml:SlotDefinition ;
     dcterms:title "License" ;
-    skos:definition "Link to a license or name of license applicable for the resource." ;
+    skos:definition "Link to a license or name of license applicable for the resource.",
+        "Unless information for license is clear, this should default to UNKNOWN." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/license> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/Protocol>,
@@ -8684,19 +8704,6 @@
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:required true ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/studyName> .
-
-<https://w3id.org/synapse/nfosi/vocab/title> a linkml:SlotDefinition ;
-    dcterms:title "Title" ;
-    rdfs:seeAlso <https://www.w3.org/TR/vocab-dcat-3/#Property:resource_title> ;
-    skos:definition "Title of a resource." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/title> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/Protocol>,
-        <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:required true ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/title> .
 
 <https://w3id.org/synapse/nfosi/vocab/ImagingAssayTemplate> a linkml:ClassDefinition ;
     skos:definition "General template for describing imaging data." ;
@@ -8933,7 +8940,8 @@
 <https://w3id.org/synapse/nfosi/vocab/manifestation> a linkml:SlotDefinition ;
     dcterms:title "Manifestation",
         "Manifestation(s)" ;
-    skos:definition "An associated phenotype characteristic." ;
+    skos:definition "An associated phenotype characteristic.",
+        "Refers to the phenotype(s) studied in the dataset. Omit if not applicable." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/manifestation> ;
     linkml:multivalued true ;
@@ -8944,12 +8952,26 @@
 <https://w3id.org/synapse/nfosi/vocab/studyId> a linkml:SlotDefinition ;
     dcterms:title "Linked Study ID",
         "Study ID" ;
-    skos:definition "Id of study." ;
+    skos:definition "Id of study.",
+        "Identifier for the study (project) from which the dataset was derived." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/studyId> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:required true ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/studyId> .
+
+<https://w3id.org/synapse/nfosi/vocab/title> a linkml:SlotDefinition ;
+    dcterms:title "Title" ;
+    rdfs:seeAlso <https://www.w3.org/TR/vocab-dcat-3/#Property:resource_title> ;
+    skos:definition "Title of a resource." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/title> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/Protocol>,
+        <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/title> .
 
 <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate> a linkml:ClassDefinition ;
     skos:definition "Specimen-level data, whether from human or animal." ;
@@ -9279,9 +9301,9 @@
 """ ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/specimenType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
@@ -9437,9 +9459,9 @@
         "https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/libraryStrand> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
@@ -10048,9 +10070,9 @@
     skos:definition "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/modelSystemName> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10129,9 +10151,9 @@
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sex> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10157,9 +10179,9 @@
     skos:definition "Genotype of NF2 gene in the biospecimen from which the data were derived, if known" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/nf2Genotype> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10194,7 +10216,8 @@
 
 <https://w3id.org/synapse/nfosi/vocab/species> a linkml:SlotDefinition ;
     dcterms:title "Species" ;
-    skos:definition "The name of a species (typically a taxonomic group) of organism." ;
+    skos:definition "Species of the organism(s) from which the data were generated. Omit property if not applicable, such as for data like compounds or other non-biological data.",
+        "The name of a species (typically a taxonomic group) of organism." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/species> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
@@ -10343,12 +10366,13 @@
 <https://w3id.org/synapse/nfosi/vocab/dataType> a linkml:SlotDefinition ;
     dcterms:title "Data Type" ;
     skos:definition """Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.
-""" ;
+""",
+        "Reflects the data types of files within the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Metadata> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Metadata> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/dataType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/EpidemiologyDataTemplate>,
@@ -10384,11 +10408,11 @@
         <https://w3id.org/synapse/nfosi/vocab/license>,
         <https://w3id.org/synapse/nfosi/vocab/manifestation>,
         <https://w3id.org/synapse/nfosi/vocab/measurementTechnique>,
-        <https://w3id.org/synapse/nfosi/vocab/name>,
         <https://w3id.org/synapse/nfosi/vocab/series>,
         <https://w3id.org/synapse/nfosi/vocab/species>,
         <https://w3id.org/synapse/nfosi/vocab/studyId>,
         <https://w3id.org/synapse/nfosi/vocab/subject>,
+        <https://w3id.org/synapse/nfosi/vocab/title>,
         <https://w3id.org/synapse/nfosi/vocab/visualizeDataOn>,
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed> ;
     linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -10411,11 +10435,11 @@
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__license>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__manifestation>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__measurementTechnique>,
-        <https://w3id.org/synapse/nfosi/vocab/portalDataset__name>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__series>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__species>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__studyId>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__subject>,
+        <https://w3id.org/synapse/nfosi/vocab/portalDataset__title>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__visualizeDataOn>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__yearProcessed> .
 

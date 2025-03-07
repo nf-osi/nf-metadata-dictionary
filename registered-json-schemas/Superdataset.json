@@ -3,8 +3,8 @@
   "description": "A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets.",
   "properties": {
     "accessType": {
+      "description": "Access type for the dataset.",
       "title": "Access Type",
-      "description": "",
       "enum": [
         "Public Access",
         "Open Access",
@@ -14,15 +14,17 @@
       "type": "string"
     },
     "alternateName": {
+      "description": "An altername name that can be used for search and discovery improvement.",
       "title": "Alternate Name",
       "type": "string"
     },
     "conditionsOfAccess": {
-      "description": "Additional requirements a user may need. This could include registering, updating their profile, joining a Synapse Team, or using specific authentication methods like 2FA or RAS.",
+      "description": "Additional requirements a user may need outside of Data Use Modifiers. This could include additional registration, updating profile information, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown.",
       "title": "User Specific Restriction",
       "type": "string"
     },
     "contributor": {
+      "description": "Organization(s) or person(s) that contributed to the dataset.",
       "items": {
         "type": "string"
       },
@@ -30,14 +32,20 @@
       "type": "array"
     },
     "countryOfOrigin": {
+      "description": "Origin of individuals from which data were generated. Omit if not applicable/unknown.",
+      "items": {
+        "type": "string"
+      },
       "title": "Country of Origin",
-      "type": "string"
+      "type": "array"
     },
     "creator": {
+      "description": "Organization or person that is creator of the dataset. Default is the PI of the project and/or the user who created all files in the dataset.",
       "title": "Creator",
       "type": "string"
     },
     "dataType": {
+      "description": "Reflects the data types of files within the dataset.",
       "items": {
         "description": "What the data (file) contains.",
         "enum": [
@@ -87,33 +95,33 @@
       "type": "array"
     },
     "dataUseModifiers": {
-      "description": "List of data use ontolgoy (DUO) terms that are true for dataset.",
+      "description": "List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Omit property if not applicable/unknown.",
       "items": {
         "description": "",
         "enum": [
-          "CC",
-          "COL",
-          "DS",
-          "IRB",
-          "GRU",
-          "GSO",
-          "GS",
-          "HMB",
-          "IS",
-          "NMDS",
-          "NRES",
-          "NPUNCU",
-          "NCU",
-          "NPU",
-          "POA",
-          "NPOA",
-          "PS",
-          "MOR",
-          "PUB",
-          "RS",
-          "RTN",
-          "TS",
-          "US"
+          "Clinical Care Use",
+          "Collaboration Required",
+          "Disease Specific Research",
+          "Ethics Approval Required",
+          "General Research Use",
+          "Genetic Studies Only",
+          "Geographical Restriction",
+          "Health or Medical or Biomedical Research",
+          "Institution Specific Restriction",
+          "No General Methods Research",
+          "No Restriction",
+          "Not-for-Profit Non-Commercial Use Only",
+          "Non-Commercial Use Only",
+          "Not-for-Profit Organisation Use Only",
+          "Population Origins or Ancestry Research Only",
+          "Population Origins or Ancestry Research Prohibited",
+          "Project Specific Restriction",
+          "Publication Moratorium",
+          "Publication Required",
+          "Research Specific Restrictions",
+          "Return to Database or Resource",
+          "Time Limit on Use",
+          "User Specific Restriction"
         ],
         "title": "Data Use Modifiers",
         "type": "string"
@@ -127,6 +135,7 @@
       "type": "integer"
     },
     "description": {
+      "description": "Blurb for the dataset; should be no more than 500 characters.",
       "title": "Description",
       "type": "string"
     },
@@ -153,9 +162,9 @@
       "items": {
         "description": "",
         "enum": [
-          "NTAP",
           "CTF",
           "GFF",
+          "NTAP",
           "NIH-NCI",
           "Independent",
           "Other"
@@ -175,15 +184,17 @@
       "type": "string"
     },
     "keywords": {
+      "items": {
+        "type": "string"
+      },
       "title": "Keywords",
-      "type": "string"
+      "type": "array"
     },
     "license": {
+      "description": "Unless information for license is clear, this should default to UNKNOWN.",
       "title": "License",
-      "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
       "enum": [
         "UNKNOWN",
-        "RESTRICTED-USE",
         "Public Domain",
         "CC-0",
         "ODC-PDDL",
@@ -199,28 +210,29 @@
       "type": "string"
     },
     "manifestation": {
+      "description": "Refers to the phenotype(s) studied in the dataset. Omit if not applicable.",
       "items": {
         "description": "",
         "enum": [
-          "Plexiform Neurofibroma",
-          "MPNST",
-          "Cutaneous Neurofibroma",
-          "Schwannoma",
-          "Low Grade Glioma",
-          "High Grade Glioma",
-          "Meningioma",
-          "ANNUBP",
-          "Glioma",
-          "JMML",
-          "SMN",
+          "Aneurysmal Bone Cyst (ANNUBP)",
           "Atypical Neurofibroma",
-          "Breast Cancer",
           "Behavioral",
-          "Quality of Life",
-          "Vision Loss",
-          "Memory",
+          "Breast Cancer",
           "Cognition",
-          "Pain"
+          "Cutaneous Neurofibroma",
+          "Glioma",
+          "High-Grade Glioma",
+          "Juvenile Myelomonocytic Leukemia (JMML)",
+          "Low-Grade Glioma",
+          "Meningioma",
+          "Memory",
+          "Malignant Peripheral Nerve Sheath Tumor (MPNST)",
+          "Pain",
+          "Plexiform Neurofibroma",
+          "Quality of Life",
+          "Schwannoma",
+          "Spinal Meningioma (SMN)",
+          "Vision Loss"
         ],
         "title": "ManifestationEnum",
         "type": "string"
@@ -229,8 +241,8 @@
       "type": "array"
     },
     "measurementTechnique": {
+      "description": "Assay used to generate original data. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).",
       "title": "Measurement Technique",
-      "description": "",
       "enum": [
         "2D AlamarBlue absorbance",
         "2D AlamarBlue fluorescence",
@@ -422,12 +434,8 @@
       ],
       "type": "string"
     },
-    "name": {
-      "title": "Name",
-      "type": "string"
-    },
     "series": {
-      "description": "Datasets may belong to a curated series. This should be assigned by staff only.",
+      "description": "Datasets may belong to a curated series. Should be assigned by staff only; omit property if not applicable/unknown.",
       "title": "Data Series",
       "enum": [
         "NF-OSI Processed Data"
@@ -435,6 +443,7 @@
       "type": "string"
     },
     "species": {
+      "description": "Species of the organism(s) from which the data were generated. Omit property if not applicable, such as for data like compounds or other non-biological data.",
       "items": {
         "description": "",
         "enum": [
@@ -457,15 +466,24 @@
       "type": "array"
     },
     "studyId": {
+      "description": "Identifier for the study (project) from which the dataset was derived.",
       "title": "Study ID",
       "type": "string"
     },
     "subject": {
+      "description": "Applicable subject term(s) for dataset cataloging; use the Library of Congress Subject Headings (LCSH) scheme.",
+      "items": {
+        "type": "string"
+      },
       "title": "Subject",
+      "type": "array"
+    },
+    "title": {
+      "title": "Title",
       "type": "string"
     },
     "visualizeDataOn": {
-      "description": "Link(s) to where data may be visualized in a separate application.",
+      "description": "Link(s) to where data may be visualized in a separate application. Omit property if not applicable/unknown.",
       "items": {
         "type": "string"
       },
@@ -473,7 +491,7 @@
       "type": "array"
     },
     "yearProcessed": {
-      "description": "Year data were processed. Typically only used for processed data type and when data series is \"NF-OSI Processed Data\".",
+      "description": "Year data were processed. Only for processed data type and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
       "title": "Year Processed",
       "type": "integer"
     }
