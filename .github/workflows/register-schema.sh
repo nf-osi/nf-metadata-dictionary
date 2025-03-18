@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for FILE in $1
+for FILE in "$@"
 do
     # Synapse does not allow additionalProperties in schema, so remove that first
     jq 'del(.additionalProperties)' $FILE > temp.json
@@ -26,7 +26,8 @@ do
             echo "Error: $(echo $STATUS | jq -r '.reason')"
             exit 1
         else
-            echo "Success:"
+            echo "Successfully registered or updated registration for $FILE!"
+            echo "Here is the version info:"
             echo "$STATUS" | jq -e '.newVersionInfo'
             break
         fi
