@@ -12,22 +12,22 @@
 
 <https://w3id.org/synapse/nfosi/vocab/nfosi> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace skos: ;
-            sh:prefix "skos" ],
-        [ sh:namespace linkml: ;
-            sh:prefix "linkml" ],
-        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
+    sh:declare [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
             sh:prefix "nf" ],
-        [ sh:namespace schema1: ;
-            sh:prefix "schema" ],
-        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
-            sh:prefix "htan" ],
-        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
-            sh:prefix "personinfo" ],
         [ sh:namespace prov: ;
             sh:prefix "prov" ],
         [ sh:namespace rdfs: ;
-            sh:prefix "rdfs" ] ;
+            sh:prefix "rdfs" ],
+        [ sh:namespace linkml: ;
+            sh:prefix "linkml" ],
+        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
+            sh:prefix "personinfo" ],
+        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
+            sh:prefix "htan" ],
+        [ sh:namespace schema1: ;
+            sh:prefix "schema" ],
+        [ sh:namespace skos: ;
+            sh:prefix "skos" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
@@ -169,7 +169,7 @@
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-03-07T22:48:05"^^xsd:dateTime ;
+    linkml:generation_date "2025-03-19T16:20:02"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -341,12 +341,14 @@
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__diseaseFocus>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__funder>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__includedInDataCatalog>,
+        <https://w3id.org/synapse/nfosi/vocab/portalDataset__individualCount>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__keywords>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__license>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__manifestation>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__measurementTechnique>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__series>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__species>,
+        <https://w3id.org/synapse/nfosi/vocab/portalDataset__specimenCount>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__studyId>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__subject>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__title>,
@@ -461,8 +463,8 @@
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-03-07T22:48:03"^^xsd:dateTime ;
-    linkml:source_file_size 297911 ;
+    linkml:source_file_date "2025-03-19T16:20:01"^^xsd:dateTime ;
+    linkml:source_file_size 298524 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,
@@ -4051,7 +4053,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/dataUseModifiers> a linkml:SlotDefinition ;
     dcterms:title "Data Use Modifiers" ;
-    skos:definition "List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Omit property if not applicable/unknown." ;
+    skos:definition "List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Most datasets allow \"General Research Use\" unless otherwise specified." ;
     linkml:multivalued true ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/DuoEnum> .
 
@@ -4097,6 +4099,11 @@
     skos:definition "Link(s) to known data catalog(s) the dataset is included in." ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/DataCatalogEnum> .
 
+<https://w3id.org/synapse/nfosi/vocab/individualCount> a linkml:SlotDefinition ;
+    dcterms:title "Individual Count" ;
+    skos:definition "Number of unique individuals included in the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown." ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/integer> .
+
 <https://w3id.org/synapse/nfosi/vocab/institutions> a linkml:SlotDefinition ;
     linkml:multivalued true ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/Institution> ;
@@ -4115,7 +4122,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/measurementTechnique> a linkml:SlotDefinition ;
     dcterms:title "Measurement Technique" ;
-    skos:definition "Assay used to generate original data. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia)." ;
+    skos:definition "What's used to generate original data, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia)." ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/AssayEnum> .
 
 <https://w3id.org/synapse/nfosi/vocab/metadata> skos:definition "A file of clinical, technical, or other parameters that describe a dataset.",
@@ -4163,7 +4170,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__contributor> a linkml:SlotDefinition ;
     dcterms:title "Contributor(s)" ;
-    skos:definition "Organization(s) or person(s) that contributed to the dataset." ;
+    skos:definition "Properly formatted name of organization(s) or person(s) that contributed to the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "contributor" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4185,7 +4192,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__creator> a linkml:SlotDefinition ;
     dcterms:title "Creator" ;
-    skos:definition "Organization or person that is creator of the dataset. Default is the PI of the project and/or the user who created all files in the dataset." ;
+    skos:definition "Properly formatted name of the organization or person that is creator of the dataset (e.g. \"NF-OSI\" or \"Robert Allaway\"), not an id. Default is the project PI and/or the user who created all files/records." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "creator" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4196,7 +4203,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__dataType> a linkml:SlotDefinition ;
     dcterms:title "Data Type" ;
-    skos:definition "Reflects the data types of files within the dataset." ;
+    skos:definition "Reflects the data types within the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "dataType" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4208,7 +4215,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__dataUseModifiers> a linkml:SlotDefinition ;
     dcterms:title "Data Use Modifiers" ;
-    skos:definition "List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Omit property if not applicable/unknown." ;
+    skos:definition "List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Most datasets allow \"General Research Use\" unless otherwise specified." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "dataUseModifiers" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4269,6 +4276,16 @@
     linkml:range <https://w3id.org/synapse/nfosi/vocab/DataCatalogEnum> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/includedInDataCatalog> .
 
+<https://w3id.org/synapse/nfosi/vocab/portalDataset__individualCount> a linkml:SlotDefinition ;
+    dcterms:title "Individual Count" ;
+    skos:definition "Number of unique individuals included in the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "individualCount" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/integer> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/individualCount> .
+
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__keywords> a linkml:SlotDefinition ;
     dcterms:title "Keywords" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -4304,7 +4321,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__measurementTechnique> a linkml:SlotDefinition ;
     dcterms:title "Measurement Technique" ;
-    skos:definition "Assay used to generate original data. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia)." ;
+    skos:definition "What's used to generate original data, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia)." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "measurementTechnique" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4332,6 +4349,16 @@
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/SpeciesEnum> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/species> .
+
+<https://w3id.org/synapse/nfosi/vocab/portalDataset__specimenCount> a linkml:SlotDefinition ;
+    dcterms:title "Specimen Count" ;
+    skos:definition "Number of unique specimens included in the dataset. Omit if not applicable/unknown." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "specimenCount" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/integer> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/specimenCount> .
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__studyId> a linkml:SlotDefinition ;
     dcterms:title "Study ID" ;
@@ -4378,7 +4405,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__yearProcessed> a linkml:SlotDefinition ;
     dcterms:title "Year Processed" ;
-    skos:definition "Year data were processed. Only for processed data type and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown." ;
+    skos:definition "Year data were processed. Only for processed dataset type and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "yearProcessed" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -4660,6 +4687,11 @@
 <https://w3id.org/synapse/nfosi/vocab/small%20molecule%20library%20screen> skos:definition "",
         "High throughput sample analysis of small molecules for purpose such as drug discovery, or biochemical, genetic or pharmacological tests." ;
     linkml:meaning <http://purl.obolibrary.org/obo/ERO_0001726> .
+
+<https://w3id.org/synapse/nfosi/vocab/specimenCount> a linkml:SlotDefinition ;
+    dcterms:title "Specimen Count" ;
+    skos:definition "Number of unique specimens included in the dataset. Omit if not applicable/unknown." ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/integer> .
 
 <https://w3id.org/synapse/nfosi/vocab/subject> a linkml:SlotDefinition ;
     dcterms:title "Subject" ;
@@ -7728,7 +7760,7 @@
     dcterms:title "Contributor(s)" ;
     rdfs:seeAlso <https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#contributor> ;
     skos:definition "An entity responsible for making contributions to the resource.",
-        "Organization(s) or person(s) that contributed to the dataset." ;
+        "Properly formatted name of organization(s) or person(s) that contributed to the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/contributor> ;
     linkml:multivalued true ;
@@ -7739,7 +7771,7 @@
     dcterms:title "Creator" ;
     rdfs:seeAlso <https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#creator> ;
     skos:definition "An entity responsible for making the resource.",
-        "Organization or person that is creator of the dataset. Default is the PI of the project and/or the user who created all files in the dataset." ;
+        "Properly formatted name of the organization or person that is creator of the dataset (e.g. \"NF-OSI\" or \"Robert Allaway\"), not an id. Default is the project PI and/or the user who created all files/records." ;
     skos:editorialNote "Recommended practice is to identify the creator with a URI. If this is not possible or feasible, a literal value that identifies the creator may be provided." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/creator> ;
@@ -8000,7 +8032,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/yearProcessed> a linkml:SlotDefinition ;
     dcterms:title "Year Processed" ;
-    skos:definition "Year data were processed. Only for processed data type and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
+    skos:definition "Year data were processed. Only for processed dataset type and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
         """Year in which the resource was processed/derived, if applicable.  This is only required for data processed by NF-OSI for tracking purposes, optional for community-contributed datasets. 
 """ ;
     skos:editorialNote "There is no 'year' validation rule and `date` rule requires actual date format" ;
@@ -8759,16 +8791,6 @@
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/assayTarget> .
 
-<https://w3id.org/synapse/nfosi/vocab/integer> a linkml:TypeDefinition ;
-    skos:definition "An integer" ;
-    skos:editorialNote "If you are authoring schemas in LinkML YAML, the type is referenced with the lower case \"integer\"." ;
-    skos:exactMatch schema1:Integer ;
-    skos:inScheme linkml:types ;
-    linkml:base "int" ;
-    linkml:definition_uri linkml:Integer ;
-    linkml:imported_from "linkml:types" ;
-    linkml:uri xsd:integer .
-
 <https://w3id.org/synapse/nfosi/vocab/workflow> a linkml:SlotDefinition ;
     skos:definition "Name and version of the workflow used to generate/analyze the data" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -9214,6 +9236,16 @@
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/ElectrophysiologyAssayTemplate> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/TimeUnit> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/timepointUnit> .
+
+<https://w3id.org/synapse/nfosi/vocab/integer> a linkml:TypeDefinition ;
+    skos:definition "An integer" ;
+    skos:editorialNote "If you are authoring schemas in LinkML YAML, the type is referenced with the lower case \"integer\"." ;
+    skos:exactMatch schema1:Integer ;
+    skos:inScheme linkml:types ;
+    linkml:base "int" ;
+    linkml:definition_uri linkml:Integer ;
+    linkml:imported_from "linkml:types" ;
+    linkml:uri xsd:integer .
 
 <https://w3id.org/synapse/nfosi/vocab/PdxGenomicsAssayTemplate> a linkml:ClassDefinition ;
     skos:definition "Raw genomics data from patient-derived xenograft (PDX) experiment, with additional PDX-relevant metadata." ;
@@ -10154,11 +10186,11 @@
     skos:definition "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sex> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10372,7 +10404,7 @@
     dcterms:title "Data Type" ;
     skos:definition """Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.
 """,
-        "Reflects the data types of files within the dataset." ;
+        "Reflects the data types within the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/Metadata> ],
@@ -10409,12 +10441,14 @@
         <https://w3id.org/synapse/nfosi/vocab/diseaseFocus>,
         <https://w3id.org/synapse/nfosi/vocab/funder>,
         <https://w3id.org/synapse/nfosi/vocab/includedInDataCatalog>,
+        <https://w3id.org/synapse/nfosi/vocab/individualCount>,
         <https://w3id.org/synapse/nfosi/vocab/keywords>,
         <https://w3id.org/synapse/nfosi/vocab/license>,
         <https://w3id.org/synapse/nfosi/vocab/manifestation>,
         <https://w3id.org/synapse/nfosi/vocab/measurementTechnique>,
         <https://w3id.org/synapse/nfosi/vocab/series>,
         <https://w3id.org/synapse/nfosi/vocab/species>,
+        <https://w3id.org/synapse/nfosi/vocab/specimenCount>,
         <https://w3id.org/synapse/nfosi/vocab/studyId>,
         <https://w3id.org/synapse/nfosi/vocab/subject>,
         <https://w3id.org/synapse/nfosi/vocab/title>,
@@ -10436,12 +10470,14 @@
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__diseaseFocus>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__funder>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__includedInDataCatalog>,
+        <https://w3id.org/synapse/nfosi/vocab/portalDataset__individualCount>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__keywords>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__license>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__manifestation>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__measurementTechnique>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__series>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__species>,
+        <https://w3id.org/synapse/nfosi/vocab/portalDataset__specimenCount>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__studyId>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__subject>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__title>,
