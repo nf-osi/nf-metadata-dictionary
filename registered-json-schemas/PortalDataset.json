@@ -183,6 +183,11 @@
       ],
       "type": "string"
     },
+    "individualsIncluded": {
+      "description": "Number of unique individuals included in the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown.",
+      "title": "Individuals Included",
+      "type": "integer"
+    },
     "keywords": {
       "items": {
         "type": "string"
@@ -435,11 +440,6 @@
       ],
       "type": "string"
     },
-    "populationSize": {
-      "description": "Number of individuals represented by the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown.",
-      "title": "Population Size",
-      "type": "integer"
-    },
     "series": {
       "description": "Datasets may belong to a curated series. Should be assigned by staff only; omit property if not applicable/unknown.",
       "title": "Data Series",
@@ -470,6 +470,11 @@
       },
       "title": "Species",
       "type": "array"
+    },
+    "specimensIncluded": {
+      "description": "Number of unique specimens included in the dataset. Omit if not applicable/unknown.",
+      "title": "Specimens Included",
+      "type": "integer"
     },
     "studyId": {
       "description": "Identifier for the study (project) from which the dataset was derived.",

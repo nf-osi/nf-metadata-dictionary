@@ -111,10 +111,15 @@ classes:
         range: FundingAgencyEnum
         multivalued: true
         required: true
-      populationSize:
-        title: Population Size
+      individualsIncluded:
+        title: Individuals Included
         range: integer
-        description: Number of individuals represented by the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown.
+        description: Number of unique individuals included in the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown.
+        required: false
+      specimensIncluded:
+        title: Specimens Included
+        range: integer
+        description: Number of unique specimens included in the dataset. Omit if not applicable/unknown.
         required: false
       series:
         title: Data Series
