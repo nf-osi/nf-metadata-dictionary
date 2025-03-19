@@ -24,7 +24,7 @@
       "type": "string"
     },
     "contributor": {
-      "description": "Organization(s) or person(s) that contributed to the dataset.",
+      "description": "Properly formatted name of organization(s) or person(s) that contributed to the dataset.",
       "items": {
         "type": "string"
       },
@@ -40,12 +40,12 @@
       "type": "array"
     },
     "creator": {
-      "description": "Organization or person that is creator of the dataset. Default is the PI of the project and/or the user who created all files in the dataset.",
+      "description": "Properly formatted name of the organization or person that is creator of the dataset (e.g. \"NF-OSI\" or \"Robert Allaway\"), not an id. Default is the project PI and/or the user who created all files/records.",
       "title": "Creator",
       "type": "string"
     },
     "dataType": {
-      "description": "Reflects the data types of files within the dataset.",
+      "description": "Reflects the data types within the dataset.",
       "items": {
         "description": "What the data (file) contains.",
         "enum": [
@@ -95,7 +95,7 @@
       "type": "array"
     },
     "dataUseModifiers": {
-      "description": "List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Omit property if not applicable/unknown.",
+      "description": "List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Most datasets allow \"General Research Use\" unless otherwise specified.",
       "items": {
         "description": "",
         "enum": [
@@ -241,7 +241,7 @@
       "type": "array"
     },
     "measurementTechnique": {
-      "description": "Assay used to generate original data. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).",
+      "description": "What's used to generate original data, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).",
       "title": "Measurement Technique",
       "enum": [
         "2D AlamarBlue absorbance",
@@ -435,6 +435,11 @@
       ],
       "type": "string"
     },
+    "populationSize": {
+      "description": "Number of individuals represented by the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown.",
+      "title": "Population Size",
+      "type": "integer"
+    },
     "series": {
       "description": "Datasets may belong to a curated series. Should be assigned by staff only; omit property if not applicable/unknown.",
       "title": "Data Series",
@@ -492,7 +497,7 @@
       "type": "array"
     },
     "yearProcessed": {
-      "description": "Year data were processed. Only for processed data type and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
+      "description": "Year data were processed. Only for processed dataset type and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
       "title": "Year Processed",
       "type": "integer"
     }

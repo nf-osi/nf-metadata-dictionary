@@ -34,12 +34,12 @@ classes:
       creator:
         title: Creator
         range: string
-        description: Organization or person that is creator of the dataset. Default is the PI of the project and/or the user who created all files in the dataset.
+        description: Properly formatted name of the organization or person that is creator of the dataset (e.g. "NF-OSI" or "Robert Allaway"), not an id. Default is the project PI and/or the user who created all files/records.
         required: true
       contributor:
         title: Contributor(s)
         range: string
-        description: Organization(s) or person(s) that contributed to the dataset.
+        description: Properly formatted name of organization(s) or person(s) that contributed to the dataset.
         multivalued: true
         required: false
       description:
@@ -66,7 +66,7 @@ classes:
       measurementTechnique:
         title: Measurement Technique
         range: AssayEnum
-        description: Assay used to generate original data. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).
+        description: What's used to generate original data, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).
       keywords:
         title: Keywords
         range: string
@@ -81,7 +81,7 @@ classes:
       dataType:
         title: Data Type
         range: Data
-        description: Reflects the data types of files within the dataset.
+        description: Reflects the data types within the dataset.
         multivalued: true
         required: true
       species:
@@ -111,6 +111,11 @@ classes:
         range: FundingAgencyEnum
         multivalued: true
         required: true
+      populationSize:
+        title: Population Size
+        range: integer
+        description: Number of individuals represented by the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown.
+        required: false
       series:
         title: Data Series
         range: DataSeriesEnum
@@ -124,7 +129,7 @@ classes:
         required: false
       yearProcessed:
         title: Year Processed
-        description: Year data were processed. Only for processed data type and when data series is "NF-OSI Processed Data"; omit if not applicable/unknown.
+        description: Year data were processed. Only for processed dataset type and when data series is "NF-OSI Processed Data"; omit if not applicable/unknown.
         range: integer
         required: false
       datePublished:
@@ -139,7 +144,7 @@ classes:
         required: false
       dataUseModifiers:
         title: Data Use Modifiers
-        description: List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Omit property if not applicable/unknown.
+        description: List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Most datasets allow "General Research Use" unless otherwise specified.
         range: DuoEnum
         multivalued: true
         required: false
