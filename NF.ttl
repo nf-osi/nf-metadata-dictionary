@@ -12,22 +12,22 @@
 
 <https://w3id.org/synapse/nfosi/vocab/nfosi> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
+    sh:declare [ sh:namespace rdfs: ;
+            sh:prefix "rdfs" ],
+        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
+            sh:prefix "htan" ],
+        [ sh:namespace linkml: ;
+            sh:prefix "linkml" ],
+        [ sh:namespace skos: ;
+            sh:prefix "skos" ],
+        [ sh:namespace schema1: ;
+            sh:prefix "schema" ],
+        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
             sh:prefix "nf" ],
         [ sh:namespace prov: ;
             sh:prefix "prov" ],
-        [ sh:namespace rdfs: ;
-            sh:prefix "rdfs" ],
-        [ sh:namespace linkml: ;
-            sh:prefix "linkml" ],
         [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
-            sh:prefix "personinfo" ],
-        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
-            sh:prefix "htan" ],
-        [ sh:namespace schema1: ;
-            sh:prefix "schema" ],
-        [ sh:namespace skos: ;
-            sh:prefix "skos" ] ;
+            sh:prefix "personinfo" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
@@ -169,7 +169,7 @@
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-03-19T16:20:02"^^xsd:dateTime ;
+    linkml:generation_date "2025-03-20T17:35:19"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -330,6 +330,7 @@
         <https://w3id.org/synapse/nfosi/vocab/populationCoverage>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__accessType>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__alternateName>,
+        <https://w3id.org/synapse/nfosi/vocab/portalDataset__citation>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__conditionsOfAccess>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__contributor>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__countryOfOrigin>,
@@ -463,8 +464,8 @@
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-03-19T16:20:01"^^xsd:dateTime ;
-    linkml:source_file_size 298524 ;
+    linkml:source_file_date "2025-03-20T17:35:17"^^xsd:dateTime ;
+    linkml:source_file_size 298838 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,
@@ -4158,6 +4159,16 @@
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/alternateName> .
 
+<https://w3id.org/synapse/nfosi/vocab/portalDataset__citation> a linkml:SlotDefinition ;
+    dcterms:title "Citation" ;
+    skos:definition "identifies academic articles that are recommended by the data provider be cited in addition to the dataset itself." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "citation" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/citation> .
+
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__conditionsOfAccess> a linkml:SlotDefinition ;
     dcterms:title "User Specific Restriction" ;
     skos:definition "Additional requirements a user may need outside of Data Use Modifiers. This could include additional registration, updating profile information, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown." ;
@@ -4170,7 +4181,7 @@
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__contributor> a linkml:SlotDefinition ;
     dcterms:title "Contributor(s)" ;
-    skos:definition "Properly formatted name of organization(s) or person(s) that contributed to the dataset." ;
+    skos:definition "Institution of person repsonsible for collecting and managing data. Properly formatted name of organization(s) or person(s) that contributed to the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "contributor" ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
@@ -7707,17 +7718,6 @@
     linkml:required true ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/channel> .
 
-<https://w3id.org/synapse/nfosi/vocab/citation> a linkml:SlotDefinition ;
-    dcterms:title "Citation" ;
-    skos:definition "Citation (e.g. doi) that usage of data or resource should be cited with." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/citation> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/Protocol>,
-        <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/citation> .
-
 <https://w3id.org/synapse/nfosi/vocab/concentrationMaterial> a linkml:SlotDefinition ;
     skos:definition "Numeric value for concentration of the material" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -7760,7 +7760,7 @@
     dcterms:title "Contributor(s)" ;
     rdfs:seeAlso <https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#contributor> ;
     skos:definition "An entity responsible for making contributions to the resource.",
-        "Properly formatted name of organization(s) or person(s) that contributed to the dataset." ;
+        "Institution of person repsonsible for collecting and managing data. Properly formatted name of organization(s) or person(s) that contributed to the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/contributor> ;
     linkml:multivalued true ;
@@ -8629,6 +8629,18 @@
     linkml:range <https://w3id.org/synapse/nfosi/vocab/Cell> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/cellType> .
 
+<https://w3id.org/synapse/nfosi/vocab/citation> a linkml:SlotDefinition ;
+    dcterms:title "Citation" ;
+    skos:definition "Citation (e.g. doi) that usage of data or resource should be cited with.",
+        "identifies academic articles that are recommended by the data provider be cited in addition to the dataset itself." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/citation> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/Protocol>,
+        <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/citation> .
+
 <https://w3id.org/synapse/nfosi/vocab/compoundDose> a linkml:SlotDefinition ;
     skos:definition "A dose quantity for the treatment compound. To be used with compoundDoseUnit." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -9338,9 +9350,9 @@
 """ ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/specimenType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
@@ -10107,9 +10119,9 @@
     skos:definition "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/modelSystemName> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10186,11 +10198,11 @@
     skos:definition "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
-        [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sex> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10430,6 +10442,7 @@
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:attributes <https://w3id.org/synapse/nfosi/vocab/accessType>,
         <https://w3id.org/synapse/nfosi/vocab/alternateName>,
+        <https://w3id.org/synapse/nfosi/vocab/citation>,
         <https://w3id.org/synapse/nfosi/vocab/conditionsOfAccess>,
         <https://w3id.org/synapse/nfosi/vocab/contributor>,
         <https://w3id.org/synapse/nfosi/vocab/countryOfOrigin>,
@@ -10459,6 +10472,7 @@
     linkml:slot_usage [ ] ;
     linkml:slots <https://w3id.org/synapse/nfosi/vocab/portalDataset__accessType>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__alternateName>,
+        <https://w3id.org/synapse/nfosi/vocab/portalDataset__citation>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__conditionsOfAccess>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__contributor>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__countryOfOrigin>,
