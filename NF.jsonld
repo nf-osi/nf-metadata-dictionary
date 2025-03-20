@@ -12129,6 +12129,9 @@
                     "@id": "bts:Title"
                 },
                 {
+                    "@id": "bts:Description"
+                },
+                {
                     "@id": "bts:AlternateName"
                 },
                 {
@@ -12138,16 +12141,7 @@
                     "@id": "bts:Contributor"
                 },
                 {
-                    "@id": "bts:Description"
-                },
-                {
-                    "@id": "bts:AccessType"
-                },
-                {
-                    "@id": "bts:License"
-                },
-                {
-                    "@id": "bts:CountryOfOrigin"
+                    "@id": "bts:StudyId"
                 },
                 {
                     "@id": "bts:MeasurementTechnique"
@@ -12165,9 +12159,6 @@
                     "@id": "bts:Species"
                 },
                 {
-                    "@id": "bts:StudyId"
-                },
-                {
                     "@id": "bts:Manifestation"
                 },
                 {
@@ -12175,6 +12166,12 @@
                 },
                 {
                     "@id": "bts:Funder"
+                },
+                {
+                    "@id": "bts:IndividualCount"
+                },
+                {
+                    "@id": "bts:SpecimenCount"
                 },
                 {
                     "@id": "bts:Series"
@@ -12192,12 +12189,41 @@
                     "@id": "bts:IncludedInDataCatalog"
                 },
                 {
+                    "@id": "bts:Citation"
+                },
+                {
+                    "@id": "bts:CountryOfOrigin"
+                },
+                {
+                    "@id": "bts:AccessType"
+                },
+                {
+                    "@id": "bts:License"
+                },
+                {
                     "@id": "bts:DataUseModifiers"
                 },
                 {
                     "@id": "bts:ConditionsOfAccess"
                 }
             ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Description",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Text describing a resource.",
+            "rdfs:label": "Description",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "description",
+            "sms:required": "sms:false",
             "sms:validationRules": []
         },
         {
@@ -12248,71 +12274,6 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "contributor",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:Description",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "Text describing a resource.",
-            "rdfs:label": "Description",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "description",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:AccessType",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "Indicates access type / possible procedures needed for access to the resource.",
-            "rdfs:label": "AccessType",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "schema:rangeIncludes": [
-                {
-                    "@id": "bts:PublicAccess"
-                },
-                {
-                    "@id": "bts:OpenAccess"
-                },
-                {
-                    "@id": "bts:ControlledAccess"
-                },
-                {
-                    "@id": "bts:PrivateAccess"
-                }
-            ],
-            "sms:displayName": "accessType",
-            "sms:required": "sms:true",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:CountryOfOrigin",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "CountryOfOrigin",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "countryOfOrigin",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -12381,6 +12342,40 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "funder",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:IndividualCount",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "IndividualCount",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "individualCount",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:SpecimenCount",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "SpecimenCount",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "specimenCount",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -12469,6 +12464,54 @@
             },
             "sms:displayName": "includedInDataCatalog",
             "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:CountryOfOrigin",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "CountryOfOrigin",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "countryOfOrigin",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:AccessType",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Indicates access type / possible procedures needed for access to the resource.",
+            "rdfs:label": "AccessType",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:PublicAccess"
+                },
+                {
+                    "@id": "bts:OpenAccess"
+                },
+                {
+                    "@id": "bts:ControlledAccess"
+                },
+                {
+                    "@id": "bts:PrivateAccess"
+                }
+            ],
+            "sms:displayName": "accessType",
+            "sms:required": "sms:true",
             "sms:validationRules": []
         },
         {
