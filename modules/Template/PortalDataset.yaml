@@ -17,7 +17,7 @@ classes:
     # - id
     # - count
     # - currentVersion
-    # - doi (if minted)
+    # - doi (if minted) (written as identifier)
     # - createdBy # user id/handle, creator allows setting name more explicitly for citations
     # - datasetItemCount
     # - datasetSizeInBytes
@@ -26,6 +26,11 @@ classes:
         title: Title
         range: string
         required: true
+      description:
+        title: Description
+        range: string
+        description: Blurb for the dataset; should be no more than 500 characters.
+        required: false
       alternateName:
         title: Alternate Name
         description: An altername name that can be used for search and discovery improvement.
@@ -39,30 +44,14 @@ classes:
       contributor:
         title: Contributor(s)
         range: string
-        description: Properly formatted name of organization(s) or person(s) that contributed to the dataset.
+        description: Institution of person repsonsible for collecting and managing data. Properly formatted name of organization(s) or person(s) that contributed to the dataset.
         multivalued: true
         required: false
-      description:
-        title: Description
+      studyId:
+        title: Study ID
         range: string
-        description: Blurb for the dataset; should be no more than 500 characters.
-        required: false
-      accessType:
-        title: Access Type
-        range: AccessTypeEnum
-        description: Access type for the dataset.
+        description: Identifier for the study (project) from which the dataset was derived.
         required: true
-      license:
-        title: License
-        range: License
-        description: Unless information for license is clear, this should default to UNKNOWN. 
-        required: true
-      countryOfOrigin:
-        title: Country of Origin
-        range: string
-        description: Origin of individuals from which data were generated. Omit if not applicable/unknown.
-        multivalued: true
-        required: false
       measurementTechnique:
         title: Measurement Technique
         range: AssayEnum
@@ -76,7 +65,7 @@ classes:
         title: Subject
         range: string
         description: Applicable subject term(s) for dataset cataloging; use the Library of Congress Subject Headings (LCSH) scheme.
-        multivalued: true 
+        multivalued: true
         required: false
       dataType:
         title: Data Type
@@ -90,11 +79,6 @@ classes:
         description: Species of the organism(s) from which the data were generated. Omit property if not applicable, such as for data like compounds or other non-biological data.
         multivalued: true
         required: false # not all datasets from assays that use biological samples
-      studyId:
-        title: Study ID
-        range: string
-        description: Identifier for the study (project) from which the dataset was derived.
-        required: true
       manifestation:
         title: Manifestation(s)
         range: ManifestationEnum
@@ -124,7 +108,7 @@ classes:
       series:
         title: Data Series
         range: DataSeriesEnum
-        description: Datasets may belong to a curated series. Should be assigned by staff only; omit property if not applicable/unknown. 
+        description: Datasets may belong to a curated series. Should be assigned by staff only; omit property if not applicable/unknown.
         required: false
       visualizeDataOn:
         title: Visualize Data On
@@ -147,6 +131,27 @@ classes:
         description: Link(s) to known data catalog(s) the dataset is included in.
         range: DataCatalogEnum
         required: false
+      citation:
+        title: Citation
+        range: string
+        description: identifies academic articles that are recommended by the data provider be cited in addition to the dataset itself.
+        required: false
+      countryOfOrigin:
+        title: Country of Origin
+        range: string
+        description: Origin of individuals from which data were generated. Omit if not applicable/unknown.
+        multivalued: true
+        required: false
+      accessType:
+        title: Access Type
+        range: AccessTypeEnum
+        description: Access type for the dataset.
+        required: true
+      license:
+        title: License
+        range: License
+        description: Unless information for license is clear, this should default to UNKNOWN.
+        required: true
       dataUseModifiers:
         title: Data Use Modifiers
         description: List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Most datasets allow "General Research Use" unless otherwise specified.
