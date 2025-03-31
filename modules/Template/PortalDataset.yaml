@@ -39,7 +39,8 @@ classes:
       creator:
         title: Creator
         range: string
-        description: Properly formatted name of the organization or person that is creator of the dataset (e.g. "NF-OSI" or "Robert Allaway"), not an id. Default is the project PI and/or the user who created all files/records.
+        description: Properly formatted name of the organization or person that is creator of the dataset (e.g. "NF-OSI" or "Robert Allaway"), not an id. Most preferred is the project PI or data lead who's responsible for its conception.
+        multivalued: true
         required: true
       contributor:
         title: Contributor(s)
@@ -55,7 +56,8 @@ classes:
       measurementTechnique:
         title: Measurement Technique
         range: AssayEnum
-        description: What's used to generate original data, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).
+        multivalued: true
+        description: What's used to generate data in dataset, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).
       keywords:
         title: Keywords
         range: string
