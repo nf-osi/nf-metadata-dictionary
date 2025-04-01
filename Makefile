@@ -55,7 +55,7 @@ Protocol:
 	cat header.yaml relevant_props.yaml relevant_enums.yaml modules/Template/Protocol.yaml > temp.yaml
 	gen-json-schema --inline --no-metadata --not-closed --title-from=title temp.yaml > tmp.json
 	json-dereference -s tmp.json -o tmp.json
-	jq '."$$defs".Protocol | ."$$id"="https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-protocol"' tmp.json > registered-json-schemas/Protocol.json
+	jq '."$$defs".ProtocolTemplate | ."$$id"="https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-protocol"' tmp.json > registered-json-schemas/Protocol.json
 	rm -f relevant_props.yaml relevant_enums.yaml temp.yaml tmp.json 
 	@echo "--- Saved registered-json-schemas/Protocol.json ---"
 
