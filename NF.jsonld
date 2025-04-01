@@ -9039,6 +9039,738 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:ProtocolTemplate",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "//bioschemas.org/profiles/LabProtocol/0.7-DRAFT.",
+            "rdfs:label": "ProtocolTemplate",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "ProtocolTemplate",
+            "sms:required": "sms:false",
+            "sms:requiresDependency": [
+                {
+                    "@id": "bts:Title"
+                },
+                {
+                    "@id": "bts:Author"
+                },
+                {
+                    "@id": "bts:Citation"
+                },
+                {
+                    "@id": "bts:License"
+                },
+                {
+                    "@id": "bts:ProtocolAssay"
+                },
+                {
+                    "@id": "bts:ProtocolPurpose"
+                },
+                {
+                    "@id": "bts:SampleType"
+                },
+                {
+                    "@id": "bts:Comments"
+                }
+            ],
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Citation",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Citation (e.g. doi) that usage of data or resource should be cited with.",
+            "rdfs:label": "Citation",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "citation",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:License",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
+            "rdfs:label": "License",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:UNKNOWN"
+                },
+                {
+                    "@id": "bts:PublicDomain"
+                },
+                {
+                    "@id": "bts:CC-0"
+                },
+                {
+                    "@id": "bts:ODC-PDDL"
+                },
+                {
+                    "@id": "bts:CC-BY"
+                },
+                {
+                    "@id": "bts:ODC-BY"
+                },
+                {
+                    "@id": "bts:ODC-ODbL"
+                },
+                {
+                    "@id": "bts:CCBY-SA"
+                },
+                {
+                    "@id": "bts:CCBY-NC"
+                },
+                {
+                    "@id": "bts:CCBY-ND"
+                },
+                {
+                    "@id": "bts:CCBY-NC-SA"
+                },
+                {
+                    "@id": "bts:CCBY-NC-ND"
+                }
+            ],
+            "sms:displayName": "License",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ProtocolAssay",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Main assay type that this protocol is related to, e.g. this is a prep protocol for single-cell RNA-seq assay. This is especially helpful for newly-developed or in-house assays.\n",
+            "rdfs:label": "ProtocolAssay",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "schema:rangeIncludes": [
+                {
+                    "@id": "bts:2DAlamarBlueabsorbance"
+                },
+                {
+                    "@id": "bts:2DAlamarBluefluorescence"
+                },
+                {
+                    "@id": "bts:3Dconfocalimaging"
+                },
+                {
+                    "@id": "bts:3Delectronmicroscopy"
+                },
+                {
+                    "@id": "bts:3Dimaging"
+                },
+                {
+                    "@id": "bts:3Dmicrotissueviability"
+                },
+                {
+                    "@id": "bts:Actigraphy"
+                },
+                {
+                    "@id": "bts:AlgometRxNociometer"
+                },
+                {
+                    "@id": "bts:Auditorybrainstemresponse"
+                },
+                {
+                    "@id": "bts:ATAC-seq"
+                },
+                {
+                    "@id": "bts:ATPaseactivityassay"
+                },
+                {
+                    "@id": "bts:BrdUproliferationassay"
+                },
+                {
+                    "@id": "bts:CAPP-seq"
+                },
+                {
+                    "@id": "bts:CUT&RUN"
+                },
+                {
+                    "@id": "bts:ChIP-seq"
+                },
+                {
+                    "@id": "bts:ChildBehaviorChecklistforAges1.5-5"
+                },
+                {
+                    "@id": "bts:ChildBehaviorChecklistforAges6-18"
+                },
+                {
+                    "@id": "bts:CODEX"
+                },
+                {
+                    "@id": "bts:Confocalmicroscopy"
+                },
+                {
+                    "@id": "bts:Corsiblocks"
+                },
+                {
+                    "@id": "bts:Currentclampassay"
+                },
+                {
+                    "@id": "bts:DiffusionMRI"
+                },
+                {
+                    "@id": "bts:Distortionproductotoacousticemissions"
+                },
+                {
+                    "@id": "bts:DNAopticalmapping"
+                },
+                {
+                    "@id": "bts:ELISA"
+                },
+                {
+                    "@id": "bts:ERRbisulfitesequencing"
+                },
+                {
+                    "@id": "bts:EdUproliferationassay"
+                },
+                {
+                    "@id": "bts:FIA-MSMS"
+                },
+                {
+                    "@id": "bts:FLIPRhigh-throughputcellularscreening"
+                },
+                {
+                    "@id": "bts:FluorescenceInSituHybridization"
+                },
+                {
+                    "@id": "bts:Focusgroup"
+                },
+                {
+                    "@id": "bts:FTIRspectroscopy"
+                },
+                {
+                    "@id": "bts:HI-C"
+                },
+                {
+                    "@id": "bts:HPLC"
+                },
+                {
+                    "@id": "bts:Interview"
+                },
+                {
+                    "@id": "bts:ISO-seq"
+                },
+                {
+                    "@id": "bts:MIB/MS"
+                },
+                {
+                    "@id": "bts:Matrigel-basedtumorigenesisassay"
+                },
+                {
+                    "@id": "bts:MudPIT"
+                },
+                {
+                    "@id": "bts:MigrationAssay"
+                },
+                {
+                    "@id": "bts:NIHToolbox"
+                },
+                {
+                    "@id": "bts:NOMe-seq"
+                },
+                {
+                    "@id": "bts:RNAarray"
+                },
+                {
+                    "@id": "bts:RNA-seq"
+                },
+                {
+                    "@id": "bts:RPPA"
+                },
+                {
+                    "@id": "bts:RiccardiandAblonscales"
+                },
+                {
+                    "@id": "bts:SNParray"
+                },
+                {
+                    "@id": "bts:SUSHI"
+                },
+                {
+                    "@id": "bts:Sangersequencing"
+                },
+                {
+                    "@id": "bts:SocialResponsivenessScale"
+                },
+                {
+                    "@id": "bts:SocialResponsivenessScale,SecondEdition"
+                },
+                {
+                    "@id": "bts:Tcellreceptorrepertoiresequencing"
+                },
+                {
+                    "@id": "bts:TIDE"
+                },
+                {
+                    "@id": "bts:TMTquantitation"
+                },
+                {
+                    "@id": "bts:TriKineticsactivitymonitoring"
+                },
+                {
+                    "@id": "bts:VonFreytest"
+                },
+                {
+                    "@id": "bts:Activeavoidancelearningbehaviorassay"
+                },
+                {
+                    "@id": "bts:Array"
+                },
+                {
+                    "@id": "bts:Atomicforcemicroscopy"
+                },
+                {
+                    "@id": "bts:Autoradiography"
+                },
+                {
+                    "@id": "bts:Bisulfitesequencing"
+                },
+                {
+                    "@id": "bts:Bloodchemistrymeasurement"
+                },
+                {
+                    "@id": "bts:BluenativePAGE"
+                },
+                {
+                    "@id": "bts:Bodysizetraitmeasurement"
+                },
+                {
+                    "@id": "bts:Bonehistomorphometry"
+                },
+                {
+                    "@id": "bts:Brightfieldmicroscopy"
+                },
+                {
+                    "@id": "bts:CAMP-GloMaxAssay"
+                },
+                {
+                    "@id": "bts:Calciumretentioncapacityassay"
+                },
+                {
+                    "@id": "bts:Cellcompetition"
+                },
+                {
+                    "@id": "bts:Cellcount"
+                },
+                {
+                    "@id": "bts:Cellpainting"
+                },
+                {
+                    "@id": "bts:Cellproliferation"
+                },
+                {
+                    "@id": "bts:Cellviabilityassay"
+                },
+                {
+                    "@id": "bts:Clinicaldata"
+                },
+                {
+                    "@id": "bts:CNF-Skindex"
+                },
+                {
+                    "@id": "bts:Cognitiveassessment"
+                },
+                {
+                    "@id": "bts:Combinationlibraryscreen"
+                },
+                {
+                    "@id": "bts:Combinationscreen"
+                },
+                {
+                    "@id": "bts:ComplexIIenzymeactivityassay"
+                },
+                {
+                    "@id": "bts:Compoundscreen"
+                },
+                {
+                    "@id": "bts:Contextualconditioningbehaviorassay"
+                },
+                {
+                    "@id": "bts:ConventionalMRI"
+                },
+                {
+                    "@id": "bts:Children'sDermatologyLifeQualityIndexQuestionnaire"
+                },
+                {
+                    "@id": "bts:Differentialscanningcalorimetry"
+                },
+                {
+                    "@id": "bts:Dynamiclightscattering"
+                },
+                {
+                    "@id": "bts:Electrochemiluminescence"
+                },
+                {
+                    "@id": "bts:Electrophoreticlightscattering"
+                },
+                {
+                    "@id": "bts:Elevatedplusmazetest"
+                },
+                {
+                    "@id": "bts:FACE-QAppearance-relatedDistress"
+                },
+                {
+                    "@id": "bts:Flowcytometry"
+                },
+                {
+                    "@id": "bts:Focusformingassay"
+                },
+                {
+                    "@id": "bts:FunctionalMRI"
+                },
+                {
+                    "@id": "bts:Gaitmeasurement"
+                },
+                {
+                    "@id": "bts:Gelfiltrationchromatography"
+                },
+                {
+                    "@id": "bts:Gelpermeationchromatography"
+                },
+                {
+                    "@id": "bts:Genotyping"
+                },
+                {
+                    "@id": "bts:Highcontentscreen"
+                },
+                {
+                    "@id": "bts:Highfrequencyultrasound"
+                },
+                {
+                    "@id": "bts:High-performanceliquidchromatography/tandemmassspectrometry"
+                },
+                {
+                    "@id": "bts:Immunoassay"
+                },
+                {
+                    "@id": "bts:Immunocytochemistry"
+                },
+                {
+                    "@id": "bts:Immunofluorescence"
+                },
+                {
+                    "@id": "bts:Immunohistochemistry"
+                },
+                {
+                    "@id": "bts:Insilicosynthesis"
+                },
+                {
+                    "@id": "bts:Invitrotumorigenesis"
+                },
+                {
+                    "@id": "bts:InvivoPDXviability"
+                },
+                {
+                    "@id": "bts:Invivobioluminescence"
+                },
+                {
+                    "@id": "bts:Invivotumorgrowth"
+                },
+                {
+                    "@id": "bts:Jumpinglibrary"
+                },
+                {
+                    "@id": "bts:Labelfreemassspectrometry"
+                },
+                {
+                    "@id": "bts:Laserspeckleimaging"
+                },
+                {
+                    "@id": "bts:Lightscatteringassay"
+                },
+                {
+                    "@id": "bts:Liquidchromatography-electrochemicaldetection"
+                },
+                {
+                    "@id": "bts:Liquidchromatography/massspectrometry"
+                },
+                {
+                    "@id": "bts:Liquidchromatography/tandemmassspectrometry"
+                },
+                {
+                    "@id": "bts:LncRNA-seq"
+                },
+                {
+                    "@id": "bts:Localfieldpotentialrecording"
+                },
+                {
+                    "@id": "bts:Longtermpotentiationassay"
+                },
+                {
+                    "@id": "bts:MRNAcounts"
+                },
+                {
+                    "@id": "bts:Magneticresonanceangiography"
+                },
+                {
+                    "@id": "bts:Magneticresonancespectroscopy"
+                },
+                {
+                    "@id": "bts:Magnetization-PreparedRapidGradientEchoMRI"
+                },
+                {
+                    "@id": "bts:Massspectrometry"
+                },
+                {
+                    "@id": "bts:Massivelyparallelreporterassay"
+                },
+                {
+                    "@id": "bts:Metabolicscreening"
+                },
+                {
+                    "@id": "bts:Methylationarray"
+                },
+                {
+                    "@id": "bts:MiRNAarray"
+                },
+                {
+                    "@id": "bts:MiRNA-seq"
+                },
+                {
+                    "@id": "bts:Microrheology"
+                },
+                {
+                    "@id": "bts:Skindex-16"
+                },
+                {
+                    "@id": "bts:Multi-electrodearray"
+                },
+                {
+                    "@id": "bts:Nanoparticletrackinganalysis"
+                },
+                {
+                    "@id": "bts:NanoStringnCounterAnalysisSystem"
+                },
+                {
+                    "@id": "bts:N-backtask"
+                },
+                {
+                    "@id": "bts:Neuropsychologicalassessment"
+                },
+                {
+                    "@id": "bts:Nextgenerationtargetedsequencing"
+                },
+                {
+                    "@id": "bts:Noveltyresponsebehaviorassay"
+                },
+                {
+                    "@id": "bts:Openfieldtest"
+                },
+                {
+                    "@id": "bts:Opticaltomography"
+                },
+                {
+                    "@id": "bts:Opticalcoherencetomography"
+                },
+                {
+                    "@id": "bts:Optokineticreflexassay"
+                },
+                {
+                    "@id": "bts:Oscillatoryrheology"
+                },
+                {
+                    "@id": "bts:OxBS-seq"
+                },
+                {
+                    "@id": "bts:Oxygenconsumptionassay"
+                },
+                {
+                    "@id": "bts:Patternelectroretinogram"
+                },
+                {
+                    "@id": "bts:Perineurialcellthickness"
+                },
+                {
+                    "@id": "bts:PharmocokineticADMEassay"
+                },
+                {
+                    "@id": "bts:Phase-contrastmicroscopy"
+                },
+                {
+                    "@id": "bts:Photograph"
+                },
+                {
+                    "@id": "bts:Polymerasechainreaction"
+                },
+                {
+                    "@id": "bts:Polysomnography"
+                },
+                {
+                    "@id": "bts:Positronemissiontomography"
+                },
+                {
+                    "@id": "bts:PROMISCognitiveFunction"
+                },
+                {
+                    "@id": "bts:Proximityextensionassay"
+                },
+                {
+                    "@id": "bts:Puretoneaverage"
+                },
+                {
+                    "@id": "bts:QuantitativePCR"
+                },
+                {
+                    "@id": "bts:Questionnaire"
+                },
+                {
+                    "@id": "bts:Reactiveoxygenspeciesassay"
+                },
+                {
+                    "@id": "bts:Reportergeneassay"
+                },
+                {
+                    "@id": "bts:Rheometry"
+                },
+                {
+                    "@id": "bts:Ribo-seq"
+                },
+                {
+                    "@id": "bts:Rotarodperformancetest"
+                },
+                {
+                    "@id": "bts:SandwichELISA"
+                },
+                {
+                    "@id": "bts:ScCGI-seq"
+                },
+                {
+                    "@id": "bts:Scale"
+                },
+                {
+                    "@id": "bts:SaferSeqS"
+                },
+                {
+                    "@id": "bts:Singlemoleculedrugscreenassay"
+                },
+                {
+                    "@id": "bts:Single-cellRNA-seq"
+                },
+                {
+                    "@id": "bts:SinglecellATAC-seq"
+                },
+                {
+                    "@id": "bts:Single-nucleusRNA-seq"
+                },
+                {
+                    "@id": "bts:Smallmoleculelibraryscreen"
+                },
+                {
+                    "@id": "bts:Sorbitoldehydrogenaseactivitylevelassay"
+                },
+                {
+                    "@id": "bts:Spatialfrequencydomainimaging"
+                },
+                {
+                    "@id": "bts:Spatialtranscriptomics"
+                },
+                {
+                    "@id": "bts:Statichistomorphometry"
+                },
+                {
+                    "@id": "bts:Staticlightscattering"
+                },
+                {
+                    "@id": "bts:Survival"
+                },
+                {
+                    "@id": "bts:Targetedexomesequencing"
+                },
+                {
+                    "@id": "bts:Tractionforcemicroscopy"
+                },
+                {
+                    "@id": "bts:Transcranialdopplerultrasonography"
+                },
+                {
+                    "@id": "bts:Twinspotassay"
+                },
+                {
+                    "@id": "bts:Ultrahigh-performanceliquidchromatography/tandemmassspectrometry"
+                },
+                {
+                    "@id": "bts:Westernblot"
+                },
+                {
+                    "@id": "bts:Wholeexomesequencing"
+                },
+                {
+                    "@id": "bts:Wholegenomesequencing"
+                },
+                {
+                    "@id": "bts:Whole-cellpatchclamp"
+                },
+                {
+                    "@id": "bts:Wordrecognitionscore"
+                },
+                {
+                    "@id": "bts:STRprofile"
+                }
+            ],
+            "sms:displayName": "protocolAssay",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ProtocolPurpose",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Brief description of the protocol purpose.",
+            "rdfs:label": "ProtocolPurpose",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "protocolPurpose",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:SampleType",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Type of sample used",
+            "rdfs:label": "SampleType",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "sampleType",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:ProcessedExpressionTemplate",
             "@type": "rdfs:Class",
             "rdfs:comment": "Template for quantified gene/protein expression data that are still represented as one file per sample.",
@@ -10595,738 +11327,6 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "germlineMutation",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:Protocol",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "Protocol",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:ResourceType"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "protocol",
-            "sms:required": "sms:false",
-            "sms:requiresDependency": [
-                {
-                    "@id": "bts:Title"
-                },
-                {
-                    "@id": "bts:Author"
-                },
-                {
-                    "@id": "bts:Citation"
-                },
-                {
-                    "@id": "bts:License"
-                },
-                {
-                    "@id": "bts:ProtocolAssay"
-                },
-                {
-                    "@id": "bts:ProtocolPurpose"
-                },
-                {
-                    "@id": "bts:SampleType"
-                },
-                {
-                    "@id": "bts:Comments"
-                }
-            ],
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:Citation",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "Citation (e.g. doi) that usage of data or resource should be cited with.",
-            "rdfs:label": "Citation",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "citation",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:License",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
-            "rdfs:label": "License",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "schema:rangeIncludes": [
-                {
-                    "@id": "bts:UNKNOWN"
-                },
-                {
-                    "@id": "bts:PublicDomain"
-                },
-                {
-                    "@id": "bts:CC-0"
-                },
-                {
-                    "@id": "bts:ODC-PDDL"
-                },
-                {
-                    "@id": "bts:CC-BY"
-                },
-                {
-                    "@id": "bts:ODC-BY"
-                },
-                {
-                    "@id": "bts:ODC-ODbL"
-                },
-                {
-                    "@id": "bts:CCBY-SA"
-                },
-                {
-                    "@id": "bts:CCBY-NC"
-                },
-                {
-                    "@id": "bts:CCBY-ND"
-                },
-                {
-                    "@id": "bts:CCBY-NC-SA"
-                },
-                {
-                    "@id": "bts:CCBY-NC-ND"
-                }
-            ],
-            "sms:displayName": "License",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:ProtocolAssay",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "Main assay type that this protocol is related to, e.g. this is a prep protocol for single-cell RNA-seq assay. This is especially helpful for newly-developed or in-house assays.\n",
-            "rdfs:label": "ProtocolAssay",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "schema:rangeIncludes": [
-                {
-                    "@id": "bts:2DAlamarBlueabsorbance"
-                },
-                {
-                    "@id": "bts:2DAlamarBluefluorescence"
-                },
-                {
-                    "@id": "bts:3Dconfocalimaging"
-                },
-                {
-                    "@id": "bts:3Delectronmicroscopy"
-                },
-                {
-                    "@id": "bts:3Dimaging"
-                },
-                {
-                    "@id": "bts:3Dmicrotissueviability"
-                },
-                {
-                    "@id": "bts:Actigraphy"
-                },
-                {
-                    "@id": "bts:AlgometRxNociometer"
-                },
-                {
-                    "@id": "bts:Auditorybrainstemresponse"
-                },
-                {
-                    "@id": "bts:ATAC-seq"
-                },
-                {
-                    "@id": "bts:ATPaseactivityassay"
-                },
-                {
-                    "@id": "bts:BrdUproliferationassay"
-                },
-                {
-                    "@id": "bts:CAPP-seq"
-                },
-                {
-                    "@id": "bts:CUT&RUN"
-                },
-                {
-                    "@id": "bts:ChIP-seq"
-                },
-                {
-                    "@id": "bts:ChildBehaviorChecklistforAges1.5-5"
-                },
-                {
-                    "@id": "bts:ChildBehaviorChecklistforAges6-18"
-                },
-                {
-                    "@id": "bts:CODEX"
-                },
-                {
-                    "@id": "bts:Confocalmicroscopy"
-                },
-                {
-                    "@id": "bts:Corsiblocks"
-                },
-                {
-                    "@id": "bts:Currentclampassay"
-                },
-                {
-                    "@id": "bts:DiffusionMRI"
-                },
-                {
-                    "@id": "bts:Distortionproductotoacousticemissions"
-                },
-                {
-                    "@id": "bts:DNAopticalmapping"
-                },
-                {
-                    "@id": "bts:ELISA"
-                },
-                {
-                    "@id": "bts:ERRbisulfitesequencing"
-                },
-                {
-                    "@id": "bts:EdUproliferationassay"
-                },
-                {
-                    "@id": "bts:FIA-MSMS"
-                },
-                {
-                    "@id": "bts:FLIPRhigh-throughputcellularscreening"
-                },
-                {
-                    "@id": "bts:FluorescenceInSituHybridization"
-                },
-                {
-                    "@id": "bts:Focusgroup"
-                },
-                {
-                    "@id": "bts:FTIRspectroscopy"
-                },
-                {
-                    "@id": "bts:HI-C"
-                },
-                {
-                    "@id": "bts:HPLC"
-                },
-                {
-                    "@id": "bts:Interview"
-                },
-                {
-                    "@id": "bts:ISO-seq"
-                },
-                {
-                    "@id": "bts:MIB/MS"
-                },
-                {
-                    "@id": "bts:Matrigel-basedtumorigenesisassay"
-                },
-                {
-                    "@id": "bts:MudPIT"
-                },
-                {
-                    "@id": "bts:MigrationAssay"
-                },
-                {
-                    "@id": "bts:NIHToolbox"
-                },
-                {
-                    "@id": "bts:NOMe-seq"
-                },
-                {
-                    "@id": "bts:RNAarray"
-                },
-                {
-                    "@id": "bts:RNA-seq"
-                },
-                {
-                    "@id": "bts:RPPA"
-                },
-                {
-                    "@id": "bts:RiccardiandAblonscales"
-                },
-                {
-                    "@id": "bts:SNParray"
-                },
-                {
-                    "@id": "bts:SUSHI"
-                },
-                {
-                    "@id": "bts:Sangersequencing"
-                },
-                {
-                    "@id": "bts:SocialResponsivenessScale"
-                },
-                {
-                    "@id": "bts:SocialResponsivenessScale,SecondEdition"
-                },
-                {
-                    "@id": "bts:Tcellreceptorrepertoiresequencing"
-                },
-                {
-                    "@id": "bts:TIDE"
-                },
-                {
-                    "@id": "bts:TMTquantitation"
-                },
-                {
-                    "@id": "bts:TriKineticsactivitymonitoring"
-                },
-                {
-                    "@id": "bts:VonFreytest"
-                },
-                {
-                    "@id": "bts:Activeavoidancelearningbehaviorassay"
-                },
-                {
-                    "@id": "bts:Array"
-                },
-                {
-                    "@id": "bts:Atomicforcemicroscopy"
-                },
-                {
-                    "@id": "bts:Autoradiography"
-                },
-                {
-                    "@id": "bts:Bisulfitesequencing"
-                },
-                {
-                    "@id": "bts:Bloodchemistrymeasurement"
-                },
-                {
-                    "@id": "bts:BluenativePAGE"
-                },
-                {
-                    "@id": "bts:Bodysizetraitmeasurement"
-                },
-                {
-                    "@id": "bts:Bonehistomorphometry"
-                },
-                {
-                    "@id": "bts:Brightfieldmicroscopy"
-                },
-                {
-                    "@id": "bts:CAMP-GloMaxAssay"
-                },
-                {
-                    "@id": "bts:Calciumretentioncapacityassay"
-                },
-                {
-                    "@id": "bts:Cellcompetition"
-                },
-                {
-                    "@id": "bts:Cellcount"
-                },
-                {
-                    "@id": "bts:Cellpainting"
-                },
-                {
-                    "@id": "bts:Cellproliferation"
-                },
-                {
-                    "@id": "bts:Cellviabilityassay"
-                },
-                {
-                    "@id": "bts:Clinicaldata"
-                },
-                {
-                    "@id": "bts:CNF-Skindex"
-                },
-                {
-                    "@id": "bts:Cognitiveassessment"
-                },
-                {
-                    "@id": "bts:Combinationlibraryscreen"
-                },
-                {
-                    "@id": "bts:Combinationscreen"
-                },
-                {
-                    "@id": "bts:ComplexIIenzymeactivityassay"
-                },
-                {
-                    "@id": "bts:Compoundscreen"
-                },
-                {
-                    "@id": "bts:Contextualconditioningbehaviorassay"
-                },
-                {
-                    "@id": "bts:ConventionalMRI"
-                },
-                {
-                    "@id": "bts:Children'sDermatologyLifeQualityIndexQuestionnaire"
-                },
-                {
-                    "@id": "bts:Differentialscanningcalorimetry"
-                },
-                {
-                    "@id": "bts:Dynamiclightscattering"
-                },
-                {
-                    "@id": "bts:Electrochemiluminescence"
-                },
-                {
-                    "@id": "bts:Electrophoreticlightscattering"
-                },
-                {
-                    "@id": "bts:Elevatedplusmazetest"
-                },
-                {
-                    "@id": "bts:FACE-QAppearance-relatedDistress"
-                },
-                {
-                    "@id": "bts:Flowcytometry"
-                },
-                {
-                    "@id": "bts:Focusformingassay"
-                },
-                {
-                    "@id": "bts:FunctionalMRI"
-                },
-                {
-                    "@id": "bts:Gaitmeasurement"
-                },
-                {
-                    "@id": "bts:Gelfiltrationchromatography"
-                },
-                {
-                    "@id": "bts:Gelpermeationchromatography"
-                },
-                {
-                    "@id": "bts:Genotyping"
-                },
-                {
-                    "@id": "bts:Highcontentscreen"
-                },
-                {
-                    "@id": "bts:Highfrequencyultrasound"
-                },
-                {
-                    "@id": "bts:High-performanceliquidchromatography/tandemmassspectrometry"
-                },
-                {
-                    "@id": "bts:Immunoassay"
-                },
-                {
-                    "@id": "bts:Immunocytochemistry"
-                },
-                {
-                    "@id": "bts:Immunofluorescence"
-                },
-                {
-                    "@id": "bts:Immunohistochemistry"
-                },
-                {
-                    "@id": "bts:Insilicosynthesis"
-                },
-                {
-                    "@id": "bts:Invitrotumorigenesis"
-                },
-                {
-                    "@id": "bts:InvivoPDXviability"
-                },
-                {
-                    "@id": "bts:Invivobioluminescence"
-                },
-                {
-                    "@id": "bts:Invivotumorgrowth"
-                },
-                {
-                    "@id": "bts:Jumpinglibrary"
-                },
-                {
-                    "@id": "bts:Labelfreemassspectrometry"
-                },
-                {
-                    "@id": "bts:Laserspeckleimaging"
-                },
-                {
-                    "@id": "bts:Lightscatteringassay"
-                },
-                {
-                    "@id": "bts:Liquidchromatography-electrochemicaldetection"
-                },
-                {
-                    "@id": "bts:Liquidchromatography/massspectrometry"
-                },
-                {
-                    "@id": "bts:Liquidchromatography/tandemmassspectrometry"
-                },
-                {
-                    "@id": "bts:LncRNA-seq"
-                },
-                {
-                    "@id": "bts:Localfieldpotentialrecording"
-                },
-                {
-                    "@id": "bts:Longtermpotentiationassay"
-                },
-                {
-                    "@id": "bts:MRNAcounts"
-                },
-                {
-                    "@id": "bts:Magneticresonanceangiography"
-                },
-                {
-                    "@id": "bts:Magneticresonancespectroscopy"
-                },
-                {
-                    "@id": "bts:Magnetization-PreparedRapidGradientEchoMRI"
-                },
-                {
-                    "@id": "bts:Massspectrometry"
-                },
-                {
-                    "@id": "bts:Massivelyparallelreporterassay"
-                },
-                {
-                    "@id": "bts:Metabolicscreening"
-                },
-                {
-                    "@id": "bts:Methylationarray"
-                },
-                {
-                    "@id": "bts:MiRNAarray"
-                },
-                {
-                    "@id": "bts:MiRNA-seq"
-                },
-                {
-                    "@id": "bts:Microrheology"
-                },
-                {
-                    "@id": "bts:Skindex-16"
-                },
-                {
-                    "@id": "bts:Multi-electrodearray"
-                },
-                {
-                    "@id": "bts:Nanoparticletrackinganalysis"
-                },
-                {
-                    "@id": "bts:NanoStringnCounterAnalysisSystem"
-                },
-                {
-                    "@id": "bts:N-backtask"
-                },
-                {
-                    "@id": "bts:Neuropsychologicalassessment"
-                },
-                {
-                    "@id": "bts:Nextgenerationtargetedsequencing"
-                },
-                {
-                    "@id": "bts:Noveltyresponsebehaviorassay"
-                },
-                {
-                    "@id": "bts:Openfieldtest"
-                },
-                {
-                    "@id": "bts:Opticaltomography"
-                },
-                {
-                    "@id": "bts:Opticalcoherencetomography"
-                },
-                {
-                    "@id": "bts:Optokineticreflexassay"
-                },
-                {
-                    "@id": "bts:Oscillatoryrheology"
-                },
-                {
-                    "@id": "bts:OxBS-seq"
-                },
-                {
-                    "@id": "bts:Oxygenconsumptionassay"
-                },
-                {
-                    "@id": "bts:Patternelectroretinogram"
-                },
-                {
-                    "@id": "bts:Perineurialcellthickness"
-                },
-                {
-                    "@id": "bts:PharmocokineticADMEassay"
-                },
-                {
-                    "@id": "bts:Phase-contrastmicroscopy"
-                },
-                {
-                    "@id": "bts:Photograph"
-                },
-                {
-                    "@id": "bts:Polymerasechainreaction"
-                },
-                {
-                    "@id": "bts:Polysomnography"
-                },
-                {
-                    "@id": "bts:Positronemissiontomography"
-                },
-                {
-                    "@id": "bts:PROMISCognitiveFunction"
-                },
-                {
-                    "@id": "bts:Proximityextensionassay"
-                },
-                {
-                    "@id": "bts:Puretoneaverage"
-                },
-                {
-                    "@id": "bts:QuantitativePCR"
-                },
-                {
-                    "@id": "bts:Questionnaire"
-                },
-                {
-                    "@id": "bts:Reactiveoxygenspeciesassay"
-                },
-                {
-                    "@id": "bts:Reportergeneassay"
-                },
-                {
-                    "@id": "bts:Rheometry"
-                },
-                {
-                    "@id": "bts:Ribo-seq"
-                },
-                {
-                    "@id": "bts:Rotarodperformancetest"
-                },
-                {
-                    "@id": "bts:SandwichELISA"
-                },
-                {
-                    "@id": "bts:ScCGI-seq"
-                },
-                {
-                    "@id": "bts:Scale"
-                },
-                {
-                    "@id": "bts:SaferSeqS"
-                },
-                {
-                    "@id": "bts:Singlemoleculedrugscreenassay"
-                },
-                {
-                    "@id": "bts:Single-cellRNA-seq"
-                },
-                {
-                    "@id": "bts:SinglecellATAC-seq"
-                },
-                {
-                    "@id": "bts:Single-nucleusRNA-seq"
-                },
-                {
-                    "@id": "bts:Smallmoleculelibraryscreen"
-                },
-                {
-                    "@id": "bts:Sorbitoldehydrogenaseactivitylevelassay"
-                },
-                {
-                    "@id": "bts:Spatialfrequencydomainimaging"
-                },
-                {
-                    "@id": "bts:Spatialtranscriptomics"
-                },
-                {
-                    "@id": "bts:Statichistomorphometry"
-                },
-                {
-                    "@id": "bts:Staticlightscattering"
-                },
-                {
-                    "@id": "bts:Survival"
-                },
-                {
-                    "@id": "bts:Targetedexomesequencing"
-                },
-                {
-                    "@id": "bts:Tractionforcemicroscopy"
-                },
-                {
-                    "@id": "bts:Transcranialdopplerultrasonography"
-                },
-                {
-                    "@id": "bts:Twinspotassay"
-                },
-                {
-                    "@id": "bts:Ultrahigh-performanceliquidchromatography/tandemmassspectrometry"
-                },
-                {
-                    "@id": "bts:Westernblot"
-                },
-                {
-                    "@id": "bts:Wholeexomesequencing"
-                },
-                {
-                    "@id": "bts:Wholegenomesequencing"
-                },
-                {
-                    "@id": "bts:Whole-cellpatchclamp"
-                },
-                {
-                    "@id": "bts:Wordrecognitionscore"
-                },
-                {
-                    "@id": "bts:STRprofile"
-                }
-            ],
-            "sms:displayName": "protocolAssay",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:ProtocolPurpose",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "Brief description of the protocol purpose.",
-            "rdfs:label": "ProtocolPurpose",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "protocolPurpose",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:SampleType",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "Type of sample used",
-            "rdfs:label": "SampleType",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Thing"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "sampleType",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -27070,6 +27070,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "report",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:Protocol",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "Protocol",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:ResourceType"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "protocol",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
