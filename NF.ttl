@@ -12,22 +12,22 @@
 
 <https://w3id.org/synapse/nfosi/vocab/nfosi> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace skos: ;
+    sh:declare [ sh:namespace linkml: ;
+            sh:prefix "linkml" ],
+        [ sh:namespace schema1: ;
+            sh:prefix "schema" ],
+        [ sh:namespace skos: ;
             sh:prefix "skos" ],
-        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
-            sh:prefix "htan" ],
+        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
+            sh:prefix "personinfo" ],
+        [ sh:namespace rdfs: ;
+            sh:prefix "rdfs" ],
         [ sh:namespace prov: ;
             sh:prefix "prov" ],
         [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
             sh:prefix "nf" ],
-        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
-            sh:prefix "personinfo" ],
-        [ sh:namespace linkml: ;
-            sh:prefix "linkml" ],
-        [ sh:namespace schema1: ;
-            sh:prefix "schema" ],
-        [ sh:namespace rdfs: ;
-            sh:prefix "rdfs" ] ;
+        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
+            sh:prefix "htan" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
@@ -68,7 +68,7 @@
         <https://w3id.org/synapse/nfosi/vocab/ProteinArrayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ProteinAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ProteomicsAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/Protocol>,
+        <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/PublicationTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate>,
@@ -169,7 +169,7 @@
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-03-31T20:45:13"^^xsd:dateTime ;
+    linkml:generation_date "2025-04-01T22:46:41"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -464,8 +464,8 @@
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-03-31T20:45:11"^^xsd:dateTime ;
-    linkml:source_file_size 299019 ;
+    linkml:source_file_date "2025-04-01T22:46:40"^^xsd:dateTime ;
+    linkml:source_file_size 299046 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,
@@ -6946,8 +6946,8 @@
 """ ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/protocolAssay> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/Protocol> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/Protocol> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/AssayEnum> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/protocolAssay> .
 
@@ -6956,8 +6956,8 @@
     skos:definition "Brief description of the protocol purpose." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/protocolPurpose> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/Protocol> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/Protocol> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/protocolPurpose> .
 
@@ -7040,8 +7040,8 @@
     skos:definition "Type of sample used" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sampleType> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/Protocol> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/Protocol> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/sampleType> .
 
@@ -7892,15 +7892,6 @@
     linkml:required true ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/initiative> .
 
-<https://w3id.org/synapse/nfosi/vocab/isCellLine> a linkml:SlotDefinition ;
-    skos:definition "Whether or not sample source is a cell line (Yes; No)" ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/isCellLine> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/BooleanEnum> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/isCellLine> .
-
 <https://w3id.org/synapse/nfosi/vocab/lensAperture> a linkml:SlotDefinition ;
     skos:definition "Numerical aperture of the lens. Floating point value > 0." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -8390,6 +8381,16 @@
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/bisulfiteConversionKitID> .
 
+<https://w3id.org/synapse/nfosi/vocab/isCellLine> a linkml:SlotDefinition ;
+    skos:definition "Whether or not sample source is a cell line (Yes; No)" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/isCellLine> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/BooleanEnum> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/isCellLine> .
+
 <https://w3id.org/synapse/nfosi/vocab/ChIPSeqTemplate> a linkml:ClassDefinition ;
     skos:definition "Template for describing raw data from ChIP-Seq assays, typically used to identify DNA-protein interactions." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -8515,54 +8516,6 @@
         <https://w3id.org/synapse/nfosi/vocab/specimenPreparationMethod>,
         <https://w3id.org/synapse/nfosi/vocab/tumorType> .
 
-<https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate> a linkml:ClassDefinition ;
-    skos:closeMatch <htan:BulkRNA-seqLevel1> ;
-    skos:definition "Template for describing raw data from (bulk) RNA-sequencing" ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate> ;
-    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
-    linkml:slot_usage [ ] ;
-    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
-        <https://w3id.org/synapse/nfosi/vocab/Filename>,
-        <https://w3id.org/synapse/nfosi/vocab/age>,
-        <https://w3id.org/synapse/nfosi/vocab/ageUnit>,
-        <https://w3id.org/synapse/nfosi/vocab/aliquotID>,
-        <https://w3id.org/synapse/nfosi/vocab/assay>,
-        <https://w3id.org/synapse/nfosi/vocab/batchID>,
-        <https://w3id.org/synapse/nfosi/vocab/comments>,
-        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
-        <https://w3id.org/synapse/nfosi/vocab/dataType>,
-        <https://w3id.org/synapse/nfosi/vocab/diagnosis>,
-        <https://w3id.org/synapse/nfosi/vocab/experimentalCondition>,
-        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
-        <https://w3id.org/synapse/nfosi/vocab/genePerturbationTechnology>,
-        <https://w3id.org/synapse/nfosi/vocab/genePerturbationType>,
-        <https://w3id.org/synapse/nfosi/vocab/genePerturbed>,
-        <https://w3id.org/synapse/nfosi/vocab/individualID>,
-        <https://w3id.org/synapse/nfosi/vocab/libraryPrep>,
-        <https://w3id.org/synapse/nfosi/vocab/libraryPreparationMethod>,
-        <https://w3id.org/synapse/nfosi/vocab/libraryStrand>,
-        <https://w3id.org/synapse/nfosi/vocab/modelSystemName>,
-        <https://w3id.org/synapse/nfosi/vocab/nf1Genotype>,
-        <https://w3id.org/synapse/nfosi/vocab/nf2Genotype>,
-        <https://w3id.org/synapse/nfosi/vocab/nucleicAcidSource>,
-        <https://w3id.org/synapse/nfosi/vocab/organ>,
-        <https://w3id.org/synapse/nfosi/vocab/parentSpecimenID>,
-        <https://w3id.org/synapse/nfosi/vocab/platform>,
-        <https://w3id.org/synapse/nfosi/vocab/readDepth>,
-        <https://w3id.org/synapse/nfosi/vocab/readLength>,
-        <https://w3id.org/synapse/nfosi/vocab/readPair>,
-        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
-        <https://w3id.org/synapse/nfosi/vocab/runType>,
-        <https://w3id.org/synapse/nfosi/vocab/sex>,
-        <https://w3id.org/synapse/nfosi/vocab/species>,
-        <https://w3id.org/synapse/nfosi/vocab/specimenID>,
-        <https://w3id.org/synapse/nfosi/vocab/specimenPreparationMethod>,
-        <https://w3id.org/synapse/nfosi/vocab/specimenType>,
-        <https://w3id.org/synapse/nfosi/vocab/targetDepth>,
-        <https://w3id.org/synapse/nfosi/vocab/tumorType> .
-
 <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> a linkml:ClassDefinition ;
     skos:definition "Template for describing raw data from single-cell RNA-seq." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -8620,7 +8573,7 @@
     skos:definition "The author of the resource; preferably use an ORCID ID, GitHub profile link, etc., if available and a text name if not." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/author> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/Protocol>,
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
     linkml:multivalued true ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
@@ -8645,7 +8598,7 @@
         "identifies academic articles that are recommended by the data provider be cited in addition to the dataset itself." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/citation> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/Protocol>,
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
@@ -8739,7 +8692,7 @@
         "Unless information for license is clear, this should default to UNKNOWN." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/license> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/Protocol>,
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/License> ;
@@ -8964,6 +8917,55 @@
         <https://w3id.org/synapse/nfosi/vocab/workflow>,
         <https://w3id.org/synapse/nfosi/vocab/workflowLink> .
 
+<https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate> a linkml:ClassDefinition ;
+    skos:closeMatch <htan:BulkRNA-seqLevel1> ;
+    skos:definition "Template for describing raw data from (bulk) RNA-sequencing" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate> ;
+    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
+    linkml:slot_usage [ ] ;
+    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
+        <https://w3id.org/synapse/nfosi/vocab/Filename>,
+        <https://w3id.org/synapse/nfosi/vocab/age>,
+        <https://w3id.org/synapse/nfosi/vocab/ageUnit>,
+        <https://w3id.org/synapse/nfosi/vocab/aliquotID>,
+        <https://w3id.org/synapse/nfosi/vocab/assay>,
+        <https://w3id.org/synapse/nfosi/vocab/batchID>,
+        <https://w3id.org/synapse/nfosi/vocab/comments>,
+        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
+        <https://w3id.org/synapse/nfosi/vocab/dataType>,
+        <https://w3id.org/synapse/nfosi/vocab/diagnosis>,
+        <https://w3id.org/synapse/nfosi/vocab/experimentalCondition>,
+        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
+        <https://w3id.org/synapse/nfosi/vocab/genePerturbationTechnology>,
+        <https://w3id.org/synapse/nfosi/vocab/genePerturbationType>,
+        <https://w3id.org/synapse/nfosi/vocab/genePerturbed>,
+        <https://w3id.org/synapse/nfosi/vocab/individualID>,
+        <https://w3id.org/synapse/nfosi/vocab/isCellLine>,
+        <https://w3id.org/synapse/nfosi/vocab/libraryPrep>,
+        <https://w3id.org/synapse/nfosi/vocab/libraryPreparationMethod>,
+        <https://w3id.org/synapse/nfosi/vocab/libraryStrand>,
+        <https://w3id.org/synapse/nfosi/vocab/modelSystemName>,
+        <https://w3id.org/synapse/nfosi/vocab/nf1Genotype>,
+        <https://w3id.org/synapse/nfosi/vocab/nf2Genotype>,
+        <https://w3id.org/synapse/nfosi/vocab/nucleicAcidSource>,
+        <https://w3id.org/synapse/nfosi/vocab/organ>,
+        <https://w3id.org/synapse/nfosi/vocab/parentSpecimenID>,
+        <https://w3id.org/synapse/nfosi/vocab/platform>,
+        <https://w3id.org/synapse/nfosi/vocab/readDepth>,
+        <https://w3id.org/synapse/nfosi/vocab/readLength>,
+        <https://w3id.org/synapse/nfosi/vocab/readPair>,
+        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
+        <https://w3id.org/synapse/nfosi/vocab/runType>,
+        <https://w3id.org/synapse/nfosi/vocab/sex>,
+        <https://w3id.org/synapse/nfosi/vocab/species>,
+        <https://w3id.org/synapse/nfosi/vocab/specimenID>,
+        <https://w3id.org/synapse/nfosi/vocab/specimenPreparationMethod>,
+        <https://w3id.org/synapse/nfosi/vocab/specimenType>,
+        <https://w3id.org/synapse/nfosi/vocab/targetDepth>,
+        <https://w3id.org/synapse/nfosi/vocab/tumorType> .
+
 <https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> a linkml:ClassDefinition ;
     skos:definition "Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -9015,7 +9017,7 @@
     skos:definition "Title of a resource." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/title> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/Protocol>,
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
@@ -9360,9 +9362,9 @@
 """ ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/specimenType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
@@ -9448,12 +9450,12 @@
         <https://w3id.org/synapse/nfosi/vocab/workflow>,
         <https://w3id.org/synapse/nfosi/vocab/workflowLink> .
 
-<https://w3id.org/synapse/nfosi/vocab/Protocol> a linkml:ClassDefinition ;
+<https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> a linkml:ClassDefinition ;
     dcterms:source <https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT> ;
     skos:definition "Describes protocol document based on https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/Protocol> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/Protocol> ;
+    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
     linkml:slot_usage [ ] ;
     linkml:slots <https://w3id.org/synapse/nfosi/vocab/author>,
         <https://w3id.org/synapse/nfosi/vocab/citation>,
@@ -9518,9 +9520,9 @@
         "https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/libraryStrand> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
@@ -10120,8 +10122,8 @@
         <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplateExtended>,
-        <https://w3id.org/synapse/nfosi/vocab/Protocol> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/Protocol> ;
+        <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/comments> .
 
@@ -10129,9 +10131,9 @@
     skos:definition "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/modelSystemName> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10208,11 +10210,11 @@
     skos:definition "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sex> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10238,9 +10240,9 @@
     skos:definition "Genotype of NF2 gene in the biospecimen from which the data were derived, if known" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/nf2Genotype> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10429,9 +10431,9 @@
         "Reflects the data types within the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Metadata> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Metadata> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/dataType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/EpidemiologyDataTemplate>,
