@@ -3,12 +3,25 @@
 ### Data Model Artifacts 
 
 The data model is compiled and released as several different artifacts using various tooling. 
-The figure below provides an overview; refer to the `Makefile` for details of the underlying processing.
+We keep the main one, `NF.jsonld`, in the root of the repository, while others are availble in `dist` and `registered-json-schemas` the folder.
 
-- `modules/*.yaml`: These are source files. Refer to [Data Model Framework](#data-model-framework) for editing guidelines.
-- `NF.jsonld`: This is the main output format used for distribution and downstream apps (Data Curator App).
-- `registered-json-schemas/*.json`: These are JSON serializations for a subset of the data model, for native functionality with Synapse platform or wherever JSON seralization is preferred.
+#### Here's a nice table summarizing what you might want to grab for different purposes
 
+| Artifact | Description |
+| -------- | ----------- |
+| `NF.jsonld` | Main output in schematic-compatible JSON-LD format, for distribution and use with schematic and Data Curator. |
+| `registered-json-schemas/*.json` | JSON serializations for a subset of the data model, for native functionality with 
+Synapse platform or wherever a JSON definition is preferred. |
+| `dist/NF.yaml` | Data model as as a single LinkML-valid YAML file, useful for using LinkML tooling to create Excel spreadsheets. |
+| `dist/NF_linkml.jsonld` | JSON-LD from LinkML, best if you want to compare/combine our model with others maintained in LinkML, e.g. see here. There are differences with the `NF.jsonld`. |
+| `dist/NF_linklml.ttl` | Basically same as above but in Turtle format, since others might publish the .ttl artifact for *their* models but not the JSON-LD e.g. see here. |
+
+In general, .jsonld or .ttl artifacts facilate model querying and comparison if you know how to load them into compatible linked data tooling. 
+
+#### And here are details about the source/processing if you need to do more than just download something
+
+- `modules/*.yaml`: Source files. Refer to [Data Model Framework](#data-model-framework) for editing guidelines.
+- `Makefile`: Scripts to build the artifacts from the source files.
 
 ```mermaid
 graph LR
