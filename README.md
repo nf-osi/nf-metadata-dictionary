@@ -10,8 +10,7 @@ We keep the main one, `NF.jsonld`, in the root of the repository, while others a
 | Artifact | Description |
 | -------- | ----------- |
 | `NF.jsonld` | Main output in schematic-compatible JSON-LD format, for distribution and use with schematic and Data Curator. |
-| `registered-json-schemas/*.json` | JSON serializations for a subset of the data model, for native functionality with 
-Synapse platform or wherever a JSON definition is preferred. |
+| `registered-json-schemas/*.json` | JSON serializations for a subset of the data model, for native functionality with Synapse platform or wherever a JSON definition is preferred. |
 | `dist/NF.yaml` | Data model as as a single LinkML-valid YAML file, useful for using LinkML tooling to create Excel spreadsheets. |
 | `dist/NF_linkml.jsonld` | JSON-LD from LinkML, best if you want to compare/combine our model with others maintained in LinkML, e.g. see here. There are differences with the `NF.jsonld`. |
 | `dist/NF_linklml.ttl` | Basically same as above but in Turtle format, since others might publish the .ttl artifact for *their* models but not the JSON-LD e.g. see here. |
