@@ -13,7 +13,7 @@ We keep the main one, `NF.jsonld`, in the root of the repository, while others a
 | `registered-json-schemas/*.json` | JSON serializations for a subset of the data model, for native functionality with Synapse platform or wherever a JSON definition is preferred. |
 | `dist/NF.yaml` | Data model as as a single LinkML-valid YAML file, useful for using LinkML tooling to create Excel spreadsheets. |
 | `dist/NF_linkml.jsonld` | JSON-LD from LinkML, best if you want to compare/combine our model with others maintained in LinkML, e.g. see here. There are differences with the `NF.jsonld`. |
-| `dist/NF_linklml.ttl` | Basically same as above but in Turtle format. |
+| `dist/NF.ttl` | Basically same as above but in Turtle format. |
 
 In general, .jsonld or .ttl artifacts facilate model querying and comparison if you know how to load them into compatible linked data tooling. 
 
@@ -31,6 +31,7 @@ graph LR
     A --> L[LinkML]
     L --> J[*.json]
     L --> T[NF.ttl]
+    L --> LJ["(LinkML) NF.jsonld"]
 
 class B,D tools
     
@@ -46,6 +47,7 @@ style E fill:white,stroke:#333,stroke-width:2px;
 style G fill:white,stroke:#333,stroke-width:2px;
 style J fill:white,stroke:#333,stroke-width:2px;
 style T fill:white,stroke:#333,stroke-width:2px;
+style LJ fill:white,stroke:#333,stroke-width:2px;
 style B fill:#aaf,stroke:#333,stroke-width:2px
 style D fill:#aaf,stroke:#333,stroke-width:2px
 style H fill:#aaf,stroke:#333,stroke-width:2px
