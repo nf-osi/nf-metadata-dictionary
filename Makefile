@@ -17,7 +17,7 @@ NF.yaml:
 
 NF.ttl:
 	make dist/NF.yaml
-	gen-rdf dist/NF.yaml > NF.ttl
+	gen-rdf dist/NF.yaml > dist/NF.ttl
 
 linkml_jsonld:
 	gen-jsonld dist/NF.yaml > dist/NF_linkml.jsonld
