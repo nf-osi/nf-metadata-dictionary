@@ -31,6 +31,7 @@ graph LR
     A --> L[LinkML]
     L --> J[*.json]
     L --> T[NF.ttl]
+    L --> J[(LinkML) NF.jsonld]
 
 class B,D tools
     

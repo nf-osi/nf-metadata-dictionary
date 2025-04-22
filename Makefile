@@ -19,8 +19,8 @@ NF.ttl:
 	make dist/NF.yaml
 	gen-rdf dist/NF.yaml > NF.ttl
 
-LinkML_jsonld:
-    gen-jsonld dist/NF.yaml > dist/NF.jsonld
+linkml_jsonld:
+	gen-jsonld dist/NF.yaml > dist/NF_linkml.jsonld
 
 # Example generation of manifests as Excel using LinkML -- each manifest is a sheet with dropdowns where appropriate
 # We DON'T normally use these products, but this step is useful to provide as example for some
