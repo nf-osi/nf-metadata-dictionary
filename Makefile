@@ -16,15 +16,18 @@ NF.yaml:
 	rm -f merged*.yaml
 
 NF.ttl:
-	make NF.yaml
-	gen-rdf NF.yaml > NF.ttl
+	make dist/NF.yaml
+	gen-rdf dist/NF.yaml > NF.ttl
+
+LinkML_jsonld:
+    gen-jsonld dist/NF.yaml > dist/NF.jsonld
 
 # Example generation of manifests as Excel using LinkML -- each manifest is a sheet with dropdowns where appropriate
 # We DON'T normally use these products, but this step is useful to provide as example for some
 # There seems to be a bug where enum_range seems to be handled correctly, but this is relevant for only small set of attributes
 # where we can migrate to using defined enums instead of inlined enums
 ManifestLinkMLDemo: NF.yaml
-	gen-excel NF.yaml
+	gen-excel dist/NF.yaml
 
 # Recompile certain json schemas with LinkML with selective import of props, enums, and template 
 # LinkML output needs to be dereferenced bc Synapse doesn't suppport full specs such as $defs
