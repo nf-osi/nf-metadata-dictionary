@@ -34,10 +34,10 @@ enums:
         meaning: http://purl.obolibrary.org/obo/NCIT_C62317
         notes:
         - More general than `molecular property`
-      drugCombinationScreen:
+      drug combination screen:
         description: Information on drug sensitivity of more than one compound
         source: https://www.ncbi.nlm.nih.gov/pubmed/29344898
-      isoformExpression:
+      isoform expression:
         description: Expression of protein isoforms formed from alternative splicings or other post-translational modifications of a single gene through RNA splicing mechanisms.
         source: https://en.wikipedia.org/wiki/Protein_isoform
         meaning: http://purl.obolibrary.org/obo/NCIT_C184767
@@ -47,7 +47,7 @@ enums:
       mass spectrometry data:
         description: Data from mass spectrometry measurement.
         meaning: http://edamontology.org/data_2536
-      surveyData:
+      survey data:
         description: A data set that contains the outcome of a survey.
         meaning: http://purl.obolibrary.org/obo/OMIABIS_0000060
       kinomics:
@@ -57,11 +57,11 @@ enums:
         notes:
         - See "Kinome Response Profile" (http://purl.obolibrary.org/obo/NCIT_C107137) for kinome data *specifically* with drug treatment
         - Subclasss of "Proteomics" (http://purl.obolibrary.org/obo/NCIT_C16723)
-      SomaticVariants:
+      somatic variants:
         description: Called somatic variants
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_somatic_mutation
         meaning: https://w3id.org/synapse/nfosi/vocab/SomaticVariants
-      Volume:
+      volume:
         description: Data of the three dimensional space occupied by an entity or the capacity of a space or container.
         meaning: http://purl.obolibrary.org/obo/NCIT_C25335
       characteristic:
@@ -70,27 +70,27 @@ enums:
         notes: 
         - Not preferred for annotation; more specific term should be used.
         - May cover both morphology parameter and physiology parameter. 
-      drugScreen:
+      drug screen:
         description: Information on drug sensitivity and molecular markers of drug response
         source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3531057/
         meaning: https://w3id.org/synapse/nfosi/vocab/drugScreen
-      geneExpression:
+      gene expression:
         description: Data of the levels and patterns of synthesis of gene products (proteins and functional RNA), including interpretation in functional terms of gene expression data.
         meaning: http://edamontology.org/data_2603
         notes:
         - EDAM does have a broader mapping, [expression data](http://edamontology.org/data_2603)
         - The mapping used maps to [gene expression profile](http://edamontology.org/data_0928)
         - Covers both raw (e.g. fastqs, microarray intensities) and processed gene expression data (e.g. normalized gene expression matrix).
-      AlignedReads:
+      aligned reads:
         description: Aligned reads output from alignment workflows
         meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads
-      genomicFeatures:
+      genomic features:
         description: Data of sequence feature (continuous extent of biological sequence) that is of genomic origin.
         meaning: http://purl.obolibrary.org/obo/GENO_0000481
         notes:
         - Consider subclass of "nucleic acid features" (http://edamontology.org/data_1276)
         see_also: https://en.wikipedia.org/wiki/General_feature_format
-      genomicVariants:
+      genomic variants:
         description: >
           Genomic alterations, including single nucleotide polymorphisms, short indels and structural variants.
           Use more specific term if possible, esp. if data is only of one specific subset.
@@ -100,18 +100,18 @@ enums:
       raw counts:
         description: The number or amount of something.
         meaning: http://purl.obolibrary.org/obo/NCIT_C25463
-      RawIntensities:
+      raw intensities:
         description: Raw intensity values from the instrument (including microarrays, plate reader assays, raw pixel intensities from imaging assay, mass spectrometry, etc.).
         meaning: https://w3id.org/synapse/nfosi/vocab/RawIntensities
         notes:
         - Not preferred for annotation.
-      NormalizedIntensities:
+      normalized intensities:
         description: Normalized intensity values from the instrument.
         meaning: https://w3id.org/synapse/nfosi/vocab/NormalizedIntensities
         notes:
         - Not preferred for annotation.
         - See RawIntensities
-      Pharmacokinetic Study:
+      pharmacokinetics:
         description: Data characterizing the process by which a drug is absorbed, distributed, metabolized, and eliminated by the body.
         meaning: http://purl.obolibrary.org/obo/NCIT_C49663
       mask image:
@@ -120,19 +120,19 @@ enums:
       count matrix:
         description: A table of unnormalized values representing summarised read counts per genomic region (e.g. gene, transcript, peak).
         meaning: http://edamontology.org/data_3917
-      chromatinActivity:
+      chromatin activity:
         description: Data of chromatin activity, which allows access to condensed genomic DNA and potentially controls gene expression.
         meaning: https://w3id.org/synapse/nfosi/vocab/chromatinActivity
         see_also:
         - https://en.wikipedia.org/wiki/Chromatin_remodeling
-      StructuralVariants:
+      structural variants:
         description: Genomic variants data that covers deletions, duplications, CNVs, insertions, inversions, and translocations, which may be derived from specialized variant calling workflows.
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=structural_variation
         meaning: https://w3id.org/synapse/nfosi/vocab/StructuralVariantss
-      GermlineVariants:
+      germline variants:
         description: Called germline variants
         meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation
-      CopyNumberVariants:
+      copy number variants:
         description: Copy number variants
         meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=copy_number_variation
       image:
@@ -143,7 +143,7 @@ enums:
         meaning: http://edamontology.org/data_2600
         notes:
         - EDAM preferred label is 'Pathway or network'
-      cellularPhysiology:
+      cellular physiology:
         description: Data on the physiological parameter of a cell.
         meaning: https://w3id.org/synapse/nfosi/vocab/cellularPhysiology
       metabolomics:
@@ -159,13 +159,13 @@ enums:
         meaning: http://edamontology.org/data_3722
         notes: 
         - Relation to pharmacokinetic data -- certain physiology parameteres inherent to the organism influences its pharmokinetics of a drug.
-      AnnotatedSomaticVariants:
+      annotated somatic mutation:
         description: Somatic variants annotated with some annotation workflow
         meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation
-      AnnotatedGermlineVariants:
+      annotated germline variants:
         description: Germline variants annotated with some annotation workflow
         meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_germline_variation
-      Weight:
+      weight:
         description: The vertical force exerted by a mass as a result of gravity.
         meaning: http://purl.obolibrary.org/obo/NCIT_C25208
       electrophysiology:
@@ -184,10 +184,10 @@ enums:
       audio transcript:
         description: Text transcript of an audio recording.
         meaning: https://w3id.org/synapse/nfosi/vocab/audioTranscript
-      dataIndex:
+      data index:
         description: A data index is information used to help with retrieval of some other data, especially large-scale data that would benefit from such an index. Very common formats are .bai and .tbi.
         meaning: http://edamontology.org/data_0955
-      AggregatedData:
+      aggregated data:
         description: Summary or group-level data.
         notes:
         - Not preferred for annotation.
@@ -200,7 +200,9 @@ enums:
         notes: 
         - Can be used for .dna (SnapGene) files.
       protein interaction data:
-        description: Data concerning the interactions (predicted or known) within or between a protein, structural domain or part of a protein. This includes intra- and inter-residue contacts and distances, as well as interactions with other proteins and non-protein entities such as nucleic acid, metal atoms, water, ions etc.
+        description: >
+          Data concerning the interactions (predicted or known) within or between a protein, structural domain or part of a protein. 
+          This includes intra- and inter-residue contacts and distances, as well as interactions with other proteins and non-protein entities such as nucleic acid, metal atoms, water, ions etc.
         meaning: http://edamontology.org/data_0906
       protein interaction raw data:
         description: Protein-protein interaction data from for example yeast two-hybrid analysis, protein microarrays, immunoaffinity chromatography followed by mass spectrometry, phage display etc.
@@ -214,21 +216,27 @@ enums:
 
 
   DataSubtypeEnum:
+    description: >
+      Categorizes data based on its processing state. This is the main classification axis used for data types. 
+      Not all data types can use this dimensions (e.g. clinical data).
     permissible_values:
-      normalized:
-        description: A data set that is produced as the output of a normalization data transformation.
-        meaning: http://purl.obolibrary.org/obo/OBI_0000451
-      dataMatrix:
-        description: A file of data containing multiple values for multiple samples.
+    # --- Data Generation/Origin ---
       raw:
-        description: A data file produced by an instrument, or one with very little subsequent processing.
+        description: Data produced by an instrument, or one with very little subsequent processing.
+      simulated:
+        description: Data generated computationally via models or simulations, not direct experimental measurement. 
+    # --- Processed ---
+      normalized:
+        description: Data that has undergone a normalization procedure to adjust for technical variation or to bring measurements onto a common scale. Considered a more specific type of processed data.
+        meaning: http://purl.obolibrary.org/obo/OBI_0000451
+      quantified: 
+        description: Data representing measurements/counts of specific features (gene counts, peak intensities, object properties).
       processed:
-        description: A file of data generated from running one or more bioinformatics methods on a raw file.
-      metadata:
-        description: A file of clinical, technical, or other parameters that describe a dataset.
-      representative:
-        description: An activity that stands as an equivalent of something or results in an equivalent; typical of, or the same as, others in a larger group of people or things.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C67045
+        description: Data generated from running one or more bioinformatics methods on raw data.
+    # --- Analyzed/Interpreted ---  
+      derived:
+        description: Data from additional analytical steps performed on already processed data.
+        
 
   Metadata: # Updated with EDAM concepts
     description: Data that provides information about other data
@@ -262,23 +270,6 @@ enums:
       Ontology Metadata: # New from EDAM
         description: Data concerning a biological ontology.
         meaning: http://edamontology.org/data_2223
-
-  DataSubtypeEnum:
-    permissible_values:
-      normalized:
-        description: A data set that is produced as the output of a normalization data transformation.
-        meaning: http://purl.obolibrary.org/obo/OBI_0000451
-      dataMatrix:
-        description: A file of data containing multiple values for multiple samples.
-      raw:
-        description: A data file produced by an instrument, or one with very little subsequent processing.
-      processed:
-        description: A file of data generated from running one or more bioinformatics methods on a raw file.
-      metadata:
-        description: A file of clinical, technical, or other parameters that describe a dataset.
-      representative:
-        description: An activity that stands as an equivalent of something or results in an equivalent; typical of, or the same as, others in a larger group of people or things.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C67045
 
   UnknownEnum:
     permissible_values:
