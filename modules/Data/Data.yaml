@@ -5,26 +5,35 @@ enums:
     notes:
     - Broad term; should not be used for annotation
     permissible_values:
+      # experimental measurement:
+      #   description: Raw data such as measurements or other results from laboratory experiments, as generated from laboratory hardware.
+      #   meaning: http://edamontology.org/data_3108
+      #   notes:
+      #   - Not used for annotation. If resourceType=experimentalData -> dataType
       immunoassay:
         description: Laboratory test involving interaction of antigens with specific antibodies.
         meaning: http://purl.obolibrary.org/obo/NCIT_C16723
-      behavior data:
+      behavioral data:
         description: |
           Qualitative or quantitative behavioral measurements / observations about the action, reaction, or performance of an organism in response to external or internal stimuli. 
           Examples: avoidance behavior, choice-making.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C16723
         notes:
         - Legacy concept previously labeled "behavior process", updated to "behavioral data".
       clinical:
         description: Data containing clinical information, e.g. patient diagnosis, personal demographics, exposures, laboratory tests, family relationships.
-        source: https://docs.gdc.cancer.gov/Encyclopedia/pages/Clinical_Data
         meaning: http://www.ebi.ac.uk/efo/EFO_0030083
+        notes:
+        - The closest EDAM term is for [EHR](http://edamontology.org/data_3861), and while [ecological data](http://edamontology.org/data_3736), there is no mapping, which is why we use EFO.
+        see_also:
+        - https://docs.gdc.cancer.gov/Encyclopedia/pages/Clinical_Data
       demographics:
         description: The statistical characterization of human populations or segments of human populations (e.g., characterization by age, sex, race, or income).
         meaning: http://purl.obolibrary.org/obo/NCIT_C16495
       particle characterization:
         description: Data providing information about entities such as composition, structure and defects.
         meaning: http://purl.obolibrary.org/obo/NCIT_C62317
+        notes:
+        - More general than `molecular property`
       drugCombinationScreen:
         description: Information on drug sensitivity of more than one compound
         source: https://www.ncbi.nlm.nih.gov/pubmed/29344898
@@ -42,7 +51,7 @@ enums:
         description: A data set that contains the outcome of a survey.
         meaning: http://purl.obolibrary.org/obo/OMIABIS_0000060
       kinomics:
-        description: Kinome data representing protein kinase signaling/activity.
+        description: Data studying protein kinase signaling/activity.
         source: http://www.kinomecore.com/what-is-kinomics/
         meaning: https://w3id.org/synapse/nfosi/vocab/kinomics
         notes:
@@ -59,8 +68,8 @@ enums:
         description: Broad data type for data that can encompass volume, weight, brightness, color, capacity, etc.
         meaning: http://purl.obolibrary.org/obo/NCIT_C25447
         notes: 
-        - Not preferred for annotation; use something more specific.
-        - Concept covers both morphology parameter and physiology parameter. 
+        - Not preferred for annotation; more specific term should be used.
+        - May cover both morphology parameter and physiology parameter. 
       drugScreen:
         description: Information on drug sensitivity and molecular markers of drug response
         source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3531057/
@@ -69,8 +78,9 @@ enums:
         description: Data of the levels and patterns of synthesis of gene products (proteins and functional RNA), including interpretation in functional terms of gene expression data.
         meaning: http://edamontology.org/data_2603
         notes:
-        - This covers both raw and processed gene expression data, but when the distinction is clear, the subtype should be used (e.g., "raw gene expression" or "processed gene expression").
-        - Preferred name in EDAM is "expression data"
+        - EDAM does have a broader mapping, [expression data](http://edamontology.org/data_2603)
+        - The mapping used maps to [gene expression profile](http://edamontology.org/data_0928)
+        - Covers both raw (e.g. fastqs, microarray intensities) and processed gene expression data (e.g. normalized gene expression matrix).
       AlignedReads:
         description: Aligned reads output from alignment workflows
         meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads
@@ -107,8 +117,11 @@ enums:
       mask image:
         description: Image used as the mask for an image processing operation, such as subtraction.
         meaning: http://dicom.nema.org/resources/ontology/DCM/121321
+      count matrix:
+        description: A table of unnormalized values representing summarised read counts per genomic region (e.g. gene, transcript, peak).
+        meaning: http://edamontology.org/data_3917
       chromatinActivity:
-        description: Chromatin activity that allow access of condensed genomic DNA and potentially control gene expression.
+        description: Data of chromatin activity, which allows access to condensed genomic DNA and potentially controls gene expression.
         meaning: https://w3id.org/synapse/nfosi/vocab/chromatinActivity
         see_also:
         - https://en.wikipedia.org/wiki/Chromatin_remodeling
@@ -181,27 +194,75 @@ enums:
       plot:
         description: Data that has been plotted as a graph of some type, or data representing such a graph.
         meaning: http://edamontology.org/data_2884
+      nucleic acid sequence record:
+        description: A nucleic acid sequence and associated metadata.
+        meaning: http://edamontology.org/data_2887
+        notes: 
+        - Can be used for .dna (SnapGene) files.
+      protein interaction data:
+        description: Data concerning the interactions (predicted or known) within or between a protein, structural domain or part of a protein. This includes intra- and inter-residue contacts and distances, as well as interactions with other proteins and non-protein entities such as nucleic acid, metal atoms, water, ions etc.
+        meaning: http://edamontology.org/data_0906
+      protein interaction raw data:
+        description: Protein-protein interaction data from for example yeast two-hybrid analysis, protein microarrays, immunoaffinity chromatography followed by mass spectrometry, phage display etc.
+        meaning: http://edamontology.org/data_0905
       molecular property:
-        description: A report on the physical (e.g. structural) or chemical properties of molecules, or parts of a molecule.
+        description: Data on the physical (e.g. structural) or chemical properties of molecules, or parts of a molecule.
         meaning: http://edamontology.org/data_2087
       text data:
-        description: Data that is represented as text; considered "unstructured data".
+        description: Data that is represented as text, usually referring to "unstructured data".
         meaning: http://edamontology.org/data_2526
-      Metadata:
-        description: Data that provides information about other data
-        source: https://en.wikipedia.org/wiki/Metadata
-        meaning: http://edamontology.org/data_2337
-      Workflow Metadata: 
-        description: Process data from computational workflows.
-        comments: For use esp. with nextflow metadata files.
+
+
+  DataSubtypeEnum:
+    permissible_values:
+      normalized:
+        description: A data set that is produced as the output of a normalization data transformation.
+        meaning: http://purl.obolibrary.org/obo/OBI_0000451
+      dataMatrix:
+        description: A file of data containing multiple values for multiple samples.
+      raw:
+        description: A data file produced by an instrument, or one with very little subsequent processing.
+      processed:
+        description: A file of data generated from running one or more bioinformatics methods on a raw file.
+      metadata:
+        description: A file of clinical, technical, or other parameters that describe a dataset.
+      representative:
+        description: An activity that stands as an equivalent of something or results in an equivalent; typical of, or the same as, others in a larger group of people or things.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C67045
+
+  Metadata: # Updated with EDAM concepts
+    description: Data that provides information about other data
+    source: https://en.wikipedia.org/wiki/Metadata
+    permissible_values:
+      Descriptive Metadata:
+        description: Descriptive information about a resource. It is used for discovery and identification. It includes elements such as title, abstract, author, and keywords.
+        comments: The `synapse_manifest.csv` files uploaded by DCA count as Descriptive Metadata
+      Structural Metadata:
+        description: >
+          Metadata about containers of data and indicates how compound objects are put together, for example, how pages are ordered to form chapters.
+          It describes the types, versions, relationships, and other characteristics of digital materials.
+      Administrative Metadata:
+        description: Information to help manage a resource, like resource type, permissions, and when and how it was created.
+      Reference Metadata:
+        description: Information about the contents and quality of statistical data.
+      Statistical Metadata:
+        description: Also called process data, may describe processes that collect, process, or produce statistical data.
+      Legal Metadata:
+        description: Provides information about the creator, copyright holder, and public licensing, if provided.
+        comments: Can apply to a file with license text.
+      Workflow Metadata:
+        description: Process data from computational workflows. This is highly related to Statistical Metadata. Basic information, annotation or documentation concerning a workflow (but not the workflow itself).
         meaning: http://edamontology.org/data_0949
-      Tool Metadata:
-        description: Basic information about one or more bioinformatics applications or packages, such as name, type, description, or other documentation.
-        meaning: http://edamontology.org/data_0958
-      System Metadata:
-        description: Metadata concerning the software, hardware or other aspects of a computer system.
-        meaning: http://edamontology.org/data_3106
-  
+        comments: Coined category for use esp. with nextflow metadata files.
+      Image Metadata: # New from EDAM
+        description: Any data concerning a specific biological or biomedical image.
+        meaning: http://edamontology.org/data_3546
+        notes:
+        - Label for e.g. XML files that contain image metadata.
+      Ontology Metadata: # New from EDAM
+        description: Data concerning a biological ontology.
+        meaning: http://edamontology.org/data_2223
+
   DataSubtypeEnum:
     permissible_values:
       normalized:
