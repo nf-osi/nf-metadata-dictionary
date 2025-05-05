@@ -12,22 +12,22 @@
 
 <https://w3id.org/synapse/nfosi/vocab/nfosi> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace schema1: ;
-            sh:prefix "schema" ],
+    sh:declare [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
+            sh:prefix "htan" ],
         [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
             sh:prefix "personinfo" ],
-        [ sh:namespace skos: ;
-            sh:prefix "skos" ],
-        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
-            sh:prefix "nf" ],
-        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
-            sh:prefix "htan" ],
-        [ sh:namespace linkml: ;
-            sh:prefix "linkml" ],
         [ sh:namespace rdfs: ;
             sh:prefix "rdfs" ],
+        [ sh:namespace skos: ;
+            sh:prefix "skos" ],
         [ sh:namespace prov: ;
-            sh:prefix "prov" ] ;
+            sh:prefix "prov" ],
+        [ sh:namespace schema1: ;
+            sh:prefix "schema" ],
+        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
+            sh:prefix "nf" ],
+        [ sh:namespace linkml: ;
+            sh:prefix "linkml" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
@@ -169,7 +169,7 @@
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-04-24T22:47:35"^^xsd:dateTime ;
+    linkml:generation_date "2025-05-05T15:46:15"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -464,8 +464,8 @@
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-04-24T22:47:33"^^xsd:dateTime ;
-    linkml:source_file_size 306518 ;
+    linkml:source_file_date "2025-05-05T15:46:14"^^xsd:dateTime ;
+    linkml:source_file_size 306516 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,
@@ -2990,7 +2990,7 @@ Examples: avoidance behavior, choice-making.
 
 <https://w3id.org/synapse/nfosi/vocab/genomic%20features> rdfs:seeAlso <https://en.wikipedia.org/wiki/General_feature_format> ;
     skos:definition "Data of sequence feature (continuous extent of biological sequence) that is of genomic origin." ;
-    skos:editorialNote "Consider subclass of \"nucleic acid features\" (http://edamontology.org/data_1276)" ;
+    skos:editorialNote "Really subclass of \"nucleic acid features\" (http://edamontology.org/data_1276)" ;
     linkml:meaning <http://purl.obolibrary.org/obo/GENO_0000481> .
 
 <https://w3id.org/synapse/nfosi/vocab/genomic%20variants> skos:definition """Genomic alterations, including single nucleotide polymorphisms, short indels and structural variants. Use more specific term if possible, esp. if data is only of one specific subset.
@@ -9461,9 +9461,9 @@ Examples: avoidance behavior, choice-making.
 """ ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/specimenType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
@@ -10311,9 +10311,9 @@ Examples: avoidance behavior, choice-making.
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sex> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10530,9 +10530,9 @@ Examples: avoidance behavior, choice-making.
         "Reflects the data types within the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Metadata> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Metadata> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/dataType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/EpidemiologyDataTemplate>,
