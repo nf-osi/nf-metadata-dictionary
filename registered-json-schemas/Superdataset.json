@@ -52,6 +52,11 @@
       "title": "Creator",
       "type": "array"
     },
+    "croissant_file_s3_object": {
+      "description": "Link to croissant file for dataset.",
+      "title": "Croissant File",
+      "type": "string"
+    },
     "dataType": {
       "description": "Reflects the data types within the dataset.",
       "items": {
@@ -176,6 +181,12 @@
       },
       "title": "Disease Focus",
       "type": "array"
+    },
+    "doi": {
+      "description": "The Digital Object Identifier (DOI) associated with the dataset, used for citation and persistent identification.",
+      "pattern": "^10\\\\.\\\\d{4,9}/[-._;()/:A-Z0-9]+$",
+      "title": "doi",
+      "type": "string"
     },
     "funder": {
       "items": {
