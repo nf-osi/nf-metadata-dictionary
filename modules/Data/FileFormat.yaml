@@ -6,13 +6,13 @@ enums:
         meaning: http://purl.obolibrary.org/obo/NCIT_C80224
       DICOM:
         description: A comprehensive set of standards for communications between medical imaging devices, including handling, storing and transmitting information in medical imaging. It includes a file format definition and a network communication protocol.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C49059
+        meaning: http://edamontology.org/format_3548
       MATLAB data:
         description: A MATLAB formatted data file with expected extension “.mat”.
-        source: https://synapse.org
+        meaning: http://edamontology.org/format_3626
       MATLAB script:
         description: A MATLAB script file with expected extension “.m”. Note that files with a “.mat” extension contains MATLAB formatted data.
-        source: https://synapse.org
+        meaning: http://edamontology.org/format_4007
       NWB:
         description: Neurodata Without Borders (NWB) is a data standard for neurophysiology data, designed to store data including from intracellular and extracellular electrophysiology experiments, data from optical physiology experiments, and tracking and stimulus data.
         source: https://www.nwb.org/
@@ -21,10 +21,10 @@ enums:
         source: https://nipy.org/nibabel/reference/nibabel.parrec.html
       Python script:
         description: Python script with expected extension “.py”.
-        source: https://synapse.org
+        meaning: http://edamontology.org/format_3996
       R script:
         description: R script with expected extension “.R”.
-        source: https://synapse.org
+        meaning: http://edamontology.org/format_3999
       RCC: 
         description: Reporter Code Count-A data file (.csv) output by the Nanostring nCounter Digital Analyzer, which contains gene sample information, probe information and probe counts.
         meaning: http://edamontology.org/format_3580
@@ -54,6 +54,7 @@ enums:
         meaning: http://www.ebi.ac.uk/swo/data/SWO_3000023
       avi:
         description: AVI files can contain both audio and video data in a file container that allows synchronous audio-with-video playback.
+        meaning: http://edamontology.org/format_3990
         source: https://en.wikipedia.org/wiki/Audio_Video_Interleave
       bai:
         description: BAM indexing format
@@ -62,7 +63,7 @@ enums:
         description: BAM format, the binary, BGZF-formatted compressed version of SAM format for alignment of nucleotide sequences (e.g. sequencing reads) to (a) reference sequence(s)
         meaning: http://edamontology.org/format_2572
       bash script:
-        description: Bash Shell Script
+        description: Bash shell script with .sh extension.
         source: https://en.wikipedia.org/wiki/Shell_script
       bcf:
         description: BCF, the binary version of Variant Call Format (VCF) for sequence variation (indels, polymorphisms, structural variation)
@@ -99,6 +100,7 @@ enums:
         meaning: http://edamontology.org/format_1638
       chp:
         description: CHP file contains probe set analysis results generated from Affymetrix software
+        meaning: http://edamontology.org/format_1644
       cnn:
         description: Copy number reference profile from CNVKit pipeline. 
         source: https://cnvkit.readthedocs.io/en/stable/fileformats.html
@@ -110,6 +112,7 @@ enums:
         source: https://cnvkit.readthedocs.io/en/stable/fileformats.html
       cram:
         description: A CRAM file is a compressed format for storing genomic sequence data.
+        meaning: http://edamontology.org/format_3462
         notes: 
         - ChatGPT (September 25, 2023 Version)
       crai:
@@ -127,7 +130,7 @@ enums:
         description: Gene expression counts file and a specific format of .tsv commonly part of bioinformatics workflows (Stringtie and Ballgown).
         source: https://github.com/alyssafrazee/ballgown#ballgown-readable-expression-output
       czi:
-        description: microscopy imaging file format that saves multidimensional images such as time lapse, Z-stacks, multiposition experiments and virtual slides, combined with relevant meta information
+        description: Microscopy imaging file format that saves multidimensional images such as time lapse, Z-stacks, multiposition experiments and virtual slides, combined with relevant meta information
         source: https://www.zeiss.com/microscopy/int/products/microscope-software/zen/czi.html
       dat:
         description: Format of Affymetrix data file of raw image data.
@@ -137,6 +140,7 @@ enums:
         source: https://www.snapgene.com/guides/convert-genbank-files
       doc:
         description: Microsoft Word document format
+        meaning: http://edamontology.org/format_3506
       docker image:
         description: >
           A Docker image is a file, comprised of multiple layers, that is used to execute code in a Docker container.  An image is essentially built from the instructions for a complete and executable version of an application, which relies on the host OS kernel
@@ -148,13 +152,16 @@ enums:
         description: The .edat3 proprietary format is used to store experiment data that can be analyzed in E-DataAid.
         source: https://support.pstnet.com/hc/en-us/articles/229354727-INFO-E-Prime-file-extensions-18091
       excel:
-        description: Microsoft Excel spreadsheet format
+        description: Microsoft Excel spreadsheet format with extension .xlsx or .xls
+        meaning: http://edamontology.org/format_3620
+        notes:
+        - http://edamontology.org/format_3468 is the older version of http://edamontology.org/format_3620
       fasta:
         description: FASTA format is a text-based format for representing either nucleotide sequences or peptide sequences, in which nucleotides or amino acids are represented using single-letter codes
-        meaning: https://en.wikipedia.org/wiki/FASTA_format
+        meaning: http://edamontology.org/format_1929
       fastq:
         description: FASTQ format is a text-based format for storing both a biological sequence (usually nucleotide sequence) and its corresponding quality scores. Both the sequence letter and quality score are each encoded with a single ASCII character for brevity
-        meaning: https://en.wikipedia.org/wiki/FASTQ_format
+        meaning: http://edamontology.org/format_1930
       fcs:
         description: Format standard of a digital entity that is conformant with the Flow Cytometry Data File Standard
         meaning: http://purl.obolibrary.org/obo/OBI_0000327
@@ -165,6 +172,7 @@ enums:
         description: Output of samtools flagstat tool
       gb:
         description: GenBank Sequence Format (GenBank Flat File Format) consists of an annotation section and a sequence section. The start of the annotation section is marked by a line beginning with the word "LOCUS". The start of sequence section is marked by a line beginning with the word "ORIGIN" and the end of the section is marked by a line with only "//".
+        meaning: http://edamontology.org/format_1936
         source: https://fairsharing.org/833
       gct:
         description: Tab-delimited text files of GenePattern that contain a column for each sample, a row for each gene, and an expression value for each gene in each sample
@@ -178,7 +186,7 @@ enums:
         source: https://en.wikipedia.org/wiki/Gene_transfer_format
       gzip:
         description: GZipped format
-        meaning: http://purl.obolibrary.org/obo/NCIT_C80220
+        meaning: http://edamontology.org/format_3989
       hdf5:
         description: >
           HDF5 is the new version, according to the HDF group, a completely different technology (https://support.hdfgroup.org/products/hdf4/ compared to HDF.  
@@ -192,7 +200,7 @@ enums:
         meaning: https://nifti.nimh.nih.gov/pub/dist/src/niftilib/nifti1.h
       hic:
         description: Hi-C contact matrix file
-        meaning: https://github.com/theaidenlab/juicer/wiki/Data
+        source: https://github.com/theaidenlab/juicer/wiki/Data
       html:
         description: HTML format
         meaning: http://edamontology.org/format_2331
@@ -216,16 +224,22 @@ enums:
         description: JavaScript Object Notation format; a lightweight, text-based format to represent tree-structured data using key-value pairs.
         meaning: http://edamontology.org/format_3464
       lif:
-        description: Leia Image Format (LIF) images are JPEG images with metadata that may contain depth, bokeh data, and one or more images (e.g. stereo images) known as "views".
+        description: Leica Image Format (LIF) images are JPEG images with metadata that may contain depth, bokeh data, and one or more images (e.g. stereo images) known as "views".
+        meaning: https://w3id.org/reproduceme#LIF
+        source: https://docs.openmicroscopy.org/bio-formats/5.8.2/formats/leica-lif.html
       locs:
         description: Illumina iScan bead location file.
         source: https://support.illumina.com/content/dam/illumina-support/documents/documentation/system_documentation/iscan/iscan-system-guide-11313539-01.pdf
       maf:
-        description: Multiple Alignment Format (MAF) supporting alignments of whole genomes with rearrangements, directions, multiple pieces to the alignment, and so forth
-        meaning: http://edamontology.org/format_3008
+        description: Mutation annotation format as outputted from GenomeNexus.
+        source: https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format
+        notes:
+        - DO NOT use http://edamontology.org/format_3008 as that refers to Multiple Alignment Format (MAF).
       md:
         description: Markdown (MD) is a lightweight markup language with plain text formatting syntax
         source: https://en.wikipedia.org/wiki/Markdown
+        notes:
+        - Strangely, EDAM has [R markdown](http://edamontology.org/format_4000) but not markdown
       mov:
         description: A video file format with the .mov extension
         source: https://synapse.org
@@ -237,12 +251,14 @@ enums:
         meaning: http://edamontology.org/format_3702
       mtx:
         description: Matrix Market Exchange Format
+        meaning: http://edamontology.org/format_3916
         source: https://math.nist.gov/MatrixMarket/formats.html#MMformat
       mzML:
         description: mzML format for raw spectrometer output data, standardised by HUPO PSI MSS.
         meaning: http://edamontology.org/format_3244
       nii:
         description: NIfTI-1 can store image data from any modality such as PET, MRI, CT, EEG that produces regularly sampled 1-5D rasters.
+        meaning: http://edamontology.org/format_3549
         source: https://nifti.nimh.nih.gov/nifti-1/documentation/faq
       ome-tiff:
         description: OME-TIFF is a preferred open image format
@@ -258,6 +274,7 @@ enums:
         meaning: http://edamontology.org/format_3603
       powerpoint:
         description: Microsoft Powerpoint slide format
+        meaning: http://edamontology.org/format_3838
       pzfx:
         description: A PZFX file is a Prism project created by GraphPad Prism, a scientific application used to analyze and graph data. It contains project data including graphs and layouts, notes, and tables.
         source: https://fileinfo.com/extension/pzfx
@@ -276,8 +293,9 @@ enums:
         description: .recal file from GATK VQSR
         meaning: https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_variantrecalibration_VariantRecalibrator.php#--recal_file
       rmd:
-        description: markdown document specific to r analyses
-        meaning: http://rmarkdown.rstudio.com/developer_document_templates.html
+        description: Markdown document specific to R analyses.
+        meaning: http://edamontology.org/format_4000
+        source: http://rmarkdown.rstudio.com/developer_document_templates.html
       sam:
         description: Sequence Alignment/Map (SAM) format for alignment of nucleotide sequences (e.g. sequencing reads) to (a) reference sequence(s)
         meaning: http://edamontology.org/format_2573
@@ -291,7 +309,7 @@ enums:
         description: SEG file (segmented data; .seg or .cbs) is a tab-delimited text file that lists loci and associated numeric values
         meaning: https://software.broadinstitute.org/software/igv/SEG
       sf:
-        description: Salmon’s main output is its quantification file. This file is a plain-text, tab-separated file with a single header line (which names all of the columns).
+        description: Salmon's main output is its quantification file. This file is a plain-text, tab-separated file with a single header line (which names all of the columns).
         meaning: https://salmon.readthedocs.io/en/latest/file_formats.html
       sif:
         description: SIF (simple interaction file) Format - a network/pathway format used for instance in cytoscape
@@ -307,26 +325,27 @@ enums:
         meaning: http://edamontology.org/format_3604
       svs:
         description: A single-file pyramidal tiled TIFF, with non-standard metadata and compression.
-        meaning: https://openslide.org/formats/aperio/
+        source: https://openslide.org/formats/aperio/
       tagAlign:
         description: Tag Alignment provides genomic mapping of short sequence tags.
-        meaning: https://genome.ucsc.edu/FAQ/FAQformat.html#format15
+        source: https://genome.ucsc.edu/FAQ/FAQformat.html#format15
       tar:
-        description: tape archive
-        meaning: https://en.wikipedia.org/wiki/Tar_(computing)
+        description: TAR archive file format generated by the Unix-based utility tar.
+        meaning: http://edamontology.org/format_3981
       tbi:
         description: A TBI file is an index for a TABIX-compressed genomic data file, enabling rapid region-based retrieval.
-        notes: 
-        - ChatGPT (September 25, 2023 Version)
+        meaning: http://purl.obolibrary.org/obo/NCIT_C184806
       tif:
         description: Tagged Image File Format, abbreviated TIFF or TIF, is a computer file format for storing raster graphics images
-        meaning: https://en.wikipedia.org/wiki/TIFF
+        meaning: http://edamontology.org/format_3591
       tom:
         description: The .tom format is a specialized 3D image export format from the Vectra medical imaging systems that can optionally preserve trimmings and/or landmarks.
-        meaning: http://canfieldupgrade.com/assets/media/VECTRA-M3-User-Guide.pdf
+        source: http://canfieldupgrade.com/assets/media/VECTRA-M3-User-Guide.pdf
+        notes:
+        - No other model has this as it is relatively new and highly specific format for a proprietary platform.
       tranches:
         description: .tranches file from GATK VQSR
-        meaning: https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_variantrecalibration_VariantRecalibrator.php#--tranches_file
+        source: https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_variantrecalibration_VariantRecalibrator.php#--tranches_file
       tsv:
         description: Tabular data represented as tab-separated values in a text file
         meaning: http://edamontology.org/format_3475
@@ -347,4 +366,4 @@ enums:
         meaning: http://edamontology.org/format_3750
       zip:
         description: zip is a format standard of a digital entity that is conformant with the PKWARE .ZIP file format specification
-        meaning: http://purl.obolibrary.org/obo/OBI_0000325
+        meaning: http://edamontology.org/format_3987

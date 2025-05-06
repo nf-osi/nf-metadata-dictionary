@@ -12,22 +12,22 @@
 
 <https://w3id.org/synapse/nfosi/vocab/nfosi> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace linkml: ;
-            sh:prefix "linkml" ],
-        [ sh:namespace schema1: ;
-            sh:prefix "schema" ],
-        [ sh:namespace skos: ;
-            sh:prefix "skos" ],
+    sh:declare [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
+            sh:prefix "htan" ],
         [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
             sh:prefix "personinfo" ],
         [ sh:namespace rdfs: ;
             sh:prefix "rdfs" ],
+        [ sh:namespace skos: ;
+            sh:prefix "skos" ],
         [ sh:namespace prov: ;
             sh:prefix "prov" ],
+        [ sh:namespace schema1: ;
+            sh:prefix "schema" ],
         [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
             sh:prefix "nf" ],
-        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
-            sh:prefix "htan" ] ;
+        [ sh:namespace linkml: ;
+            sh:prefix "linkml" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
@@ -169,7 +169,7 @@
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-04-01T22:46:41"^^xsd:dateTime ;
+    linkml:generation_date "2025-05-05T15:46:15"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -464,8 +464,8 @@
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-04-01T22:46:40"^^xsd:dateTime ;
-    linkml:source_file_size 299046 ;
+    linkml:source_file_date "2025-05-05T15:46:14"^^xsd:dateTime ;
+    linkml:source_file_size 306516 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,
@@ -567,8 +567,6 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Active> skos:definition "The project is in the performance period between grant start and grant end dates." .
 
-<https://w3id.org/synapse/nfosi/vocab/Administrative%20Metadata> skos:definition "Information to help manage a resource, like resource type, permissions, and when and how it was created." .
-
 <https://w3id.org/synapse/nfosi/vocab/Affymetrix%20Genome-Wide%20Human%20SNP%205.0%20Array> dcterms:source <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL6804> ;
     skos:definition "Affymetrix Genome-Wide Human SNP 5.0 Array" .
 
@@ -583,8 +581,6 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Affymetrix%20U133AB> skos:definition "" .
 
-<https://w3id.org/synapse/nfosi/vocab/AggregatedData> skos:definition "Summary or group-level data." .
-
 <https://w3id.org/synapse/nfosi/vocab/Agilent%2044Karray> skos:definition "" .
 
 <https://w3id.org/synapse/nfosi/vocab/Albany%20Medical%20College> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
@@ -592,9 +588,6 @@
 <https://w3id.org/synapse/nfosi/vocab/Albert%20Einstein%20College%20of%20Medicine> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/AlgometRx%20Nociometer> skos:definition "Assay that can selectively measure the sensitivity of three different nerve fiber types. An overall score can be derived to indicate the type of pain a person is experiencing and can be used to monitor how well a patient responds to treatment of pain." .
-
-<https://w3id.org/synapse/nfosi/vocab/AlignedReads> skos:definition "Aligned reads output from alignment workflows" ;
-    linkml:meaning <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads> .
 
 <https://w3id.org/synapse/nfosi/vocab/Alliant%20International%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
@@ -611,11 +604,6 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Anaplastic%20Pleomorphic%20Xanthoastrocytoma> skos:definition "APXA" ;
     linkml:meaning <https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=APXA> .
-
-<https://w3id.org/synapse/nfosi/vocab/AnnotatedGermlineVariants> skos:definition "Germline variants annotated with some annotation workflow" .
-
-<https://w3id.org/synapse/nfosi/vocab/AnnotatedSomaticVariants> skos:definition "Somatic variants annotated with some annotation workflow" ;
-    linkml:meaning <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation> .
 
 <https://w3id.org/synapse/nfosi/vocab/Arizona%20State%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
@@ -846,9 +834,6 @@
 <https://w3id.org/synapse/nfosi/vocab/Controlled%20Access> skos:definition """Access is restricted and only available after fulfilling specific requirements, such as submitting a research statement or getting approval directly from the data owner through Synapse. Note that for datasets, if any component file is under controlled access, the entire dataset is considered to be under controlled access.
 """ .
 
-<https://w3id.org/synapse/nfosi/vocab/CopyNumberVariants> skos:definition "Copy number variants" ;
-    linkml:meaning <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=copy_number_variation> .
-
 <https://w3id.org/synapse/nfosi/vocab/Cornell%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/Corsi%20blocks> skos:definition """A visuospatial counterpart to the verbal-memory span task (Milner, 1971). Over the years, it has frequently been used to assess visuospatial short-term memory performance in adults  (e.g. Smyth & Scholey, 1992), children (e.g. Orsini, Schiappa, & Grossi, 1981), and patients with neuropsychological deficits. 
@@ -870,7 +855,7 @@
 <https://w3id.org/synapse/nfosi/vocab/DESeq2> dcterms:source <https://bioconductor.org/packages/release/bioc/html/DESeq2.html> .
 
 <https://w3id.org/synapse/nfosi/vocab/DICOM> skos:definition "A comprehensive set of standards for communications between medical imaging devices, including handling, storing and transmitting information in medical imaging. It includes a file format definition and a network communication protocol." ;
-    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C49059> .
+    linkml:meaning <http://edamontology.org/format_3548> .
 
 <https://w3id.org/synapse/nfosi/vocab/DNA> skos:definition "DNA (deoxyribonucleic acid) is a polymer of nucleotides and is the genetic material in organisms and some viruses." .
 
@@ -891,9 +876,6 @@
 <https://w3id.org/synapse/nfosi/vocab/DeepVariant> dcterms:source <https://github.com/google/deepvariant> .
 
 <https://w3id.org/synapse/nfosi/vocab/Delaware%20State%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
-
-<https://w3id.org/synapse/nfosi/vocab/Descriptive%20Metadata> skos:definition "Descriptive information about a resource. It is used for discovery and identification. It includes elements such as title, abstract, author, and keywords." ;
-    skos:note "The `synapse_manifest.csv` files uploaded by DCA count as Descriptive Metadata" .
 
 <https://w3id.org/synapse/nfosi/vocab/Dh5%20alpha> skos:definition "[From GFF:] Dh5 alpha" .
 
@@ -1090,9 +1072,6 @@
 <https://w3id.org/synapse/nfosi/vocab/Georgia%20Institute%20of%20Technology> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/Georgia%20State%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
-
-<https://w3id.org/synapse/nfosi/vocab/GermlineVariants> skos:definition "Called germline variants" ;
-    linkml:meaning <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation> .
 
 <https://w3id.org/synapse/nfosi/vocab/Glioblastoma> skos:definition "GB" ;
     linkml:meaning <https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GB> .
@@ -1370,9 +1349,6 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Langston%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
-<https://w3id.org/synapse/nfosi/vocab/Legal%20Metadata> skos:definition "Provides information about the creator, copyright holder, and public licensing, if provided." ;
-    skos:note "Can apply to a file with license text." .
-
 <https://w3id.org/synapse/nfosi/vocab/Lehigh%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/Leica%20Aperio%20AT2> dcterms:source <https://www.leicabiosystems.com/sites/default/files/2020-10/Aperio_AT2_Brochure_USA.pdf> ;
@@ -1415,11 +1391,11 @@
 <https://w3id.org/synapse/nfosi/vocab/M3%20MPNST> dcterms:source <https://synapse.org> ;
     skos:definition "A patient-derived MPNST cell line" .
 
-<https://w3id.org/synapse/nfosi/vocab/MATLAB%20data> dcterms:source <https://synapse.org> ;
-    skos:definition "A MATLAB formatted data file with expected extension “.mat”." .
+<https://w3id.org/synapse/nfosi/vocab/MATLAB%20data> skos:definition "A MATLAB formatted data file with expected extension “.mat”." ;
+    linkml:meaning <http://edamontology.org/format_3626> .
 
-<https://w3id.org/synapse/nfosi/vocab/MATLAB%20script> dcterms:source <https://synapse.org> ;
-    skos:definition "A MATLAB script file with expected extension “.m”. Note that files with a “.mat” extension contains MATLAB formatted data." .
+<https://w3id.org/synapse/nfosi/vocab/MATLAB%20script> skos:definition "A MATLAB script file with expected extension “.m”. Note that files with a “.mat” extension contains MATLAB formatted data." ;
+    linkml:meaning <http://edamontology.org/format_4007> .
 
 <https://w3id.org/synapse/nfosi/vocab/MGI%20T-series> dcterms:source <https://en.mgi-tech.com/products/> ;
     skos:definition "deep whole genome sequencing" .
@@ -1643,8 +1619,6 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Normalized%20Counts> skos:definition "Normalized counts based on some normalization method (e.g. DESeq2)." .
 
-<https://w3id.org/synapse/nfosi/vocab/NormalizedIntensities> skos:definition "Normalized intensity values from the instrument/machine." .
-
 <https://w3id.org/synapse/nfosi/vocab/North%20Carolina%20Central%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/North%20Carolina%20State%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
@@ -1754,9 +1728,6 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Perlegen%20300Karray> skos:definition "" .
 
-<https://w3id.org/synapse/nfosi/vocab/Pharmacokinetic%20Study> skos:definition "A study of the process by which a drug is absorbed, distributed, metabolized, and eliminated by the body." ;
-    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C49663> .
-
 <https://w3id.org/synapse/nfosi/vocab/Philips%20Achieva%203T> dcterms:source <https://clinicalimagingsystems.com/product/philips-achieva-3-0t-mri-scanner/> ;
     skos:definition "Complete 3T MRI system, it offers an extremely broad clinical reach from routine head, spine and musculoskeletal imaging to the most advanced exams." .
 
@@ -1821,8 +1792,8 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Purdue%20University%2C%20West%20Lafayette> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
-<https://w3id.org/synapse/nfosi/vocab/Python%20script> dcterms:source <https://synapse.org> ;
-    skos:definition "Python script with expected extension “.py”." .
+<https://w3id.org/synapse/nfosi/vocab/Python%20script> skos:definition "Python script with expected extension “.py”." ;
+    linkml:meaning <http://edamontology.org/format_3996> .
 
 <https://w3id.org/synapse/nfosi/vocab/Q%20Exative%20HF> skos:definition "Thermo scientific Q Exative" ;
     linkml:meaning <http://purl.obolibrary.org/obo/MS_10025223> .
@@ -1832,8 +1803,8 @@
 <https://w3id.org/synapse/nfosi/vocab/QuantSeq%20FWD%20V2%20with%20UDI> dcterms:source <https://www.lexogen.com/quantseq-fwd-udi-v2/> ;
     skos:definition "Prep kit for next-gen sequencing with low-abundance samples. For analysis, note that this only provides gene-level counts, not transcript-level." .
 
-<https://w3id.org/synapse/nfosi/vocab/R%20script> dcterms:source <https://synapse.org> ;
-    skos:definition "R script with expected extension “.R”." .
+<https://w3id.org/synapse/nfosi/vocab/R%20script> skos:definition "R script with expected extension “.R”." ;
+    linkml:meaning <http://edamontology.org/format_3999> .
 
 <https://w3id.org/synapse/nfosi/vocab/R816X> skos:definition "A pathogenic mutation in the NF1 gene (amino acid nomenclature) leading to a truncated protein" .
 
@@ -1864,12 +1835,8 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Raw%20Counts> skos:definition "Raw read counts of transcripts." .
 
-<https://w3id.org/synapse/nfosi/vocab/RawIntensities> skos:definition "Raw intensity values from the instrument." .
-
 <https://w3id.org/synapse/nfosi/vocab/Recurrent%20MPNST> skos:definition "The reemergence of malignant peripheral nerve sheath tumor after a period of remission." ;
     linkml:meaning <obo:NCIT_C8823> .
-
-<https://w3id.org/synapse/nfosi/vocab/Reference%20Metadata> skos:definition "Information about the contents and quality of statistical data." .
 
 <https://w3id.org/synapse/nfosi/vocab/Rensselaer%20Polytechnic%20Institute> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
@@ -2045,9 +2012,6 @@
 <https://w3id.org/synapse/nfosi/vocab/Social%20Responsiveness%20Scale%2C%20Second%20Edition> dcterms:source <https://www.wpspublish.com/srs-2-social-responsiveness-scale-second-edition> ;
     skos:definition "Identifies the presence and severity of social impairment within the autism spectrum and differentiates it from that which occurs in other disorders." .
 
-<https://w3id.org/synapse/nfosi/vocab/SomaticVariants> dcterms:source <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_somatic_mutation> ;
-    skos:definition "Called somatic variants" .
-
 <https://w3id.org/synapse/nfosi/vocab/South%20Dakota%20State%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/Southern%20Illinois%20University%2C%20Carbondale> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
@@ -2073,8 +2037,6 @@
 
 <https://w3id.org/synapse/nfosi/vocab/State%20University%20of%20New%20York%2C%20Upstate%20Medical%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
-<https://w3id.org/synapse/nfosi/vocab/Statistical%20Metadata> skos:definition "Also called process data, may describe processes that collect, process, or produce statistical data." .
-
 <https://w3id.org/synapse/nfosi/vocab/Stevens%20Institute%20of%20Technology> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/Stony%20Brook%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
@@ -2082,12 +2044,6 @@
 <https://w3id.org/synapse/nfosi/vocab/Strelka2> dcterms:source <https://www.nature.com/articles/s41592-018-0051-x> .
 
 <https://w3id.org/synapse/nfosi/vocab/StringTie> dcterms:source <https://www.nature.com/articles/nbt.3122> .
-
-<https://w3id.org/synapse/nfosi/vocab/Structural%20Metadata> skos:definition """Metadata about containers of data and indicates how compound objects are put together, for example, how pages are ordered to form chapters.  It describes the types, versions, relationships, and other characteristics of digital materials.
-""" .
-
-<https://w3id.org/synapse/nfosi/vocab/StructuralVariants> dcterms:source <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=structural_variation> ;
-    skos:definition "Genomic variants data that covers deletions, duplications, CNVs, insertions, inversions, and translocations, which may be derived from specialized variant calling workflows." .
 
 <https://w3id.org/synapse/nfosi/vocab/Subcutaneous%20Neurofibroma> skos:definition "A neurofibroma that occurs along the peripheral nerves beneath the skin." ;
     skos:editorialNote "Not in NCIT, but see https://nyulangone.org/conditions/neurofibromatosis/types" .
@@ -2442,9 +2398,6 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Virginia%20Polytechnic%20Institute%20and%20State%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
-<https://w3id.org/synapse/nfosi/vocab/Volume> skos:definition "The amount of three dimensional space occupied by an object or the capacity of a space or container." ;
-    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C25335> .
-
 <https://w3id.org/synapse/nfosi/vocab/Von%20Frey%20test> skos:definition "Assay applying electrical stimulus to assess pain in rodents." ;
     linkml:meaning <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5592204/> .
 
@@ -2458,9 +2411,6 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Wayne%20State%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
-<https://w3id.org/synapse/nfosi/vocab/Weight> skos:definition "The vertical force exerted by a mass as a result of gravity." ;
-    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C25208> .
-
 <https://w3id.org/synapse/nfosi/vocab/West%20Virginia%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/Western%20Michigan%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
@@ -2472,9 +2422,6 @@
 <https://w3id.org/synapse/nfosi/vocab/Withdrawn> skos:definition "The project was planned/started but not completed (withdrawn for various reasons)." .
 
 <https://w3id.org/synapse/nfosi/vocab/Worcester%20Polytechnic%20Institute> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
-
-<https://w3id.org/synapse/nfosi/vocab/Workflow%20Metadata> skos:definition "Process data from computational workflows. This is highly related to Statistical Metadata." ;
-    skos:note "Coined category for use esp. with nextflow metadata files." .
 
 <https://w3id.org/synapse/nfosi/vocab/XF24%20Extracellular%20Flux%20Analyzer> dcterms:source <https://cehs.unl.edu/borc/xfe-24-extracellular-flux-analyzer-seahorse-bioscience/> ;
     skos:definition "measures real time kinetic of the media flux in live cellular environment to determine in vitro oxygen consumption rate (OCR), and extracellular acidification rate (ECAR), in order to assess cellular metabolic functions such as oxidative phosphorylation, glycolysis, and fatty acid oxidation. XFe-24 assays apply to all fields of biomedical research." .
@@ -2511,11 +2458,23 @@
 
 <https://w3id.org/synapse/nfosi/vocab/active%20avoidance%20learning%20behavior%20assay> skos:definition "A behavioral assay devised to measure active avoidance learning behavior" .
 
+<https://w3id.org/synapse/nfosi/vocab/aggregated%20data> skos:definition "Summary or group-level data." ;
+    skos:editorialNote "Not preferred for annotation." .
+
 <https://w3id.org/synapse/nfosi/vocab/ai> skos:definition "Adobe Illustrator format" ;
     linkml:meaning <http://www.ebi.ac.uk/swo/data/SWO_3000023> .
 
+<https://w3id.org/synapse/nfosi/vocab/aligned%20reads> skos:definition "Aligned reads output from alignment workflows" ;
+    linkml:meaning <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads> .
+
 <https://w3id.org/synapse/nfosi/vocab/allograft> skos:definition "Tissues, cells, or organs transplanted between genetically different individuals of the same species" ;
     linkml:meaning <https://www.ncbi.nlm.nih.gov/mesh/68064591> .
+
+<https://w3id.org/synapse/nfosi/vocab/annotated%20germline%20variants> skos:definition "Germline variants annotated with some annotation workflow" ;
+    linkml:meaning <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_germline_variation> .
+
+<https://w3id.org/synapse/nfosi/vocab/annotated%20somatic%20mutation> skos:definition "Somatic variants annotated with some annotation workflow" ;
+    linkml:meaning <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation> .
 
 <https://w3id.org/synapse/nfosi/vocab/arachnoid> skos:definition "An arachnoid mater is a delicate membrane that encloses the spinal cord and brain and lies between the pia mater and dura mater." ;
     linkml:meaning <https://www.ebi.ac.uk/ols/ontologies/bto/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FBTO_0001636> .
@@ -2530,7 +2489,8 @@
 
 <https://w3id.org/synapse/nfosi/vocab/atrophy> linkml:meaning <http://www.ebi.ac.uk/efo/EFO_0000001> .
 
-<https://w3id.org/synapse/nfosi/vocab/audio%20transcript> skos:definition "" .
+<https://w3id.org/synapse/nfosi/vocab/audio%20transcript> skos:definition "Text transcript of an audio recording." ;
+    linkml:meaning <https://w3id.org/synapse/nfosi/vocab/audioTranscript> .
 
 <https://w3id.org/synapse/nfosi/vocab/auditory%20brainstem%20response> skos:definition "ABR is a gold standard for evaluating hearing in mice. A non-invasive method that measures the electrical activity generated by the auditory nerve and brainstem in response to sound stimuli. Electrodes are placed on the scalp of the mouse, and sound is delivered through a speaker or earphone." .
 
@@ -2541,7 +2501,8 @@
     linkml:meaning <http://purl.obolibrary.org/obo/ERO_0000716> .
 
 <https://w3id.org/synapse/nfosi/vocab/avi> dcterms:source <https://en.wikipedia.org/wiki/Audio_Video_Interleave> ;
-    skos:definition "AVI files can contain both audio and video data in a file container that allows synchronous audio-with-video playback." .
+    skos:definition "AVI files can contain both audio and video data in a file container that allows synchronous audio-with-video playback." ;
+    linkml:meaning <http://edamontology.org/format_3990> .
 
 <https://w3id.org/synapse/nfosi/vocab/axilla> skos:definition "" .
 
@@ -2555,7 +2516,7 @@
     linkml:meaning <http://edamontology.org/format_2572> .
 
 <https://w3id.org/synapse/nfosi/vocab/bash%20script> dcterms:source <https://en.wikipedia.org/wiki/Shell_script> ;
-    skos:definition "Bash Shell Script" .
+    skos:definition "Bash shell script with .sh extension." .
 
 <https://w3id.org/synapse/nfosi/vocab/bcf> skos:definition "BCF, the binary version of Variant Call Format (VCF) for sequence variation (indels, polymorphisms, structural variation)" ;
     linkml:meaning <http://edamontology.org/format_3016> .
@@ -2575,7 +2536,10 @@
 <https://w3id.org/synapse/nfosi/vocab/bedgraph> skos:definition "Holds a tab-delimited chromosome /start /end / datavalue dataset. The bedGraph format allows display of continuous-valued data in track format. This display type is useful for probability scores and transcriptome data" ;
     linkml:meaning <http://edamontology.org/format_3583> .
 
-<https://w3id.org/synapse/nfosi/vocab/behavior%20process> skos:definition "The action, reaction, or performance of an organism in response to external or internal stimuli." .
+<https://w3id.org/synapse/nfosi/vocab/behavioral%20data> skos:definition """Qualitative or quantitative behavioral measurements / observations about the action, reaction, or performance of an organism in response to external or internal stimuli. 
+Examples: avoidance behavior, choice-making.
+""" ;
+    skos:editorialNote "Legacy concept previously labeled \"behavior process\", updated to \"behavioral data\"." .
 
 <https://w3id.org/synapse/nfosi/vocab/bgzip> skos:definition "Blocked GNU Zip format" ;
     linkml:meaning <http://edamontology.org/format_3615> .
@@ -2687,24 +2651,31 @@
 <https://w3id.org/synapse/nfosi/vocab/cell%20viability%20assay> skos:definition "This assay type measures the cellular state of living or dying by measuring an indicator of life or death" ;
     linkml:meaning <http://www.bioassayontology.org/bao#BAO_0003009> .
 
-<https://w3id.org/synapse/nfosi/vocab/cellularPhysiology> skos:definition "" .
+<https://w3id.org/synapse/nfosi/vocab/cellular%20physiology> skos:definition "Data on the physiological parameter of a cell." ;
+    linkml:meaning <https://w3id.org/synapse/nfosi/vocab/cellularPhysiology> .
 
 <https://w3id.org/synapse/nfosi/vocab/cerebral%20cortex> skos:definition "The surface layer of gray matter of the cerebrum that functions chiefly in coordination of sensory and motor information." ;
     linkml:meaning <http://purl.obolibrary.org/obo/BTO_0000233> .
 
-<https://w3id.org/synapse/nfosi/vocab/characteristic> skos:definition "Broad data type for measures that can encompass volume, weight, brightness, color, capacity, etc." ;
+<https://w3id.org/synapse/nfosi/vocab/characteristic> skos:definition "Broad data type for data that can encompass volume, weight, brightness, color, capacity, etc." ;
+    skos:editorialNote "May cover both morphology parameter and physiology parameter.",
+        "Not preferred for annotation; more specific term should be used." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C25447> .
 
 <https://w3id.org/synapse/nfosi/vocab/chemical%20descriptor> skos:definition "A chemical descriptor is a data item (quantity or value) about a chemical entity that conforms to a specification for how it is calculated, measured or recorded." ;
     linkml:meaning <http://semanticscience.org/resource/CHEMINF_000123> .
 
-<https://w3id.org/synapse/nfosi/vocab/chp> skos:definition "CHP file contains probe set analysis results generated from Affymetrix software" .
+<https://w3id.org/synapse/nfosi/vocab/chp> skos:definition "CHP file contains probe set analysis results generated from Affymetrix software" ;
+    linkml:meaning <http://edamontology.org/format_1644> .
 
-<https://w3id.org/synapse/nfosi/vocab/chromatinActivity> skos:definition "Chromatin activity that allow access of condensed genomic DNA and potentially control gene expression." ;
-    linkml:meaning <https://en.wikipedia.org/wiki/Chromatin_remodeling> .
+<https://w3id.org/synapse/nfosi/vocab/chromatin%20activity> rdfs:seeAlso <https://en.wikipedia.org/wiki/Chromatin_remodeling> ;
+    skos:definition "Data of chromatin activity, which allows access to condensed genomic DNA and potentially controls gene expression." ;
+    linkml:meaning <https://w3id.org/synapse/nfosi/vocab/chromatinActivity> .
 
-<https://w3id.org/synapse/nfosi/vocab/clinical> dcterms:source <https://docs.gdc.cancer.gov/Encyclopedia/pages/Clinical_Data> ;
-    skos:definition "Data related to patient diagnosis, demographics, exposures, laboratory tests, and family relationships" .
+<https://w3id.org/synapse/nfosi/vocab/clinical> rdfs:seeAlso <https://docs.gdc.cancer.gov/Encyclopedia/pages/Clinical_Data> ;
+    skos:definition "Data containing clinical information, e.g. patient diagnosis, personal demographics, exposures, laboratory tests, family relationships." ;
+    skos:editorialNote "The closest EDAM term is for [EHR](http://edamontology.org/data_3861), and while [ecological data](http://edamontology.org/data_3736), there is no mapping, which is why we use EFO." ;
+    linkml:meaning <http://www.ebi.ac.uk/efo/EFO_0030083> .
 
 <https://w3id.org/synapse/nfosi/vocab/clinical%20laboratory%20measurement> linkml:meaning <http://www.ebi.ac.uk/efo/EFO_0004297> .
 
@@ -2743,11 +2714,18 @@
 <https://w3id.org/synapse/nfosi/vocab/conventional%20MRI> skos:definition "Magnetic resonance imaging using standard protocols for high resolution structural and anatomic characterization, including T1 weighted, T2 weighted, fluid attenuated inversion recovery (FLAIR), and gadolinium-enhanced sequences. [  NCI  ]" ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C175525> .
 
+<https://w3id.org/synapse/nfosi/vocab/copy%20number%20variants> skos:definition "Copy number variants" ;
+    linkml:meaning <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=copy_number_variation> .
+
+<https://w3id.org/synapse/nfosi/vocab/count%20matrix> skos:definition "A table of unnormalized values representing summarised read counts per genomic region (e.g. gene, transcript, peak)." ;
+    linkml:meaning <http://edamontology.org/data_3917> .
+
 <https://w3id.org/synapse/nfosi/vocab/crai> skos:definition "A CRAI file is an index for a CRAM file, facilitating fast data retrieval." ;
     skos:editorialNote "ChatGPT (September 25, 2023 Version)" .
 
 <https://w3id.org/synapse/nfosi/vocab/cram> skos:definition "A CRAM file is a compressed format for storing genomic sequence data." ;
-    skos:editorialNote "ChatGPT (September 25, 2023 Version)" .
+    skos:editorialNote "ChatGPT (September 25, 2023 Version)" ;
+    linkml:meaning <http://edamontology.org/format_3462> .
 
 <https://w3id.org/synapse/nfosi/vocab/csi> skos:definition "A CSI file is a compressed sequence index used for efficiently accessing genomic data in large datasets." ;
     skos:editorialNote "ChatGPT (September 25, 2023 Version)" .
@@ -2782,15 +2760,18 @@
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C13226> .
 
 <https://w3id.org/synapse/nfosi/vocab/czi> dcterms:source <https://www.zeiss.com/microscopy/int/products/microscope-software/zen/czi.html> ;
-    skos:definition "microscopy imaging file format that saves multidimensional images such as time lapse, Z-stacks, multiposition experiments and virtual slides, combined with relevant meta information" .
+    skos:definition "Microscopy imaging file format that saves multidimensional images such as time lapse, Z-stacks, multiposition experiments and virtual slides, combined with relevant meta information" .
 
 <https://w3id.org/synapse/nfosi/vocab/dat> skos:definition "Format of Affymetrix data file of raw image data." ;
     linkml:meaning <http://edamontology.org/format_1637> .
 
-<https://w3id.org/synapse/nfosi/vocab/dataIndex> skos:definition "A data index is information used to help with retrieval of some other data, especially large-scale data that would benefit from such an index. Very common formats are .bai and .tbi." ;
+<https://w3id.org/synapse/nfosi/vocab/data%20index> skos:definition "A data index is information used to help with retrieval of some other data, especially large-scale data that would benefit from such an index. Very common formats are .bai and .tbi." ;
     linkml:meaning <http://edamontology.org/data_0955> .
 
-<https://w3id.org/synapse/nfosi/vocab/dataMatrix> skos:definition "A file of data containing multiple values for multiple samples." .
+<https://w3id.org/synapse/nfosi/vocab/data%20sharing%20plan> skos:definition "A document containing the plan and documentation for data sharing, one component of overall data management." ;
+    skos:editorialNote "Technically EDAM term is 'data management plan', which is more encompassing in scope.",
+        "Use for tagging uploaded data sharing plans." ;
+    linkml:meaning <http://edamontology.org/data_4040> .
 
 <https://w3id.org/synapse/nfosi/vocab/date> a linkml:TypeDefinition ;
     skos:definition "a date (year, month and day) in an idealized calendar" ;
@@ -2840,6 +2821,11 @@
 <https://w3id.org/synapse/nfosi/vocab/demographics> skos:definition "The statistical characterization of human populations or segments of human populations (e.g., characterization by age, sex, race, or income)." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C16495> .
 
+<https://w3id.org/synapse/nfosi/vocab/derived> skos:definition "Data from additional analytical steps performed on already processed data." .
+
+<https://w3id.org/synapse/nfosi/vocab/descriptive%20metadata> skos:definition "Information that describes and identifies a resource, including elements that facilitate discovery and understanding." ;
+    skos:editorialNote "Currently used for `manifest.csv` files." .
+
 <https://w3id.org/synapse/nfosi/vocab/differential%20scanning%20calorimetry> skos:definition "Differential scanning calorimetry (DSC) is the measurement of thermodynamic parameters (e.g. enthalpy) during a chemical or biochemical reaction of both a sample and a reference, by the known variation (step-wise or linear) of one variable, whilst a second is kept constant." ;
     linkml:meaning <http://purl.obolibrary.org/obo/CHMO_0000684> .
 
@@ -2852,7 +2838,8 @@
 <https://w3id.org/synapse/nfosi/vocab/dna> dcterms:source <https://www.snapgene.com/guides/convert-genbank-files> ;
     skos:definition "Propietary SnapGene file format." .
 
-<https://w3id.org/synapse/nfosi/vocab/doc> skos:definition "Microsoft Word document format" .
+<https://w3id.org/synapse/nfosi/vocab/doc> skos:definition "Microsoft Word document format" ;
+    linkml:meaning <http://edamontology.org/format_3506> .
 
 <https://w3id.org/synapse/nfosi/vocab/docker%20image> skos:definition """A Docker image is a file, comprised of multiple layers, that is used to execute code in a Docker container.  An image is essentially built from the instructions for a complete and executable version of an application, which relies on the host OS kernel
 """ ;
@@ -2874,17 +2861,18 @@
 <https://w3id.org/synapse/nfosi/vocab/drop-seq> skos:definition "" ;
     linkml:meaning <https://github.com/HumanCellAtlas/metadata-schema/blob/master/json_schema/type/process/sequencing/library_preparation_process.json> .
 
+<https://w3id.org/synapse/nfosi/vocab/drug%20combination%20screen> dcterms:source <https://www.ncbi.nlm.nih.gov/pubmed/29344898> ;
+    skos:definition "Information on drug sensitivity of more than one compound" .
+
 <https://w3id.org/synapse/nfosi/vocab/drug%20interaction> linkml:meaning <http://www.ebi.ac.uk/efo/EFO_0009878> .
 
 <https://w3id.org/synapse/nfosi/vocab/drug%20resistance> linkml:meaning <http://www.ebi.ac.uk/efo/EFO_0020001> .
 
+<https://w3id.org/synapse/nfosi/vocab/drug%20screen> dcterms:source <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3531057/> ;
+    skos:definition "Information on drug sensitivity and molecular markers of drug response" ;
+    linkml:meaning <https://w3id.org/synapse/nfosi/vocab/drugScreen> .
+
 <https://w3id.org/synapse/nfosi/vocab/drug%20toxicity> linkml:meaning <http://www.ebi.ac.uk/efo/EFO_0020003> .
-
-<https://w3id.org/synapse/nfosi/vocab/drugCombinationScreen> dcterms:source <https://www.ncbi.nlm.nih.gov/pubmed/29344898> ;
-    skos:definition "Information on drug sensitivity of more than one compound" .
-
-<https://w3id.org/synapse/nfosi/vocab/drugScreen> dcterms:source <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3531057/> ;
-    skos:definition "Information on drug sensitivity and molecular markers of drug response" .
 
 <https://w3id.org/synapse/nfosi/vocab/dup> dcterms:source <https://software.broadinstitute.org/gatk/documentation/tooldocs/4.0.4.0/picard_sam_markduplicates_MarkDuplicates.php> ;
     skos:definition "output of the Picard MarkDuplicates tool." .
@@ -2901,10 +2889,6 @@
 
 <https://w3id.org/synapse/nfosi/vocab/electrophoretic%20light%20scattering> dcterms:source <https://en.wikipedia.org/wiki/Electrophoretic_light_scattering> ;
     skos:definition "Subtype of dynamic light scattering, used to measure electrophoretic mobility." .
-
-<https://w3id.org/synapse/nfosi/vocab/electrophysiology> dcterms:source <https://bioportal.bioontology.org/ontologies/ERO/?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FERO_0000564&jump_to_nav=true> ;
-    skos:definition "Data generated from an electrophysiology assay." ;
-    skos:editorialNote "ERO has been deprecated and direct URIs no longer work." .
 
 <https://w3id.org/synapse/nfosi/vocab/elevated%20plus%20maze%20test> skos:definition "A method which utilizes an experimental apparatus consisting of four arms, usually two enclosed and two open, in the shape of a plus (+) upon which the test animal can walk. The maze is elevated a set distance, for example 40 to 60 centimeters, above the floor or platform upon which the apparatus sits." ;
     linkml:meaning <http://purl.obolibrary.org/obo/MMO_0000262> .
@@ -2923,19 +2907,20 @@
 
 <https://w3id.org/synapse/nfosi/vocab/ethanol> skos:definition "Preserved in ethanol" .
 
-<https://w3id.org/synapse/nfosi/vocab/excel> skos:definition "Microsoft Excel spreadsheet format" .
+<https://w3id.org/synapse/nfosi/vocab/excel> skos:definition "Microsoft Excel spreadsheet format with extension .xlsx or .xls" ;
+    skos:editorialNote "http://edamontology.org/format_3468 is the older version of http://edamontology.org/format_3620" ;
+    linkml:meaning <http://edamontology.org/format_3620> .
 
-<https://w3id.org/synapse/nfosi/vocab/experimentalData> dcterms:source <https://synapse.org> ;
-    skos:definition "Any file derived from or pertaining to a scientific experiment. Experimental data annotations should be applied, possibly disease-related" .
+<https://w3id.org/synapse/nfosi/vocab/experimentalData> skos:definition "Any file derived from or pertaining to a scientific experiment. Experimental data annotations should be applied, possibly disease-related." .
 
 <https://w3id.org/synapse/nfosi/vocab/eye> skos:definition "The organ of sight or vision. [ NCI ]" ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C12401> .
 
 <https://w3id.org/synapse/nfosi/vocab/fasta> skos:definition "FASTA format is a text-based format for representing either nucleotide sequences or peptide sequences, in which nucleotides or amino acids are represented using single-letter codes" ;
-    linkml:meaning <https://en.wikipedia.org/wiki/FASTA_format> .
+    linkml:meaning <http://edamontology.org/format_1929> .
 
 <https://w3id.org/synapse/nfosi/vocab/fastq> skos:definition "FASTQ format is a text-based format for storing both a biological sequence (usually nucleotide sequence) and its corresponding quality scores. Both the sequence letter and quality score are each encoded with a single ASCII character for brevity" ;
-    linkml:meaning <https://en.wikipedia.org/wiki/FASTQ_format> .
+    linkml:meaning <http://edamontology.org/format_1930> .
 
 <https://w3id.org/synapse/nfosi/vocab/fcs> skos:definition "Format standard of a digital entity that is conformant with the Flow Cytometry Data File Standard" ;
     linkml:meaning <http://purl.obolibrary.org/obo/OBI_0000327> .
@@ -2978,7 +2963,8 @@
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C17958> .
 
 <https://w3id.org/synapse/nfosi/vocab/gb> dcterms:source <https://fairsharing.org/833> ;
-    skos:definition "GenBank Sequence Format (GenBank Flat File Format) consists of an annotation section and a sequence section. The start of the annotation section is marked by a line beginning with the word \"LOCUS\". The start of sequence section is marked by a line beginning with the word \"ORIGIN\" and the end of the section is marked by a line with only \"//\"." .
+    skos:definition "GenBank Sequence Format (GenBank Flat File Format) consists of an annotation section and a sequence section. The start of the annotation section is marked by a line beginning with the word \"LOCUS\". The start of sequence section is marked by a line beginning with the word \"ORIGIN\" and the end of the section is marked by a line with only \"//\"." ;
+    linkml:meaning <http://edamontology.org/format_1936> .
 
 <https://w3id.org/synapse/nfosi/vocab/gct> skos:definition "Tab-delimited text files of GenePattern that contain a column for each sample, a row for each gene, and an expression value for each gene in each sample" ;
     linkml:meaning <http://edamontology.org/format_3709> .
@@ -2990,25 +2976,33 @@
 <https://w3id.org/synapse/nfosi/vocab/gel%20permeation%20chromatography> dcterms:source <https://www.agilent.com/cs/library/primers/Public/5990-6969EN%20GPC%20SEC%20Chrom%20Guide.pdf> ;
     skos:definition "AKA size exclusion chromatography (GPC/SEC), this assay is a type of high performance liquid chromatography used to determine the molecular weight distributions of polymers." .
 
+<https://w3id.org/synapse/nfosi/vocab/gene%20expression> skos:definition "Data of the levels and patterns of synthesis of gene products (proteins and functional RNA), including interpretation in functional terms of gene expression data." ;
+    skos:editorialNote "Covers both raw (e.g. fastqs, microarray intensities) and processed gene expression data (e.g. normalized gene expression matrix).",
+        "EDAM does have a broader mapping, [expression data](http://edamontology.org/data_2603)",
+        "The mapping used maps to [gene expression profile](http://edamontology.org/data_0928)" ;
+    linkml:meaning <http://edamontology.org/data_2603> .
+
 <https://w3id.org/synapse/nfosi/vocab/gene%20function> skos:definition "A term that expresses the function of a gene product." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C48933> .
 
 <https://w3id.org/synapse/nfosi/vocab/gene%20symbol> skos:definition "A unique gene name approved by an organism specific nomenclature committee." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C43568> .
 
-<https://w3id.org/synapse/nfosi/vocab/geneExpression> skos:definition "The analysis of levels and patterns of synthesis of gene products (proteins and functional RNA) including interpretation in functional terms of gene expression data." ;
-    linkml:meaning <http://edamontology.org/topic_0203> .
-
-<https://w3id.org/synapse/nfosi/vocab/genomicFeatures> rdfs:seeAlso <https://en.wikipedia.org/wiki/General_feature_format> ;
+<https://w3id.org/synapse/nfosi/vocab/genomic%20features> rdfs:seeAlso <https://en.wikipedia.org/wiki/General_feature_format> ;
     skos:definition "Data of sequence feature (continuous extent of biological sequence) that is of genomic origin." ;
+    skos:editorialNote "Really subclass of \"nucleic acid features\" (http://edamontology.org/data_1276)" ;
     linkml:meaning <http://purl.obolibrary.org/obo/GENO_0000481> .
 
-<https://w3id.org/synapse/nfosi/vocab/genomicVariants> skos:definition """Genomic alterations, including single nucleotide polymorphisms, short indels and structural variants. Use more specific term if possible, esp. if data is only of one specific subset.
+<https://w3id.org/synapse/nfosi/vocab/genomic%20variants> skos:definition """Genomic alterations, including single nucleotide polymorphisms, short indels and structural variants. Use more specific term if possible, esp. if data is only of one specific subset.
 """ ;
-    linkml:meaning <http://edamontology.org/operation_3227> .
+    skos:editorialNote "Somewhat more specific than the concept URI it is mapped to." ;
+    linkml:meaning <http://edamontology.org/data_3498> .
 
 <https://w3id.org/synapse/nfosi/vocab/genotyping> skos:definition "The determination of the DNA sequence of an individual." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C45447> .
+
+<https://w3id.org/synapse/nfosi/vocab/germline%20variants> skos:definition "Called germline variants" ;
+    linkml:meaning <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation> .
 
 <https://w3id.org/synapse/nfosi/vocab/gff3> skos:definition "Generic Feature Format version 3 (GFF3) of sequence features." ;
     linkml:meaning <http://edamontology.org/format_1975> .
@@ -3021,7 +3015,7 @@
     linkml:meaning <http://edamontology.org/format_2306> .
 
 <https://w3id.org/synapse/nfosi/vocab/gzip> skos:definition "GZipped format" ;
-    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C80220> .
+    linkml:meaning <http://edamontology.org/format_3989> .
 
 <https://w3id.org/synapse/nfosi/vocab/hTERT%20NF1%20ipNF00.6> skos:definition "" ;
     linkml:meaning <https://web.expasy.org/cellosaurus/CVCL_UI76> .
@@ -3088,8 +3082,8 @@
 <https://w3id.org/synapse/nfosi/vocab/hiPSC-SCP> skos:definition "Schwann cell precursor iPSCs" ;
     linkml:meaning <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7773354> .
 
-<https://w3id.org/synapse/nfosi/vocab/hic> skos:definition "Hi-C contact matrix file" ;
-    linkml:meaning <https://github.com/theaidenlab/juicer/wiki/Data> .
+<https://w3id.org/synapse/nfosi/vocab/hic> dcterms:source <https://github.com/theaidenlab/juicer/wiki/Data> ;
+    skos:definition "Hi-C contact matrix file" .
 
 <https://w3id.org/synapse/nfosi/vocab/high%20content%20screen> skos:definition "An image analysis technique combining automated fluorescence microscopy with multi-parameter quantitative image analysis for the large scale study of cells (cellomics)." ;
     linkml:meaning <http://www.ebi.ac.uk/efo/EFO_0007550> .
@@ -3165,6 +3159,10 @@
 <https://w3id.org/synapse/nfosi/vocab/image> skos:definition "Biological or biomedical data that has been rendered into an image." ;
     linkml:meaning <http://edamontology.org/data_2968> .
 
+<https://w3id.org/synapse/nfosi/vocab/image%20metadata> skos:definition "Any data concerning a specific biological or biomedical image." ;
+    skos:editorialNote "For e.g. XML files that contain image metadata." ;
+    linkml:meaning <http://edamontology.org/data_3546> .
+
 <https://w3id.org/synapse/nfosi/vocab/img> skos:definition "MRI Data file, as in the NIFTI-1 Analyze 7.5 format" ;
     linkml:meaning <https://nifti.nimh.nih.gov/pub/dist/src/niftilib/nifti1.h> .
 
@@ -3193,8 +3191,9 @@
 
 <https://w3id.org/synapse/nfosi/vocab/inward> skos:definition "Reads face each other" .
 
-<https://w3id.org/synapse/nfosi/vocab/isoformExpression> dcterms:source <https://en.wikipedia.org/wiki/Protein_isoform> ;
-    skos:definition "Expression of protein isoforms formed from alternative splicings or other post-translational modifications of a single gene through RNA splicing mechanisms." .
+<https://w3id.org/synapse/nfosi/vocab/isoform%20expression> dcterms:source <https://en.wikipedia.org/wiki/Protein_isoform> ;
+    skos:definition "Expression of protein isoforms formed from alternative splicings or other post-translational modifications of a single gene through RNA splicing mechanisms." ;
+    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C184767> .
 
 <https://w3id.org/synapse/nfosi/vocab/isograft> skos:definition "Tissues, cells or organs transplanted between genetically identical individuals" ;
     linkml:meaning <https://www.ncbi.nlm.nih.gov/mesh/68064596> .
@@ -3236,9 +3235,6 @@
 <https://w3id.org/synapse/nfosi/vocab/kidney> skos:definition "One of the two bean-shaped organs located on each side of the spine in the retroperitoneum." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C12415> .
 
-<https://w3id.org/synapse/nfosi/vocab/kinomics> dcterms:source <http://www.kinomecore.com/what-is-kinomics/> ;
-    skos:definition "Kinomics is the study of protein kinases and protein kinase signaling." .
-
 <https://w3id.org/synapse/nfosi/vocab/knockdown> skos:definition "Gene knockdown refers to techniques by which the expression of one or more of an organism's genes is reduced, either through genetic modification (a change in the DNA of one of the organism's chromosomes) or by treatment with a reagent such as a short DNA or RNA oligonucleotide with a sequence complementary to either an mRNA transcript or a gene." ;
     linkml:meaning <http://www.bioassayontology.org/bao#BAO_0002433> .
 
@@ -3253,7 +3249,9 @@
 
 <https://w3id.org/synapse/nfosi/vocab/leg> skos:definition "" .
 
-<https://w3id.org/synapse/nfosi/vocab/lif> skos:definition "Leia Image Format (LIF) images are JPEG images with metadata that may contain depth, bokeh data, and one or more images (e.g. stereo images) known as \"views\"." .
+<https://w3id.org/synapse/nfosi/vocab/lif> dcterms:source <https://docs.openmicroscopy.org/bio-formats/5.8.2/formats/leica-lif.html> ;
+    skos:definition "Leica Image Format (LIF) images are JPEG images with metadata that may contain depth, bokeh data, and one or more images (e.g. stereo images) known as \"views\"." ;
+    linkml:meaning <https://w3id.org/reproduceme#LIF> .
 
 <https://w3id.org/synapse/nfosi/vocab/light%20scattering%20assay> skos:definition "A method for determining structure by measuring the change in direction or energy of scattered visible light. Light is scattered by the electrons surrounding the atomic nuclei in the sample." ;
     linkml:meaning <http://purl.obolibrary.org/obo/CHMO_0000166> .
@@ -3298,8 +3296,9 @@
 <https://w3id.org/synapse/nfosi/vocab/macrophages> skos:definition "A mononuclear phagocyte present in variety of tissues, typically differentiated from monocytes, capable of phagocytosing a variety of extracellular particulate material, including immune complexes, microorganisms, and dead cells." ;
     linkml:meaning <https://www.ebi.ac.uk/ols/ontologies/cl/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FCL_0000235> .
 
-<https://w3id.org/synapse/nfosi/vocab/maf> skos:definition "Multiple Alignment Format (MAF) supporting alignments of whole genomes with rearrangements, directions, multiple pieces to the alignment, and so forth" ;
-    linkml:meaning <http://edamontology.org/format_3008> .
+<https://w3id.org/synapse/nfosi/vocab/maf> dcterms:source <https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format> ;
+    skos:definition "Mutation annotation format as outputted from GenomeNexus." ;
+    skos:editorialNote "DO NOT use http://edamontology.org/format_3008 as that refers to Multiple Alignment Format (MAF)." .
 
 <https://w3id.org/synapse/nfosi/vocab/magnetic%20resonance%20angiography> skos:definition "Angiography using magnetic resonance imaging." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C190557> .
@@ -3316,13 +3315,17 @@
 <https://w3id.org/synapse/nfosi/vocab/mass%20spectrometry> skos:definition "A generic mass spectrometry assay that allows identification and amount of peptide or protein materials." ;
     linkml:meaning <http://purl.obolibrary.org/obo/ERO_0000708> .
 
+<https://w3id.org/synapse/nfosi/vocab/mass%20spectrometry%20data> skos:definition "Data from mass spectrometry measurement." ;
+    linkml:meaning <http://edamontology.org/data_2536> .
+
 <https://w3id.org/synapse/nfosi/vocab/massively%20parallel%20reporter%20assay> skos:definition "An assay in which multiplexing the construction and interrogation of larger libraries of reporter constructs allows measurement of the transcriptional regulatory activities of thousands to hundreds of thousands of DNA sequences." ;
     linkml:meaning <http://purl.obolibrary.org/obo/OBI_0002675> .
 
 <https://w3id.org/synapse/nfosi/vocab/matching> skos:definition "Reads face the same direction" .
 
 <https://w3id.org/synapse/nfosi/vocab/md> dcterms:source <https://en.wikipedia.org/wiki/Markdown> ;
-    skos:definition "Markdown (MD) is a lightweight markup language with plain text formatting syntax" .
+    skos:definition "Markdown (MD) is a lightweight markup language with plain text formatting syntax" ;
+    skos:editorialNote "Strangely, EDAM has [R markdown](http://edamontology.org/format_4000) but not markdown" .
 
 <https://w3id.org/synapse/nfosi/vocab/mechanical> skos:definition "" ;
     linkml:meaning <https://github.com/HumanCellAtlas/metadata-schema/blob/master/json_schema/type/process/sequencing/library_preparation_process.json> .
@@ -3335,8 +3338,8 @@
 <https://w3id.org/synapse/nfosi/vocab/metabolic%20screening> skos:definition "Metabolic screening is a medical assessment that involves analyzing specific markers in bodily fluids to detect and evaluate metabolic disorders or imbalances." ;
     linkml:meaning <https://bioportal.bioontology.org/ontologies/SNOMEDCT?p=classes&conceptid=395118002> .
 
-<https://w3id.org/synapse/nfosi/vocab/metabolomics> skos:definition "The systematic study of metabolites, the chemical processes they are involved, and the chemical fingerprints of specific cellular processes in a whole cell, tissue, organ or organism." ;
-    linkml:meaning <http://edamontology.org/topic_3172> .
+<https://w3id.org/synapse/nfosi/vocab/metadata> skos:definition "Data about data, information that describes another set of data." ;
+    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C52095> .
 
 <https://w3id.org/synapse/nfosi/vocab/metastatic%20tumor> skos:definition "For neoplasms, a non-infiltrating and non-metastasizing neoplastic process that is characterized by the absence of morphologic features associated with malignancy (e.g., severe atypia, nuclear pleomorphism, tumor cell necrosis, and abnormal mitoses)." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C14172> .
@@ -3368,12 +3371,18 @@
 
 <https://w3id.org/synapse/nfosi/vocab/minutes> linkml:meaning <http://purl.obolibrary.org/obo/UO_0000031> .
 
+<https://w3id.org/synapse/nfosi/vocab/molecular%20property> skos:definition "Data on the physical (e.g. structural) or chemical properties of molecules, or parts of a molecule." ;
+    linkml:meaning <http://edamontology.org/data_2087> .
+
 <https://w3id.org/synapse/nfosi/vocab/monocyte-derived%20microglia> skos:definition "" .
 
 <https://w3id.org/synapse/nfosi/vocab/monocytes> skos:definition "Myeloid mononuclear recirculating leukocyte that can act as a precursor of tissue macrophages, osteoclasts and some populations of tissue dendritic cells." ;
     linkml:meaning <https://www.ebi.ac.uk/ols/ontologies/efo/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FCL_0000576> .
 
 <https://w3id.org/synapse/nfosi/vocab/months> linkml:meaning <http://purl.obolibrary.org/obo/UO_0000035> .
+
+<https://w3id.org/synapse/nfosi/vocab/morphology%20parameter> skos:definition "Experimentally determined parameter of the morphology of an organism, e.g. size & shape. General term representing data about **structure** and **form** of an organism or organism part." ;
+    linkml:meaning <http://edamontology.org/data_3723> .
 
 <https://w3id.org/synapse/nfosi/vocab/motor%20development%20measurement> linkml:meaning <http://www.ebi.ac.uk/efo/EFO_0008237> .
 
@@ -3387,7 +3396,8 @@
     linkml:meaning <http://edamontology.org/format_3702> .
 
 <https://w3id.org/synapse/nfosi/vocab/mtx> dcterms:source <https://math.nist.gov/MatrixMarket/formats.html#MMformat> ;
-    skos:definition "Matrix Market Exchange Format" .
+    skos:definition "Matrix Market Exchange Format" ;
+    linkml:meaning <http://edamontology.org/format_3916> .
 
 <https://w3id.org/synapse/nfosi/vocab/mucus> skos:definition "A bodily fluid consisting of a slippery secretion of the lining of the mucous membranes in the body." ;
     linkml:meaning <http://purl.obolibrary.org/obo/UBERON_0000912> .
@@ -3427,7 +3437,8 @@
     linkml:meaning <http://purl.obolibrary.org/obo/BTO_0000925> .
 
 <https://w3id.org/synapse/nfosi/vocab/network> skos:definition "Network data represents connections between entities and are often in graphical format." ;
-    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C61377> .
+    skos:editorialNote "EDAM preferred label is 'Pathway or network'" ;
+    linkml:meaning <http://edamontology.org/data_2600> .
 
 <https://w3id.org/synapse/nfosi/vocab/neuropsychological%20assessment> skos:definition "Evaluation for cognitive impairment by assessing the neuropsychological domains." ;
     linkml:meaning <http://purl.obolibrary.org/obo/MAXO_0009018> .
@@ -3436,7 +3447,8 @@
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C130177> .
 
 <https://w3id.org/synapse/nfosi/vocab/nii> dcterms:source <https://nifti.nimh.nih.gov/nifti-1/documentation/faq> ;
-    skos:definition "NIfTI-1 can store image data from any modality such as PET, MRI, CT, EEG that produces regularly sampled 1-5D rasters." .
+    skos:definition "NIfTI-1 can store image data from any modality such as PET, MRI, CT, EEG that produces regularly sampled 1-5D rasters." ;
+    linkml:meaning <http://edamontology.org/format_3549> .
 
 <https://w3id.org/synapse/nfosi/vocab/nodeidentifier> a linkml:TypeDefinition ;
     skos:definition "A URI, CURIE or BNODE that represents a node in a model." ;
@@ -3450,8 +3462,13 @@
 
 <https://w3id.org/synapse/nfosi/vocab/non-targeting%20control> skos:definition "Use of a guide RNA that is designed to not target any gene in particular, used as a control for a targeting gRNA" .
 
-<https://w3id.org/synapse/nfosi/vocab/normalized> skos:definition "A data set that is produced as the output of a normalization data transformation." ;
+<https://w3id.org/synapse/nfosi/vocab/normalized> skos:definition "Data that has undergone a normalization procedure to adjust for technical variation or to bring measurements onto a common scale. Considered a more specific type of processed data." ;
     linkml:meaning <http://purl.obolibrary.org/obo/OBI_0000451> .
+
+<https://w3id.org/synapse/nfosi/vocab/normalized%20intensities> skos:definition "Normalized intensity values from the instrument." ;
+    skos:editorialNote "Not preferred for annotation.",
+        "See RawIntensities" ;
+    linkml:meaning <https://w3id.org/synapse/nfosi/vocab/NormalizedIntensities> .
 
 <https://w3id.org/synapse/nfosi/vocab/nose> skos:definition "A structure of special sense serving as an organ of the sense of smell and as an entrance to the respiratory tract." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C12756> .
@@ -3460,6 +3477,10 @@
 
 <https://w3id.org/synapse/nfosi/vocab/nuclear%20extract> skos:definition "Nuclear extracts contain proteins in nuclear compartment of the cell" ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C19832> .
+
+<https://w3id.org/synapse/nfosi/vocab/nucleic%20acid%20sequence%20record> skos:definition "A nucleic acid sequence and associated metadata." ;
+    skos:editorialNote "Can be used for .dna (SnapGene) files." ;
+    linkml:meaning <http://edamontology.org/data_2887> .
 
 <https://w3id.org/synapse/nfosi/vocab/objectidentifier> a linkml:TypeDefinition ;
     skos:definition "A URI or CURIE that represents an object in the model." ;
@@ -3527,6 +3548,7 @@
     linkml:meaning <http://purl.obolibrary.org/obo/BTO_0000988> .
 
 <https://w3id.org/synapse/nfosi/vocab/particle%20characterization> skos:definition "Data providing information about entities such as composition, structure and defects." ;
+    skos:editorialNote "More general than `molecular property`" ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C62317> .
 
 <https://w3id.org/synapse/nfosi/vocab/particles/mL> skos:definition "" .
@@ -3542,6 +3564,9 @@
 <https://w3id.org/synapse/nfosi/vocab/perineurial%20cell%20thickness> skos:definition "Measuring the thickness of the cells in the perineurium, e.g. in developing Drosophila melanogaster." ;
     linkml:meaning <http://purl.obolibrary.org/obo/MI_0410> .
 
+<https://w3id.org/synapse/nfosi/vocab/pharmacokinetics> skos:definition "Data characterizing the process by which a drug is absorbed, distributed, metabolized, and eliminated by the body." ;
+    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C49663> .
+
 <https://w3id.org/synapse/nfosi/vocab/pharmocokinetic%20ADME%20assay> skos:definition """Any one or more ADME assays used to assess absorption, distribution, metabolism, and excretion, for evaluation of drug candidates and other pharmaceuticals.
 """ .
 
@@ -3551,11 +3576,18 @@
 <https://w3id.org/synapse/nfosi/vocab/photograph> skos:definition "An image recorded by a camera." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C86035> .
 
+<https://w3id.org/synapse/nfosi/vocab/physiology%20parameter> skos:definition "Experimentally determined parameter of the physiology of an organism, e.g. metabolic rate. General term representing data about **function** and **process** of an organism or organism part." ;
+    skos:editorialNote "Relation to pharmacokinetic data -- certain physiology parameteres inherent to the organism influences its pharmokinetics of a drug." ;
+    linkml:meaning <http://edamontology.org/data_3722> .
+
 <https://w3id.org/synapse/nfosi/vocab/plasma> skos:definition "Plasma is the fluid (noncellular) portion of the circulating blood, as distinguished from the serum that is the fluid portion of the blood obtained by removal of the fibrin clot and blood cells after coagulation." ;
     linkml:meaning <http://purl.obolibrary.org/obo/BTO_0000131> .
 
 <https://w3id.org/synapse/nfosi/vocab/plink> dcterms:source <https://www.cog-genomics.org/plink2/formats> ;
     skos:definition "Any Plink file format (MAP/PED/BED/BIM/FAM)" .
+
+<https://w3id.org/synapse/nfosi/vocab/plot> skos:definition "Data that has been plotted as a graph of some type, or data representing such a graph." ;
+    linkml:meaning <http://edamontology.org/data_2884> .
 
 <https://w3id.org/synapse/nfosi/vocab/png> skos:definition "PNG is a file format for image compression" ;
     linkml:meaning <http://edamontology.org/format_3603> .
@@ -3571,7 +3603,8 @@
 <https://w3id.org/synapse/nfosi/vocab/positron%20emission%20tomography> skos:definition "A technique for measuring the gamma radiation produced by collisions of electrons and positrons (anti-electrons) within living tissue." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C17007> .
 
-<https://w3id.org/synapse/nfosi/vocab/powerpoint> skos:definition "Microsoft Powerpoint slide format" .
+<https://w3id.org/synapse/nfosi/vocab/powerpoint> skos:definition "Microsoft Powerpoint slide format" ;
+    linkml:meaning <http://edamontology.org/format_3838> .
 
 <https://w3id.org/synapse/nfosi/vocab/primary%20cultured%20fibroblast%20cell> skos:definition "A primary cultured cell that is derived from fibroblast cell in vivo." ;
     linkml:meaning <http://purl.obolibrary.org/obo/CLO_0037301> .
@@ -3579,10 +3612,17 @@
 <https://w3id.org/synapse/nfosi/vocab/primary%20tumor> skos:definition "A primary tumor is the tumor at the initial site of cancer, not where the cancer may have spread or metastasized, called the secondary tumor. Use `tumorType` to further describe the primary tumor." ;
     linkml:meaning <https://cancergenome.nih.gov/cancersselected/biospeccriteria> .
 
-<https://w3id.org/synapse/nfosi/vocab/processed> skos:definition "A file of data generated from running one or more bioinformatics methods on a raw file." .
+<https://w3id.org/synapse/nfosi/vocab/processed> skos:definition "Data generated from running one or more bioinformatics methods on raw data." .
 
 <https://w3id.org/synapse/nfosi/vocab/prostate> skos:definition "Lobular organ the parenchyma of which has as its parts glandular acini which are continuous with the prostatic part of the urethra." ;
     linkml:meaning <http://purl.obolibrary.org/obo/FMA_9600> .
+
+<https://w3id.org/synapse/nfosi/vocab/protein%20interaction%20data> skos:definition """Data concerning the interactions (predicted or known) within or between a protein, structural domain or part of a protein.  This includes intra- and inter-residue contacts and distances, as well as interactions with other proteins and non-protein entities such as nucleic acid, metal atoms, water, ions etc.
+""" ;
+    linkml:meaning <http://edamontology.org/data_0906> .
+
+<https://w3id.org/synapse/nfosi/vocab/protein%20interaction%20raw%20data> skos:definition "Protein-protein interaction data from for example yeast two-hybrid analysis, protein microarrays, immunoaffinity chromatography followed by mass spectrometry, phage display etc." ;
+    linkml:meaning <http://edamontology.org/data_0905> .
 
 <https://w3id.org/synapse/nfosi/vocab/proteomics> skos:definition "Protein and peptide identification, especially in the study of whole proteomes of organisms." ;
     linkml:meaning <http://edamontology.org/topic_0121> .
@@ -3602,6 +3642,8 @@
 <https://w3id.org/synapse/nfosi/vocab/pzfx> dcterms:source <https://fileinfo.com/extension/pzfx> ;
     skos:definition "A PZFX file is a Prism project created by GraphPad Prism, a scientific application used to analyze and graph data. It contains project data including graphs and layouts, notes, and tables." .
 
+<https://w3id.org/synapse/nfosi/vocab/quantified> skos:definition "Data representing measurements/counts of specific features (gene counts, peak intensities, object properties)." .
+
 <https://w3id.org/synapse/nfosi/vocab/quantitative%20PCR> skos:definition "Quantitative PCR (Q-PCR) is used to measure the quantity of a PCR product (commonly in real-time). It quantitatively measures starting amounts of DNA, cDNA, or RNA." ;
     linkml:meaning <http://purl.obolibrary.org/obo/MI_1195> .
 
@@ -3612,6 +3654,10 @@
 
 <https://w3id.org/synapse/nfosi/vocab/raw%20counts> skos:definition "The number or amount of something." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C25463> .
+
+<https://w3id.org/synapse/nfosi/vocab/raw%20intensities> skos:definition "Raw intensity values from the instrument (including microarrays, plate reader assays, raw pixel intensities from imaging assay, mass spectrometry, etc.)." ;
+    skos:editorialNote "Not preferred for annotation." ;
+    linkml:meaning <https://w3id.org/synapse/nfosi/vocab/RawIntensities> .
 
 <https://w3id.org/synapse/nfosi/vocab/rds> dcterms:source <https://www.datafiles.samhsa.gov/get-help/format-specific-issues/how-do-i-read-data-r> ;
     skos:definition "R binary data format similar to RData." .
@@ -3634,9 +3680,6 @@
 """ ;
     linkml:meaning <http://purl.obolibrary.org/obo/OBI_0002082> .
 
-<https://w3id.org/synapse/nfosi/vocab/representative> skos:definition "An activity that stands as an equivalent of something or results in an equivalent; typical of, or the same as, others in a larger group of people or things." ;
-    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C67045> .
-
 <https://w3id.org/synapse/nfosi/vocab/result> dcterms:source <https://synapse.org> ;
     skos:definition "Any file that reports data results. Examples include figures, presentations, analysis, etc." ;
     skos:note "This resource category is somewhat more general than `report`." .
@@ -3652,8 +3695,9 @@
 <https://w3id.org/synapse/nfosi/vocab/ribo-seq> skos:definition "Ribosome profiling (Ribo-Seq)." ;
     linkml:meaning <http://www.ebi.ac.uk/efo/EFO_0008891> .
 
-<https://w3id.org/synapse/nfosi/vocab/rmd> skos:definition "markdown document specific to r analyses" ;
-    linkml:meaning <http://rmarkdown.rstudio.com/developer_document_templates.html> .
+<https://w3id.org/synapse/nfosi/vocab/rmd> dcterms:source <http://rmarkdown.rstudio.com/developer_document_templates.html> ;
+    skos:definition "Markdown document specific to R analyses." ;
+    linkml:meaning <http://edamontology.org/format_4000> .
 
 <https://w3id.org/synapse/nfosi/vocab/rotarod%20performance%20test> skos:definition "A method that utilizes a device consisting of a rotating rod the speed of which is mechanically driven and precisely controlled, for instance held constant or accelerated. The rotarod test is often used to measure riding time or endurance in order to evaluate balance, motor coordination or grip strength." ;
     linkml:meaning <http://purl.obolibrary.org/obo/MMO_0000567> .
@@ -3717,7 +3761,7 @@
 <https://w3id.org/synapse/nfosi/vocab/serum> skos:definition "Liquid derived from blood plasma that has clotting factors removed." ;
     linkml:meaning <http://purl.obolibrary.org/obo/BTO_0001239> .
 
-<https://w3id.org/synapse/nfosi/vocab/sf> skos:definition "Salmon’s main output is its quantification file. This file is a plain-text, tab-separated file with a single header line (which names all of the columns)." ;
+<https://w3id.org/synapse/nfosi/vocab/sf> skos:definition "Salmon's main output is its quantification file. This file is a plain-text, tab-separated file with a single header line (which names all of the columns)." ;
     linkml:meaning <https://salmon.readthedocs.io/en/latest/file_formats.html> .
 
 <https://w3id.org/synapse/nfosi/vocab/shoulder> skos:definition "" .
@@ -3748,6 +3792,10 @@
 
 <https://w3id.org/synapse/nfosi/vocab/skin> skos:definition "The integument of an animal (as a fur-bearing mammal or a bird) separated from the body usually with its hair or feathers." ;
     linkml:meaning <http://purl.obolibrary.org/obo/BTO_0001253> .
+
+<https://w3id.org/synapse/nfosi/vocab/somatic%20variants> dcterms:source <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_somatic_mutation> ;
+    skos:definition "Called somatic variants" ;
+    linkml:meaning <https://w3id.org/synapse/nfosi/vocab/SomaticVariants> .
 
 <https://w3id.org/synapse/nfosi/vocab/sorbitol%20dehydrogenase%20activity%20level%20assay> skos:definition "An enzymatic activity level assay that measures the activity of sorbitol dehydrogenase in a sample." ;
     linkml:meaning <http://purl.obolibrary.org/obo/OBI_0003434> .
@@ -3796,7 +3844,11 @@
 <https://w3id.org/synapse/nfosi/vocab/stool> skos:definition "Portion of semisolid bodily waste discharged through the anus." ;
     linkml:meaning <http://purl.obolibrary.org/obo/UBERON_0001988> .
 
-<https://w3id.org/synapse/nfosi/vocab/surveyData> skos:definition "A data set that contains the outcome of a survey." ;
+<https://w3id.org/synapse/nfosi/vocab/structural%20variants> dcterms:source <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=structural_variation> ;
+    skos:definition "Genomic variants data that covers deletions, duplications, CNVs, insertions, inversions, and translocations, which may be derived from specialized variant calling workflows." ;
+    linkml:meaning <https://w3id.org/synapse/nfosi/vocab/StructuralVariantss> .
+
+<https://w3id.org/synapse/nfosi/vocab/survey%20data> skos:definition "A data set that contains the outcome of a survey." ;
     linkml:meaning <http://purl.obolibrary.org/obo/OMIABIS_0000060> .
 
 <https://w3id.org/synapse/nfosi/vocab/survival> skos:definition "Any quantitative measurement of survival of or in an individual or study population." ;
@@ -3805,32 +3857,37 @@
 <https://w3id.org/synapse/nfosi/vocab/svg> skos:definition "Scalable Vector Graphics (SVG) is an XML-based vector image format for two-dimensional graphics with support for interactivity and animation." ;
     linkml:meaning <http://edamontology.org/format_3604> .
 
-<https://w3id.org/synapse/nfosi/vocab/svs> skos:definition "A single-file pyramidal tiled TIFF, with non-standard metadata and compression." ;
-    linkml:meaning <https://openslide.org/formats/aperio/> .
+<https://w3id.org/synapse/nfosi/vocab/svs> dcterms:source <https://openslide.org/formats/aperio/> ;
+    skos:definition "A single-file pyramidal tiled TIFF, with non-standard metadata and compression." .
 
 <https://w3id.org/synapse/nfosi/vocab/sweat> skos:definition "Secretion produced by a sweat gland." ;
     linkml:meaning <http://purl.obolibrary.org/obo/UBERON_0001089> .
 
-<https://w3id.org/synapse/nfosi/vocab/tagAlign> skos:definition "Tag Alignment provides genomic mapping of short sequence tags." ;
-    linkml:meaning <https://genome.ucsc.edu/FAQ/FAQformat.html#format15> .
+<https://w3id.org/synapse/nfosi/vocab/synthetic> skos:definition "Data generated computationally via models or simulations, not direct experimental measurement." .
 
-<https://w3id.org/synapse/nfosi/vocab/tar> skos:definition "tape archive" ;
-    linkml:meaning <https://en.wikipedia.org/wiki/Tar_(computing)> .
+<https://w3id.org/synapse/nfosi/vocab/tagAlign> dcterms:source <https://genome.ucsc.edu/FAQ/FAQformat.html#format15> ;
+    skos:definition "Tag Alignment provides genomic mapping of short sequence tags." .
+
+<https://w3id.org/synapse/nfosi/vocab/tar> skos:definition "TAR archive file format generated by the Unix-based utility tar." ;
+    linkml:meaning <http://edamontology.org/format_3981> .
 
 <https://w3id.org/synapse/nfosi/vocab/targeted%20exome%20sequencing> skos:definition "Also known as Clinical Exome Sequencing, Targeted Exome Sequencing is a subset of WES as it covers a limited number of genes, typically 3000 to 6000 genes." ;
     linkml:meaning <https://labassure.com/whole-exome-sequencing-vs-clinical-exome-sequencing/> .
 
 <https://w3id.org/synapse/nfosi/vocab/tbi> skos:definition "A TBI file is an index for a TABIX-compressed genomic data file, enabling rapid region-based retrieval." ;
-    skos:editorialNote "ChatGPT (September 25, 2023 Version)" .
+    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C184806> .
 
 <https://w3id.org/synapse/nfosi/vocab/teratoma> skos:definition "A non-seminomatous germ cell tumor characterized by the presence of various tissues which correspond to the different germinal layers (endoderm, mesoderm, and ectoderm). It occurs in the testis, ovary, and extragonadal sites including central nervous system, mediastinum, lung, and stomach" ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C3403> .
+
+<https://w3id.org/synapse/nfosi/vocab/text%20data> skos:definition "Data that is represented as text, usually referring to \"unstructured data\"." ;
+    linkml:meaning <http://edamontology.org/data_2526> .
 
 <https://w3id.org/synapse/nfosi/vocab/thoracic%20spine> skos:definition "" ;
     linkml:meaning <http://purl.obolibrary.org/obo/UBERON_0006073> .
 
 <https://w3id.org/synapse/nfosi/vocab/tif> skos:definition "Tagged Image File Format, abbreviated TIFF or TIF, is a computer file format for storing raster graphics images" ;
-    linkml:meaning <https://en.wikipedia.org/wiki/TIFF> .
+    linkml:meaning <http://edamontology.org/format_3591> .
 
 <https://w3id.org/synapse/nfosi/vocab/time> a linkml:TypeDefinition ;
     skos:definition "A time object represents a (local) time of day, independent of any particular day" ;
@@ -3844,8 +3901,9 @@
     linkml:repr "str" ;
     linkml:uri xsd:time .
 
-<https://w3id.org/synapse/nfosi/vocab/tom> skos:definition "The .tom format is a specialized 3D image export format from the Vectra medical imaging systems that can optionally preserve trimmings and/or landmarks." ;
-    linkml:meaning <http://canfieldupgrade.com/assets/media/VECTRA-M3-User-Guide.pdf> .
+<https://w3id.org/synapse/nfosi/vocab/tom> dcterms:source <http://canfieldupgrade.com/assets/media/VECTRA-M3-User-Guide.pdf> ;
+    skos:definition "The .tom format is a specialized 3D image export format from the Vectra medical imaging systems that can optionally preserve trimmings and/or landmarks." ;
+    skos:editorialNote "No other model has this as it is relatively new and highly specific format for a proprietary platform." .
 
 <https://w3id.org/synapse/nfosi/vocab/tool> dcterms:source <https://synapse.org> ;
     skos:definition "Any file or link that represents a tool, model, or algorithm; the tool annotations could be applied" .
@@ -3853,8 +3911,8 @@
 <https://w3id.org/synapse/nfosi/vocab/traction%20force%20microscopy> skos:definition "An experimental method for determining the tractions on the surface of a biological cell by obtaining measurements of the surrounding displacement field within an in vitro extracellular matrix (ECM)" ;
     linkml:meaning <https://en.wikipedia.org/wiki/Traction_force_microscopy> .
 
-<https://w3id.org/synapse/nfosi/vocab/tranches> skos:definition ".tranches file from GATK VQSR" ;
-    linkml:meaning <https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_variantrecalibration_VariantRecalibrator.php#--tranches_file> .
+<https://w3id.org/synapse/nfosi/vocab/tranches> dcterms:source <https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_variantrecalibration_VariantRecalibrator.php#--tranches_file> ;
+    skos:definition ".tranches file from GATK VQSR" .
 
 <https://w3id.org/synapse/nfosi/vocab/transcranial%20doppler%20ultrasonography> skos:definition "A diagnostic technique that uses pulsed Doppler ultrasound to measure the velocity of blood flow through the major blood vessels of the brain." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C122930> .
@@ -3906,10 +3964,16 @@
 <https://w3id.org/synapse/nfosi/vocab/vcf> skos:definition "Variant Call Format (VCF) for sequence variation (indels, polymorphisms, structural variation)" ;
     linkml:meaning <http://edamontology.org/format_3016> .
 
+<https://w3id.org/synapse/nfosi/vocab/volume> skos:definition "Data of the three dimensional space occupied by an entity or the capacity of a space or container." ;
+    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C25335> .
+
 <https://w3id.org/synapse/nfosi/vocab/weblink> skos:definition "An address to another document or other resource on the World Wide Web." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C42743> .
 
 <https://w3id.org/synapse/nfosi/vocab/weeks> linkml:meaning <http://purl.obolibrary.org/obo/UO_0000034> .
+
+<https://w3id.org/synapse/nfosi/vocab/weight> skos:definition "The vertical force exerted by a mass as a result of gravity." ;
+    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C25208> .
 
 <https://w3id.org/synapse/nfosi/vocab/western%20blot> skos:definition "A multistep process in which a mixture of proteins is separated by gel electrophoresis" ;
     linkml:meaning <http://purl.obolibrary.org/obo/MMO_0000338> .
@@ -3931,6 +3995,10 @@
 
 <https://w3id.org/synapse/nfosi/vocab/word%20recognition%20score> skos:definition "Assays how well a person can understand speech by repeating a list of words. The WRS is a percentage of words correctly repeated. It's a more functional measure because it predicts whether hearing loss can be improved with amplification." .
 
+<https://w3id.org/synapse/nfosi/vocab/workflow%20metadata> skos:definition "Process data from computational workflows. This is highly related to Statistical Metadata. Basic information, annotation or documentation concerning a workflow (but not the workflow itself)." ;
+    skos:note "Coined category for use esp. with nextflow metadata files." ;
+    linkml:meaning <http://edamontology.org/data_0949> .
+
 <https://w3id.org/synapse/nfosi/vocab/workflow%20report> skos:definition "Workflow-generated reports of analysis of primary data, usually created programmatically at completion of workflow step." .
 
 <https://w3id.org/synapse/nfosi/vocab/xenograft> skos:definition "Tissues, cells or organs transplanted between animals of different species" ;
@@ -3945,7 +4013,7 @@
 <https://w3id.org/synapse/nfosi/vocab/years> linkml:meaning <http://purl.obolibrary.org/obo/UO_0000036> .
 
 <https://w3id.org/synapse/nfosi/vocab/zip> skos:definition "zip is a format standard of a digital entity that is conformant with the PKWARE .ZIP file format specification" ;
-    linkml:meaning <http://purl.obolibrary.org/obo/OBI_0000325> .
+    linkml:meaning <http://edamontology.org/format_3987> .
 
 <https://w3id.org/synapse/nfosi/vocab/Atypical%20Neurofibroma> skos:definition "A neurofibroma characterized by the presence of cellular pleomorphism." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C41426> .
@@ -4072,6 +4140,18 @@
     skos:definition "Date data were published/available on Synapse." ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/integer> .
 
+<https://w3id.org/synapse/nfosi/vocab/electrophysiology> dcterms:source <https://bioportal.bioontology.org/ontologies/ERO/?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FERO_0000564&jump_to_nav=true> ;
+    skos:definition """Data generated from an electrophysiology assay, e.g: 
+- Cell: Resting membrane potential, ion channel currents (patch clamp data)
+- Neurons: Action potentials, resting potential, synaptic potentials. 
+- Heart: Electrocardiogram (ECG/EKG) waveforms, cardiac action potentials.
+- Muscle: Electromyogram (EMG) signals
+- Whole brain: Electroencephalogram (EEG)
+- Retina: Electroretinogram (ERG)
+""" ;
+    skos:editorialNote "ERO has been deprecated and direct URIs no longer work." ;
+    linkml:meaning <https://w3id.org/synapse/nfosi/vocab/electrophysiology> .
+
 <https://w3id.org/synapse/nfosi/vocab/embargoEndDate> a linkml:SlotDefinition ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
 
@@ -4125,15 +4205,21 @@
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:required true .
 
+<https://w3id.org/synapse/nfosi/vocab/kinomics> dcterms:source <http://www.kinomecore.com/what-is-kinomics/> ;
+    skos:definition "Data studying protein kinase signaling/activity." ;
+    skos:editorialNote "See \"Kinome Response Profile\" (http://purl.obolibrary.org/obo/NCIT_C107137) for kinome data *specifically* with drug treatment",
+        "Subclasss of \"Proteomics\" (http://purl.obolibrary.org/obo/NCIT_C16723)" ;
+    linkml:meaning <https://w3id.org/synapse/nfosi/vocab/kinomics> .
+
 <https://w3id.org/synapse/nfosi/vocab/measurementTechnique> a linkml:SlotDefinition ;
     dcterms:title "Measurement Technique" ;
     skos:definition "What's used to generate data in dataset, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia)." ;
     linkml:multivalued true ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/AssayEnum> .
 
-<https://w3id.org/synapse/nfosi/vocab/metadata> skos:definition "A file of clinical, technical, or other parameters that describe a dataset.",
-        "Data about data, information that describes another set of data." ;
-    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C52095> .
+<https://w3id.org/synapse/nfosi/vocab/metabolomics> rdfs:seeAlso <http://edamontology.org/topic_3172> ;
+    skos:definition "Data of metabolites, the chemical processes they are involved, and the chemical fingerprints of specific cellular processes in a whole cell, tissue, organ or organism." ;
+    linkml:meaning <https://w3id.org/synapse/nfosi/vocab/metabolomics> .
 
 <https://w3id.org/synapse/nfosi/vocab/mitochondria> dcterms:source <https://github.com/HumanCellAtlas/metadata-schema/blob/master/json_schema/type/process/sequencing/library_preparation_process.json> ;
     skos:definition "Mitochondria only" .
@@ -4695,7 +4781,7 @@
     linkml:range <https://w3id.org/synapse/nfosi/vocab/PublicationTypeEnum> ;
     linkml:required true .
 
-<https://w3id.org/synapse/nfosi/vocab/raw> skos:definition "A data file produced by an instrument, or one with very little subsequent processing.",
+<https://w3id.org/synapse/nfosi/vocab/raw> skos:definition "Data produced by experimental measurement/observation with very little subsequent processing.",
         "Proprietary file format for mass spectrometry data from Thermo Scientific" ;
     linkml:meaning <http://edamontology.org/format_3712> .
 
@@ -4942,14 +5028,16 @@
         <https://w3id.org/synapse/nfosi/vocab/Cy5>,
         <https://w3id.org/synapse/nfosi/vocab/Not%20Applicable> .
 
-<https://w3id.org/synapse/nfosi/vocab/DataSubtypeEnum> skos:inScheme <https://w3id.org/nfosi/> ;
+<https://w3id.org/synapse/nfosi/vocab/DataSubtypeEnum> skos:definition """Categorizes data based on its processing state. This is the main classification axis used for data types.  Not all data types can use this dimensions (e.g. clinical data).
+""" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/DataSubtypeEnum> ;
-    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/dataMatrix>,
-        <https://w3id.org/synapse/nfosi/vocab/metadata>,
+    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/derived>,
         <https://w3id.org/synapse/nfosi/vocab/normalized>,
         <https://w3id.org/synapse/nfosi/vocab/processed>,
+        <https://w3id.org/synapse/nfosi/vocab/quantified>,
         <https://w3id.org/synapse/nfosi/vocab/raw>,
-        <https://w3id.org/synapse/nfosi/vocab/representative> .
+        <https://w3id.org/synapse/nfosi/vocab/synthetic> .
 
 <https://w3id.org/synapse/nfosi/vocab/DiagnosisEnum> skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/DiagnosisEnum> ;
@@ -5254,13 +5342,9 @@
     skos:definition "Data that provides information about other data" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/Metadata> ;
-    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/Administrative%20Metadata>,
-        <https://w3id.org/synapse/nfosi/vocab/Descriptive%20Metadata>,
-        <https://w3id.org/synapse/nfosi/vocab/Legal%20Metadata>,
-        <https://w3id.org/synapse/nfosi/vocab/Reference%20Metadata>,
-        <https://w3id.org/synapse/nfosi/vocab/Statistical%20Metadata>,
-        <https://w3id.org/synapse/nfosi/vocab/Structural%20Metadata>,
-        <https://w3id.org/synapse/nfosi/vocab/Workflow%20Metadata> .
+    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/descriptive%20metadata>,
+        <https://w3id.org/synapse/nfosi/vocab/image%20metadata>,
+        <https://w3id.org/synapse/nfosi/vocab/workflow%20metadata> .
 
 <https://w3id.org/synapse/nfosi/vocab/MosaicismEnum> skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/MosaicismEnum> ;
@@ -5544,7 +5628,9 @@
     linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/forward>,
         <https://w3id.org/synapse/nfosi/vocab/reverse> .
 
-<https://w3id.org/synapse/nfosi/vocab/Resource> skos:inScheme <https://w3id.org/nfosi/> ;
+<https://w3id.org/synapse/nfosi/vocab/Resource> skos:definition """Resource classes. Most resource entities expected to be some type of "experimental data" and further specified via `dataType`.
+""" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/Resource> ;
     linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/experimentalData>,
         <https://w3id.org/synapse/nfosi/vocab/metadata>,
@@ -8234,47 +8320,60 @@
         <https://w3id.org/synapse/nfosi/vocab/whole-cell%20patch%20clamp>,
         <https://w3id.org/synapse/nfosi/vocab/word%20recognition%20score> .
 
-<https://w3id.org/synapse/nfosi/vocab/Data> skos:definition "What the data (file) contains." ;
+<https://w3id.org/synapse/nfosi/vocab/Data> skos:definition "Type of data represented by the entity (File, Dataset, etc.)." ;
+    skos:editorialNote "Broad term/abstract class; should not be used for annotation",
+        "http://edamontology.org/data_0006" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/Data> ;
-    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/AggregatedData>,
-        <https://w3id.org/synapse/nfosi/vocab/AlignedReads>,
-        <https://w3id.org/synapse/nfosi/vocab/AnnotatedGermlineVariants>,
-        <https://w3id.org/synapse/nfosi/vocab/AnnotatedSomaticVariants>,
-        <https://w3id.org/synapse/nfosi/vocab/CopyNumberVariants>,
-        <https://w3id.org/synapse/nfosi/vocab/GermlineVariants>,
-        <https://w3id.org/synapse/nfosi/vocab/NormalizedIntensities>,
-        <https://w3id.org/synapse/nfosi/vocab/Pharmacokinetic%20Study>,
-        <https://w3id.org/synapse/nfosi/vocab/RawIntensities>,
-        <https://w3id.org/synapse/nfosi/vocab/SomaticVariants>,
-        <https://w3id.org/synapse/nfosi/vocab/StructuralVariants>,
-        <https://w3id.org/synapse/nfosi/vocab/Volume>,
-        <https://w3id.org/synapse/nfosi/vocab/Weight>,
+    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/aggregated%20data>,
+        <https://w3id.org/synapse/nfosi/vocab/aligned%20reads>,
+        <https://w3id.org/synapse/nfosi/vocab/annotated%20germline%20variants>,
+        <https://w3id.org/synapse/nfosi/vocab/annotated%20somatic%20mutation>,
         <https://w3id.org/synapse/nfosi/vocab/audio%20transcript>,
-        <https://w3id.org/synapse/nfosi/vocab/behavior%20process>,
-        <https://w3id.org/synapse/nfosi/vocab/cellularPhysiology>,
+        <https://w3id.org/synapse/nfosi/vocab/behavioral%20data>,
+        <https://w3id.org/synapse/nfosi/vocab/cellular%20physiology>,
         <https://w3id.org/synapse/nfosi/vocab/characteristic>,
-        <https://w3id.org/synapse/nfosi/vocab/chromatinActivity>,
+        <https://w3id.org/synapse/nfosi/vocab/chromatin%20activity>,
         <https://w3id.org/synapse/nfosi/vocab/clinical>,
-        <https://w3id.org/synapse/nfosi/vocab/dataIndex>,
+        <https://w3id.org/synapse/nfosi/vocab/copy%20number%20variants>,
+        <https://w3id.org/synapse/nfosi/vocab/count%20matrix>,
+        <https://w3id.org/synapse/nfosi/vocab/data%20index>,
+        <https://w3id.org/synapse/nfosi/vocab/data%20sharing%20plan>,
         <https://w3id.org/synapse/nfosi/vocab/demographics>,
-        <https://w3id.org/synapse/nfosi/vocab/drugCombinationScreen>,
-        <https://w3id.org/synapse/nfosi/vocab/drugScreen>,
+        <https://w3id.org/synapse/nfosi/vocab/drug%20combination%20screen>,
+        <https://w3id.org/synapse/nfosi/vocab/drug%20screen>,
         <https://w3id.org/synapse/nfosi/vocab/electrophysiology>,
-        <https://w3id.org/synapse/nfosi/vocab/geneExpression>,
-        <https://w3id.org/synapse/nfosi/vocab/genomicFeatures>,
-        <https://w3id.org/synapse/nfosi/vocab/genomicVariants>,
+        <https://w3id.org/synapse/nfosi/vocab/gene%20expression>,
+        <https://w3id.org/synapse/nfosi/vocab/genomic%20features>,
+        <https://w3id.org/synapse/nfosi/vocab/genomic%20variants>,
+        <https://w3id.org/synapse/nfosi/vocab/germline%20variants>,
         <https://w3id.org/synapse/nfosi/vocab/image>,
         <https://w3id.org/synapse/nfosi/vocab/immunoassay>,
-        <https://w3id.org/synapse/nfosi/vocab/isoformExpression>,
+        <https://w3id.org/synapse/nfosi/vocab/isoform%20expression>,
         <https://w3id.org/synapse/nfosi/vocab/kinomics>,
         <https://w3id.org/synapse/nfosi/vocab/mask%20image>,
+        <https://w3id.org/synapse/nfosi/vocab/mass%20spectrometry%20data>,
         <https://w3id.org/synapse/nfosi/vocab/metabolomics>,
+        <https://w3id.org/synapse/nfosi/vocab/molecular%20property>,
+        <https://w3id.org/synapse/nfosi/vocab/morphology%20parameter>,
         <https://w3id.org/synapse/nfosi/vocab/network>,
+        <https://w3id.org/synapse/nfosi/vocab/normalized%20intensities>,
+        <https://w3id.org/synapse/nfosi/vocab/nucleic%20acid%20sequence%20record>,
         <https://w3id.org/synapse/nfosi/vocab/particle%20characterization>,
+        <https://w3id.org/synapse/nfosi/vocab/pharmacokinetics>,
+        <https://w3id.org/synapse/nfosi/vocab/physiology%20parameter>,
+        <https://w3id.org/synapse/nfosi/vocab/plot>,
+        <https://w3id.org/synapse/nfosi/vocab/protein%20interaction%20data>,
+        <https://w3id.org/synapse/nfosi/vocab/protein%20interaction%20raw%20data>,
         <https://w3id.org/synapse/nfosi/vocab/proteomics>,
         <https://w3id.org/synapse/nfosi/vocab/raw%20counts>,
-        <https://w3id.org/synapse/nfosi/vocab/surveyData> .
+        <https://w3id.org/synapse/nfosi/vocab/raw%20intensities>,
+        <https://w3id.org/synapse/nfosi/vocab/somatic%20variants>,
+        <https://w3id.org/synapse/nfosi/vocab/structural%20variants>,
+        <https://w3id.org/synapse/nfosi/vocab/survey%20data>,
+        <https://w3id.org/synapse/nfosi/vocab/text%20data>,
+        <https://w3id.org/synapse/nfosi/vocab/volume>,
+        <https://w3id.org/synapse/nfosi/vocab/weight> .
 
 <https://w3id.org/synapse/nfosi/vocab/DiseaseFocusEnum> dcterms:title "Disease Focus" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -9362,9 +9461,9 @@
 """ ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/specimenType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
@@ -9520,9 +9619,9 @@
         "https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/libraryStrand> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
@@ -10131,9 +10230,9 @@
     skos:definition "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/modelSystemName> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10195,9 +10294,9 @@
     skos:definition "Genotype of NF1 gene in the biospecimen from which the data were derived, if known." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/nf1Genotype> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10210,11 +10309,11 @@
     skos:definition "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
-        [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sex> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,

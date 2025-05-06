@@ -110,17 +110,17 @@ jobs:
           pip show schematicpy
 
       - name: Test generate
-        working-directory: tests/generate
+        working-directory: tests/schematic/generate
         continue-on-error: true
         run: ./basic_templates.sh
 
       - name: Test validate
-        working-directory: tests/validate
+        working-directory: tests/schematic/validate
         continue-on-error: true
         run: ./run_config.sh
 
       - name: Test submit
-        working-directory: tests/submit
+        working-directory: tests/schematic/submit
         continue-on-error: true
         # Only test submit needs SYNAPSE_AUTH_TOKEN
         env:
@@ -131,8 +131,8 @@ jobs:
           printf "[authentication]\nSYNAPSE_AUTH_TOKEN=$SYNAPSE_AUTH_TOKEN" > .synapseConfig
           ./test_submit.sh
       
-      - name: Create test suite report
-        working-directory: tests
+      - name: Create schematic test suite report
+        working-directory: tests/schematic
         continue-on-error: true
         run: docker run -v $(pwd):/tests -e SCHEMATIC=${{ env.SCHEMATIC_VERSION }} rocker/tidyverse R -e "rmarkdown::render('tests/test-suite-report.Rmd')"
 
