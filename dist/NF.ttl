@@ -12,20 +12,20 @@
 
 <https://w3id.org/synapse/nfosi/vocab/nfosi> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
-            sh:prefix "htan" ],
-        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
-            sh:prefix "personinfo" ],
+    sh:declare [ sh:namespace skos: ;
+            sh:prefix "skos" ],
         [ sh:namespace rdfs: ;
             sh:prefix "rdfs" ],
-        [ sh:namespace skos: ;
-            sh:prefix "skos" ],
-        [ sh:namespace prov: ;
-            sh:prefix "prov" ],
-        [ sh:namespace schema1: ;
-            sh:prefix "schema" ],
+        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
+            sh:prefix "htan" ],
         [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
             sh:prefix "nf" ],
+        [ sh:namespace schema1: ;
+            sh:prefix "schema" ],
+        [ sh:namespace prov: ;
+            sh:prefix "prov" ],
+        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
+            sh:prefix "personinfo" ],
         [ sh:namespace linkml: ;
             sh:prefix "linkml" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
@@ -169,7 +169,7 @@
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-05-05T15:46:15"^^xsd:dateTime ;
+    linkml:generation_date "2025-05-06T18:21:03"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -335,11 +335,13 @@
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__contributor>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__countryOfOrigin>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__creator>,
+        <https://w3id.org/synapse/nfosi/vocab/portalDataset__croissant_file_s3_object>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__dataType>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__dataUseModifiers>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__datePublished>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__description>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__diseaseFocus>,
+        <https://w3id.org/synapse/nfosi/vocab/portalDataset__doi>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__funder>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__includedInDataCatalog>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__individualCount>,
@@ -464,8 +466,8 @@
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-05-05T15:46:14"^^xsd:dateTime ;
-    linkml:source_file_size 306516 ;
+    linkml:source_file_date "2025-05-06T18:21:02"^^xsd:dateTime ;
+    linkml:source_file_size 306945 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,
@@ -4124,6 +4126,11 @@ Examples: avoidance behavior, choice-making.
     linkml:multivalued true ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
 
+<https://w3id.org/synapse/nfosi/vocab/croissant_file_s3_object> a linkml:SlotDefinition ;
+    dcterms:title "Croissant File" ;
+    skos:definition "Link to croissant file for dataset." ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
+
 <https://w3id.org/synapse/nfosi/vocab/dataUseModifiers> a linkml:SlotDefinition ;
     dcterms:title "Data Use Modifiers" ;
     skos:definition "List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Most datasets allow \"General Research Use\" unless otherwise specified." ;
@@ -4304,6 +4311,16 @@ Examples: avoidance behavior, choice-making.
     linkml:required true ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/creator> .
 
+<https://w3id.org/synapse/nfosi/vocab/portalDataset__croissant_file_s3_object> a linkml:SlotDefinition ;
+    dcterms:title "Croissant File" ;
+    skos:definition "Link to croissant file for dataset." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "croissant_file_s3_object" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/croissant_file_s3_object> .
+
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__dataType> a linkml:SlotDefinition ;
     dcterms:title "Data Type" ;
     skos:definition "Reflects the data types within the dataset." ;
@@ -4357,6 +4374,17 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/DiseaseFocusEnum> ;
     linkml:required true ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/diseaseFocus> .
+
+<https://w3id.org/synapse/nfosi/vocab/portalDataset__doi> a linkml:SlotDefinition ;
+    dcterms:title "doi" ;
+    skos:definition "The Digital Object Identifier (DOI) associated with the dataset, used for citation and persistent identification." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "doi" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PortalDataset> ;
+    linkml:pattern "^10\\\\.\\\\d{4,9}/[-._;()/:A-Z0-9]+$" ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/doi> .
 
 <https://w3id.org/synapse/nfosi/vocab/portalDataset__funder> a linkml:SlotDefinition ;
     dcterms:title "Funder" ;
@@ -7922,15 +7950,6 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/DissociationMethodEnum> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/dissociationMethod> .
 
-<https://w3id.org/synapse/nfosi/vocab/doi> a linkml:SlotDefinition ;
-    dcterms:title "Digital Object Identifier" ;
-    skos:definition "Digital object identifier of the resource." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/doi> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:required true ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/doi> .
-
 <https://w3id.org/synapse/nfosi/vocab/experimentalFactor> a linkml:SlotDefinition ;
     skos:definition "An ontology concept for experimental factor measured with this data." ;
     skos:editorialNote "Note that this enforces a concept term from EFO (currently preferred), while the related `experimentalCondition` is free-text and much more specific." ;
@@ -8738,6 +8757,18 @@ Examples: avoidance behavior, choice-making.
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/compoundName> .
+
+<https://w3id.org/synapse/nfosi/vocab/doi> a linkml:SlotDefinition ;
+    dcterms:title "Digital Object Identifier",
+        "doi" ;
+    skos:definition "Digital object identifier of the resource.",
+        "The Digital Object Identifier (DOI) associated with the dataset, used for citation and persistent identification." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/doi> ;
+    linkml:pattern "^10\\\\.\\\\d{4,9}/[-._;()/:A-Z0-9]+$" ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/doi> .
 
 <https://w3id.org/synapse/nfosi/vocab/fundingAgency> a linkml:SlotDefinition ;
     dcterms:title "Linked Funder(s)" ;
@@ -10294,9 +10325,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Genotype of NF1 gene in the biospecimen from which the data were derived, if known." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/nf1Genotype> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10339,9 +10370,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Genotype of NF2 gene in the biospecimen from which the data were derived, if known" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/nf2Genotype> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10530,9 +10561,9 @@ Examples: avoidance behavior, choice-making.
         "Reflects the data types within the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Metadata> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Metadata> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/dataType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/EpidemiologyDataTemplate>,
@@ -10558,11 +10589,13 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/contributor>,
         <https://w3id.org/synapse/nfosi/vocab/countryOfOrigin>,
         <https://w3id.org/synapse/nfosi/vocab/creator>,
+        <https://w3id.org/synapse/nfosi/vocab/croissant_file_s3_object>,
         <https://w3id.org/synapse/nfosi/vocab/dataType>,
         <https://w3id.org/synapse/nfosi/vocab/dataUseModifiers>,
         <https://w3id.org/synapse/nfosi/vocab/datePublished>,
         <https://w3id.org/synapse/nfosi/vocab/description>,
         <https://w3id.org/synapse/nfosi/vocab/diseaseFocus>,
+        <https://w3id.org/synapse/nfosi/vocab/doi>,
         <https://w3id.org/synapse/nfosi/vocab/funder>,
         <https://w3id.org/synapse/nfosi/vocab/includedInDataCatalog>,
         <https://w3id.org/synapse/nfosi/vocab/individualCount>,
@@ -10588,11 +10621,13 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__contributor>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__countryOfOrigin>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__creator>,
+        <https://w3id.org/synapse/nfosi/vocab/portalDataset__croissant_file_s3_object>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__dataType>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__dataUseModifiers>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__datePublished>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__description>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__diseaseFocus>,
+        <https://w3id.org/synapse/nfosi/vocab/portalDataset__doi>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__funder>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__includedInDataCatalog>,
         <https://w3id.org/synapse/nfosi/vocab/portalDataset__individualCount>,
