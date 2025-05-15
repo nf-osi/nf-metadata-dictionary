@@ -15730,17 +15730,20 @@
         {
             "@id": "bts:Metadata",
             "@type": "rdfs:Class",
-            "rdfs:comment": "Data that provides information about other data",
+            "rdfs:comment": "TBD",
             "rdfs:label": "Metadata",
             "rdfs:subClassOf": [
                 {
                     "@id": "bts:ResourceType"
+                },
+                {
+                    "@id": "bts:DataType"
                 }
             ],
             "schema:isPartOf": {
                 "@id": "http://schema.biothings.io"
             },
-            "sms:displayName": "Metadata",
+            "sms:displayName": "metadata",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -18409,6 +18412,9 @@
                 },
                 {
                     "@id": "bts:Textdata"
+                },
+                {
+                    "@id": "bts:Metadata"
                 },
                 {
                     "@id": "bts:Descriptivemetadata"
@@ -34620,6 +34626,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "TestSummaryEnum",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:MetadataEnum",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "Data that provides information about other data",
+            "rdfs:label": "MetadataEnum",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "MetadataEnum",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
