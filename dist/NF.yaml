@@ -257,7 +257,7 @@ slots:
   dataType:
     any_of:
       - range: Data
-      - range: Metadata
+      - range: MetadataEnum
     description: >
       Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.
 
@@ -2533,10 +2533,12 @@ enums:
         # --- Analyzed/Interpreted ---  
       derived:
         description: Data from additional analytical steps performed on already processed data.
-  Metadata:
+  MetadataEnum:
     description: Data that provides information about other data
     source: https://en.wikipedia.org/wiki/Metadata
     permissible_values:
+      metadata:
+        description: Most general label for data that contains information about data.
       descriptive metadata:
         description: Information that describes and identifies a resource, including elements that facilitate discovery and understanding.
         notes:
@@ -2546,7 +2548,7 @@ enums:
         meaning: http://edamontology.org/data_0949
         comments: Coined category for use esp. with nextflow metadata files.
       image metadata:
-        description: Any data concerning a specific biological or biomedical image.
+        description: Data concerning a specific biological or biomedical image.
         meaning: http://edamontology.org/data_3546
         notes:
           - For e.g. XML files that contain image metadata.
