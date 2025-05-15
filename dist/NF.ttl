@@ -12,22 +12,22 @@
 
 <https://w3id.org/synapse/nfosi/vocab/nfosi> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
-            sh:prefix "htan" ],
-        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
-            sh:prefix "personinfo" ],
-        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
-            sh:prefix "nf" ],
-        [ sh:namespace prov: ;
-            sh:prefix "prov" ],
+    sh:declare [ sh:namespace skos: ;
+            sh:prefix "skos" ],
         [ sh:namespace linkml: ;
             sh:prefix "linkml" ],
-        [ sh:namespace skos: ;
-            sh:prefix "skos" ],
-        [ sh:namespace schema1: ;
-            sh:prefix "schema" ],
+        [ sh:namespace prov: ;
+            sh:prefix "prov" ],
+        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
+            sh:prefix "nf" ],
+        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
+            sh:prefix "htan" ],
         [ sh:namespace rdfs: ;
-            sh:prefix "rdfs" ] ;
+            sh:prefix "rdfs" ],
+        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
+            sh:prefix "personinfo" ],
+        [ sh:namespace schema1: ;
+            sh:prefix "schema" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
@@ -169,7 +169,7 @@
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-05-15T15:44:08"^^xsd:dateTime ;
+    linkml:generation_date "2025-05-15T18:33:25"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -466,8 +466,8 @@
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-05-15T15:44:07"^^xsd:dateTime ;
-    linkml:source_file_size 307597 ;
+    linkml:source_file_date "2025-05-15T18:33:23"^^xsd:dateTime ;
+    linkml:source_file_size 307675 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,
@@ -801,6 +801,8 @@
 <https://w3id.org/synapse/nfosi/vocab/Children%27s%20Hospital%20of%20Philadelphia> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/Children%27s%20National> linkml:meaning <https://ror.org/03wa2q724> .
+
+<https://w3id.org/synapse/nfosi/vocab/Children%27s%20Tumor%20Foundation> linkml:meaning <https://ror.org/01hx92781> .
 
 <https://w3id.org/synapse/nfosi/vocab/Chromium%20X> dcterms:source <https://www.10xgenomics.com/chromium-x> ;
     skos:definition "(From 10x Genomics) Single-cell platform that can analyze hundreds to hundreds of thousands of cells in single run for e.g. gene expression, chromatin accessibility, cell surface proteins, immune clonotype, antigen specificity, CRISPR perturbation screens)." .
@@ -7441,6 +7443,7 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/Chapman%20University>,
         <https://w3id.org/synapse/nfosi/vocab/Children%27s%20Hospital%20of%20Philadelphia>,
         <https://w3id.org/synapse/nfosi/vocab/Children%27s%20National>,
+        <https://w3id.org/synapse/nfosi/vocab/Children%27s%20Tumor%20Foundation>,
         <https://w3id.org/synapse/nfosi/vocab/Cincinnati%20Children%27s%20Hospital%20Medical%20Center>,
         <https://w3id.org/synapse/nfosi/vocab/City%20of%20Hope>,
         <https://w3id.org/synapse/nfosi/vocab/Clarkson%20University>,
@@ -9501,9 +9504,9 @@ Examples: avoidance behavior, choice-making.
 """ ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/specimenType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
@@ -9659,9 +9662,9 @@ Examples: avoidance behavior, choice-making.
         "https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/libraryStrand> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
@@ -10349,9 +10352,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
-        [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sex> ;
