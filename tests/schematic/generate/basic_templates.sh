@@ -1,9 +1,9 @@
 #!/bin/bash
 # Test generate GoogleSheets templates
 
-TEST_CONFIG=../../dca-template-config.json
+TEST_CONFIG=../../../dca-template-config.json
 CREDS=creds.json
-DATA_MODEL_PATH=../../NF.jsonld
+DATA_MODEL_PATH=../../../NF.jsonld
 DATA_MODEL=NF.jsonld
 LOG_DIR=logs
 SLEEP_THROTTLE=20 # API rate-limiting, need to better figure out dynamically based on # of templates
