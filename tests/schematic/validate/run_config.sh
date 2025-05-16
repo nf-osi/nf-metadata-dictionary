@@ -3,7 +3,7 @@
 
 CONFIG=config.json
 LOG_DIR=logs
-DATA_MODEL_PATH=../../NF.jsonld
+DATA_MODEL_PATH=../../../NF.jsonld
 DATA_MODEL=NF.jsonld
 
 MANIFESTS=($(jq -r '.tests[].manifest' $CONFIG | tr -d '"'))

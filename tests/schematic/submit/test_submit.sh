@@ -5,7 +5,7 @@ CONFIG=config.json
 LOG_DIR=logs
 TEST_WORK_DIR=work
 SYN_PROJECT=syn26462036 # NF-dev-playground
-DATA_MODEL_PATH=../../NF.jsonld
+DATA_MODEL_PATH=../../../NF.jsonld
 DATA_MODEL=NF.jsonld
 
 MANIFEST_DIR=($(jq -r '.manifest_directory' $CONFIG | tr -d '"'))
