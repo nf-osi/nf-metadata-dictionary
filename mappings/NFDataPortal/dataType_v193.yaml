@@ -1,0 +1,175 @@
+title: Mapping of legacy `dataType` concept labels present in v193 of Portal - Files to new preferred labels in data model v10.1.0.
+description: This translates concept terms in use to new preferred labels in data model v10.0.0. (Only terms being translated are included.)
+mapping:
+  - source: Administrative Metadata
+    target:
+      label: metadata
+  
+  - source: AggregatedData
+    target:
+      label: epidemiological data
+      comment: Aggregated data noted as not a preferred term for curation. Inspection of 4 files with this annotation suggested new term "epidemiological data" as more useful. 
+  
+  - source: AlignedReads
+    target:
+      label: aligned reads
+      
+  - source: Analysis
+    target:
+      label: over-representation data
+      comment: This was a single MSigDB data file
+  
+  - source: behavior process
+    target:
+      label: behavioral data
+      comment: Legacy concept updated to behavioral data per target term notes
+  
+  - source: Cellular Assay
+    target:
+      label: cellular physiology
+      comment: Mapping to broader category
+  
+  - source: cellularPhysiology
+    target:
+      label: cellular physiology
+  
+  - source: chromatinActivity
+    target:
+      label: chromatin activity
+  
+  - source: Copy Number Variants
+    target:
+      label: copy number variants
+  
+  - source: csv
+    target:
+      label: drug screen
+      comment: The set of files with this annotation were inspected and found to contain dose- and time-dependendent activity drug response data
+  
+  - source: dataIndex
+    target:
+      label: data index 
+      
+  - source: Descriptive Metadata
+    target:
+      label: metadata
+  
+  - source: drugCombinationScreen
+    target:
+      label: drug combination screen
+  
+  - source: drugScreen
+    target:
+      label: drug screen
+      
+  - source: excel
+    target:
+      label: cellular physiology
+      comment: Files were inspected and contain measurements of hypoxia for various conditions cell line treatments/conditions
+  
+  - source: exel
+    target:
+      label: cellular physiology
+      comment: Files were inspected and contain measurements of hydrolysis, oxygen consumption, etc. for various treatments/conditions
+  
+  - source: experimentalData
+    target:
+      label: plot
+      comment: Two files misannotated that contained plots
+  
+  - source: geneExpression
+    target:
+      label: gene expression
+  
+  - source: genomicFeatures
+    target:
+      label: genomic features
+  
+  - source: genomicVariants
+    target:
+      label: genomic variants
+      
+  - source: Gentamicin Concentrations
+    target:
+      label: pharmacokinetics
+      comment: Drug concentration data maps to pharmacokinetics
+  
+  - source: GermlineVariants
+    target:
+      label: germline variants
+  
+  - source: immunoassay
+    target:
+      label: image
+      comment: Specific technique resulting in image files, mapping to general image category
+      
+  - source: immunofluorescence
+    target:
+      label: image
+      comment: Specific technique resulting in image files, mapping to general image category
+  
+  - source: jpg
+    target:
+      label: image
+      comment: Format rather than content type, mapping to image
+  
+  - source: NormalizedIntensities
+    target:
+      label: normalized intensities
+      
+  - source: Pharmacokinetic Study
+    target:
+      label: pharmacokinetics
+  
+  - source: ppt
+    target:
+      label: image
+      comment: These particular ppt-annotated file instances store images
+  
+  - source: processed
+    target:
+      label: plot
+      comment: The files annotated as "processed" were plots stored in PDF
+  
+  - source: RawIntensities
+    target:
+      label: raw intensities
+      
+  - source: Reference Metadata
+    target:
+      label: metadata
+  
+  - source: Routine monitoring
+    target:
+      label: clinical
+      comment: De-identified lab values (for BUN and CRE) from drug study monitoring
+  
+  - source: RawIntensities
+    target:
+      label: raw intensities
+  
+  - source: SomaticVariants
+    target:
+      label: somatic variants
+  
+  - source: Statistical Metadata
+    target:
+      label: report
+      comment: This was a single entity named "Statistical Analysis", suggests report as most appropriate mapping
+  
+  - source: surveyData
+    target:
+      label: survey data
+  
+  - source: Volume
+    target:
+      label: volume
+  
+  - source: Weight
+    target:
+      label: weight
+  
+  - source: word
+    target:
+      label: image
+      comment: Set of files with this annotation were docx files containing blot images
