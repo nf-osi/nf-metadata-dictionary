@@ -1,0 +1,105 @@
+id: https://w3id.org/nfosi/
+name: nfosi
+default_curi_maps:
+- semweb_context
+prefixes:
+  nf: https://w3id.org/synapse/nfosi/vocab/
+  personinfo: https://w3id.org/linkml/examples/personinfo/
+  linkml: https://w3id.org/linkml/
+  schema: http://schema.org/
+  rdfs: http://www.w3.org/2000/01/rdf-schema#
+  skos: http://www.w3.org/2004/02/skos/core#
+  prov: http://www.w3.org/ns/prov#
+  htan: https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld
+default_prefix: nf
+default_range: string
+emit_prefixes:
+- rdf
+- rdfs
+- xsd
+- skos
+imports:
+- linkml:types
+slots: {}
+enums: {}
+classes:
+  PortalStudy:
+    description: 'A scientific project of some planned duration with PIs and key contributors,
+      specific research topics, and potential publication/data/other outputs.  A study
+      is often represented as a Synapse project and so is also referred to as "project".
+      The study schema here is specifically for studies listed on the NF Portal at
+      https://nf.synapse.org/Explore/Studies.
+
+      '
+    notes:
+    - There are small differences for the public portal representation of study vs.
+      elsewhere such as in the less-public data sharing plan, but it should always
+      be possible to translate DSP rep to the portal study rep.
+    attributes:
+      studyId:
+        range: string
+        required: true
+      studyName:
+        range: string
+        required: true
+      studyLeads:
+        range: string
+        multivalued: true
+        required: true
+      summary:
+        range: string
+        required: true
+      institutions:
+        range: Institution
+        multivalued: true
+        required: true
+      fundingAgency:
+        range: string
+        required: true
+      initiative:
+        range: string
+        required: true
+      studyStatus:
+        range: StudyStatusEnum
+        required: true
+      dataStatus:
+        range: DataStatusEnum
+        required: true
+      dataType:
+        range: Data
+        multivalued: true
+        required: false
+      manifestation:
+        range: string
+        multivalued: true
+        required: false
+      diseaseFocus:
+        range: DiseaseFocusEnum
+        multivalued: true
+        required: false
+      relatedStudies:
+        range: string
+        multivalued: true
+        required: false
+      grantDOI:
+        range: string
+        multivalued: true
+        required: false
+      grantStartDate:
+        range: string
+      grantEndDate:
+        range: string
+      embargoEndDate:
+        range: string
+      releasedDate:
+        range: string
+      accessRequirements:
+        range: string
+        required: false
+      acknowledgementStatements:
+        range: string
+        required: false
+      studyFileviewId:
+        range: string
+        required: true
+    slots: []

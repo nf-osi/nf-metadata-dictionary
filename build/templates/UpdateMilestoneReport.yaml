@@ -1,0 +1,96 @@
+id: https://w3id.org/nfosi/
+name: nfosi
+default_curi_maps:
+- semweb_context
+prefixes:
+  nf: https://w3id.org/synapse/nfosi/vocab/
+  personinfo: https://w3id.org/linkml/examples/personinfo/
+  linkml: https://w3id.org/linkml/
+  schema: http://schema.org/
+  rdfs: http://www.w3.org/2000/01/rdf-schema#
+  skos: http://www.w3.org/2004/02/skos/core#
+  prov: http://www.w3.org/ns/prov#
+  htan: https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld
+default_prefix: nf
+default_range: string
+emit_prefixes:
+- rdf
+- rdfs
+- xsd
+- skos
+imports:
+- linkml:types
+slots:
+  Filename:
+    description: The name of the file.
+    required: false
+  resourceType:
+    description: The type of resource being stored and annotated
+    range: Resource
+    required: true
+  progressReportNumber:
+    description: "Indicates milestone the  data is associated with. Currently only\
+      \ required for projects funded by NTAP, GFF, and NFRI. For GFF studies, this\
+      \ is the \u2018progress report\u2019 timeline. Example: if submitting data for\
+      \ the 6-month milestone report for NTAP, progressReportNumber=1.  Also if submitting\
+      \ data associated with first milestone, progressReportNumber =1"
+    required: false
+enums:
+  Resource:
+    description: 'Resource classes. Most resource entities expected to be some type
+      of "experimental data" and further specified via `dataType`.
+
+      '
+    permissible_values:
+      experimentalData:
+        description: Any file derived from or pertaining to a scientific experiment.
+          Experimental data annotations should be applied, possibly disease-related.
+      result:
+        description: Any file that reports data results. Examples include figures,
+          presentations, analysis, etc.
+        comments: This resource category is somewhat more general than `report`.
+        source: https://synapse.org
+      tool:
+        description: Any file or link that represents a tool, model, or algorithm;
+          the tool annotations could be applied
+        source: https://synapse.org
+      workflow report:
+        description: Workflow-generated reports of analysis of primary data, usually
+          created programmatically at completion of workflow step.
+      report:
+        description: 'A document assembled by an author for the purpose of providing
+          information for the audience.  A report is the output of a documenting process
+          and has the objective to be consumed by a specific audience.  Topic of the
+          report is on something that has completed. A report is not a single figure.  Examples
+          of reports are journal article, patent application, grant progress report,
+          case report (not patient record).
+
+          '
+        meaning: http://purl.obolibrary.org/obo/IAO_0000088
+      metadata:
+        description: Data about data, information that describes another set of data.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C52095
+      protocol:
+        description: A plan specification which has sufficient level of detail and
+          quantitative information to communicate it between investigation agents,
+          so that different investigation agents will reliably be able to independently
+          reproduce the process.
+        meaning: http://purl.obolibrary.org/obo/OBI_0000272
+      weblink:
+        description: An address to another document or other resource on the World
+          Wide Web.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C42743
+classes:
+  UpdateMilestoneReport:
+    is_a: PartialTemplate
+    description: Metadata template for updating milestone report values in NF studies
+      -- currently a supported feature for NTAP and GFF.
+    slots:
+    - Filename
+    - resourceType
+    - progressReportNumber
+  PartialTemplate:
+    abstract: true
+    description: A template for collecting a subset of contextual data; not intended
+      to be a standalone template but rather a subdocument.
+    slots: []

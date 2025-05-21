@@ -1,0 +1,31 @@
+id: https://w3id.org/nfosi/
+name: nfosi
+default_curi_maps:
+- semweb_context
+prefixes:
+  nf: https://w3id.org/synapse/nfosi/vocab/
+  personinfo: https://w3id.org/linkml/examples/personinfo/
+  linkml: https://w3id.org/linkml/
+  schema: http://schema.org/
+  rdfs: http://www.w3.org/2000/01/rdf-schema#
+  skos: http://www.w3.org/2004/02/skos/core#
+  prov: http://www.w3.org/ns/prov#
+  htan: https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld
+default_prefix: nf
+default_range: string
+emit_prefixes:
+- rdf
+- rdfs
+- xsd
+- skos
+imports:
+- linkml:types
+slots: {}
+enums: {}
+classes:
+  Template:
+    abstract: true
+    description: A collection of fields representing some entity.
+    comments:
+    - Also called a manifest depending on context.
+    slots: []

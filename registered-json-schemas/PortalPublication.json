@@ -1,19 +1,182 @@
 {
-  "additionalProperties": false,
+  "$defs": {
+    "PortalPublication": {
+      "additionalProperties": false,
+      "description": "A slightly more specialized publication concept intended for the specific scope of the NF Portal.",
+      "properties": {
+        "abstract": {
+          "title": "Abstract",
+          "type": "string"
+        },
+        "accessibility": {
+          "title": "Accessibility"
+        },
+        "author": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Author(s)",
+          "type": "array"
+        },
+        "dataset": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Linked Datasets",
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "diseaseFocus": {
+          "items": {},
+          "title": "Disease Focus",
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "doi": {
+          "title": "Digital Object Identifier",
+          "type": "string"
+        },
+        "fundingAgency": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Linked Funder(s)",
+          "type": "array"
+        },
+        "grantNumber": {
+          "title": "Grant Number",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "journal": {
+          "title": "Journal",
+          "type": "string"
+        },
+        "manifestation": {
+          "title": "Manifestation",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pmid": {
+          "title": "PubMed ID",
+          "type": "string"
+        },
+        "publicationType": {
+          "description": "Type of publication in relation to the linked study on the NF Portal. A primary publication is the main publication for the study and may describe data or resources generated from the study. A secondary publication references or describes reuse of resources for the linked study.\n",
+          "title": "Publication Type"
+        },
+        "studyId": {
+          "title": "Linked Study ID",
+          "type": "string"
+        },
+        "studyName": {
+          "title": "Linked Study Name",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "year": {
+          "title": "Year",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "publicationType",
+        "fundingAgency",
+        "studyId",
+        "studyName",
+        "doi",
+        "journal",
+        "pmid",
+        "title",
+        "year",
+        "author",
+        "abstract"
+      ],
+      "title": "PortalPublication",
+      "type": "object"
+    },
+    "PublicationTemplate": {
+      "additionalProperties": false,
+      "description": "A generalized data model template for Publications to be hopefully used across dccs",
+      "properties": {
+        "abstract": {
+          "title": "Abstract",
+          "type": "string"
+        },
+        "accessibility": {
+          "title": "Accessibility"
+        },
+        "author": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Author(s)",
+          "type": "array"
+        },
+        "doi": {
+          "title": "Digital Object Identifier",
+          "type": "string"
+        },
+        "grantNumber": {
+          "title": "Grant Number",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "journal": {
+          "title": "Journal",
+          "type": "string"
+        },
+        "pmid": {
+          "title": "PubMed ID",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "year": {
+          "title": "Year",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "doi",
+        "journal",
+        "pmid",
+        "title",
+        "year",
+        "author",
+        "abstract"
+      ],
+      "title": "PublicationTemplate",
+      "type": "object"
+    }
+  },
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalpublication",
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "additionalProperties": true,
   "description": "A slightly more specialized publication concept intended for the specific scope of the NF Portal.",
+  "metamodel_version": "1.7.0",
   "properties": {
     "abstract": {
       "title": "Abstract",
       "type": "string"
     },
     "accessibility": {
-      "title": "Accessibility",
-      "description": "",
-      "enum": [
-        "Open Access",
-        "Restricted Access"
-      ],
-      "type": "string"
+      "title": "Accessibility"
     },
     "author": {
       "items": {
@@ -27,26 +190,18 @@
         "type": "string"
       },
       "title": "Linked Datasets",
-      "type": "array"
+      "type": [
+        "array",
+        "null"
+      ]
     },
     "diseaseFocus": {
-      "items": {
-        "description": "",
-        "enum": [
-          "Neurofibromatosis type 1",
-          "NF2-related schwannomatosis",
-          "SMARCB1-related schwannomatosis",
-          "LZTR1-related schwannomatosis",
-          "22q-related schwannomatosis",
-          "Schwannomatosis-NOS",
-          "Schwannomatosis-NEC",
-          "Multiple"
-        ],
-        "title": "Disease Focus",
-        "type": "string"
-      },
+      "items": {},
       "title": "Disease Focus",
-      "type": "array"
+      "type": [
+        "array",
+        "null"
+      ]
     },
     "doi": {
       "title": "Digital Object Identifier",
@@ -61,7 +216,10 @@
     },
     "grantNumber": {
       "title": "Grant Number",
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "journal": {
       "title": "Journal",
@@ -69,7 +227,10 @@
     },
     "manifestation": {
       "title": "Manifestation",
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "pmid": {
       "title": "PubMed ID",
@@ -77,12 +238,7 @@
     },
     "publicationType": {
       "description": "Type of publication in relation to the linked study on the NF Portal. A primary publication is the main publication for the study and may describe data or resources generated from the study. A secondary publication references or describes reuse of resources for the linked study.\n",
-      "title": "Publication Type",
-      "enum": [
-        "Primary",
-        "Secondary"
-      ],
-      "type": "string"
+      "title": "Publication Type"
     },
     "studyId": {
       "title": "Linked Study ID",
@@ -114,7 +270,7 @@
     "author",
     "abstract"
   ],
-  "title": "PortalPublication",
+  "title": "nfosi",
   "type": "object",
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalpublication"
+  "version": null
 }

@@ -1,14 +1,1820 @@
+id: https://w3id.org/nfosi/
+name: nfosi
+
+default_curi_maps:
+  - semweb_context
+prefixes:
+  nf: https://w3id.org/synapse/nfosi/vocab/
+  personinfo: https://w3id.org/linkml/examples/personinfo/
+  linkml: https://w3id.org/linkml/
+  schema: http://schema.org/
+  rdfs: http://www.w3.org/2000/01/rdf-schema#
+  skos: http://www.w3.org/2004/02/skos/core#
+  prov: http://www.w3.org/ns/prov#
+  htan: https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld
+
+default_prefix: nf
+default_range: string
+
+emit_prefixes:
+  - rdf
+  - rdfs
+  - xsd
+  - skos
+imports:
+  - linkml:types
 
 
-# Note: this template definition uses the alternate syntax with 'attribute'
-classes:
-  PortalStudy:
-    description: >
-      A scientific project of some planned duration with PIs and key contributors, specific research topics, and potential publication/data/other outputs. 
-      A study is often represented as a Synapse project and so is also referred to as "project".
-      The study schema here is specifically for studies listed on the NF Portal at https://nf.synapse.org/Explore/Studies.
+slots: {}
+
+enums:
+  Data:
+    description: Type of data represented by the entity (File, Dataset, etc.).
     notes:
-    - There are small differences for the public portal representation of study vs. elsewhere such as in the less-public data sharing plan, but it should always be possible to translate DSP rep to the portal study rep.
+      - http://edamontology.org/data_0006
+      - Broad term/abstract class; should not be used for annotation
+    permissible_values:
+      immunoassay:
+        description: Laboratory test involving interaction of antigens with specific antibodies.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C16723
+      behavioral data:
+        description: "Qualitative or quantitative behavioral measurements / observations about the action, reaction, or performance of an organism in response to external or internal stimuli. \nExamples: avoidance behavior, choice-making.\n"
+        notes:
+          - Legacy concept previously labeled "behavior process", updated to "behavioral data".
+      clinical:
+        description: Data containing clinical information, e.g. patient diagnosis, personal demographics, exposures, laboratory tests, family relationships.
+        meaning: http://www.ebi.ac.uk/efo/EFO_0030083
+        notes:
+          - The closest EDAM term is for [EHR](http://edamontology.org/data_3861), and while [ecological data](http://edamontology.org/data_3736), there is no mapping, which is why we use EFO.
+        see_also:
+          - https://docs.gdc.cancer.gov/Encyclopedia/pages/Clinical_Data
+      demographics:
+        description: The statistical characterization of human populations or segments of human populations (e.g., characterization by age, sex, race, or income).
+        meaning: http://purl.obolibrary.org/obo/NCIT_C16495
+      epidemiological data:
+        description: Data that is used to describe the distribution of a disease or health-related characteristic within a population and to identify factors that affect that distribution.
+      particle characterization:
+        description: Data providing information about entities such as composition, structure and defects.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C62317
+        notes:
+          - More general than `molecular property`
+      drug combination screen:
+        description: Information on drug sensitivity of more than one compound
+        source: https://www.ncbi.nlm.nih.gov/pubmed/29344898
+      isoform expression:
+        description: Expression of protein isoforms formed from alternative splicings or other post-translational modifications of a single gene through RNA splicing mechanisms.
+        source: https://en.wikipedia.org/wiki/Protein_isoform
+        meaning: http://purl.obolibrary.org/obo/NCIT_C184767
+      proteomics:
+        description: Protein and peptide identification, especially in the study of whole proteomes of organisms.
+        meaning: http://edamontology.org/topic_0121
+      mass spectrometry data:
+        description: Data from mass spectrometry measurement.
+        meaning: http://edamontology.org/data_2536
+      survey data:
+        description: A data set that contains the outcome of a survey.
+        meaning: http://purl.obolibrary.org/obo/OMIABIS_0000060
+      kinomics:
+        description: Data studying protein kinase signaling/activity.
+        source: http://www.kinomecore.com/what-is-kinomics/
+        meaning: https://w3id.org/synapse/nfosi/vocab/kinomics
+        notes:
+          - See "Kinome Response Profile" (http://purl.obolibrary.org/obo/NCIT_C107137) for kinome data *specifically* with drug treatment
+          - Subclasss of "Proteomics" (http://purl.obolibrary.org/obo/NCIT_C16723)
+      somatic variants:
+        description: Called somatic variants
+        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_somatic_mutation
+        meaning: https://w3id.org/synapse/nfosi/vocab/SomaticVariants
+      volume:
+        description: Data of the three dimensional space occupied by an entity or the capacity of a space or container.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25335
+      characteristic:
+        description: Broad data type for data that can encompass volume, weight, brightness, color, capacity, etc.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25447
+        notes:
+          - Not preferred for annotation; more specific term should be used.
+          - May cover both morphology parameter and physiology parameter.
+      drug screen:
+        description: Information on drug sensitivity and molecular markers of drug response
+        source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3531057/
+        meaning: https://w3id.org/synapse/nfosi/vocab/drugScreen
+      gene expression:
+        description: Data of the levels and patterns of synthesis of gene products (proteins and functional RNA), including interpretation in functional terms of gene expression data.
+        meaning: http://edamontology.org/data_2603
+        notes:
+          - EDAM does have a broader mapping, [expression data](http://edamontology.org/data_2603)
+          - The mapping used maps to [gene expression profile](http://edamontology.org/data_0928)
+          - Covers both raw (e.g. fastqs, microarray intensities) and processed gene expression data (e.g. normalized gene expression matrix).
+      aligned reads:
+        description: Aligned reads output from alignment workflows
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads
+      genomic features:
+        description: Data of sequence feature (continuous extent of biological sequence) that is of genomic origin.
+        meaning: http://purl.obolibrary.org/obo/GENO_0000481
+        notes:
+          - Really subclass of "nucleic acid features" (http://edamontology.org/data_1276)
+        see_also: https://en.wikipedia.org/wiki/General_feature_format
+      genomic variants:
+        description: >
+          Genomic alterations, including single nucleotide polymorphisms, short indels and structural variants. Use more specific term if possible, esp. if data is only of one specific subset.
+
+        meaning: http://edamontology.org/data_3498
+        notes:
+          - Somewhat more specific than the concept URI it is mapped to.
+      raw counts:
+        description: The number or amount of something.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25463
+      raw intensities:
+        description: Raw intensity values from the instrument (including microarrays, plate reader assays, raw pixel intensities from imaging assay, mass spectrometry, etc.).
+        meaning: https://w3id.org/synapse/nfosi/vocab/RawIntensities
+        notes:
+          - Not preferred for annotation.
+      normalized intensities:
+        description: Normalized intensity values from the instrument.
+        meaning: https://w3id.org/synapse/nfosi/vocab/NormalizedIntensities
+        notes:
+          - Not preferred for annotation.
+          - See RawIntensities
+      pharmacokinetics:
+        description: Data characterizing the process by which a drug is absorbed, distributed, metabolized, and eliminated by the body.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C49663
+      mask image:
+        description: Image used as the mask for an image processing operation, such as subtraction.
+        meaning: http://dicom.nema.org/resources/ontology/DCM/121321
+      count matrix:
+        description: A table of unnormalized values representing summarised read counts per genomic region (e.g. gene, transcript, peak).
+        meaning: http://edamontology.org/data_3917
+      chromatin activity:
+        description: Data of chromatin activity, which allows access to condensed genomic DNA and potentially controls gene expression.
+        meaning: https://w3id.org/synapse/nfosi/vocab/chromatinActivity
+        see_also:
+          - https://en.wikipedia.org/wiki/Chromatin_remodeling
+      structural variants:
+        description: Genomic variants data that covers deletions, duplications, CNVs, insertions, inversions, and translocations, which may be derived from specialized variant calling workflows.
+        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=structural_variation
+        meaning: https://w3id.org/synapse/nfosi/vocab/StructuralVariantss
+      germline variants:
+        description: Called germline variants
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation
+      copy number variants:
+        description: Copy number variants
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=copy_number_variation
+      image:
+        description: Biological or biomedical data that has been rendered into an image.
+        meaning: http://edamontology.org/data_2968
+      network:
+        description: Network data represents connections between entities and are often in graphical format.
+        meaning: http://edamontology.org/data_2600
+        notes:
+          - EDAM preferred label is 'Pathway or network'
+      cellular physiology:
+        description: Data on the physiological parameter of a cell.
+        meaning: https://w3id.org/synapse/nfosi/vocab/cellularPhysiology
+      metabolomics:
+        description: Data of metabolites, the chemical processes they are involved, and the chemical fingerprints of specific cellular processes in a whole cell, tissue, organ or organism.
+        meaning: https://w3id.org/synapse/nfosi/vocab/metabolomics
+        see_also:
+          - http://edamontology.org/topic_3172
+      morphology parameter:
+        description: Experimentally determined parameter of the morphology of an organism, e.g. size & shape. General term representing data about **structure** and **form** of an organism or organism part.
+        meaning: http://edamontology.org/data_3723
+      physiology parameter:
+        description: Experimentally determined parameter of the physiology of an organism, e.g. metabolic rate. General term representing data about **function** and **process** of an organism or organism part.
+        meaning: http://edamontology.org/data_3722
+        notes:
+          - Relation to pharmacokinetic data -- certain physiology parameteres inherent to the organism influences its pharmokinetics of a drug.
+      annotated somatic mutation:
+        description: Somatic variants annotated with some annotation workflow
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation
+      annotated germline variants:
+        description: Germline variants annotated with some annotation workflow
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_germline_variation
+      weight:
+        description: The vertical force exerted by a mass as a result of gravity.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25208
+      electrophysiology:
+        description: "Data generated from an electrophysiology assay, e.g: \n- Cell: Resting membrane potential, ion channel currents (patch clamp data)\n- Neurons: Action potentials, resting potential, synaptic potentials. \n- Heart: Electrocardiogram (ECG/EKG) waveforms, cardiac action potentials.\n- Muscle: Electromyogram (EMG) signals\n- Whole brain: Electroencephalogram (EEG)\n- Retina: Electroretinogram (ERG)\n"
+        meaning: https://w3id.org/synapse/nfosi/vocab/electrophysiology
+        notes:
+          - ERO has been deprecated and direct URIs no longer work.
+        source: https://bioportal.bioontology.org/ontologies/ERO/?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FERO_0000564&jump_to_nav=true
+      audio transcript:
+        description: Text transcript of an audio recording.
+        meaning: https://w3id.org/synapse/nfosi/vocab/audioTranscript
+      data index:
+        description: A data index is information used to help with retrieval of some other data, especially large-scale data that would benefit from such an index. Very common formats are .bai and .tbi.
+        meaning: http://edamontology.org/data_0955
+      data sharing plan:
+        description: A document containing the plan and documentation for data sharing, one component of overall data management.
+        meaning: http://edamontology.org/data_4040
+        notes:
+          - Technically EDAM term is 'data management plan', which is more encompassing in scope.
+          - Use for tagging uploaded data sharing plans.
+      aggregated data:
+        description: Summary or group-level data.
+        notes:
+          - Not preferred for annotation.
+      over-representation data:
+        description: A ranked list of categories (usually ontology concepts), each associated with a statistical metric of over-/under-representation within the studied data.
+        meaning: http://edamontology.org/data_3753
+      plot:
+        description: Data that has been plotted as a graph of some type, or data representing such a graph.
+        meaning: http://edamontology.org/data_2884
+      nucleic acid sequence record:
+        description: A nucleic acid sequence and associated metadata.
+        meaning: http://edamontology.org/data_2887
+        notes:
+          - Can be used for .dna (SnapGene) files.
+      protein interaction data:
+        description: >
+          Data concerning the interactions (predicted or known) within or between a protein, structural domain or part of a protein.  This includes intra- and inter-residue contacts and distances, as well as interactions with other proteins and non-protein entities such as nucleic acid, metal atoms, water, ions etc.
+
+        meaning: http://edamontology.org/data_0906
+      protein interaction raw data:
+        description: Protein-protein interaction data from for example yeast two-hybrid analysis, protein microarrays, immunoaffinity chromatography followed by mass spectrometry, phage display etc.
+        meaning: http://edamontology.org/data_0905
+      molecular property:
+        description: Data on the physical (e.g. structural) or chemical properties of molecules, or parts of a molecule.
+        meaning: http://edamontology.org/data_2087
+      report:
+        description: A human-readable collection of information including annotation on a biological entity or phenomena, computer-generated reports of analysis of primary data... as distinct from the primary data itself.
+        meaning: http://edamontology.org/data_2048
+      text data:
+        description: Data that is represented as text, usually referring to "unstructured data".
+        meaning: http://edamontology.org/data_2526
+  DataSubtypeEnum:
+    description: >
+      Categorizes data based on its processing state. This is the main classification axis used for data types.  Not all data types can use this dimensions (e.g. clinical data).
+
+    permissible_values:
+      # --- Data Generation/Origin ---
+      raw:
+        description: Data produced by experimental measurement/observation with very little subsequent processing.
+      synthetic:
+        description: Data generated computationally via models or simulations, not direct experimental measurement.
+        # --- Processed ---
+      normalized:
+        description: Data that has undergone a normalization procedure to adjust for technical variation or to bring measurements onto a common scale. Considered a more specific type of processed data.
+        meaning: http://purl.obolibrary.org/obo/OBI_0000451
+      quantified:
+        description: Data representing measurements/counts of specific features (gene counts, peak intensities, object properties).
+      processed:
+        description: Data generated from running one or more bioinformatics methods on raw data.
+        # --- Analyzed/Interpreted ---  
+      derived:
+        description: Data from additional analytical steps performed on already processed data.
+  MetadataEnum:
+    description: Data that provides information about other data
+    source: https://en.wikipedia.org/wiki/Metadata
+    permissible_values:
+      metadata:
+        description: Most general label for data that contains information about data.
+      descriptive metadata:
+        description: Information that describes and identifies a resource, including elements that facilitate discovery and understanding.
+        notes:
+          - Currently used for `manifest.csv` files.
+      workflow metadata:
+        description: Process data from computational workflows. This is highly related to Statistical Metadata. Basic information, annotation or documentation concerning a workflow (but not the workflow itself).
+        meaning: http://edamontology.org/data_0949
+        comments: Coined category for use esp. with nextflow metadata files.
+      image metadata:
+        description: Data concerning a specific biological or biomedical image.
+        meaning: http://edamontology.org/data_3546
+        notes:
+          - For e.g. XML files that contain image metadata.
+  UnknownEnum:
+    permissible_values:
+      Unknown:
+        description: Not known, observed, recorded; or reported as unknown by the data contributor.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C17998
+  NotApplicableEnum:
+    permissible_values:
+      Not Applicable:
+        description: Not applicable in this context
+  AssayEnum:
+    title: Assay
+    permissible_values:
+      2D AlamarBlue absorbance:
+        description: Cell viability assay based on detection of AlamarBlue (resazurin). Living cells reduce blue, non-fluorescent resazurin to the red, fluorescent molecule resorufin.  The amount of fluorescence or absorbance is proportional to the number of living cells and corresponds to the cell’s metabolic activity. For the absorbance-based assay, absorbance can be read at 570 nm.
+        meaning: https://www.thermofisher.com/us/en/home/life-science/cell-analysis/fluorescence-microplate-assays/microplate-assays-cell-viability/alamarblue-assay-cell-viability.html
+      2D AlamarBlue fluorescence:
+        description: Cell viability assay based on detection of AlamarBlue (resazurin). Living cells reduce blue, non-fluorescent resazurin to the red, fluorescent molecule resorufin. The amount of fluorescence or absorbance is proportional to the number of living cells and corresponds to the cell’s metabolic activity. For the fluorescence-based assay, color change and fluorescence can be detected using 560/590 nm (excitation/emission).
+        meaning: https://www.thermofisher.com/us/en/home/life-science/cell-analysis/fluorescence-microplate-assays/microplate-assays-cell-viability/alamarblue-assay-cell-viability.html
+      3D confocal imaging:
+        description: Confocal microscopy with 3D reconstruction of the sample tissue.
+        meaning: https://pubmed.ncbi.nlm.nih.gov/34331281
+      3D electron microscopy:
+        description: Three-dimensional (3D) reconstruction of single, transparent objects from a collection of projection images recorded with a transmission electron microscope. It offers the opportunity to obtain 3D information on structural cellular arrangements with a high resolution.
+        meaning: http://purl.obolibrary.org/obo/MI_0410
+        aliases:
+          - 3DEM
+          - electron tomog
+      3D imaging:
+        description: Technique to produce 3D images to visualize important structures in great detail. To produce 3D images, many scans are made, and then combined by computers to produce a 3D model, which can then be manipulated. 3D ultrasounds are produced using a somewhat similar technique.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C18485
+      3D microtissue viability:
+        description: Cell viability assay on a 3D microtissue model.
+        meaning: https://www.ncbi.nlm.nih.gov/books/NBK343426/
+      actigraphy:
+        description: Use of a portable device (actigraph) to study sleep-wake patterns and circadian rhythms by assessing movement.
+        meaning: http://purl.obolibrary.org/obo/MAXO_0000914
+      AlgometRx Nociometer:
+        description: Assay that can selectively measure the sensitivity of three different nerve fiber types. An overall score can be derived to indicate the type of pain a person is experiencing and can be used to monitor how well a patient responds to treatment of pain.
+      auditory brainstem response:
+        description: ABR is a gold standard for evaluating hearing in mice. A non-invasive method that measures the electrical activity generated by the auditory nerve and brainstem in response to sound stimuli. Electrodes are placed on the scalp of the mouse, and sound is delivered through a speaker or earphone.
+      ATAC-seq:
+        description: Open chromatin regions measured by sequencing DNA after assay for transposase-accessible chromatin (ATAC) treatment
+        meaning: http://purl.obolibrary.org/obo/OBI_0002039
+      ATPase activity assay:
+        description: As an assay used for drug discovery, measures enzymatic ATP hydrolysis to help assess levels of enzymatic activity induced by a candidate drug molecule.
+        meaning: http://purl.obolibrary.org/obo/MI_0880
+        notes:
+          - See also https://www.bellbrooklabs.com/atpase-activity-assay-for-drug-discovery/ for discussion
+      BrdU proliferation assay:
+        description: A cell proliferation assay in which cells are cultured in the presence of BrdU which is incorporated into newly synthesized DNA of replicating cells (during the S phase of the cell cycle).
+        meaning: http://purl.obolibrary.org/obo/OBI_0000664
+      CAPP-seq:
+        description: Cancer Personalized Profiling by deep sequencing (CAPP-seq) is a novel blood-based assay that uses next-generating sequencing to quantitate circulating tumor DNA (ctDNA)
+        meaning: http://www.ebi.ac.uk/efo/EFO_0008672
+        source: https://www.redjournal.org/article/S0360-3016(16)30438-2/fulltext
+      CUT&RUN:
+        description: Cleavage Under Targets and Release Using Nuclease (CUT&RUN) is a chromatin profiling strategy in which antibody-targeted controlled cleavage by micrococcal nuclease releases specific protein-DNA complexes into the supernatant for paired-end DNA sequencing. (doi:10.7554/eLife.21856)
+      ChIP-seq:
+        description: Chromatin immuno-precipitation followed by sequencing
+        meaning: http://purl.obolibrary.org/obo/OBI_0000716
+      'Child Behavior Checklist for Ages 1.5-5':
+        description: >
+          "A standardized measure designed to detect behavioral and emotional problems in children 1.5-5 years old.  The forms obtain parents', daycare providers', and teachers' ratings of 99 problem items plus descriptions of problems, disabilities,  what concerns respondents most about the child, and the best things about the child. [ NCI ]".
+
+        meaning: http://purl.obolibrary.org/obo/NCIT_C165712
+      'Child Behavior Checklist for Ages 6-18':
+        description: >
+          "A standardized measure designed to detect behavioral and emotional problems in children and adolescents.  It is completed by the parent/caretaker who spends the most time with the child and provides ratings for 20 competence and 120 problem items. [ NCI ]"
+
+        meaning: http://purl.obolibrary.org/obo/NCIT_C165711
+      CODEX:
+        description: CODEX imaging.
+      confocal microscopy:
+        description: >
+          Confocal microscopy has advantages over widefield optical microscopy, including the ability to eliminate or reduce background information away from the focal plane and collect serial optical sections from thick specimens.  It uses point illumination and a spatial pinhole to eliminate out-of-focus light in specimens that are thicker than the focal plane.
+
+        meaning: http://www.bioassayontology.org/bao#BAO_0000453
+      Corsi blocks:
+        description: "A visuospatial counterpart to the verbal-memory span task (Milner, 1971). Over the years, it has frequently been used to assess visuospatial short-term memory performance in adults  (e.g. Smyth & Scholey, 1992), children (e.g. Orsini, Schiappa, & Grossi, 1981), and patients with neuropsychological deficits. \n"
+        meaning: https://www.cognitiveatlas.org/task/id/trm_4da881dace79c/
+      current clamp assay:
+        description: >
+          The current clamp technique records the membrane potential by injecting current into a cell through the recording electrode.  Unlike in the voltage clamp mode, where the membrane potential is held at a level determined by the experimenter, in "current clamp" mode the membrane potential is free to vary,  and the amplifier records whatever voltage the cell generates on its own or as a result of stimulation.  This technique is used to study how a cell responds when electric current enters a cell; this is important for instance for understanding how neurons respond to neurotransmitters that act by opening membrane ion channels.
+
+        meaning: http://purl.obolibrary.org/obo/OBI_0002185
+      diffusion MRI:
+        description: MRI method that measure the diffusion of water in the tissue, rather than the content of water as measured in conventional MRI.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C20117
+      distortion product otoacoustic emissions:
+        description: >
+          DPOAE evaluates cochlear (outer hair cell) function and helps identify hearing loss due to cochlear dysfunction.Measures the sound waves generated by the inner ear (cochlea) in response to two simultaneous tones of different frequencies.  A probe with a microphone and speaker is placed in the ear canal to deliver sounds and capture the cochlear response.
+
+      DNA optical mapping:
+        description: Fluorescent imaging of linearly extended DNA molecules to probe information patterns along the molecules
+        meaning: https://doi.org/10.1016/j.copbio.2013.01.009
+      ELISA:
+        description: A highly sensitive technique for detecting and measuring antigens or antibodies in a solution; the solution is run over a surface to which immobilized antibodies specific to the substance have been attached, and if the substance is present, it will bind to the antibody layer, and its presence is verified and visualized with an application of antibodies that have been tagged in some way.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C16553
+      ERR bisulfite sequencing:
+        description: 'Enhanced reduced representation bisulfite sequencing (ERRBS) '
+      EdU proliferation assay:
+        description: Proliferation assay using EdU as a thymidine nucleoside analog is an alternative to the classical BrdU assay.
+        meaning: http://purl.obolibrary.org/obo/OBI_0000891
+        source: https://www.sigmaaldrich.com/deepweb/assets/sigmaaldrich/product/documents/100/843/17-1052x.pdf
+      FIA-MSMS:
+        description: Flow injection analysis - tandem mass spectrometer
+        meaning: https://www.ncbi.nlm.nih.gov/pubmed/28667829
+      FLIPR high-throughput cellular screening:
+        description: >
+          An imaging-based system that allows measurement and analysis of peaks of human-derived induced pluripotent stem cells (hiPSCs),  differentiated into cardiomyocytes and neurons,  up to 100 times per second and quickly cherry pick events such as Early-After-Depolarization-like events (EAD-like events), fibrillation, and irregular beating.
+
+        source: https://www.moleculardevices.com/products/flipr-penta-high-throughput-cellular-screening-system
+      Fluorescence In Situ Hybridization:
+        description: >
+          A physical mapping approach that uses fluorescent tags to detect hybridization of probes within metaphase chromosomes or less condensed somatic interphase chromatin.  This technique can be used for identification of chromosomal abnormalities and for gene mapping.
+
+        meaning: http://purl.obolibrary.org/obo/NCIT_C17563
+      Focus group:
+        description: >
+          A small, usually diverse group of people whose response to something is studied to determine the response that can be expected from a larger population.  It is used especially in market research and political analysis.
+
+        meaning: http://purl.obolibrary.org/obo/NCIT_C154589
+      FTIR spectroscopy:
+        description: >
+          Fourier transform infrared (FTIR) spectroscopy is a technique used to obtain an infrared spectrum of absorption or emission of a solid, liquid or gas.  An FTIR spectrometer simultaneously collects high-resolution spectral data over a wide spectral range.
+
+        meaning: http://purl.obolibrary.org/obo/CHMO_0000636
+      HI-C:
+        description: Chromatin interactions detected by HI-C protocol
+        meaning: http://www.ebi.ac.uk/efo/EFO_0007693
+      HPLC:
+        description: >
+          Frequently referred to simply as HPLC, this form of column chromatography is used frequently in biochemistry.  The analyte is forced through a column by liquid at high pressure, which decreases the time the separated components remain on the stationary phase.
+
+        meaning: http://purl.obolibrary.org/obo/NCIT_C16434
+      Interview:
+        description: A conversation with an individual regarding his or her background and other personal and professional details, opinions on specific subjects posed by the interviewer, etc.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C16751
+      ISO-seq:
+        description: Full isoform sequencing
+      MIB/MS:
+        description: Kinomics assay using multiplexed kinase inhibitor beads and mass spectrometry (MIB/MS)
+        meaning: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3328787/
+      Matrigel-based tumorigenesis assay:
+        description: An assay in which tumor cells are loaded into a Matrigel matrix and measured for tumor formation characteristics
+        see_also:
+          - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3230200/
+      MudPIT:
+        description: MudPIT is a method for rapid and large-scale protein identification by multidimensional liquid chromatography associated with tandem mass spectrometry
+        meaning: http://purl.obolibrary.org/obo/MI_0658
+      Migration Assay:
+        description: An in vitro assay in which cultured cells are monitored and analyzed for their ability to move into an acellular area of a culture material.
+        meaning: http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C19425
+      NIH Toolbox:
+        description: A comprehensive set of neuro-behavioral measures that assess cognitive, emotional, sensory, and motor functions"
+        meaning: http://purl.obolibrary.org/obo/NCIT_C154482
+      NOMe-seq:
+        description: Nucleosome Occupancy and Methylome Sequencing
+        meaning: http://purl.obolibrary.org/obo/NCIT_C106053
+      RNA array:
+        description: RNA measurements captured by array technology
+        meaning: http://purl.obolibrary.org/obo/OBI_0001463
+      RNA-seq:
+        description: Bulk RNA sequencing
+        meaning: http://purl.obolibrary.org/obo/OBI_0001271
+      RPPA:
+        description: Reverse phase protein array (RPPA) is a an assay that measures multiple protein expression levels in a large number of biological samples simultaneously using high quality antibodies
+        meaning: http://www.bioassayontology.org/bao#BAO_0010030
+      Riccardi and Ablon scales:
+        description: The Riccardi and Ablon scales score severity and visibility of disease, respectively, and are commonly used as a combined assessment for NF1 patients in clinical settings. See https://doi.org/10.1001/archderm.137.11.1421 for example usage.
+        meaning: https://doi.org/10.1001/archderm.137.11.1421
+      SNP array:
+        description: SNP measurements captured by array technology
+        meaning: http://purl.obolibrary.org/obo/OBI_0001204
+      SUSHI:
+        description: Fast super-resolution method that exploits sparsity in the underlying vasculature and statistical independence within the measured signals to detect slow-flowing blood, facilitating noninvasive perfusion measurements.
+        meaning: https://pubmed.ncbi.nlm.nih.gov/30295619/
+      Sanger sequencing:
+        description: A DNA sequencing technique in which a mixture of deoxynucleosidetriphosphates (dNTPs) and chain-terminating dNTPs, which are radioactively or fluorescently labeled, are combined within the reaction mixture. Once the reaction is complete, the DNA strands are separated by size, and the labeled chain terminating dNTPs can be read in sequence by the investigator or by a machine.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C19641
+      Social Responsiveness Scale:
+        description: "The Social Responsiveness Scale (SRS; Constantino et al., 2003) is a brief assessment tool for measuring autism traits."
+        source: https://doi.org/10.1037/t17260-000
+      'Social Responsiveness Scale, Second Edition':
+        description: Identifies the presence and severity of social impairment within the autism spectrum and differentiates it from that which occurs in other disorders.
+        source: https://www.wpspublish.com/srs-2-social-responsiveness-scale-second-edition
+      T cell receptor repertoire sequencing:
+        description: A sequencing assay that determines the sequences of DNA or RNA molecules that encode the repertoire of T cell receptors within an input sample.
+        meaning: http://purl.obolibrary.org/obo/OBI_0002990
+      TIDE:
+        description: >
+          Tracking of Indels by Decomposition (TIDE) is a simple and accurate assay to precisely determine the spectrum and frequency of targeted mutations generated  in a pool of cells by genome editing tools such as CRISPR/Cas9, TALENs and ZFNs.
+
+        source: https://tide.nki.nl/
+      TMT quantitation:
+        description: An isobaric labeling technique that uses tags containing four regions with the same total molecular weights and structure, so that during chromatographic or electrophoretic separation and in single MS mode, molecules labelled with different tags are indistinguishable.
+        meaning: http://purl.obolibrary.org/obo/ERO_0002175
+      TriKinetics activity monitoring:
+        description: TriKinetics systems quantify animal movement over time, and can be used to measure circadian rhythm, sleep, longevity, social interaction, geotaxis, learning, phototaxis, and drug response in various species of flies, mosquitoes, bees, spiders, ants, cockroaches, beetles, moths, zooplankton, and fish, among others.
+        source: https://trikinetics.com/
+      Von Frey test:
+        description: Assay applying electrical stimulus to assess pain in rodents.
+        meaning: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5592204/
+      active avoidance learning behavior assay:
+        description: A behavioral assay devised to measure active avoidance learning behavior
+      array:
+        description: ''
+      atomic force microscopy:
+        description: Microscopy which uses a sharp spike (known as a 'tip') mounted on the end of a cantilever to scan the surface of the specimen
+        meaning: http://purl.obolibrary.org/obo/CHMO_0000113
+      autoradiography:
+        description: A radioactivity detection technique using X-ray film to visualize molecules or fragments of molecules that have been radioactively labeled.
+        meaning: http://purl.obolibrary.org/obo/ERO_0000716
+      bisulfite sequencing:
+        description: Methylation data captured by sequencing of DNA treated by a bisulfite-based chemical process
+        meaning: http://purl.obolibrary.org/obo/OBI_0000748
+      blood chemistry measurement:
+        description: The determination of the measured concentrations of chemical constituents of the blood by assay in a clinical laboratory.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C47868
+      blue native PAGE:
+        description: Blue native PAGE (BN-PAGE) permits a high-resolution separation of multi-protein complexes under native conditions.
+        meaning: http://purl.obolibrary.org/obo/MI_0276
+      body size trait measurement:
+        description: Any measurable or observable characteristic related to the overall physical magnitude of an organism.
+        meaning: http://purl.obolibrary.org/obo/VT_0100005
+      bone histomorphometry:
+        description: Asasy providing quantitative information on metabolic bone diseases and fracture healing. This is the broader assay concept containing both static and dynamic histomorphometry.
+      brightfield microscopy:
+        description: Microscopy where the specimen is illuminated with light transmitted from a source on the opposite side of the specimen from the objective
+        meaning: http://purl.obolibrary.org/obo/CHMO_0000104
+      cAMP-Glo Max Assay:
+        description: The cAMP-Glo Max Assay from Promega is a bioluminescent assay used for the quantification of cyclic AMP (cAMP) in cell-based assays. It utilizes a luminescent luciferase-based detection system to detect the levels of cAMP in cell lysates, which can be used to study G protein-coupled receptor (GPCR) signaling and other intracellular signaling pathways.
+        meaning: https://www.promega.com/products/cell-signaling/gpcr-signaling/camp_glo-max-assay/?catNum=V1681
+      calcium retention capacity assay:
+        description: The CRC assay assesses Ca2+-related mitochondrial functions
+        see_also:
+          - https://pubmed.ncbi.nlm.nih.gov/29781984/
+      cell competition:
+        description: An assay in which two or more labeled populations of cells or organoids are mixed, allowed to grow, possibly in the presence of a drug or other perturbagen. The relative quantity of the cell populations is measured at the end of the experiment.
+        meaning: https://pubmed.ncbi.nlm.nih.gov/22113311/
+      cell count:
+        description: A procedure to determine the number of cells in a sample. Also used to mean the result of such a procedure.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C48938
+      cell painting:
+        source: https://www.nature.com/articles/nprot.2016.105
+      cell proliferation:
+        description: A cellular assay that allows for the measurement of the multiplication or reproduction of cells, resulting in the expansion of a cell population.
+        meaning: http://purl.obolibrary.org/obo/ERO_0000636
+      cell viability assay:
+        description: This assay type measures the cellular state of living or dying by measuring an indicator of life or death
+        meaning: http://www.bioassayontology.org/bao#BAO_0003009
+      clinical data:
+        description: Data pertaining to the medical well-being or status of a patient. Category also includes clinical reports and individual patient data.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C15783
+      cNF-Skindex:
+        description: The cNF-Skindex, validated in a French population, specifically assesses the cNF-related QOL.
+        source: https://pubmed.ncbi.nlm.nih.gov/37149083/
+      cognitive assessment:
+        description: A set of tests or assessments to determine congnitive abilities of a patient.
+        meaning: http://purl.obolibrary.org/obo/MAXO_0009017
+      combination library screen:
+        description: High throughput sample analysis of collections of compounds that provide a variety of chemically diverse structures that can be used to identify structure types that have affinity with pharmacological targets.
+        meaning: http://purl.obolibrary.org/obo/ERO_0001686
+      combination screen:
+        description: ''
+      complex II enzyme activity assay:
+        description: Assay measuring activity of the Complex II enzyme for e.g. high-throughput screening.
+        notes:
+          - Can be considered a mitochondrial assay
+        source: https://www.caymanchem.com/product/700940/mitocheck%C2%AE-complex-ii-activity-assay-kit
+      compound screen:
+        description: ''
+      contextual conditioning behavior assay:
+        description: A behavioral assay devised to measure contextual conditioning behavior
+      conventional MRI:
+        description: Magnetic resonance imaging using standard protocols for high resolution structural and anatomic characterization, including T1 weighted, T2 weighted, fluid attenuated inversion recovery (FLAIR), and gadolinium-enhanced sequences. [  NCI  ]
+        meaning: http://purl.obolibrary.org/obo/NCIT_C175525
+      Children's Dermatology Life Quality Index Questionnaire:
+        description: A standardized rating scale originally developed by Lewis-Jones and Finlay in 1995. This instrument is used to make quality of life assessment in children with skin conditions. [ NCI ]
+        meaning: http://purl.obolibrary.org/obo/NCIT_C119092
+      differential scanning calorimetry:
+        description: Differential scanning calorimetry (DSC) is the measurement of thermodynamic parameters (e.g. enthalpy) during a chemical or biochemical reaction of both a sample and a reference, by the known variation (step-wise or linear) of one variable, whilst a second is kept constant.
+        meaning: http://purl.obolibrary.org/obo/CHMO_0000684
+      dynamic light scattering:
+        description: Dynamic Light Scattering (DLS), also known as photocorrelation spectroscopy, is a method for determining the size distribution of a sample of small particles in solution by illuminating the sample with a light source (usually a laser) and measuring the time-dependent fluctuations in the intensity of the scattered light caused by Brownian motion.
+        meaning: http://purl.obolibrary.org/obo/CHMO_0000167
+      electrochemiluminescence:
+        description: A method in which electromagnetic radiation, in the form of light emission, is generated from an electrochemical reaction in a solution.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C111193
+        source: https://www.mesoscale.com/en/technical_resources/our_technology/ecl
+      electrophoretic light scattering:
+        description: Subtype of dynamic light scattering, used to measure electrophoretic mobility.
+        source: https://en.wikipedia.org/wiki/Electrophoretic_light_scattering
+      elevated plus maze test:
+        description: A method which utilizes an experimental apparatus consisting of four arms, usually two enclosed and two open, in the shape of a plus (+) upon which the test animal can walk. The maze is elevated a set distance, for example 40 to 60 centimeters, above the floor or platform upon which the apparatus sits.
+        meaning: http://purl.obolibrary.org/obo/MMO_0000262
+      FACE-Q Appearance-related Distress:
+        description: >
+          This 8-item scale measures appearance-related distress in people seeking cosmetic treatments for the body or the face.  Item ask someone to agree/disagree with statements about feelings (e.g., unhappy, stressed, down) and behaviors, such as avoiding being around people.
+
+        meaning: https://qportfolio.org/wp-content/uploads/2021/11/FACE-Q-AESTHETICS-USERS-GUIDE.pdf
+      flow cytometry:
+        description: A cytometry assay in which an input cell population is put in solution, is passed by a laser, and optical sensors are used to detect scattering of the laser light and/or fluorescence of specific markers to count and characterize the particles in solution
+        meaning: http://purl.obolibrary.org/obo/OBI_0000916
+      focus forming assay:
+        description: The focus forming assay (FFA) is an immunostaining technique and a variation of the viral plaque assay. Instead of detecting the plaque formation after virus-induced cell lysis these assays detect infected host cells and infectious virus particles before a plaque is formed.
+        see_also:
+          - https://www.bpes.co.uk/focus-forming-assay-virus-titer-quantitation/
+      functional MRI:
+        description: The principle of functional MRI imaging is to take a series of images of an organ in quick succession and to statistically analyze the images for differences among them. Most commonly used in studies of brain function. [  NCI  ]
+        meaning: http://purl.obolibrary.org/obo/NCIT_C17958
+      gait measurement:
+        description: >
+          Quantification of some aspect of a person's gait such as rhythm, variability or step length
+
+        meaning: http://www.ebi.ac.uk/efo/EFO_0007680
+      gel filtration chromatography:
+        description: >
+          'Gel filtration chromatography (synonym: gel permeation chromatography - GPC) is a type of size-exclusion chromatography (SEC), that separates analytes on the basis of size, typically in organic solvents.  The technique is often used for the analysis of polymers.'
+
+        meaning: http://purl.obolibrary.org/obo/CHMO_0001011
+      gel permeation chromatography:
+        description: AKA size exclusion chromatography (GPC/SEC), this assay is a type of high performance liquid chromatography used to determine the molecular weight distributions of polymers.
+        source: https://www.agilent.com/cs/library/primers/Public/5990-6969EN%20GPC%20SEC%20Chrom%20Guide.pdf
+      genotyping:
+        description: The determination of the DNA sequence of an individual.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C45447
+      high content screen:
+        description: An image analysis technique combining automated fluorescence microscopy with multi-parameter quantitative image analysis for the large scale study of cells (cellomics).
+        meaning: http://www.ebi.ac.uk/efo/EFO_0007550
+      high frequency ultrasound:
+        description: High frequency ultrasound (HFUS) is an imaging modality that can give greater resolution of surface changes in skin (review in PMID:24583666)
+      high-performance liquid chromatography/tandem mass spectrometry:
+        description: HPLC-MSMS is an analytical technique wherein high performance liquid chromatography is coupled to tandem mass spectrometry in order to separate, identify, and quantify substances in a sample.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C120691
+      immunoassay:
+        description: Generic immunology assay
+      immunocytochemistry:
+        description: The branch of immunochemistry dealing with cells and cellular activity; the application of immunochemical techniques to cytochemistry.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C17731
+      immunofluorescence:
+        description: An immunological procedure in which the antibodies are coupled with molecules which fluoresce under ultra violet (UV) light. This makes them particularly suitable for detection of specific antigens in tissues or on cells.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C17370
+      immunohistochemistry:
+        description: An immunostaining assay to detect and potentially localize antigens within the cells of a tissue section
+        meaning: http://purl.obolibrary.org/obo/OBI_0001986
+      in silico synthesis:
+        description: Synthesis of molecules and compounds (e.g. drug candidates) via simulation or other system outside of a live biological system.
+      in vitro tumorigenesis:
+        description: An in vitro assay devised to measure tumor formation
+      in vivo PDX viability:
+        description: Assay to assess viability using PDX model.
+      in vivo bioluminescence:
+        description: An imaging assay that allows detection of bioluminescence from a living organism or organisms.
+        meaning: http://purl.obolibrary.org/obo/ERO_0000651
+      in vivo tumor growth:
+        description: The growth of a tumor measured using calipers, ruler, or another similar measurement device. See also "in vivo bioluminescence".
+      jumping library:
+        description: >
+          Jumping libraries are created to bypass difficult to align/map regions, such as those containing repetitive DNA sequences. Briefly, the DNA of interest is identified, cut into fragments either with restriction enzymes or by shearing.  The size-selected fragments are ligated to adapters for bead-capture and circularized. After bead-capture, the DNA is linearized via restriction enzymes, and can be sequenced using adapter primers facing in outward [reverse/forward (RF)] directions.  These library inserts are considered jumping because the ends originate from distal genomic DNA sequences and are ligated adjacent to one another during circularization.
+
+        source: https://gatk.broadinstitute.org/hc/en-us/articles/360035890751-Jumping-libraries
+      label free mass spectrometry:
+        description: A mass spectrometry assay that allows for measurement for endogenous targets in live cell assays, and eliminates the need for tags, dyes, or specialized reagents or engineered cells.
+        meaning: http://purl.obolibrary.org/obo/ERO_0000708
+      laser speckle imaging:
+        description: A noninvasive, non-scanning optical imaging technique that provides full-field visualization of blood flow to the tissue being imaged, which provides information about tissue perfusion and the efficiency of disease treatment.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C116492
+      light scattering assay:
+        description: A method for determining structure by measuring the change in direction or energy of scattered visible light. Light is scattered by the electrons surrounding the atomic nuclei in the sample.
+        meaning: http://purl.obolibrary.org/obo/CHMO_0000166
+      liquid chromatography-electrochemical detection:
+        description: A liquid chromatography method that is sensitive to compounds which can be either reduced or oxidised. The mobile phase passes directly over the working electrode, which is set to the specific potential required for oxidation or reduction. The current produced is then measured.
+        meaning: http://purl.obolibrary.org/obo/CHMO_0001746
+      liquid chromatography/mass spectrometry:
+        description: LC-MS is a hyphenated technique, combining the separation power of liquid chromatography (LC), an analytical chromatographic technique for separating ions or molecules dissolved in a solvent, with the detection power of mass spectrometry(MS), a technique to separate gas phase ions according their m/z (mass to charge ratio) value. Used for drug screening, pharmacology studies, environmental analyses and forensics.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C18475
+      liquid chromatography/tandem mass spectrometry:
+        description: LC-MSMS is an analytical technique wherein liquid chromatography is coupled to tandem mass spectrometry in order to separate, identify, and quantify substances in a sample.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C122168
+      lncRNA-seq:
+        description: Long non-coding RNA measurements collected from RNA-Seq experiments
+      local field potential recording:
+        description: An extracellular electrophysiology assay where a microelectrode is placed in the extracellular space of brain tissue to measure action potential and compared to an electrode either outside or inside that tissue.
+        meaning: http://purl.obolibrary.org/obo/OBI_0002189
+      long term potentiation assay:
+        description: A measure of the persistent robust synaptic response induced by synchronous stimulation of pre- and postsynaptic cells.
+        meaning: http://purl.obolibrary.org/obo/VT_0002207
+      mRNA counts:
+        description: A mRNA profiling assay using digital molecular barcoding technology to quantify target mRNA molecules without the need for amplification.
+      magnetic resonance angiography:
+        description: Angiography using magnetic resonance imaging.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C190557
+      magnetic resonance spectroscopy:
+        description: Detection and measurement of the resonant spectra of molecular species in a tissue or sample.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C16810
+      Magnetization-Prepared Rapid Gradient Echo MRI:
+        description: >
+          A magnetic resonance imaging modality that offers rapid imaging time, easy reconstruction of any plane, and three-dimensional surface contour rendering with cut away postprocessing.  Especially useful for imaging brain, MP-RAGE captures high tissue contrast and provides high spatial resolution with whole brain coverage in a short scan time.
+
+        meaning: http://purl.obolibrary.org/obo/NCIT_C118462
+      mass spectrometry:
+        description: A generic mass spectrometry assay that allows identification and amount of peptide or protein materials.
+        meaning: http://purl.obolibrary.org/obo/ERO_0000708
+      massively parallel reporter assay:
+        description: An assay in which multiplexing the construction and interrogation of larger libraries of reporter constructs allows measurement of the transcriptional regulatory activities of thousands to hundreds of thousands of DNA sequences.
+        meaning: http://purl.obolibrary.org/obo/OBI_0002675
+      metabolic screening:
+        description: Metabolic screening is a medical assessment that involves analyzing specific markers in bodily fluids to detect and evaluate metabolic disorders or imbalances.
+        meaning: https://bioportal.bioontology.org/ontologies/SNOMEDCT?p=classes&conceptid=395118002
+      methylation array:
+        description: Methylation data captured by array technology
+        meaning: http://purl.obolibrary.org/obo/OBI_0001332
+      miRNA array:
+        description: microRNA measurements captured by array technology
+        meaning: http://purl.obolibrary.org/obo/OBI_0001335
+      miRNA-seq:
+        description: Small RNA measurements collected from RNA sequencing experiments
+        meaning: http://purl.obolibrary.org/obo/OBI_0002112
+      microrheology:
+        description: A technique used to measure the rheological properties of a medium, such as microviscosity and microviscoelasticity.
+        notes:
+          - Dynamic light scattering (DLS) is the ancestor of microrheology.
+        source: https://www.elveflow.com/microfluidic-reviews/general-microfluidics/microrheology-a-review/
+      Skindex-16:
+        description: A validated measure of the effects of skin diseases on quality of life that [is] suitable for use in research about patients' experiences of illness and its treatment
+        source: https://pubmed.ncbi.nlm.nih.gov/22284137/
+      multi-electrode array:
+        description: >
+          A multi-electrode array is a grid of tightly spaced microscopic electrodes embedded in the bottom of each well in a multi-well MEA plate.  Cells, such as cardiomyocytes or neurons, which are electrically active, can be cultured over the electrodes creating a cohesive network.  The functional behavior or electrical activity of this network can be recorded.
+
+        source: https://www.axionbiosystems.com/multielectrode-array
+      nanoparticle tracking analysis:
+        description: Particle sizing technique based on Brownian motion and scattered light.
+        meaning: http://purl.enanomapper.org/onto/ENM_0000065
+      NanoString nCounter Analysis System:
+        description: A proprietary molecular analysis system for single molecule detection with no amplification. It uses unique fluorescent barcodes for direct, digital detection and copy number quantitation of hundreds of different target molecules in a single run. It requires only nanoscale amounts of RNA and has a detection sensitivity down to 1 copy per cell.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C198498
+      n-back task:
+        description: A task in which items (e.g., letters) are presented one at a time and participants must identify each item that repeats relative to the item that occurred "n" items before its onset.
+        meaning: https://www.cognitiveatlas.org/task/id/tsk_4a57abb949bcd/
+        notes:
+          - There are variants such as verbal n-back and visuospatial n-back; currently we do not go into that level of granularity.
+      neuropsychological assessment:
+        description: Evaluation for cognitive impairment by assessing the neuropsychological domains.
+        meaning: http://purl.obolibrary.org/obo/MAXO_0009018
+      next generation targeted sequencing:
+        description: A type of next generation sequencing in which specific genes or portions of genes are targeted for sequencing using amplicon-based workflow.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C130177
+      novelty response behavior assay:
+        description: A behavioral assay devised to measure novelty response behavior
+      open field test:
+        description: A test utilizing an enclosure consisting of a single area bordered by clear or opaque walls, used to measure movement, exploratory behavior, etc of an experimental subject.
+        meaning: http://purl.obolibrary.org/obo/MMO_0000258
+      optical tomography:
+        description: >
+          Optical tomography is a form of computed tomography that creates a digital volumetric model of an object by reconstructing images made from light transmitted and scattered through an object. Subtypes are diffuse optical tomography, time-of-flight diffuse optical tomography, fluorescence molecular tomography, confocal diffuse tomography, optical coherence tomography.
+
+        source: https://en.wikipedia.org/wiki/Optical_tomography
+      optical coherence tomography:
+        description: >
+          Optical Coherence Tomography (OCT) combines the principles of ultrasound with the imaging performance of a microscope.  OCT uses infrared light waves that reflect off the internal microstructure within the biological tissues.  The frequencies and bandwidths of infrared light are orders of magnitude higher than medical ultrasound signals, resulting in greatly increased image resolution, 8-25 times greater than any existing modality.  In addition to providing high-level resolutions for the evaluation of microanatomic structures OCT is also able to provide information regarding tissue composition. OCT is most widely used in ophthalmology.
+
+        meaning: http://purl.obolibrary.org/obo/NCIT_C20828
+        source: https://en.wikipedia.org/wiki/Optical_coherence_tomography
+      optokinetic reflex assay:
+        description: The optokinetic reflex (OKR), which serves to stabilize a moving image on the retina, is a behavioral response that has many favorable attributes as a test of CNS function. The OKR requires no training, assesses the function of diverse CNS circuits, can be induced repeatedly with minimal fatigue or adaptation, and produces an electronic record that is readily and objectively quantifiable.
+        meaning: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0002055
+      oscillatory rheology:
+        description: Oscillatory rheology is a standard experimental tool for studying viscosity.
+        source: https://www.semanticscholar.org/paper/Oscillatory-Rheology-Measuring-the-Viscoelastic-of-Weitz-Wyss/b0e44c88a9c0bd691eea6f3fb87393c975403d5f
+      oxBS-seq:
+        description: Oxidative bisulfite sequencing (oxBS-Seq) to map 5-methylcytosine and 5-hydroxymethylcytosine
+        meaning: http://www.ebi.ac.uk/efo/EFO_0008840
+      oxygen consumption assay:
+        description: Assay measuring oxygen consumption rate (OCR) to assess changes in metabolism in e.g. cancer cells
+        meaning: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8275291/
+      pattern electroretinogram:
+        description: Pattern electroretinogram (PERG) is an electrophysiologic ophthalmologic test that provides non-invasive objective, quantitative measurement of central retinal function. PERG is the retinal response to a pattern-reversing, black-and-white checkerboard or stripped stimulus. The PERG assesses both macular and retinal ganglion cell electrical activity and can help differentiate between diseases of macular versus optic nerve dysfunction.
+        meaning: https://www.ncbi.nlm.nih.gov/books/NBK560641
+      perineurial cell thickness:
+        description: Measuring the thickness of the cells in the perineurium, e.g. in developing Drosophila melanogaster.
+        meaning: http://purl.obolibrary.org/obo/MI_0410
+      pharmocokinetic ADME assay:
+        description: >
+          Any one or more ADME assays used to assess absorption, distribution, metabolism, and excretion, for evaluation of drug candidates and other pharmaceuticals.
+
+      phase-contrast microscopy:
+        description: A simple non-quantitative form of interference microscopy of great utility in visualising live cells. Small differences in optical path length due to differences in refractive index and thickness of structures are visualised as differences in light intensity.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C16857
+      photograph:
+        description: An image recorded by a camera.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C86035
+      polymerase chain reaction:
+        description: A rapid technique for in vitro amplification of specific DNA or RNA sequences, allowing small quantities of short sequences to be analyzed without cloning
+        meaning: http://purl.obolibrary.org/obo/MMO_0000459
+      polysomnography:
+        description: A group of tests (usually central electroencephalogram (EEG) (C3 or C4), reference occipital EEG (O1 or O2), right and left electro-oculogram (EOG), mental or submental electromylogram (EMG), thoracic effort, abdominal effort, nasal and oral airflow, a microphone to record snoring, pulse oxygen saturation, EKG, and video recording to document body positions during sleep) taken during sleep.
+        meaning: http://purl.obolibrary.org/obo/MAXO_0000915
+      positron emission tomography:
+        description: A technique for measuring the gamma radiation produced by collisions of electrons and positrons (anti-electrons) within living tissue.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C17007
+      PROMIS Cognitive Function:
+        description: The PROMIS Cognitive Function and Cognitive Function Abilities Subset item banks assess patient-perceived cognitive deficits.
+        meaning: http://www.healthmeasures.net/images/PROMIS/manuals/PROMIS_Cognitive_Function_Scoring_Manual.pdf
+      proximity extension assay:
+        description: Olink's Proximity Extension Assay (PEA) combines specificity and scalability to enable high-throughput, multiplex protein biomarker analysis.
+        source: https://olink.com/technology/what-is-pea
+      pure tone average:
+        description: Metric used to summarize hearing sensitivity at specific frequencies to assess hearing impairment. As PTA increases, hearing ability decreases.
+      quantitative PCR:
+        description: Quantitative PCR (Q-PCR) is used to measure the quantity of a PCR product (commonly in real-time). It quantitatively measures starting amounts of DNA, cDNA, or RNA.
+        meaning: http://purl.obolibrary.org/obo/MI_1195
+      questionnaire:
+        description: A document with a set of printed or written questions with a choice of answers, devised for the purposes of a survey or statistical study.
+        meaning: http://purl.obolibrary.org/obo/OBI_0001000
+      reactive oxygen species assay:
+        description: Reactive oxygen species (ROS) are measured to assess oxidative events and to investigate their biological importance using antioxidants or inhibitors to modulate the phenomena observed.
+        source: https://www.nature.com/articles/s42255-022-00591-z
+        notes:
+          - https://www.nature.com/articles/s42255-022-00591-z for good discussion
+      reporter gene assay:
+        description: >
+          Reporter gene assay measures the gene expression from a reporter gene. The reporter gene is inserted under the control of a foreign promoter or an artificial regulatory element of interest.  Reporters include luciferase, beta galactosidase, beta lactamase, chloramphenicol acetyl transferase, or a fluorescent protein.
+
+        meaning: http://purl.obolibrary.org/obo/OBI_0002082
+      rheometry:
+        description: 'The study of the flow of fluids which cannot be defined by a single value of viscosity. Rheometry (synonym: rheology) is the measurement of the relationship between deformation and stress for these liquids. [ https://orcid.org/0000-0002-0640-0422 ]'
+        meaning: http://purl.obolibrary.org/obo/CHMO_0000915
+      ribo-seq:
+        description: Ribosome profiling (Ribo-Seq).
+        meaning: http://www.ebi.ac.uk/efo/EFO_0008891
+      rotarod performance test:
+        description: A method that utilizes a device consisting of a rotating rod the speed of which is mechanically driven and precisely controlled, for instance held constant or accelerated. The rotarod test is often used to measure riding time or endurance in order to evaluate balance, motor coordination or grip strength.
+        meaning: http://purl.obolibrary.org/obo/MMO_0000567
+      sandwich ELISA:
+        description: The sandwich ELISA measures the amount of antigen between two layers of antibodies. The antigens to be measured must contain at least two antigenic sites, capable of binding to antibody, since at least two antibodies act in the sandwich. So sandwich assays are restricted to the quantitation of multivalent antigens such as proteins or polysaccharides. Sandwich ELISAs for quantitation of antigens are especially valuable when the concentration of antigens is low and/or they are contained in high concentrations of contaminating protein.
+        meaning: https://www.ebi.ac.uk/ols/ontologies/bao/terms?iri=http%3A%2F%2Fwww.bioassayontology.org%2Fbao%23BAO_0002421
+      scCGI-seq:
+        description: A method for genome-wide CpG island (CGI) methylation sequencing for single cells (scCGI-seq), combining methylation-sensitive restriction enzyme digestion and multiple displacement amplification for selective detection of methylated CGIs
+        meaning: https://www.ncbi.nlm.nih.gov/pubmed/28126923
+      scale:
+        description: An instrument or machine for weighing.
+        meaning: http://purl.obolibrary.org/obo/MMO_0000217
+      SaferSeqS:
+        description: A blood-based assay that evaluates mutations in circulating tumor DNA and chromosomal copy number changes to detect minimal residual disease (MRD) with high specificity towards tumor type.
+        source: https://doi.org/10.1038/s41587-021-00900-z
+      single molecule drug screen assay:
+        description: An experiment in which a single molecule was used in an assay
+      single-cell RNA-seq:
+        description: A procedure that can determine the nucleotide sequence for all of the RNA transcripts in an amplified nucleotide sample that was derived from a single cell.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C171152
+      single cell ATAC-seq:
+        description: A molecular genetic technique where DNA is isolated from single cell (sc) samples and amplified to create a genomic library. Then the library is subjected to ATAC-seq, which isolates and sequences regions rich in open chromatin.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C179458
+      single-nucleus RNA-seq:
+        description: A method for quantifying the transcriptome of individual cells, in which transcripts isolated from single nuclei are subjected to high-throughput sequencing and mapping to a reference genome.
+        meaning: http://purl.obolibrary.org/obo/FBcv_0009001
+      small molecule library screen:
+        description: High throughput sample analysis of small molecules for purpose such as drug discovery, or biochemical, genetic or pharmacological tests.
+        meaning: http://purl.obolibrary.org/obo/ERO_0001726
+      sorbitol dehydrogenase activity level assay:
+        description: An enzymatic activity level assay that measures the activity of sorbitol dehydrogenase in a sample.
+        meaning: http://purl.obolibrary.org/obo/OBI_0003434
+      spatial frequency domain imaging:
+        description: Spatial Frequency Domain Imaging (SFDI) is a non-contact, depth-varying and wide-field optical imaging technique for measuring optical properties in a wide field-of-view on a pixel-by-pixel basis. Relevant applications include including burn assessment, skin tissue evaluation, tumor tissue detection, brain tissue monitoring.
+        meaning: https://doi.org/10.3390/photonics8050162
+        notes:
+          - Note that term has no matches in OLS as of June 2022.
+      spatial transcriptomics:
+        description: assay that allows visualization and quantitative analysis of the transcriptome with spatial resolution in individual tissue sections
+        meaning: http://www.ebi.ac.uk/efo/EFO_0008994
+      static histomorphometry:
+        description: Static histomorphometry involves evaluation of bone parameters at a particular time point.
+      static light scattering:
+        description: Static Light Scattering is a method for determining structure by measuring the total or time-averaged scattering intensity of scattered visible light as a function of angle.
+        meaning: http://purl.obolibrary.org/obo/CHMO_0000180
+      survival:
+        description: Any quantitative measurement of survival of or in an individual or study population.
+        meaning: http://purl.obolibrary.org/obo/MI_0410
+      targeted exome sequencing:
+        description: Also known as Clinical Exome Sequencing, Targeted Exome Sequencing is a subset of WES as it covers a limited number of genes, typically 3000 to 6000 genes.
+        meaning: https://labassure.com/whole-exome-sequencing-vs-clinical-exome-sequencing/
+      traction force microscopy:
+        description: An experimental method for determining the tractions on the surface of a biological cell by obtaining measurements of the surrounding displacement field within an in vitro extracellular matrix (ECM)
+        meaning: https://en.wikipedia.org/wiki/Traction_force_microscopy
+      transcranial doppler ultrasonography:
+        description: A diagnostic technique that uses pulsed Doppler ultrasound to measure the velocity of blood flow through the major blood vessels of the brain.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C122930
+      twin spot assay:
+        description: Two individual and genetically different populations of cells that originate from the same mitotic recombination event; twin spots allow a direct and reliable comparison between mutant and wild-type clones, and the size of the wild-type twin can serve as a reference for comparison with the homozygous mutant clones.
+        meaning: https://pubmed.ncbi.nlm.nih.gov/29378809/
+      ultra high-performance liquid chromatography/tandem mass spectrometry:
+        description: UPLC-MSMS is an analytical technique wherein ultra-high performance liquid chromatography is coupled to tandem mass spectrometry in order to separate, identify, and quantify substances in a sample.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C122176
+      western blot:
+        description: A multistep process in which a mixture of proteins is separated by gel electrophoresis
+        meaning: http://purl.obolibrary.org/obo/MMO_0000338
+      whole exome sequencing:
+        description: A procedure that can determine the DNA sequence for all of the exons in an individual.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C101295
+      whole genome sequencing:
+        description: Laboratory technique to sequence the complete DNA sequence of an organism's genome at a single time
+        meaning: http://edamontology.org/topic_3673
+      whole-cell patch clamp:
+        description: A patch-clamp assay where the electrode is left in place on the cell, as in cell-attached recordings, but the membrane patch has been perforated, providing access from the interior of the pipette to the intracellular space of the cell. Measurements made with this technique involve recording currents through multiple channels simultaneously, over the membrane of the entire cell.
+        meaning: http://purl.obolibrary.org/obo/OBI_0002178
+      word recognition score:
+        description: Assays how well a person can understand speech by repeating a list of words. The WRS is a percentage of words correctly repeated. It's a more functional measure because it predicts whether hearing loss can be improved with amplification.
+      STR profile:
+        description: The analysis of all of the short tandem repeats in the genome of a biological sample.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C129889
+  DrugScreen:
+    description: This is a subset of Assay enum above.
+    permissible_values:
+      combination library screen:
+        description: ''
+      combination screen:
+        description: ''
+      single molecule:
+        description: ''
+      small molecule library screen:
+        description: ''
+  SpeciesEnum:
+    permissible_values:
+      Rattus norvegicus:
+        description: 'Rattus with taxonomy ID:10116 and Genbank common name: Norway rat'
+        meaning: https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=10116&lvl=3&lin=f&keep=1&srchmode=1&unlock
+      Gallus gallus:
+        description: The common domestic fowl, Chicken.
+        meaning: https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9031
+      Pan troglodytes:
+        description: 'Pan troglodytes with taxonomy ID: 9598 and Genbank common name: chimpanzee'
+        meaning: https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9598&lvl=3&lin=f&keep=1&srchmode=1&unlock
+      Mus musculus (humanized):
+        description: 'Mus musculus with taxonomy ID: 10090 and Genbank common name: house mouse'
+        meaning: https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=10090&lvl=3&lin=f&keep=1&srchmode=1&unlock
+      Homo sapiens:
+        description: 'Homo sapiens with taxonomy ID: 9606 and Genbank common name: human'
+        meaning: https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9606&lvl=3&lin=f&keep=1&srchmode=1&unlock
+      Danio rerio:
+        description: 'Danio rerio with taxonomy ID: 7955 and Genbank common name: zebrafish'
+        meaning: https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=7955&lvl=3&lin=f&keep=1&srchmode=1&unlock
+      Drosophila melanogaster:
+        description: 'Drosophila melanogaster with taxonomy ID: 7227 and Genbank common name: fruit fly'
+        meaning: https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=7227&lvl=3&p=has_linkout&p=blast_url&p=genome_blast&p=mapview&lin=f&keep=1&srchmode=1&unlock
+      Rhesus macaque:
+        description: 'Macaca mulatta with taxonomy ID: 9544 and Genbank common name: Rhesus monkey'
+        meaning: https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9544&lvl=3&p=has_linkout&p=blast_url&p=genome_blast&p=mapview&lin=f&keep=1&srchmode=1&unlock
+      Sus scrofa:
+        description: 'Sus scrofa with taxonomy ID: 9823 and Genbank common name: pig'
+        meaning: https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9823
+      Oryctolagus cuniculus:
+        description: 'Oryctolagus cuniculus with taxonomy ID: 9986 and Genbank common name: rabbit'
+        meaning: https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9986&lvl=3&lin=f&keep=1&srchmode=1&unlock
+      Mus musculus:
+        description: 'Mus musculus with taxonomy ID: 10090 and Genbank common name: house mouse'
+        meaning: https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=10090&lvl=3&lin=f&keep=1&srchmode=1&unlock
+
+classes:
+  Template:
+    abstract: true
+    description: A collection of fields representing some entity.
+    comments:
+    - Also called a manifest depending on context.
+  PartialTemplate:
+    abstract: true
+    description: A template for collecting a subset of contextual data; not intended
+      to be a standalone template but rather a subdocument.
+  AnimalIndividualTemplate:
+    description: Template for non-human individual-level data.
+    slots:
+    - individualID
+    - sex
+    - age
+    - ageUnit
+    - diagnosis
+    - diagnosisAgeGroup
+    - inheritance
+    - mosaicism
+    - nf1Genotype
+    - nf2Genotype
+    - germlineMutation
+    - species
+    - modelSystemName
+  BiospecimenTemplate:
+    description: Specimen-level data, whether from human or animal.
+    slots:
+    - individualID
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - tumorType
+    - bodySite
+    - experimentalCondition
+  HumanCohortTemplate:
+    description: 'Data of biosamples from human patients. Adapted from Table 2 of
+      http://nrs.harvard.edu/urn-3:HUL.InstRepos:32725809. This template should be
+      used when biosamples are from NF patients to provides a more valuable characterization
+      and make additional gene-phenotype insights possible.
+
+      '
+    notes:
+    - Instead of collecting birth month/year, age is collected.
+    - What has been required is still required, while all new recommendations are
+      optional.
+    - Include attributes used for the portal but not in recommendations (nf1Genotype,
+      nf1Genotype, species).
+    slots:
+    - individualID
+    - sex
+    - age
+    - ageUnit
+    - diagnosis
+    - diagnosisAgeGroup
+    - inheritance
+    - mosaicism
+    - nf1Genotype
+    - nf2Genotype
+    - germlineMutationIndicator
+    - species
+    - vitalStatus
+    - WHOPerformanceStatus
+    - painStatus
+    - tumorTreatmentStatus
+    - cafeaulaitMacules
+    - skinFoldFreckling
+    - IrisLischNodules
+    - dermalNeurofibromas
+    - subcutaneousNodularNeurofibromas
+    - diffuseDermalNeurofibromas
+    - spinalNeurofibromas
+    - plexiformNeurofibromas
+    - opticGlioma
+    - heartDefect
+    - vascularDisease
+    - pubertyOnset
+    - stature
+    - peripheralNeuropathy
+    - aqueductalStenosis
+    - longBoneDysplasia
+    - sphenoidDysplasia
+    - scoliosis
+    - intellectualDisability
+    - learningDisability
+    - attentionDeficitDisorder
+    - pheochromocytoma
+    - glomusTumor
+    - MPNSTCharacterization
+    - nonopticGlioma
+    - GIST
+    - leukemia
+    - breastCancer
+    - otherTumors
+    - vestibularSchwannoma
+    - meningioma
+    - gliomaOrEpendymoma
+    - spinalSchwannoma
+    - dermalSchwannoma
+    - nonvestibularCranialSchwannoma
+    - lenticularOpacity
+    - nonvestibularSchwannomas
+    - numberOfSchwannomas
+  BiologicalAssayDataTemplate:
+    is_a: Template
+    abstract: true
+    description: 'A template defining basic metadata on deposited data artifacts (i.e.
+      files) from experimental assays involving biosamples.  This is an abstract template;
+      "real" template subclasses define additional properties appropriate for the
+      type of data file (e.g. imaging vs sequencing).
+
+      '
+    slots:
+    - Component
+    - Filename
+    - fileFormat
+    - resourceType
+    - dataType
+    - dataSubtype
+    - assay
+    - individualID
+    - species
+    - sex
+    - age
+    - ageUnit
+    - diagnosis
+    - nf1Genotype
+    - nf2Genotype
+    - tumorType
+    - modelSystemName
+    - organ
+    - comments
+  NonBiologicalAssayDataTemplate:
+    is_a: Template
+    abstract: true
+    description: 'Describes data artifacts (i.e. files) from an experimental/physical-sciences
+      assay  where input specimens are more at the level of synthesized molecules
+      or inorganic materials.
+
+      '
+    notes:
+    - Name of this base abstraction is not great, may need to revise.
+    slots:
+    - Component
+    - Filename
+    - fileFormat
+    - resourceType
+    - dataType
+    - dataSubtype
+    - assay
+  GeneticsAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    abstract: true
+    description: 'Template for relatively raw data of RNA/DNA structure and expression.  This
+      is an abstract template encapsulating data from low-throughput to high-throughput
+      assays,  sequencing-based or non-sequencing based (e.g. microarrays, optical
+      genome mapping).  In practice, data are more specifically typed and matched
+      to one of the templates below.
+
+      '
+    notes:
+    - http://purl.obolibrary.org/obo/GECKO_0000032
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - tumorType
+    - platform
+    - nucleicAcidSource
+    - specimenPreparationMethod
+  BulkSequencingAssayTemplate:
+    is_a: GeneticsAssayTemplate
+    description: General template for raw (level 1) RNA/DNA data, i.e. sequence data
+      from a sequencing assay.
+    slots:
+    - specimenType
+    - runType
+    - libraryStrand
+    - libraryPrep
+    - libraryPreparationMethod
+    - readPair
+    - readLength
+    - readDepth
+    - targetDepth
+    - batchID
+  ScSequencingAssayTemplate:
+    is_a: GeneticsAssayTemplate
+    description: General template for raw RNA/DNA data, i.e. sequence data from a
+      sequencing assay.
+    slots:
+    - cellType
+    - isCellLine
+    - cellID
+    - dissociationMethod
+    - runType
+    - libraryStrand
+    - libraryKitID
+    - libraryPrep
+    - libraryPreparationMethod
+    - readPair
+    - readLength
+    - readDepth
+    - targetDepth
+    - batchID
+    - auxiliaryAsset
+  GenomicsAssayTemplate:
+    is_a: BulkSequencingAssayTemplate
+    description: Alias to BulkSequencingAssayTemplate, use for sequence data on a
+      large scale when there is no template available that is more specific.
+    notes:
+    - It's possible that not all raw genomics data equates to sequencing output.
+    slots: null
+  GenomicsAssayTemplateExtended:
+    is_a: GenomicsAssayTemplate
+    description: Genomics assay template but with additional experiment data.
+    slots:
+    - experimentalCondition
+    - experimentalTimepoint
+    - timepointUnit
+    - genePerturbed
+    - genePerturbationTechnology
+    - genePerturbationType
+    - comments
+  RNASeqTemplate:
+    is_a: BulkSequencingAssayTemplate
+    description: Template for describing raw data from (bulk) RNA-sequencing
+    slots:
+    - genePerturbed
+    - genePerturbationType
+    - genePerturbationTechnology
+    - experimentalCondition
+    - isCellLine
+    close_mappings:
+    - htan:BulkRNA-seqLevel1
+  ScRNASeqTemplate:
+    is_a: ScSequencingAssayTemplate
+    description: Template for describing raw data from single-cell RNA-seq.
+    slots:
+    - genePerturbed
+    - genePerturbationType
+    - genePerturbationTechnology
+    - experimentalCondition
+  PdxGenomicsAssayTemplate:
+    is_a: GenomicsAssayTemplate
+    description: Raw genomics data from patient-derived xenograft (PDX) experiment,
+      with additional PDX-relevant metadata.
+    slots:
+    - transplantationType
+    - transplantationRecipientSpecies
+    - transplantationRecipientTissue
+    - modelSystemName
+    - experimentalCondition
+    - experimentalTimepoint
+    - timepointUnit
+  WGSTemplate:
+    is_a: BulkSequencingAssayTemplate
+    description: Template for describing raw data from Whole Genome Sequencing (WGS)
+    slots: null
+  WESTemplate:
+    is_a: BulkSequencingAssayTemplate
+    description: Template for describing raw data from Whole Exome Sequencing (WES/WXS)
+    slots:
+    - targetCaptureKitID
+    close_mappings:
+    - htan:BulkWESLevel1
+  EpigenomicsAssayTemplate:
+    is_a: BulkSequencingAssayTemplate
+    description: Template for describing raw data from epigenetics sequencing assays
+      such as bisulfite sequencing.
+    slots:
+    - bisulfiteConversionKitID
+    close_mappings:
+    - htan:BulkMethylation-seqLevel1
+  EpigeneticsAssayTemplate:
+    is_a: EpigenomicsAssayTemplate
+    description: Alias for EpigenomicsAssayTemplate for backwards-compatibility.
+    slots: null
+  ChIPSeqTemplate:
+    is_a: EpigenomicsAssayTemplate
+    description: Template for describing raw data from ChIP-Seq assays, typically
+      used to identify DNA-protein interactions.
+    slots:
+    - antibodyID
+    - platform
+    - peakCallingAlgorithm
+  GenomicsArrayTemplate:
+    is_a: GeneticsAssayTemplate
+    description: A template for describing raw data from array-based genomics/epigenomics,
+      e.g. CEL files.
+    slots:
+    - platform
+    - channel
+  MethylationArrayTemplate:
+    is_a: GenomicsArrayTemplate
+    description: Template for raw data files (idat) from DNA methylation arrays.
+    source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=raw_methylation_array
+    slots:
+    - chipID
+    - chipPosition
+    - plateName
+    - plateWell
+  ProcessedAlignedReadsTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: "Template for describing aligned reads (e.g. BAM/CRAM files) from\
+      \ a sequencing assay. The QC meta are extracted from samtools stats when available\
+      \ and are the same metrics preferred by GDC. \n"
+    slots:
+    - genomicReference
+    - genomicReferenceLink
+    - averageInsertSize
+    - averageReadLength
+    - averageBaseQuality
+    - pairsOnDifferentChr
+    - readsDuplicatedPercent
+    - readsMappedPercent
+    - meanCoverage
+    - proportionCoverage10x
+    - proportionCoverage30x
+    - readDepth
+    - totalReads
+    - workflow
+    - workflowLink
+    - auxiliaryAsset
+    - specimenID
+    close_mappings:
+    - htan:ScRNA-seqLevel2
+    - htan:BulkRNA-seqLevel2
+    - htan:BulkWESLevel2
+  ProcessedVariantCallsTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Template for describing either simple germline/somatic variant calls
+      output data (VCF/MAF) as well as structural variants (e.g. CNVs).
+    slots:
+    - isFilteredReads
+    - workflow
+    - workflowLink
+    - auxiliaryAsset
+    - specimenID
+    close_mappings:
+    - htan:BulkWESLevel3
+  ProcessedExpressionTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Template for quantified gene/protein expression data that are still
+      represented as one file per sample.
+    slots:
+    - expressionUnit
+    - workflow
+    - workflowLink
+    - auxiliaryAsset
+    - specimenID
+    close_mappings:
+    - htan:BulkRNA-seqLevel3
+  ProcessedMergedDataTemplate:
+    description: 'Further processed data with multiple samples aggregated into one
+      file. This may be also be known as level-4 data. Unlike level-2 and level-3
+      data, individual-level attributes such as age and sex are no longer surfaced
+      on the data file directly.
+
+      '
+    slots:
+    - Component
+    - Filename
+    - fileFormat
+    - resourceType
+    - dataType
+    - dataSubtype
+    - workflow
+    - workflowLink
+    - auxiliaryAsset
+    - assay
+    close_mappings:
+    - https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aggregated_somatic_mutation
+    - https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=gene_expression
+  ProteinAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    abstract: true
+    description: Abstract template for data from some assay of protein structure and
+      function. Data should be instantiated with more specific template.
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - platform
+    - proteinExtractSource
+  MassSpecAssayTemplate:
+    is_a: ProteinAssayTemplate
+    description: Template for raw mass spec-based proteomics data.
+    notes:
+    - Technically, mass spec does not have to be considered a biological assay, but
+      we'll classify it as such when used with a biological sample.
+    slots:
+    - dataCollectionMode
+    close_mappings:
+    - htan:MassSpectrometryLevel1
+  ProteomicsAssayTemplate:
+    is_a: MassSpecAssayTemplate
+    description: Alias to MassSpecAssayTemplate for backwards-compatibility.
+    slots: null
+  ProteinArrayTemplate:
+    is_a: ProteinAssayTemplate
+    description: Template for array- and immuno-based proteomics data.
+    slots:
+    - antibodyID
+    close_mappings:
+    - htan:RPPALevel2
+  ImagingAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: General template for describing imaging data.
+    slots:
+    - platform
+    - assayTarget
+    - auxiliaryAsset
+  MRIAssayTemplate:
+    is_a: ImagingAssayTemplate
+    description: Template for describing MRI data.
+    slots:
+    - bodySite
+    - MRISequence
+    - experimentalCondition
+    - experimentalTimepoint
+    - timepointUnit
+  MicroscopyAssayTemplate:
+    is_a: ImagingAssayTemplate
+    description: Template for data from a microscopy data.
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - objective
+    - nominalMagnification
+    - lensAperture
+    - workingDistance
+    - workingDistanceUnit
+    - immersion
+    close_mappings:
+    - htan:ImagingLevel2
+  ImmunoMicroscopyTemplate:
+    is_a: MicroscopyAssayTemplate
+    description: Template for describing immunofluorescence or immunohistochemistry
+      images.
+    slots:
+    - antibodyID
+  ClinicalAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: 'General template for typically tabular **individual-level** data.
+      This can include repeated measures and a drug treatment context.
+
+      '
+    slots:
+    - experimentalFactor
+    - experimentalCondition
+    - timepointUnit
+    - compoundName
+    - compoundDose
+    - compoundDoseUnit
+    - comments
+  GeneralMeasureDataTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: 'General template for data in tabular form that aggregates tissue-level
+      or cellular-level data.
+
+      '
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - modelSystemName
+    - experimentalFactor
+    - experimentalCondition
+    - experimentalTimepoint
+    - timepointUnit
+    - compoundName
+    - compoundDose
+    - compoundDoseUnit
+    - genePerturbed
+    - genePerturbationType
+    - genePerturbationTechnology
+    - comments
+  PharmacokineticsAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Generic template for describing data from a pharmacokinetics assay.
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - platform
+    - compoundName
+    - compoundDose
+    - compoundDoseUnit
+    - experimentalCondition
+    - experimentalTimepoint
+    - timepointUnit
+  PlateBasedReporterAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Generic template for describing data from a plate-based reporter
+      assay.
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - platform
+    - assayTarget
+    - compoundName
+    - compoundDose
+    - compoundDoseUnit
+    - experimentalCondition
+    - experimentalTimepoint
+    - timepointUnit
+    - reporterGene
+    - reporterSubstance
+  FlowCytometryTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Template for flow cytometry assay
+    slots:
+    - platform
+    - cellType
+    - auxiliaryAsset
+    close_mappings:
+    - https://www.immport.org/shared/dataModelDocumentation?table=fcs_analyzed_result
+  MaterialScienceAssayTemplate:
+    is_a: NonBiologicalAssayDataTemplate
+    description: General template for describing data for a materials science assay.
+    slots:
+    - platform
+    - specimenID
+    - materialType
+    - concentrationMaterial
+    - concentrationMaterialUnit
+    - concentrationNaCl
+    - concentrationNaClUnit
+  LightScatteringAssayTemplate:
+    is_a: MaterialScienceAssayTemplate
+    description: Template for dynamic or static light scattering data adapted from
+      ISA-TAB-Nano specs.
+    source: https://wiki.nci.nih.gov/display/icr/isa-tab-nano
+    slots:
+    - pH
+    - concentrationNaCl
+    - concentrationNaClUnit
+  ElectrophysiologyAssayTemplate:
+    is_a: BiologicalAssayDataTemplate
+    description: Template for raw electrophysiology data (electrical recordings).
+    source: https://arxiv.org/pdf/1605.07673.pdf
+    slots:
+    - platform
+    - bodySite
+    - cellType
+    - recordingSource
+    - experimentalTimepoint
+    - timepointUnit
+    - experimentalCondition
+    - auxiliaryAsset
+  EpidemiologyDataTemplate:
+    is_a: Template
+    description: For aggregated data from defined populations or cohorts, used in/derived
+      from epidemiology studies.
+    slots:
+    - resourceType
+    - dataType
+    - fileFormat
+    - populationCoverage
+    - epidemiologyMetric
+  WorkflowReport:
+    is_a: Template
+    description: Template used for miscellaneous workflow reports and accessory files
+    notes:
+    - resourceType should default to "workflow report"
+    - note that `dataType` and `dataSubtype` don't apply
+    slots:
+    - resourceType
+    - assay
+    - fileFormat
+    - relatedDataset
+    - workflow
+    - workflowLink
+  UpdateMilestoneReport:
+    is_a: PartialTemplate
+    description: Metadata template for updating milestone report values in NF studies
+      -- currently a supported feature for NTAP and GFF.
+    slots:
+    - Filename
+    - resourceType
+    - progressReportNumber
+  PortalDataset:
+    description: 'A slightly more specialized dataset concept intended for the specific
+      scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets.
+
+      '
+    notes:
+    - The compiled JSON schema for this should be bound to [Dataset](https://rest-docs.synapse.org/rest/org/sagebionetworks/repo/model/table/Dataset.html)
+      entities, not folders.
+    - While "publisher" (repository) may seem redundant given that all Datasets are
+      obviously on Synapse, it's for explicit compatibility with DataCite, and eventually
+      may want to have "symbolic" datasets like Cancer Complexity Portal that list
+      datasets hosted somewhere else.
+    attributes:
+      title:
+        title: Title
+        range: string
+        required: true
+      description:
+        title: Description
+        range: string
+        description: Blurb for the dataset; should be no more than 500 characters.
+        required: false
+      alternateName:
+        title: Alternate Name
+        description: An altername name that can be used for search and discovery improvement.
+        range: string
+        required: false
+      creator:
+        title: Creator
+        range: string
+        description: Properly formatted name of the organization or person that is
+          creator of the dataset (e.g. "NF-OSI" or "Robert Allaway"), not an id. Most
+          preferred is the project PI or data lead who's responsible for its conception
+          and initial content creation.
+        multivalued: true
+        required: true
+      contributor:
+        title: Contributor(s)
+        range: string
+        description: Institution or person responsible for collecting and managing
+          the files and records in the dataset.
+        multivalued: true
+        required: false
+      studyId:
+        title: Study ID
+        range: string
+        description: Identifier for the study (project) from which the dataset was
+          derived.
+        required: true
+      measurementTechnique:
+        title: Measurement Technique
+        range: AssayEnum
+        multivalued: true
+        description: What's used to generate data in dataset, typically referring
+          to the assay. Omit if not applicable (e.g. for curated dataset such as a
+          list compounds from a database or text extracted from Wikipedia).
+      keywords:
+        title: Keywords
+        range: string
+        multivalued: true
+        required: true
+      subject:
+        title: Subject
+        range: string
+        description: Applicable subject term(s) for dataset cataloging; use the Library
+          of Congress Subject Headings (LCSH) scheme.
+        multivalued: true
+        required: false
+      dataType:
+        title: Data Type
+        range: Data
+        description: Reflects the data types within the dataset.
+        multivalued: true
+        required: true
+      species:
+        title: Species
+        range: SpeciesEnum
+        description: Species of the organism(s) from which the data were generated.
+          Omit property if not applicable, such as for data like compounds or other
+          non-biological data.
+        multivalued: true
+        required: false
+      manifestation:
+        title: Manifestation(s)
+        range: ManifestationEnum
+        description: Refers to the phenotype(s) studied in the dataset. Omit if not
+          applicable.
+        multivalued: true
+        required: false
+      diseaseFocus:
+        title: Disease Focus
+        range: DiseaseFocusEnum
+        multivalued: true
+        required: true
+      funder:
+        title: Funder
+        range: FundingAgencyEnum
+        multivalued: true
+        required: true
+      individualCount:
+        title: Individual Count
+        range: integer
+        description: Number of unique individuals included in the dataset (whether
+          as individual-level or as aggregate data). Omit if not applicable/unknown.
+        required: false
+      specimenCount:
+        title: Specimen Count
+        range: integer
+        description: Number of unique specimens included in the dataset. Omit if not
+          applicable/unknown.
+        required: false
+      series:
+        title: Data Series
+        range: DataSeriesEnum
+        description: Datasets may belong to a curated series. Should be assigned by
+          staff only; omit property if not applicable/unknown.
+        required: false
+      visualizeDataOn:
+        title: Visualize Data On
+        description: Link(s) to where data may be visualized in a separate application.
+          Omit property if not applicable/unknown.
+        range: string
+        multivalued: true
+        required: false
+      yearProcessed:
+        title: Year Processed
+        description: Year data were processed. Only for processed dataset type and
+          when data series is "NF-OSI Processed Data"; omit if not applicable/unknown.
+        range: integer
+        required: false
+      datePublished:
+        title: Date Published
+        description: Date data were published/available on Synapse.
+        range: integer
+        required: false
+      includedInDataCatalog:
+        title: Included In Data Catalog
+        description: Link(s) to known data catalog(s) the dataset is included in.
+        range: DataCatalogEnum
+        required: false
+      citation:
+        title: Citation
+        range: string
+        description: identifies academic articles that are recommended by the data
+          provider be cited in addition to the dataset itself.
+        required: false
+      countryOfOrigin:
+        title: Country of Origin
+        range: string
+        description: Origin of individuals from which data were generated. Omit if
+          not applicable/unknown.
+        multivalued: true
+        required: false
+      doi:
+        title: doi
+        range: string
+        description: The Digital Object Identifier (DOI) associated with the dataset,
+          used for citation and persistent identification.
+        required: false
+        pattern: ^10\\.\\d{4,9}/[-._;()/:A-Z0-9]+$
+      croissant_file_s3_object:
+        title: Croissant File
+        range: string
+        description: Link to croissant file for dataset.
+        required: false
+      accessType:
+        title: Access Type
+        range: AccessTypeEnum
+        description: Access type for the dataset.
+        required: true
+      license:
+        title: License
+        range: License
+        description: Unless information for license is clear, this should default
+          to UNKNOWN.
+        required: true
+      dataUseModifiers:
+        title: Data Use Modifiers
+        description: List of data use ontology (DUO) terms that are true for dataset,
+          which describes the allowable scope and terms for data use. Most datasets
+          allow "General Research Use" unless otherwise specified.
+        range: DuoEnum
+        multivalued: true
+        required: false
+      conditionsOfAccess:
+        title: User Specific Restriction
+        description: Additional requirements a user may need outside of Data Use Modifiers.
+          This could include additional registration, updating profile information,
+          joining a Synapse Team, or using specific authentication methods like 2FA
+          or RAS. Omit property if not applicable/unknown.
+        range: string
+        required: false
+  PublicationTemplate:
+    description: A generalized data model template for Publications to be hopefully
+      used across dccs
+    notes:
+    - This structure is based on a CSV file from MC2 annotations with customized fields
+      as attributes.
+    attributes:
+      grantNumber:
+        title: Grant Number
+        range: string
+        required: false
+      doi:
+        title: Digital Object Identifier
+        range: string
+        required: true
+      journal:
+        title: Journal
+        range: string
+        required: true
+      pmid:
+        title: PubMed ID
+        range: string
+        required: true
+      title:
+        title: Title
+        range: string
+        required: true
+      year:
+        title: Year
+        range: integer
+        required: true
+      author:
+        title: Author(s)
+        range: string
+        multivalued: true
+        required: true
+      abstract:
+        title: Abstract
+        range: string
+        required: true
+      accessibility:
+        title: Accessibility
+        range: PublicationAccessibilityEnum
+        required: false
+  PortalPublication:
+    is_a: PublicationTemplate
+    description: A slightly more specialized publication concept intended for the
+      specific scope of the NF Portal.
+    attributes:
+      publicationType:
+        title: Publication Type
+        description: 'Type of publication in relation to the linked study on the NF
+          Portal. A primary publication is the main publication for the study and
+          may describe data or resources generated from the study. A secondary publication
+          references or describes reuse of resources for the linked study.
+
+          '
+        range: PublicationTypeEnum
+        required: true
+      diseaseFocus:
+        title: Disease Focus
+        range: DiseaseFocusEnum
+        multivalued: true
+        required: false
+      dataset:
+        title: Linked Datasets
+        range: string
+        multivalued: true
+        required: false
+      manifestation:
+        title: Manifestation
+        range: string
+        required: false
+      fundingAgency:
+        title: Linked Funder(s)
+        range: string
+        multivalued: true
+        required: true
+      studyId:
+        title: Linked Study ID
+        range: string
+        required: true
+      studyName:
+        title: Linked Study Name
+        range: string
+        required: true
+  PortalStudy:
+    description: 'A scientific project of some planned duration with PIs and key contributors,
+      specific research topics, and potential publication/data/other outputs.  A study
+      is often represented as a Synapse project and so is also referred to as "project".
+      The study schema here is specifically for studies listed on the NF Portal at
+      https://nf.synapse.org/Explore/Studies.
+
+      '
+    notes:
+    - There are small differences for the public portal representation of study vs.
+      elsewhere such as in the less-public data sharing plan, but it should always
+      be possible to translate DSP rep to the portal study rep.
     attributes:
       studyId:
         range: string
@@ -16,7 +1822,7 @@ classes:
       studyName:
         range: string
         required: true
-      studyLeads: # this combines both PIs and other data contributors, which is a distinction in the DSP
+      studyLeads:
         range: string
         multivalued: true
         required: true
@@ -76,4 +1882,26 @@ classes:
       studyFileviewId:
         range: string
         required: true
-
+  ProtocolTemplate:
+    description: Describes protocol document based on https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT.
+    source: https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT
+    slots:
+    - title
+    - author
+    - citation
+    - license
+    - protocolAssay
+    - protocolPurpose
+    - sampleType
+    - comments
+  SourceCodeTemplate:
+    is_a: Template
+    description: Template for describing scripts or software code.
+    slots:
+    - title
+    - author
+    - citation
+    - license
+    - programmingLanguage
+    - runtimePlatform
+    - documentation

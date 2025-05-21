@@ -1,0 +1,79 @@
+{
+  "$defs": {
+    "Resource": {
+      "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
+      "enum": [
+        "experimentalData",
+        "result",
+        "tool",
+        "workflow report",
+        "report",
+        "metadata",
+        "protocol",
+        "weblink"
+      ],
+      "title": "Resource",
+      "type": "string"
+    },
+    "UpdateMilestoneReport": {
+      "additionalProperties": false,
+      "description": "Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF.",
+      "properties": {
+        "Filename": {
+          "description": "The name of the file.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "progressReportNumber": {
+          "description": "Indicates milestone the  data is associated with. Currently only required for projects funded by NTAP, GFF, and NFRI. For GFF studies, this is the \u2018progress report\u2019 timeline. Example: if submitting data for the 6-month milestone report for NTAP, progressReportNumber=1.  Also if submitting data associated with first milestone, progressReportNumber =1",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "resourceType": {
+          "$ref": "#/$defs/Resource",
+          "description": "The type of resource being stored and annotated"
+        }
+      },
+      "required": [
+        "resourceType"
+      ],
+      "title": "UpdateMilestoneReport",
+      "type": "object"
+    }
+  },
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-updatemilestonereport",
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "additionalProperties": true,
+  "description": "Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF.",
+  "metamodel_version": "1.7.0",
+  "properties": {
+    "Filename": {
+      "description": "The name of the file.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "progressReportNumber": {
+      "description": "Indicates milestone the  data is associated with. Currently only required for projects funded by NTAP, GFF, and NFRI. For GFF studies, this is the \u2018progress report\u2019 timeline. Example: if submitting data for the 6-month milestone report for NTAP, progressReportNumber=1.  Also if submitting data associated with first milestone, progressReportNumber =1",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "resourceType": {
+      "$ref": "#/$defs/Resource",
+      "description": "The type of resource being stored and annotated"
+    }
+  },
+  "required": [
+    "resourceType"
+  ],
+  "title": "nfosi",
+  "type": "object",
+  "version": null
+}
