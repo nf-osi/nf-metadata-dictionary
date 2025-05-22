@@ -46,79 +46,6 @@ slots:
     description: Workflow URL reference
     required: false
 enums:
-  Resource:
-    description: 'Resource classes. Most resource entities expected to be some type
-      of "experimental data" and further specified via `dataType`.
-
-      '
-    permissible_values:
-      experimentalData:
-        description: Any file derived from or pertaining to a scientific experiment.
-          Experimental data annotations should be applied, possibly disease-related.
-      result:
-        description: Any file that reports data results. Examples include figures,
-          presentations, analysis, etc.
-        comments: This resource category is somewhat more general than `report`.
-        source: https://synapse.org
-      tool:
-        description: Any file or link that represents a tool, model, or algorithm;
-          the tool annotations could be applied
-        source: https://synapse.org
-      workflow report:
-        description: Workflow-generated reports of analysis of primary data, usually
-          created programmatically at completion of workflow step.
-      report:
-        description: 'A document assembled by an author for the purpose of providing
-          information for the audience.  A report is the output of a documenting process
-          and has the objective to be consumed by a specific audience.  Topic of the
-          report is on something that has completed. A report is not a single figure.  Examples
-          of reports are journal article, patent application, grant progress report,
-          case report (not patient record).
-
-          '
-        meaning: http://purl.obolibrary.org/obo/IAO_0000088
-      metadata:
-        description: Data about data, information that describes another set of data.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C52095
-      protocol:
-        description: A plan specification which has sufficient level of detail and
-          quantitative information to communicate it between investigation agents,
-          so that different investigation agents will reliably be able to independently
-          reproduce the process.
-        meaning: http://purl.obolibrary.org/obo/OBI_0000272
-      weblink:
-        description: An address to another document or other resource on the World
-          Wide Web.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C42743
-  WorkflowEnum:
-    permissible_values:
-      CNVkit:
-        source: https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004873
-      DeepVariant:
-        source: https://github.com/google/deepvariant
-      DESeq2:
-        source: https://bioconductor.org/packages/release/bioc/html/DESeq2.html
-      FastQC:
-        source: https://github.com/s-andrews/FastQC
-      FreeBayes:
-        source: https://arxiv.org/abs/1207.3907
-      GATK BaseRecalibration:
-        source: https://gatk.broadinstitute.org/hc/en-us/articles/360036898312-BaseRecalibrator
-      GATK MarkDuplicates:
-        source: https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-
-      MultiQC:
-        source: https://multiqc.info/
-      Mutect2:
-        source: https://www.biorxiv.org/content/10.1101/861054v1.full.pdf
-      Sarek:
-        source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7111497/
-      STAR and Salmon: null
-      Strelka2:
-        source: https://www.nature.com/articles/s41592-018-0051-x
-      StringTie:
-        source: https://www.nature.com/articles/nbt.3122
-      TrimGalore:
-        source: https://github.com/FelixKrueger/TrimGalore
   AssayEnum:
     title: Assay
     permissible_values:
@@ -1081,6 +1008,79 @@ enums:
         description: The analysis of all of the short tandem repeats in the genome
           of a biological sample.
         meaning: http://purl.obolibrary.org/obo/NCIT_C129889
+  Resource:
+    description: 'Resource classes. Most resource entities expected to be some type
+      of "experimental data" and further specified via `dataType`.
+
+      '
+    permissible_values:
+      experimentalData:
+        description: Any file derived from or pertaining to a scientific experiment.
+          Experimental data annotations should be applied, possibly disease-related.
+      result:
+        description: Any file that reports data results. Examples include figures,
+          presentations, analysis, etc.
+        comments: This resource category is somewhat more general than `report`.
+        source: https://synapse.org
+      tool:
+        description: Any file or link that represents a tool, model, or algorithm;
+          the tool annotations could be applied
+        source: https://synapse.org
+      workflow report:
+        description: Workflow-generated reports of analysis of primary data, usually
+          created programmatically at completion of workflow step.
+      report:
+        description: 'A document assembled by an author for the purpose of providing
+          information for the audience.  A report is the output of a documenting process
+          and has the objective to be consumed by a specific audience.  Topic of the
+          report is on something that has completed. A report is not a single figure.  Examples
+          of reports are journal article, patent application, grant progress report,
+          case report (not patient record).
+
+          '
+        meaning: http://purl.obolibrary.org/obo/IAO_0000088
+      metadata:
+        description: Data about data, information that describes another set of data.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C52095
+      protocol:
+        description: A plan specification which has sufficient level of detail and
+          quantitative information to communicate it between investigation agents,
+          so that different investigation agents will reliably be able to independently
+          reproduce the process.
+        meaning: http://purl.obolibrary.org/obo/OBI_0000272
+      weblink:
+        description: An address to another document or other resource on the World
+          Wide Web.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C42743
+  WorkflowEnum:
+    permissible_values:
+      CNVkit:
+        source: https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004873
+      DeepVariant:
+        source: https://github.com/google/deepvariant
+      DESeq2:
+        source: https://bioconductor.org/packages/release/bioc/html/DESeq2.html
+      FastQC:
+        source: https://github.com/s-andrews/FastQC
+      FreeBayes:
+        source: https://arxiv.org/abs/1207.3907
+      GATK BaseRecalibration:
+        source: https://gatk.broadinstitute.org/hc/en-us/articles/360036898312-BaseRecalibrator
+      GATK MarkDuplicates:
+        source: https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-
+      MultiQC:
+        source: https://multiqc.info/
+      Mutect2:
+        source: https://www.biorxiv.org/content/10.1101/861054v1.full.pdf
+      Sarek:
+        source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7111497/
+      STAR and Salmon: null
+      Strelka2:
+        source: https://www.nature.com/articles/s41592-018-0051-x
+      StringTie:
+        source: https://www.nature.com/articles/nbt.3122
+      TrimGalore:
+        source: https://github.com/FelixKrueger/TrimGalore
   FileFormatEnum:
     permissible_values:
       7z:

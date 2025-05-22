@@ -406,266 +406,10 @@ enums:
         description: Data that is represented as text, usually referring to "unstructured
           data".
         meaning: http://edamontology.org/data_2526
-  DataSubtypeEnum:
-    description: 'Categorizes data based on its processing state. This is the main
-      classification axis used for data types.  Not all data types can use this dimensions
-      (e.g. clinical data).
-
-      '
-    permissible_values:
-      raw:
-        description: Data produced by experimental measurement/observation with very
-          little subsequent processing.
-      synthetic:
-        description: Data generated computationally via models or simulations, not
-          direct experimental measurement.
-      normalized:
-        description: Data that has undergone a normalization procedure to adjust for
-          technical variation or to bring measurements onto a common scale. Considered
-          a more specific type of processed data.
-        meaning: http://purl.obolibrary.org/obo/OBI_0000451
-      quantified:
-        description: Data representing measurements/counts of specific features (gene
-          counts, peak intensities, object properties).
-      processed:
-        description: Data generated from running one or more bioinformatics methods
-          on raw data.
-      derived:
-        description: Data from additional analytical steps performed on already processed
-          data.
   NotApplicableEnum:
     permissible_values:
       Not Applicable:
         description: Not applicable in this context
-  Genotype:
-    permissible_values:
-      -/-:
-        description: Homozygous deletion or mutation.
-      +/-:
-        description: Heterozygous deletion or mutation
-      +/+:
-        description: Homozygous wildtype
-      Unknown:
-        description: unknown
-  Tumor:
-    permissible_values:
-      Diffuse Astrocytoma:
-        description: DA
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=DA
-      Subcutaneous Neurofibroma:
-        description: A neurofibroma that occurs along the peripheral nerves beneath
-          the skin.
-        notes: Not in NCIT, but see https://nyulangone.org/conditions/neurofibromatosis/types
-      Pilomyxoid Astrocytoma:
-        description: PMA
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PMA
-      Juvenile Myelomonocytic Leukemia:
-        description: (JMML) A myelodysplastic/myeloproliferative neoplasm of childhood
-          that is characterized by proliferation principally of the granulocytic and
-          monocytic lineages
-        meaning: obo:NCIT_C9233
-      Anaplastic Astrocytoma:
-        description: AASTR
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=AASTR
-      Malignant Peripheral Nerve Sheath Tumor:
-        description: MPNST
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=MPNST
-      Localized Neurofibroma:
-        description: Refers to Cutaneous Neurofibroma; this is a synonym used mainly
-          for compatibility with JHU Biobank.
-        notes:
-        - JHU Biobank
-      Cutaneous Neurofibroma:
-        description: A neurofibroma that grows along small branches of nerves in the
-          dermis in patients with neurofibromatosis. It presents as a solid cutaneous
-          tumor.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C128451
-      Colorectal Adenocarcinoma:
-        description: (COADREAD) The most common type of colorectal carcinoma. It is
-          chararactized by the presence of malignant glandular epithelial cells invading
-          through the muscularis mucosa into the submucosa.
-        meaning: obo:NCIT_C5105
-      Anaplastic Pilocytic Astrocytoma:
-        description: Pilocytic astrocytoma with anaplastic features exhibits a spectrum
-          of morphologies and is associated with decreased survival when compared
-          with typical PA.
-        meaning: https://doi.org/10.1097/pas.0b013e3181c75238
-      Schwannoma:
-        description: SCHW
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=SCHW
-      Hemorrhagic Neoplasm:
-        description: A neoplasm with hemorrhagic findings.
-        notes: This is based after the NCIT term 'Necrotic Neoplasm' to accomodate
-          records using only 'hemorrhage' for tumor description -- it may be of limited
-          usefulness long-term.
-      Not Applicable:
-        description: ''
-      Pilocytic Astrocytoma:
-        description: PAST
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PAST
-      Ganglioglioma:
-        description: GNG
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GNG
-      Plexiform Neurofibroma:
-        description: An elongated and multinodular neurofibroma, formed when the tumor
-          involves either multiple trunks of a plexus or multiple fascicles of a large
-          nerve, such as the sciatic. Some plexiform neurofibromas resemble a bag
-          of worms, others produce a massive ropy enlargement of the nerve.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C3797
-      NF2-Associated Tumor:
-        description: Unspecified NF2-associated tumor; use a more specific tumor classification
-          if available.
-        notes: This was added to accomodate records that only specified 'NF2' and
-          is patterned after the existence of the NCIT term 'NF1-Associated Malignant
-          Peripheral Nerve Sheath Tumor'
-      Fibrosarcoma:
-        description: (FIBS) A malignant mesenchymal fibroblastic neoplasm affecting
-          the soft tissue and bone.
-        meaning: obo:NCIT_C3043
-      Low-Grade Glioma NOS:
-        description: LGGNOS
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=LGGNOS
-      Glioblastoma:
-        description: GB
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GB
-      Anaplastic Pleomorphic Xanthoastrocytoma:
-        description: APXA
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=APXA
-      Glioblastoma Multiforme:
-        description: GBM
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GBM
-      Unknown:
-        description: 'A tumor of unknown origin, or tumor type missing. '
-      Atypical Pilocytic Astrocytoma:
-        description: Pilocytic astrocytoma with atypical features.
-      Optic Pathway Glioma:
-        description: A glioma that affects the optic nerve. This condition can be
-          seen in association with neurofibromatosis 1. It is most commonly seen in
-          the pediatric age group.
-        meaning: https://ncit.nci.nih.gov/ncitbrowser/ConceptReport.jsp?dictionary=NCI_Thesaurus&ns=ncit&code=C4537
-      Diffuse Infiltrating Neurofibroma:
-        description: 'Diffuse infiltrating neurofibroma can present as slow-growing,
-          soft tissue masses with overlying skin thickening. These le-sions infiltrate
-          the dermis and the subcutaneous tissue and  characteristically spread along
-          the connective tissues enveloping islands of normal fat. Some of these lesions
-          develop fatty proliferation and can mimic lipomas,  angiolipomas, or angiomyolipomas
-          on imaging and histological evaluation '
-        meaning: https://doi.org/10.1007/s00256-014-1965-8
-      Fibromatosis:
-        description: A poorly circumscribed neoplasm arising from the soft tissues.
-          It is characterized by the presence of spindle-shaped fibroblasts and an
-          infiltrative growth pattern.
-        meaning: obo:NCIT_C3042
-      Neurofibroma with Degenerative Atypia:
-        description: ''
-        notes:
-        - JHU Biobank
-      Necrotic Neoplasm:
-        description: A neoplasm characterized by focal or diffuse tumor cell necrosis.
-        meaning: obo:NCIT_C36029
-      Pleomorphic Xanthoastrocytoma:
-        description: PXA
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PXA
-      Teratoma:
-        description: TT
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=TT
-      Sarcoma:
-        description: (SARCNOS) An usually aggressive malignant neoplasm of the soft
-          tissue or bone...Representative subtypes are liposarcoma, leiomyosarcoma,
-          osteosarcoma, and chondrosarcoma.
-        meaning: obo:NCIT_C9118
-      Massive Soft Tissue Neurofibroma:
-        description: Massive soft tissue neurofibroma is characterized  by local infiltration
-          and extension to multiple nerve branches,  as well as substantial overgrowth
-          of adjacent soft tissue and  skin, which distinguishes it from its more
-          benign variant, plexiform neurofibroma. With striking presentation and  severe
-          dysmorphism, massive soft tissue neurofibroma is also labeled elephantiasis
-          neuromatosa. Although considered benign it  shares similarities with malignant
-          peripheral nerve sheath  tumors such as local infiltration and cell mitogenesis.
-          Massive soft tissue neurofibroma is associated with significant morbidity
-          and mortality and almost no response to  conventional chemotherapy and radiotherapy.
-          Surgery is eventually pursued, although bleeding may be a life-threatening  complication
-          as massive soft tissue neurofibromas are highly  vascularized.
-        meaning: https://doi.org/10.1177%2F0883073815571635
-      Glioma:
-        description: A benign or malignant brain and spinal cord tumor that arises
-          from glial cells (astrocytes, oligodendrocytes, ependymal cells). Tumors
-          that arise from astrocytes are called astrocytic tumors or astrocytomas.
-          Tumors that arise from oligodendrocytes are called oligodendroglial tumors.
-          Tumors that arise from ependymal cells are called ependymomas.
-        meaning: http://purl.obolibrary.org/obo/MONDO_0021042
-      Oligoastrocytoma:
-        description: OAST
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=OAST
-      Colorectal Carcinoma:
-        description: A malignant epithelial neoplasm that arrises from the colon or
-          rectum and invates through the muscularis mucosa into the submucosa. 95
-          percent of colorectal carcinoma are colorectal adenocarcinoma -- use this
-          more specific term if it applies.
-        meaning: obo:NCIT_C2955
-      Meningioma:
-        description: MNG
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=MNG
-      ANNUBP:
-        description: 'Atypical neurofibromatous neoplasms of uncertain biologic potential
-          is a provisional classification for lesions displaying at least two features:
-          atypia, loss of neurofibroma architecture, high cellularity, and/or mitotic
-          activity >1/50 but <3/10 high power fields. They can be inconsistently diagnosed
-          as atypical neurofibroma or low-grade MPNST. See https://pubmed.ncbi.nlm.nih.gov/28551330/.'
-      High-Grade Glioma NOS:
-        description: HGGNOS
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=HGGNOS
-      NF1-Associated Tumor:
-        description: Unspecified NF1-associated tumor; use a more specific tumor classification
-          if available.
-        notes: This was added to accomodate records that only specified 'NF1' and
-          is patterned after the existence of the NCIT term 'NF1-Associated Malignant
-          Peripheral Nerve Sheath Tumor'
-      Atypical Neurofibroma:
-        description: A neurofibroma characterized by the presence of cellular pleomorphism.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C41426
-      Cellular Neurofibroma:
-        description: A neurofibroma characterized by the presence of areas with increased
-          cellularity.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C41427
-      Neurofibroma:
-        description: NFIB
-      Recurrent MPNST:
-        description: The reemergence of malignant peripheral nerve sheath tumor after
-          a period of remission.
-        meaning: obo:NCIT_C8823
-      Anaplastic Ganglioglioma:
-        description: AGNG
-        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=AGNG
-      tumor:
-        description: "General term for tumor sample \u2013 use when it is unknown\
-          \ when a more specific clinical classification is unknown, e.g. whether\
-          \ it is primary or secondary."
-        meaning: http://purl.obolibrary.org/obo/NCIT_C18009
-      metastatic tumor:
-        description: For neoplasms, a non-infiltrating and non-metastasizing neoplastic
-          process that is characterized by the absence of morphologic features associated
-          with malignancy (e.g., severe atypia, nuclear pleomorphism, tumor cell necrosis,
-          and abnormal mitoses).
-        meaning: http://purl.obolibrary.org/obo/NCIT_C14172
-      metastatic/recurrent tumor:
-        description: A tumor with metastatic/recurrent characteristic.
-      recurrent tumor:
-        description: A tumor described with recurrent characteristic.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C4798
-      Melanoma:
-        description: 'A malignant, usually aggressive tumor composed of atypical,
-          neoplastic melanocytes. Most often, melanomas arise in the skin (cutaneous
-          melanomas) and include the following histologic subtypes: superficial spreading
-          melanoma, nodular melanoma, acral lentiginous melanoma, and lentigo maligna
-          melanoma. Cutaneous melanomas may arise from acquired or congenital melanocytic
-          or dysplastic nevi. Melanomas may also arise in other anatomic sites including
-          the gastrointestinal system, eye, urinary tract, and reproductive system.
-          Melanomas frequently metastasize to lymph nodes, liver, lungs, and brain.
-          [ NCI ]'
-        meaning: http://purl.obolibrary.org/obo/NCIT_C3224
-      Nodular Neurofibroma:
-        description: TBD
   CellLineModel:
     permissible_values:
       HEK293 NF1 -/- with WT mNf1 cDNA:
@@ -1173,194 +917,6 @@ enums:
       Nf1flox/flox:
         description: Mice with two floxed NF1 alleles.
         meaning: https://www.doi.org/10.1002/ana.23813
-  OrganEnum:
-    permissible_values:
-      kidney:
-        description: One of the two bean-shaped organs located on each side of the
-          spine in the retroperitoneum.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C12415
-      ovary:
-        description: One of the typically paired essential female reproductive organs
-          that produce eggs and in vertebrates female sex hormones.
-        meaning: http://purl.obolibrary.org/obo/BTO_0000975
-      lung:
-        description: One of the usually paired compound saccular thoracic organs that
-          constitute the basic respiratory organ of air-breathing vertebrates.
-        meaning: http://purl.obolibrary.org/obo/BTO_0000763
-      bone marrow:
-        description: The soft, fatty, vascular tissue that fills most bone cavities
-          and is the source of red blood cells and many white blood cells.
-        meaning: http://purl.obolibrary.org/obo/BTO_0000141
-      prostate:
-        description: Lobular organ the parenchyma of which has as its parts glandular
-          acini which are continuous with the prostatic part of the urethra.
-        meaning: http://purl.obolibrary.org/obo/FMA_9600
-      breast:
-        description: The fore or ventral part of the body between the neck and the
-          abdomen.
-        meaning: http://purl.obolibrary.org/obo/BTO_0000149
-      mesentery:
-        description: ''
-      mammary gland:
-        description: A specialized accessory gland of the skin of mammals that secretes
-          milk. The gland is typically only developed in females, and regresses in
-          males.
-        meaning: http://purl.obolibrary.org/obo/UBERON_0001911
-      colon:
-        description: The part of the large intestine that extends from the cecum to
-          the rectum.
-        meaning: http://purl.obolibrary.org/obo/BTO_0000269
-      spleen:
-        description: A highly vascular ductless organ that is located in the left
-          abdominal region near the stomach or intestine of most vertebrates and is
-          concerned with final destruction of red blood cells, filtration and storage
-          of blood, and production of lymphocytes.
-        meaning: http://purl.obolibrary.org/obo/BTO_0001281
-      Bursa Of Fabricius:
-        description: An epithelial outgrowth of lymphoid tissue in the cloaca of young
-          birds, responsible for B-lymphocyte maturation. It undergoes atrophy and
-          involution at six months of age.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C111141
-      nose:
-        description: A structure of special sense serving as an organ of the sense
-          of smell and as an entrance to the respiratory tract.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C12756
-      brain:
-        description: The portion of the vertebrate central nervous system that constitutes
-          the organ of thought and neural coordination.
-        meaning: http://purl.obolibrary.org/obo/BTO_0000142
-      pancreas:
-        description: A large lobulated gland of vertebrates that secretes digestive
-          enzymes and the hormones insulin and glucagon.
-        meaning: http://purl.obolibrary.org/obo/BTO_0000988
-      liver:
-        description: ''
-      blood:
-        description: The fluid that circulates in the heart, arteries, capillaries,
-          and veins of a vertebrate animal carrying nourishment and oxygen to and
-          bringing away waste products from all parts of the body.
-        meaning: http://purl.obolibrary.org/obo/BTO_0000089
-      lymph node:
-        description: A bean-shaped organ surrounded by a connective tissue capsule.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C12745
-      nerves:
-        description: Any of the filamentous bands of nervous tissue that connect parts
-          of the nervous system with the other organs, conduct nervous impulses, and
-          are made up of axons and dendrites together with protective and supportive
-          structures.
-        meaning: http://purl.obolibrary.org/obo/BTO_0000925
-      skin:
-        description: The integument of an animal (as a fur-bearing mammal or a bird)
-          separated from the body usually with its hair or feathers.
-        meaning: http://purl.obolibrary.org/obo/BTO_0001253
-      eye:
-        description: The organ of sight or vision. [ NCI ]
-        meaning: http://purl.obolibrary.org/obo/NCIT_C12401
-  MetadataEnum:
-    description: Data that provides information about other data
-    source: https://en.wikipedia.org/wiki/Metadata
-    permissible_values:
-      metadata:
-        description: Most general label for data that contains information about data.
-      descriptive metadata:
-        description: Information that describes and identifies a resource, including
-          elements that facilitate discovery and understanding.
-        notes:
-        - Currently used for `manifest.csv` files.
-      workflow metadata:
-        description: Process data from computational workflows. This is highly related
-          to Statistical Metadata. Basic information, annotation or documentation
-          concerning a workflow (but not the workflow itself).
-        meaning: http://edamontology.org/data_0949
-        comments: Coined category for use esp. with nextflow metadata files.
-      image metadata:
-        description: Data concerning a specific biological or biomedical image.
-        meaning: http://edamontology.org/data_3546
-        notes:
-        - For e.g. XML files that contain image metadata.
-  DiagnosisEnum:
-    permissible_values:
-      Neurofibromatosis type 1:
-        description: '(NF1) - A disease characterized by patches of skin pigmentation
-          (cafe-au-lait spots), Lisch nodules of the iris, tumors in the peripheral
-          nervous system and fibromatous skin tumors.  Individuals with the disorder
-          have increased susceptibility to the development of benign and malignant
-          tumors.
-
-          '
-      Schwannomatosis:
-        description: A rare genetic disorder characterized by the presence of multiple
-          schwannomas.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C6557
-      NF2-related schwannomatosis:
-        description: Previously known as Neurofibromatosis type 2.
-      SMARCB1-related schwannomatosis: null
-      LZTR1-related schwannomatosis: null
-      22q-related schwannomatosis: null
-      Schwannomatosis-NOS: null
-      Schwannomatosis-NEC: null
-      Sporadic Schwannoma:
-        description: 'Sporadic schwannomas and neurofibromas are tumors that arise
-          from the nerve sheaths of cranial nerves, nerve roots, spinal nerves, and
-          peripheral nerves.  Most schwannomas originate from the eighth cranial nerve,
-          whereas neurofibromas more commonly arise along the spinal nerve roots.
-
-          '
-        notes:
-        - Not in NCIT as of 2023-06-07
-      Vestibular Schwannoma:
-        meaning: http://purl.obolibrary.org/obo/NCIT_C3276
-      Noonan Syndrome:
-        description: A rare, highly variable, multisystemic disorder mainly characterized
-          by short stature, distinctive facial features, congenital heart defects,
-          cardiomyopathy and an increased risk to develop tumors in childhood.
-        meaning: http://www.orpha.net/ORDO/Orphanet_648
-      Not Applicable: null
-      Unknown: null
-  Resource:
-    description: 'Resource classes. Most resource entities expected to be some type
-      of "experimental data" and further specified via `dataType`.
-
-      '
-    permissible_values:
-      experimentalData:
-        description: Any file derived from or pertaining to a scientific experiment.
-          Experimental data annotations should be applied, possibly disease-related.
-      result:
-        description: Any file that reports data results. Examples include figures,
-          presentations, analysis, etc.
-        comments: This resource category is somewhat more general than `report`.
-        source: https://synapse.org
-      tool:
-        description: Any file or link that represents a tool, model, or algorithm;
-          the tool annotations could be applied
-        source: https://synapse.org
-      workflow report:
-        description: Workflow-generated reports of analysis of primary data, usually
-          created programmatically at completion of workflow step.
-      report:
-        description: 'A document assembled by an author for the purpose of providing
-          information for the audience.  A report is the output of a documenting process
-          and has the objective to be consumed by a specific audience.  Topic of the
-          report is on something that has completed. A report is not a single figure.  Examples
-          of reports are journal article, patent application, grant progress report,
-          case report (not patient record).
-
-          '
-        meaning: http://purl.obolibrary.org/obo/IAO_0000088
-      metadata:
-        description: Data about data, information that describes another set of data.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C52095
-      protocol:
-        description: A plan specification which has sufficient level of detail and
-          quantitative information to communicate it between investigation agents,
-          so that different investigation agents will reliably be able to independently
-          reproduce the process.
-        meaning: http://purl.obolibrary.org/obo/OBI_0000272
-      weblink:
-        description: An address to another document or other resource on the World
-          Wide Web.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C42743
   SpeciesEnum:
     permissible_values:
       Rattus norvegicus:
@@ -1405,24 +961,6 @@ enums:
         description: 'Mus musculus with taxonomy ID: 10090 and Genbank common name:
           house mouse'
         meaning: https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=10090&lvl=3&lin=f&keep=1&srchmode=1&unlock
-  SexEnum:
-    permissible_values:
-      Male:
-        description: A person who belongs to the sex that normally produces sperm.
-          The term is used to indicate biological sex distinctions, cultural gender
-          role distinctions, or both.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C20197
-      Female:
-        description: A person who belongs to the sex that normally produces ova. The
-          term is used to indicate biological sex distinctions, or cultural gender
-          role distinctions, or both.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C16576
-  UnknownEnum:
-    permissible_values:
-      Unknown:
-        description: Not known, observed, recorded; or reported as unknown by the
-          data contributor.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C17998
   FileFormatEnum:
     permissible_values:
       7z:
@@ -1900,6 +1438,33 @@ enums:
         description: zip is a format standard of a digital entity that is conformant
           with the PKWARE .ZIP file format specification
         meaning: http://edamontology.org/format_3987
+  DataSubtypeEnum:
+    description: 'Categorizes data based on its processing state. This is the main
+      classification axis used for data types.  Not all data types can use this dimensions
+      (e.g. clinical data).
+
+      '
+    permissible_values:
+      raw:
+        description: Data produced by experimental measurement/observation with very
+          little subsequent processing.
+      synthetic:
+        description: Data generated computationally via models or simulations, not
+          direct experimental measurement.
+      normalized:
+        description: Data that has undergone a normalization procedure to adjust for
+          technical variation or to bring measurements onto a common scale. Considered
+          a more specific type of processed data.
+        meaning: http://purl.obolibrary.org/obo/OBI_0000451
+      quantified:
+        description: Data representing measurements/counts of specific features (gene
+          counts, peak intensities, object properties).
+      processed:
+        description: Data generated from running one or more bioinformatics methods
+          on raw data.
+      derived:
+        description: Data from additional analytical steps performed on already processed
+          data.
   TimeUnit:
     permissible_values:
       seconds:
@@ -1916,6 +1481,146 @@ enums:
         meaning: http://purl.obolibrary.org/obo/UO_0000035
       years:
         meaning: http://purl.obolibrary.org/obo/UO_0000036
+  DiagnosisEnum:
+    permissible_values:
+      Neurofibromatosis type 1:
+        description: '(NF1) - A disease characterized by patches of skin pigmentation
+          (cafe-au-lait spots), Lisch nodules of the iris, tumors in the peripheral
+          nervous system and fibromatous skin tumors.  Individuals with the disorder
+          have increased susceptibility to the development of benign and malignant
+          tumors.
+
+          '
+      Schwannomatosis:
+        description: A rare genetic disorder characterized by the presence of multiple
+          schwannomas.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C6557
+      NF2-related schwannomatosis:
+        description: Previously known as Neurofibromatosis type 2.
+      SMARCB1-related schwannomatosis: null
+      LZTR1-related schwannomatosis: null
+      22q-related schwannomatosis: null
+      Schwannomatosis-NOS: null
+      Schwannomatosis-NEC: null
+      Sporadic Schwannoma:
+        description: 'Sporadic schwannomas and neurofibromas are tumors that arise
+          from the nerve sheaths of cranial nerves, nerve roots, spinal nerves, and
+          peripheral nerves.  Most schwannomas originate from the eighth cranial nerve,
+          whereas neurofibromas more commonly arise along the spinal nerve roots.
+
+          '
+        notes:
+        - Not in NCIT as of 2023-06-07
+      Vestibular Schwannoma:
+        meaning: http://purl.obolibrary.org/obo/NCIT_C3276
+      Noonan Syndrome:
+        description: A rare, highly variable, multisystemic disorder mainly characterized
+          by short stature, distinctive facial features, congenital heart defects,
+          cardiomyopathy and an increased risk to develop tumors in childhood.
+        meaning: http://www.orpha.net/ORDO/Orphanet_648
+      Not Applicable: null
+      Unknown: null
+  UnknownEnum:
+    permissible_values:
+      Unknown:
+        description: Not known, observed, recorded; or reported as unknown by the
+          data contributor.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C17998
+  OrganEnum:
+    permissible_values:
+      kidney:
+        description: One of the two bean-shaped organs located on each side of the
+          spine in the retroperitoneum.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C12415
+      ovary:
+        description: One of the typically paired essential female reproductive organs
+          that produce eggs and in vertebrates female sex hormones.
+        meaning: http://purl.obolibrary.org/obo/BTO_0000975
+      lung:
+        description: One of the usually paired compound saccular thoracic organs that
+          constitute the basic respiratory organ of air-breathing vertebrates.
+        meaning: http://purl.obolibrary.org/obo/BTO_0000763
+      bone marrow:
+        description: The soft, fatty, vascular tissue that fills most bone cavities
+          and is the source of red blood cells and many white blood cells.
+        meaning: http://purl.obolibrary.org/obo/BTO_0000141
+      prostate:
+        description: Lobular organ the parenchyma of which has as its parts glandular
+          acini which are continuous with the prostatic part of the urethra.
+        meaning: http://purl.obolibrary.org/obo/FMA_9600
+      breast:
+        description: The fore or ventral part of the body between the neck and the
+          abdomen.
+        meaning: http://purl.obolibrary.org/obo/BTO_0000149
+      mesentery:
+        description: ''
+      mammary gland:
+        description: A specialized accessory gland of the skin of mammals that secretes
+          milk. The gland is typically only developed in females, and regresses in
+          males.
+        meaning: http://purl.obolibrary.org/obo/UBERON_0001911
+      colon:
+        description: The part of the large intestine that extends from the cecum to
+          the rectum.
+        meaning: http://purl.obolibrary.org/obo/BTO_0000269
+      spleen:
+        description: A highly vascular ductless organ that is located in the left
+          abdominal region near the stomach or intestine of most vertebrates and is
+          concerned with final destruction of red blood cells, filtration and storage
+          of blood, and production of lymphocytes.
+        meaning: http://purl.obolibrary.org/obo/BTO_0001281
+      Bursa Of Fabricius:
+        description: An epithelial outgrowth of lymphoid tissue in the cloaca of young
+          birds, responsible for B-lymphocyte maturation. It undergoes atrophy and
+          involution at six months of age.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C111141
+      nose:
+        description: A structure of special sense serving as an organ of the sense
+          of smell and as an entrance to the respiratory tract.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C12756
+      brain:
+        description: The portion of the vertebrate central nervous system that constitutes
+          the organ of thought and neural coordination.
+        meaning: http://purl.obolibrary.org/obo/BTO_0000142
+      pancreas:
+        description: A large lobulated gland of vertebrates that secretes digestive
+          enzymes and the hormones insulin and glucagon.
+        meaning: http://purl.obolibrary.org/obo/BTO_0000988
+      liver:
+        description: ''
+      blood:
+        description: The fluid that circulates in the heart, arteries, capillaries,
+          and veins of a vertebrate animal carrying nourishment and oxygen to and
+          bringing away waste products from all parts of the body.
+        meaning: http://purl.obolibrary.org/obo/BTO_0000089
+      lymph node:
+        description: A bean-shaped organ surrounded by a connective tissue capsule.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C12745
+      nerves:
+        description: Any of the filamentous bands of nervous tissue that connect parts
+          of the nervous system with the other organs, conduct nervous impulses, and
+          are made up of axons and dendrites together with protective and supportive
+          structures.
+        meaning: http://purl.obolibrary.org/obo/BTO_0000925
+      skin:
+        description: The integument of an animal (as a fur-bearing mammal or a bird)
+          separated from the body usually with its hair or feathers.
+        meaning: http://purl.obolibrary.org/obo/BTO_0001253
+      eye:
+        description: The organ of sight or vision. [ NCI ]
+        meaning: http://purl.obolibrary.org/obo/NCIT_C12401
+  SexEnum:
+    permissible_values:
+      Male:
+        description: A person who belongs to the sex that normally produces sperm.
+          The term is used to indicate biological sex distinctions, cultural gender
+          role distinctions, or both.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C20197
+      Female:
+        description: A person who belongs to the sex that normally produces ova. The
+          term is used to indicate biological sex distinctions, or cultural gender
+          role distinctions, or both.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C16576
   AssayEnum:
     title: Assay
     permissible_values:
@@ -2878,6 +2583,301 @@ enums:
         description: The analysis of all of the short tandem repeats in the genome
           of a biological sample.
         meaning: http://purl.obolibrary.org/obo/NCIT_C129889
+  Resource:
+    description: 'Resource classes. Most resource entities expected to be some type
+      of "experimental data" and further specified via `dataType`.
+
+      '
+    permissible_values:
+      experimentalData:
+        description: Any file derived from or pertaining to a scientific experiment.
+          Experimental data annotations should be applied, possibly disease-related.
+      result:
+        description: Any file that reports data results. Examples include figures,
+          presentations, analysis, etc.
+        comments: This resource category is somewhat more general than `report`.
+        source: https://synapse.org
+      tool:
+        description: Any file or link that represents a tool, model, or algorithm;
+          the tool annotations could be applied
+        source: https://synapse.org
+      workflow report:
+        description: Workflow-generated reports of analysis of primary data, usually
+          created programmatically at completion of workflow step.
+      report:
+        description: 'A document assembled by an author for the purpose of providing
+          information for the audience.  A report is the output of a documenting process
+          and has the objective to be consumed by a specific audience.  Topic of the
+          report is on something that has completed. A report is not a single figure.  Examples
+          of reports are journal article, patent application, grant progress report,
+          case report (not patient record).
+
+          '
+        meaning: http://purl.obolibrary.org/obo/IAO_0000088
+      metadata:
+        description: Data about data, information that describes another set of data.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C52095
+      protocol:
+        description: A plan specification which has sufficient level of detail and
+          quantitative information to communicate it between investigation agents,
+          so that different investigation agents will reliably be able to independently
+          reproduce the process.
+        meaning: http://purl.obolibrary.org/obo/OBI_0000272
+      weblink:
+        description: An address to another document or other resource on the World
+          Wide Web.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C42743
+  Genotype:
+    permissible_values:
+      -/-:
+        description: Homozygous deletion or mutation.
+      +/-:
+        description: Heterozygous deletion or mutation
+      +/+:
+        description: Homozygous wildtype
+      Unknown:
+        description: unknown
+  MetadataEnum:
+    description: Data that provides information about other data
+    source: https://en.wikipedia.org/wiki/Metadata
+    permissible_values:
+      metadata:
+        description: Most general label for data that contains information about data.
+      descriptive metadata:
+        description: Information that describes and identifies a resource, including
+          elements that facilitate discovery and understanding.
+        notes:
+        - Currently used for `manifest.csv` files.
+      workflow metadata:
+        description: Process data from computational workflows. This is highly related
+          to Statistical Metadata. Basic information, annotation or documentation
+          concerning a workflow (but not the workflow itself).
+        meaning: http://edamontology.org/data_0949
+        comments: Coined category for use esp. with nextflow metadata files.
+      image metadata:
+        description: Data concerning a specific biological or biomedical image.
+        meaning: http://edamontology.org/data_3546
+        notes:
+        - For e.g. XML files that contain image metadata.
+  Tumor:
+    permissible_values:
+      Diffuse Astrocytoma:
+        description: DA
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=DA
+      Subcutaneous Neurofibroma:
+        description: A neurofibroma that occurs along the peripheral nerves beneath
+          the skin.
+        notes: Not in NCIT, but see https://nyulangone.org/conditions/neurofibromatosis/types
+      Pilomyxoid Astrocytoma:
+        description: PMA
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PMA
+      Juvenile Myelomonocytic Leukemia:
+        description: (JMML) A myelodysplastic/myeloproliferative neoplasm of childhood
+          that is characterized by proliferation principally of the granulocytic and
+          monocytic lineages
+        meaning: obo:NCIT_C9233
+      Anaplastic Astrocytoma:
+        description: AASTR
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=AASTR
+      Malignant Peripheral Nerve Sheath Tumor:
+        description: MPNST
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=MPNST
+      Localized Neurofibroma:
+        description: Refers to Cutaneous Neurofibroma; this is a synonym used mainly
+          for compatibility with JHU Biobank.
+        notes:
+        - JHU Biobank
+      Cutaneous Neurofibroma:
+        description: A neurofibroma that grows along small branches of nerves in the
+          dermis in patients with neurofibromatosis. It presents as a solid cutaneous
+          tumor.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C128451
+      Colorectal Adenocarcinoma:
+        description: (COADREAD) The most common type of colorectal carcinoma. It is
+          chararactized by the presence of malignant glandular epithelial cells invading
+          through the muscularis mucosa into the submucosa.
+        meaning: obo:NCIT_C5105
+      Anaplastic Pilocytic Astrocytoma:
+        description: Pilocytic astrocytoma with anaplastic features exhibits a spectrum
+          of morphologies and is associated with decreased survival when compared
+          with typical PA.
+        meaning: https://doi.org/10.1097/pas.0b013e3181c75238
+      Schwannoma:
+        description: SCHW
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=SCHW
+      Hemorrhagic Neoplasm:
+        description: A neoplasm with hemorrhagic findings.
+        notes: This is based after the NCIT term 'Necrotic Neoplasm' to accomodate
+          records using only 'hemorrhage' for tumor description -- it may be of limited
+          usefulness long-term.
+      Not Applicable:
+        description: ''
+      Pilocytic Astrocytoma:
+        description: PAST
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PAST
+      Ganglioglioma:
+        description: GNG
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GNG
+      Plexiform Neurofibroma:
+        description: An elongated and multinodular neurofibroma, formed when the tumor
+          involves either multiple trunks of a plexus or multiple fascicles of a large
+          nerve, such as the sciatic. Some plexiform neurofibromas resemble a bag
+          of worms, others produce a massive ropy enlargement of the nerve.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C3797
+      NF2-Associated Tumor:
+        description: Unspecified NF2-associated tumor; use a more specific tumor classification
+          if available.
+        notes: This was added to accomodate records that only specified 'NF2' and
+          is patterned after the existence of the NCIT term 'NF1-Associated Malignant
+          Peripheral Nerve Sheath Tumor'
+      Fibrosarcoma:
+        description: (FIBS) A malignant mesenchymal fibroblastic neoplasm affecting
+          the soft tissue and bone.
+        meaning: obo:NCIT_C3043
+      Low-Grade Glioma NOS:
+        description: LGGNOS
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=LGGNOS
+      Glioblastoma:
+        description: GB
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GB
+      Anaplastic Pleomorphic Xanthoastrocytoma:
+        description: APXA
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=APXA
+      Glioblastoma Multiforme:
+        description: GBM
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GBM
+      Unknown:
+        description: 'A tumor of unknown origin, or tumor type missing. '
+      Atypical Pilocytic Astrocytoma:
+        description: Pilocytic astrocytoma with atypical features.
+      Optic Pathway Glioma:
+        description: A glioma that affects the optic nerve. This condition can be
+          seen in association with neurofibromatosis 1. It is most commonly seen in
+          the pediatric age group.
+        meaning: https://ncit.nci.nih.gov/ncitbrowser/ConceptReport.jsp?dictionary=NCI_Thesaurus&ns=ncit&code=C4537
+      Diffuse Infiltrating Neurofibroma:
+        description: 'Diffuse infiltrating neurofibroma can present as slow-growing,
+          soft tissue masses with overlying skin thickening. These le-sions infiltrate
+          the dermis and the subcutaneous tissue and  characteristically spread along
+          the connective tissues enveloping islands of normal fat. Some of these lesions
+          develop fatty proliferation and can mimic lipomas,  angiolipomas, or angiomyolipomas
+          on imaging and histological evaluation '
+        meaning: https://doi.org/10.1007/s00256-014-1965-8
+      Fibromatosis:
+        description: A poorly circumscribed neoplasm arising from the soft tissues.
+          It is characterized by the presence of spindle-shaped fibroblasts and an
+          infiltrative growth pattern.
+        meaning: obo:NCIT_C3042
+      Neurofibroma with Degenerative Atypia:
+        description: ''
+        notes:
+        - JHU Biobank
+      Necrotic Neoplasm:
+        description: A neoplasm characterized by focal or diffuse tumor cell necrosis.
+        meaning: obo:NCIT_C36029
+      Pleomorphic Xanthoastrocytoma:
+        description: PXA
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PXA
+      Teratoma:
+        description: TT
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=TT
+      Sarcoma:
+        description: (SARCNOS) An usually aggressive malignant neoplasm of the soft
+          tissue or bone...Representative subtypes are liposarcoma, leiomyosarcoma,
+          osteosarcoma, and chondrosarcoma.
+        meaning: obo:NCIT_C9118
+      Massive Soft Tissue Neurofibroma:
+        description: Massive soft tissue neurofibroma is characterized  by local infiltration
+          and extension to multiple nerve branches,  as well as substantial overgrowth
+          of adjacent soft tissue and  skin, which distinguishes it from its more
+          benign variant, plexiform neurofibroma. With striking presentation and  severe
+          dysmorphism, massive soft tissue neurofibroma is also labeled elephantiasis
+          neuromatosa. Although considered benign it  shares similarities with malignant
+          peripheral nerve sheath  tumors such as local infiltration and cell mitogenesis.
+          Massive soft tissue neurofibroma is associated with significant morbidity
+          and mortality and almost no response to  conventional chemotherapy and radiotherapy.
+          Surgery is eventually pursued, although bleeding may be a life-threatening  complication
+          as massive soft tissue neurofibromas are highly  vascularized.
+        meaning: https://doi.org/10.1177%2F0883073815571635
+      Glioma:
+        description: A benign or malignant brain and spinal cord tumor that arises
+          from glial cells (astrocytes, oligodendrocytes, ependymal cells). Tumors
+          that arise from astrocytes are called astrocytic tumors or astrocytomas.
+          Tumors that arise from oligodendrocytes are called oligodendroglial tumors.
+          Tumors that arise from ependymal cells are called ependymomas.
+        meaning: http://purl.obolibrary.org/obo/MONDO_0021042
+      Oligoastrocytoma:
+        description: OAST
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=OAST
+      Colorectal Carcinoma:
+        description: A malignant epithelial neoplasm that arrises from the colon or
+          rectum and invates through the muscularis mucosa into the submucosa. 95
+          percent of colorectal carcinoma are colorectal adenocarcinoma -- use this
+          more specific term if it applies.
+        meaning: obo:NCIT_C2955
+      Meningioma:
+        description: MNG
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=MNG
+      ANNUBP:
+        description: 'Atypical neurofibromatous neoplasms of uncertain biologic potential
+          is a provisional classification for lesions displaying at least two features:
+          atypia, loss of neurofibroma architecture, high cellularity, and/or mitotic
+          activity >1/50 but <3/10 high power fields. They can be inconsistently diagnosed
+          as atypical neurofibroma or low-grade MPNST. See https://pubmed.ncbi.nlm.nih.gov/28551330/.'
+      High-Grade Glioma NOS:
+        description: HGGNOS
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=HGGNOS
+      NF1-Associated Tumor:
+        description: Unspecified NF1-associated tumor; use a more specific tumor classification
+          if available.
+        notes: This was added to accomodate records that only specified 'NF1' and
+          is patterned after the existence of the NCIT term 'NF1-Associated Malignant
+          Peripheral Nerve Sheath Tumor'
+      Atypical Neurofibroma:
+        description: A neurofibroma characterized by the presence of cellular pleomorphism.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C41426
+      Cellular Neurofibroma:
+        description: A neurofibroma characterized by the presence of areas with increased
+          cellularity.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C41427
+      Neurofibroma:
+        description: NFIB
+      Recurrent MPNST:
+        description: The reemergence of malignant peripheral nerve sheath tumor after
+          a period of remission.
+        meaning: obo:NCIT_C8823
+      Anaplastic Ganglioglioma:
+        description: AGNG
+        meaning: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=AGNG
+      tumor:
+        description: "General term for tumor sample \u2013 use when it is unknown\
+          \ when a more specific clinical classification is unknown, e.g. whether\
+          \ it is primary or secondary."
+        meaning: http://purl.obolibrary.org/obo/NCIT_C18009
+      metastatic tumor:
+        description: For neoplasms, a non-infiltrating and non-metastasizing neoplastic
+          process that is characterized by the absence of morphologic features associated
+          with malignancy (e.g., severe atypia, nuclear pleomorphism, tumor cell necrosis,
+          and abnormal mitoses).
+        meaning: http://purl.obolibrary.org/obo/NCIT_C14172
+      metastatic/recurrent tumor:
+        description: A tumor with metastatic/recurrent characteristic.
+      recurrent tumor:
+        description: A tumor described with recurrent characteristic.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C4798
+      Melanoma:
+        description: 'A malignant, usually aggressive tumor composed of atypical,
+          neoplastic melanocytes. Most often, melanomas arise in the skin (cutaneous
+          melanomas) and include the following histologic subtypes: superficial spreading
+          melanoma, nodular melanoma, acral lentiginous melanoma, and lentigo maligna
+          melanoma. Cutaneous melanomas may arise from acquired or congenital melanocytic
+          or dysplastic nevi. Melanomas may also arise in other anatomic sites including
+          the gastrointestinal system, eye, urinary tract, and reproductive system.
+          Melanomas frequently metastasize to lymph nodes, liver, lungs, and brain.
+          [ NCI ]'
+        meaning: http://purl.obolibrary.org/obo/NCIT_C3224
+      Nodular Neurofibroma:
+        description: TBD
 classes:
   BiologicalAssayDataTemplate:
     is_a: Template

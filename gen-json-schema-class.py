@@ -174,6 +174,20 @@ for json_file in OUT_DIR.glob("*.json"):
                 resolve_refs(item)
     resolve_refs(props)
 
+        # Normalize nullable types: convert ["string","null"] to "string"
+    def normalize_types(obj):
+        if isinstance(obj, dict):
+            if 'type' in obj and isinstance(obj['type'], list):
+                types = obj['type']
+                if 'string' in types and 'null' in types and len(types) == 2:
+                    obj['type'] = 'string'
+            for v in obj.values():
+                normalize_types(v)
+        elif isinstance(obj, list):
+            for item in obj:
+                normalize_types(item)
+    normalize_types(schema)
+
     # reorder keys
     ordered = OrderedDict()
     for key in ["$id", "$schema", "title", "type", "description", "properties", "required"]:
