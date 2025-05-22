@@ -1,0 +1,572 @@
+{
+  "additionalProperties": false,
+  "description": "A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets.",
+  "properties": {
+    "accessType": {
+      "description": "Access type for the dataset.",
+      "title": "Access Type",
+      "enum": [
+        "Public Access",
+        "Open Access",
+        "Controlled Access",
+        "Private Access"
+      ],
+      "type": "string"
+    },
+    "alternateName": {
+      "description": "An altername name that can be used for search and discovery improvement.",
+      "title": "Alternate Name",
+      "type": "string"
+    },
+    "citation": {
+      "description": "identifies academic articles that are recommended by the data provider be cited in addition to the dataset itself.",
+      "title": "Citation",
+      "type": "string"
+    },
+    "conditionsOfAccess": {
+      "description": "Additional requirements a user may need outside of Data Use Modifiers. This could include additional registration, updating profile information, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown.",
+      "title": "User Specific Restriction",
+      "type": "string"
+    },
+    "contributor": {
+      "description": "Institution or person responsible for collecting and managing the files and records in the dataset.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Contributor(s)",
+      "type": "array"
+    },
+    "countryOfOrigin": {
+      "description": "Origin of individuals from which data were generated. Omit if not applicable/unknown.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Country of Origin",
+      "type": "array"
+    },
+    "creator": {
+      "description": "Properly formatted name of the organization or person that is creator of the dataset (e.g. \"NF-OSI\" or \"Robert Allaway\"), not an id. Most preferred is the project PI or data lead who's responsible for its conception and initial content creation.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Creator",
+      "type": "array"
+    },
+    "croissant_file_s3_object": {
+      "description": "Link to croissant file for dataset.",
+      "title": "Croissant File",
+      "type": "string"
+    },
+    "dataType": {
+      "description": "Reflects the data types within the dataset.",
+      "items": {
+        "description": "Type of data represented by the entity (File, Dataset, etc.).",
+        "enum": [
+          "immunoassay",
+          "behavioral data",
+          "clinical",
+          "demographics",
+          "epidemiological data",
+          "particle characterization",
+          "drug combination screen",
+          "isoform expression",
+          "proteomics",
+          "mass spectrometry data",
+          "survey data",
+          "kinomics",
+          "somatic variants",
+          "volume",
+          "characteristic",
+          "drug screen",
+          "gene expression",
+          "aligned reads",
+          "genomic features",
+          "genomic variants",
+          "raw counts",
+          "raw intensities",
+          "normalized intensities",
+          "pharmacokinetics",
+          "mask image",
+          "count matrix",
+          "chromatin activity",
+          "structural variants",
+          "germline variants",
+          "copy number variants",
+          "image",
+          "network",
+          "cellular physiology",
+          "metabolomics",
+          "morphology parameter",
+          "physiology parameter",
+          "annotated somatic mutation",
+          "annotated germline variants",
+          "weight",
+          "electrophysiology",
+          "audio transcript",
+          "data index",
+          "data sharing plan",
+          "aggregated data",
+          "over-representation data",
+          "plot",
+          "nucleic acid sequence record",
+          "protein interaction data",
+          "protein interaction raw data",
+          "molecular property",
+          "report",
+          "text data"
+        ],
+        "title": "Data",
+        "type": "string"
+      },
+      "title": "Data Type",
+      "type": "array"
+    },
+    "dataUseModifiers": {
+      "description": "List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Most datasets allow \"General Research Use\" unless otherwise specified.",
+      "items": {
+        "description": "",
+        "enum": [
+          "Clinical Care Use",
+          "Collaboration Required",
+          "Disease Specific Research",
+          "Ethics Approval Required",
+          "General Research Use",
+          "Genetic Studies Only",
+          "Geographical Restriction",
+          "Health or Medical or Biomedical Research",
+          "Institution Specific Restriction",
+          "No General Methods Research",
+          "No Restriction",
+          "Not-for-Profit Non-Commercial Use Only",
+          "Non-Commercial Use Only",
+          "Not-for-Profit Organisation Use Only",
+          "Population Origins or Ancestry Research Only",
+          "Population Origins or Ancestry Research Prohibited",
+          "Project Specific Restriction",
+          "Publication Moratorium",
+          "Publication Required",
+          "Research Specific Restrictions",
+          "Return to Database or Resource",
+          "Time Limit on Use",
+          "User Specific Restriction"
+        ],
+        "title": "Data Use Modifiers",
+        "type": "string"
+      },
+      "title": "Data Use Modifiers",
+      "type": "array"
+    },
+    "datePublished": {
+      "description": "Date data were published/available on Synapse.",
+      "title": "Date Published",
+      "type": "integer"
+    },
+    "description": {
+      "description": "Blurb for the dataset; should be no more than 500 characters.",
+      "title": "Description",
+      "type": "string"
+    },
+    "diseaseFocus": {
+      "items": {
+        "description": "",
+        "enum": [
+          "Neurofibromatosis type 1",
+          "NF2-related schwannomatosis",
+          "SMARCB1-related schwannomatosis",
+          "LZTR1-related schwannomatosis",
+          "22q-related schwannomatosis",
+          "Schwannomatosis-NOS",
+          "Schwannomatosis-NEC",
+          "Multiple"
+        ],
+        "title": "Disease Focus",
+        "type": "string"
+      },
+      "title": "Disease Focus",
+      "type": "array"
+    },
+    "doi": {
+      "description": "The Digital Object Identifier (DOI) associated with the dataset, used for citation and persistent identification.",
+      "pattern": "^10\\\\.\\\\d{4,9}/[-._;()/:A-Z0-9]+$",
+      "title": "doi",
+      "type": "string"
+    },
+    "funder": {
+      "items": {
+        "description": "",
+        "enum": [
+          "CTF",
+          "GFF",
+          "NTAP",
+          "NIH-NCI",
+          "Independent",
+          "Other"
+        ],
+        "title": "FundingAgencyEnum",
+        "type": "string"
+      },
+      "title": "Funder",
+      "type": "array"
+    },
+    "includedInDataCatalog": {
+      "description": "Link(s) to known data catalog(s) the dataset is included in.",
+      "title": "Included In Data Catalog",
+      "enum": [
+        "https://www.synapse.org/DataCatalog:0"
+      ],
+      "type": "string"
+    },
+    "individualCount": {
+      "description": "Number of unique individuals included in the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown.",
+      "title": "Individual Count",
+      "type": "integer"
+    },
+    "keywords": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Keywords",
+      "type": "array"
+    },
+    "license": {
+      "description": "Unless information for license is clear, this should default to UNKNOWN.",
+      "title": "License",
+      "enum": [
+        "UNKNOWN",
+        "Public Domain",
+        "CC-0",
+        "ODC-PDDL",
+        "CC-BY",
+        "ODC-BY",
+        "ODC-ODbL",
+        "CC BY-SA",
+        "CC BY-NC",
+        "CC BY-ND",
+        "CC BY-NC-SA",
+        "CC BY-NC-ND"
+      ],
+      "type": "string"
+    },
+    "manifestation": {
+      "description": "Refers to the phenotype(s) studied in the dataset. Omit if not applicable.",
+      "items": {
+        "description": "",
+        "enum": [
+          "Aneurysmal Bone Cyst (ANNUBP)",
+          "Atypical Neurofibroma",
+          "Behavioral",
+          "Breast Cancer",
+          "Cognition",
+          "Cutaneous Neurofibroma",
+          "Glioma",
+          "High-Grade Glioma",
+          "Juvenile Myelomonocytic Leukemia (JMML)",
+          "Low-Grade Glioma",
+          "Meningioma",
+          "Memory",
+          "Malignant Peripheral Nerve Sheath Tumor (MPNST)",
+          "Pain",
+          "Plexiform Neurofibroma",
+          "Quality of Life",
+          "Schwannoma",
+          "Spinal Meningioma (SMN)",
+          "Vision Loss"
+        ],
+        "title": "ManifestationEnum",
+        "type": "string"
+      },
+      "title": "Manifestation(s)",
+      "type": "array"
+    },
+    "measurementTechnique": {
+      "description": "What's used to generate data in dataset, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).",
+      "items": {
+        "description": "",
+        "enum": [
+          "2D AlamarBlue absorbance",
+          "2D AlamarBlue fluorescence",
+          "3D confocal imaging",
+          "3D electron microscopy",
+          "3D imaging",
+          "3D microtissue viability",
+          "actigraphy",
+          "AlgometRx Nociometer",
+          "auditory brainstem response",
+          "ATAC-seq",
+          "ATPase activity assay",
+          "BrdU proliferation assay",
+          "CAPP-seq",
+          "CUT&RUN",
+          "ChIP-seq",
+          "Child Behavior Checklist for Ages 1.5-5",
+          "Child Behavior Checklist for Ages 6-18",
+          "CODEX",
+          "confocal microscopy",
+          "Corsi blocks",
+          "current clamp assay",
+          "diffusion MRI",
+          "distortion product otoacoustic emissions",
+          "DNA optical mapping",
+          "ELISA",
+          "ERR bisulfite sequencing",
+          "EdU proliferation assay",
+          "FIA-MSMS",
+          "FLIPR high-throughput cellular screening",
+          "Fluorescence In Situ Hybridization",
+          "Focus group",
+          "FTIR spectroscopy",
+          "HI-C",
+          "HPLC",
+          "Interview",
+          "ISO-seq",
+          "MIB/MS",
+          "Matrigel-based tumorigenesis assay",
+          "MudPIT",
+          "Migration Assay",
+          "NIH Toolbox",
+          "NOMe-seq",
+          "RNA array",
+          "RNA-seq",
+          "RPPA",
+          "Riccardi and Ablon scales",
+          "SNP array",
+          "SUSHI",
+          "Sanger sequencing",
+          "Social Responsiveness Scale",
+          "Social Responsiveness Scale, Second Edition",
+          "T cell receptor repertoire sequencing",
+          "TIDE",
+          "TMT quantitation",
+          "TriKinetics activity monitoring",
+          "Von Frey test",
+          "active avoidance learning behavior assay",
+          "array",
+          "atomic force microscopy",
+          "autoradiography",
+          "bisulfite sequencing",
+          "blood chemistry measurement",
+          "blue native PAGE",
+          "body size trait measurement",
+          "bone histomorphometry",
+          "brightfield microscopy",
+          "cAMP-Glo Max Assay",
+          "calcium retention capacity assay",
+          "cell competition",
+          "cell count",
+          "cell painting",
+          "cell proliferation",
+          "cell viability assay",
+          "clinical data",
+          "cNF-Skindex",
+          "cognitive assessment",
+          "combination library screen",
+          "combination screen",
+          "complex II enzyme activity assay",
+          "compound screen",
+          "contextual conditioning behavior assay",
+          "conventional MRI",
+          "Children's Dermatology Life Quality Index Questionnaire",
+          "differential scanning calorimetry",
+          "dynamic light scattering",
+          "electrochemiluminescence",
+          "electrophoretic light scattering",
+          "elevated plus maze test",
+          "FACE-Q Appearance-related Distress",
+          "flow cytometry",
+          "focus forming assay",
+          "functional MRI",
+          "gait measurement",
+          "gel filtration chromatography",
+          "gel permeation chromatography",
+          "genotyping",
+          "high content screen",
+          "high frequency ultrasound",
+          "high-performance liquid chromatography/tandem mass spectrometry",
+          "immunoassay",
+          "immunocytochemistry",
+          "immunofluorescence",
+          "immunohistochemistry",
+          "in silico synthesis",
+          "in vitro tumorigenesis",
+          "in vivo PDX viability",
+          "in vivo bioluminescence",
+          "in vivo tumor growth",
+          "jumping library",
+          "label free mass spectrometry",
+          "laser speckle imaging",
+          "light scattering assay",
+          "liquid chromatography-electrochemical detection",
+          "liquid chromatography/mass spectrometry",
+          "liquid chromatography/tandem mass spectrometry",
+          "lncRNA-seq",
+          "local field potential recording",
+          "long term potentiation assay",
+          "mRNA counts",
+          "magnetic resonance angiography",
+          "magnetic resonance spectroscopy",
+          "Magnetization-Prepared Rapid Gradient Echo MRI",
+          "mass spectrometry",
+          "massively parallel reporter assay",
+          "metabolic screening",
+          "methylation array",
+          "miRNA array",
+          "miRNA-seq",
+          "microrheology",
+          "Skindex-16",
+          "multi-electrode array",
+          "nanoparticle tracking analysis",
+          "NanoString nCounter Analysis System",
+          "n-back task",
+          "neuropsychological assessment",
+          "next generation targeted sequencing",
+          "novelty response behavior assay",
+          "open field test",
+          "optical tomography",
+          "optical coherence tomography",
+          "optokinetic reflex assay",
+          "oscillatory rheology",
+          "oxBS-seq",
+          "oxygen consumption assay",
+          "pattern electroretinogram",
+          "perineurial cell thickness",
+          "pharmocokinetic ADME assay",
+          "phase-contrast microscopy",
+          "photograph",
+          "polymerase chain reaction",
+          "polysomnography",
+          "positron emission tomography",
+          "PROMIS Cognitive Function",
+          "proximity extension assay",
+          "pure tone average",
+          "quantitative PCR",
+          "questionnaire",
+          "reactive oxygen species assay",
+          "reporter gene assay",
+          "rheometry",
+          "ribo-seq",
+          "rotarod performance test",
+          "sandwich ELISA",
+          "scCGI-seq",
+          "scale",
+          "SaferSeqS",
+          "single molecule drug screen assay",
+          "single-cell RNA-seq",
+          "single cell ATAC-seq",
+          "single-nucleus RNA-seq",
+          "small molecule library screen",
+          "sorbitol dehydrogenase activity level assay",
+          "spatial frequency domain imaging",
+          "spatial transcriptomics",
+          "static histomorphometry",
+          "static light scattering",
+          "survival",
+          "targeted exome sequencing",
+          "traction force microscopy",
+          "transcranial doppler ultrasonography",
+          "twin spot assay",
+          "ultra high-performance liquid chromatography/tandem mass spectrometry",
+          "western blot",
+          "whole exome sequencing",
+          "whole genome sequencing",
+          "whole-cell patch clamp",
+          "word recognition score",
+          "STR profile"
+        ],
+        "title": "Assay",
+        "type": "string"
+      },
+      "title": "Measurement Technique",
+      "type": "array"
+    },
+    "series": {
+      "description": "Datasets may belong to a curated series. Should be assigned by staff only; omit property if not applicable/unknown.",
+      "title": "Data Series",
+      "enum": [
+        "NF-OSI Processed Data"
+      ],
+      "type": "string"
+    },
+    "species": {
+      "description": "Species of the organism(s) from which the data were generated. Omit property if not applicable, such as for data like compounds or other non-biological data.",
+      "items": {
+        "description": "",
+        "enum": [
+          "Rattus norvegicus",
+          "Gallus gallus",
+          "Pan troglodytes",
+          "Mus musculus (humanized)",
+          "Homo sapiens",
+          "Danio rerio",
+          "Drosophila melanogaster",
+          "Rhesus macaque",
+          "Sus scrofa",
+          "Oryctolagus cuniculus",
+          "Mus musculus"
+        ],
+        "title": "SpeciesEnum",
+        "type": "string"
+      },
+      "title": "Species",
+      "type": "array"
+    },
+    "specimenCount": {
+      "description": "Number of unique specimens included in the dataset. Omit if not applicable/unknown.",
+      "title": "Specimen Count",
+      "type": "integer"
+    },
+    "studyId": {
+      "description": "Identifier for the study (project) from which the dataset was derived.",
+      "title": "Study ID",
+      "type": "string"
+    },
+    "subject": {
+      "description": "Applicable subject term(s) for dataset cataloging; use the Library of Congress Subject Headings (LCSH) scheme.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Subject",
+      "type": "array"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "visualizeDataOn": {
+      "description": "Link(s) to where data may be visualized in a separate application. Omit property if not applicable/unknown.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Visualize Data On",
+      "type": "array"
+    },
+    "yearProcessed": {
+      "description": "Year data were processed. Only for processed dataset type and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
+      "title": "Year Processed",
+      "type": "integer"
+    }
+  },
+  "title": "PortalDataset",
+  "type": "object",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-superdataset",
+  "if": {
+    "properties": {
+      "concreteType": {
+        "const": "org.sagebionetworks.repo.model.Folder"
+      }
+    },
+    "not": {
+      "properties": {
+        "name": {
+          "const": "Raw Data"
+        }
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "contentType": {
+        "const": "dataset"
+      }
+    }
+  }
+}

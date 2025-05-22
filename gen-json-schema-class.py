@@ -4,6 +4,10 @@ import subprocess
 import os
 from pathlib import Path
 from collections import deque
+# Add JSON and jsonref for dereferencing
+import json
+import jsonref
+
 NPX = "npx.cmd" if os.name == "nt" else "npx"
 
 # ─── CONFIG ───────────────────────────────────────────────────────────────────
@@ -104,8 +108,6 @@ for cls_name, cls_def in all_classes.items():
 
 # ─── STEP 2: for each small YAML, generate the JSON schema ────────────────────
 
-import json
-
 for tpl in BUILD_DIR.glob("*.yaml"):
     cls = tpl.stem
     print(f"\n🔨 Generating JSON Schema for {cls}")
@@ -133,5 +135,21 @@ for tpl in BUILD_DIR.glob("*.yaml"):
     # 3) Overwrite file with pretty‐printed JSON
     out_file.write_text(json.dumps(schema, indent=2))
     print("  ✅ wrote", out_file)
+
+# ─── STEP 3: Dereference all generated JSON schemas ────────────────────────────
+print("\n🔨 Dereferencing all JSON schemas...")
+for json_file in OUT_DIR.glob("*.json"):
+    # Skip already dereferenced files
+    if json_file.stem.endswith("-deref"):
+        continue
+    deref_file = OUT_DIR / f"{json_file.stem}-deref.json"
+    print(f"🔨 Dereferencing {json_file.name}")
+    # Load and replace all $ref pointers
+    with json_file.open() as src:
+        deref_schema = jsonref.JsonRef.replace_refs(json.load(src))
+    # Write dereferenced schema
+    with deref_file.open("w") as dst:
+        json.dump(deref_schema, dst, indent=2)
+    print("  ✅ wrote", deref_file)
 
 print("\n🎉 All done!")

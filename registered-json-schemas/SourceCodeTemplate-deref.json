@@ -1,0 +1,173 @@
+{
+  "$defs": {
+    "License": {
+      "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
+      "enum": [
+        "UNKNOWN",
+        "Public Domain",
+        "CC-0",
+        "ODC-PDDL",
+        "CC-BY",
+        "ODC-BY",
+        "ODC-ODbL",
+        "CC BY-SA",
+        "CC BY-NC",
+        "CC BY-ND",
+        "CC BY-NC-SA",
+        "CC BY-NC-ND"
+      ],
+      "title": "License",
+      "type": "string"
+    },
+    "SourceCodeTemplate": {
+      "additionalProperties": false,
+      "description": "Template for describing scripts or software code.",
+      "properties": {
+        "author": {
+          "description": "The author of the resource; preferably use an ORCID ID, GitHub profile link, etc., if available and a text name if not.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Author(s)",
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "citation": {
+          "description": "Citation (e.g. doi) that usage of data or resource should be cited with.",
+          "title": "Citation",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "documentation": {
+          "description": "URL to any documentation describing the resource and its use.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "license": {
+          "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
+          "enum": [
+            "UNKNOWN",
+            "Public Domain",
+            "CC-0",
+            "ODC-PDDL",
+            "CC-BY",
+            "ODC-BY",
+            "ODC-ODbL",
+            "CC BY-SA",
+            "CC BY-NC",
+            "CC BY-ND",
+            "CC BY-NC-SA",
+            "CC BY-NC-ND"
+          ],
+          "title": "License",
+          "type": "string"
+        },
+        "programmingLanguage": {
+          "description": "A computer programming language",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "runtimePlatform": {
+          "description": "Runtime platform or script interpreter dependencies (e.g. Java v1, Python 2.3).",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "title": {
+          "description": "Title of a resource.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "title": "SourceCodeTemplate",
+      "type": "object"
+    }
+  },
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-sourcecodetemplate",
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "additionalProperties": true,
+  "description": "Template for describing scripts or software code.",
+  "metamodel_version": "1.7.0",
+  "properties": {
+    "author": {
+      "description": "The author of the resource; preferably use an ORCID ID, GitHub profile link, etc., if available and a text name if not.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Author(s)",
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "citation": {
+      "description": "Citation (e.g. doi) that usage of data or resource should be cited with.",
+      "title": "Citation",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "documentation": {
+      "description": "URL to any documentation describing the resource and its use.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "license": {
+      "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
+      "enum": [
+        "UNKNOWN",
+        "Public Domain",
+        "CC-0",
+        "ODC-PDDL",
+        "CC-BY",
+        "ODC-BY",
+        "ODC-ODbL",
+        "CC BY-SA",
+        "CC BY-NC",
+        "CC BY-ND",
+        "CC BY-NC-SA",
+        "CC BY-NC-ND"
+      ],
+      "title": "License",
+      "type": "string"
+    },
+    "programmingLanguage": {
+      "description": "A computer programming language",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "runtimePlatform": {
+      "description": "Runtime platform or script interpreter dependencies (e.g. Java v1, Python 2.3).",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "title": {
+      "description": "Title of a resource.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "title"
+  ],
+  "title": "nfosi",
+  "type": "object",
+  "version": null
+}
