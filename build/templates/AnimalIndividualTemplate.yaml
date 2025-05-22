@@ -94,39 +94,10 @@ slots:
       RB51 (vaccine strain of Brucella abortus)'
     required: false
 enums:
-  TimeUnit:
+  NotApplicableEnum:
     permissible_values:
-      seconds:
-        meaning: http://purl.obolibrary.org/obo/UO_0000010
-      minutes:
-        meaning: http://purl.obolibrary.org/obo/UO_0000031
-      hours:
-        meaning: http://purl.obolibrary.org/obo/UO_0000032
-      days:
-        meaning: http://purl.obolibrary.org/obo/UO_0000033
-      weeks:
-        meaning: http://purl.obolibrary.org/obo/UO_0000034
-      months:
-        meaning: http://purl.obolibrary.org/obo/UO_0000035
-      years:
-        meaning: http://purl.obolibrary.org/obo/UO_0000036
-  SexEnum:
-    permissible_values:
-      Male:
-        description: A person who belongs to the sex that normally produces sperm.
-          The term is used to indicate biological sex distinctions, cultural gender
-          role distinctions, or both.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C20197
-      Female:
-        description: A person who belongs to the sex that normally produces ova. The
-          term is used to indicate biological sex distinctions, or cultural gender
-          role distinctions, or both.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C16576
-  InheritanceEnum:
-    permissible_values:
-      parent affected: null
-      parent not affected: null
-      unknown: null
+      Not Applicable:
+        description: Not applicable in this context
   Genotype:
     permissible_values:
       -/-:
@@ -137,10 +108,6 @@ enums:
         description: Homozygous wildtype
       Unknown:
         description: unknown
-  NotApplicableEnum:
-    permissible_values:
-      Not Applicable:
-        description: Not applicable in this context
   CellLineModel:
     permissible_values:
       HEK293 NF1 -/- with WT mNf1 cDNA:
@@ -559,6 +526,13 @@ enums:
         description: A primary cultured cell that is derived from fibroblast cell
           in vivo.
         meaning: http://purl.obolibrary.org/obo/CLO_0037301
+  AgeGroupEnum:
+    permissible_values:
+      infancy: null
+      childhood: null
+      adolescence: null
+      adulthood: null
+      unknown: null
   MouseModel:
     permissible_values:
       Prss56Cre/+;Tom/+;Nf1fl/fl:
@@ -687,24 +661,11 @@ enums:
         meaning: http://www.orpha.net/ORDO/Orphanet_648
       Not Applicable: null
       Unknown: null
-  AgeGroupEnum:
+  InheritanceEnum:
     permissible_values:
-      infancy: null
-      childhood: null
-      adolescence: null
-      adulthood: null
+      parent affected: null
+      parent not affected: null
       unknown: null
-  MosaicismEnum:
-    permissible_values:
-      mosaic: null
-      not mosaic: null
-      unknown: null
-  UnknownEnum:
-    permissible_values:
-      Unknown:
-        description: Not known, observed, recorded; or reported as unknown by the
-          data contributor.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C17998
   SpeciesEnum:
     permissible_values:
       Rattus norvegicus:
@@ -749,6 +710,45 @@ enums:
         description: 'Mus musculus with taxonomy ID: 10090 and Genbank common name:
           house mouse'
         meaning: https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=10090&lvl=3&lin=f&keep=1&srchmode=1&unlock
+  SexEnum:
+    permissible_values:
+      Male:
+        description: A person who belongs to the sex that normally produces sperm.
+          The term is used to indicate biological sex distinctions, cultural gender
+          role distinctions, or both.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C20197
+      Female:
+        description: A person who belongs to the sex that normally produces ova. The
+          term is used to indicate biological sex distinctions, or cultural gender
+          role distinctions, or both.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C16576
+  MosaicismEnum:
+    permissible_values:
+      mosaic: null
+      not mosaic: null
+      unknown: null
+  UnknownEnum:
+    permissible_values:
+      Unknown:
+        description: Not known, observed, recorded; or reported as unknown by the
+          data contributor.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C17998
+  TimeUnit:
+    permissible_values:
+      seconds:
+        meaning: http://purl.obolibrary.org/obo/UO_0000010
+      minutes:
+        meaning: http://purl.obolibrary.org/obo/UO_0000031
+      hours:
+        meaning: http://purl.obolibrary.org/obo/UO_0000032
+      days:
+        meaning: http://purl.obolibrary.org/obo/UO_0000033
+      weeks:
+        meaning: http://purl.obolibrary.org/obo/UO_0000034
+      months:
+        meaning: http://purl.obolibrary.org/obo/UO_0000035
+      years:
+        meaning: http://purl.obolibrary.org/obo/UO_0000036
 classes:
   AnimalIndividualTemplate:
     description: Template for non-human individual-level data.

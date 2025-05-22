@@ -90,6 +90,335 @@ slots:
     range: AssayEnum
     required: true
 enums:
+  Resource:
+    description: 'Resource classes. Most resource entities expected to be some type
+      of "experimental data" and further specified via `dataType`.
+
+      '
+    permissible_values:
+      experimentalData:
+        description: Any file derived from or pertaining to a scientific experiment.
+          Experimental data annotations should be applied, possibly disease-related.
+      result:
+        description: Any file that reports data results. Examples include figures,
+          presentations, analysis, etc.
+        comments: This resource category is somewhat more general than `report`.
+        source: https://synapse.org
+      tool:
+        description: Any file or link that represents a tool, model, or algorithm;
+          the tool annotations could be applied
+        source: https://synapse.org
+      workflow report:
+        description: Workflow-generated reports of analysis of primary data, usually
+          created programmatically at completion of workflow step.
+      report:
+        description: 'A document assembled by an author for the purpose of providing
+          information for the audience.  A report is the output of a documenting process
+          and has the objective to be consumed by a specific audience.  Topic of the
+          report is on something that has completed. A report is not a single figure.  Examples
+          of reports are journal article, patent application, grant progress report,
+          case report (not patient record).
+
+          '
+        meaning: http://purl.obolibrary.org/obo/IAO_0000088
+      metadata:
+        description: Data about data, information that describes another set of data.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C52095
+      protocol:
+        description: A plan specification which has sufficient level of detail and
+          quantitative information to communicate it between investigation agents,
+          so that different investigation agents will reliably be able to independently
+          reproduce the process.
+        meaning: http://purl.obolibrary.org/obo/OBI_0000272
+      weblink:
+        description: An address to another document or other resource on the World
+          Wide Web.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C42743
+  ConcentrationUnit:
+    permissible_values:
+      mg/mL:
+        description: ''
+      mM:
+        description: ''
+      particles/mL:
+        description: ''
+  Data:
+    description: Type of data represented by the entity (File, Dataset, etc.).
+    notes:
+    - http://edamontology.org/data_0006
+    - Broad term/abstract class; should not be used for annotation
+    permissible_values:
+      immunoassay:
+        description: Laboratory test involving interaction of antigens with specific
+          antibodies.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C16723
+      behavioral data:
+        description: "Qualitative or quantitative behavioral measurements / observations\
+          \ about the action, reaction, or performance of an organism in response\
+          \ to external or internal stimuli. \nExamples: avoidance behavior, choice-making.\n"
+        notes:
+        - Legacy concept previously labeled "behavior process", updated to "behavioral
+          data".
+      clinical:
+        description: Data containing clinical information, e.g. patient diagnosis,
+          personal demographics, exposures, laboratory tests, family relationships.
+        meaning: http://www.ebi.ac.uk/efo/EFO_0030083
+        notes:
+        - The closest EDAM term is for [EHR](http://edamontology.org/data_3861), and
+          while [ecological data](http://edamontology.org/data_3736), there is no
+          mapping, which is why we use EFO.
+        see_also:
+        - https://docs.gdc.cancer.gov/Encyclopedia/pages/Clinical_Data
+      demographics:
+        description: The statistical characterization of human populations or segments
+          of human populations (e.g., characterization by age, sex, race, or income).
+        meaning: http://purl.obolibrary.org/obo/NCIT_C16495
+      epidemiological data:
+        description: Data that is used to describe the distribution of a disease or
+          health-related characteristic within a population and to identify factors
+          that affect that distribution.
+      particle characterization:
+        description: Data providing information about entities such as composition,
+          structure and defects.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C62317
+        notes:
+        - More general than `molecular property`
+      drug combination screen:
+        description: Information on drug sensitivity of more than one compound
+        source: https://www.ncbi.nlm.nih.gov/pubmed/29344898
+      isoform expression:
+        description: Expression of protein isoforms formed from alternative splicings
+          or other post-translational modifications of a single gene through RNA splicing
+          mechanisms.
+        source: https://en.wikipedia.org/wiki/Protein_isoform
+        meaning: http://purl.obolibrary.org/obo/NCIT_C184767
+      proteomics:
+        description: Protein and peptide identification, especially in the study of
+          whole proteomes of organisms.
+        meaning: http://edamontology.org/topic_0121
+      mass spectrometry data:
+        description: Data from mass spectrometry measurement.
+        meaning: http://edamontology.org/data_2536
+      survey data:
+        description: A data set that contains the outcome of a survey.
+        meaning: http://purl.obolibrary.org/obo/OMIABIS_0000060
+      kinomics:
+        description: Data studying protein kinase signaling/activity.
+        source: http://www.kinomecore.com/what-is-kinomics/
+        meaning: https://w3id.org/synapse/nfosi/vocab/kinomics
+        notes:
+        - See "Kinome Response Profile" (http://purl.obolibrary.org/obo/NCIT_C107137)
+          for kinome data *specifically* with drug treatment
+        - Subclasss of "Proteomics" (http://purl.obolibrary.org/obo/NCIT_C16723)
+      somatic variants:
+        description: Called somatic variants
+        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_somatic_mutation
+        meaning: https://w3id.org/synapse/nfosi/vocab/SomaticVariants
+      volume:
+        description: Data of the three dimensional space occupied by an entity or
+          the capacity of a space or container.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25335
+      characteristic:
+        description: Broad data type for data that can encompass volume, weight, brightness,
+          color, capacity, etc.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25447
+        notes:
+        - Not preferred for annotation; more specific term should be used.
+        - May cover both morphology parameter and physiology parameter.
+      drug screen:
+        description: Information on drug sensitivity and molecular markers of drug
+          response
+        source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3531057/
+        meaning: https://w3id.org/synapse/nfosi/vocab/drugScreen
+      gene expression:
+        description: Data of the levels and patterns of synthesis of gene products
+          (proteins and functional RNA), including interpretation in functional terms
+          of gene expression data.
+        meaning: http://edamontology.org/data_2603
+        notes:
+        - EDAM does have a broader mapping, [expression data](http://edamontology.org/data_2603)
+        - The mapping used maps to [gene expression profile](http://edamontology.org/data_0928)
+        - Covers both raw (e.g. fastqs, microarray intensities) and processed gene
+          expression data (e.g. normalized gene expression matrix).
+      aligned reads:
+        description: Aligned reads output from alignment workflows
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads
+      genomic features:
+        description: Data of sequence feature (continuous extent of biological sequence)
+          that is of genomic origin.
+        meaning: http://purl.obolibrary.org/obo/GENO_0000481
+        notes:
+        - Really subclass of "nucleic acid features" (http://edamontology.org/data_1276)
+        see_also: https://en.wikipedia.org/wiki/General_feature_format
+      genomic variants:
+        description: 'Genomic alterations, including single nucleotide polymorphisms,
+          short indels and structural variants. Use more specific term if possible,
+          esp. if data is only of one specific subset.
+
+          '
+        meaning: http://edamontology.org/data_3498
+        notes:
+        - Somewhat more specific than the concept URI it is mapped to.
+      raw counts:
+        description: The number or amount of something.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25463
+      raw intensities:
+        description: Raw intensity values from the instrument (including microarrays,
+          plate reader assays, raw pixel intensities from imaging assay, mass spectrometry,
+          etc.).
+        meaning: https://w3id.org/synapse/nfosi/vocab/RawIntensities
+        notes:
+        - Not preferred for annotation.
+      normalized intensities:
+        description: Normalized intensity values from the instrument.
+        meaning: https://w3id.org/synapse/nfosi/vocab/NormalizedIntensities
+        notes:
+        - Not preferred for annotation.
+        - See RawIntensities
+      pharmacokinetics:
+        description: Data characterizing the process by which a drug is absorbed,
+          distributed, metabolized, and eliminated by the body.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C49663
+      mask image:
+        description: Image used as the mask for an image processing operation, such
+          as subtraction.
+        meaning: http://dicom.nema.org/resources/ontology/DCM/121321
+      count matrix:
+        description: A table of unnormalized values representing summarised read counts
+          per genomic region (e.g. gene, transcript, peak).
+        meaning: http://edamontology.org/data_3917
+      chromatin activity:
+        description: Data of chromatin activity, which allows access to condensed
+          genomic DNA and potentially controls gene expression.
+        meaning: https://w3id.org/synapse/nfosi/vocab/chromatinActivity
+        see_also:
+        - https://en.wikipedia.org/wiki/Chromatin_remodeling
+      structural variants:
+        description: Genomic variants data that covers deletions, duplications, CNVs,
+          insertions, inversions, and translocations, which may be derived from specialized
+          variant calling workflows.
+        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=structural_variation
+        meaning: https://w3id.org/synapse/nfosi/vocab/StructuralVariantss
+      germline variants:
+        description: Called germline variants
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation
+      copy number variants:
+        description: Copy number variants
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=copy_number_variation
+      image:
+        description: Biological or biomedical data that has been rendered into an
+          image.
+        meaning: http://edamontology.org/data_2968
+      network:
+        description: Network data represents connections between entities and are
+          often in graphical format.
+        meaning: http://edamontology.org/data_2600
+        notes:
+        - EDAM preferred label is 'Pathway or network'
+      cellular physiology:
+        description: Data on the physiological parameter of a cell.
+        meaning: https://w3id.org/synapse/nfosi/vocab/cellularPhysiology
+      metabolomics:
+        description: Data of metabolites, the chemical processes they are involved,
+          and the chemical fingerprints of specific cellular processes in a whole
+          cell, tissue, organ or organism.
+        meaning: https://w3id.org/synapse/nfosi/vocab/metabolomics
+        see_also:
+        - http://edamontology.org/topic_3172
+      morphology parameter:
+        description: Experimentally determined parameter of the morphology of an organism,
+          e.g. size & shape. General term representing data about **structure** and
+          **form** of an organism or organism part.
+        meaning: http://edamontology.org/data_3723
+      physiology parameter:
+        description: Experimentally determined parameter of the physiology of an organism,
+          e.g. metabolic rate. General term representing data about **function** and
+          **process** of an organism or organism part.
+        meaning: http://edamontology.org/data_3722
+        notes:
+        - Relation to pharmacokinetic data -- certain physiology parameteres inherent
+          to the organism influences its pharmokinetics of a drug.
+      annotated somatic mutation:
+        description: Somatic variants annotated with some annotation workflow
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation
+      annotated germline variants:
+        description: Germline variants annotated with some annotation workflow
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_germline_variation
+      weight:
+        description: The vertical force exerted by a mass as a result of gravity.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25208
+      electrophysiology:
+        description: "Data generated from an electrophysiology assay, e.g: \n- Cell:\
+          \ Resting membrane potential, ion channel currents (patch clamp data)\n\
+          - Neurons: Action potentials, resting potential, synaptic potentials. \n\
+          - Heart: Electrocardiogram (ECG/EKG) waveforms, cardiac action potentials.\n\
+          - Muscle: Electromyogram (EMG) signals\n- Whole brain: Electroencephalogram\
+          \ (EEG)\n- Retina: Electroretinogram (ERG)\n"
+        meaning: https://w3id.org/synapse/nfosi/vocab/electrophysiology
+        notes:
+        - ERO has been deprecated and direct URIs no longer work.
+        source: https://bioportal.bioontology.org/ontologies/ERO/?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FERO_0000564&jump_to_nav=true
+      audio transcript:
+        description: Text transcript of an audio recording.
+        meaning: https://w3id.org/synapse/nfosi/vocab/audioTranscript
+      data index:
+        description: A data index is information used to help with retrieval of some
+          other data, especially large-scale data that would benefit from such an
+          index. Very common formats are .bai and .tbi.
+        meaning: http://edamontology.org/data_0955
+      data sharing plan:
+        description: A document containing the plan and documentation for data sharing,
+          one component of overall data management.
+        meaning: http://edamontology.org/data_4040
+        notes:
+        - Technically EDAM term is 'data management plan', which is more encompassing
+          in scope.
+        - Use for tagging uploaded data sharing plans.
+      aggregated data:
+        description: Summary or group-level data.
+        notes:
+        - Not preferred for annotation.
+      over-representation data:
+        description: A ranked list of categories (usually ontology concepts), each
+          associated with a statistical metric of over-/under-representation within
+          the studied data.
+        meaning: http://edamontology.org/data_3753
+      plot:
+        description: Data that has been plotted as a graph of some type, or data representing
+          such a graph.
+        meaning: http://edamontology.org/data_2884
+      nucleic acid sequence record:
+        description: A nucleic acid sequence and associated metadata.
+        meaning: http://edamontology.org/data_2887
+        notes:
+        - Can be used for .dna (SnapGene) files.
+      protein interaction data:
+        description: 'Data concerning the interactions (predicted or known) within
+          or between a protein, structural domain or part of a protein.  This includes
+          intra- and inter-residue contacts and distances, as well as interactions
+          with other proteins and non-protein entities such as nucleic acid, metal
+          atoms, water, ions etc.
+
+          '
+        meaning: http://edamontology.org/data_0906
+      protein interaction raw data:
+        description: Protein-protein interaction data from for example yeast two-hybrid
+          analysis, protein microarrays, immunoaffinity chromatography followed by
+          mass spectrometry, phage display etc.
+        meaning: http://edamontology.org/data_0905
+      molecular property:
+        description: Data on the physical (e.g. structural) or chemical properties
+          of molecules, or parts of a molecule.
+        meaning: http://edamontology.org/data_2087
+      report:
+        description: A human-readable collection of information including annotation
+          on a biological entity or phenomena, computer-generated reports of analysis
+          of primary data... as distinct from the primary data itself.
+        meaning: http://edamontology.org/data_2048
+      text data:
+        description: Data that is represented as text, usually referring to "unstructured
+          data".
+        meaning: http://edamontology.org/data_2526
   DataSubtypeEnum:
     description: 'Categorizes data based on its processing state. This is the main
       classification axis used for data types.  Not all data types can use this dimensions
@@ -594,28 +923,6 @@ enums:
         description: zip is a format standard of a digital entity that is conformant
           with the PKWARE .ZIP file format specification
         meaning: http://edamontology.org/format_3987
-  MetadataEnum:
-    description: Data that provides information about other data
-    source: https://en.wikipedia.org/wiki/Metadata
-    permissible_values:
-      metadata:
-        description: Most general label for data that contains information about data.
-      descriptive metadata:
-        description: Information that describes and identifies a resource, including
-          elements that facilitate discovery and understanding.
-        notes:
-        - Currently used for `manifest.csv` files.
-      workflow metadata:
-        description: Process data from computational workflows. This is highly related
-          to Statistical Metadata. Basic information, annotation or documentation
-          concerning a workflow (but not the workflow itself).
-        meaning: http://edamontology.org/data_0949
-        comments: Coined category for use esp. with nextflow metadata files.
-      image metadata:
-        description: Data concerning a specific biological or biomedical image.
-        meaning: http://edamontology.org/data_3546
-        notes:
-        - For e.g. XML files that contain image metadata.
   PlatformEnum:
     permissible_values:
       7T Bruker Biospec:
@@ -974,58 +1281,6 @@ enums:
         source: https://pubmed.ncbi.nlm.nih.gov/29286982/
       ZetaView:
         source: https://particle-metrix.com/zetaview/
-  Resource:
-    description: 'Resource classes. Most resource entities expected to be some type
-      of "experimental data" and further specified via `dataType`.
-
-      '
-    permissible_values:
-      experimentalData:
-        description: Any file derived from or pertaining to a scientific experiment.
-          Experimental data annotations should be applied, possibly disease-related.
-      result:
-        description: Any file that reports data results. Examples include figures,
-          presentations, analysis, etc.
-        comments: This resource category is somewhat more general than `report`.
-        source: https://synapse.org
-      tool:
-        description: Any file or link that represents a tool, model, or algorithm;
-          the tool annotations could be applied
-        source: https://synapse.org
-      workflow report:
-        description: Workflow-generated reports of analysis of primary data, usually
-          created programmatically at completion of workflow step.
-      report:
-        description: 'A document assembled by an author for the purpose of providing
-          information for the audience.  A report is the output of a documenting process
-          and has the objective to be consumed by a specific audience.  Topic of the
-          report is on something that has completed. A report is not a single figure.  Examples
-          of reports are journal article, patent application, grant progress report,
-          case report (not patient record).
-
-          '
-        meaning: http://purl.obolibrary.org/obo/IAO_0000088
-      metadata:
-        description: Data about data, information that describes another set of data.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C52095
-      protocol:
-        description: A plan specification which has sufficient level of detail and
-          quantitative information to communicate it between investigation agents,
-          so that different investigation agents will reliably be able to independently
-          reproduce the process.
-        meaning: http://purl.obolibrary.org/obo/OBI_0000272
-      weblink:
-        description: An address to another document or other resource on the World
-          Wide Web.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C42743
-  ConcentrationUnit:
-    permissible_values:
-      mg/mL:
-        description: ''
-      mM:
-        description: ''
-      particles/mL:
-        description: ''
   AssayEnum:
     title: Assay
     permissible_values:
@@ -1988,283 +2243,28 @@ enums:
         description: The analysis of all of the short tandem repeats in the genome
           of a biological sample.
         meaning: http://purl.obolibrary.org/obo/NCIT_C129889
-  Data:
-    description: Type of data represented by the entity (File, Dataset, etc.).
-    notes:
-    - http://edamontology.org/data_0006
-    - Broad term/abstract class; should not be used for annotation
+  MetadataEnum:
+    description: Data that provides information about other data
+    source: https://en.wikipedia.org/wiki/Metadata
     permissible_values:
-      immunoassay:
-        description: Laboratory test involving interaction of antigens with specific
-          antibodies.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C16723
-      behavioral data:
-        description: "Qualitative or quantitative behavioral measurements / observations\
-          \ about the action, reaction, or performance of an organism in response\
-          \ to external or internal stimuli. \nExamples: avoidance behavior, choice-making.\n"
+      metadata:
+        description: Most general label for data that contains information about data.
+      descriptive metadata:
+        description: Information that describes and identifies a resource, including
+          elements that facilitate discovery and understanding.
         notes:
-        - Legacy concept previously labeled "behavior process", updated to "behavioral
-          data".
-      clinical:
-        description: Data containing clinical information, e.g. patient diagnosis,
-          personal demographics, exposures, laboratory tests, family relationships.
-        meaning: http://www.ebi.ac.uk/efo/EFO_0030083
+        - Currently used for `manifest.csv` files.
+      workflow metadata:
+        description: Process data from computational workflows. This is highly related
+          to Statistical Metadata. Basic information, annotation or documentation
+          concerning a workflow (but not the workflow itself).
+        meaning: http://edamontology.org/data_0949
+        comments: Coined category for use esp. with nextflow metadata files.
+      image metadata:
+        description: Data concerning a specific biological or biomedical image.
+        meaning: http://edamontology.org/data_3546
         notes:
-        - The closest EDAM term is for [EHR](http://edamontology.org/data_3861), and
-          while [ecological data](http://edamontology.org/data_3736), there is no
-          mapping, which is why we use EFO.
-        see_also:
-        - https://docs.gdc.cancer.gov/Encyclopedia/pages/Clinical_Data
-      demographics:
-        description: The statistical characterization of human populations or segments
-          of human populations (e.g., characterization by age, sex, race, or income).
-        meaning: http://purl.obolibrary.org/obo/NCIT_C16495
-      epidemiological data:
-        description: Data that is used to describe the distribution of a disease or
-          health-related characteristic within a population and to identify factors
-          that affect that distribution.
-      particle characterization:
-        description: Data providing information about entities such as composition,
-          structure and defects.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C62317
-        notes:
-        - More general than `molecular property`
-      drug combination screen:
-        description: Information on drug sensitivity of more than one compound
-        source: https://www.ncbi.nlm.nih.gov/pubmed/29344898
-      isoform expression:
-        description: Expression of protein isoforms formed from alternative splicings
-          or other post-translational modifications of a single gene through RNA splicing
-          mechanisms.
-        source: https://en.wikipedia.org/wiki/Protein_isoform
-        meaning: http://purl.obolibrary.org/obo/NCIT_C184767
-      proteomics:
-        description: Protein and peptide identification, especially in the study of
-          whole proteomes of organisms.
-        meaning: http://edamontology.org/topic_0121
-      mass spectrometry data:
-        description: Data from mass spectrometry measurement.
-        meaning: http://edamontology.org/data_2536
-      survey data:
-        description: A data set that contains the outcome of a survey.
-        meaning: http://purl.obolibrary.org/obo/OMIABIS_0000060
-      kinomics:
-        description: Data studying protein kinase signaling/activity.
-        source: http://www.kinomecore.com/what-is-kinomics/
-        meaning: https://w3id.org/synapse/nfosi/vocab/kinomics
-        notes:
-        - See "Kinome Response Profile" (http://purl.obolibrary.org/obo/NCIT_C107137)
-          for kinome data *specifically* with drug treatment
-        - Subclasss of "Proteomics" (http://purl.obolibrary.org/obo/NCIT_C16723)
-      somatic variants:
-        description: Called somatic variants
-        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_somatic_mutation
-        meaning: https://w3id.org/synapse/nfosi/vocab/SomaticVariants
-      volume:
-        description: Data of the three dimensional space occupied by an entity or
-          the capacity of a space or container.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C25335
-      characteristic:
-        description: Broad data type for data that can encompass volume, weight, brightness,
-          color, capacity, etc.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C25447
-        notes:
-        - Not preferred for annotation; more specific term should be used.
-        - May cover both morphology parameter and physiology parameter.
-      drug screen:
-        description: Information on drug sensitivity and molecular markers of drug
-          response
-        source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3531057/
-        meaning: https://w3id.org/synapse/nfosi/vocab/drugScreen
-      gene expression:
-        description: Data of the levels and patterns of synthesis of gene products
-          (proteins and functional RNA), including interpretation in functional terms
-          of gene expression data.
-        meaning: http://edamontology.org/data_2603
-        notes:
-        - EDAM does have a broader mapping, [expression data](http://edamontology.org/data_2603)
-        - The mapping used maps to [gene expression profile](http://edamontology.org/data_0928)
-        - Covers both raw (e.g. fastqs, microarray intensities) and processed gene
-          expression data (e.g. normalized gene expression matrix).
-      aligned reads:
-        description: Aligned reads output from alignment workflows
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads
-      genomic features:
-        description: Data of sequence feature (continuous extent of biological sequence)
-          that is of genomic origin.
-        meaning: http://purl.obolibrary.org/obo/GENO_0000481
-        notes:
-        - Really subclass of "nucleic acid features" (http://edamontology.org/data_1276)
-        see_also: https://en.wikipedia.org/wiki/General_feature_format
-      genomic variants:
-        description: 'Genomic alterations, including single nucleotide polymorphisms,
-          short indels and structural variants. Use more specific term if possible,
-          esp. if data is only of one specific subset.
-
-          '
-        meaning: http://edamontology.org/data_3498
-        notes:
-        - Somewhat more specific than the concept URI it is mapped to.
-      raw counts:
-        description: The number or amount of something.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C25463
-      raw intensities:
-        description: Raw intensity values from the instrument (including microarrays,
-          plate reader assays, raw pixel intensities from imaging assay, mass spectrometry,
-          etc.).
-        meaning: https://w3id.org/synapse/nfosi/vocab/RawIntensities
-        notes:
-        - Not preferred for annotation.
-      normalized intensities:
-        description: Normalized intensity values from the instrument.
-        meaning: https://w3id.org/synapse/nfosi/vocab/NormalizedIntensities
-        notes:
-        - Not preferred for annotation.
-        - See RawIntensities
-      pharmacokinetics:
-        description: Data characterizing the process by which a drug is absorbed,
-          distributed, metabolized, and eliminated by the body.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C49663
-      mask image:
-        description: Image used as the mask for an image processing operation, such
-          as subtraction.
-        meaning: http://dicom.nema.org/resources/ontology/DCM/121321
-      count matrix:
-        description: A table of unnormalized values representing summarised read counts
-          per genomic region (e.g. gene, transcript, peak).
-        meaning: http://edamontology.org/data_3917
-      chromatin activity:
-        description: Data of chromatin activity, which allows access to condensed
-          genomic DNA and potentially controls gene expression.
-        meaning: https://w3id.org/synapse/nfosi/vocab/chromatinActivity
-        see_also:
-        - https://en.wikipedia.org/wiki/Chromatin_remodeling
-      structural variants:
-        description: Genomic variants data that covers deletions, duplications, CNVs,
-          insertions, inversions, and translocations, which may be derived from specialized
-          variant calling workflows.
-        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=structural_variation
-        meaning: https://w3id.org/synapse/nfosi/vocab/StructuralVariantss
-      germline variants:
-        description: Called germline variants
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation
-      copy number variants:
-        description: Copy number variants
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=copy_number_variation
-      image:
-        description: Biological or biomedical data that has been rendered into an
-          image.
-        meaning: http://edamontology.org/data_2968
-      network:
-        description: Network data represents connections between entities and are
-          often in graphical format.
-        meaning: http://edamontology.org/data_2600
-        notes:
-        - EDAM preferred label is 'Pathway or network'
-      cellular physiology:
-        description: Data on the physiological parameter of a cell.
-        meaning: https://w3id.org/synapse/nfosi/vocab/cellularPhysiology
-      metabolomics:
-        description: Data of metabolites, the chemical processes they are involved,
-          and the chemical fingerprints of specific cellular processes in a whole
-          cell, tissue, organ or organism.
-        meaning: https://w3id.org/synapse/nfosi/vocab/metabolomics
-        see_also:
-        - http://edamontology.org/topic_3172
-      morphology parameter:
-        description: Experimentally determined parameter of the morphology of an organism,
-          e.g. size & shape. General term representing data about **structure** and
-          **form** of an organism or organism part.
-        meaning: http://edamontology.org/data_3723
-      physiology parameter:
-        description: Experimentally determined parameter of the physiology of an organism,
-          e.g. metabolic rate. General term representing data about **function** and
-          **process** of an organism or organism part.
-        meaning: http://edamontology.org/data_3722
-        notes:
-        - Relation to pharmacokinetic data -- certain physiology parameteres inherent
-          to the organism influences its pharmokinetics of a drug.
-      annotated somatic mutation:
-        description: Somatic variants annotated with some annotation workflow
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation
-      annotated germline variants:
-        description: Germline variants annotated with some annotation workflow
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_germline_variation
-      weight:
-        description: The vertical force exerted by a mass as a result of gravity.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C25208
-      electrophysiology:
-        description: "Data generated from an electrophysiology assay, e.g: \n- Cell:\
-          \ Resting membrane potential, ion channel currents (patch clamp data)\n\
-          - Neurons: Action potentials, resting potential, synaptic potentials. \n\
-          - Heart: Electrocardiogram (ECG/EKG) waveforms, cardiac action potentials.\n\
-          - Muscle: Electromyogram (EMG) signals\n- Whole brain: Electroencephalogram\
-          \ (EEG)\n- Retina: Electroretinogram (ERG)\n"
-        meaning: https://w3id.org/synapse/nfosi/vocab/electrophysiology
-        notes:
-        - ERO has been deprecated and direct URIs no longer work.
-        source: https://bioportal.bioontology.org/ontologies/ERO/?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FERO_0000564&jump_to_nav=true
-      audio transcript:
-        description: Text transcript of an audio recording.
-        meaning: https://w3id.org/synapse/nfosi/vocab/audioTranscript
-      data index:
-        description: A data index is information used to help with retrieval of some
-          other data, especially large-scale data that would benefit from such an
-          index. Very common formats are .bai and .tbi.
-        meaning: http://edamontology.org/data_0955
-      data sharing plan:
-        description: A document containing the plan and documentation for data sharing,
-          one component of overall data management.
-        meaning: http://edamontology.org/data_4040
-        notes:
-        - Technically EDAM term is 'data management plan', which is more encompassing
-          in scope.
-        - Use for tagging uploaded data sharing plans.
-      aggregated data:
-        description: Summary or group-level data.
-        notes:
-        - Not preferred for annotation.
-      over-representation data:
-        description: A ranked list of categories (usually ontology concepts), each
-          associated with a statistical metric of over-/under-representation within
-          the studied data.
-        meaning: http://edamontology.org/data_3753
-      plot:
-        description: Data that has been plotted as a graph of some type, or data representing
-          such a graph.
-        meaning: http://edamontology.org/data_2884
-      nucleic acid sequence record:
-        description: A nucleic acid sequence and associated metadata.
-        meaning: http://edamontology.org/data_2887
-        notes:
-        - Can be used for .dna (SnapGene) files.
-      protein interaction data:
-        description: 'Data concerning the interactions (predicted or known) within
-          or between a protein, structural domain or part of a protein.  This includes
-          intra- and inter-residue contacts and distances, as well as interactions
-          with other proteins and non-protein entities such as nucleic acid, metal
-          atoms, water, ions etc.
-
-          '
-        meaning: http://edamontology.org/data_0906
-      protein interaction raw data:
-        description: Protein-protein interaction data from for example yeast two-hybrid
-          analysis, protein microarrays, immunoaffinity chromatography followed by
-          mass spectrometry, phage display etc.
-        meaning: http://edamontology.org/data_0905
-      molecular property:
-        description: Data on the physical (e.g. structural) or chemical properties
-          of molecules, or parts of a molecule.
-        meaning: http://edamontology.org/data_2087
-      report:
-        description: A human-readable collection of information including annotation
-          on a biological entity or phenomena, computer-generated reports of analysis
-          of primary data... as distinct from the primary data itself.
-        meaning: http://edamontology.org/data_2048
-      text data:
-        description: Data that is represented as text, usually referring to "unstructured
-          data".
-        meaning: http://edamontology.org/data_2526
+        - For e.g. XML files that contain image metadata.
 classes:
   LightScatteringAssayTemplate:
     is_a: MaterialScienceAssayTemplate

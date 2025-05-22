@@ -1,5 +1,51 @@
 {
-  "$defs": {
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-publicationtemplate",
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "PublicationTemplate",
+  "type": "object",
+  "description": "A generalized data model template for Publications to be hopefully used across dccs",
+  "properties": {
+    "abstract": {
+      "title": "Abstract",
+      "type": "string"
+    },
+    "accessibility": {
+      "title": "Accessibility"
+    },
+    "author": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Author(s)",
+      "type": "array"
+    },
+    "doi": {
+      "title": "Digital Object Identifier",
+      "type": "string"
+    },
+    "grantNumber": {
+      "title": "Grant Number",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "journal": {
+      "title": "Journal",
+      "type": "string"
+    },
+    "pmid": {
+      "title": "PubMed ID",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "year": {
+      "title": "Year",
+      "type": "integer"
+    },
     "PublicationTemplate": {
       "additionalProperties": false,
       "description": "A generalized data model template for Publications to be hopefully used across dccs",
@@ -59,54 +105,6 @@
       "type": "object"
     }
   },
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-publicationtemplate",
-  "$schema": "https://json-schema.org/draft/2019-09/schema",
-  "additionalProperties": true,
-  "description": "A generalized data model template for Publications to be hopefully used across dccs",
-  "metamodel_version": "1.7.0",
-  "properties": {
-    "abstract": {
-      "title": "Abstract",
-      "type": "string"
-    },
-    "accessibility": {
-      "title": "Accessibility"
-    },
-    "author": {
-      "items": {
-        "type": "string"
-      },
-      "title": "Author(s)",
-      "type": "array"
-    },
-    "doi": {
-      "title": "Digital Object Identifier",
-      "type": "string"
-    },
-    "grantNumber": {
-      "title": "Grant Number",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "journal": {
-      "title": "Journal",
-      "type": "string"
-    },
-    "pmid": {
-      "title": "PubMed ID",
-      "type": "string"
-    },
-    "title": {
-      "title": "Title",
-      "type": "string"
-    },
-    "year": {
-      "title": "Year",
-      "type": "integer"
-    }
-  },
   "required": [
     "doi",
     "journal",
@@ -116,7 +114,7 @@
     "author",
     "abstract"
   ],
-  "title": "nfosi",
-  "type": "object",
+  "additionalProperties": true,
+  "metamodel_version": "1.7.0",
   "version": null
 }
