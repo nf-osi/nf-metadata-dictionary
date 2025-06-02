@@ -95,8 +95,6 @@ def process_term(term, term_data):
     urls = []
     if 'meaning' in term_data and is_valid_url(term_data['meaning']):
         urls.append(('meaning', term_data['meaning']))
-    if 'source' in term_data and is_valid_url(term_data['source']):
-        urls.append(('source', term_data['source']))
 
     if not urls:
         return None
