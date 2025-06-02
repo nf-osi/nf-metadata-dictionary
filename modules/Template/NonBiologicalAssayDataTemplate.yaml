@@ -1,5 +1,860 @@
+id: https://w3id.org/nfosi/
+default_curi_maps:
+- semweb_context
+prefixes:
+  nf: https://w3id.org/synapse/nfosi/vocab/
+  personinfo: https://w3id.org/linkml/examples/personinfo/
+  linkml: https://w3id.org/linkml/
+  schema: http://schema.org/
+  rdfs: http://www.w3.org/2000/01/rdf-schema#
+  skos: http://www.w3.org/2004/02/skos/core#
+  prov: http://www.w3.org/ns/prov#
+  htan: https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld
+default_prefix: nf
+default_range: string
+emit_prefixes:
+- rdf
+- rdfs
+- xsd
+- skos
+imports:
+- linkml:types
+name: NonBiologicalAssayDataTemplate
+classes:
+  NonBiologicalAssayDataTemplate:
+    description: 'Describes data artifacts (i.e. files) from an experimental/physical-sciences
+      assay  where input specimens are more at the level of synthesized molecules
+      or inorganic materials.
+
+      '
+    is_a: Template
+    slots:
+    - Component
+    - Filename
+    - fileFormat
+    - resourceType
+    - dataType
+    - dataSubtype
+    - assay
+  Template:
+    description: A collection of fields representing some entity.
+    slots: []
+slots:
+  Component:
+    description: Type of metadata template; provide the same one for all items/rows.
+    required: true
+  Filename:
+    description: The name of the file.
+    required: false
+  fileFormat:
+    description: Defined format of the data file, typically corresponding to extension,
+      but sometimes indicating more general group of files produced by the same tool
+      or software
+    range: FileFormatEnum
+    required: true
+  resourceType:
+    description: The type of resource being stored and annotated
+    range: Resource
+    required: true
+  dataType:
+    any_of:
+    - range: Data
+    - range: MetadataEnum
+    description: 'Links an entity to data types that the entity represents/contains.
+      This is closely tied to the assay property. For example, a file of dataType
+      `genomicVariants` might have an assay value of `whole genome sequencing`.
+
+      '
+    required: true
+  dataSubtype:
+    description: Further qualification of dataType, which may be used to indicate
+      the state of processing of the data, aggregation of the data, or presence of
+      metadata.
+    range: DataSubtypeEnum
+    required: true
+  assay:
+    description: The technology used to generate the data in this file.
+    range: AssayEnum
+    required: true
 enums:
+  Data:
+    description: Type of data represented by the entity (File, Dataset, etc.).
+    notes:
+    - http://edamontology.org/data_0006
+    - Broad term/abstract class; should not be used for annotation
+    permissible_values:
+      immunoassay:
+        description: Laboratory test involving interaction of antigens with specific
+          antibodies.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C16723
+      behavioral data:
+        description: "Qualitative or quantitative behavioral measurements / observations\
+          \ about the action, reaction, or performance of an organism in response\
+          \ to external or internal stimuli. \nExamples: avoidance behavior, choice-making.\n"
+        notes:
+        - Legacy concept previously labeled "behavior process", updated to "behavioral
+          data".
+      clinical:
+        description: Data containing clinical information, e.g. patient diagnosis,
+          personal demographics, exposures, laboratory tests, family relationships.
+        meaning: http://www.ebi.ac.uk/efo/EFO_0030083
+        notes:
+        - The closest EDAM term is for [EHR](http://edamontology.org/data_3861), and
+          while [ecological data](http://edamontology.org/data_3736), there is no
+          mapping, which is why we use EFO.
+        see_also:
+        - https://docs.gdc.cancer.gov/Encyclopedia/pages/Clinical_Data
+      demographics:
+        description: The statistical characterization of human populations or segments
+          of human populations (e.g., characterization by age, sex, race, or income).
+        meaning: http://purl.obolibrary.org/obo/NCIT_C16495
+      epidemiological data:
+        description: Data that is used to describe the distribution of a disease or
+          health-related characteristic within a population and to identify factors
+          that affect that distribution.
+      particle characterization:
+        description: Data providing information about entities such as composition,
+          structure and defects.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C62317
+        notes:
+        - More general than `molecular property`
+      drug combination screen:
+        description: Information on drug sensitivity of more than one compound
+        source: https://www.ncbi.nlm.nih.gov/pubmed/29344898
+      isoform expression:
+        description: Expression of protein isoforms formed from alternative splicings
+          or other post-translational modifications of a single gene through RNA splicing
+          mechanisms.
+        source: https://en.wikipedia.org/wiki/Protein_isoform
+        meaning: http://purl.obolibrary.org/obo/NCIT_C184767
+      proteomics:
+        description: Protein and peptide identification, especially in the study of
+          whole proteomes of organisms.
+        meaning: http://edamontology.org/topic_0121
+      mass spectrometry data:
+        description: Data from mass spectrometry measurement.
+        meaning: http://edamontology.org/data_2536
+      survey data:
+        description: A data set that contains the outcome of a survey.
+        meaning: http://purl.obolibrary.org/obo/OMIABIS_0000060
+      kinomics:
+        description: Data studying protein kinase signaling/activity.
+        source: http://www.kinomecore.com/what-is-kinomics/
+        meaning: https://w3id.org/synapse/nfosi/vocab/kinomics
+        notes:
+        - See "Kinome Response Profile" (http://purl.obolibrary.org/obo/NCIT_C107137)
+          for kinome data *specifically* with drug treatment
+        - Subclasss of "Proteomics" (http://purl.obolibrary.org/obo/NCIT_C16723)
+      somatic variants:
+        description: Called somatic variants
+        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_somatic_mutation
+        meaning: https://w3id.org/synapse/nfosi/vocab/SomaticVariants
+      volume:
+        description: Data of the three dimensional space occupied by an entity or
+          the capacity of a space or container.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25335
+      characteristic:
+        description: Broad data type for data that can encompass volume, weight, brightness,
+          color, capacity, etc.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25447
+        notes:
+        - Not preferred for annotation; more specific term should be used.
+        - May cover both morphology parameter and physiology parameter.
+      drug screen:
+        description: Information on drug sensitivity and molecular markers of drug
+          response
+        source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3531057/
+        meaning: https://w3id.org/synapse/nfosi/vocab/drugScreen
+      gene expression:
+        description: Data of the levels and patterns of synthesis of gene products
+          (proteins and functional RNA), including interpretation in functional terms
+          of gene expression data.
+        meaning: http://edamontology.org/data_2603
+        notes:
+        - EDAM does have a broader mapping, [expression data](http://edamontology.org/data_2603)
+        - The mapping used maps to [gene expression profile](http://edamontology.org/data_0928)
+        - Covers both raw (e.g. fastqs, microarray intensities) and processed gene
+          expression data (e.g. normalized gene expression matrix).
+      aligned reads:
+        description: Aligned reads output from alignment workflows
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads
+      genomic features:
+        description: Data of sequence feature (continuous extent of biological sequence)
+          that is of genomic origin.
+        meaning: http://purl.obolibrary.org/obo/GENO_0000481
+        notes:
+        - Really subclass of "nucleic acid features" (http://edamontology.org/data_1276)
+        see_also: https://en.wikipedia.org/wiki/General_feature_format
+      genomic variants:
+        description: 'Genomic alterations, including single nucleotide polymorphisms,
+          short indels and structural variants. Use more specific term if possible,
+          esp. if data is only of one specific subset.
+
+          '
+        meaning: http://edamontology.org/data_3498
+        notes:
+        - Somewhat more specific than the concept URI it is mapped to.
+      raw counts:
+        description: The number or amount of something.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25463
+      raw intensities:
+        description: Raw intensity values from the instrument (including microarrays,
+          plate reader assays, raw pixel intensities from imaging assay, mass spectrometry,
+          etc.).
+        meaning: https://w3id.org/synapse/nfosi/vocab/RawIntensities
+        notes:
+        - Not preferred for annotation.
+      normalized intensities:
+        description: Normalized intensity values from the instrument.
+        meaning: https://w3id.org/synapse/nfosi/vocab/NormalizedIntensities
+        notes:
+        - Not preferred for annotation.
+        - See RawIntensities
+      pharmacokinetics:
+        description: Data characterizing the process by which a drug is absorbed,
+          distributed, metabolized, and eliminated by the body.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C49663
+      mask image:
+        description: Image used as the mask for an image processing operation, such
+          as subtraction.
+        meaning: http://dicom.nema.org/resources/ontology/DCM/121321
+      count matrix:
+        description: A table of unnormalized values representing summarised read counts
+          per genomic region (e.g. gene, transcript, peak).
+        meaning: http://edamontology.org/data_3917
+      chromatin activity:
+        description: Data of chromatin activity, which allows access to condensed
+          genomic DNA and potentially controls gene expression.
+        meaning: https://w3id.org/synapse/nfosi/vocab/chromatinActivity
+        see_also:
+        - https://en.wikipedia.org/wiki/Chromatin_remodeling
+      structural variants:
+        description: Genomic variants data that covers deletions, duplications, CNVs,
+          insertions, inversions, and translocations, which may be derived from specialized
+          variant calling workflows.
+        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=structural_variation
+        meaning: https://w3id.org/synapse/nfosi/vocab/StructuralVariantss
+      germline variants:
+        description: Called germline variants
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation
+      copy number variants:
+        description: Copy number variants
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=copy_number_variation
+      image:
+        description: Biological or biomedical data that has been rendered into an
+          image.
+        meaning: http://edamontology.org/data_2968
+      network:
+        description: Network data represents connections between entities and are
+          often in graphical format.
+        meaning: http://edamontology.org/data_2600
+        notes:
+        - EDAM preferred label is 'Pathway or network'
+      cellular physiology:
+        description: Data on the physiological parameter of a cell.
+        meaning: https://w3id.org/synapse/nfosi/vocab/cellularPhysiology
+      metabolomics:
+        description: Data of metabolites, the chemical processes they are involved,
+          and the chemical fingerprints of specific cellular processes in a whole
+          cell, tissue, organ or organism.
+        meaning: https://w3id.org/synapse/nfosi/vocab/metabolomics
+        see_also:
+        - http://edamontology.org/topic_3172
+      morphology parameter:
+        description: Experimentally determined parameter of the morphology of an organism,
+          e.g. size & shape. General term representing data about **structure** and
+          **form** of an organism or organism part.
+        meaning: http://edamontology.org/data_3723
+      physiology parameter:
+        description: Experimentally determined parameter of the physiology of an organism,
+          e.g. metabolic rate. General term representing data about **function** and
+          **process** of an organism or organism part.
+        meaning: http://edamontology.org/data_3722
+        notes:
+        - Relation to pharmacokinetic data -- certain physiology parameteres inherent
+          to the organism influences its pharmokinetics of a drug.
+      annotated somatic mutation:
+        description: Somatic variants annotated with some annotation workflow
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation
+      annotated germline variants:
+        description: Germline variants annotated with some annotation workflow
+        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_germline_variation
+      weight:
+        description: The vertical force exerted by a mass as a result of gravity.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C25208
+      electrophysiology:
+        description: "Data generated from an electrophysiology assay, e.g: \n- Cell:\
+          \ Resting membrane potential, ion channel currents (patch clamp data)\n\
+          - Neurons: Action potentials, resting potential, synaptic potentials. \n\
+          - Heart: Electrocardiogram (ECG/EKG) waveforms, cardiac action potentials.\n\
+          - Muscle: Electromyogram (EMG) signals\n- Whole brain: Electroencephalogram\
+          \ (EEG)\n- Retina: Electroretinogram (ERG)\n"
+        meaning: https://w3id.org/synapse/nfosi/vocab/electrophysiology
+        notes:
+        - ERO has been deprecated and direct URIs no longer work.
+        source: https://bioportal.bioontology.org/ontologies/ERO/?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FERO_0000564&jump_to_nav=true
+      audio transcript:
+        description: Text transcript of an audio recording.
+        meaning: https://w3id.org/synapse/nfosi/vocab/audioTranscript
+      data index:
+        description: A data index is information used to help with retrieval of some
+          other data, especially large-scale data that would benefit from such an
+          index. Very common formats are .bai and .tbi.
+        meaning: http://edamontology.org/data_0955
+      data sharing plan:
+        description: A document containing the plan and documentation for data sharing,
+          one component of overall data management.
+        meaning: http://edamontology.org/data_4040
+        notes:
+        - Technically EDAM term is 'data management plan', which is more encompassing
+          in scope.
+        - Use for tagging uploaded data sharing plans.
+      aggregated data:
+        description: Summary or group-level data.
+        notes:
+        - Not preferred for annotation.
+      over-representation data:
+        description: A ranked list of categories (usually ontology concepts), each
+          associated with a statistical metric of over-/under-representation within
+          the studied data.
+        meaning: http://edamontology.org/data_3753
+      plot:
+        description: Data that has been plotted as a graph of some type, or data representing
+          such a graph.
+        meaning: http://edamontology.org/data_2884
+      nucleic acid sequence record:
+        description: A nucleic acid sequence and associated metadata.
+        meaning: http://edamontology.org/data_2887
+        notes:
+        - Can be used for .dna (SnapGene) files.
+      protein interaction data:
+        description: 'Data concerning the interactions (predicted or known) within
+          or between a protein, structural domain or part of a protein.  This includes
+          intra- and inter-residue contacts and distances, as well as interactions
+          with other proteins and non-protein entities such as nucleic acid, metal
+          atoms, water, ions etc.
+
+          '
+        meaning: http://edamontology.org/data_0906
+      protein interaction raw data:
+        description: Protein-protein interaction data from for example yeast two-hybrid
+          analysis, protein microarrays, immunoaffinity chromatography followed by
+          mass spectrometry, phage display etc.
+        meaning: http://edamontology.org/data_0905
+      molecular property:
+        description: Data on the physical (e.g. structural) or chemical properties
+          of molecules, or parts of a molecule.
+        meaning: http://edamontology.org/data_2087
+      report:
+        description: A human-readable collection of information including annotation
+          on a biological entity or phenomena, computer-generated reports of analysis
+          of primary data... as distinct from the primary data itself.
+        meaning: http://edamontology.org/data_2048
+      text data:
+        description: Data that is represented as text, usually referring to "unstructured
+          data".
+        meaning: http://edamontology.org/data_2526
+  MetadataEnum:
+    description: Data that provides information about other data
+    source: https://en.wikipedia.org/wiki/Metadata
+    permissible_values:
+      metadata:
+        description: Most general label for data that contains information about data.
+      descriptive metadata:
+        description: Information that describes and identifies a resource, including
+          elements that facilitate discovery and understanding.
+        notes:
+        - Currently used for `manifest.csv` files.
+      workflow metadata:
+        description: Process data from computational workflows. This is highly related
+          to Statistical Metadata. Basic information, annotation or documentation
+          concerning a workflow (but not the workflow itself).
+        meaning: http://edamontology.org/data_0949
+        comments: Coined category for use esp. with nextflow metadata files.
+      image metadata:
+        description: Data concerning a specific biological or biomedical image.
+        meaning: http://edamontology.org/data_3546
+        notes:
+        - For e.g. XML files that contain image metadata.
+  FileFormatEnum:
+    permissible_values:
+      7z:
+        description: A compressed archive file format that supports several different
+          data compression, encryption and pre-processing filters.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C80224
+      DICOM:
+        description: A comprehensive set of standards for communications between medical
+          imaging devices, including handling, storing and transmitting information
+          in medical imaging. It includes a file format definition and a network communication
+          protocol.
+        meaning: http://edamontology.org/format_3548
+      MATLAB data:
+        description: "A MATLAB formatted data file with expected extension \u201C\
+          .mat\u201D."
+        meaning: http://edamontology.org/format_3626
+      MATLAB script:
+        description: "A MATLAB script file with expected extension \u201C.m\u201D\
+          . Note that files with a \u201C.mat\u201D extension contains MATLAB formatted\
+          \ data."
+        meaning: http://edamontology.org/format_4007
+      NWB:
+        description: Neurodata Without Borders (NWB) is a data standard for neurophysiology
+          data, designed to store data including from intracellular and extracellular
+          electrophysiology experiments, data from optical physiology experiments,
+          and tracking and stimulus data.
+        source: https://www.nwb.org/
+      PAR:
+        description: This is yet another MRI image format generated by Philips scanners.
+          It is an ASCII header (PAR) plus a binary blob (REC).
+        source: https://nipy.org/nibabel/reference/nibabel.parrec.html
+      Python script:
+        description: "Python script with expected extension \u201C.py\u201D."
+        meaning: http://edamontology.org/format_3996
+      R script:
+        description: "R script with expected extension \u201C.R\u201D."
+        meaning: http://edamontology.org/format_3999
+      RCC:
+        description: Reporter Code Count-A data file (.csv) output by the Nanostring
+          nCounter Digital Analyzer, which contains gene sample information, probe
+          information and probe counts.
+        meaning: http://edamontology.org/format_3580
+      RData:
+        description: The RData format (usually with extension .rdata or .rda) is a
+          format designed for use with R, a system for statistical computation and
+          related graphics, for storing a complete R workspace or selected 'objects'
+          from a workspace in a form that can be loaded back by R.
+        source: https://www.loc.gov/preservation/digital/formats/fdd/fdd000470.shtml
+      REC:
+        description: This is yet another MRI image format generated by Philips scanners.
+          It is an ASCII header (PAR) plus a binary blob (REC).
+        source: https://nipy.org/nibabel/reference/nibabel.parrec.html
+      SDAT:
+        description: Phillips MRS Data File
+        source: https://github.com/chenkonturek/MRS_MRI_libs
+      SPAR:
+        description: Phillips MRS Header File
+        source: https://github.com/chenkonturek/MRS_MRI_libs
+      Sentrix descriptor file:
+        description: A BeadScan specific file needed to perform scan setting checks
+          for different array formats and assay type.
+        source: https://support.illumina.com/content/dam/illumina-support/documents/myillumina/dd0aff11-2664-481b-a8ce-26831a907cae/beadscan_3.0_software_addendum.pdf
+      ab1:
+        description: TAB1 binary format of raw DNA sequence reads (output of Applied
+          Biosystems' sequencing analysis software). Contains an electropherogram
+          and the DNA base sequence.
+        meaning: http://edamontology.org/format_3000
+      abf:
+        description: The Axon Binary File format (ABF) was created for the storage
+          of binary experimental data.
+        source: https://mdc.custhelp.com/euf/assets/content/ABFHelp.pdf
+      ai:
+        description: Adobe Illustrator format
+        meaning: http://www.ebi.ac.uk/swo/data/SWO_3000023
+      avi:
+        description: AVI files can contain both audio and video data in a file container
+          that allows synchronous audio-with-video playback.
+        meaning: http://edamontology.org/format_3990
+        source: https://en.wikipedia.org/wiki/Audio_Video_Interleave
+      bai:
+        description: BAM indexing format
+        meaning: http://edamontology.org/format_3327
+      bam:
+        description: BAM format, the binary, BGZF-formatted compressed version of
+          SAM format for alignment of nucleotide sequences (e.g. sequencing reads)
+          to (a) reference sequence(s)
+        meaning: http://edamontology.org/format_2572
+      bash script:
+        description: Bash shell script with .sh extension.
+        source: https://en.wikipedia.org/wiki/Shell_script
+      bcf:
+        description: BCF, the binary version of Variant Call Format (VCF) for sequence
+          variation (indels, polymorphisms, structural variation)
+        meaning: http://edamontology.org/format_3016
+      bed:
+        description: Browser Extensible Data (BED) format of sequence annotation track,
+          typically to be displayed in a genome browser
+        meaning: http://edamontology.org/format_3003
+      bed broadPeak:
+        description: This format is used to provide called regions of signal enrichment
+          based on pooled, normalized (interpreted) data. It is a BED 6+3 format.
+        source: http://genome.ucsc.edu/FAQ/FAQformat.html#format13
+      bed gappedPeak:
+        description: This format is used to provide called regions of signal enrichment
+          based on pooled, normalized (interpreted) data where the regions may be
+          spliced or incorporate gaps in the genomic sequence. It is a BED12+3 format.
+        source: http://genome.ucsc.edu/FAQ/FAQformat.html#format14
+      bed narrowPeak:
+        description: This format is used to provide called peaks of signal enrichment
+          based on pooled, normalized (interpreted) data. It is a BED6+4 format.
+        source: http://genome.ucsc.edu/FAQ/FAQformat.html#format12
+      bedgraph:
+        description: Holds a tab-delimited chromosome /start /end / datavalue dataset.
+          The bedGraph format allows display of continuous-valued data in track format.
+          This display type is useful for probability scores and transcriptome data
+        meaning: http://edamontology.org/format_3583
+      bgzip:
+        description: Blocked GNU Zip format
+        meaning: http://edamontology.org/format_3615
+      bigwig:
+        description: bigWig format for large sequence annotation tracks that consist
+          of a value for each sequence position
+        meaning: http://edamontology.org/format_3006
+      bmp:
+        description: Bitmap image format.
+        meaning: http://edamontology.org/format_3592
+      bpm:
+        description: A beaded pool manifest. Describe the SNP or probe content on
+          a BeadChip or in an assay pool.
+        source: https://support.illumina.com/datafiles.html
+      cel:
+        description: Format of Affymetrix data file of information about (raw) expression
+          levels of the individual probes
+        meaning: http://edamontology.org/format_1638
+      chp:
+        description: CHP file contains probe set analysis results generated from Affymetrix
+          software
+        meaning: http://edamontology.org/format_1644
+      cnn:
+        description: Copy number reference profile from CNVKit pipeline.
+        source: https://cnvkit.readthedocs.io/en/stable/fileformats.html
+      cnr:
+        description: Copy number ratios from CNVKit pipeline, storing each bin's proportional
+          weight or reliability.
+        source: https://cnvkit.readthedocs.io/en/stable/fileformats.html
+      cns:
+        description: Segmented log2 ratios from CNVKit pipeline, these represent the
+          most relevant output describing copy number variation.
+        source: https://cnvkit.readthedocs.io/en/stable/fileformats.html
+      cram:
+        description: A CRAM file is a compressed format for storing genomic sequence
+          data.
+        meaning: http://edamontology.org/format_3462
+        notes:
+        - ChatGPT (September 25, 2023 Version)
+      crai:
+        description: A CRAI file is an index for a CRAM file, facilitating fast data
+          retrieval.
+        notes:
+        - ChatGPT (September 25, 2023 Version)
+      csi:
+        description: A CSI file is a compressed sequence index used for efficiently
+          accessing genomic data in large datasets.
+        notes:
+        - ChatGPT (September 25, 2023 Version)
+      csv:
+        description: Tabular data represented as comma-separated values in a text
+          file
+        meaning: http://edamontology.org/format_3752
+      ctab:
+        description: Gene expression counts file and a specific format of .tsv commonly
+          part of bioinformatics workflows (Stringtie and Ballgown).
+        source: https://github.com/alyssafrazee/ballgown#ballgown-readable-expression-output
+      czi:
+        description: Microscopy imaging file format that saves multidimensional images
+          such as time lapse, Z-stacks, multiposition experiments and virtual slides,
+          combined with relevant meta information
+        source: https://www.zeiss.com/microscopy/int/products/microscope-software/zen/czi.html
+      dat:
+        description: Format of Affymetrix data file of raw image data.
+        meaning: http://edamontology.org/format_1637
+      dna:
+        description: Propietary SnapGene file format.
+        source: https://www.snapgene.com/guides/convert-genbank-files
+      doc:
+        description: Microsoft Word document format
+        meaning: http://edamontology.org/format_3506
+      docker image:
+        description: 'A Docker image is a file, comprised of multiple layers, that
+          is used to execute code in a Docker container.  An image is essentially
+          built from the instructions for a complete and executable version of an
+          application, which relies on the host OS kernel
+
+          '
+        meaning: http://edamontology.org/format_3973
+      dup:
+        description: output of the Picard MarkDuplicates tool.
+        source: https://software.broadinstitute.org/gatk/documentation/tooldocs/4.0.4.0/picard_sam_markduplicates_MarkDuplicates.php
+      edat3:
+        description: The .edat3 proprietary format is used to store experiment data
+          that can be analyzed in E-DataAid.
+        source: https://support.pstnet.com/hc/en-us/articles/229354727-INFO-E-Prime-file-extensions-18091
+      excel:
+        description: Microsoft Excel spreadsheet format with extension .xlsx or .xls
+        meaning: http://edamontology.org/format_3620
+        notes:
+        - http://edamontology.org/format_3468 is the older version of http://edamontology.org/format_3620
+      fasta:
+        description: FASTA format is a text-based format for representing either nucleotide
+          sequences or peptide sequences, in which nucleotides or amino acids are
+          represented using single-letter codes
+        meaning: http://edamontology.org/format_1929
+      fastq:
+        description: FASTQ format is a text-based format for storing both a biological
+          sequence (usually nucleotide sequence) and its corresponding quality scores.
+          Both the sequence letter and quality score are each encoded with a single
+          ASCII character for brevity
+        meaning: http://edamontology.org/format_1930
+      fcs:
+        description: Format standard of a digital entity that is conformant with the
+          Flow Cytometry Data File Standard
+        meaning: http://purl.obolibrary.org/obo/OBI_0000327
+      fig:
+        description: Line drawing saved in the Xfig format; stored as a vector image
+          that may include lines, shapes, arcs, splines, arrows, and text objects;
+          may also include images, colors, and patterns.
+        source: https://fileinfo.com/extension/fig
+      flagstat:
+        description: Output of samtools flagstat tool
+      gb:
+        description: GenBank Sequence Format (GenBank Flat File Format) consists of
+          an annotation section and a sequence section. The start of the annotation
+          section is marked by a line beginning with the word "LOCUS". The start of
+          sequence section is marked by a line beginning with the word "ORIGIN" and
+          the end of the section is marked by a line with only "//".
+        meaning: http://edamontology.org/format_1936
+        source: https://fairsharing.org/833
+      gct:
+        description: Tab-delimited text files of GenePattern that contain a column
+          for each sample, a row for each gene, and an expression value for each gene
+          in each sample
+        meaning: http://edamontology.org/format_3709
+      gff3:
+        description: Generic Feature Format version 3 (GFF3) of sequence features.
+        meaning: http://edamontology.org/format_1975
+      gtf:
+        description: Gene transfer format (GTF) is a file format used to hold information
+          about gene structure
+        meaning: http://edamontology.org/format_2306
+        source: https://en.wikipedia.org/wiki/Gene_transfer_format
+      gzip:
+        description: GZipped format
+        meaning: http://edamontology.org/format_3989
+      hdf5:
+        description: 'HDF5 is the new version, according to the HDF group, a completely
+          different technology (https://support.hdfgroup.org/products/hdf4/ compared
+          to HDF.   An HDF5 file appears to the user as a directed graph. The nodes
+          of this graph are the higher-level HDF5 objects that are exposed by the
+          HDF5 APIs:  Groups, Datasets, Named datatypes.  Currently supported by the
+          Python MDTraj package. HDF5 is a data model, library, and file format for
+          storing and managing data, based on Hierarchical Data Format (HDF).
+
+          '
+        meaning: http://edamontology.org/format_3590
+        notes:
+        - This file format encompasses/includes the h5ad anndata format commonly used
+          for scRNAseq data sharing.
+      hdr:
+        description: MRI Header file, as in the NIFTI-1 Analyze 7.5 format
+        meaning: https://nifti.nimh.nih.gov/pub/dist/src/niftilib/nifti1.h
+      hic:
+        description: Hi-C contact matrix file
+        source: https://github.com/theaidenlab/juicer/wiki/Data
+      html:
+        description: HTML format
+        meaning: http://edamontology.org/format_2331
+      hyperlink:
+        description: A reference (link) from some point in one hypertext document
+          to another document, another place in the same document, or a website.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C47919
+      idat:
+        description: Proprietary file format for (raw) BeadArray data used by genomewide
+          profiling platforms from Illumina Inc. This format is output directly from
+          the scanner and stores summary intensities for each probe-type on an array.
+        meaning: http://edamontology.org/format_3578
+      idx:
+        description: ''
+      img:
+        description: MRI Data file, as in the NIFTI-1 Analyze 7.5 format
+        meaning: https://nifti.nimh.nih.gov/pub/dist/src/niftilib/nifti1.h
+      jpg:
+        description: Joint Picture Group file format for lossy graphics file.
+        meaning: http://edamontology.org/format_3579
+      js:
+        description: File with Javascript code.
+      json:
+        description: JavaScript Object Notation format; a lightweight, text-based
+          format to represent tree-structured data using key-value pairs.
+        meaning: http://edamontology.org/format_3464
+      lif:
+        description: Leica Image Format (LIF) images are JPEG images with metadata
+          that may contain depth, bokeh data, and one or more images (e.g. stereo
+          images) known as "views".
+        meaning: https://w3id.org/reproduceme#LIF
+        source: https://docs.openmicroscopy.org/bio-formats/5.8.2/formats/leica-lif.html
+      locs:
+        description: Illumina iScan bead location file.
+        source: https://support.illumina.com/content/dam/illumina-support/documents/documentation/system_documentation/iscan/iscan-system-guide-11313539-01.pdf
+      maf:
+        description: Mutation annotation format as outputted from GenomeNexus.
+        source: https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format
+        notes:
+        - DO NOT use http://edamontology.org/format_3008 as that refers to Multiple
+          Alignment Format (MAF).
+      md:
+        description: Markdown (MD) is a lightweight markup language with plain text
+          formatting syntax
+        source: https://en.wikipedia.org/wiki/Markdown
+        notes:
+        - Strangely, EDAM has [R markdown](http://edamontology.org/format_4000) but
+          not markdown
+      mov:
+        description: A video file format with the .mov extension
+        source: https://synapse.org
+      MPEG-4:
+        description: A digital multimedia container format most commonly used to store
+          video and audio.
+        meaning: http://edamontology.org/format_3997
+      msf:
+        description: Proprietary mass-spectrometry format of Thermo Scientific's ProteomeDiscoverer
+          software
+        meaning: http://edamontology.org/format_3702
+      mtx:
+        description: Matrix Market Exchange Format
+        meaning: http://edamontology.org/format_3916
+        source: https://math.nist.gov/MatrixMarket/formats.html#MMformat
+      mzML:
+        description: mzML format for raw spectrometer output data, standardised by
+          HUPO PSI MSS.
+        meaning: http://edamontology.org/format_3244
+      nii:
+        description: NIfTI-1 can store image data from any modality such as PET, MRI,
+          CT, EEG that produces regularly sampled 1-5D rasters.
+        meaning: http://edamontology.org/format_3549
+        source: https://nifti.nimh.nih.gov/nifti-1/documentation/faq
+      ome-tiff:
+        description: OME-TIFF is a preferred open image format
+        meaning: http://edamontology.org/format_3727
+      pdf:
+        description: Portable Document Format
+        meaning: http://edamontology.org/format_3508
+      plink:
+        description: Any Plink file format (MAP/PED/BED/BIM/FAM)
+        source: https://www.cog-genomics.org/plink2/formats
+      png:
+        description: PNG is a file format for image compression
+        meaning: http://edamontology.org/format_3603
+      powerpoint:
+        description: Microsoft Powerpoint slide format
+        meaning: http://edamontology.org/format_3838
+      pzfx:
+        description: A PZFX file is a Prism project created by GraphPad Prism, a scientific
+          application used to analyze and graph data. It contains project data including
+          graphs and layouts, notes, and tables.
+        source: https://fileinfo.com/extension/pzfx
+      psydat:
+        description: TrialHandler or StairHandler object that has been saved to disk
+          with the python cPickle module, ideal for batch analysis and plotting with
+          Python.
+        source: https://www.psychopy.org/general/dataOutputs.html
+        notes:
+        - Not in EDAM as of April 2024.
+      raw:
+        description: Proprietary file format for mass spectrometry data from Thermo
+          Scientific
+        meaning: http://edamontology.org/format_3712
+      rds:
+        description: R binary data format similar to RData.
+        source: https://www.datafiles.samhsa.gov/get-help/format-specific-issues/how-do-i-read-data-r
+      recal:
+        description: .recal file from GATK VQSR
+        meaning: https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_variantrecalibration_VariantRecalibrator.php#--recal_file
+      rmd:
+        description: Markdown document specific to R analyses.
+        meaning: http://edamontology.org/format_4000
+        source: http://rmarkdown.rstudio.com/developer_document_templates.html
+      sam:
+        description: Sequence Alignment/Map (SAM) format for alignment of nucleotide
+          sequences (e.g. sequencing reads) to (a) reference sequence(s)
+        meaning: http://edamontology.org/format_2573
+      sav:
+        description: The SPSS Statistics File Format is a proprietary binary format,
+          developed and maintained as the native format for the SPSS statistical software
+          application.
+        meaning: https://www.loc.gov/preservation/digital/formats/fdd/fdd000469.shtml
+      sdf:
+        description: SDF is one of a family of chemical-data file formats developed
+          by MDL Information Systems; it is intended especially for structural information.
+        meaning: http://edamontology.org/format_3814
+      seg:
+        description: SEG file (segmented data; .seg or .cbs) is a tab-delimited text
+          file that lists loci and associated numeric values
+        meaning: https://software.broadinstitute.org/software/igv/SEG
+      sf:
+        description: Salmon's main output is its quantification file. This file is
+          a plain-text, tab-separated file with a single header line (which names
+          all of the columns).
+        meaning: https://salmon.readthedocs.io/en/latest/file_formats.html
+      sif:
+        description: SIF (simple interaction file) Format - a network/pathway format
+          used for instance in cytoscape
+        meaning: http://edamontology.org/format_3619
+      sqlite:
+        description: Data format used by the SQLite database.
+        meaning: http://edamontology.org/format_3621
+      sra:
+        description: SRA archive format (SRA) is the archive format used for input
+          to the NCBI Sequence Read Archive.
+        meaning: http://edamontology.org/format_3698
+      svg:
+        description: Scalable Vector Graphics (SVG) is an XML-based vector image format
+          for two-dimensional graphics with support for interactivity and animation.
+        meaning: http://edamontology.org/format_3604
+      svs:
+        description: A single-file pyramidal tiled TIFF, with non-standard metadata
+          and compression.
+        source: https://openslide.org/formats/aperio/
+      tagAlign:
+        description: Tag Alignment provides genomic mapping of short sequence tags.
+        source: https://genome.ucsc.edu/FAQ/FAQformat.html#format15
+      tar:
+        description: TAR archive file format generated by the Unix-based utility tar.
+        meaning: http://edamontology.org/format_3981
+      tbi:
+        description: A TBI file is an index for a TABIX-compressed genomic data file,
+          enabling rapid region-based retrieval.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C184806
+      tif:
+        description: Tagged Image File Format, abbreviated TIFF or TIF, is a computer
+          file format for storing raster graphics images
+        meaning: http://edamontology.org/format_3591
+      tom:
+        description: The .tom format is a specialized 3D image export format from
+          the Vectra medical imaging systems that can optionally preserve trimmings
+          and/or landmarks.
+        source: http://canfieldupgrade.com/assets/media/VECTRA-M3-User-Guide.pdf
+        notes:
+        - No other model has this as it is relatively new and highly specific format
+          for a proprietary platform.
+      tranches:
+        description: .tranches file from GATK VQSR
+        source: https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_variantrecalibration_VariantRecalibrator.php#--tranches_file
+      tsv:
+        description: Tabular data represented as tab-separated values in a text file
+        meaning: http://edamontology.org/format_3475
+      txt:
+        description: Textual format
+        meaning: http://edamontology.org/format_2330
+      vcf:
+        description: Variant Call Format (VCF) for sequence variation (indels, polymorphisms,
+          structural variation)
+        meaning: http://edamontology.org/format_3016
+      wiggle:
+        description: Wiggle format (WIG) of a sequence annotation track that consists
+          of a value for each sequence position
+        meaning: http://edamontology.org/format_3005
+      xml:
+        description: eXtensible Markup Language (XML) format.
+        meaning: http://edamontology.org/format_2332
+      yaml:
+        description: YAML (YAML Ain't Markup Language) is a human-readable tree-structured
+          data serialisation that is a superset of JSON (as of v1.2).
+        meaning: http://edamontology.org/format_3750
+      zip:
+        description: zip is a format standard of a digital entity that is conformant
+          with the PKWARE .ZIP file format specification
+        meaning: http://edamontology.org/format_3987
   AssayEnum:
+    title: Assay
     permissible_values:
       2D AlamarBlue absorbance:
         description: "Cell viability assay based on detection of AlamarBlue (resazurin).\
@@ -35,6 +890,20 @@ enums:
       3D microtissue viability:
         description: Cell viability assay on a 3D microtissue model.
         meaning: https://www.ncbi.nlm.nih.gov/books/NBK343426/
+      actigraphy:
+        description: Use of a portable device (actigraph) to study sleep-wake patterns
+          and circadian rhythms by assessing movement.
+        meaning: http://purl.obolibrary.org/obo/MAXO_0000914
+      AlgometRx Nociometer:
+        description: Assay that can selectively measure the sensitivity of three different
+          nerve fiber types. An overall score can be derived to indicate the type
+          of pain a person is experiencing and can be used to monitor how well a patient
+          responds to treatment of pain.
+      auditory brainstem response:
+        description: ABR is a gold standard for evaluating hearing in mice. A non-invasive
+          method that measures the electrical activity generated by the auditory nerve
+          and brainstem in response to sound stimuli. Electrodes are placed on the
+          scalp of the mouse, and sound is delivered through a speaker or earphone.
       ATAC-seq:
         description: Open chromatin regions measured by sequencing DNA after assay
           for transposase-accessible chromatin (ATAC) treatment
@@ -47,11 +916,6 @@ enums:
         notes:
         - See also https://www.bellbrooklabs.com/atpase-activity-assay-for-drug-discovery/
           for discussion
-      AlgometRx Nociometer:
-        description: Assay that can selectively measure the sensitivity of three different
-          nerve fiber types. An overall score can be derived to indicate the type
-          of pain a person is experiencing and can be used to monitor how well a patient
-          responds to treatment of pain.
       BrdU proliferation assay:
         description: A cell proliferation assay in which cells are cultured in the
           presence of BrdU which is incorporated into newly synthesized DNA of replicating
@@ -63,8 +927,6 @@ enums:
           circulating tumor DNA (ctDNA)
         meaning: http://www.ebi.ac.uk/efo/EFO_0008672
         source: https://www.redjournal.org/article/S0360-3016(16)30438-2/fulltext
-      CODEX:
-        description: CODEX imaging.
       CUT&RUN:
         description: Cleavage Under Targets and Release Using Nuclease (CUT&RUN) is
           a chromatin profiling strategy in which antibody-targeted controlled cleavage
@@ -90,11 +952,17 @@ enums:
 
           '
         meaning: http://purl.obolibrary.org/obo/NCIT_C165711
-      Children's Dermatology Life Quality Index Questionnaire:
-        description: A standardized rating scale originally developed by Lewis-Jones
-          and Finlay in 1995. This instrument is used to make quality of life assessment
-          in children with skin conditions. [ NCI ]
-        meaning: http://purl.obolibrary.org/obo/NCIT_C119092
+      CODEX:
+        description: CODEX imaging.
+      confocal microscopy:
+        description: 'Confocal microscopy has advantages over widefield optical microscopy,
+          including the ability to eliminate or reduce background information away
+          from the focal plane and collect serial optical sections from thick specimens.  It
+          uses point illumination and a spatial pinhole to eliminate out-of-focus
+          light in specimens that are thicker than the focal plane.
+
+          '
+        meaning: http://www.bioassayontology.org/bao#BAO_0000453
       Corsi blocks:
         description: "A visuospatial counterpart to the verbal-memory span task (Milner,\
           \ 1971). Over the years, it has frequently been used to assess visuospatial\
@@ -102,6 +970,31 @@ enums:
           \ children (e.g. Orsini, Schiappa, & Grossi, 1981), and patients with neuropsychological\
           \ deficits. \n"
         meaning: https://www.cognitiveatlas.org/task/id/trm_4da881dace79c/
+      current clamp assay:
+        description: 'The current clamp technique records the membrane potential by
+          injecting current into a cell through the recording electrode.  Unlike in
+          the voltage clamp mode, where the membrane potential is held at a level
+          determined by the experimenter, in "current clamp" mode the membrane potential
+          is free to vary,  and the amplifier records whatever voltage the cell generates
+          on its own or as a result of stimulation.  This technique is used to study
+          how a cell responds when electric current enters a cell; this is important
+          for instance for understanding how neurons respond to neurotransmitters
+          that act by opening membrane ion channels.
+
+          '
+        meaning: http://purl.obolibrary.org/obo/OBI_0002185
+      diffusion MRI:
+        description: MRI method that measure the diffusion of water in the tissue,
+          rather than the content of water as measured in conventional MRI.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C20117
+      distortion product otoacoustic emissions:
+        description: 'DPOAE evaluates cochlear (outer hair cell) function and helps
+          identify hearing loss due to cochlear dysfunction.Measures the sound waves
+          generated by the inner ear (cochlea) in response to two simultaneous tones
+          of different frequencies.  A probe with a microphone and speaker is placed
+          in the ear canal to deliver sounds and capture the cochlear response.
+
+          '
       DNA optical mapping:
         description: Fluorescent imaging of linearly extended DNA molecules to probe
           information patterns along the molecules
@@ -121,14 +1014,6 @@ enums:
           is an alternative to the classical BrdU assay.
         meaning: http://purl.obolibrary.org/obo/OBI_0000891
         source: https://www.sigmaaldrich.com/deepweb/assets/sigmaaldrich/product/documents/100/843/17-1052x.pdf
-      FACE-Q Appearance-related Distress:
-        description: 'This 8-item scale measures appearance-related distress in people
-          seeking cosmetic treatments for the body or the face.  Item ask someone
-          to agree/disagree with statements about feelings (e.g., unhappy, stressed,
-          down) and behaviors, such as avoiding being around people.
-
-          '
-        meaning: https://qportfolio.org/wp-content/uploads/2021/11/FACE-Q-AESTHETICS-USERS-GUIDE.pdf
       FIA-MSMS:
         description: Flow injection analysis - tandem mass spectrometer
         meaning: https://www.ncbi.nlm.nih.gov/pubmed/28667829
@@ -141,14 +1026,6 @@ enums:
 
           '
         source: https://www.moleculardevices.com/products/flipr-penta-high-throughput-cellular-screening-system
-      FTIR spectroscopy:
-        description: 'Fourier transform infrared (FTIR) spectroscopy is a technique
-          used to obtain an infrared spectrum of absorption or emission of a solid,
-          liquid or gas.  An FTIR spectrometer simultaneously collects high-resolution
-          spectral data over a wide spectral range.
-
-          '
-        meaning: http://purl.obolibrary.org/obo/CHMO_0000636
       Fluorescence In Situ Hybridization:
         description: 'A physical mapping approach that uses fluorescent tags to detect
           hybridization of probes within metaphase chromosomes or less condensed somatic
@@ -164,6 +1041,14 @@ enums:
 
           '
         meaning: http://purl.obolibrary.org/obo/NCIT_C154589
+      FTIR spectroscopy:
+        description: 'Fourier transform infrared (FTIR) spectroscopy is a technique
+          used to obtain an infrared spectrum of absorption or emission of a solid,
+          liquid or gas.  An FTIR spectrometer simultaneously collects high-resolution
+          spectral data over a wide spectral range.
+
+          '
+        meaning: http://purl.obolibrary.org/obo/CHMO_0000636
       HI-C:
         description: Chromatin interactions detected by HI-C protocol
         meaning: http://www.ebi.ac.uk/efo/EFO_0007693
@@ -175,39 +1060,30 @@ enums:
 
           '
         meaning: http://purl.obolibrary.org/obo/NCIT_C16434
-      ISO-seq:
-        description: Full isoform sequencing
       Interview:
         description: A conversation with an individual regarding his or her background
           and other personal and professional details, opinions on specific subjects
           posed by the interviewer, etc.
         meaning: http://purl.obolibrary.org/obo/NCIT_C16751
+      ISO-seq:
+        description: Full isoform sequencing
       MIB/MS:
         description: Kinomics assay using multiplexed kinase inhibitor beads and mass
           spectrometry (MIB/MS)
         meaning: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3328787/
-      Magnetization-Prepared Rapid Gradient Echo MRI:
-        description: 'A magnetic resonance imaging modality that offers rapid imaging
-          time, easy reconstruction of any plane, and three-dimensional surface contour
-          rendering with cut away postprocessing.  Especially useful for imaging brain,
-          MP-RAGE captures high tissue contrast and provides high spatial resolution
-          with whole brain coverage in a short scan time.
-
-          '
-        meaning: http://purl.obolibrary.org/obo/NCIT_C118462
       Matrigel-based tumorigenesis assay:
         description: An assay in which tumor cells are loaded into a Matrigel matrix
           and measured for tumor formation characteristics
         see_also:
         - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3230200/
-      Migration Assay:
-        description: An in vitro assay in which cultured cells are monitored and analyzed
-          for their ability to move into an acellular area of a culture material.
-        meaning: http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C19425
       MudPIT:
         description: MudPIT is a method for rapid and large-scale protein identification
           by multidimensional liquid chromatography associated with tandem mass spectrometry
         meaning: http://purl.obolibrary.org/obo/MI_0658
+      Migration Assay:
+        description: An in vitro assay in which cultured cells are monitored and analyzed
+          for their ability to move into an acellular area of a culture material.
+        meaning: http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C19425
       NIH Toolbox:
         description: A comprehensive set of neuro-behavioral measures that assess
           cognitive, emotional, sensory, and motor functions"
@@ -215,17 +1091,6 @@ enums:
       NOMe-seq:
         description: Nucleosome Occupancy and Methylome Sequencing
         meaning: http://purl.obolibrary.org/obo/NCIT_C106053
-      NanoString nCounter Analysis System:
-        description: A proprietary molecular analysis system for single molecule detection
-          with no amplification. It uses unique fluorescent barcodes for direct, digital
-          detection and copy number quantitation of hundreds of different target molecules
-          in a single run. It requires only nanoscale amounts of RNA and has a detection
-          sensitivity down to 1 copy per cell.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C198498
-      PROMIS Cognitive Function:
-        description: The PROMIS Cognitive Function and Cognitive Function Abilities
-          Subset item banks assess patient-perceived cognitive deficits.
-        meaning: http://www.healthmeasures.net/images/PROMIS/manuals/PROMIS_Cognitive_Function_Scoring_Manual.pdf
       RNA array:
         description: RNA measurements captured by array technology
         meaning: http://purl.obolibrary.org/obo/OBI_0001463
@@ -246,20 +1111,11 @@ enums:
       SNP array:
         description: SNP measurements captured by array technology
         meaning: http://purl.obolibrary.org/obo/OBI_0001204
-      STR profile:
-        description: The analysis of all of the short tandem repeats in the genome
-          of a biological sample.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C129889
       SUSHI:
         description: Fast super-resolution method that exploits sparsity in the underlying
           vasculature and statistical independence within the measured signals to
           detect slow-flowing blood, facilitating noninvasive perfusion measurements.
         meaning: https://pubmed.ncbi.nlm.nih.gov/30295619/
-      SaferSeqS:
-        description: A blood-based assay that evaluates mutations in circulating tumor
-          DNA and chromosomal copy number changes to detect minimal residual disease
-          (MRD) with high specificity towards tumor type.
-        source: https://doi.org/10.1038/s41587-021-00900-z
       Sanger sequencing:
         description: A DNA sequencing technique in which a mixture of deoxynucleosidetriphosphates
           (dNTPs) and chain-terminating dNTPs, which are radioactively or fluorescently
@@ -267,11 +1123,6 @@ enums:
           complete, the DNA strands are separated by size, and the labeled chain terminating
           dNTPs can be read in sequence by the investigator or by a machine.
         meaning: http://purl.obolibrary.org/obo/NCIT_C19641
-      Skindex-16:
-        description: A validated measure of the effects of skin diseases on quality
-          of life that [is] suitable for use in research about patients' experiences
-          of illness and its treatment
-        source: https://pubmed.ncbi.nlm.nih.gov/22284137/
       Social Responsiveness Scale:
         description: The Social Responsiveness Scale (SRS; Constantino et al., 2003)
           is a brief assessment tool for measuring autism traits.
@@ -310,10 +1161,6 @@ enums:
       Von Frey test:
         description: Assay applying electrical stimulus to assess pain in rodents.
         meaning: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5592204/
-      actigraphy:
-        description: Use of a portable device (actigraph) to study sleep-wake patterns
-          and circadian rhythms by assessing movement.
-        meaning: http://purl.obolibrary.org/obo/MAXO_0000914
       active avoidance learning behavior assay:
         description: A behavioral assay devised to measure active avoidance learning
           behavior
@@ -323,11 +1170,6 @@ enums:
         description: Microscopy which uses a sharp spike (known as a 'tip') mounted
           on the end of a cantilever to scan the surface of the specimen
         meaning: http://purl.obolibrary.org/obo/CHMO_0000113
-      auditory brainstem response:
-        description: ABR is a gold standard for evaluating hearing in mice. A non-invasive
-          method that measures the electrical activity generated by the auditory nerve
-          and brainstem in response to sound stimuli. Electrodes are placed on the
-          scalp of the mouse, and sound is delivered through a speaker or earphone.
       autoradiography:
         description: A radioactivity detection technique using X-ray film to visualize
           molecules or fragments of molecules that have been radioactively labeled.
@@ -363,10 +1205,6 @@ enums:
           of cAMP in cell lysates, which can be used to study G protein-coupled receptor
           (GPCR) signaling and other intracellular signaling pathways.
         meaning: https://www.promega.com/products/cell-signaling/gpcr-signaling/camp_glo-max-assay/?catNum=V1681
-      cNF-Skindex:
-        description: The cNF-Skindex, validated in a French population, specifically
-          assesses the cNF-related QOL.
-        source: https://pubmed.ncbi.nlm.nih.gov/37149083/
       calcium retention capacity assay:
         description: The CRC assay assesses Ca2+-related mitochondrial functions
         see_also:
@@ -395,6 +1233,10 @@ enums:
         description: Data pertaining to the medical well-being or status of a patient.
           Category also includes clinical reports and individual patient data.
         meaning: http://purl.obolibrary.org/obo/NCIT_C15783
+      cNF-Skindex:
+        description: The cNF-Skindex, validated in a French population, specifically
+          assesses the cNF-related QOL.
+        source: https://pubmed.ncbi.nlm.nih.gov/37149083/
       cognitive assessment:
         description: A set of tests or assessments to determine congnitive abilities
           of a patient.
@@ -414,15 +1256,6 @@ enums:
         source: https://www.caymanchem.com/product/700940/mitocheck%C2%AE-complex-ii-activity-assay-kit
       compound screen:
         description: ''
-      confocal microscopy:
-        description: 'Confocal microscopy has advantages over widefield optical microscopy,
-          including the ability to eliminate or reduce background information away
-          from the focal plane and collect serial optical sections from thick specimens.  It
-          uses point illumination and a spatial pinhole to eliminate out-of-focus
-          light in specimens that are thicker than the focal plane.
-
-          '
-        meaning: http://www.bioassayontology.org/bao#BAO_0000453
       contextual conditioning behavior assay:
         description: A behavioral assay devised to measure contextual conditioning
           behavior
@@ -432,37 +1265,17 @@ enums:
           T2 weighted, fluid attenuated inversion recovery (FLAIR), and gadolinium-enhanced
           sequences. [  NCI  ]
         meaning: http://purl.obolibrary.org/obo/NCIT_C175525
-      current clamp assay:
-        description: 'The current clamp technique records the membrane potential by
-          injecting current into a cell through the recording electrode.  Unlike in
-          the voltage clamp mode, where the membrane potential is held at a level
-          determined by the experimenter, in "current clamp" mode the membrane potential
-          is free to vary,  and the amplifier records whatever voltage the cell generates
-          on its own or as a result of stimulation.  This technique is used to study
-          how a cell responds when electric current enters a cell; this is important
-          for instance for understanding how neurons respond to neurotransmitters
-          that act by opening membrane ion channels.
-
-          '
-        meaning: http://purl.obolibrary.org/obo/OBI_0002185
+      Children's Dermatology Life Quality Index Questionnaire:
+        description: A standardized rating scale originally developed by Lewis-Jones
+          and Finlay in 1995. This instrument is used to make quality of life assessment
+          in children with skin conditions. [ NCI ]
+        meaning: http://purl.obolibrary.org/obo/NCIT_C119092
       differential scanning calorimetry:
         description: Differential scanning calorimetry (DSC) is the measurement of
           thermodynamic parameters (e.g. enthalpy) during a chemical or biochemical
           reaction of both a sample and a reference, by the known variation (step-wise
           or linear) of one variable, whilst a second is kept constant.
         meaning: http://purl.obolibrary.org/obo/CHMO_0000684
-      diffusion MRI:
-        description: MRI method that measure the diffusion of water in the tissue,
-          rather than the content of water as measured in conventional MRI.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C20117
-      distortion product otoacoustic emissions:
-        description: 'DPOAE evaluates cochlear (outer hair cell) function and helps
-          identify hearing loss due to cochlear dysfunction.Measures the sound waves
-          generated by the inner ear (cochlea) in response to two simultaneous tones
-          of different frequencies.  A probe with a microphone and speaker is placed
-          in the ear canal to deliver sounds and capture the cochlear response.
-
-          '
       dynamic light scattering:
         description: Dynamic Light Scattering (DLS), also known as photocorrelation
           spectroscopy, is a method for determining the size distribution of a sample
@@ -486,6 +1299,14 @@ enums:
           for example 40 to 60 centimeters, above the floor or platform upon which
           the apparatus sits.
         meaning: http://purl.obolibrary.org/obo/MMO_0000262
+      FACE-Q Appearance-related Distress:
+        description: 'This 8-item scale measures appearance-related distress in people
+          seeking cosmetic treatments for the body or the face.  Item ask someone
+          to agree/disagree with statements about feelings (e.g., unhappy, stressed,
+          down) and behaviors, such as avoiding being around people.
+
+          '
+        meaning: https://qportfolio.org/wp-content/uploads/2021/11/FACE-Q-AESTHETICS-USERS-GUIDE.pdf
       flow cytometry:
         description: A cytometry assay in which an input cell population is put in
           solution, is passed by a laser, and optical sensors are used to detect scattering
@@ -639,6 +1460,15 @@ enums:
         description: Detection and measurement of the resonant spectra of molecular
           species in a tissue or sample.
         meaning: http://purl.obolibrary.org/obo/NCIT_C16810
+      Magnetization-Prepared Rapid Gradient Echo MRI:
+        description: 'A magnetic resonance imaging modality that offers rapid imaging
+          time, easy reconstruction of any plane, and three-dimensional surface contour
+          rendering with cut away postprocessing.  Especially useful for imaging brain,
+          MP-RAGE captures high tissue contrast and provides high spatial resolution
+          with whole brain coverage in a short scan time.
+
+          '
+        meaning: http://purl.obolibrary.org/obo/NCIT_C118462
       mass spectrometry:
         description: A generic mass spectrometry assay that allows identification
           and amount of peptide or protein materials.
@@ -668,6 +1498,11 @@ enums:
         notes:
         - Dynamic light scattering (DLS) is the ancestor of microrheology.
         source: https://www.elveflow.com/microfluidic-reviews/general-microfluidics/microrheology-a-review/
+      Skindex-16:
+        description: A validated measure of the effects of skin diseases on quality
+          of life that [is] suitable for use in research about patients' experiences
+          of illness and its treatment
+        source: https://pubmed.ncbi.nlm.nih.gov/22284137/
       multi-electrode array:
         description: 'A multi-electrode array is a grid of tightly spaced microscopic
           electrodes embedded in the bottom of each well in a multi-well MEA plate.  Cells,
@@ -677,6 +1512,17 @@ enums:
 
           '
         source: https://www.axionbiosystems.com/multielectrode-array
+      nanoparticle tracking analysis:
+        description: Particle sizing technique based on Brownian motion and scattered
+          light.
+        meaning: http://purl.enanomapper.org/onto/ENM_0000065
+      NanoString nCounter Analysis System:
+        description: A proprietary molecular analysis system for single molecule detection
+          with no amplification. It uses unique fluorescent barcodes for direct, digital
+          detection and copy number quantitation of hundreds of different target molecules
+          in a single run. It requires only nanoscale amounts of RNA and has a detection
+          sensitivity down to 1 copy per cell.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C198498
       n-back task:
         description: A task in which items (e.g., letters) are presented one at a
           time and participants must identify each item that repeats relative to the
@@ -685,10 +1531,6 @@ enums:
         notes:
         - There are variants such as verbal n-back and visuospatial n-back; currently
           we do not go into that level of granularity.
-      nanoparticle tracking analysis:
-        description: Particle sizing technique based on Brownian motion and scattered
-          light.
-        meaning: http://purl.enanomapper.org/onto/ENM_0000065
       neuropsychological assessment:
         description: Evaluation for cognitive impairment by assessing the neuropsychological
           domains.
@@ -704,6 +1546,15 @@ enums:
           by clear or opaque walls, used to measure movement, exploratory behavior,
           etc of an experimental subject.
         meaning: http://purl.obolibrary.org/obo/MMO_0000258
+      optical tomography:
+        description: 'Optical tomography is a form of computed tomography that creates
+          a digital volumetric model of an object by reconstructing images made from
+          light transmitted and scattered through an object. Subtypes are diffuse
+          optical tomography, time-of-flight diffuse optical tomography, fluorescence
+          molecular tomography, confocal diffuse tomography, optical coherence tomography.
+
+          '
+        source: https://en.wikipedia.org/wiki/Optical_tomography
       optical coherence tomography:
         description: 'Optical Coherence Tomography (OCT) combines the principles of
           ultrasound with the imaging performance of a microscope.  OCT uses infrared
@@ -718,15 +1569,6 @@ enums:
           '
         meaning: http://purl.obolibrary.org/obo/NCIT_C20828
         source: https://en.wikipedia.org/wiki/Optical_coherence_tomography
-      optical tomography:
-        description: 'Optical tomography is a form of computed tomography that creates
-          a digital volumetric model of an object by reconstructing images made from
-          light transmitted and scattered through an object. Subtypes are diffuse
-          optical tomography, time-of-flight diffuse optical tomography, fluorescence
-          molecular tomography, confocal diffuse tomography, optical coherence tomography.
-
-          '
-        source: https://en.wikipedia.org/wiki/Optical_tomography
       optokinetic reflex assay:
         description: The optokinetic reflex (OKR), which serves to stabilize a moving
           image on the retina, is a behavioral response that has many favorable attributes
@@ -790,6 +1632,10 @@ enums:
         description: A technique for measuring the gamma radiation produced by collisions
           of electrons and positrons (anti-electrons) within living tissue.
         meaning: http://purl.obolibrary.org/obo/NCIT_C17007
+      PROMIS Cognitive Function:
+        description: The PROMIS Cognitive Function and Cognitive Function Abilities
+          Subset item banks assess patient-perceived cognitive deficits.
+        meaning: http://www.healthmeasures.net/images/PROMIS/manuals/PROMIS_Cognitive_Function_Scoring_Manual.pdf
       proximity extension assay:
         description: Olink's Proximity Extension Assay (PEA) combines specificity
           and scalability to enable high-throughput, multiplex protein biomarker analysis.
@@ -810,9 +1656,9 @@ enums:
         description: Reactive oxygen species (ROS) are measured to assess oxidative
           events and to investigate their biological importance using antioxidants
           or inhibitors to modulate the phenomena observed.
+        source: https://www.nature.com/articles/s42255-022-00591-z
         notes:
         - https://www.nature.com/articles/s42255-022-00591-z for good discussion
-        source: https://www.nature.com/articles/s42255-022-00591-z
       reporter gene assay:
         description: 'Reporter gene assay measures the gene expression from a reporter
           gene. The reporter gene is inserted under the control of a foreign promoter
@@ -857,12 +1703,11 @@ enums:
       scale:
         description: An instrument or machine for weighing.
         meaning: http://purl.obolibrary.org/obo/MMO_0000217
-      single cell ATAC-seq:
-        description: A molecular genetic technique where DNA is isolated from single
-          cell (sc) samples and amplified to create a genomic library. Then the library
-          is subjected to ATAC-seq, which isolates and sequences regions rich in open
-          chromatin.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C179458
+      SaferSeqS:
+        description: A blood-based assay that evaluates mutations in circulating tumor
+          DNA and chromosomal copy number changes to detect minimal residual disease
+          (MRD) with high specificity towards tumor type.
+        source: https://doi.org/10.1038/s41587-021-00900-z
       single molecule drug screen assay:
         description: An experiment in which a single molecule was used in an assay
       single-cell RNA-seq:
@@ -870,6 +1715,12 @@ enums:
           of the RNA transcripts in an amplified nucleotide sample that was derived
           from a single cell.
         meaning: http://purl.obolibrary.org/obo/NCIT_C171152
+      single cell ATAC-seq:
+        description: A molecular genetic technique where DNA is isolated from single
+          cell (sc) samples and amplified to create a genomic library. Then the library
+          is subjected to ATAC-seq, which isolates and sequences regions rich in open
+          chromatin.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C179458
       single-nucleus RNA-seq:
         description: A method for quantifying the transcriptome of individual cells,
           in which transcripts isolated from single nuclei are subjected to high-throughput
@@ -960,810 +1811,10 @@ enums:
           list of words. The WRS is a percentage of words correctly repeated. It's
           a more functional measure because it predicts whether hearing loss can be
           improved with amplification.
-    title: Assay
-  Data:
-    description: Type of data represented by the entity (File, Dataset, etc.).
-    notes:
-    - http://edamontology.org/data_0006
-    - Broad term/abstract class; should not be used for annotation
-    permissible_values:
-      aggregated data:
-        description: Summary or group-level data.
-        notes:
-        - Not preferred for annotation.
-      aligned reads:
-        description: Aligned reads output from alignment workflows
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads
-      annotated germline variants:
-        description: Germline variants annotated with some annotation workflow
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_germline_variation
-      annotated somatic mutation:
-        description: Somatic variants annotated with some annotation workflow
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation
-      audio transcript:
-        description: Text transcript of an audio recording.
-        meaning: https://w3id.org/synapse/nfosi/vocab/audioTranscript
-      behavioral data:
-        description: "Qualitative or quantitative behavioral measurements / observations\
-          \ about the action, reaction, or performance of an organism in response\
-          \ to external or internal stimuli. \nExamples: avoidance behavior, choice-making.\n"
-        notes:
-        - Legacy concept previously labeled "behavior process", updated to "behavioral
-          data".
-      cellular physiology:
-        description: Data on the physiological parameter of a cell.
-        meaning: https://w3id.org/synapse/nfosi/vocab/cellularPhysiology
-      characteristic:
-        description: Broad data type for data that can encompass volume, weight, brightness,
-          color, capacity, etc.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C25447
-        notes:
-        - Not preferred for annotation; more specific term should be used.
-        - May cover both morphology parameter and physiology parameter.
-      chromatin activity:
-        description: Data of chromatin activity, which allows access to condensed
-          genomic DNA and potentially controls gene expression.
-        meaning: https://w3id.org/synapse/nfosi/vocab/chromatinActivity
-        see_also:
-        - https://en.wikipedia.org/wiki/Chromatin_remodeling
-      clinical:
-        description: Data containing clinical information, e.g. patient diagnosis,
-          personal demographics, exposures, laboratory tests, family relationships.
-        meaning: http://www.ebi.ac.uk/efo/EFO_0030083
-        notes:
-        - The closest EDAM term is for [EHR](http://edamontology.org/data_3861), and
-          while [ecological data](http://edamontology.org/data_3736), there is no
-          mapping, which is why we use EFO.
-        see_also:
-        - https://docs.gdc.cancer.gov/Encyclopedia/pages/Clinical_Data
-      copy number variants:
-        description: Copy number variants
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=copy_number_variation
-      count matrix:
-        description: A table of unnormalized values representing summarised read counts
-          per genomic region (e.g. gene, transcript, peak).
-        meaning: http://edamontology.org/data_3917
-      data index:
-        description: A data index is information used to help with retrieval of some
-          other data, especially large-scale data that would benefit from such an
-          index. Very common formats are .bai and .tbi.
-        meaning: http://edamontology.org/data_0955
-      data sharing plan:
-        description: A document containing the plan and documentation for data sharing,
-          one component of overall data management.
-        meaning: http://edamontology.org/data_4040
-        notes:
-        - Technically EDAM term is 'data management plan', which is more encompassing
-          in scope.
-        - Use for tagging uploaded data sharing plans.
-      demographics:
-        description: The statistical characterization of human populations or segments
-          of human populations (e.g., characterization by age, sex, race, or income).
-        meaning: http://purl.obolibrary.org/obo/NCIT_C16495
-      drug combination screen:
-        description: Information on drug sensitivity of more than one compound
-        source: https://www.ncbi.nlm.nih.gov/pubmed/29344898
-      drug screen:
-        description: Information on drug sensitivity and molecular markers of drug
-          response
-        meaning: https://w3id.org/synapse/nfosi/vocab/drugScreen
-        source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3531057/
-      electrophysiology:
-        description: "Data generated from an electrophysiology assay, e.g: \n- Cell:\
-          \ Resting membrane potential, ion channel currents (patch clamp data)\n\
-          - Neurons: Action potentials, resting potential, synaptic potentials. \n\
-          - Heart: Electrocardiogram (ECG/EKG) waveforms, cardiac action potentials.\n\
-          - Muscle: Electromyogram (EMG) signals\n- Whole brain: Electroencephalogram\
-          \ (EEG)\n- Retina: Electroretinogram (ERG)\n"
-        meaning: https://w3id.org/synapse/nfosi/vocab/electrophysiology
-        notes:
-        - ERO has been deprecated and direct URIs no longer work.
-        source: https://bioportal.bioontology.org/ontologies/ERO/?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FERO_0000564&jump_to_nav=true
-      epidemiological data:
-        description: Data that is used to describe the distribution of a disease or
-          health-related characteristic within a population and to identify factors
-          that affect that distribution.
-      gene expression:
-        description: Data of the levels and patterns of synthesis of gene products
-          (proteins and functional RNA), including interpretation in functional terms
-          of gene expression data.
-        meaning: http://edamontology.org/data_2603
-        notes:
-        - EDAM does have a broader mapping, [expression data](http://edamontology.org/data_2603)
-        - The mapping used maps to [gene expression profile](http://edamontology.org/data_0928)
-        - Covers both raw (e.g. fastqs, microarray intensities) and processed gene
-          expression data (e.g. normalized gene expression matrix).
-      genomic features:
-        description: Data of sequence feature (continuous extent of biological sequence)
-          that is of genomic origin.
-        meaning: http://purl.obolibrary.org/obo/GENO_0000481
-        notes:
-        - Really subclass of "nucleic acid features" (http://edamontology.org/data_1276)
-        see_also: https://en.wikipedia.org/wiki/General_feature_format
-      genomic variants:
-        description: 'Genomic alterations, including single nucleotide polymorphisms,
-          short indels and structural variants. Use more specific term if possible,
-          esp. if data is only of one specific subset.
-
-          '
-        meaning: http://edamontology.org/data_3498
-        notes:
-        - Somewhat more specific than the concept URI it is mapped to.
-      germline variants:
-        description: Called germline variants
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation
-      image:
-        description: Biological or biomedical data that has been rendered into an
-          image.
-        meaning: http://edamontology.org/data_2968
-      immunoassay:
-        description: Laboratory test involving interaction of antigens with specific
-          antibodies.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C16723
-      isoform expression:
-        description: Expression of protein isoforms formed from alternative splicings
-          or other post-translational modifications of a single gene through RNA splicing
-          mechanisms.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C184767
-        source: https://en.wikipedia.org/wiki/Protein_isoform
-      kinomics:
-        description: Data studying protein kinase signaling/activity.
-        meaning: https://w3id.org/synapse/nfosi/vocab/kinomics
-        notes:
-        - See "Kinome Response Profile" (http://purl.obolibrary.org/obo/NCIT_C107137)
-          for kinome data *specifically* with drug treatment
-        - Subclasss of "Proteomics" (http://purl.obolibrary.org/obo/NCIT_C16723)
-        source: http://www.kinomecore.com/what-is-kinomics/
-      mask image:
-        description: Image used as the mask for an image processing operation, such
-          as subtraction.
-        meaning: http://dicom.nema.org/resources/ontology/DCM/121321
-      mass spectrometry data:
-        description: Data from mass spectrometry measurement.
-        meaning: http://edamontology.org/data_2536
-      metabolomics:
-        description: Data of metabolites, the chemical processes they are involved,
-          and the chemical fingerprints of specific cellular processes in a whole
-          cell, tissue, organ or organism.
-        meaning: https://w3id.org/synapse/nfosi/vocab/metabolomics
-        see_also:
-        - http://edamontology.org/topic_3172
-      molecular property:
-        description: Data on the physical (e.g. structural) or chemical properties
-          of molecules, or parts of a molecule.
-        meaning: http://edamontology.org/data_2087
-      morphology parameter:
-        description: Experimentally determined parameter of the morphology of an organism,
-          e.g. size & shape. General term representing data about **structure** and
-          **form** of an organism or organism part.
-        meaning: http://edamontology.org/data_3723
-      network:
-        description: Network data represents connections between entities and are
-          often in graphical format.
-        meaning: http://edamontology.org/data_2600
-        notes:
-        - EDAM preferred label is 'Pathway or network'
-      normalized intensities:
-        description: Normalized intensity values from the instrument.
-        meaning: https://w3id.org/synapse/nfosi/vocab/NormalizedIntensities
-        notes:
-        - Not preferred for annotation.
-        - See RawIntensities
-      nucleic acid sequence record:
-        description: A nucleic acid sequence and associated metadata.
-        meaning: http://edamontology.org/data_2887
-        notes:
-        - Can be used for .dna (SnapGene) files.
-      over-representation data:
-        description: A ranked list of categories (usually ontology concepts), each
-          associated with a statistical metric of over-/under-representation within
-          the studied data.
-        meaning: http://edamontology.org/data_3753
-      particle characterization:
-        description: Data providing information about entities such as composition,
-          structure and defects.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C62317
-        notes:
-        - More general than `molecular property`
-      pharmacokinetics:
-        description: Data characterizing the process by which a drug is absorbed,
-          distributed, metabolized, and eliminated by the body.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C49663
-      physiology parameter:
-        description: Experimentally determined parameter of the physiology of an organism,
-          e.g. metabolic rate. General term representing data about **function** and
-          **process** of an organism or organism part.
-        meaning: http://edamontology.org/data_3722
-        notes:
-        - Relation to pharmacokinetic data -- certain physiology parameteres inherent
-          to the organism influences its pharmokinetics of a drug.
-      plot:
-        description: Data that has been plotted as a graph of some type, or data representing
-          such a graph.
-        meaning: http://edamontology.org/data_2884
-      protein interaction data:
-        description: 'Data concerning the interactions (predicted or known) within
-          or between a protein, structural domain or part of a protein.  This includes
-          intra- and inter-residue contacts and distances, as well as interactions
-          with other proteins and non-protein entities such as nucleic acid, metal
-          atoms, water, ions etc.
-
-          '
-        meaning: http://edamontology.org/data_0906
-      protein interaction raw data:
-        description: Protein-protein interaction data from for example yeast two-hybrid
-          analysis, protein microarrays, immunoaffinity chromatography followed by
-          mass spectrometry, phage display etc.
-        meaning: http://edamontology.org/data_0905
-      proteomics:
-        description: Protein and peptide identification, especially in the study of
-          whole proteomes of organisms.
-        meaning: http://edamontology.org/topic_0121
-      raw counts:
-        description: The number or amount of something.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C25463
-      raw intensities:
-        description: Raw intensity values from the instrument (including microarrays,
-          plate reader assays, raw pixel intensities from imaging assay, mass spectrometry,
-          etc.).
-        meaning: https://w3id.org/synapse/nfosi/vocab/RawIntensities
-        notes:
-        - Not preferred for annotation.
-      report:
-        description: A human-readable collection of information including annotation
-          on a biological entity or phenomena, computer-generated reports of analysis
-          of primary data... as distinct from the primary data itself.
-        meaning: http://edamontology.org/data_2048
-      somatic variants:
-        description: Called somatic variants
-        meaning: https://w3id.org/synapse/nfosi/vocab/SomaticVariants
-        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_somatic_mutation
-      structural variants:
-        description: Genomic variants data that covers deletions, duplications, CNVs,
-          insertions, inversions, and translocations, which may be derived from specialized
-          variant calling workflows.
-        meaning: https://w3id.org/synapse/nfosi/vocab/StructuralVariantss
-        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=structural_variation
-      survey data:
-        description: A data set that contains the outcome of a survey.
-        meaning: http://purl.obolibrary.org/obo/OMIABIS_0000060
-      text data:
-        description: Data that is represented as text, usually referring to "unstructured
-          data".
-        meaning: http://edamontology.org/data_2526
-      volume:
-        description: Data of the three dimensional space occupied by an entity or
-          the capacity of a space or container.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C25335
-      weight:
-        description: The vertical force exerted by a mass as a result of gravity.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C25208
-  DataSubtypeEnum:
-    description: 'Categorizes data based on its processing state. This is the main
-      classification axis used for data types.  Not all data types can use this dimensions
-      (e.g. clinical data).
-
-      '
-    permissible_values:
-      derived:
-        description: Data from additional analytical steps performed on already processed
-          data.
-      normalized:
-        description: Data that has undergone a normalization procedure to adjust for
-          technical variation or to bring measurements onto a common scale. Considered
-          a more specific type of processed data.
-        meaning: http://purl.obolibrary.org/obo/OBI_0000451
-      processed:
-        description: Data generated from running one or more bioinformatics methods
-          on raw data.
-      quantified:
-        description: Data representing measurements/counts of specific features (gene
-          counts, peak intensities, object properties).
-      raw:
-        description: Data produced by experimental measurement/observation with very
-          little subsequent processing.
-      synthetic:
-        description: Data generated computationally via models or simulations, not
-          direct experimental measurement.
-  FileFormatEnum:
-    permissible_values:
-      7z:
-        description: A compressed archive file format that supports several different
-          data compression, encryption and pre-processing filters.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C80224
-      DICOM:
-        description: A comprehensive set of standards for communications between medical
-          imaging devices, including handling, storing and transmitting information
-          in medical imaging. It includes a file format definition and a network communication
-          protocol.
-        meaning: http://edamontology.org/format_3548
-      MATLAB data:
-        description: "A MATLAB formatted data file with expected extension \u201C\
-          .mat\u201D."
-        meaning: http://edamontology.org/format_3626
-      MATLAB script:
-        description: "A MATLAB script file with expected extension \u201C.m\u201D\
-          . Note that files with a \u201C.mat\u201D extension contains MATLAB formatted\
-          \ data."
-        meaning: http://edamontology.org/format_4007
-      MPEG-4:
-        description: A digital multimedia container format most commonly used to store
-          video and audio.
-        meaning: http://edamontology.org/format_3997
-      NWB:
-        description: Neurodata Without Borders (NWB) is a data standard for neurophysiology
-          data, designed to store data including from intracellular and extracellular
-          electrophysiology experiments, data from optical physiology experiments,
-          and tracking and stimulus data.
-        source: https://www.nwb.org/
-      PAR:
-        description: This is yet another MRI image format generated by Philips scanners.
-          It is an ASCII header (PAR) plus a binary blob (REC).
-        source: https://nipy.org/nibabel/reference/nibabel.parrec.html
-      Python script:
-        description: "Python script with expected extension \u201C.py\u201D."
-        meaning: http://edamontology.org/format_3996
-      R script:
-        description: "R script with expected extension \u201C.R\u201D."
-        meaning: http://edamontology.org/format_3999
-      RCC:
-        description: Reporter Code Count-A data file (.csv) output by the Nanostring
-          nCounter Digital Analyzer, which contains gene sample information, probe
-          information and probe counts.
-        meaning: http://edamontology.org/format_3580
-      RData:
-        description: The RData format (usually with extension .rdata or .rda) is a
-          format designed for use with R, a system for statistical computation and
-          related graphics, for storing a complete R workspace or selected 'objects'
-          from a workspace in a form that can be loaded back by R.
-        source: https://www.loc.gov/preservation/digital/formats/fdd/fdd000470.shtml
-      REC:
-        description: This is yet another MRI image format generated by Philips scanners.
-          It is an ASCII header (PAR) plus a binary blob (REC).
-        source: https://nipy.org/nibabel/reference/nibabel.parrec.html
-      SDAT:
-        description: Phillips MRS Data File
-        source: https://github.com/chenkonturek/MRS_MRI_libs
-      SPAR:
-        description: Phillips MRS Header File
-        source: https://github.com/chenkonturek/MRS_MRI_libs
-      Sentrix descriptor file:
-        description: A BeadScan specific file needed to perform scan setting checks
-          for different array formats and assay type.
-        source: https://support.illumina.com/content/dam/illumina-support/documents/myillumina/dd0aff11-2664-481b-a8ce-26831a907cae/beadscan_3.0_software_addendum.pdf
-      ab1:
-        description: TAB1 binary format of raw DNA sequence reads (output of Applied
-          Biosystems' sequencing analysis software). Contains an electropherogram
-          and the DNA base sequence.
-        meaning: http://edamontology.org/format_3000
-      abf:
-        description: The Axon Binary File format (ABF) was created for the storage
-          of binary experimental data.
-        source: https://mdc.custhelp.com/euf/assets/content/ABFHelp.pdf
-      ai:
-        description: Adobe Illustrator format
-        meaning: http://www.ebi.ac.uk/swo/data/SWO_3000023
-      avi:
-        description: AVI files can contain both audio and video data in a file container
-          that allows synchronous audio-with-video playback.
-        meaning: http://edamontology.org/format_3990
-        source: https://en.wikipedia.org/wiki/Audio_Video_Interleave
-      bai:
-        description: BAM indexing format
-        meaning: http://edamontology.org/format_3327
-      bam:
-        description: BAM format, the binary, BGZF-formatted compressed version of
-          SAM format for alignment of nucleotide sequences (e.g. sequencing reads)
-          to (a) reference sequence(s)
-        meaning: http://edamontology.org/format_2572
-      bash script:
-        description: Bash shell script with .sh extension.
-        source: https://en.wikipedia.org/wiki/Shell_script
-      bcf:
-        description: BCF, the binary version of Variant Call Format (VCF) for sequence
-          variation (indels, polymorphisms, structural variation)
-        meaning: http://edamontology.org/format_3016
-      bed:
-        description: Browser Extensible Data (BED) format of sequence annotation track,
-          typically to be displayed in a genome browser
-        meaning: http://edamontology.org/format_3003
-      bed broadPeak:
-        description: This format is used to provide called regions of signal enrichment
-          based on pooled, normalized (interpreted) data. It is a BED 6+3 format.
-        source: http://genome.ucsc.edu/FAQ/FAQformat.html#format13
-      bed gappedPeak:
-        description: This format is used to provide called regions of signal enrichment
-          based on pooled, normalized (interpreted) data where the regions may be
-          spliced or incorporate gaps in the genomic sequence. It is a BED12+3 format.
-        source: http://genome.ucsc.edu/FAQ/FAQformat.html#format14
-      bed narrowPeak:
-        description: This format is used to provide called peaks of signal enrichment
-          based on pooled, normalized (interpreted) data. It is a BED6+4 format.
-        source: http://genome.ucsc.edu/FAQ/FAQformat.html#format12
-      bedgraph:
-        description: Holds a tab-delimited chromosome /start /end / datavalue dataset.
-          The bedGraph format allows display of continuous-valued data in track format.
-          This display type is useful for probability scores and transcriptome data
-        meaning: http://edamontology.org/format_3583
-      bgzip:
-        description: Blocked GNU Zip format
-        meaning: http://edamontology.org/format_3615
-      bigwig:
-        description: bigWig format for large sequence annotation tracks that consist
-          of a value for each sequence position
-        meaning: http://edamontology.org/format_3006
-      bmp:
-        description: Bitmap image format.
-        meaning: http://edamontology.org/format_3592
-      bpm:
-        description: A beaded pool manifest. Describe the SNP or probe content on
-          a BeadChip or in an assay pool.
-        source: https://support.illumina.com/datafiles.html
-      cel:
-        description: Format of Affymetrix data file of information about (raw) expression
-          levels of the individual probes
-        meaning: http://edamontology.org/format_1638
-      chp:
-        description: CHP file contains probe set analysis results generated from Affymetrix
-          software
-        meaning: http://edamontology.org/format_1644
-      cnn:
-        description: Copy number reference profile from CNVKit pipeline.
-        source: https://cnvkit.readthedocs.io/en/stable/fileformats.html
-      cnr:
-        description: Copy number ratios from CNVKit pipeline, storing each bin's proportional
-          weight or reliability.
-        source: https://cnvkit.readthedocs.io/en/stable/fileformats.html
-      cns:
-        description: Segmented log2 ratios from CNVKit pipeline, these represent the
-          most relevant output describing copy number variation.
-        source: https://cnvkit.readthedocs.io/en/stable/fileformats.html
-      crai:
-        description: A CRAI file is an index for a CRAM file, facilitating fast data
-          retrieval.
-        notes:
-        - ChatGPT (September 25, 2023 Version)
-      cram:
-        description: A CRAM file is a compressed format for storing genomic sequence
-          data.
-        meaning: http://edamontology.org/format_3462
-        notes:
-        - ChatGPT (September 25, 2023 Version)
-      csi:
-        description: A CSI file is a compressed sequence index used for efficiently
-          accessing genomic data in large datasets.
-        notes:
-        - ChatGPT (September 25, 2023 Version)
-      csv:
-        description: Tabular data represented as comma-separated values in a text
-          file
-        meaning: http://edamontology.org/format_3752
-      ctab:
-        description: Gene expression counts file and a specific format of .tsv commonly
-          part of bioinformatics workflows (Stringtie and Ballgown).
-        source: https://github.com/alyssafrazee/ballgown#ballgown-readable-expression-output
-      czi:
-        description: Microscopy imaging file format that saves multidimensional images
-          such as time lapse, Z-stacks, multiposition experiments and virtual slides,
-          combined with relevant meta information
-        source: https://www.zeiss.com/microscopy/int/products/microscope-software/zen/czi.html
-      dat:
-        description: Format of Affymetrix data file of raw image data.
-        meaning: http://edamontology.org/format_1637
-      dna:
-        description: Propietary SnapGene file format.
-        source: https://www.snapgene.com/guides/convert-genbank-files
-      doc:
-        description: Microsoft Word document format
-        meaning: http://edamontology.org/format_3506
-      docker image:
-        description: 'A Docker image is a file, comprised of multiple layers, that
-          is used to execute code in a Docker container.  An image is essentially
-          built from the instructions for a complete and executable version of an
-          application, which relies on the host OS kernel
-
-          '
-        meaning: http://edamontology.org/format_3973
-      dup:
-        description: output of the Picard MarkDuplicates tool.
-        source: https://software.broadinstitute.org/gatk/documentation/tooldocs/4.0.4.0/picard_sam_markduplicates_MarkDuplicates.php
-      edat3:
-        description: The .edat3 proprietary format is used to store experiment data
-          that can be analyzed in E-DataAid.
-        source: https://support.pstnet.com/hc/en-us/articles/229354727-INFO-E-Prime-file-extensions-18091
-      excel:
-        description: Microsoft Excel spreadsheet format with extension .xlsx or .xls
-        meaning: http://edamontology.org/format_3620
-        notes:
-        - http://edamontology.org/format_3468 is the older version of http://edamontology.org/format_3620
-      fasta:
-        description: FASTA format is a text-based format for representing either nucleotide
-          sequences or peptide sequences, in which nucleotides or amino acids are
-          represented using single-letter codes
-        meaning: http://edamontology.org/format_1929
-      fastq:
-        description: FASTQ format is a text-based format for storing both a biological
-          sequence (usually nucleotide sequence) and its corresponding quality scores.
-          Both the sequence letter and quality score are each encoded with a single
-          ASCII character for brevity
-        meaning: http://edamontology.org/format_1930
-      fcs:
-        description: Format standard of a digital entity that is conformant with the
-          Flow Cytometry Data File Standard
-        meaning: http://purl.obolibrary.org/obo/OBI_0000327
-      fig:
-        description: Line drawing saved in the Xfig format; stored as a vector image
-          that may include lines, shapes, arcs, splines, arrows, and text objects;
-          may also include images, colors, and patterns.
-        source: https://fileinfo.com/extension/fig
-      flagstat:
-        description: Output of samtools flagstat tool
-      gb:
-        description: GenBank Sequence Format (GenBank Flat File Format) consists of
-          an annotation section and a sequence section. The start of the annotation
-          section is marked by a line beginning with the word "LOCUS". The start of
-          sequence section is marked by a line beginning with the word "ORIGIN" and
-          the end of the section is marked by a line with only "//".
-        meaning: http://edamontology.org/format_1936
-        source: https://fairsharing.org/833
-      gct:
-        description: Tab-delimited text files of GenePattern that contain a column
-          for each sample, a row for each gene, and an expression value for each gene
-          in each sample
-        meaning: http://edamontology.org/format_3709
-      gff3:
-        description: Generic Feature Format version 3 (GFF3) of sequence features.
-        meaning: http://edamontology.org/format_1975
-      gtf:
-        description: Gene transfer format (GTF) is a file format used to hold information
-          about gene structure
-        meaning: http://edamontology.org/format_2306
-        source: https://en.wikipedia.org/wiki/Gene_transfer_format
-      gzip:
-        description: GZipped format
-        meaning: http://edamontology.org/format_3989
-      hdf5:
-        description: 'HDF5 is the new version, according to the HDF group, a completely
-          different technology (https://support.hdfgroup.org/products/hdf4/ compared
-          to HDF.   An HDF5 file appears to the user as a directed graph. The nodes
-          of this graph are the higher-level HDF5 objects that are exposed by the
-          HDF5 APIs:  Groups, Datasets, Named datatypes.  Currently supported by the
-          Python MDTraj package. HDF5 is a data model, library, and file format for
-          storing and managing data, based on Hierarchical Data Format (HDF).
-
-          '
-        meaning: http://edamontology.org/format_3590
-        notes:
-        - This file format encompasses/includes the h5ad anndata format commonly used
-          for scRNAseq data sharing.
-      hdr:
-        description: MRI Header file, as in the NIFTI-1 Analyze 7.5 format
-        meaning: https://nifti.nimh.nih.gov/pub/dist/src/niftilib/nifti1.h
-      hic:
-        description: Hi-C contact matrix file
-        source: https://github.com/theaidenlab/juicer/wiki/Data
-      html:
-        description: HTML format
-        meaning: http://edamontology.org/format_2331
-      hyperlink:
-        description: A reference (link) from some point in one hypertext document
-          to another document, another place in the same document, or a website.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C47919
-      idat:
-        description: Proprietary file format for (raw) BeadArray data used by genomewide
-          profiling platforms from Illumina Inc. This format is output directly from
-          the scanner and stores summary intensities for each probe-type on an array.
-        meaning: http://edamontology.org/format_3578
-      idx:
-        description: ''
-      img:
-        description: MRI Data file, as in the NIFTI-1 Analyze 7.5 format
-        meaning: https://nifti.nimh.nih.gov/pub/dist/src/niftilib/nifti1.h
-      jpg:
-        description: Joint Picture Group file format for lossy graphics file.
-        meaning: http://edamontology.org/format_3579
-      js:
-        description: File with Javascript code.
-      json:
-        description: JavaScript Object Notation format; a lightweight, text-based
-          format to represent tree-structured data using key-value pairs.
-        meaning: http://edamontology.org/format_3464
-      lif:
-        description: Leica Image Format (LIF) images are JPEG images with metadata
-          that may contain depth, bokeh data, and one or more images (e.g. stereo
-          images) known as "views".
-        meaning: https://w3id.org/reproduceme#LIF
-        source: https://docs.openmicroscopy.org/bio-formats/5.8.2/formats/leica-lif.html
-      locs:
-        description: Illumina iScan bead location file.
-        source: https://support.illumina.com/content/dam/illumina-support/documents/documentation/system_documentation/iscan/iscan-system-guide-11313539-01.pdf
-      maf:
-        description: Mutation annotation format as outputted from GenomeNexus.
-        notes:
-        - DO NOT use http://edamontology.org/format_3008 as that refers to Multiple
-          Alignment Format (MAF).
-        source: https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format
-      md:
-        description: Markdown (MD) is a lightweight markup language with plain text
-          formatting syntax
-        notes:
-        - Strangely, EDAM has [R markdown](http://edamontology.org/format_4000) but
-          not markdown
-        source: https://en.wikipedia.org/wiki/Markdown
-      mov:
-        description: A video file format with the .mov extension
-        source: https://synapse.org
-      msf:
-        description: Proprietary mass-spectrometry format of Thermo Scientific's ProteomeDiscoverer
-          software
-        meaning: http://edamontology.org/format_3702
-      mtx:
-        description: Matrix Market Exchange Format
-        meaning: http://edamontology.org/format_3916
-        source: https://math.nist.gov/MatrixMarket/formats.html#MMformat
-      mzML:
-        description: mzML format for raw spectrometer output data, standardised by
-          HUPO PSI MSS.
-        meaning: http://edamontology.org/format_3244
-      nii:
-        description: NIfTI-1 can store image data from any modality such as PET, MRI,
-          CT, EEG that produces regularly sampled 1-5D rasters.
-        meaning: http://edamontology.org/format_3549
-        source: https://nifti.nimh.nih.gov/nifti-1/documentation/faq
-      ome-tiff:
-        description: OME-TIFF is a preferred open image format
-        meaning: http://edamontology.org/format_3727
-      pdf:
-        description: Portable Document Format
-        meaning: http://edamontology.org/format_3508
-      plink:
-        description: Any Plink file format (MAP/PED/BED/BIM/FAM)
-        source: https://www.cog-genomics.org/plink2/formats
-      png:
-        description: PNG is a file format for image compression
-        meaning: http://edamontology.org/format_3603
-      powerpoint:
-        description: Microsoft Powerpoint slide format
-        meaning: http://edamontology.org/format_3838
-      psydat:
-        description: TrialHandler or StairHandler object that has been saved to disk
-          with the python cPickle module, ideal for batch analysis and plotting with
-          Python.
-        notes:
-        - Not in EDAM as of April 2024.
-        source: https://www.psychopy.org/general/dataOutputs.html
-      pzfx:
-        description: A PZFX file is a Prism project created by GraphPad Prism, a scientific
-          application used to analyze and graph data. It contains project data including
-          graphs and layouts, notes, and tables.
-        source: https://fileinfo.com/extension/pzfx
-      raw:
-        description: Proprietary file format for mass spectrometry data from Thermo
-          Scientific
-        meaning: http://edamontology.org/format_3712
-      rds:
-        description: R binary data format similar to RData.
-        source: https://www.datafiles.samhsa.gov/get-help/format-specific-issues/how-do-i-read-data-r
-      recal:
-        description: .recal file from GATK VQSR
-        meaning: https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_variantrecalibration_VariantRecalibrator.php#--recal_file
-      rmd:
-        description: Markdown document specific to R analyses.
-        meaning: http://edamontology.org/format_4000
-        source: http://rmarkdown.rstudio.com/developer_document_templates.html
-      sam:
-        description: Sequence Alignment/Map (SAM) format for alignment of nucleotide
-          sequences (e.g. sequencing reads) to (a) reference sequence(s)
-        meaning: http://edamontology.org/format_2573
-      sav:
-        description: The SPSS Statistics File Format is a proprietary binary format,
-          developed and maintained as the native format for the SPSS statistical software
-          application.
-        meaning: https://www.loc.gov/preservation/digital/formats/fdd/fdd000469.shtml
-      sdf:
-        description: SDF is one of a family of chemical-data file formats developed
-          by MDL Information Systems; it is intended especially for structural information.
-        meaning: http://edamontology.org/format_3814
-      seg:
-        description: SEG file (segmented data; .seg or .cbs) is a tab-delimited text
-          file that lists loci and associated numeric values
-        meaning: https://software.broadinstitute.org/software/igv/SEG
-      sf:
-        description: Salmon's main output is its quantification file. This file is
-          a plain-text, tab-separated file with a single header line (which names
-          all of the columns).
-        meaning: https://salmon.readthedocs.io/en/latest/file_formats.html
-      sif:
-        description: SIF (simple interaction file) Format - a network/pathway format
-          used for instance in cytoscape
-        meaning: http://edamontology.org/format_3619
-      sqlite:
-        description: Data format used by the SQLite database.
-        meaning: http://edamontology.org/format_3621
-      sra:
-        description: SRA archive format (SRA) is the archive format used for input
-          to the NCBI Sequence Read Archive.
-        meaning: http://edamontology.org/format_3698
-      svg:
-        description: Scalable Vector Graphics (SVG) is an XML-based vector image format
-          for two-dimensional graphics with support for interactivity and animation.
-        meaning: http://edamontology.org/format_3604
-      svs:
-        description: A single-file pyramidal tiled TIFF, with non-standard metadata
-          and compression.
-        source: https://openslide.org/formats/aperio/
-      tagAlign:
-        description: Tag Alignment provides genomic mapping of short sequence tags.
-        source: https://genome.ucsc.edu/FAQ/FAQformat.html#format15
-      tar:
-        description: TAR archive file format generated by the Unix-based utility tar.
-        meaning: http://edamontology.org/format_3981
-      tbi:
-        description: A TBI file is an index for a TABIX-compressed genomic data file,
-          enabling rapid region-based retrieval.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C184806
-      tif:
-        description: Tagged Image File Format, abbreviated TIFF or TIF, is a computer
-          file format for storing raster graphics images
-        meaning: http://edamontology.org/format_3591
-      tom:
-        description: The .tom format is a specialized 3D image export format from
-          the Vectra medical imaging systems that can optionally preserve trimmings
-          and/or landmarks.
-        notes:
-        - No other model has this as it is relatively new and highly specific format
-          for a proprietary platform.
-        source: http://canfieldupgrade.com/assets/media/VECTRA-M3-User-Guide.pdf
-      tranches:
-        description: .tranches file from GATK VQSR
-        source: https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_variantrecalibration_VariantRecalibrator.php#--tranches_file
-      tsv:
-        description: Tabular data represented as tab-separated values in a text file
-        meaning: http://edamontology.org/format_3475
-      txt:
-        description: Textual format
-        meaning: http://edamontology.org/format_2330
-      vcf:
-        description: Variant Call Format (VCF) for sequence variation (indels, polymorphisms,
-          structural variation)
-        meaning: http://edamontology.org/format_3016
-      wiggle:
-        description: Wiggle format (WIG) of a sequence annotation track that consists
-          of a value for each sequence position
-        meaning: http://edamontology.org/format_3005
-      xml:
-        description: eXtensible Markup Language (XML) format.
-        meaning: http://edamontology.org/format_2332
-      yaml:
-        description: YAML (YAML Ain't Markup Language) is a human-readable tree-structured
-          data serialisation that is a superset of JSON (as of v1.2).
-        meaning: http://edamontology.org/format_3750
-      zip:
-        description: zip is a format standard of a digital entity that is conformant
-          with the PKWARE .ZIP file format specification
-        meaning: http://edamontology.org/format_3987
-  MetadataEnum:
-    description: Data that provides information about other data
-    permissible_values:
-      descriptive metadata:
-        description: Information that describes and identifies a resource, including
-          elements that facilitate discovery and understanding.
-        notes:
-        - Currently used for `manifest.csv` files.
-      image metadata:
-        description: Data concerning a specific biological or biomedical image.
-        meaning: http://edamontology.org/data_3546
-        notes:
-        - For e.g. XML files that contain image metadata.
-      metadata:
-        description: Most general label for data that contains information about data.
-      workflow metadata:
-        comments: Coined category for use esp. with nextflow metadata files.
-        description: Process data from computational workflows. This is highly related
-          to Statistical Metadata. Basic information, annotation or documentation
-          concerning a workflow (but not the workflow itself).
-        meaning: http://edamontology.org/data_0949
-    source: https://en.wikipedia.org/wiki/Metadata
+      STR profile:
+        description: The analysis of all of the short tandem repeats in the genome
+          of a biological sample.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C129889
   Resource:
     description: 'Resource classes. Most resource entities expected to be some type
       of "experimental data" and further specified via `dataType`.
@@ -1773,15 +1824,18 @@ enums:
       experimentalData:
         description: Any file derived from or pertaining to a scientific experiment.
           Experimental data annotations should be applied, possibly disease-related.
-      metadata:
-        description: Data about data, information that describes another set of data.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C52095
-      protocol:
-        description: A plan specification which has sufficient level of detail and
-          quantitative information to communicate it between investigation agents,
-          so that different investigation agents will reliably be able to independently
-          reproduce the process.
-        meaning: http://purl.obolibrary.org/obo/OBI_0000272
+      result:
+        description: Any file that reports data results. Examples include figures,
+          presentations, analysis, etc.
+        comments: This resource category is somewhat more general than `report`.
+        source: https://synapse.org
+      tool:
+        description: Any file or link that represents a tool, model, or algorithm;
+          the tool annotations could be applied
+        source: https://synapse.org
+      workflow report:
+        description: Workflow-generated reports of analysis of primary data, usually
+          created programmatically at completion of workflow step.
       report:
         description: 'A document assembled by an author for the purpose of providing
           information for the audience.  A report is the output of a documenting process
@@ -1792,69 +1846,43 @@ enums:
 
           '
         meaning: http://purl.obolibrary.org/obo/IAO_0000088
-      result:
-        comments: This resource category is somewhat more general than `report`.
-        description: Any file that reports data results. Examples include figures,
-          presentations, analysis, etc.
-        source: https://synapse.org
-      tool:
-        description: Any file or link that represents a tool, model, or algorithm;
-          the tool annotations could be applied
-        source: https://synapse.org
+      metadata:
+        description: Data about data, information that describes another set of data.
+        meaning: http://purl.obolibrary.org/obo/NCIT_C52095
+      protocol:
+        description: A plan specification which has sufficient level of detail and
+          quantitative information to communicate it between investigation agents,
+          so that different investigation agents will reliably be able to independently
+          reproduce the process.
+        meaning: http://purl.obolibrary.org/obo/OBI_0000272
       weblink:
         description: An address to another document or other resource on the World
           Wide Web.
         meaning: http://purl.obolibrary.org/obo/NCIT_C42743
-      workflow report:
-        description: Workflow-generated reports of analysis of primary data, usually
-          created programmatically at completion of workflow step.
-id: https://w3id.org/nfosi/
-imports:
-- linkml:types
-name: nfosi
-prefixes:
-  htan: https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld
-  linkml: https://w3id.org/linkml/
-  nf: https://w3id.org/synapse/nfosi/vocab/
-  personinfo: https://w3id.org/linkml/examples/personinfo/
-  prov: http://www.w3.org/ns/prov#
-  rdfs: http://www.w3.org/2000/01/rdf-schema#
-  schema: http://schema.org/
-  skos: http://www.w3.org/2004/02/skos/core#
-slots:
-  Component:
-    description: Type of metadata template; provide the same one for all items/rows.
-    required: true
-  Filename:
-    description: The name of the file.
-    required: false
-  assay:
-    description: The technology used to generate the data in this file.
-    range: AssayEnum
-    required: true
-  dataSubtype:
-    description: Further qualification of dataType, which may be used to indicate
-      the state of processing of the data, aggregation of the data, or presence of
-      metadata.
-    range: DataSubtypeEnum
-    required: true
-  dataType:
-    any_of:
-    - range: Data
-    - range: MetadataEnum
-    description: 'Links an entity to data types that the entity represents/contains.
-      This is closely tied to the assay property. For example, a file of dataType
-      `genomicVariants` might have an assay value of `whole genome sequencing`.
+  DataSubtypeEnum:
+    description: 'Categorizes data based on its processing state. This is the main
+      classification axis used for data types.  Not all data types can use this dimensions
+      (e.g. clinical data).
 
       '
-    required: true
-  fileFormat:
-    description: Defined format of the data file, typically corresponding to extension,
-      but sometimes indicating more general group of files produced by the same tool
-      or software
-    range: FileFormatEnum
-    required: true
-  resourceType:
-    description: The type of resource being stored and annotated
-    range: Resource
-    required: true
+    permissible_values:
+      raw:
+        description: Data produced by experimental measurement/observation with very
+          little subsequent processing.
+      synthetic:
+        description: Data generated computationally via models or simulations, not
+          direct experimental measurement.
+      normalized:
+        description: Data that has undergone a normalization procedure to adjust for
+          technical variation or to bring measurements onto a common scale. Considered
+          a more specific type of processed data.
+        meaning: http://purl.obolibrary.org/obo/OBI_0000451
+      quantified:
+        description: Data representing measurements/counts of specific features (gene
+          counts, peak intensities, object properties).
+      processed:
+        description: Data generated from running one or more bioinformatics methods
+          on raw data.
+      derived:
+        description: Data from additional analytical steps performed on already processed
+          data.

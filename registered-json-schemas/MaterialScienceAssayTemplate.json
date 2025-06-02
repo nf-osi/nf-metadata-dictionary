@@ -503,6 +503,61 @@
       "title": "MetadataEnum",
       "type": "string"
     },
+    "NonBiologicalAssayDataTemplate": {
+      "additionalProperties": false,
+      "description": "Describes data artifacts (i.e. files) from an experimental/physical-sciences assay  where input specimens are more at the level of synthesized molecules or inorganic materials.",
+      "properties": {
+        "Component": {
+          "description": "Type of metadata template; provide the same one for all items/rows.",
+          "type": "string"
+        },
+        "Filename": {
+          "description": "The name of the file.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "assay": {
+          "$ref": "#/$defs/AssayEnum",
+          "description": "The technology used to generate the data in this file."
+        },
+        "dataSubtype": {
+          "$ref": "#/$defs/DataSubtypeEnum",
+          "description": "Further qualification of dataType, which may be used to indicate the state of processing of the data, aggregation of the data, or presence of metadata."
+        },
+        "dataType": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Data"
+            },
+            {
+              "$ref": "#/$defs/MetadataEnum"
+            }
+          ],
+          "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
+          "type": "string"
+        },
+        "fileFormat": {
+          "$ref": "#/$defs/FileFormatEnum",
+          "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software"
+        },
+        "resourceType": {
+          "$ref": "#/$defs/Resource",
+          "description": "The type of resource being stored and annotated"
+        }
+      },
+      "required": [
+        "Component",
+        "fileFormat",
+        "resourceType",
+        "dataType",
+        "dataSubtype",
+        "assay"
+      ],
+      "title": "NonBiologicalAssayDataTemplate",
+      "type": "object"
+    },
     "PlatformEnum": {
       "description": "",
       "enum": [
@@ -638,11 +693,17 @@
       ],
       "title": "Resource",
       "type": "string"
+    },
+    "Template": {
+      "additionalProperties": false,
+      "description": "A collection of fields representing some entity.",
+      "title": "Template",
+      "type": "object"
     }
   },
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-materialscienceassaytemplate",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
-  "additionalProperties": true,
+  "additionalProperties": false,
   "description": "General template for describing data for a materials science assay.",
   "metamodel_version": "1.7.0",
   "properties": {

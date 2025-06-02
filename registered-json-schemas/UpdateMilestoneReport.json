@@ -1,5 +1,11 @@
 {
   "$defs": {
+    "PartialTemplate": {
+      "additionalProperties": false,
+      "description": "A template for collecting a subset of contextual data; not intended to be a standalone template but rather a subdocument.",
+      "title": "PartialTemplate",
+      "type": "object"
+    },
     "Resource": {
       "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
       "enum": [
@@ -47,7 +53,7 @@
   },
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-updatemilestonereport",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
-  "additionalProperties": true,
+  "additionalProperties": false,
   "description": "Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF.",
   "metamodel_version": "1.7.0",
   "properties": {

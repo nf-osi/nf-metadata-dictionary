@@ -195,6 +195,167 @@
       "title": "Assay",
       "type": "string"
     },
+    "BiologicalAssayDataTemplate": {
+      "additionalProperties": false,
+      "description": "A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples.  This is an abstract template; \"real\" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing).",
+      "properties": {
+        "Component": {
+          "description": "Type of metadata template; provide the same one for all items/rows.",
+          "type": "string"
+        },
+        "Filename": {
+          "description": "The name of the file.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "age": {
+          "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ageUnit": {
+          "$ref": "#/$defs/TimeUnit",
+          "description": "A time unit that can be used with a given age value, e.g. years."
+        },
+        "assay": {
+          "$ref": "#/$defs/AssayEnum",
+          "description": "The technology used to generate the data in this file."
+        },
+        "comments": {
+          "description": "Brief free-text comments that may also be important to understanding the resource.",
+          "title": "Comments",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "dataSubtype": {
+          "$ref": "#/$defs/DataSubtypeEnum",
+          "description": "Further qualification of dataType, which may be used to indicate the state of processing of the data, aggregation of the data, or presence of metadata."
+        },
+        "dataType": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Data"
+            },
+            {
+              "$ref": "#/$defs/MetadataEnum"
+            }
+          ],
+          "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
+          "type": "string"
+        },
+        "diagnosis": {
+          "$ref": "#/$defs/DiagnosisEnum",
+          "description": "Diagnosis for the individual given signs and symptoms. Use the most specific diagnosis term that applies."
+        },
+        "fileFormat": {
+          "$ref": "#/$defs/FileFormatEnum",
+          "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software"
+        },
+        "individualID": {
+          "description": "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
+          "type": "string"
+        },
+        "modelSystemName": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CellLineModel"
+            },
+            {
+              "$ref": "#/$defs/MouseModel"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)",
+          "type": "string"
+        },
+        "nf1Genotype": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Genotype"
+            },
+            {
+              "$ref": "#/$defs/UnknownEnum"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Genotype of NF1 gene in the biospecimen from which the data were derived, if known.",
+          "type": "string"
+        },
+        "nf2Genotype": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Genotype"
+            },
+            {
+              "$ref": "#/$defs/UnknownEnum"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Genotype of NF2 gene in the biospecimen from which the data were derived, if known",
+          "type": "string"
+        },
+        "organ": {
+          "$ref": "#/$defs/OrganEnum",
+          "description": "A unique macroscopic (gross) anatomic structure that performs specific functions. It is composed of various tissues. An organ is part of an anatomic system or a body region."
+        },
+        "resourceType": {
+          "$ref": "#/$defs/Resource",
+          "description": "The type of resource being stored and annotated"
+        },
+        "sex": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SexEnum"
+            },
+            {
+              "$ref": "#/$defs/UnknownEnum"
+            },
+            {
+              "$ref": "#/$defs/NotApplicableEnum"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other.",
+          "type": "string"
+        },
+        "species": {
+          "$ref": "#/$defs/SpeciesEnum",
+          "description": "The name of a species (typically a taxonomic group) of organism."
+        },
+        "tumorType": {
+          "$ref": "#/$defs/Tumor",
+          "description": "The type of tumor that the biospecimen used to generate the data were collected from."
+        }
+      },
+      "required": [
+        "Component",
+        "fileFormat",
+        "resourceType",
+        "dataType",
+        "dataSubtype",
+        "assay",
+        "individualID",
+        "species",
+        "diagnosis",
+        "tumorType"
+      ],
+      "title": "BiologicalAssayDataTemplate",
+      "type": "object"
+    },
     "BulkSequencingAssayTemplate": {
       "additionalProperties": false,
       "description": "General template for raw (level 1) RNA/DNA data, i.e. sequence data from a sequencing assay.",
@@ -822,6 +983,200 @@
       "title": "FileFormatEnum",
       "type": "string"
     },
+    "GeneticsAssayTemplate": {
+      "additionalProperties": false,
+      "description": "Template for relatively raw data of RNA/DNA structure and expression.  This is an abstract template encapsulating data from low-throughput to high-throughput assays,  sequencing-based or non-sequencing based (e.g. microarrays, optical genome mapping).  In practice, data are more specifically typed and matched to one of the templates below.",
+      "properties": {
+        "Component": {
+          "description": "Type of metadata template; provide the same one for all items/rows.",
+          "type": "string"
+        },
+        "Filename": {
+          "description": "The name of the file.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "age": {
+          "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ageUnit": {
+          "$ref": "#/$defs/TimeUnit",
+          "description": "A time unit that can be used with a given age value, e.g. years."
+        },
+        "aliquotID": {
+          "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "assay": {
+          "$ref": "#/$defs/AssayEnum",
+          "description": "The technology used to generate the data in this file."
+        },
+        "comments": {
+          "description": "Brief free-text comments that may also be important to understanding the resource.",
+          "title": "Comments",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "dataSubtype": {
+          "$ref": "#/$defs/DataSubtypeEnum",
+          "description": "Further qualification of dataType, which may be used to indicate the state of processing of the data, aggregation of the data, or presence of metadata."
+        },
+        "dataType": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Data"
+            },
+            {
+              "$ref": "#/$defs/MetadataEnum"
+            }
+          ],
+          "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
+          "type": "string"
+        },
+        "diagnosis": {
+          "$ref": "#/$defs/DiagnosisEnum",
+          "description": "Diagnosis for the individual given signs and symptoms. Use the most specific diagnosis term that applies."
+        },
+        "fileFormat": {
+          "$ref": "#/$defs/FileFormatEnum",
+          "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software"
+        },
+        "individualID": {
+          "description": "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
+          "type": "string"
+        },
+        "modelSystemName": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CellLineModel"
+            },
+            {
+              "$ref": "#/$defs/MouseModel"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)",
+          "type": "string"
+        },
+        "nf1Genotype": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Genotype"
+            },
+            {
+              "$ref": "#/$defs/UnknownEnum"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Genotype of NF1 gene in the biospecimen from which the data were derived, if known.",
+          "type": "string"
+        },
+        "nf2Genotype": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Genotype"
+            },
+            {
+              "$ref": "#/$defs/UnknownEnum"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Genotype of NF2 gene in the biospecimen from which the data were derived, if known",
+          "type": "string"
+        },
+        "nucleicAcidSource": {
+          "$ref": "#/$defs/NucleicAcidSourceEnum",
+          "description": "Source of the extracted nucleic acid used in the experiment"
+        },
+        "organ": {
+          "$ref": "#/$defs/OrganEnum",
+          "description": "A unique macroscopic (gross) anatomic structure that performs specific functions. It is composed of various tissues. An organ is part of an anatomic system or a body region."
+        },
+        "parentSpecimenID": {
+          "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "platform": {
+          "$ref": "#/$defs/PlatformEnum",
+          "description": "A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data."
+        },
+        "resourceType": {
+          "$ref": "#/$defs/Resource",
+          "description": "The type of resource being stored and annotated"
+        },
+        "sex": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SexEnum"
+            },
+            {
+              "$ref": "#/$defs/UnknownEnum"
+            },
+            {
+              "$ref": "#/$defs/NotApplicableEnum"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other.",
+          "type": "string"
+        },
+        "species": {
+          "$ref": "#/$defs/SpeciesEnum",
+          "description": "The name of a species (typically a taxonomic group) of organism."
+        },
+        "specimenID": {
+          "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
+          "type": "string"
+        },
+        "specimenPreparationMethod": {
+          "$ref": "#/$defs/SpecimenPreparationMethodEnum",
+          "description": "Term that represents preservation of the sample before usage in, e.g. sequencing"
+        },
+        "tumorType": {
+          "$ref": "#/$defs/Tumor",
+          "description": "The type of tumor that the biospecimen used to generate the data were collected from."
+        }
+      },
+      "required": [
+        "specimenID",
+        "tumorType",
+        "platform",
+        "specimenPreparationMethod",
+        "Component",
+        "fileFormat",
+        "resourceType",
+        "dataType",
+        "dataSubtype",
+        "assay",
+        "individualID",
+        "species",
+        "diagnosis"
+      ],
+      "title": "GeneticsAssayTemplate",
+      "type": "object"
+    },
     "Genotype": {
       "description": "",
       "enum": [
@@ -1166,6 +1521,12 @@
       ],
       "title": "StrandednessEnum",
       "type": "string"
+    },
+    "Template": {
+      "additionalProperties": false,
+      "description": "A collection of fields representing some entity.",
+      "title": "Template",
+      "type": "object"
     },
     "TimeUnit": {
       "description": "",
@@ -1551,7 +1912,7 @@
   },
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-wgstemplate",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
-  "additionalProperties": true,
+  "additionalProperties": false,
   "description": "Template for describing raw data from Whole Genome Sequencing (WGS)",
   "metamodel_version": "1.7.0",
   "properties": {
