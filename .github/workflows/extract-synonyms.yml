@@ -1,6 +1,6 @@
-# .github/workflows/run-tests.yml
+# .github/workflows/extract-synonyms.yml
 
-name: “Manual Branch Test”
+name: “github-action-synoynms Branch Test”
 
 # Only allow manual dispatch:
 on:
@@ -9,7 +9,7 @@ on:
       target-branch:
         description: 'Branch to run this workflow on'
         required: true
-        default: 'main'
+        default: 'github-action-synoynms'
 
 jobs:
   checkout-and-verify:
