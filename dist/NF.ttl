@@ -12,22 +12,22 @@
 
 <https://w3id.org/synapse/nfosi/vocab/nfosi> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
-            sh:prefix "personinfo" ],
-        [ sh:namespace schema1: ;
-            sh:prefix "schema" ],
+    sh:declare [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
+            sh:prefix "htan" ],
         [ sh:namespace skos: ;
             sh:prefix "skos" ],
-        [ sh:namespace linkml: ;
-            sh:prefix "linkml" ],
-        [ sh:namespace rdfs: ;
-            sh:prefix "rdfs" ],
-        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
-            sh:prefix "htan" ],
+        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
+            sh:prefix "personinfo" ],
         [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
             sh:prefix "nf" ],
         [ sh:namespace prov: ;
-            sh:prefix "prov" ] ;
+            sh:prefix "prov" ],
+        [ sh:namespace rdfs: ;
+            sh:prefix "rdfs" ],
+        [ sh:namespace linkml: ;
+            sh:prefix "linkml" ],
+        [ sh:namespace schema1: ;
+            sh:prefix "schema" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
@@ -169,7 +169,7 @@
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-05-21T13:41:51"^^xsd:dateTime ;
+    linkml:generation_date "2025-06-05T21:07:25"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -466,8 +466,8 @@
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-05-21T13:41:50"^^xsd:dateTime ;
-    linkml:source_file_size 307953 ;
+    linkml:source_file_date "2025-06-05T21:07:23"^^xsd:dateTime ;
+    linkml:source_file_size 308007 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,
@@ -8903,6 +8903,17 @@ Examples: avoidance behavior, choice-making.
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/Template> ;
     linkml:slot_usage [ ] .
 
+<https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> a linkml:ClassDefinition ;
+    skos:definition "Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> ;
+    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/PartialTemplate> ;
+    linkml:slot_usage [ ] ;
+    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Filename>,
+        <https://w3id.org/synapse/nfosi/vocab/progressReportNumber>,
+        <https://w3id.org/synapse/nfosi/vocab/resourceType> .
+
 <https://w3id.org/synapse/nfosi/vocab/assayTarget> a linkml:SlotDefinition ;
     skos:definition "Target of the assay such as a HUGO gene symbol, cell type, or tissue region depending on the capabilities of the assay." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -9112,17 +9123,6 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/specimenType>,
         <https://w3id.org/synapse/nfosi/vocab/targetDepth>,
         <https://w3id.org/synapse/nfosi/vocab/tumorType> .
-
-<https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> a linkml:ClassDefinition ;
-    skos:definition "Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> ;
-    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/PartialTemplate> ;
-    linkml:slot_usage [ ] ;
-    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Filename>,
-        <https://w3id.org/synapse/nfosi/vocab/progressReportNumber>,
-        <https://w3id.org/synapse/nfosi/vocab/resourceType> .
 
 <https://w3id.org/synapse/nfosi/vocab/diseaseFocus> a linkml:SlotDefinition ;
     dcterms:title "Disease Focus" ;
@@ -9504,20 +9504,6 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/timepointUnit>,
         <https://w3id.org/synapse/nfosi/vocab/tumorType> .
 
-<https://w3id.org/synapse/nfosi/vocab/specimenType> a linkml:SlotDefinition ;
-    skos:definition """The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory substances.
-""" ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ],
-        [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ] ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/specimenType> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/specimenType> .
-
 <https://w3id.org/synapse/nfosi/vocab/WorkflowReport> a linkml:ClassDefinition ;
     skos:definition "Template used for miscellaneous workflow reports and accessory files" ;
     skos:editorialNote "note that `dataType` and `dataSubtype` don't apply",
@@ -9530,6 +9516,40 @@ Examples: avoidance behavior, choice-making.
     linkml:slots <https://w3id.org/synapse/nfosi/vocab/assay>,
         <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
         <https://w3id.org/synapse/nfosi/vocab/relatedDataset>,
+        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
+        <https://w3id.org/synapse/nfosi/vocab/workflow>,
+        <https://w3id.org/synapse/nfosi/vocab/workflowLink> .
+
+<https://w3id.org/synapse/nfosi/vocab/specimenType> a linkml:SlotDefinition ;
+    skos:definition """The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory substances.
+""" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:any_of [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ] ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/specimenType> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/specimenType> .
+
+<https://w3id.org/synapse/nfosi/vocab/ProcessedMergedDataTemplate> a linkml:ClassDefinition ;
+    skos:closeMatch <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aggregated_somatic_mutation>,
+        <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=gene_expression> ;
+    skos:definition """Further processed data with multiple samples aggregated into one file. This may be also be known as level-4 data. Unlike level-2 and level-3 data, individual-level attributes such as age and sex are no longer surfaced on the data file directly.
+""" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/ProcessedMergedDataTemplate> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/ProcessedMergedDataTemplate> ;
+    linkml:slot_usage [ ] ;
+    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
+        <https://w3id.org/synapse/nfosi/vocab/Filename>,
+        <https://w3id.org/synapse/nfosi/vocab/assay>,
+        <https://w3id.org/synapse/nfosi/vocab/auxiliaryAsset>,
+        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
+        <https://w3id.org/synapse/nfosi/vocab/dataType>,
+        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
         <https://w3id.org/synapse/nfosi/vocab/resourceType>,
         <https://w3id.org/synapse/nfosi/vocab/workflow>,
         <https://w3id.org/synapse/nfosi/vocab/workflowLink> .
@@ -9576,42 +9596,6 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/platform>,
         <https://w3id.org/synapse/nfosi/vocab/resourceType>,
         <https://w3id.org/synapse/nfosi/vocab/specimenID> .
-
-<https://w3id.org/synapse/nfosi/vocab/ProcessedMergedDataTemplate> a linkml:ClassDefinition ;
-    skos:closeMatch <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aggregated_somatic_mutation>,
-        <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=gene_expression> ;
-    skos:definition """Further processed data with multiple samples aggregated into one file. This may be also be known as level-4 data. Unlike level-2 and level-3 data, individual-level attributes such as age and sex are no longer surfaced on the data file directly.
-""" ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/ProcessedMergedDataTemplate> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/ProcessedMergedDataTemplate> ;
-    linkml:slot_usage [ ] ;
-    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
-        <https://w3id.org/synapse/nfosi/vocab/Filename>,
-        <https://w3id.org/synapse/nfosi/vocab/assay>,
-        <https://w3id.org/synapse/nfosi/vocab/auxiliaryAsset>,
-        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
-        <https://w3id.org/synapse/nfosi/vocab/dataType>,
-        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
-        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
-        <https://w3id.org/synapse/nfosi/vocab/workflow>,
-        <https://w3id.org/synapse/nfosi/vocab/workflowLink> .
-
-<https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> a linkml:ClassDefinition ;
-    dcterms:source <https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT> ;
-    skos:definition "Describes protocol document based on https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
-    linkml:slot_usage [ ] ;
-    linkml:slots <https://w3id.org/synapse/nfosi/vocab/author>,
-        <https://w3id.org/synapse/nfosi/vocab/citation>,
-        <https://w3id.org/synapse/nfosi/vocab/comments>,
-        <https://w3id.org/synapse/nfosi/vocab/license>,
-        <https://w3id.org/synapse/nfosi/vocab/protocolAssay>,
-        <https://w3id.org/synapse/nfosi/vocab/protocolPurpose>,
-        <https://w3id.org/synapse/nfosi/vocab/sampleType>,
-        <https://w3id.org/synapse/nfosi/vocab/title> .
 
 <https://w3id.org/synapse/nfosi/vocab/auxiliaryAsset> a linkml:SlotDefinition ;
     skos:definition """URI to supplemental asset(s), e.g. QC reports or other auxiliary files to support the processing, analysis, or interpretation of the current entity.
@@ -9667,9 +9651,9 @@ Examples: avoidance behavior, choice-making.
         "https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/libraryStrand> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
@@ -9969,6 +9953,25 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/tumorType>,
         <https://w3id.org/synapse/nfosi/vocab/workingDistance>,
         <https://w3id.org/synapse/nfosi/vocab/workingDistanceUnit> .
+
+<https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> a linkml:ClassDefinition ;
+    dcterms:source <https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT> ;
+    skos:definition "Describes protocol document based on https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
+    linkml:slot_usage [ ] ;
+    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
+        <https://w3id.org/synapse/nfosi/vocab/Filename>,
+        <https://w3id.org/synapse/nfosi/vocab/author>,
+        <https://w3id.org/synapse/nfosi/vocab/citation>,
+        <https://w3id.org/synapse/nfosi/vocab/comments>,
+        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
+        <https://w3id.org/synapse/nfosi/vocab/license>,
+        <https://w3id.org/synapse/nfosi/vocab/protocolAssay>,
+        <https://w3id.org/synapse/nfosi/vocab/protocolPurpose>,
+        <https://w3id.org/synapse/nfosi/vocab/sampleType>,
+        <https://w3id.org/synapse/nfosi/vocab/title> .
 
 <https://w3id.org/synapse/nfosi/vocab/PublicationTemplate> a linkml:ClassDefinition ;
     skos:definition "A generalized data model template for Publications to be hopefully used across dccs" ;
@@ -10278,9 +10281,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/modelSystemName> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10359,9 +10362,9 @@ Examples: avoidance behavior, choice-making.
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sex> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10398,18 +10401,6 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/nf2Genotype> .
 
-<https://w3id.org/synapse/nfosi/vocab/Component> a linkml:SlotDefinition ;
-    skos:definition "Type of metadata template; provide the same one for all items/rows." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/Component> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/NonBiologicalAssayDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ProcessedMergedDataTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProcessedMergedDataTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:required true ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/Component> .
-
 <https://w3id.org/synapse/nfosi/vocab/dataSubtype> a linkml:SlotDefinition ;
     skos:definition "Further qualification of dataType, which may be used to indicate the state of processing of the data, aggregation of the data, or presence of metadata." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -10437,17 +10428,18 @@ Examples: avoidance behavior, choice-making.
     linkml:required true ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/species> .
 
-<https://w3id.org/synapse/nfosi/vocab/Filename> a linkml:SlotDefinition ;
-    skos:definition "The name of the file." ;
+<https://w3id.org/synapse/nfosi/vocab/Component> a linkml:SlotDefinition ;
+    skos:definition "Type of metadata template; provide the same one for all items/rows." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/Filename> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/Component> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/NonBiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ProcessedMergedDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> ;
+        <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/Filename> .
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/Component> .
 
 <https://w3id.org/synapse/nfosi/vocab/assay> a linkml:SlotDefinition ;
     skos:definition "The technology used to generate the data in this file." ;
@@ -10462,19 +10454,18 @@ Examples: avoidance behavior, choice-making.
     linkml:required true ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/assay> .
 
-<https://w3id.org/synapse/nfosi/vocab/fileFormat> a linkml:SlotDefinition ;
-    skos:definition "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software" ;
+<https://w3id.org/synapse/nfosi/vocab/Filename> a linkml:SlotDefinition ;
+    skos:definition "The name of the file." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/fileFormat> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/Filename> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/EpidemiologyDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/NonBiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ProcessedMergedDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/WorkflowReport> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/WorkflowReport> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/FileFormatEnum> ;
-    linkml:required true ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/fileFormat> .
+        <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/Filename> .
 
 <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate> a linkml:ClassDefinition ;
     skos:definition """A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples.  This is an abstract template; "real" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing).
@@ -10504,6 +10495,21 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/sex>,
         <https://w3id.org/synapse/nfosi/vocab/species>,
         <https://w3id.org/synapse/nfosi/vocab/tumorType> .
+
+<https://w3id.org/synapse/nfosi/vocab/fileFormat> a linkml:SlotDefinition ;
+    skos:definition "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/fileFormat> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/EpidemiologyDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/NonBiologicalAssayDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ProcessedMergedDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/WorkflowReport> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/FileFormatEnum> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/fileFormat> .
 
 <https://w3id.org/synapse/nfosi/vocab/resourceType> a linkml:SlotDefinition ;
     skos:definition "The type of resource being stored and annotated" ;
