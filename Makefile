@@ -52,16 +52,6 @@ PortalStudy:
 	rm -f relevant_enums.yaml temp.yaml tmp.json
 	@echo "--- Saved registered-json-schemas/PortalStudy.json ---"
 
-Protocol:
-	yq '.slots |= with_entries(select(.value.in_subset[] == "portal" or .value.in_subset[] == "registered"))' modules/props.yaml > relevant_props.yaml
-	yq ea '. as $$item ireduce ({}; . * $$item )' modules/Data/Data.yaml modules/DCC/Portal.yaml modules/Assay/Assay.yaml > relevant_enums.yaml
-	cat header.yaml relevant_props.yaml relevant_enums.yaml modules/Template/Protocol.yaml > temp.yaml
-	gen-json-schema --inline --no-metadata --not-closed --title-from=title temp.yaml > tmp.json
-	json-dereference -s tmp.json -o tmp.json
-	jq '."$$defs".ProtocolTemplate | ."$$id"="https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-protocol"' tmp.json > registered-json-schemas/Protocol.json
-	rm -f relevant_props.yaml relevant_enums.yaml temp.yaml tmp.json 
-	@echo "--- Saved registered-json-schemas/Protocol.json ---"
-
 Superdataset:
 	jq '. += input | del(.required) | ."$$id"="https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-superdataset"' registered-json-schemas/PortalDataset.json registered-json-schemas/super_rules.json > registered-json-schemas/Superdataset.json
 	@echo "--- Saved registered-json-schemas/Superdataset.json ---"
