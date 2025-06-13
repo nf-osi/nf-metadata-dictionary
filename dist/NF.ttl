@@ -12,22 +12,22 @@
 
 <https://w3id.org/synapse/nfosi/vocab/nfosi> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace rdfs: ;
+    sh:declare [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
+            sh:prefix "htan" ],
+        [ sh:namespace rdfs: ;
             sh:prefix "rdfs" ],
-        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
-            sh:prefix "nf" ],
+        [ sh:namespace prov: ;
+            sh:prefix "prov" ],
         [ sh:namespace schema1: ;
             sh:prefix "schema" ],
         [ sh:namespace skos: ;
             sh:prefix "skos" ],
-        [ sh:namespace prov: ;
-            sh:prefix "prov" ],
-        [ sh:namespace linkml: ;
-            sh:prefix "linkml" ],
-        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
-            sh:prefix "htan" ],
         [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
-            sh:prefix "personinfo" ] ;
+            sh:prefix "personinfo" ],
+        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
+            sh:prefix "nf" ],
+        [ sh:namespace linkml: ;
+            sh:prefix "linkml" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
@@ -169,7 +169,7 @@
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-06-13T18:19:08"^^xsd:dateTime ;
+    linkml:generation_date "2025-06-13T20:11:31"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -466,8 +466,8 @@
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-06-13T18:19:07"^^xsd:dateTime ;
-    linkml:source_file_size 309498 ;
+    linkml:source_file_date "2025-06-13T20:11:30"^^xsd:dateTime ;
+    linkml:source_file_size 308085 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,
@@ -743,9 +743,6 @@
 <https://w3id.org/synapse/nfosi/vocab/CNVkit> dcterms:source <https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004873> .
 
 <https://w3id.org/synapse/nfosi/vocab/CODEX> skos:definition "CODEX imaging." .
-
-<https://w3id.org/synapse/nfosi/vocab/CRISPR%20Assisted%20mRNA%20Fragment%20Trans-splicing%20%28CRAFT%29> dcterms:source <https://www.nature.com/articles/s41467-024-46172-4> ;
-    skos:definition "A more specific technique repurposing CRISPR to assist trans-splicing of exogenous RNA fragments into an endogenous pre-mRNA transcript." .
 
 <https://w3id.org/synapse/nfosi/vocab/CUNY%2C%20City%20College> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
@@ -1564,6 +1561,8 @@
 <https://w3id.org/synapse/nfosi/vocab/Necrotic%20Neoplasm> skos:definition "A neoplasm characterized by focal or diffuse tumor cell necrosis." ;
     linkml:meaning <obo:NCIT_C36029> .
 
+<https://w3id.org/synapse/nfosi/vocab/Nemours%20Children%27s%20Clinic> linkml:meaning <https://ror.org/01mzw6m29> .
+
 <https://w3id.org/synapse/nfosi/vocab/NeuN%2B> skos:definition "Is a neuronal nuclear antigen that is commonly used as a biomarker for neurons and NeuN immunoreactivity has been widely used to identify neurons in tissue culture to measure the neuron(positive)/glia(negative) ratio in brain regions." ;
     linkml:meaning <https://en.wikipedia.org/wiki/NeuN> .
 
@@ -2083,8 +2082,6 @@
     skos:definition "High intensity focused ultrasound (HIFU) technology which delivers highly accurate and non-invasive ultrasound energy to target areas within the human skin." .
 
 <https://w3id.org/synapse/nfosi/vocab/TPM> skos:definition "Transcript per million" .
-
-<https://w3id.org/synapse/nfosi/vocab/Technische%20Universit%C3%A4t%20Dresden> linkml:meaning <https://ror.org/042aqky30> .
 
 <https://w3id.org/synapse/nfosi/vocab/Temple%20University> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
@@ -2641,10 +2638,6 @@ Examples: avoidance behavior, choice-making.
 
 <https://w3id.org/synapse/nfosi/vocab/calcium%20retention%20capacity%20assay> rdfs:seeAlso <https://pubmed.ncbi.nlm.nih.gov/29781984/> ;
     skos:definition "The CRC assay assesses Ca2+-related mitochondrial functions" .
-
-<https://w3id.org/synapse/nfosi/vocab/capsid%20sequence> skos:definition "Sequence of capsid protein regions (AAV9, AAVsc, etc.)" ;
-    skos:editorialNote "Mapping to broader concept since EDAM doesn't have further granularity for sequence data." ;
-    linkml:meaning <http://edamontology.org/data_3494> .
 
 <https://w3id.org/synapse/nfosi/vocab/cel> skos:definition "Format of Affymetrix data file of information about (raw) expression levels of the individual probes" ;
     linkml:meaning <http://edamontology.org/format_1638> .
@@ -3420,10 +3413,6 @@ Examples: avoidance behavior, choice-making.
     skos:definition """A multi-electrode array is a grid of tightly spaced microscopic electrodes embedded in the bottom of each well in a multi-well MEA plate.  Cells, such as cardiomyocytes or neurons, which are electrically active, can be cultured over the electrodes creating a cohesive network.  The functional behavior or electrical activity of this network can be recorded.
 """ .
 
-<https://w3id.org/synapse/nfosi/vocab/multiomics> rdfs:seeAlso <http://edamontology.org/topic_4021> ;
-    skos:definition "Data from multiple omics" ;
-    skos:editorialNote "Funder PM suggestion to add as data type. Technically EDAM treats it as a topic concept rather than a data concept." .
-
 <https://w3id.org/synapse/nfosi/vocab/muscle> skos:definition "" .
 
 <https://w3id.org/synapse/nfosi/vocab/mzML> skos:definition "mzML format for raw spectrometer output data, standardised by HUPO PSI MSS." ;
@@ -3634,10 +3623,6 @@ Examples: avoidance behavior, choice-making.
     linkml:meaning <https://cancergenome.nih.gov/cancersselected/biospeccriteria> .
 
 <https://w3id.org/synapse/nfosi/vocab/processed> skos:definition "Data generated from running one or more bioinformatics methods on raw data." .
-
-<https://w3id.org/synapse/nfosi/vocab/promoter%20sequence> skos:definition "Sequence data of promoter region (P0, flCAG, etc.)" ;
-    skos:editorialNote "Mapping to broader concept since EDAM doesn't have further granularity for sequence data." ;
-    linkml:meaning <http://edamontology.org/data_3494> .
 
 <https://w3id.org/synapse/nfosi/vocab/prostate> skos:definition "Lobular organ the parenchyma of which has as its parts glandular acini which are continuous with the prostatic part of the urethra." ;
     linkml:meaning <http://purl.obolibrary.org/obo/FMA_9600> .
@@ -3934,9 +3919,6 @@ Examples: avoidance behavior, choice-making.
 
 <https://w3id.org/synapse/nfosi/vocab/tranches> dcterms:source <https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_variantrecalibration_VariantRecalibrator.php#--tranches_file> ;
     skos:definition ".tranches file from GATK VQSR" .
-
-<https://w3id.org/synapse/nfosi/vocab/trans-endothelial%20electrical%20resistance> skos:definition "Trans-endothelial electrical resistance (TEER), aka epithelial voltohmmeter (EVOM) assay, is used to assess the integrity and barrier function of epithelial cell monolayers in cell culture experiments." ;
-    linkml:meaning <http://purl.enanomapper.org/onto/ENM_8000301> .
 
 <https://w3id.org/synapse/nfosi/vocab/transcranial%20doppler%20ultrasonography> skos:definition "A diagnostic technique that uses pulsed Doppler ultrasound to measure the velocity of blood flow through the major blood vessels of the brain." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C122930> .
@@ -5310,7 +5292,6 @@ Examples: avoidance behavior, choice-making.
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/GenePerturbationMethodEnum> ;
     linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/CRE%20Recombinase>,
         <https://w3id.org/synapse/nfosi/vocab/CRISPR>,
-        <https://w3id.org/synapse/nfosi/vocab/CRISPR%20Assisted%20mRNA%20Fragment%20Trans-splicing%20%28CRAFT%29>,
         <https://w3id.org/synapse/nfosi/vocab/RNAi> .
 
 <https://w3id.org/synapse/nfosi/vocab/GenePerturbationTechnologyEnum> skos:inScheme <https://w3id.org/nfosi/> ;
@@ -7556,6 +7537,7 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/Morgan%20State%20University>,
         <https://w3id.org/synapse/nfosi/vocab/NCI%20Center%20for%20Cancer%20Research>,
         <https://w3id.org/synapse/nfosi/vocab/National%20Institutes%20of%20Health>,
+        <https://w3id.org/synapse/nfosi/vocab/Nemours%20Children%27s%20Clinic>,
         <https://w3id.org/synapse/nfosi/vocab/New%20Jersey%20Institute%20of%20Technology>,
         <https://w3id.org/synapse/nfosi/vocab/New%20Mexico%20State%20University>,
         <https://w3id.org/synapse/nfosi/vocab/New%20York%20Medical%20College>,
@@ -7612,7 +7594,6 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/Stevens%20Institute%20of%20Technology>,
         <https://w3id.org/synapse/nfosi/vocab/Stony%20Brook%20University>,
         <https://w3id.org/synapse/nfosi/vocab/Syracuse%20University>,
-        <https://w3id.org/synapse/nfosi/vocab/Technische%20Universit%C3%A4t%20Dresden>,
         <https://w3id.org/synapse/nfosi/vocab/Temple%20University>,
         <https://w3id.org/synapse/nfosi/vocab/Tennessee%20State%20University>,
         <https://w3id.org/synapse/nfosi/vocab/Tennessee%20Technological%20University>,
@@ -8366,7 +8347,6 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/survival>,
         <https://w3id.org/synapse/nfosi/vocab/targeted%20exome%20sequencing>,
         <https://w3id.org/synapse/nfosi/vocab/traction%20force%20microscopy>,
-        <https://w3id.org/synapse/nfosi/vocab/trans-endothelial%20electrical%20resistance>,
         <https://w3id.org/synapse/nfosi/vocab/transcranial%20doppler%20ultrasonography>,
         <https://w3id.org/synapse/nfosi/vocab/twin%20spot%20assay>,
         <https://w3id.org/synapse/nfosi/vocab/ultra%20high-performance%20liquid%20chromatography/tandem%20mass%20spectrometry>,
@@ -8387,7 +8367,6 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/annotated%20somatic%20mutation>,
         <https://w3id.org/synapse/nfosi/vocab/audio%20transcript>,
         <https://w3id.org/synapse/nfosi/vocab/behavioral%20data>,
-        <https://w3id.org/synapse/nfosi/vocab/capsid%20sequence>,
         <https://w3id.org/synapse/nfosi/vocab/cellular%20physiology>,
         <https://w3id.org/synapse/nfosi/vocab/characteristic>,
         <https://w3id.org/synapse/nfosi/vocab/chromatin%20activity>,
@@ -8414,7 +8393,6 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/metabolomics>,
         <https://w3id.org/synapse/nfosi/vocab/molecular%20property>,
         <https://w3id.org/synapse/nfosi/vocab/morphology%20parameter>,
-        <https://w3id.org/synapse/nfosi/vocab/multiomics>,
         <https://w3id.org/synapse/nfosi/vocab/network>,
         <https://w3id.org/synapse/nfosi/vocab/normalized%20intensities>,
         <https://w3id.org/synapse/nfosi/vocab/nucleic%20acid%20sequence%20record>,
@@ -8423,7 +8401,6 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/pharmacokinetics>,
         <https://w3id.org/synapse/nfosi/vocab/physiology%20parameter>,
         <https://w3id.org/synapse/nfosi/vocab/plot>,
-        <https://w3id.org/synapse/nfosi/vocab/promoter%20sequence>,
         <https://w3id.org/synapse/nfosi/vocab/protein%20interaction%20data>,
         <https://w3id.org/synapse/nfosi/vocab/protein%20interaction%20raw%20data>,
         <https://w3id.org/synapse/nfosi/vocab/proteomics>,
@@ -9551,9 +9528,9 @@ Examples: avoidance behavior, choice-making.
 """ ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/specimenType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
@@ -10307,9 +10284,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/modelSystemName> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10371,9 +10348,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Genotype of NF1 gene in the biospecimen from which the data were derived, if known." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/nf1Genotype> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10386,11 +10363,11 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
-        [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sex> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,

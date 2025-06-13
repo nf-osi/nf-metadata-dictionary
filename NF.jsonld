@@ -1657,6 +1657,9 @@
                     "@id": "bts:NationalInstitutesofHealth"
                 },
                 {
+                    "@id": "bts:NemoursChildren'sClinic"
+                },
+                {
                     "@id": "bts:NewJerseyInstituteofTechnology"
                 },
                 {
@@ -1823,9 +1826,6 @@
                 },
                 {
                     "@id": "bts:SyracuseUniversity"
-                },
-                {
-                    "@id": "bts:TechnischeUniversitätDresden"
                 },
                 {
                     "@id": "bts:TempleUniversity"
@@ -4520,6 +4520,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:NemoursChildren'sClinic",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "TBD",
+            "rdfs:label": "NemoursChildren'sClinic",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Institution"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "Nemours Children's Clinic",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:NewJerseyInstituteofTechnology",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
@@ -5468,23 +5485,6 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "Syracuse University",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:TechnischeUniversitätDresden",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "TechnischeUniversitätDresden",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:Institution"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "Technische Universität Dresden",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -13679,29 +13679,9 @@
                 },
                 {
                     "@id": "bts:CRERecombinase"
-                },
-                {
-                    "@id": "bts:CRISPRAssistedmRNAFragmentTrans-splicing(CRAFT)"
                 }
             ],
             "sms:displayName": "genePerturbationTechnology",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:CRISPRAssistedmRNAFragmentTrans-splicing(CRAFT)",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "CRISPRAssistedmRNAFragmentTrans-splicing(CRAFT)",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:GenePerturbationTechnology"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "CRISPR Assisted mRNA Fragment Trans-splicing (CRAFT)",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -19696,9 +19676,6 @@
                     "@id": "bts:Behavioraldata"
                 },
                 {
-                    "@id": "bts:Capsidsequence"
-                },
-                {
                     "@id": "bts:Clinical"
                 },
                 {
@@ -19798,9 +19775,6 @@
                     "@id": "bts:Morphologyparameter"
                 },
                 {
-                    "@id": "bts:Multiomics"
-                },
-                {
                     "@id": "bts:Physiologyparameter"
                 },
                 {
@@ -19835,9 +19809,6 @@
                 },
                 {
                     "@id": "bts:Nucleicacidsequencerecord"
-                },
-                {
-                    "@id": "bts:Promotersequence"
                 },
                 {
                     "@id": "bts:Proteininteractiondata"
@@ -19913,23 +19884,6 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "behavioral data",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:Capsidsequence",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "Capsidsequence",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:DataType"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "capsid sequence",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -20495,23 +20449,6 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:Multiomics",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "Multiomics",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:DataType"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "multiomics",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
             "@id": "bts:Physiologyparameter",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
@@ -20712,23 +20649,6 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "nucleic acid sequence record",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
-            "@id": "bts:Promotersequence",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "Promotersequence",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:DataType"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "promoter sequence",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -29225,9 +29145,6 @@
                     "@id": "bts:Tractionforcemicroscopy"
                 },
                 {
-                    "@id": "bts:Trans-endothelialelectricalresistance"
-                },
-                {
                     "@id": "bts:Transcranialdopplerultrasonography"
                 },
                 {
@@ -32743,26 +32660,6 @@
             "sms:validationRules": []
         },
         {
-            "@id": "bts:Trans-endothelialelectricalresistance",
-            "@type": "rdfs:Class",
-            "rdfs:comment": "TBD",
-            "rdfs:label": "Trans-endothelialelectricalresistance",
-            "rdfs:subClassOf": [
-                {
-                    "@id": "bts:ProtocolAssay"
-                },
-                {
-                    "@id": "bts:Assay"
-                }
-            ],
-            "schema:isPartOf": {
-                "@id": "http://schema.biothings.io"
-            },
-            "sms:displayName": "trans-endothelial electrical resistance",
-            "sms:required": "sms:false",
-            "sms:validationRules": []
-        },
-        {
             "@id": "bts:Transcranialdopplerultrasonography",
             "@type": "rdfs:Class",
             "rdfs:comment": "TBD",
@@ -33526,9 +33423,6 @@
                 },
                 {
                     "@id": "bts:Tractionforcemicroscopy"
-                },
-                {
-                    "@id": "bts:Trans-endothelialelectricalresistance"
                 },
                 {
                     "@id": "bts:Transcranialdopplerultrasonography"
