@@ -12,22 +12,22 @@
 
 <https://w3id.org/synapse/nfosi/vocab/nfosi> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
-            sh:prefix "htan" ],
-        [ sh:namespace skos: ;
-            sh:prefix "skos" ],
-        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
-            sh:prefix "personinfo" ],
-        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
-            sh:prefix "nf" ],
-        [ sh:namespace prov: ;
-            sh:prefix "prov" ],
+    sh:declare [ sh:namespace schema1: ;
+            sh:prefix "schema" ],
         [ sh:namespace rdfs: ;
             sh:prefix "rdfs" ],
         [ sh:namespace linkml: ;
             sh:prefix "linkml" ],
-        [ sh:namespace schema1: ;
-            sh:prefix "schema" ] ;
+        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
+            sh:prefix "htan" ],
+        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
+            sh:prefix "nf" ],
+        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
+            sh:prefix "personinfo" ],
+        [ sh:namespace prov: ;
+            sh:prefix "prov" ],
+        [ sh:namespace skos: ;
+            sh:prefix "skos" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
@@ -169,7 +169,7 @@
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-06-05T21:07:25"^^xsd:dateTime ;
+    linkml:generation_date "2025-06-13T19:47:21"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -466,8 +466,8 @@
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-06-05T21:07:23"^^xsd:dateTime ;
-    linkml:source_file_size 308007 ;
+    linkml:source_file_date "2025-06-13T19:47:19"^^xsd:dateTime ;
+    linkml:source_file_size 308060 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,
@@ -1560,6 +1560,8 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Necrotic%20Neoplasm> skos:definition "A neoplasm characterized by focal or diffuse tumor cell necrosis." ;
     linkml:meaning <obo:NCIT_C36029> .
+
+<https://w3id.org/synapse/nfosi/vocab/Nemours%20Children%27s%20Clinic> linkml:meaning <https://w3id.org/synapse/nfosi/vocab/> .
 
 <https://w3id.org/synapse/nfosi/vocab/NeuN%2B> skos:definition "Is a neuronal nuclear antigen that is commonly used as a biomarker for neurons and NeuN immunoreactivity has been widely used to identify neurons in tissue culture to measure the neuron(positive)/glia(negative) ratio in brain regions." ;
     linkml:meaning <https://en.wikipedia.org/wiki/NeuN> .
@@ -7535,6 +7537,7 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/Morgan%20State%20University>,
         <https://w3id.org/synapse/nfosi/vocab/NCI%20Center%20for%20Cancer%20Research>,
         <https://w3id.org/synapse/nfosi/vocab/National%20Institutes%20of%20Health>,
+        <https://w3id.org/synapse/nfosi/vocab/Nemours%20Children%27s%20Clinic>,
         <https://w3id.org/synapse/nfosi/vocab/New%20Jersey%20Institute%20of%20Technology>,
         <https://w3id.org/synapse/nfosi/vocab/New%20Mexico%20State%20University>,
         <https://w3id.org/synapse/nfosi/vocab/New%20York%20Medical%20College>,
@@ -10281,9 +10284,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/modelSystemName> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10360,9 +10363,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
-        [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
         [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sex> ;
