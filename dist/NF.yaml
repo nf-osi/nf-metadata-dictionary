@@ -497,6 +497,10 @@ slots:
       - Meaning originally captured with combination of readPairOrientation and readStrandOrigin.
       - https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/
     required: true
+  numberOfPcrCycles:
+    description: A data item that is the number of PCR cycles used during the construction of a sequencing library.
+    meaning: http://purl.obolibrary.org/obo/OBI_0002475
+    required: false
   license:
     title: License
     description: Link to a license or name of license applicable for the resource.
@@ -5094,6 +5098,7 @@ classes:
       - libraryStrand
       - libraryPrep
       - libraryPreparationMethod
+      - numberOfPcrCycles
       - readPair
       - readLength
       - readDepth
@@ -5112,6 +5117,7 @@ classes:
       - libraryKitID
       - libraryPrep
       - libraryPreparationMethod
+      - numberOfPcrCycles
       - readPair
       - readLength
       - readDepth
