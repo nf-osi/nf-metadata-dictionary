@@ -12,22 +12,22 @@
 
 <https://w3id.org/synapse/nfosi/vocab/nfosi> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace prov: ;
-            sh:prefix "prov" ],
-        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
+    sh:declare [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
             sh:prefix "htan" ],
-        [ sh:namespace linkml: ;
-            sh:prefix "linkml" ],
+        [ sh:namespace schema1: ;
+            sh:prefix "schema" ],
+        [ sh:namespace prov: ;
+            sh:prefix "prov" ],
+        [ sh:namespace rdfs: ;
+            sh:prefix "rdfs" ],
         [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
             sh:prefix "nf" ],
         [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
             sh:prefix "personinfo" ],
-        [ sh:namespace rdfs: ;
-            sh:prefix "rdfs" ],
         [ sh:namespace skos: ;
             sh:prefix "skos" ],
-        [ sh:namespace schema1: ;
-            sh:prefix "schema" ] ;
+        [ sh:namespace linkml: ;
+            sh:prefix "linkml" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
@@ -169,7 +169,7 @@
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-06-17T17:23:43"^^xsd:dateTime ;
+    linkml:generation_date "2025-06-26T01:35:38"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -466,8 +466,8 @@
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-06-17T17:23:42"^^xsd:dateTime ;
-    linkml:source_file_size 309826 ;
+    linkml:source_file_date "2025-06-26T01:35:37"^^xsd:dateTime ;
+    linkml:source_file_size 310537 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,
@@ -3032,6 +3032,9 @@ Examples: avoidance behavior, choice-making.
 <https://w3id.org/synapse/nfosi/vocab/gff3> skos:definition "Generic Feature Format version 3 (GFF3) of sequence features." ;
     linkml:meaning <http://edamontology.org/format_1975> .
 
+<https://w3id.org/synapse/nfosi/vocab/grip%20strength> skos:definition "Assessment of muscle strength that measures that force with which one holds or grasps." ;
+    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C139210> .
+
 <https://w3id.org/synapse/nfosi/vocab/groin> skos:definition "Anatomically also known as the inguinal part of abdomen." ;
     linkml:meaning <http://purl.obolibrary.org/obo/UBERON_0008337> .
 
@@ -3089,6 +3092,9 @@ Examples: avoidance behavior, choice-making.
 <https://w3id.org/synapse/nfosi/vocab/hTERT%20ipn02.3%202%CE%BB> skos:definition "Derived from peripheral sciatic nerve from a donor without neurofibromatosis. No detectable NF1 mutation." .
 
 <https://w3id.org/synapse/nfosi/vocab/hTERT%20ipn02.8> skos:definition "Derived from peripheral nerve from a donor without neurofibromatosis. No detectable NF1 mutation." .
+
+<https://w3id.org/synapse/nfosi/vocab/hand-held%20dynamometry> skos:definition "A technique to assess isometric muscle strength using a hand-held dynamometer." ;
+    linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C186193> .
 
 <https://w3id.org/synapse/nfosi/vocab/hdf5> skos:definition """HDF5 is the new version, according to the HDF group, a completely different technology (https://support.hdfgroup.org/products/hdf4/ compared to HDF.   An HDF5 file appears to the user as a directed graph. The nodes of this graph are the higher-level HDF5 objects that are exposed by the HDF5 APIs:  Groups, Datasets, Named datatypes.  Currently supported by the Python MDTraj package. HDF5 is a data model, library, and file format for storing and managing data, based on Hierarchical Data Format (HDF).
 """ ;
@@ -3814,6 +3820,9 @@ Examples: avoidance behavior, choice-making.
     linkml:meaning <http://purl.obolibrary.org/obo/FBcv_0009001> .
 
 <https://w3id.org/synapse/nfosi/vocab/singleEnd> skos:definition "A library preparation that results in the creation of a library of 5' ends of DNA." .
+
+<https://w3id.org/synapse/nfosi/vocab/six-minute%20walk%20test> dcterms:source <https://www.ncbi.nlm.nih.gov/books/NBK576420/> ;
+    skos:definition "The six-minute walk test (6MWT) is a simple, standardized functional assay of exercise capacity that measures how far the human subject can walk within a 6-minute duration; used to to evaluate lung and heart conditions." .
 
 <https://w3id.org/synapse/nfosi/vocab/skin> skos:definition "The integument of an animal (as a fur-bearing mammal or a bird) separated from the body usually with its hair or feathers." ;
     linkml:meaning <http://purl.obolibrary.org/obo/BTO_0001253> .
@@ -8295,6 +8304,8 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/gel%20filtration%20chromatography>,
         <https://w3id.org/synapse/nfosi/vocab/gel%20permeation%20chromatography>,
         <https://w3id.org/synapse/nfosi/vocab/genotyping>,
+        <https://w3id.org/synapse/nfosi/vocab/grip%20strength>,
+        <https://w3id.org/synapse/nfosi/vocab/hand-held%20dynamometry>,
         <https://w3id.org/synapse/nfosi/vocab/high%20content%20screen>,
         <https://w3id.org/synapse/nfosi/vocab/high%20frequency%20ultrasound>,
         <https://w3id.org/synapse/nfosi/vocab/high-performance%20liquid%20chromatography/tandem%20mass%20spectrometry>,
@@ -8364,6 +8375,7 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/single%20molecule%20drug%20screen%20assay>,
         <https://w3id.org/synapse/nfosi/vocab/single-cell%20RNA-seq>,
         <https://w3id.org/synapse/nfosi/vocab/single-nucleus%20RNA-seq>,
+        <https://w3id.org/synapse/nfosi/vocab/six-minute%20walk%20test>,
         <https://w3id.org/synapse/nfosi/vocab/small%20molecule%20library%20screen>,
         <https://w3id.org/synapse/nfosi/vocab/sorbitol%20dehydrogenase%20activity%20level%20assay>,
         <https://w3id.org/synapse/nfosi/vocab/spatial%20frequency%20domain%20imaging>,
@@ -10313,9 +10325,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/modelSystemName> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10392,11 +10404,11 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ],
-        [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sex> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10616,9 +10628,9 @@ Examples: avoidance behavior, choice-making.
         "Reflects the data types within the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/MetadataEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/MetadataEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/dataType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/EpidemiologyDataTemplate>,
