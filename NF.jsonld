@@ -12420,6 +12420,23 @@
             "sms:validationRules": []
         },
         {
+            "@id": "bts:AlternateDataRepository",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "EGAS00001003186, dbgap",
+            "rdfs:label": "AlternateDataRepository",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "alternateDataRepository",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
             "@id": "bts:IsMultiIndividual",
             "@type": "rdfs:Class",
             "rdfs:comment": "Whether or not a file has data for multiple individuals (Yes; No)",
@@ -21525,6 +21542,23 @@
                 "@id": "http://schema.biothings.io"
             },
             "sms:displayName": "id",
+            "sms:required": "sms:false",
+            "sms:validationRules": []
+        },
+        {
+            "@id": "bts:ClinicalTrialID",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "ID of an associated clinical trial. For trials from clinicaltrials.gov, naming starts with NCT########.",
+            "rdfs:label": "ClinicalTrialID",
+            "rdfs:subClassOf": [
+                {
+                    "@id": "bts:Thing"
+                }
+            ],
+            "schema:isPartOf": {
+                "@id": "http://schema.biothings.io"
+            },
+            "sms:displayName": "clinicalTrialID",
             "sms:required": "sms:false",
             "sms:validationRules": []
         },
@@ -37480,6 +37514,12 @@
                 },
                 {
                     "@id": "bts:StudyFileviewId"
+                },
+                {
+                    "@id": "bts:ClinicalTrialID"
+                },
+                {
+                    "@id": "bts:AlternateDataRepository"
                 }
             ],
             "sms:validationRules": []
