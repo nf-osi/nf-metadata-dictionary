@@ -30,7 +30,7 @@ jobs:
           pip install pyyaml requests rdflib tqdm
 
       - name: Run synonym extraction
-        run: python extract_synonyms.py
+        run: python utils/extract_synonyms.py
         continue-on-error: true  # Continue even if script fails
 
       - name: Check if CSV was created
@@ -41,11 +41,26 @@ jobs:
           fi
           echo "CSV file was created successfully"
 
+      - name: Inject synonyms into YAML
+        run: python utils/inject_synonyms.py --csv term_synonyms.csv --yaml dist/NF.yaml
+        continue-on-error: false  # Fail if injection fails
+
+      - name: Check if YAML was modified
+        run: |
+          if git diff --exit-code dist/NF.yaml; then
+            echo "No changes made to NF.yaml"
+          else
+            echo "NF.yaml was successfully updated with synonyms"
+            git diff --stat dist/NF.yaml
+          fi
+
       - name: Create release asset
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v1
         with:
-          files: term_synonyms.csv
+          files: |
+            term_synonyms.csv
+            dist/NF.yaml
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -54,6 +69,8 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
-          name: term-synonyms-csv
-          path: term_synonyms.csv
+          name: synonym-injection-results
+          path: |
+            term_synonyms.csv
+            dist/NF.yaml
           if-no-files-found: error 
