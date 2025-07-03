@@ -14,6 +14,7 @@ on:
 jobs:
   extract-synonyms:
     runs-on: ubuntu-latest
+    timeout-minutes: 65  # Set job timeout to 65 minutes
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,7 +31,17 @@ jobs:
           pip install pyyaml requests rdflib tqdm
 
       - name: Run synonym extraction
-        run: python utils/extract_synonyms.py
+        run: |
+          echo "Starting synonym extraction with timeout handling..."
+          timeout 3600 python utils/extract_synonyms.py || {
+            exit_code=$?
+            if [ $exit_code -eq 124 ]; then
+              echo "Synonym extraction timed out after 60 minutes, but partial results may be available"
+            else
+              echo "Synonym extraction failed with exit code: $exit_code"
+            fi
+            exit $exit_code
+          }
         continue-on-error: true  # Continue even if script fails
 
       - name: Check if CSV was created

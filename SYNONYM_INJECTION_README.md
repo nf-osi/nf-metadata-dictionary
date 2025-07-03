@@ -29,11 +29,36 @@ The script implements sophisticated filtering to avoid redundant aliases:
 - Example: Skips "Three-Dimensional Imaging" as a duplicate of "Three Dimensional Imaging"
 - Prevents aliases that are too similar to the original term name
 
+## Timeout and Robustness Improvements
+
+To address timeout issues during synonym extraction, the following improvements have been implemented:
+
+### Performance Optimizations
+- **Reduced timeouts**: HTTP requests limited to 15 seconds (down from 30)
+- **Per-term timeout**: Individual term processing limited to 30 seconds (down from 60)
+- **Batch processing**: Terms processed in batches of 50 for better memory management
+- **Reduced parallelism**: Maximum 5 concurrent workers (down from 10) to reduce server load
+
+### Timeout Handling
+- **Script timeout**: 55-minute script timeout with graceful shutdown
+- **Workflow timeout**: 60-minute timeout with proper error handling
+- **Resume capability**: Can resume processing from existing CSV file if interrupted
+- **Progress preservation**: Results saved after each batch to prevent data loss
+
+### Error Resilience
+- **Graceful degradation**: Script continues even if individual terms fail
+- **Partial results**: Always produces usable CSV output, even with timeouts
+- **Clear error reporting**: Detailed logging of which terms timeout or fail
+
 ## Updated Workflow
 
-The GitHub workflow now includes these new steps:
+The GitHub workflow now includes these enhanced steps:
 
-1. **Extract synonyms** (existing): `python utils/extract_synonyms.py`
+1. **Extract synonyms** (improved): `python utils/extract_synonyms.py`
+   - **Timeout protection**: 60-minute timeout with graceful handling
+   - **Resume capability**: Can resume from partial CSV if interrupted
+   - **Batch processing**: Processes terms in smaller batches for better reliability
+   - **Reduced timeouts**: Individual requests limited to 15 seconds, terms to 30 seconds
 2. **Inject synonyms** (new): `python utils/inject_synonyms.py --csv term_synonyms.csv --yaml dist/NF.yaml`
 3. **Validate changes**: Check if YAML was modified and show diff statistics
 4. **Upload artifacts**: Both CSV and updated YAML are now included in releases and artifacts
