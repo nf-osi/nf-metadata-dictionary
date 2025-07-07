@@ -1,5 +1,5 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-wgstemplate",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/sagedm-wgstemplate",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "title": "WGSTemplate",
   "type": "object",
@@ -18,7 +18,7 @@
       "type": "string"
     },
     "ageUnit": {
-      "description": "",
+      "description": "A time unit that can be used with a given age value, e.g. years.",
       "enum": [
         "seconds",
         "minutes",
@@ -36,7 +36,7 @@
       "type": "string"
     },
     "assay": {
-      "description": "",
+      "description": "The technology used to generate the data in this file.",
       "enum": [
         "2D AlamarBlue absorbance",
         "2D AlamarBlue fluorescence",
@@ -240,7 +240,7 @@
       "type": "string"
     },
     "dataSubtype": {
-      "description": "Categorizes data based on its processing state. This is the main classification axis used for data types.  Not all data types can use this dimensions (e.g. clinical data).",
+      "description": "Further qualification of dataType, which may be used to indicate the state of processing of the data, aggregation of the data, or presence of metadata.",
       "enum": [
         "raw",
         "synthetic",
@@ -329,7 +329,7 @@
       "type": "string"
     },
     "diagnosis": {
-      "description": "",
+      "description": "Diagnosis for the individual given signs and symptoms. Use the most specific diagnosis term that applies.",
       "enum": [
         "Neurofibromatosis type 1",
         "Schwannomatosis",
@@ -349,7 +349,7 @@
       "type": "string"
     },
     "fileFormat": {
-      "description": "",
+      "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
       "enum": [
         "7z",
         "DICOM",
@@ -474,7 +474,7 @@
       "type": "string"
     },
     "libraryPrep": {
-      "description": "",
+      "description": "The general strategy by which the library was prepared",
       "enum": [
         "lncRNAenrichment",
         "miRNAenrichment",
@@ -485,7 +485,7 @@
       "type": "string"
     },
     "libraryPreparationMethod": {
-      "description": "",
+      "description": "Method by which library was prepared",
       "enum": [
         "10x",
         "CEL-seq",
@@ -773,7 +773,7 @@
       "type": "string"
     },
     "nucleicAcidSource": {
-      "description": "",
+      "description": "Source of the extracted nucleic acid used in the experiment",
       "enum": [
         "bulk cell",
         "bulk nuclei",
@@ -785,7 +785,7 @@
       "type": "string"
     },
     "organ": {
-      "description": "",
+      "description": "A unique macroscopic (gross) anatomic structure that performs specific functions. It is composed of various tissues. An organ is part of an anatomic system or a body region.",
       "enum": [
         "kidney",
         "ovary",
@@ -816,7 +816,7 @@
       "type": "string"
     },
     "platform": {
-      "description": "",
+      "description": "A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data.",
       "enum": [
         "7T Bruker Biospec",
         "10x Visium Spatial Gene Expression",
@@ -949,7 +949,7 @@
       "type": "string"
     },
     "resourceType": {
-      "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
+      "description": "The type of resource being stored and annotated",
       "enum": [
         "experimentalData",
         "result",
@@ -964,7 +964,7 @@
       "type": "string"
     },
     "runType": {
-      "description": "",
+      "description": "Sequencing run type.",
       "enum": [
         "pairedEnd",
         "singleEnd"
@@ -1007,7 +1007,7 @@
       "type": "string"
     },
     "species": {
-      "description": "",
+      "description": "The name of a species (typically a taxonomic group) of organism.",
       "enum": [
         "Rattus norvegicus",
         "Gallus gallus",
@@ -1029,7 +1029,7 @@
       "type": "string"
     },
     "specimenPreparationMethod": {
-      "description": "",
+      "description": "Term that represents preservation of the sample before usage in, e.g. sequencing",
       "enum": [
         "Fresh collected",
         "Flash frozen",
@@ -1101,7 +1101,7 @@
       "type": "string"
     },
     "tumorType": {
-      "description": "",
+      "description": "The type of tumor that the biospecimen used to generate the data were collected from.",
       "enum": [
         "Diffuse Astrocytoma",
         "Subcutaneous Neurofibroma",
@@ -2183,8 +2183,5 @@
     "individualID",
     "species",
     "diagnosis"
-  ],
-  "additionalProperties": false,
-  "metamodel_version": "1.7.0",
-  "version": null
+  ]
 }

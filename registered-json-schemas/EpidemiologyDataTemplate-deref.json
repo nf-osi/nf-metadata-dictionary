@@ -1,5 +1,5 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-epidemiologydatatemplate",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/sagedm-epidemiologydatatemplate",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "title": "EpidemiologyDataTemplate",
   "type": "object",
@@ -86,7 +86,7 @@
       "type": "string"
     },
     "fileFormat": {
-      "description": "",
+      "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
       "enum": [
         "7z",
         "DICOM",
@@ -211,7 +211,7 @@
       "type": "string"
     },
     "resourceType": {
-      "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
+      "description": "The type of resource being stored and annotated",
       "enum": [
         "experimentalData",
         "result",
@@ -437,8 +437,5 @@
     "dataType",
     "fileFormat",
     "epidemiologyMetric"
-  ],
-  "additionalProperties": false,
-  "metamodel_version": "1.7.0",
-  "version": null
+  ]
 }

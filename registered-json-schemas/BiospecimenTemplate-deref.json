@@ -1,5 +1,5 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-biospecimentemplate",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/sagedm-biospecimentemplate",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "title": "BiospecimenTemplate",
   "type": "object",
@@ -10,7 +10,7 @@
       "type": "string"
     },
     "bodySite": {
-      "description": "",
+      "description": "Sample location referring to a named area of the body, inclusive of gross anatomical structures and organ parts.",
       "enum": [
         "axilla",
         "groin",
@@ -52,7 +52,7 @@
       "type": "string"
     },
     "tumorType": {
-      "description": "",
+      "description": "The type of tumor that the biospecimen used to generate the data were collected from.",
       "enum": [
         "Diffuse Astrocytoma",
         "Subcutaneous Neurofibroma",
@@ -198,8 +198,5 @@
     "individualID",
     "specimenID",
     "tumorType"
-  ],
-  "additionalProperties": false,
-  "metamodel_version": "1.7.0",
-  "version": null
+  ]
 }

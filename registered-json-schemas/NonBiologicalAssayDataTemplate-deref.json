@@ -1,5 +1,5 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-nonbiologicalassaydatatemplate",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/sagedm-nonbiologicalassaydatatemplate",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "title": "NonBiologicalAssayDataTemplate",
   "type": "object",
@@ -14,7 +14,7 @@
       "type": "string"
     },
     "assay": {
-      "description": "",
+      "description": "The technology used to generate the data in this file.",
       "enum": [
         "2D AlamarBlue absorbance",
         "2D AlamarBlue fluorescence",
@@ -209,7 +209,7 @@
       "type": "string"
     },
     "dataSubtype": {
-      "description": "Categorizes data based on its processing state. This is the main classification axis used for data types.  Not all data types can use this dimensions (e.g. clinical data).",
+      "description": "Further qualification of dataType, which may be used to indicate the state of processing of the data, aggregation of the data, or presence of metadata.",
       "enum": [
         "raw",
         "synthetic",
@@ -298,7 +298,7 @@
       "type": "string"
     },
     "fileFormat": {
-      "description": "",
+      "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
       "enum": [
         "7z",
         "DICOM",
@@ -419,7 +419,7 @@
       "type": "string"
     },
     "resourceType": {
-      "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
+      "description": "The type of resource being stored and annotated",
       "enum": [
         "experimentalData",
         "result",
@@ -855,8 +855,5 @@
     "dataType",
     "dataSubtype",
     "assay"
-  ],
-  "additionalProperties": false,
-  "metamodel_version": "1.7.0",
-  "version": null
+  ]
 }

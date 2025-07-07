@@ -1,5 +1,5 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-sourcecodetemplate",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/sagedm-sourcecodetemplate",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "title": "SourceCodeTemplate",
   "type": "object",
@@ -26,7 +26,7 @@
       "type": "string"
     },
     "license": {
-      "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
+      "description": "Link to a license or name of license applicable for the resource.",
       "enum": [
         "UNKNOWN",
         "Public Domain",
@@ -78,8 +78,5 @@
   },
   "required": [
     "title"
-  ],
-  "additionalProperties": false,
-  "metamodel_version": "1.7.0",
-  "version": null
+  ]
 }

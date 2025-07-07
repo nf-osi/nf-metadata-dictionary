@@ -1,12 +1,12 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-workflowreport",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/sagedm-workflowreport",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "title": "WorkflowReport",
   "type": "object",
   "description": "Template used for miscellaneous workflow reports and accessory files",
   "properties": {
     "assay": {
-      "description": "",
+      "description": "The technology used to generate the data in this file.",
       "enum": [
         "2D AlamarBlue absorbance",
         "2D AlamarBlue fluorescence",
@@ -201,7 +201,7 @@
       "type": "string"
     },
     "fileFormat": {
-      "description": "",
+      "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
       "enum": [
         "7z",
         "DICOM",
@@ -326,7 +326,7 @@
       "type": "string"
     },
     "resourceType": {
-      "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
+      "description": "The type of resource being stored and annotated",
       "enum": [
         "experimentalData",
         "result",
@@ -341,7 +341,7 @@
       "type": "string"
     },
     "workflow": {
-      "description": "",
+      "description": "Name and version of the workflow used to generate/analyze the data",
       "enum": [
         "CNVkit",
         "DeepVariant",
@@ -722,8 +722,5 @@
     "resourceType",
     "assay",
     "fileFormat"
-  ],
-  "additionalProperties": false,
-  "metamodel_version": "1.7.0",
-  "version": null
+  ]
 }

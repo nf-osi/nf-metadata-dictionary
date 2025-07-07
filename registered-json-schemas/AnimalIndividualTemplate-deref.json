@@ -1,5 +1,5 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-animalindividualtemplate",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/sagedm-animalindividualtemplate",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "title": "AnimalIndividualTemplate",
   "type": "object",
@@ -10,7 +10,7 @@
       "type": "string"
     },
     "ageUnit": {
-      "description": "",
+      "description": "A time unit that can be used with a given age value, e.g. years.",
       "enum": [
         "seconds",
         "minutes",
@@ -24,7 +24,7 @@
       "type": "string"
     },
     "diagnosis": {
-      "description": "",
+      "description": "Diagnosis for the individual given signs and symptoms. Use the most specific diagnosis term that applies.",
       "enum": [
         "Neurofibromatosis type 1",
         "Schwannomatosis",
@@ -44,7 +44,7 @@
       "type": "string"
     },
     "diagnosisAgeGroup": {
-      "description": "",
+      "description": "Age group of the individual at the time of diagnosis.",
       "enum": [
         "infancy",
         "childhood",
@@ -52,7 +52,7 @@
         "adulthood",
         "unknown"
       ],
-      "title": "AgeGroupEnum",
+      "title": "Diagnosis age group",
       "type": "string"
     },
     "germlineMutation": {
@@ -64,13 +64,13 @@
       "type": "string"
     },
     "inheritance": {
-      "description": "",
+      "description": "Describes whether known inheritance from a parent.",
       "enum": [
         "parent affected",
         "parent not affected",
         "unknown"
       ],
-      "title": "InheritanceEnum",
+      "title": "Inheritance",
       "type": "string"
     },
     "modelSystemName": {
@@ -254,13 +254,13 @@
       "type": "string"
     },
     "mosaicism": {
-      "description": "",
+      "description": "Whether individual is mosaic.",
       "enum": [
         "mosaic",
         "not mosaic",
         "unknown"
       ],
-      "title": "MosaicismEnum",
+      "title": "Mosaicism",
       "type": "string"
     },
     "nf1Genotype": {
@@ -354,7 +354,7 @@
       "type": "string"
     },
     "species": {
-      "description": "",
+      "description": "The name of a species (typically a taxonomic group) of organism.",
       "enum": [
         "Rattus norvegicus",
         "Gallus gallus",
@@ -667,8 +667,5 @@
     "individualID",
     "diagnosis",
     "species"
-  ],
-  "additionalProperties": false,
-  "metamodel_version": "1.7.0",
-  "version": null
+  ]
 }

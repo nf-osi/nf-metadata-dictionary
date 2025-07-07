@@ -1,5 +1,5 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-protocoltemplate",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/sagedm-protocoltemplate",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "title": "ProtocolTemplate",
   "type": "object",
@@ -27,7 +27,7 @@
       "type": "string"
     },
     "license": {
-      "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
+      "description": "Link to a license or name of license applicable for the resource.",
       "enum": [
         "UNKNOWN",
         "Public Domain",
@@ -46,7 +46,7 @@
       "type": "string"
     },
     "protocolAssay": {
-      "description": "",
+      "description": "Main assay type that this protocol is related to, e.g. this is a prep protocol for single-cell RNA-seq assay. This is especially helpful for newly-developed or in-house assays.\n",
       "enum": [
         "2D AlamarBlue absorbance",
         "2D AlamarBlue fluorescence",
@@ -237,7 +237,7 @@
         "word recognition score",
         "STR profile"
       ],
-      "title": "Assay",
+      "title": "Protocol assay",
       "type": "string"
     },
     "protocolPurpose": {
@@ -471,8 +471,5 @@
   },
   "required": [
     "title"
-  ],
-  "additionalProperties": false,
-  "metamodel_version": "1.7.0",
-  "version": null
+  ]
 }
