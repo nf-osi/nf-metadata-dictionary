@@ -12,22 +12,22 @@
 
 <https://w3id.org/synapse/nfosi/vocab/nfosi> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
-            sh:prefix "nf" ],
+    sh:declare [ sh:namespace linkml: ;
+            sh:prefix "linkml" ],
         [ sh:namespace schema1: ;
             sh:prefix "schema" ],
+        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
+            sh:prefix "nf" ],
         [ sh:namespace prov: ;
             sh:prefix "prov" ],
-        [ sh:namespace linkml: ;
-            sh:prefix "linkml" ],
-        [ sh:namespace skos: ;
-            sh:prefix "skos" ],
         [ sh:namespace rdfs: ;
             sh:prefix "rdfs" ],
-        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
-            sh:prefix "htan" ],
+        [ sh:namespace skos: ;
+            sh:prefix "skos" ],
         [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
-            sh:prefix "personinfo" ] ;
+            sh:prefix "personinfo" ],
+        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
+            sh:prefix "htan" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
@@ -169,7 +169,7 @@
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-07-09T13:21:57"^^xsd:dateTime ;
+    linkml:generation_date "2025-07-09T14:06:00"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -470,8 +470,8 @@
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-07-09T13:21:55"^^xsd:dateTime ;
-    linkml:source_file_size 311323 ;
+    linkml:source_file_date "2025-07-09T14:05:59"^^xsd:dateTime ;
+    linkml:source_file_size 312470 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,
@@ -4058,6 +4058,10 @@ Examples: avoidance behavior, choice-making.
 <https://w3id.org/synapse/nfosi/vocab/zip> skos:definition "zip is a format standard of a digital entity that is conformant with the PKWARE .ZIP file format specification" ;
     linkml:meaning <http://edamontology.org/format_3987> .
 
+<https://w3id.org/synapse/nfosi/vocab/22q-related%20schwannomatosis> skos:definition """A schwannomatosis that causes a predisposition to develop multiple schwannoma. It is diagnosed when an individual does not meet criteria for NF2-related schwannomatosis, SMARCB1-related schwannomatosis, or LTZR1-related schwannomatosis and both of the following molecular features exist: a loss of heterozygosity (LOH) of the same chromosome 22q markers in two anatomically distinct tumors or hybrid nerve sheath tumors and a different NF2 pathogenic variant in each tumor which cannot be detected in unaffected tissue.
+""" ;
+    linkml:meaning <http://purl.obolibrary.org/obo/MONDO_1030016> .
+
 <https://w3id.org/synapse/nfosi/vocab/Atypical%20Neurofibroma> skos:definition "A neurofibroma characterized by the presence of cellular pleomorphism." ;
     linkml:meaning <http://purl.obolibrary.org/obo/NCIT_C41426> .
 
@@ -4095,6 +4099,8 @@ Examples: avoidance behavior, choice-making.
 <https://w3id.org/synapse/nfosi/vocab/Glioma> skos:definition "A benign or malignant brain and spinal cord tumor that arises from glial cells (astrocytes, oligodendrocytes, ependymal cells). Tumors that arise from astrocytes are called astrocytic tumors or astrocytomas. Tumors that arise from oligodendrocytes are called oligodendroglial tumors. Tumors that arise from ependymal cells are called ependymomas." ;
     linkml:meaning <http://purl.obolibrary.org/obo/MONDO_0021042> .
 
+<https://w3id.org/synapse/nfosi/vocab/LZTR1-related%20schwannomatosis> linkml:meaning <http://purl.obolibrary.org/obo/MONDO_0014299> .
+
 <https://w3id.org/synapse/nfosi/vocab/Material> skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/Material> ;
     linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/DNA>,
@@ -4107,7 +4113,8 @@ Examples: avoidance behavior, choice-making.
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/NF1Variant> ;
     linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/R816X> .
 
-<https://w3id.org/synapse/nfosi/vocab/NF2-related%20schwannomatosis> skos:definition "Previously known as Neurofibromatosis type 2." .
+<https://w3id.org/synapse/nfosi/vocab/NF2-related%20schwannomatosis> skos:definition "A tumor-prone disorder characterized by the development of multiple schwannomas and meningiomas." ;
+    linkml:meaning <http://purl.obolibrary.org/obo/MONDO_0007039> .
 
 <https://w3id.org/synapse/nfosi/vocab/Neurofibromatosis%20type%201> skos:definition """(NF1) - A disease characterized by patches of skin pigmentation (cafe-au-lait spots), Lisch nodules of the iris, tumors in the peripheral nervous system and fibromatous skin tumors.  Individuals with the disorder have increased susceptibility to the development of benign and malignant tumors.
 """ .
@@ -4122,8 +4129,14 @@ Examples: avoidance behavior, choice-making.
     linkml:meaning <http://purl.obolibrary.org/obo/ERO_0001688>,
         <http://purl.obolibrary.org/obo/NCIT_C20153> .
 
+<https://w3id.org/synapse/nfosi/vocab/SMARCB1-related%20schwannomatosis> linkml:meaning <http://purl.obolibrary.org/obo/MONDO_0024517> .
+
 <https://w3id.org/synapse/nfosi/vocab/Schwannoma> skos:definition "SCHW" ;
     linkml:meaning <https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=SCHW> .
+
+<https://w3id.org/synapse/nfosi/vocab/Schwannomatosis-NEC> skos:definition "Schwannomatosis, not elsewhere classified. Used for cases that do not fit into other established diagnostic categories." .
+
+<https://w3id.org/synapse/nfosi/vocab/Schwannomatosis-NOS> skos:definition "Schwannomatosis, not otherwise specified. Used when the specific genetic cause or subtype cannot be determined or is not available." .
 
 <https://w3id.org/synapse/nfosi/vocab/abstract> a linkml:SlotDefinition ;
     dcterms:title "Abstract" ;
@@ -9734,9 +9747,9 @@ Examples: avoidance behavior, choice-making.
         "https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/libraryStrand> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
@@ -10443,11 +10456,11 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sex> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10616,9 +10629,9 @@ Examples: avoidance behavior, choice-making.
         "Reflects the data types within the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/MetadataEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/MetadataEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/dataType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/EpidemiologyDataTemplate>,
@@ -10828,3 +10841,5 @@ Examples: avoidance behavior, choice-making.
     linkml:definition_uri linkml:String ;
     linkml:imported_from "linkml:types" ;
     linkml:uri xsd:string .
+
+
