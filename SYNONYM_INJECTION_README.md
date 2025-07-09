@@ -61,7 +61,8 @@ The GitHub workflow now includes these enhanced steps:
    - **Reduced timeouts**: Individual requests limited to 15 seconds, terms to 30 seconds
 2. **Inject synonyms** (new): `python utils/inject_synonyms.py --csv term_synonyms.csv --yaml dist/NF.yaml`
 3. **Validate changes**: Check if YAML was modified and show diff statistics
-4. **Upload artifacts**: Both CSV and updated YAML are now included in releases and artifacts
+4. **Commit changes**: Automatically commit and push the updated `dist/NF.yaml` back to the repository
+5. **Upload artifacts**: Both CSV and updated YAML are now included in releases and artifacts
 
 ## Script Options
 
@@ -83,7 +84,8 @@ Options:
 2. **Quality filtering**: Prevents low-quality aliases through intelligent deduplication
 3. **Consistent format**: All aliases follow the same YAML structure
 4. **Workflow integration**: Seamlessly fits into existing CI/CD pipeline
-5. **Release assets**: Both CSV and updated YAML are available as release artifacts
+5. **Automatic updates**: Changes are automatically committed back to the repository
+6. **Release assets**: Both CSV and updated YAML are available as release artifacts
 
 ## Example Processing Output
 

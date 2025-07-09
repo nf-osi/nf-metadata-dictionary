@@ -15,6 +15,8 @@ jobs:
   extract-synonyms:
     runs-on: ubuntu-latest
     timeout-minutes: 65  # Set job timeout to 65 minutes
+    permissions:
+      contents: write  # Allow the workflow to push changes back to the repository
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -60,10 +62,21 @@ jobs:
         run: |
           if git diff --exit-code dist/NF.yaml; then
             echo "No changes made to NF.yaml"
+            echo "yaml_modified=false" >> $GITHUB_ENV
           else
             echo "NF.yaml was successfully updated with synonyms"
             git diff --stat dist/NF.yaml
+            echo "yaml_modified=true" >> $GITHUB_ENV
           fi
+
+      - name: Commit and push changes
+        if: env.yaml_modified == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add dist/NF.yaml
+          git commit -m "Auto-update NF.yaml with synonyms from workflow run"
+          git push
 
       - name: Create release asset
         if: github.event_name == 'release'
