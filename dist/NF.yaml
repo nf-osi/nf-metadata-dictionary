@@ -2422,15 +2422,13 @@ enums:
         meaning: OMIABIS:0000060
       kinomics:
         description: Data studying protein kinase signaling/activity.
-        source: http://www.kinomecore.com/what-is-kinomics/
-        meaning: https://w3id.org/synapse/nfosi/vocab/kinomics
+        source: https://w3id.org/synapse/nfosi/vocab/kinomics
         notes:
           - See "Kinome Response Profile" (http://purl.obolibrary.org/obo/NCIT_C107137) for kinome data *specifically* with drug treatment
           - Subclasss of "Proteomics" (http://purl.obolibrary.org/obo/NCIT_C16723)
       somatic variants:
         description: Called somatic variants
-        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_somatic_mutation
-        meaning: https://w3id.org/synapse/nfosi/vocab/SomaticVariants
+        source: https://w3id.org/synapse/nfosi/vocab/SomaticVariants
       volume:
         description: Data of the three dimensional space occupied by an entity or the capacity of a space or container.
         meaning: NCIT:C25335
@@ -2442,8 +2440,7 @@ enums:
           - May cover both morphology parameter and physiology parameter.
       drug screen:
         description: Information on drug sensitivity and molecular markers of drug response
-        source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3531057/
-        meaning: https://w3id.org/synapse/nfosi/vocab/drugScreen
+        source: https://w3id.org/synapse/nfosi/vocab/drugScreen
       gene expression:
         description: Data of the levels and patterns of synthesis of gene products (proteins and functional RNA), including interpretation in functional terms of gene expression data.
         meaning: EDAM:data_2603
@@ -2453,7 +2450,7 @@ enums:
           - Covers both raw (e.g. fastqs, microarray intensities) and processed gene expression data (e.g. normalized gene expression matrix).
       aligned reads:
         description: Aligned reads output from alignment workflows
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads
+        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads
       genomic features:
         description: Data of sequence feature (continuous extent of biological sequence) that is of genomic origin.
         meaning: GENO:0000481
@@ -2472,12 +2469,12 @@ enums:
         meaning: NCIT:C25463
       raw intensities:
         description: Raw intensity values from the instrument (including microarrays, plate reader assays, raw pixel intensities from imaging assay, mass spectrometry, etc.).
-        meaning: https://w3id.org/synapse/nfosi/vocab/RawIntensities
+        source: https://w3id.org/synapse/nfosi/vocab/RawIntensities
         notes:
           - Not preferred for annotation.
       normalized intensities:
         description: Normalized intensity values from the instrument.
-        meaning: https://w3id.org/synapse/nfosi/vocab/NormalizedIntensities
+        source: https://w3id.org/synapse/nfosi/vocab/NormalizedIntensities
         notes:
           - Not preferred for annotation.
           - See RawIntensities
@@ -2492,19 +2489,18 @@ enums:
         meaning: EDAM:data_3917
       chromatin activity:
         description: Data of chromatin activity, which allows access to condensed genomic DNA and potentially controls gene expression.
-        meaning: https://w3id.org/synapse/nfosi/vocab/chromatinActivity
+        source: https://w3id.org/synapse/nfosi/vocab/chromatinActivity
         see_also:
           - https://en.wikipedia.org/wiki/Chromatin_remodeling
       structural variants:
         description: Genomic variants data that covers deletions, duplications, CNVs, insertions, inversions, and translocations, which may be derived from specialized variant calling workflows.
-        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=structural_variation
-        meaning: https://w3id.org/synapse/nfosi/vocab/StructuralVariantss
+        source: https://w3id.org/synapse/nfosi/vocab/StructuralVariantss
       germline variants:
         description: Called germline variants
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation
+        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation
       copy number variants:
         description: Copy number variants
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=copy_number_variation
+        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=copy_number_variation
       image:
         description: Biological or biomedical data that has been rendered into an image.
         meaning: EDAM:data_2968
@@ -2515,10 +2511,10 @@ enums:
           - EDAM preferred label is 'Pathway or network'
       cellular physiology:
         description: Data on the physiological parameter of a cell.
-        meaning: https://w3id.org/synapse/nfosi/vocab/cellularPhysiology
+        source: https://w3id.org/synapse/nfosi/vocab/cellularPhysiology
       metabolomics:
         description: Data of metabolites, the chemical processes they are involved, and the chemical fingerprints of specific cellular processes in a whole cell, tissue, organ or organism.
-        meaning: https://w3id.org/synapse/nfosi/vocab/metabolomics
+        source: https://w3id.org/synapse/nfosi/vocab/metabolomics
         see_also:
           - http://edamontology.org/topic_3172
       morphology parameter:
@@ -2531,22 +2527,21 @@ enums:
           - Relation to pharmacokinetic data -- certain physiology parameteres inherent to the organism influences its pharmokinetics of a drug.
       annotated somatic mutation:
         description: Somatic variants annotated with some annotation workflow
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation
+        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation
       annotated germline variants:
         description: Germline variants annotated with some annotation workflow
-        meaning: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_germline_variation
+        source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_germline_variation
       weight:
         description: The vertical force exerted by a mass as a result of gravity.
         meaning: NCIT:C25208
       electrophysiology:
         description: "Data generated from an electrophysiology assay, e.g: \n- Cell: Resting membrane potential, ion channel currents (patch clamp data)\n- Neurons: Action potentials, resting potential, synaptic potentials. \n- Heart: Electrocardiogram (ECG/EKG) waveforms, cardiac action potentials.\n- Muscle: Electromyogram (EMG) signals\n- Whole brain: Electroencephalogram (EEG)\n- Retina: Electroretinogram (ERG)\n"
-        meaning: https://w3id.org/synapse/nfosi/vocab/electrophysiology
+        source: https://bioportal.bioontology.org/ontologies/ERO/?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FERO_0000564&jump_to_nav=true
         notes:
           - ERO has been deprecated and direct URIs no longer work.
-        source: https://bioportal.bioontology.org/ontologies/ERO/?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FERO_0000564&jump_to_nav=true
       audio transcript:
         description: Text transcript of an audio recording.
-        meaning: https://w3id.org/synapse/nfosi/vocab/audioTranscript
+        source: https://w3id.org/synapse/nfosi/vocab/audioTranscript
       data index:
         description: A data index is information used to help with retrieval of some other data, especially large-scale data that would benefit from such an index. Very common formats are .bai and .tbi.
         meaning: EDAM:data_0955
@@ -2840,7 +2835,7 @@ enums:
           - This file format encompasses/includes the h5ad anndata format commonly used for scRNAseq data sharing.
       hdr:
         description: MRI Header file, as in the NIFTI-1 Analyze 7.5 format
-        meaning: https://nifti.nimh.nih.gov/pub/dist/src/niftilib/nifti1.h
+        source: https://nifti.nimh.nih.gov/pub/dist/src/niftilib/nifti1.h
       hic:
         description: Hi-C contact matrix file
         source: https://github.com/theaidenlab/juicer/wiki/Data
@@ -2857,7 +2852,7 @@ enums:
         description: ''
       img:
         description: MRI Data file, as in the NIFTI-1 Analyze 7.5 format
-        meaning: https://nifti.nimh.nih.gov/pub/dist/src/niftilib/nifti1.h
+        source: https://nifti.nimh.nih.gov/pub/dist/src/niftilib/nifti1.h
       jpg:
         description: Joint Picture Group file format for lossy graphics file.
         meaning: EDAM:format_3579
@@ -2868,7 +2863,6 @@ enums:
         meaning: EDAM:format_3464
       lif:
         description: Leica Image Format (LIF) images are JPEG images with metadata that may contain depth, bokeh data, and one or more images (e.g. stereo images) known as "views".
-        meaning: https://w3id.org/reproduceme#LIF
         source: https://docs.openmicroscopy.org/bio-formats/5.8.2/formats/leica-lif.html
       locs:
         description: Illumina iScan bead location file.
@@ -2934,7 +2928,7 @@ enums:
         source: https://www.datafiles.samhsa.gov/get-help/format-specific-issues/how-do-i-read-data-r
       recal:
         description: .recal file from GATK VQSR
-        meaning: https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_variantrecalibration_VariantRecalibrator.php#--recal_file
+        source: https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_variantrecalibration_VariantRecalibrator.php#--recal_file
       rmd:
         description: Markdown document specific to R analyses.
         meaning: EDAM:format_4000
@@ -2944,16 +2938,16 @@ enums:
         meaning: EDAM:format_2573
       sav:
         description: The SPSS Statistics File Format is a proprietary binary format, developed and maintained as the native format for the SPSS statistical software application.
-        meaning: https://www.loc.gov/preservation/digital/formats/fdd/fdd000469.shtml
+        source: https://www.loc.gov/preservation/digital/formats/fdd/fdd000469.shtml
       sdf:
         description: SDF is one of a family of chemical-data file formats developed by MDL Information Systems; it is intended especially for structural information.
         meaning: EDAM:format_3814
       seg:
         description: SEG file (segmented data; .seg or .cbs) is a tab-delimited text file that lists loci and associated numeric values
-        meaning: https://software.broadinstitute.org/software/igv/SEG
+        source: https://software.broadinstitute.org/software/igv/SEG
       sf:
         description: Salmon's main output is its quantification file. This file is a plain-text, tab-separated file with a single header line (which names all of the columns).
-        meaning: https://salmon.readthedocs.io/en/latest/file_formats.html
+        source: https://salmon.readthedocs.io/en/latest/file_formats.html
       sif:
         description: SIF (simple interaction file) Format - a network/pathway format used for instance in cytoscape
         meaning: EDAM:format_3619
@@ -3099,16 +3093,16 @@ enums:
     permissible_values:
       allograft:
         description: Tissues, cells, or organs transplanted between genetically different individuals of the same species
-        meaning: https://www.ncbi.nlm.nih.gov/mesh/68064591
+        source: https://www.ncbi.nlm.nih.gov/mesh/68064591
       xenograft:
         description: Tissues, cells or organs transplanted between animals of different species
-        meaning: https://www.ncbi.nlm.nih.gov/mesh/68064593
+        source: https://www.ncbi.nlm.nih.gov/mesh/68064593
       autograft:
         description: Transplant comprised of an individual's own tissue, transferred from one part of the body to another.
-        meaning: https://www.ncbi.nlm.nih.gov/mesh/68064592
+        source: https://www.ncbi.nlm.nih.gov/mesh/68064592
       isograft:
         description: Tissues, cells or organs transplanted between genetically identical individuals
-        meaning: https://www.ncbi.nlm.nih.gov/mesh/68064596
+        source: https://www.ncbi.nlm.nih.gov/mesh/68064596
   TimeUnit:
     permissible_values:
       seconds:
