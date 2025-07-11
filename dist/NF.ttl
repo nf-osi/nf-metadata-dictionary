@@ -12,84 +12,90 @@
 
 <https://w3id.org/synapse/nfosi/vocab/nfosi> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace <http://purl.obolibrary.org/obo/ERO_> ;
-            sh:prefix "ERO" ],
+    sh:declare [ sh:namespace <http://www.bioassayontology.org/bao#BAO_> ;
+            sh:prefix "BAO" ],
+        [ sh:namespace skos: ;
+            sh:prefix "skos" ],
+        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
+            sh:prefix "htan" ],
+        [ sh:namespace <http://dicom.nema.org/resources/ontology/DCM/> ;
+            sh:prefix "DCM" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/IAO_> ;
+            sh:prefix "IAO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/BTO_> ;
+            sh:prefix "BTO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MS_> ;
+            sh:prefix "MS" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/GO_> ;
+            sh:prefix "GO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/FBcv_> ;
+            sh:prefix "FBcv" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MONDO_> ;
+            sh:prefix "MONDO" ],
         [ sh:namespace schema1: ;
             sh:prefix "schema" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MAXO_> ;
-            sh:prefix "MAXO" ],
-        [ sh:namespace <http://www.bioassayontology.org/bao#BAO_> ;
-            sh:prefix "BAO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MMO_> ;
-            sh:prefix "MMO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/VT_> ;
-            sh:prefix "VT" ],
-        [ sh:namespace <http://edamontology.org/> ;
-            sh:prefix "EDAM" ],
-        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
-            sh:prefix "personinfo" ],
+        [ sh:namespace <http://www.ebi.ac.uk/swo/data/SWO_> ;
+            sh:prefix "SWO" ],
         [ sh:namespace rdfs: ;
             sh:prefix "rdfs" ],
         [ sh:namespace linkml: ;
             sh:prefix "linkml" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/GENO_> ;
-            sh:prefix "GENO" ],
-        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
-            sh:prefix "nf" ],
-        [ sh:namespace skos: ;
-            sh:prefix "skos" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/FBcv_> ;
-            sh:prefix "FBcv" ],
-        [ sh:namespace <http://semanticscience.org/resource/CHEMINF_> ;
-            sh:prefix "CHEMINF" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/CLO_> ;
-            sh:prefix "CLO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/NCIT_> ;
-            sh:prefix "NCIT" ],
-        [ sh:namespace <http://dicom.nema.org/resources/ontology/DCM/> ;
-            sh:prefix "DCM" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/UBERON_> ;
-            sh:prefix "UBERON" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/VT_> ;
+            sh:prefix "VT" ],
         [ sh:namespace <http://purl.obolibrary.org/obo/CHMO_> ;
             sh:prefix "CHMO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MS_> ;
-            sh:prefix "MS" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MONDO_> ;
-            sh:prefix "MONDO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/OMIABIS_> ;
-            sh:prefix "OMIABIS" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/CL_> ;
-            sh:prefix "CL" ],
-        [ sh:namespace <http://snomed.info/id/> ;
-            sh:prefix "SNOMED" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/OBI_> ;
-            sh:prefix "OBI" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/FMA_> ;
-            sh:prefix "FMA" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/PATO_> ;
-            sh:prefix "PATO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MI_> ;
-            sh:prefix "MI" ],
-        [ sh:namespace <http://www.ebi.ac.uk/swo/data/SWO_> ;
-            sh:prefix "SWO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/GO_> ;
-            sh:prefix "GO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/NCIT_> ;
+            sh:prefix "NCIT" ],
         [ sh:namespace <http://www.ebi.ac.uk/efo/EFO_> ;
             sh:prefix "EFO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/BTO_> ;
-            sh:prefix "BTO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/UO_> ;
-            sh:prefix "UO" ],
+        [ sh:namespace <http://semanticscience.org/resource/CHEMINF_> ;
+            sh:prefix "CHEMINF" ],
+        [ sh:namespace prov: ;
+            sh:prefix "prov" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/UBERON_> ;
+            sh:prefix "UBERON" ],
         [ sh:namespace <http://purl.obolibrary.org/obo/FBbi_> ;
             sh:prefix "FBbi" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/IAO_> ;
-            sh:prefix "IAO" ],
+        [ sh:namespace <http://edamontology.org/> ;
+            sh:prefix "EDAM" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/ERO_> ;
+            sh:prefix "ERO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/OBI_> ;
+            sh:prefix "OBI" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MI_> ;
+            sh:prefix "MI" ],
+        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
+            sh:prefix "personinfo" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/ZFA_> ;
+            sh:prefix "ZFA" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/FMA_> ;
+            sh:prefix "FMA" ],
+        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
+            sh:prefix "nf" ],
+        [ sh:namespace <http://www.ebi.ac.uk/cmpo/CMPO_> ;
+            sh:prefix "CMPO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/DOID_> ;
+            sh:prefix "DOID" ],
+        [ sh:namespace <http://snomed.info/id/> ;
+            sh:prefix "SNOMED" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/CL_> ;
+            sh:prefix "CL" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/UO_> ;
+            sh:prefix "UO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/GENO_> ;
+            sh:prefix "GENO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MAXO_> ;
+            sh:prefix "MAXO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/OMIABIS_> ;
+            sh:prefix "OMIABIS" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MMO_> ;
+            sh:prefix "MMO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/CLO_> ;
+            sh:prefix "CLO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/PATO_> ;
+            sh:prefix "PATO" ],
         [ sh:namespace <http://purl.enanomapper.org/onto/ENM_> ;
-            sh:prefix "ENM" ],
-        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
-            sh:prefix "htan" ],
-        [ sh:namespace prov: ;
-            sh:prefix "prov" ] ;
+            sh:prefix "ENM" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
@@ -231,7 +237,7 @@
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-07-10T17:23:16"^^xsd:dateTime ;
+    linkml:generation_date "2025-07-11T22:52:07"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -532,8 +538,8 @@
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-07-10T17:23:14"^^xsd:dateTime ;
-    linkml:source_file_size 302625 ;
+    linkml:source_file_date "2025-07-11T22:52:05"^^xsd:dateTime ;
+    linkml:source_file_size 301219 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,
@@ -685,8 +691,8 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Available> skos:definition "Data is fully available for download for the project (with fulfillment of any governance requirements)." .
 
-<https://w3id.org/synapse/nfosi/vocab/B-lymphocytes> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/efo/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FCL_0000236> ;
-    skos:definition "A lymphocyte of B lineage with the phenotype CD19-positive and surface immunoglobulin-positive." .
+<https://w3id.org/synapse/nfosi/vocab/B-lymphocytes> skos:definition "A lymphocyte of B lineage with the phenotype CD19-positive and surface immunoglobulin-positive." ;
+    linkml:meaning <CL:0000236> .
 
 <https://w3id.org/synapse/nfosi/vocab/B6%3B129-Trp53tm1Tyj%20Nf1tm1Tyj%20Suz12Gt%28Betageo%291Khe/KcichJ> dcterms:source <https://www.jax.org/strain/027678> ;
     skos:definition "" .
@@ -1073,8 +1079,8 @@
 
 <https://w3id.org/synapse/nfosi/vocab/Fresh%20collected> skos:definition "Fresh collected" .
 
-<https://w3id.org/synapse/nfosi/vocab/GABAergic%20neurons> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/zfa/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FZFA_0009276> ;
-    skos:definition "A neuron that uses GABA as a vesicular neurotransmitter." .
+<https://w3id.org/synapse/nfosi/vocab/GABAergic%20neurons> skos:definition "A neuron that uses GABA as a vesicular neurotransmitter." ;
+    linkml:meaning <ZFA:0009276> .
 
 <https://w3id.org/synapse/nfosi/vocab/GATK%20BaseRecalibration> dcterms:source <https://gatk.broadinstitute.org/hc/en-us/articles/360036898312-BaseRecalibrator> .
 
@@ -1962,8 +1968,8 @@
 <https://w3id.org/synapse/nfosi/vocab/SDAT> dcterms:source <https://github.com/chenkonturek/MRS_MRI_libs> ;
     skos:definition "Phillips MRS Data File" .
 
-<https://w3id.org/synapse/nfosi/vocab/SH-SY5Y> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/bto/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FBTO_0000793> ;
-    skos:definition "Human neuroblastoma clonal subline of the neuroepithelioma cell line SK-N-SH that had been established in 1970 from the bone marrow biopsy of a 4-year-old girl with metastatic neuroblastoma." .
+<https://w3id.org/synapse/nfosi/vocab/SH-SY5Y> skos:definition "Human neuroblastoma clonal subline of the neuroepithelioma cell line SK-N-SH that had been established in 1970 from the bone marrow biopsy of a 4-year-old girl with metastatic neuroblastoma." ;
+    linkml:meaning <BTO:0000793> .
 
 <https://w3id.org/synapse/nfosi/vocab/SNP%20array> skos:definition "SNP measurements captured by array technology" ;
     linkml:meaning <OBI:0001204> .
@@ -2555,13 +2561,13 @@
 <https://w3id.org/synapse/nfosi/vocab/annotated%20somatic%20mutation> dcterms:source <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation> ;
     skos:definition "Somatic variants annotated with some annotation workflow" .
 
-<https://w3id.org/synapse/nfosi/vocab/arachnoid> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/bto/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FBTO_0001636> ;
-    skos:definition "An arachnoid mater is a delicate membrane that encloses the spinal cord and brain and lies between the pia mater and dura mater." .
+<https://w3id.org/synapse/nfosi/vocab/arachnoid> skos:definition "An arachnoid mater is a delicate membrane that encloses the spinal cord and brain and lies between the pia mater and dura mater." ;
+    linkml:meaning <BTO:0001636> .
 
 <https://w3id.org/synapse/nfosi/vocab/array> skos:definition "" .
 
-<https://w3id.org/synapse/nfosi/vocab/astrocytes> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/cl/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FCL_0000127> ;
-    skos:definition "Astrocytes (from 'star' cells) are irregularly shaped with many long processes, including those with end-feet which form the glial (limiting) membrane and directly and indirectly contribute to the blood-brain barrier." .
+<https://w3id.org/synapse/nfosi/vocab/astrocytes> skos:definition "Astrocytes (from 'star' cells) are irregularly shaped with many long processes, including those with end-feet which form the glial (limiting) membrane and directly and indirectly contribute to the blood-brain barrier." ;
+    linkml:meaning <CL:0000127> .
 
 <https://w3id.org/synapse/nfosi/vocab/atomic%20force%20microscopy> skos:definition "Microscopy which uses a sharp spike (known as a 'tip') mounted on the end of a cantilever to scan the surface of the specimen" ;
     linkml:meaning <CHMO:0000113> .
@@ -2999,8 +3005,8 @@ Examples: avoidance behavior, choice-making.
 
 <https://w3id.org/synapse/nfosi/vocab/epidemiological%20data> skos:definition "Data that is used to describe the distribution of a disease or health-related characteristic within a population and to identify factors that affect that distribution." .
 
-<https://w3id.org/synapse/nfosi/vocab/epithelial> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/efo/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FCL_0000066> ;
-    skos:definition "Somatic cells that cover the surface of the body and line its cavities." .
+<https://w3id.org/synapse/nfosi/vocab/epithelial> skos:definition "Somatic cells that cover the surface of the body and line its cavities." ;
+    linkml:meaning <CL:0000066> .
 
 <https://w3id.org/synapse/nfosi/vocab/epithelial-like> dcterms:source <https://www.thermofisher.com/us/en/home/references/gibco-cell-culture-basics/cell-morphology.html> ;
     skos:definition "In cell morphology, epithelial-like cells are polygonal in shape with more regular dimensions, and grow attached to a substrate in discrete patches." .
@@ -3025,8 +3031,8 @@ Examples: avoidance behavior, choice-making.
 <https://w3id.org/synapse/nfosi/vocab/fcs> skos:definition "Format standard of a digital entity that is conformant with the Flow Cytometry Data File Standard" ;
     linkml:meaning <OBI:0000327> .
 
-<https://w3id.org/synapse/nfosi/vocab/fibroblast> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/cl/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FCL_0000057> ;
-    skos:definition "A connective tissue cell which secretes an extracellular matrix rich in collagen and other macromolecules. Flattened and irregular in outline with branching processes; appear fusiform or spindle-shaped." .
+<https://w3id.org/synapse/nfosi/vocab/fibroblast> skos:definition "A connective tissue cell which secretes an extracellular matrix rich in collagen and other macromolecules. Flattened and irregular in outline with branching processes; appear fusiform or spindle-shaped." ;
+    linkml:meaning <CL:0000057> .
 
 <https://w3id.org/synapse/nfosi/vocab/fig> dcterms:source <https://fileinfo.com/extension/fig> ;
     skos:definition "Line drawing saved in the Xfig format; stored as a vector image that may include lines, shapes, arcs, splines, arrows, and text objects; may also include images, colors, and patterns." .
@@ -3222,8 +3228,8 @@ Examples: avoidance behavior, choice-making.
 <https://w3id.org/synapse/nfosi/vocab/i28cNF> dcterms:source <https://synapse.org> ;
     skos:definition "An hTERT-immortalized cutaneous neurofibroma cell line derived from a primary cell culture, developed by Dr. Peggy Wallace." .
 
-<https://w3id.org/synapse/nfosi/vocab/iPSC> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/efo/terms?iri=http%3A%2F%2Fwww.ebi.ac.uk%2Fefo%2FEFO_0004905> ;
-    skos:definition "Induced pluripotent stem cells (iPS cells or iPSCs) are a type of pluripotent stem cell artificially derived from a non-pluripotent cell." .
+<https://w3id.org/synapse/nfosi/vocab/iPSC> skos:definition "Induced pluripotent stem cells (iPS cells or iPSCs) are a type of pluripotent stem cell artificially derived from a non-pluripotent cell." ;
+    linkml:meaning <EFO:0004905> .
 
 <https://w3id.org/synapse/nfosi/vocab/iPSC%20NF1%20%2B/-%20BJFF.6%20bkgd> skos:definition "[From GFF:] iPSC NF1 +/- BJFF.6 bkgd" .
 
@@ -3394,15 +3400,15 @@ Examples: avoidance behavior, choice-making.
 <https://w3id.org/synapse/nfosi/vocab/lymph%20node> skos:definition "A bean-shaped organ surrounded by a connective tissue capsule." ;
     linkml:meaning NCIT:C12745 .
 
-<https://w3id.org/synapse/nfosi/vocab/lymphoblast> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/bto/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FBTO_0000772> ;
-    skos:definition "Often referred to as a blast cell. Unlike other usages of the suffix -blast a lymphoblast is a further differentiation of a lymphocyte, T- or B-, occasioned by an antigenic stimulus. The lymphoblast usually develops by enlargement of a lymphocyte, active re-entry to the S phase of the cell cycle, mitogenesis and production of much m-RNA and ribosomes." .
+<https://w3id.org/synapse/nfosi/vocab/lymphoblast> skos:definition "Often referred to as a blast cell. Unlike other usages of the suffix -blast a lymphoblast is a further differentiation of a lymphocyte, T- or B-, occasioned by an antigenic stimulus. The lymphoblast usually develops by enlargement of a lymphocyte, active re-entry to the S phase of the cell cycle, mitogenesis and production of much m-RNA and ribosomes." ;
+    linkml:meaning <BTO:0000772> .
 
 <https://w3id.org/synapse/nfosi/vocab/mM> skos:definition "" .
 
 <https://w3id.org/synapse/nfosi/vocab/mRNA%20counts> skos:definition "A mRNA profiling assay using digital molecular barcoding technology to quantify target mRNA molecules without the need for amplification." .
 
-<https://w3id.org/synapse/nfosi/vocab/macrophages> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/cl/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FCL_0000235> ;
-    skos:definition "A mononuclear phagocyte present in variety of tissues, typically differentiated from monocytes, capable of phagocytosing a variety of extracellular particulate material, including immune complexes, microorganisms, and dead cells." .
+<https://w3id.org/synapse/nfosi/vocab/macrophages> skos:definition "A mononuclear phagocyte present in variety of tissues, typically differentiated from monocytes, capable of phagocytosing a variety of extracellular particulate material, including immune complexes, microorganisms, and dead cells." ;
+    linkml:meaning <CL:0000235> .
 
 <https://w3id.org/synapse/nfosi/vocab/maf> dcterms:source <https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format> ;
     skos:definition "Mutation annotation format as outputted from GenomeNexus." ;
@@ -3464,8 +3470,8 @@ Examples: avoidance behavior, choice-making.
 
 <https://w3id.org/synapse/nfosi/vocab/miRNAenrichment> skos:definition "RNA library with size selection for microRNAs" .
 
-<https://w3id.org/synapse/nfosi/vocab/microglia> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/bto/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FBTO_0000078> ;
-    skos:definition "The small, non-neural, interstitial cells of mesodermal origin that form part of the supporting structure of the central nervous system." .
+<https://w3id.org/synapse/nfosi/vocab/microglia> skos:definition "The small, non-neural, interstitial cells of mesodermal origin that form part of the supporting structure of the central nervous system." ;
+    linkml:meaning <BTO:0000078> .
 
 <https://w3id.org/synapse/nfosi/vocab/microrheology> dcterms:source <https://www.elveflow.com/microfluidic-reviews/general-microfluidics/microrheology-a-review/> ;
     skos:definition "A technique used to measure the rheological properties of a medium, such as microviscosity and microviscoelasticity." ;
@@ -3481,8 +3487,8 @@ Examples: avoidance behavior, choice-making.
 
 <https://w3id.org/synapse/nfosi/vocab/monocyte-derived%20microglia> skos:definition "" .
 
-<https://w3id.org/synapse/nfosi/vocab/monocytes> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/efo/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FCL_0000576> ;
-    skos:definition "Myeloid mononuclear recirculating leukocyte that can act as a precursor of tissue macrophages, osteoclasts and some populations of tissue dendritic cells." .
+<https://w3id.org/synapse/nfosi/vocab/monocytes> skos:definition "Myeloid mononuclear recirculating leukocyte that can act as a precursor of tissue macrophages, osteoclasts and some populations of tissue dendritic cells." ;
+    linkml:meaning <CL:0000576> .
 
 <https://w3id.org/synapse/nfosi/vocab/months> linkml:meaning <UO:0000035> .
 
@@ -3810,8 +3816,8 @@ Examples: avoidance behavior, choice-making.
 <https://w3id.org/synapse/nfosi/vocab/rotarod%20performance%20test> skos:definition "A method that utilizes a device consisting of a rotating rod the speed of which is mechanically driven and precisely controlled, for instance held constant or accelerated. The rotarod test is often used to measure riding time or endurance in order to evaluate balance, motor coordination or grip strength." ;
     linkml:meaning <MMO:0000567> .
 
-<https://w3id.org/synapse/nfosi/vocab/round> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/cmpo/terms?iri=http%3A%2F%2Fwww.ebi.ac.uk%2Fcmpo%2FCMPO_0000118> ;
-    skos:definition "A phenotype observation at the level of the cell shape where the cell is round" .
+<https://w3id.org/synapse/nfosi/vocab/round> skos:definition "A phenotype observation at the level of the cell shape where the cell is round" ;
+    linkml:meaning <CMPO:0000118> .
 
 <https://w3id.org/synapse/nfosi/vocab/sMPNST> dcterms:source <https://www.nature.com/articles/s41418-022-00991-4> ;
     skos:definition "sMPNST cells established from Nf1- and p53-deficient skin precursors (SKP)" .
@@ -3831,8 +3837,8 @@ Examples: avoidance behavior, choice-making.
 <https://w3id.org/synapse/nfosi/vocab/sam> skos:definition "Sequence Alignment/Map (SAM) format for alignment of nucleotide sequences (e.g. sequencing reads) to (a) reference sequence(s)" ;
     linkml:meaning <EDAM:format_2573> .
 
-<https://w3id.org/synapse/nfosi/vocab/sandwich%20ELISA> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/bao/terms?iri=http%3A%2F%2Fwww.bioassayontology.org%2Fbao%23BAO_0002421> ;
-    skos:definition "The sandwich ELISA measures the amount of antigen between two layers of antibodies. The antigens to be measured must contain at least two antigenic sites, capable of binding to antibody, since at least two antibodies act in the sandwich. So sandwich assays are restricted to the quantitation of multivalent antigens such as proteins or polysaccharides. Sandwich ELISAs for quantitation of antigens are especially valuable when the concentration of antigens is low and/or they are contained in high concentrations of contaminating protein." .
+<https://w3id.org/synapse/nfosi/vocab/sandwich%20ELISA> skos:definition "The sandwich ELISA measures the amount of antigen between two layers of antibodies. The antigens to be measured must contain at least two antigenic sites, capable of binding to antibody, since at least two antibodies act in the sandwich. So sandwich assays are restricted to the quantitation of multivalent antigens such as proteins or polysaccharides. Sandwich ELISAs for quantitation of antigens are especially valuable when the concentration of antigens is low and/or they are contained in high concentrations of contaminating protein." ;
+    linkml:meaning <BAO:0002421> .
 
 <https://w3id.org/synapse/nfosi/vocab/sav> dcterms:source <https://www.loc.gov/preservation/digital/formats/fdd/fdd000469.shtml> ;
     skos:definition "The SPSS Statistics File Format is a proprietary binary format, developed and maintained as the native format for the SPSS statistical software application." .
@@ -3849,11 +3855,11 @@ Examples: avoidance behavior, choice-making.
 
 <https://w3id.org/synapse/nfosi/vocab/scapula> skos:definition "" .
 
-<https://w3id.org/synapse/nfosi/vocab/schwann> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/bto/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FBTO_0001220> ;
-    skos:definition "Schwann cells are a variety of glial cell that keep peripheral nerve fibres (both myelinated and unmyelinated) alive." .
+<https://w3id.org/synapse/nfosi/vocab/schwann> skos:definition "Schwann cells are a variety of glial cell that keep peripheral nerve fibres (both myelinated and unmyelinated) alive." ;
+    linkml:meaning <BTO:0001220> .
 
-<https://w3id.org/synapse/nfosi/vocab/schwannoma> dcterms:source <https://www.ebi.ac.uk/ols/ontologies/efo/terms?iri=http%3A%2F%2Fwww.ebi.ac.uk%2Fefo%2FEFO_0000693> ;
-    skos:definition "A neoplasm that arises from SCHWANN CELLS of the cranial, peripheral, and autonomic nerves." .
+<https://w3id.org/synapse/nfosi/vocab/schwannoma> skos:definition "A neoplasm that arises from SCHWANN CELLS of the cranial, peripheral, and autonomic nerves." ;
+    linkml:meaning <EFO:0000693> .
 
 <https://w3id.org/synapse/nfosi/vocab/sciatic%20nerve> skos:definition "The longest single nerve that is formed by the merging of the ventral rami of the L4, L5, and S1 in the pelvis and passes down the lower limb where it divides into the common peroneal and tibial nerves" ;
     linkml:meaning <BTO:0001221> .
@@ -8171,13 +8177,13 @@ Examples: avoidance behavior, choice-making.
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/materialType> .
 
 <https://w3id.org/synapse/nfosi/vocab/meningioma> a linkml:SlotDefinition ;
-    dcterms:source <https://www.ebi.ac.uk/ols/ontologies/doid/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FDOID_3565> ;
     dcterms:title "Meningioma" ;
     skos:definition "A central nervous system cancer tissue that are manifested in the central nervous system and arise from the arachnoid 'cap' cells of the arachnoid villi in the meninges.",
         "Characterization of the manifestation of Meningioma." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/meningioma> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/HumanCohortTemplate> ;
+    linkml:meaning <DOID:3565> ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/HumanCohortTemplate> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/MultipleImagingDiagnosisEnum> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/meningioma> .
@@ -9790,9 +9796,9 @@ Examples: avoidance behavior, choice-making.
         "https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/libraryStrand> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
@@ -10420,9 +10426,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/MouseModel> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/modelSystemName> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10484,9 +10490,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Genotype of NF1 gene in the biospecimen from which the data were derived, if known." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/nf1Genotype> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -10529,9 +10535,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Genotype of NF2 gene in the biospecimen from which the data were derived, if known" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/nf2Genotype> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
