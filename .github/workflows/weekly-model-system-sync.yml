@@ -26,6 +26,12 @@ jobs:
         with:
           python-version: '3.10'
       
+      - name: Get current date
+        id: date
+        run: |
+          echo "date=$(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_OUTPUT
+          echo "date-short=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+      
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -67,16 +73,16 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: weekly sync of model system names from Synapse table ${{ env.SYNAPSE_TABLE_ID }}"
-          title: "Weekly Model System Sync - $(date +'%Y-%m-%d')"
+          title: "Weekly Model System Sync - ${{ steps.date.outputs.date }}"
           body: |
             This PR contains the weekly sync of model system names from the NFTC truth table.
             
             **Source:** Synapse table `${{ env.SYNAPSE_TABLE_ID }}`
-            **Sync Date:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')
+            **Sync Date:** ${{ steps.date.outputs.date }}
             
             ### Changes Made:
             - Updated cell line models in `modules/Sample/CellLineModel.yaml`
-            - Updated animal models in `modules/Sample/AnimalModel.yaml`
+            - Updated animal models in `modules/Sample/AnimalModel.yaml`  
             - Rebuilt data model artifacts (`NF.jsonld`, `dist/NF.yaml`)
             
             ### Files Modified:
@@ -88,7 +94,7 @@ jobs:
             This sync ensures that the metadata dictionary stays current with the latest cell lines and animal models available in the NFTC research tools database.
             
             **Automated sync via:** `.github/workflows/weekly-model-system-sync.yml`
-          branch: sync/model-systems-$(date +'%Y%m%d')
+          branch: sync/model-systems-${{ steps.date.outputs.date-short }}
           labels: |
             automated
             model-systems

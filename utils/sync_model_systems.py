@@ -30,16 +30,31 @@ def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
         
         # Initialize Synapse client
         syn = Synapse()
-        syn.login(silent=True)
         
-        # Query the table
-        query = f"SELECT * FROM {synapse_id}"
+        # Try to login - first with token, then silent
+        try:
+            if os.getenv('SYNAPSE_AUTH_TOKEN'):
+                syn.login(authToken=os.getenv('SYNAPSE_AUTH_TOKEN'), silent=True)
+            else:
+                syn.login(silent=True)
+        except Exception as login_error:
+            print(f"Warning: Could not login to Synapse: {login_error}")
+            print("Falling back to mock data for testing.")
+            raise ImportError("Synapse login failed")
+        
+        # Query the table for resourceName, rrid, and resourceType columns
+        query = f"SELECT resourceName, rrid, resourceType FROM {synapse_id}"
+        print(f"Executing query: {query}")
+        
         results = syn.tableQuery(query)
         
         # Convert to list of dictionaries
         data = []
         for row in results:
-            data.append(dict(row))
+            row_dict = dict(row)
+            # Only include rows with required fields
+            if row_dict.get('resourceName') and row_dict.get('resourceType'):
+                data.append(row_dict)
             
         return data
         
@@ -50,14 +65,12 @@ def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
             {
                 'resourceName': 'Test Cell Line 1',
                 'rrid': 'CVCL_0001',
-                'resourceType': 'cell line',
-                'description': 'Test cell line description'
+                'resourceType': 'cell line'
             },
             {
                 'resourceName': 'Test Mouse Model 1', 
                 'rrid': 'MGI:0001',
-                'resourceType': 'animal model',
-                'description': 'Test mouse model description'
+                'resourceType': 'animal model'
             }
         ]
     except Exception as e:
@@ -85,12 +98,11 @@ def format_enum_entry(resource: Dict[str, Any]) -> Dict[str, Any]:
     # Build the entry
     entry_data = {}
     
-    # Add description if available
+    # Use resourceName as description if no separate description provided
     description = resource.get('description', '').strip()
-    if description:
-        entry_data['description'] = description
-    else:
-        entry_data['description'] = f"{name}"
+    if not description:
+        description = name
+    entry_data['description'] = description
         
     # Add source/meaning from RRID if available
     rrid = resource.get('rrid', '').strip()
@@ -99,6 +111,15 @@ def format_enum_entry(resource: Dict[str, Any]) -> Dict[str, Any]:
             entry_data['source'] = f"https://web.expasy.org/cellosaurus/{rrid}"
         elif rrid.startswith('MGI:'):
             entry_data['source'] = f"http://www.informatics.jax.org/accession/{rrid}"
+        elif rrid.startswith('RRID:'):
+            # Handle full RRID format
+            clean_rrid = rrid.replace('RRID:', '')
+            if clean_rrid.startswith('CVCL_'):
+                entry_data['source'] = f"https://web.expasy.org/cellosaurus/{clean_rrid}"
+            elif clean_rrid.startswith('MGI:'):
+                entry_data['source'] = f"http://www.informatics.jax.org/accession/{clean_rrid}"
+            else:
+                entry_data['source'] = rrid
         else:
             entry_data['source'] = rrid
     
