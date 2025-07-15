@@ -570,7 +570,7 @@ slots:
   modelSystemName:
     any_of:
       - range: CellLineModel
-      - range: MouseModel
+      - range: AnimalModel
     description: 'A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)'
     required: false
   modifiedBy:
@@ -3830,6 +3830,64 @@ enums:
       Restricted Access:
         description: This publication is restricted access
         meaning:
+  AnimalModel:
+    permissible_values:
+      Prss56Cre/+;Tom/+;Nf1fl/fl:
+        description: The Prss56Cre/+;Tom/+;Nf1fl/fl mouse model is genetically engineered to express Cre recombinase under the Prss56 promoter, enabling tissue-specific deletion of the Nf1 gene, alongside a visual reporter, Tomato fluorescent protein, for tracing Cre activity.
+      Prss56Cre/+;Tom/+:
+        description: The Prss56Cre/+;Tom/+ mouse model is genetically engineered to express Cre recombinase under the Prss56 promoter, enabling tissue-specific gene modification, alongside a Tomato fluorescent protein reporter to visualize Cre activity.
+      B6;129S2-Trp53tm1Tyj Nf1tm1Tyj/J:
+        description: ''
+        source: https://www.jax.org/strain/008191
+      Prss56Cre;R26mT:
+        description: Prss56Cre;R26mT is a transgenic non-human animal model for Neurofibromatosis type 1, wherein the Nf1 gene is specifically inactivated in BC cells and derivatives thereof.
+        source: https://patents.google.com/patent/EP3420811A1/en
+      B6.129S1-Nf1tm1Cbr/J:
+        description: ''
+        source: https://www.jax.org/strain/007923
+      Nf1-OPG:
+        description: ''
+      C57BL/6J:
+        description: C57BL/6 is the most widely used inbred strain. It is commonly used as a general purpose strain and background strain for the generation of congenics carrying both spontaneous and induced mutations.
+        source: https://www.jax.org/strain/000664
+      NRG:
+        description: Extremely immunodeficient mice with a targeted knockout mutation in recombination activating gene 1 (Rag1) and a complete null allele of the IL2 receptor common gamma chain.
+        source: https://www.jax.org/strain/007799
+      Nf1-OPG-Arg816:
+        description: ''
+      NOD scid gamma:
+        description: These mice are most often referred to using their branded name NSG™ and are extremely immunodeficient.
+        source: https://www.jax.org/strain/005557
+      B6.129S2-Nf1tm1Tyj/J:
+        description: ''
+        source: https://www.jax.org/strain/008192
+      B6;129-Trp53tm1Tyj Nf1tm1Tyj Suz12Gt(Betageo)1Khe/KcichJ:
+        description: ''
+        source: https://www.jax.org/strain/027678
+      B6.129(Cg)-Nf1tm1Par/J:
+        description: ''
+        source: https://www.jax.org/strain/017640
+      GFAP-Cre; Nf1-G848R/Flox:
+        description: GFAP-Cre; Nf1-G848R/Flox mice carry a germline Nf1 mutation (G848R), and the second Nf1 allele is conditionally knocked out in astrocytes, offering researchers a valuable tool to explore the specific consequences and roles of these genetic modifications in astrocytes and studies related to Nf1.
+        source: https://doi.org/10.1093/hmg/ddw039
+      GFAP-Cre; Nf1-R681X/Flox:
+        description: GFAP-Cre; Nf1-R681X/Flox mice have a germline Nf1 mutation (R681X), and the second Nf1 allele is conditionally knocked out specifically in astrocytes, providing a unique model for studying the effects and functions of these genetic alterations in astrocytes and Nf1-related research.
+        source: https://doi.org/10.1093/hmg/ddw039
+      GFAP-Cre; Nf1-C383X/Flox:
+        description: GFAP-Cre; Nf1-C383X/Flox mice carry a germline Nf1 mutation (C383X), and the second Nf1 allele is conditionally knocked out in astrocytes, offering researchers a valuable tool to explore the specific consequences and roles of these genetic modifications in astrocytes and studies related to Nf1.
+        source: https://doi.org/10.1038/s41467-022-30466-6
+      Nf1-C848R/Flox:
+        description: Nf1-G848R/Flox mice harbor a germline Nf1 mutation (G848R) with conditional removal of the second Nf1 allele through Cre-lox recombination, offering researchers a valuable tool to explore the consequences and functions of Nf1 gene alterations in various research studies.
+        source: https://doi.org/10.1093/hmg/ddw039
+      Nf1-R681X/Flox:
+        description: Nf1-R681X/Flox mice carry a germline Nf1 mutation (R681X) with conditional removal of the second Nf1 allele via Cre-lox recombination, providing researchers with a useful model to investigate the effects and implications of Nf1 gene alterations in different experimental contexts.
+        source: https://doi.org/10.1093/hmg/ddw039
+      Nf1-C383X/Flox:
+        description: Nf1-C383X/Flox mice feature a germline Nf1 mutation (R383X) with conditional removal of the second Nf1 allele through Cre-lox recombination, making them an important resource for studying the specific consequences and roles of Nf1 gene alterations in diverse research areas.
+        source: https://doi.org/10.1038/s41467-022-30466-6
+      Nf1flox/flox:
+        description: Mice with two floxed NF1 alleles.
+        source: https://www.doi.org/10.1002/ana.23813
   BodyPartEnum:
     permissible_values:
       axilla:
@@ -4582,64 +4640,6 @@ enums:
         description: 'Polymeric nanoparticles (PNPs) are solid and spherical (in most cases) structures prepared from natural or synthetic polymers with drug delivery being known to be one of the most important biomedical applications (reference: Hirvonen et al., Nanoengineered Biomaterials for Advanced Drug Delivery, 2020)'
       DNA:
         description: DNA (deoxyribonucleic acid) is a polymer of nucleotides and is the genetic material in organisms and some viruses.
-  MouseModel:
-    permissible_values:
-      Prss56Cre/+;Tom/+;Nf1fl/fl:
-        description: The Prss56Cre/+;Tom/+;Nf1fl/fl mouse model is genetically engineered to express Cre recombinase under the Prss56 promoter, enabling tissue-specific deletion of the Nf1 gene, alongside a visual reporter, Tomato fluorescent protein, for tracing Cre activity.
-      Prss56Cre/+;Tom/+:
-        description: The Prss56Cre/+;Tom/+ mouse model is genetically engineered to express Cre recombinase under the Prss56 promoter, enabling tissue-specific gene modification, alongside a Tomato fluorescent protein reporter to visualize Cre activity.
-      B6;129S2-Trp53tm1Tyj Nf1tm1Tyj/J:
-        description: ''
-        source: https://www.jax.org/strain/008191
-      Prss56Cre;R26mT:
-        description: Prss56Cre;R26mT is a transgenic non-human animal model for Neurofibromatosis type 1, wherein the Nf1 gene is specifically inactivated in BC cells and derivatives thereof.
-        source: https://patents.google.com/patent/EP3420811A1/en
-      B6.129S1-Nf1tm1Cbr/J:
-        description: ''
-        source: https://www.jax.org/strain/007923
-      Nf1-OPG:
-        description: ''
-      C57BL/6J:
-        description: C57BL/6 is the most widely used inbred strain. It is commonly used as a general purpose strain and background strain for the generation of congenics carrying both spontaneous and induced mutations.
-        source: https://www.jax.org/strain/000664
-      NRG:
-        description: Extremely immunodeficient mice with a targeted knockout mutation in recombination activating gene 1 (Rag1) and a complete null allele of the IL2 receptor common gamma chain.
-        source: https://www.jax.org/strain/007799
-      Nf1-OPG-Arg816:
-        description: ''
-      NOD scid gamma:
-        description: These mice are most often referred to using their branded name NSG™ and are extremely immunodeficient.
-        source: https://www.jax.org/strain/005557
-      B6.129S2-Nf1tm1Tyj/J:
-        description: ''
-        source: https://www.jax.org/strain/008192
-      B6;129-Trp53tm1Tyj Nf1tm1Tyj Suz12Gt(Betageo)1Khe/KcichJ:
-        description: ''
-        source: https://www.jax.org/strain/027678
-      B6.129(Cg)-Nf1tm1Par/J:
-        description: ''
-        source: https://www.jax.org/strain/017640
-      GFAP-Cre; Nf1-G848R/Flox:
-        description: GFAP-Cre; Nf1-G848R/Flox mice carry a germline Nf1 mutation (G848R), and the second Nf1 allele is conditionally knocked out in astrocytes, offering researchers a valuable tool to explore the specific consequences and roles of these genetic modifications in astrocytes and studies related to Nf1.
-        source: https://doi.org/10.1093/hmg/ddw039
-      GFAP-Cre; Nf1-R681X/Flox:
-        description: GFAP-Cre; Nf1-R681X/Flox mice have a germline Nf1 mutation (R681X), and the second Nf1 allele is conditionally knocked out specifically in astrocytes, providing a unique model for studying the effects and functions of these genetic alterations in astrocytes and Nf1-related research.
-        source: https://doi.org/10.1093/hmg/ddw039
-      GFAP-Cre; Nf1-C383X/Flox:
-        description: GFAP-Cre; Nf1-C383X/Flox mice carry a germline Nf1 mutation (C383X), and the second Nf1 allele is conditionally knocked out in astrocytes, offering researchers a valuable tool to explore the specific consequences and roles of these genetic modifications in astrocytes and studies related to Nf1.
-        source: https://doi.org/10.1038/s41467-022-30466-6
-      Nf1-C848R/Flox:
-        description: Nf1-G848R/Flox mice harbor a germline Nf1 mutation (G848R) with conditional removal of the second Nf1 allele through Cre-lox recombination, offering researchers a valuable tool to explore the consequences and functions of Nf1 gene alterations in various research studies.
-        source: https://doi.org/10.1093/hmg/ddw039
-      Nf1-R681X/Flox:
-        description: Nf1-R681X/Flox mice carry a germline Nf1 mutation (R681X) with conditional removal of the second Nf1 allele via Cre-lox recombination, providing researchers with a useful model to investigate the effects and implications of Nf1 gene alterations in different experimental contexts.
-        source: https://doi.org/10.1093/hmg/ddw039
-      Nf1-C383X/Flox:
-        description: Nf1-C383X/Flox mice feature a germline Nf1 mutation (R383X) with conditional removal of the second Nf1 allele through Cre-lox recombination, making them an important resource for studying the specific consequences and roles of Nf1 gene alterations in diverse research areas.
-        source: https://doi.org/10.1038/s41467-022-30466-6
-      Nf1flox/flox:
-        description: Mice with two floxed NF1 alleles.
-        source: https://www.doi.org/10.1002/ana.23813
   SexEnum:
     permissible_values:
       Male:
