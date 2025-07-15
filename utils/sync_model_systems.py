@@ -31,27 +31,65 @@ def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
         # Initialize Synapse client
         syn = Synapse()
         
-        # Try to login - first with token, then silent
+        # Try to login - first with token, then silent, then anonymous
         try:
             if os.getenv('SYNAPSE_AUTH_TOKEN'):
                 syn.login(authToken=os.getenv('SYNAPSE_AUTH_TOKEN'), silent=True)
             else:
-                syn.login(silent=True)
+                # Try silent login first
+                try:
+                    syn.login(silent=True)
+                except:
+                    # If silent login fails, try anonymous access
+                    print("Attempting anonymous access to Synapse...")
+                    # For anonymous access, we don't need to login
+                    pass
         except Exception as login_error:
             print(f"Warning: Could not login to Synapse: {login_error}")
-            print("Falling back to mock data for testing.")
-            raise ImportError("Synapse login failed")
+            print("Attempting anonymous access...")
+            # Continue without authentication for anonymous access
         
         # Query the table for resourceName, rrid, and resourceType columns
         query = f"SELECT resourceName, rrid, resourceType FROM {synapse_id}"
         print(f"Executing query: {query}")
         
-        results = syn.tableQuery(query)
+        try:
+            results = syn.tableQuery(query)
+        except Exception as query_error:
+            print(f"Error executing query: {query_error}")
+            print("Falling back to mock data for testing.")
+            raise ImportError("Synapse query failed")
         
         # Convert to list of dictionaries
         data = []
         for row in results:
-            row_dict = dict(row)
+            # Handle different row formats
+            if hasattr(row, '_asdict'):
+                # Named tuple format
+                row_dict = row._asdict()
+            elif isinstance(row, dict):
+                # Already a dictionary
+                row_dict = row
+            elif isinstance(row, (list, tuple)):
+                # List/tuple format - map to column names based on actual query result
+                # From debugging: the query returns [id, ?, resourceName, rrid, resourceType]
+                if len(row) >= 5:
+                    row_dict = {
+                        'resourceName': row[2],  # 3rd element
+                        'rrid': row[3],          # 4th element  
+                        'resourceType': row[4]   # 5th element
+                    }
+                else:
+                    print(f"Warning: Row has unexpected length {len(row)}: {row}")
+                    continue
+            else:
+                # Try to convert to dict
+                try:
+                    row_dict = dict(row)
+                except:
+                    print(f"Warning: Could not convert row to dict: {row}")
+                    continue
+            
             # Only include rows with required fields
             if row_dict.get('resourceName') and row_dict.get('resourceType'):
                 data.append(row_dict)
@@ -91,7 +129,8 @@ def format_enum_entry(resource: Dict[str, Any]) -> Dict[str, Any]:
     entry = {}
     
     # Use resourceName as the key
-    name = resource.get('resourceName', '').strip()
+    name = resource.get('resourceName', '') or ''
+    name = name.strip() if name else ''
     if not name:
         return None
         
@@ -99,13 +138,15 @@ def format_enum_entry(resource: Dict[str, Any]) -> Dict[str, Any]:
     entry_data = {}
     
     # Use resourceName as description if no separate description provided
-    description = resource.get('description', '').strip()
+    description = resource.get('description', '') or ''
+    description = description.strip() if description else ''
     if not description:
         description = name
     entry_data['description'] = description
         
     # Add source/meaning from RRID if available
-    rrid = resource.get('rrid', '').strip()
+    rrid = resource.get('rrid', '') or ''
+    rrid = rrid.strip() if rrid else ''
     if rrid:
         if rrid.startswith('CVCL_'):
             entry_data['source'] = f"https://web.expasy.org/cellosaurus/{rrid}"
@@ -194,7 +235,8 @@ def main():
     animal_models = []
     
     for resource in data:
-        resource_type = resource.get('resourceType', '').lower().strip()
+        resource_type = resource.get('resourceType', '') or ''
+        resource_type = resource_type.lower().strip() if resource_type else ''
         
         if 'cell line' in resource_type:
             formatted = format_enum_entry(resource)

@@ -38,8 +38,6 @@ jobs:
           pip install synapseclient pyyaml
 
       - name: Sync model system data
-        env:
-          SYNAPSE_AUTH_TOKEN: ${{ secrets.SYNAPSE_AUTH_TOKEN }}
         run: |
           python utils/sync_model_systems.py --synapse-id ${{ env.SYNAPSE_TABLE_ID }}
       
