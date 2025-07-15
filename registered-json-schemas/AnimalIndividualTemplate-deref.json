@@ -10,7 +10,7 @@
       "type": "string"
     },
     "ageUnit": {
-      "description": "A time unit that can be used with a given age value, e.g. years.",
+      "description": "",
       "enum": [
         "seconds",
         "minutes",
@@ -24,7 +24,7 @@
       "type": "string"
     },
     "diagnosis": {
-      "description": "Diagnosis for the individual given signs and symptoms. Use the most specific diagnosis term that applies.",
+      "description": "",
       "enum": [
         "Neurofibromatosis type 1",
         "Schwannomatosis",
@@ -44,7 +44,7 @@
       "type": "string"
     },
     "diagnosisAgeGroup": {
-      "description": "Age group of the individual at the time of diagnosis.",
+      "description": "",
       "enum": [
         "infancy",
         "childhood",
@@ -52,7 +52,7 @@
         "adulthood",
         "unknown"
       ],
-      "title": "Diagnosis age group",
+      "title": "AgeGroupEnum",
       "type": "string"
     },
     "germlineMutation": {
@@ -64,13 +64,13 @@
       "type": "string"
     },
     "inheritance": {
-      "description": "Describes whether known inheritance from a parent.",
+      "description": "",
       "enum": [
         "parent affected",
         "parent not affected",
         "unknown"
       ],
-      "title": "Inheritance",
+      "title": "InheritanceEnum",
       "type": "string"
     },
     "modelSystemName": {
@@ -254,13 +254,13 @@
       "type": "string"
     },
     "mosaicism": {
-      "description": "Whether individual is mosaic.",
+      "description": "",
       "enum": [
         "mosaic",
         "not mosaic",
         "unknown"
       ],
-      "title": "Mosaicism",
+      "title": "MosaicismEnum",
       "type": "string"
     },
     "nf1Genotype": {
@@ -354,275 +354,6 @@
       "type": "string"
     },
     "species": {
-      "description": "The name of a species (typically a taxonomic group) of organism.",
-      "enum": [
-        "Rattus norvegicus",
-        "Gallus gallus",
-        "Pan troglodytes",
-        "Mus musculus (humanized)",
-        "Homo sapiens",
-        "Danio rerio",
-        "Drosophila melanogaster",
-        "Rhesus macaque",
-        "Sus scrofa",
-        "Oryctolagus cuniculus",
-        "Mus musculus"
-      ],
-      "title": "SpeciesEnum",
-      "type": "string"
-    },
-    "AgeGroupEnum": {
-      "description": "",
-      "enum": [
-        "infancy",
-        "childhood",
-        "adolescence",
-        "adulthood",
-        "unknown"
-      ],
-      "title": "AgeGroupEnum",
-      "type": "string"
-    },
-    "CellLineModel": {
-      "description": "",
-      "enum": [
-        "HEK293 NF1 -/- with WT mNf1 cDNA",
-        "SZ-NF4",
-        "Nf1-/- HEK 293",
-        "HEK293 NF1 -/- Exon 52 R2550X #5",
-        "HBE135-E6E7",
-        "NCC-MPNST5-C1",
-        "sc93.1",
-        "JHU 2-079-PDX",
-        "HEK293 NF1 -/- with R192X mNf1 cDNA",
-        "icNF98.4c",
-        "ST88-14",
-        "hTERT NF1 ipNF95.6",
-        "icNF99.1",
-        "cNF00.10a",
-        "iPSC Y489C; Exon 13 cryptic splice",
-        "3PNF_SiPSsv_MM_11",
-        "hTERT NF1 ipnNF09.4",
-        "S520",
-        "Schwann cell NF1 -/- with R681X mNf1 cDNA",
-        "JH-2-002-CL",
-        "NCC-MPNST2-C1",
-        "HEK293 NF1 -/- with R1306X mNf1 cDNA",
-        "WT ES",
-        "Fb93.1",
-        "cNF04.9a",
-        "JHU 2-103-PDX",
-        "5PNF_TDiPSsv_PM_6",
-        "NCC-MPNST1-C1",
-        "7PNF_SiPSrv_PM_12",
-        "HEK293 NF1 -/- with R681X mNf1 cDNA",
-        "GM23338",
-        "hTERT NF1 ipnNF95.11c",
-        "T265",
-        "HEK293 NF1 -/- clone 2",
-        "sNF02.2",
-        "iPSC NF1 WT",
-        "icNF98.4d",
-        "NF2-/- AC007-hTERT",
-        "HEK293 NF1 -/- with WT tagged mNf1 cDNA",
-        "NCC-MPNST3-C1",
-        "HEK293",
-        "Dh5 alpha",
-        "icNF97.2a",
-        "Schwann cell NF1 -/- (iPN97.4 #24)",
-        "cNF97.5",
-        "NCC-MPNST4-C1",
-        "NMS-2",
-        "cNF99.1",
-        "hiPSC",
-        "AC007-hTERT",
-        "ScienCell Schwann cells",
-        "icNF04.9a",
-        "90-8",
-        "Schwann cell NF1 -/- with WT tagged mNf1 cDNA",
-        "iPSC NF1 +/- BJFF.6 bkgd",
-        "JHU 2-079-CL",
-        "cNF97.2b",
-        "JHU 2-002-CL",
-        "NF1",
-        "SZ-NF1",
-        "3PNF_FiPSsv_PM_2",
-        "hTERT NF1 ipNF05.5 (Mixed clones)",
-        "hTERT ipn02.3 2\u03bb",
-        "JHU 2-103-CL",
-        "HEK293 NF1 -/- Exon 17 #A15 G629R cryptic splice",
-        "Lis42_NF1_1N",
-        "ELK-TAD Luciferase Reporter HEK293 Stable NF1 -/-",
-        "human foreskin fibroblasts",
-        "icNF00.10a",
-        "HEK293 NF1 -/- with R1947X mNf1 cDNA",
-        "Nf1-/- Epithelial lung cells",
-        "Nf2-/- Schwann SC (mouse) (PMID26554010)",
-        "STS-26T",
-        "HEK293 NF1 -/- with R461X mNf1 cDNA",
-        "i28cNF",
-        "sNF94.3",
-        "Nf1-/- skin-derived precursor cells",
-        "hTERT ipn02.8",
-        "Dhh-Cre; NF1Arg681*/flox Schwann Cells",
-        "KCL024",
-        "icNF97.2b",
-        "HeLa SilenciX NF1",
-        "hTERT NF1 ipNF95.11b C/T",
-        "HEK293 NF1 -/- Exon 47 insT #14",
-        "HS-PSS",
-        "YST-1",
-        "M3 MPNST",
-        "S462.TY",
-        "S462",
-        "HEK293 NF1 -/- Exon 17 #B48 G629R cryptic splice",
-        "GM11602",
-        "Lis47_NF1_2N",
-        "hTERT NF1 sipnNF95.12B",
-        "KCL025",
-        "Schwann cell NF1 -/- with R816X mNf1 cDNA",
-        "hiPSC-SCP",
-        "sNF96.2",
-        "cNF98.4c",
-        "NF1-R68X Embryonic cells",
-        "BJFF.6",
-        "Ben-Men-1",
-        "HEK293 NF1 -/- with R816X mNf1 cDNA",
-        "hTERT NF1 ipNF05.5",
-        "i18cNF",
-        "hTERT SC ipn97.4",
-        "i21cNF",
-        "cNF98.4d",
-        "28cNF",
-        "SC4 [Mouse schwannoma]",
-        "cNF18.1a",
-        "Nf1Arg681*/Arg681* ES",
-        "GM11601",
-        "HEK293 NF1 -/- with R2550X mNf1 cDNA",
-        "JH-2-103-CL",
-        "HS-Sch-2",
-        "hTERT NF1 ipn02.3 2\u03bb",
-        "ELK-TAD Luciferase Reporter HEK293 Stable",
-        "6PNF_SiPSrv_PM_2",
-        "hTERT NF1 ipNF03.3",
-        "JH-2-079-CL",
-        "hTERT NF1 ipNF04.4",
-        "Nf1Arg681*/Arg681* MEFs",
-        "Nf1Arg681*/+ ES",
-        "cNF97.2a",
-        "Schwann cell i28cNF NF1 -/- (#14)",
-        "hTERT NF1 ipNF00.6",
-        "NCC-MPNST3-X2-C1",
-        "JHU 2-002-PDX",
-        "hTERT NF1 ipNF95.11b C",
-        "5PNF_TDiPSsv_MM_4",
-        "hTERT NF1 ipn06.2 A",
-        "hTERT SC ipn02.8",
-        "SZ-NF2",
-        "sMPNST",
-        "HS02",
-        "HS05",
-        "primary cultured fibroblast cell"
-      ],
-      "title": "CellLineModel",
-      "type": "string"
-    },
-    "DiagnosisEnum": {
-      "description": "",
-      "enum": [
-        "Neurofibromatosis type 1",
-        "Schwannomatosis",
-        "NF2-related schwannomatosis",
-        "SMARCB1-related schwannomatosis",
-        "LZTR1-related schwannomatosis",
-        "22q-related schwannomatosis",
-        "Schwannomatosis-NOS",
-        "Schwannomatosis-NEC",
-        "Sporadic Schwannoma",
-        "Vestibular Schwannoma",
-        "Noonan Syndrome",
-        "Not Applicable",
-        "Unknown"
-      ],
-      "title": "DiagnosisEnum",
-      "type": "string"
-    },
-    "Genotype": {
-      "description": "",
-      "enum": [
-        "-/-",
-        "+/-",
-        "+/+",
-        "Unknown"
-      ],
-      "title": "Genotype",
-      "type": "string"
-    },
-    "InheritanceEnum": {
-      "description": "",
-      "enum": [
-        "parent affected",
-        "parent not affected",
-        "unknown"
-      ],
-      "title": "InheritanceEnum",
-      "type": "string"
-    },
-    "MosaicismEnum": {
-      "description": "",
-      "enum": [
-        "mosaic",
-        "not mosaic",
-        "unknown"
-      ],
-      "title": "MosaicismEnum",
-      "type": "string"
-    },
-    "MouseModel": {
-      "description": "",
-      "enum": [
-        "Prss56Cre/+;Tom/+;Nf1fl/fl",
-        "Prss56Cre/+;Tom/+",
-        "B6;129S2-Trp53tm1Tyj Nf1tm1Tyj/J",
-        "Prss56Cre;R26mT",
-        "B6.129S1-Nf1tm1Cbr/J",
-        "Nf1-OPG",
-        "C57BL/6J",
-        "NRG",
-        "Nf1-OPG-Arg816",
-        "NOD scid gamma",
-        "B6.129S2-Nf1tm1Tyj/J",
-        "B6;129-Trp53tm1Tyj Nf1tm1Tyj Suz12Gt(Betageo)1Khe/KcichJ",
-        "B6.129(Cg)-Nf1tm1Par/J",
-        "GFAP-Cre; Nf1-G848R/Flox",
-        "GFAP-Cre; Nf1-R681X/Flox",
-        "GFAP-Cre; Nf1-C383X/Flox",
-        "Nf1-C848R/Flox",
-        "Nf1-R681X/Flox",
-        "Nf1-C383X/Flox",
-        "Nf1flox/flox"
-      ],
-      "title": "MouseModel",
-      "type": "string"
-    },
-    "NotApplicableEnum": {
-      "description": "",
-      "enum": [
-        "Not Applicable"
-      ],
-      "title": "NotApplicableEnum",
-      "type": "string"
-    },
-    "SexEnum": {
-      "description": "",
-      "enum": [
-        "Male",
-        "Female"
-      ],
-      "title": "SexEnum",
-      "type": "string"
-    },
-    "SpeciesEnum": {
       "description": "",
       "enum": [
         "Rattus norvegicus",
@@ -638,28 +369,6 @@
         "Mus musculus"
       ],
       "title": "SpeciesEnum",
-      "type": "string"
-    },
-    "TimeUnit": {
-      "description": "",
-      "enum": [
-        "seconds",
-        "minutes",
-        "hours",
-        "days",
-        "weeks",
-        "months",
-        "years"
-      ],
-      "title": "TimeUnit",
-      "type": "string"
-    },
-    "UnknownEnum": {
-      "description": "",
-      "enum": [
-        "Unknown"
-      ],
-      "title": "UnknownEnum",
       "type": "string"
     }
   },

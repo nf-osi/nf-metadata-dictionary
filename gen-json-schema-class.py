@@ -129,46 +129,55 @@ for tpl in BUILD_DIR.glob("*.yaml"):
         print(f"❌ Invalid JSON for {cls}: {e}")
         continue
 
+    # set ID + title
     raw["$id"]   = (
         f"https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/"
         f"sagedm-{cls.lower()}"
     )
     raw["title"] = cls
 
-    deref = jsonref.replace_refs(raw, merge_props=True, proxies=False)
-    # jsonref.dumps will chase every proxy and output raw JSON
-    full = deref
-    defs = full.pop("$defs", {})
-    props = full.setdefault("properties", {})
-    for nm, defn in defs.items():
-        if defn.get("enum"):
-            props[nm] = defn
+    # --- dereference, but leave $refs intact so we can inline enums ourselves
+    deref = jsonref.replace_refs(raw, merge_props=False, proxies=False)
+    full  = deref
 
+    # pull out all enum definitions
+    defs  = full.pop("$defs", {})
+    props = full.setdefault("properties", {})
+
+    # walk every property; when we hit a $ref to an enum, inline only its enum list + title
     def resolve(obj):
         if isinstance(obj, dict):
             if "$ref" in obj:
-                ref = obj.pop("$ref")
-                name = ref.rsplit("/", 1)[-1]
-                enumdef = defs.get(name)
-                if enumdef:
-                    obj.clear()
-                    obj.update(enumdef)
+                ref       = obj.pop("$ref")
+                enum_name = ref.rsplit("/", 1)[-1]
+                enumdef   = defs.get(enum_name)
+                if enumdef and "enum" in enumdef:
+                    # merge only the enum values
+                    obj["enum"] = enumdef["enum"]
+                    # bring over human-friendly title if you set one
+                    if "title" in enumdef:
+                        obj["title"] = enumdef["title"]
                 return
             for v in obj.values():
                 resolve(v)
+        elif isinstance(obj, list):
+            for item in obj:
+                resolve(item)
+
     resolve(props)
 
+    # now normalize, order, and write out as before
     def normalize(o):
         if isinstance(o, dict):
-            if isinstance(o.get("type"), list):
-                t = o["type"]
-                if set(t) == {"string","null"}:
-                    o["type"] = "string"
+            t = o.get("type")
+            if isinstance(t, list) and set(t) == {"string","null"}:
+                o["type"] = "string"
             for v in o.values():
                 normalize(v)
         elif isinstance(o, list):
             for i in o:
                 normalize(i)
+
     normalize(full)
 
     ordered = OrderedDict()
@@ -184,6 +193,7 @@ for tpl in BUILD_DIR.glob("*.yaml"):
     out_json = OUT_DIR / f"{cls}-deref.json"
     out_json.write_text(json.dumps(ordered, indent=2))
     print(f"  ✅ wrote {out_json}")
+
 
 # ─── STEP 4: VALIDATE AGAINST SYNAPSE (dryRun) ───────────────────────────────
 print("\n🔨 Validating all dereferenced schemas…")
