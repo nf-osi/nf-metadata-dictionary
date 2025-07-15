@@ -146,25 +146,19 @@ def format_enum_entry(resource: Dict[str, Any]) -> Dict[str, Any]:
     if description and description != name:
         entry_data['description'] = description
         
-    # Add source/meaning from RRID if available
+    # Add meaning from RRID if available
     rrid = resource.get('rrid', '') or ''
     rrid = rrid.strip() if rrid else ''
     if rrid:
-        if rrid.startswith('CVCL_'):
-            entry_data['source'] = f"https://web.expasy.org/cellosaurus/{rrid}"
-        elif rrid.startswith('MGI:'):
-            entry_data['source'] = f"http://www.informatics.jax.org/accession/{rrid}"
-        elif rrid.startswith('RRID:'):
-            # Handle full RRID format
-            clean_rrid = rrid.replace('RRID:', '')
-            if clean_rrid.startswith('CVCL_'):
-                entry_data['source'] = f"https://web.expasy.org/cellosaurus/{clean_rrid}"
-            elif clean_rrid.startswith('MGI:'):
-                entry_data['source'] = f"http://www.informatics.jax.org/accession/{clean_rrid}"
-            else:
-                entry_data['source'] = rrid
+        if rrid.startswith('RRID:'):
+            # Handle full RRID format - keep as is
+            entry_data['meaning'] = rrid
+        elif rrid.startswith('rrid:'):
+            # Already has rrid: prefix
+            entry_data['meaning'] = rrid
         else:
-            entry_data['source'] = rrid
+            # Add rrid: prefix for bare RRID values
+            entry_data['meaning'] = f"rrid:{rrid}"
     
     return {name: entry_data}
 
