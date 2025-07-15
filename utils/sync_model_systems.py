@@ -10,7 +10,7 @@ resourceType column.
 import os
 import sys
 import yaml
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Set
 import argparse
 
 
@@ -49,8 +49,8 @@ def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
             print("Attempting anonymous access...")
             # Continue without authentication for anonymous access
         
-        # Query the table for resourceName, rrid, and resourceType columns
-        query = f"SELECT resourceName, rrid, resourceType FROM {synapse_id}"
+        # Query the table for resourceName, rrid, resourceType, and description columns
+        query = f"SELECT resourceName, rrid, resourceType, description FROM {synapse_id}"
         print(f"Executing query: {query}")
         
         try:
@@ -72,12 +72,13 @@ def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
                 row_dict = row
             elif isinstance(row, (list, tuple)):
                 # List/tuple format - map to column names based on actual query result
-                # From debugging: the query returns [id, ?, resourceName, rrid, resourceType]
-                if len(row) >= 5:
+                # From debugging: the query returns [id, ?, resourceName, rrid, resourceType, description]
+                if len(row) >= 6:
                     row_dict = {
                         'resourceName': row[2],  # 3rd element
                         'rrid': row[3],          # 4th element  
-                        'resourceType': row[4]   # 5th element
+                        'resourceType': row[4],  # 5th element
+                        'description': row[5]    # 6th element
                     }
                 else:
                     print(f"Warning: Row has unexpected length {len(row)}: {row}")
@@ -103,12 +104,14 @@ def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
             {
                 'resourceName': 'Test Cell Line 1',
                 'rrid': 'CVCL_0001',
-                'resourceType': 'cell line'
+                'resourceType': 'cell line',
+                'description': 'Test cell line description'
             },
             {
                 'resourceName': 'Test Mouse Model 1', 
                 'rrid': 'MGI:0001',
-                'resourceType': 'animal model'
+                'resourceType': 'animal model',
+                'description': 'Test mouse model description'
             }
         ]
     except Exception as e:
@@ -137,12 +140,11 @@ def format_enum_entry(resource: Dict[str, Any]) -> Dict[str, Any]:
     # Build the entry
     entry_data = {}
     
-    # Use resourceName as description if no separate description provided
+    # Use description from database if available and different from resource name
     description = resource.get('description', '') or ''
     description = description.strip() if description else ''
-    if not description:
-        description = name
-    entry_data['description'] = description
+    if description and description != name:
+        entry_data['description'] = description
         
     # Add source/meaning from RRID if available
     rrid = resource.get('rrid', '') or ''
@@ -165,6 +167,56 @@ def format_enum_entry(resource: Dict[str, Any]) -> Dict[str, Any]:
             entry_data['source'] = rrid
     
     return {name: entry_data}
+
+
+def load_manual_entries(file_path: str) -> Set[str]:
+    """
+    Load entries from a manual YAML file.
+    
+    Args:
+        file_path: Path to the manual YAML file
+        
+    Returns:
+        Set of entry names from the manual file
+    """
+    if not os.path.exists(file_path):
+        return set()
+    
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = yaml.safe_load(f)
+        
+        if data and 'enums' in data:
+            # Get the first enum (should be the only one)
+            enum_data = next(iter(data['enums'].values()))
+            if 'permissible_values' in enum_data:
+                return set(enum_data['permissible_values'].keys())
+    except Exception as e:
+        print(f"Warning: Could not load manual entries from {file_path}: {e}")
+    
+    return set()
+
+
+def filter_duplicates(entries: List[Dict[str, Any]], manual_entries: Set[str]) -> List[Dict[str, Any]]:
+    """
+    Filter out entries that already exist in manual files.
+    
+    Args:
+        entries: List of formatted enum entries
+        manual_entries: Set of entry names from manual file
+        
+    Returns:
+        Filtered list of entries without duplicates
+    """
+    filtered = []
+    for entry in entries:
+        if entry:
+            entry_name = next(iter(entry.keys()))
+            if entry_name not in manual_entries:
+                filtered.append(entry)
+            else:
+                print(f"Skipping duplicate entry: {entry_name} (exists in manual file)")
+    return filtered
 
 
 def update_enum_file(file_path: str, enum_name: str, entries: List[Dict[str, Any]]) -> None:
@@ -194,8 +246,14 @@ def update_enum_file(file_path: str, enum_name: str, entries: List[Dict[str, Any
         }
     }
     
-    # Write to file
+    # Write to file with warning comment
     with open(file_path, 'w', encoding='utf-8') as f:
+        # Add warning comment at the top
+        f.write("# WARNING: This file is auto-generated from Synapse table syn26450069\n")
+        f.write("# DO NOT EDIT DIRECTLY - changes will be overwritten\n") 
+        f.write("# For manual entries, use the corresponding *Manual.yaml file\n")
+        f.write("# Generated by utils/sync_model_systems.py\n\n")
+        
         yaml.dump(enum_data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
     
     print(f"Updated {file_path} with {len(sorted_entries)} entries")
@@ -218,6 +276,8 @@ def main():
     # Define file paths
     cell_line_path = os.path.join(repo_root, 'modules', 'Sample', 'CellLineModel.yaml')
     animal_model_path = os.path.join(repo_root, 'modules', 'Sample', 'AnimalModel.yaml')
+    cell_line_manual_path = os.path.join(repo_root, 'modules', 'Sample', 'CellLineModelManual.yaml')
+    animal_model_manual_path = os.path.join(repo_root, 'modules', 'Sample', 'AnimalModelManual.yaml')
     
     print(f"Fetching data from Synapse table {args.synapse_id}...")
     
@@ -229,6 +289,12 @@ def main():
         return 1
     
     print(f"Fetched {len(data)} records from Synapse")
+    
+    # Load manual entries to avoid duplicates
+    cell_line_manual_entries = load_manual_entries(cell_line_manual_path)
+    animal_model_manual_entries = load_manual_entries(animal_model_manual_path)
+    print(f"Found {len(cell_line_manual_entries)} manual cell line entries")
+    print(f"Found {len(animal_model_manual_entries)} manual animal model entries")
     
     # Separate data by resource type
     cell_lines = []
@@ -246,6 +312,10 @@ def main():
             formatted = format_enum_entry(resource)
             if formatted:
                 animal_models.append(formatted)
+    
+    # Filter out duplicates with manual entries
+    cell_lines = filter_duplicates(cell_lines, cell_line_manual_entries)
+    animal_models = filter_duplicates(animal_models, animal_model_manual_entries)
     
     print(f"Found {len(cell_lines)} cell lines and {len(animal_models)} animal models")
     
