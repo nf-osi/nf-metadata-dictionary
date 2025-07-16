@@ -23,9 +23,9 @@ class TimeoutError(Exception):
 def timeout_handler(signum, frame):
     raise TimeoutError("Script timeout reached")
 
-# Set script timeout to 80 minutes (4800 seconds)
+# Set script timeout to 5.5 hours (19800 seconds)
 signal.signal(signal.SIGALRM, timeout_handler)
-signal.alarm(4800)
+signal.alarm(19800)
 
 def expand_abbreviated_uri(abbreviated_uri):
     """
@@ -293,8 +293,8 @@ def main():
                 writer.writerow(['Term', 'Meaning_URI', 'Synonyms'])
             
             # Process terms in smaller batches with reduced parallelism
-            batch_size = 50
-            max_workers = 3  # Reduced to 3 for better stability
+            batch_size = 25  # Reduced batch size for more frequent progress saves
+            max_workers = 2  # Reduced to 2 for better stability and less API pressure
             
             for i in range(0, remaining_terms, batch_size):
                 batch = terms_to_process[i:i + batch_size]
@@ -331,7 +331,7 @@ def main():
         print("\nProcessing complete! Results saved to term_synonyms.csv")
         
     except TimeoutError:
-        print("\nScript timeout reached (80 minutes). Partial results saved to CSV.")
+        print("\nScript timeout reached (5.5 hours). Partial results saved to CSV.")
         sys.exit(1)
     except KeyboardInterrupt:
         print("\nScript interrupted. Partial results saved to CSV.")
