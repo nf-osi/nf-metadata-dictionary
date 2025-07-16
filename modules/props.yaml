@@ -70,6 +70,13 @@ slots:
     description: A unique identifier (non-PII) that represents the aliquots used for
       e.g. replicate runs. This is linked to the specimenID.
     required: false
+  alternateDataRepository:
+    title: alternateDataRepository
+    description: Reference to other portals or visualization tools where data is located.  Examples - ega.study:EGAS00001003186, dbgap:phs003519.v1.p1, cellxgene.collection:c11009b8-b113-4a99-9890-78b2f9df9d79, cbioportal:schw_ctf_synodos_2025 
+    range: string
+    in_subset:
+      - portal
+    required: false    
   antibodyID:
     description: Antibody ID such as RRID if available, otherwise use vendor ID.
     required: false
@@ -198,6 +205,13 @@ slots:
     in_subset:
       - portal
     required: false
+  clinicalTrialID:
+    title: clinicalTrialID
+    description: ID of an associated clinical trial. For trials from clinicaltrials.gov, naming starts with NCT########.
+    range: string
+    in_subset:
+      - portal
+    required: false    
   comments:
     title: Comments
     description: Brief free-text comments that may also be important to
