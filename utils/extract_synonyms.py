@@ -23,9 +23,9 @@ class TimeoutError(Exception):
 def timeout_handler(signum, frame):
     raise TimeoutError("Script timeout reached")
 
-# Set script timeout to 5.5 hours (19800 seconds)
+# Set script timeout to 7 hours (25200 seconds)
 signal.signal(signal.SIGALRM, timeout_handler)
-signal.alarm(19800)
+signal.alarm(25200)
 
 def expand_abbreviated_uri(abbreviated_uri):
     """
