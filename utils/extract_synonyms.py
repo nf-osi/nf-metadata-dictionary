@@ -23,9 +23,9 @@ class TimeoutError(Exception):
 def timeout_handler(signum, frame):
     raise TimeoutError("Script timeout reached")
 
-# Set script timeout to 55 minutes (3300 seconds)
+# Set script timeout to 80 minutes (4800 seconds)
 signal.signal(signal.SIGALRM, timeout_handler)
-signal.alarm(3300)
+signal.alarm(4800)
 
 def expand_abbreviated_uri(abbreviated_uri):
     """
@@ -294,7 +294,7 @@ def main():
             
             # Process terms in smaller batches with reduced parallelism
             batch_size = 50
-            max_workers = 5  # Reduced from 10
+            max_workers = 3  # Reduced to 3 for better stability
             
             for i in range(0, remaining_terms, batch_size):
                 batch = terms_to_process[i:i + batch_size]
@@ -315,7 +315,7 @@ def main():
                                      total=len(batch), 
                                      desc=f"Batch {batch_num}"):
                         try:
-                            result = future.result(timeout=30)  # Reduced timeout to 30 seconds
+                            result = future.result(timeout=45)  # Increased timeout to 45 seconds
                             if result:
                                 writer.writerow(result)
                         except concurrent.futures.TimeoutError:
@@ -331,7 +331,7 @@ def main():
         print("\nProcessing complete! Results saved to term_synonyms.csv")
         
     except TimeoutError:
-        print("\nScript timeout reached (35 minutes). Partial results saved to CSV.")
+        print("\nScript timeout reached (80 minutes). Partial results saved to CSV.")
         sys.exit(1)
     except KeyboardInterrupt:
         print("\nScript interrupted. Partial results saved to CSV.")
