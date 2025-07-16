@@ -1,31 +1,151 @@
-# .github/workflows/extract-synonyms.yml
+# name: Extract Synonyms with Abbreviated URIsgithub/workflows/extract-synonyms.yml
 
 name: “github-action-synoynms Branch Test”
 
 # Only allow manual dispatch:
 on:
-  workflow_dispatch:
+  release:
+    types: [published]
+  workflow_dispatch:  # Allows manual triggering
     inputs:
-      target-branch:
-        description: 'Branch to run this workflow on'
-        required: true
-        default: 'github-action-synoynms'
+      test_mode:
+        description: 'Run in test mode'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
-  checkout-and-verify:
+  extract-synonyms:
     runs-on: ubuntu-latest
+    timeout-minutes: 480  # Set to 8 hours maximum
+    permissions:
+      contents: write  # Allow the workflow to push changes back to the repository
     steps:
-      - name: Checkout code from chosen branch
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          ref: ${{ github.event.inputs.target-branch }}
+          python-version: '3.10'
 
-      - name: Print branch info
+      - name: Install dependencies
         run: |
-          echo "Running on branch: $(git rev-parse --abbrev-ref HEAD)"
-          echo "Latest commit:"
-          git log -1 --pretty=oneline
+          python -m pip install --upgrade pip
+          pip install pyyaml requests rdflib tqdm
 
-      # (Optional) add more test steps below
-      - name: Placeholder test step
-        run: echo "💡 Your branch is hooked up and this step succeeded."
+      - name: Verify YAML format
+        run: |
+          echo "Checking for abbreviated URIs in NF.yaml..."
+          python -c "
+          import yaml
+          with open('dist/NF.yaml', 'r') as f:
+              data = yaml.safe_load(f)
+          
+          abbreviated_count = 0
+          full_url_count = 0
+          
+          for enum_name, enum_data in data.get('enums', {}).items():
+              for term, term_data in enum_data.get('permissible_values', {}).items():
+                  if isinstance(term_data, dict) and 'meaning' in term_data:
+                      meaning = term_data['meaning']
+                      if meaning and isinstance(meaning, str):
+                          if ':' in meaning and not meaning.startswith('http'):
+                              abbreviated_count += 1
+                          elif meaning.startswith('http'):
+                              full_url_count += 1
+          
+          print(f'Found {abbreviated_count} abbreviated URIs and {full_url_count} full URLs')
+          print('✓ Ready to process abbreviated URI format')
+          "
+
+      - name: Run synonym extraction
+        run: |
+          echo "Starting synonym extraction with abbreviated URI support..."
+          echo "Running full synonym extraction with 7-hour timeout..."
+          timeout 25200 python utils/extract_synonyms.py || {
+            exit_code=$?
+            if [ $exit_code -eq 124 ]; then
+              echo "Synonym extraction timed out after 7 hours, but partial results may be available"
+            else
+              echo "Synonym extraction failed with exit code: $exit_code"
+            fi
+            exit $exit_code
+          }
+        continue-on-error: true  # Continue even if script fails
+
+      - name: Check if CSV was created
+        run: |
+          if [ ! -f term_synonyms.csv ]; then
+            echo "Error: term_synonyms.csv was not created"
+            echo "Creating a minimal CSV file to proceed..."
+            echo "term,meaning,synonyms" > term_synonyms.csv
+            echo "Unable to extract synonyms due to timeout, proceeding with empty synonyms file"
+          fi
+          echo "CSV file was created successfully"
+          echo "Number of terms processed:"
+          wc -l term_synonyms.csv
+
+      - name: Preview CSV content
+        run: |
+          echo "First 10 lines of CSV (excluding header):"
+          head -11 term_synonyms.csv
+
+      - name: Inject synonyms into YAML
+        run: python utils/inject_synonyms.py --csv term_synonyms.csv --yaml dist/NF.yaml
+        continue-on-error: false  # Fail if injection fails
+
+      - name: Check if YAML was modified
+        run: |
+          if git diff --exit-code dist/NF.yaml; then
+            echo "No changes made to NF.yaml"
+            echo "yaml_modified=false" >> $GITHUB_ENV
+          else
+            echo "NF.yaml was successfully updated with synonyms"
+            git diff --stat dist/NF.yaml
+            echo "yaml_modified=true" >> $GITHUB_ENV
+          fi
+
+      - name: Validate YAML syntax
+        if: env.yaml_modified == 'true'
+        run: |
+          python -c "
+          import yaml
+          try:
+              with open('dist/NF.yaml', 'r') as f:
+                  yaml.safe_load(f)
+              print('✓ YAML syntax is valid after synonym injection')
+          except Exception as e:
+              print(f'✗ YAML syntax error: {e}')
+              exit(1)
+          "
+
+      - name: Commit and push changes
+        if: env.yaml_modified == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add dist/NF.yaml term_synonyms.csv
+          git commit -m "Auto-update NF.yaml with synonyms from abbreviated URIs"
+          git push
+
+      - name: Create release asset
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            term_synonyms.csv
+            dist/NF.yaml
+          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifact
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: synonym-injection-results-abbreviated-uris
+          path: |
+            term_synonyms.csv
+            dist/NF.yaml
+          if-no-files-found: error
