@@ -49,10 +49,11 @@ jobs:
               for term, term_data in enum_data.get('permissible_values', {}).items():
                   if isinstance(term_data, dict) and 'meaning' in term_data:
                       meaning = term_data['meaning']
-                      if ':' in meaning and not meaning.startswith('http'):
-                          abbreviated_count += 1
-                      elif meaning.startswith('http'):
-                          full_url_count += 1
+                      if meaning and isinstance(meaning, str):
+                          if ':' in meaning and not meaning.startswith('http'):
+                              abbreviated_count += 1
+                          elif meaning.startswith('http'):
+                              full_url_count += 1
           
           print(f'Found {abbreviated_count} abbreviated URIs and {full_url_count} full URLs')
           print('✓ Ready to process abbreviated URI format')
