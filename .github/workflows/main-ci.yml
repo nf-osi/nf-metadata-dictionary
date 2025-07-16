@@ -35,10 +35,12 @@ jobs:
           git clone --depth 1 https://github.com/anngvu/retold.git
           pip install linkml==v1.8.1
           npm install -g json-dereference-cli
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
           make -B
   
       - name: Install tools and regenerate registered jsons for Superdataset, PortalDataset, etc
         run: |
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
           make PortalDataset
           make PortalStudy
           make Superdataset
