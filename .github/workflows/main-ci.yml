@@ -57,6 +57,7 @@ jobs:
           pip install schematicpy==${{ env.SCHEMATIC_VERSION }}
           pip show schematicpy
           schematic schema convert NF.jsonld
+          python utils/fix_display_names.py retold_NF.jsonld NF.jsonld
     
       - name: Commit files if there are changes
         run: |
