@@ -119,6 +119,44 @@ def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
         return []
 
 
+def sanitize_yaml_key(name: str) -> str:
+    """
+    Sanitize a string to be safe as a YAML key for JSON-LD conversion.
+    
+    Args:
+        name: Original string
+        
+    Returns:
+        Sanitized string safe for use as YAML key
+    """
+    if not name:
+        return name
+    
+    # Replace problematic characters that cause JSON-LD conversion issues
+    sanitized = name
+    
+    # Replace double colons with single dash
+    sanitized = sanitized.replace('::', '-')
+    
+    # Replace forward slashes with dashes
+    sanitized = sanitized.replace('/', '-')
+    
+    # Replace plus signs with the word "plus" to maintain meaning
+    sanitized = sanitized.replace('+', 'plus')
+    
+    # Replace any remaining colons with dashes
+    sanitized = sanitized.replace(':', '-')
+    
+    # Clean up multiple consecutive dashes
+    while '--' in sanitized:
+        sanitized = sanitized.replace('--', '-')
+    
+    # Remove leading/trailing dashes
+    sanitized = sanitized.strip('-')
+    
+    return sanitized
+
+
 def format_enum_entry(resource: Dict[str, Any]) -> Dict[str, Any]:
     """
     Format a resource entry for YAML enum.
@@ -132,9 +170,14 @@ def format_enum_entry(resource: Dict[str, Any]) -> Dict[str, Any]:
     entry = {}
     
     # Use resourceName as the key
-    name = resource.get('resourceName', '') or ''
-    name = name.strip() if name else ''
-    if not name:
+    original_name = resource.get('resourceName', '') or ''
+    original_name = original_name.strip() if original_name else ''
+    if not original_name:
+        return None
+    
+    # Sanitize the name for use as YAML key
+    sanitized_name = sanitize_yaml_key(original_name)
+    if not sanitized_name:
         return None
         
     # Build the entry
@@ -143,7 +186,17 @@ def format_enum_entry(resource: Dict[str, Any]) -> Dict[str, Any]:
     # Use description from database if available and different from resource name
     description = resource.get('description', '') or ''
     description = description.strip() if description else ''
-    if description and description != name:
+    
+    # If we sanitized the name, always include the original name in description
+    if sanitized_name != original_name:
+        if description and description != original_name:
+            # Prepend original name to existing description
+            entry_data['description'] = f"{original_name}. {description}"
+        else:
+            # Use original name as description
+            entry_data['description'] = original_name
+    elif description and description != original_name:
+        # Only include description if it's different from the name
         entry_data['description'] = description
         
     # Add meaning from RRID if available
@@ -160,7 +213,7 @@ def format_enum_entry(resource: Dict[str, Any]) -> Dict[str, Any]:
             # Add rrid: prefix for bare RRID values
             entry_data['meaning'] = f"rrid:{rrid}"
     
-    return {name: entry_data}
+    return {sanitized_name: entry_data}
 
 
 def load_manual_entries(file_path: str) -> Set[str]:
