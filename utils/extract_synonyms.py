@@ -27,6 +27,68 @@ def timeout_handler(signum, frame):
 signal.signal(signal.SIGALRM, timeout_handler)
 signal.alarm(3300)
 
+def expand_abbreviated_uri(abbreviated_uri):
+    """
+    Convert abbreviated URI (e.g., 'NCIT:C18485') to full URL.
+    Returns None if the URI format is not recognized.
+    """
+    if not abbreviated_uri or ':' not in abbreviated_uri:
+        return abbreviated_uri  # Already a full URL or invalid
+    
+    # If it's already a full URL, return as-is
+    if abbreviated_uri.startswith('http'):
+        return abbreviated_uri
+    
+    prefix, local_id = abbreviated_uri.split(':', 1)
+    
+    # Map common prefixes to base URIs
+    prefix_map = {
+        'NCIT': 'http://purl.obolibrary.org/obo/NCIT_',
+        'EFO': 'http://www.ebi.ac.uk/efo/EFO_',
+        'OBI': 'http://purl.obolibrary.org/obo/OBI_',
+        'GO': 'http://purl.obolibrary.org/obo/GO_',
+        'MONDO': 'http://purl.obolibrary.org/obo/MONDO_',
+        'MI': 'http://purl.obolibrary.org/obo/MI_',
+        'BAO': 'http://www.bioassayontology.org/bao#BAO_',
+        'CHMO': 'http://purl.obolibrary.org/obo/CHMO_',
+        'MAXO': 'http://purl.obolibrary.org/obo/MAXO_',
+        'ERO': 'http://purl.obolibrary.org/obo/ERO_',
+        'VT': 'http://purl.obolibrary.org/obo/VT_',
+        'UO': 'http://purl.obolibrary.org/obo/UO_',
+        'CL': 'http://purl.obolibrary.org/obo/CL_',
+        'UBERON': 'http://purl.obolibrary.org/obo/UBERON_',
+        'BTO': 'http://purl.obolibrary.org/obo/BTO_',
+        'MMO': 'http://purl.obolibrary.org/obo/MMO_',
+        'IAO': 'http://purl.obolibrary.org/obo/IAO_',
+        'MS': 'http://purl.obolibrary.org/obo/MS_',
+        'OMIABIS': 'http://purl.obolibrary.org/obo/OMIABIS_',
+        'FBbi': 'http://purl.obolibrary.org/obo/FBbi_',
+        'FBcv': 'http://purl.obolibrary.org/obo/FBcv_',
+        'PATO': 'http://purl.obolibrary.org/obo/PATO_',
+        'EDAM': 'http://edamontology.org/',
+        'SWO': 'http://www.ebi.ac.uk/swo/data/SWO_',
+        'SNOMED': 'http://snomed.info/id/',
+        'ENM': 'http://purl.enanomapper.org/onto/ENM_',
+        'DCM': 'http://dicom.nema.org/resources/ontology/DCM/',
+        'CHEMINF': 'http://semanticscience.org/resource/CHEMINF_',
+        'CMPO': 'http://www.ebi.ac.uk/cmpo/CMPO_',
+        'ZFA': 'http://purl.obolibrary.org/obo/ZFA_',
+        'DOID': 'http://purl.obolibrary.org/obo/DOID_',
+        'FMA': 'http://purl.obolibrary.org/obo/FMA_',
+        'CLO': 'http://purl.obolibrary.org/obo/CLO_',
+        'GENO': 'http://purl.obolibrary.org/obo/GENO_'
+    }
+    
+    if prefix in prefix_map:
+        # Handle NCIT special case - it uses 'C' prefix in the ID
+        if prefix == 'NCIT':
+            return f"{prefix_map[prefix]}{local_id}"
+        else:
+            return f"{prefix_map[prefix]}{local_id}"
+    
+    print(f"Warning: Unknown prefix '{prefix}' in URI '{abbreviated_uri}'")
+    return None
+
 @lru_cache(maxsize=1000)
 def fetch_rdf(term_url):
     """
@@ -34,8 +96,14 @@ def fetch_rdf(term_url):
     Cached to avoid repeated requests for the same URL.
     """
     try:
+        # Expand abbreviated URI if necessary
+        full_url = expand_abbreviated_uri(term_url)
+        if not full_url:
+            print(f"Could not expand abbreviated URI: {term_url}")
+            return None
+            
         headers = {"Accept": "application/rdf+xml"}
-        resp = session.get(term_url, headers=headers, timeout=15)
+        resp = session.get(full_url, headers=headers, timeout=15)
         resp.raise_for_status()
         return resp.text
     except Exception as e:
@@ -49,8 +117,34 @@ def fetch_full_ontology(term_url):
     Cached to avoid repeated requests for the same URL.
     """
     try:
-        base = term_url.rsplit("_", 1)[0]
-        ontology_url = base + ".owl"
+        # Expand abbreviated URI if necessary
+        full_url = expand_abbreviated_uri(term_url)
+        if not full_url:
+            print(f"Could not expand abbreviated URI: {term_url}")
+            return None
+            
+        # Try to determine the ontology base URL from the full URL
+        if 'purl.obolibrary.org/obo/' in full_url:
+            # For OBO ontologies, extract the prefix and construct the .owl URL
+            parts = full_url.split('/')
+            for i, part in enumerate(parts):
+                if part.startswith(('NCIT_', 'EFO_', 'OBI_', 'GO_', 'MONDO_', 'MI_', 'CHMO_', 'MAXO_', 'ERO_', 'VT_', 'UO_', 'CL_', 'UBERON_', 'BTO_', 'MMO_', 'IAO_', 'MS_', 'OMIABIS_', 'FBbi_', 'FBcv_', 'PATO_', 'ZFA_', 'DOID_', 'FMA_', 'CLO_', 'GENO_')):
+                    prefix = part.split('_')[0]
+                    ontology_url = f"http://purl.obolibrary.org/obo/{prefix.lower()}.owl"
+                    break
+            else:
+                # Fallback: try to construct from the base
+                base = full_url.rsplit("_", 1)[0]
+                ontology_url = base + ".owl"
+        elif 'ebi.ac.uk/efo/' in full_url:
+            ontology_url = "http://www.ebi.ac.uk/efo/efo.owl"
+        elif 'bioassayontology.org/bao' in full_url:
+            ontology_url = "http://www.bioassayontology.org/bao/bao_complete.owl"
+        else:
+            # Generic fallback
+            base = full_url.rsplit("_", 1)[0]
+            ontology_url = base + ".owl"
+            
         resp = session.get(ontology_url, timeout=15)
         resp.raise_for_status()
         return resp.text
@@ -66,7 +160,14 @@ def extract_synonyms(rdf_data, term_iri):
         # explicitly tell RDFlib this is RDF/XML
         g.parse(data=rdf_data, format="xml")
         OIO = Namespace("http://www.geneontology.org/formats/oboInOwl#")
-        term = URIRef(term_iri)
+        
+        # Expand abbreviated URI if necessary
+        expanded_iri = expand_abbreviated_uri(term_iri)
+        if not expanded_iri:
+            print(f"Could not expand IRI: {term_iri}")
+            return []
+            
+        term = URIRef(expanded_iri)
         return [str(o) for o in g.objects(term, OIO.hasExactSynonym)]
     except Exception as e:
         print(f"Error extracting synonyms for {term_iri}: {str(e)}")
@@ -90,9 +191,17 @@ def get_synonyms_for_term(term_url):
     return []
 
 def is_valid_url(url):
-    """Check if the URL is valid and not empty"""
+    """Check if the URL is valid (full URL or abbreviated URI) and not empty"""
     if not url or not isinstance(url, str):
         return False
+    
+    # Check if it's an abbreviated URI (like NCIT:C18485)
+    if ':' in url and not url.startswith('http'):
+        parts = url.split(':', 1)
+        if len(parts) == 2 and parts[0] and parts[1]:
+            return True
+    
+    # Check if it's a full URL
     try:
         result = urlparse(url)
         return all([result.scheme, result.netloc])
@@ -106,19 +215,27 @@ def process_term(term, term_data):
 
     urls = []
     if 'meaning' in term_data and is_valid_url(term_data['meaning']):
-        urls.append(('meaning', term_data['meaning']))
+        # Store both the original abbreviated URI and the expanded URL for reference
+        original_uri = term_data['meaning']
+        expanded_url = expand_abbreviated_uri(original_uri)
+        if expanded_url:
+            urls.append(('meaning', original_uri, expanded_url))
+        else:
+            urls.append(('meaning', original_uri, original_uri))
 
     if not urls:
         return None
 
     all_synonyms = []
-    for url_type, url in urls:
-        synonyms = get_synonyms_for_term(url)
+    for url_type, original_uri, expanded_url in urls:
+        # Use the expanded URL for fetching synonyms
+        synonyms = get_synonyms_for_term(expanded_url if expanded_url != original_uri else original_uri)
         if synonyms:
             all_synonyms.extend(synonyms)
 
     if all_synonyms:
-        return [term, '; '.join(url for _, url in urls), '; '.join(all_synonyms)]
+        # Store the original URI in the CSV for consistency with YAML
+        return [term, original_uri, '; '.join(all_synonyms)]
     return None
 
 def main():
@@ -173,7 +290,7 @@ def main():
             
             # Write header only if creating new file
             if not csv_exists:
-                writer.writerow(['Term', 'URLs', 'Synonyms'])
+                writer.writerow(['Term', 'Meaning_URI', 'Synonyms'])
             
             # Process terms in smaller batches with reduced parallelism
             batch_size = 50

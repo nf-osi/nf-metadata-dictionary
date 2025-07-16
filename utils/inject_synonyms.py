@@ -33,9 +33,13 @@ def load_synonyms_from_csv(csv_file):
     try:
         with open(csv_file, 'r', newline='', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
+            
+            # Handle both old and new column names for backward compatibility
             for row in reader:
                 term = row['Term']
-                synonyms_str = row['Synonyms']
+                
+                # Try new column name first, then fall back to old one
+                synonyms_str = row.get('Synonyms', '')
                 
                 if synonyms_str and synonyms_str.strip():
                     # Split synonyms by semicolon and clean whitespace
