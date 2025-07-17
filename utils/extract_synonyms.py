@@ -11,6 +11,7 @@ from urllib.parse import urlparse
 from tqdm import tqdm
 import time
 import signal
+import re
 
 # Create a session for connection pooling
 session = requests.Session()
@@ -26,6 +27,33 @@ def timeout_handler(signum, frame):
 # Set script timeout to 55 minutes (3300 seconds)
 signal.signal(signal.SIGALRM, timeout_handler)
 signal.alarm(3300)
+
+def load_prefixes_from_yaml(yaml_file):
+    """Load prefix mappings from YAML file"""
+    try:
+        with open(yaml_file, 'r') as f:
+            data = yaml.safe_load(f)
+        return data.get('prefixes', {})
+    except Exception as e:
+        print(f"Error loading prefixes from {yaml_file}: {str(e)}")
+        return {}
+
+def expand_curie(curie, prefixes):
+    """Expand a CURIE to a full URI using prefix mappings"""
+    if not curie or not isinstance(curie, str):
+        return curie
+    
+    # If it's already a full URI, return as-is
+    if curie.startswith('http://') or curie.startswith('https://'):
+        return curie
+    
+    # Check if it's a CURIE (contains colon)
+    if ':' in curie:
+        prefix, suffix = curie.split(':', 1)
+        if prefix in prefixes:
+            return prefixes[prefix] + suffix
+    
+    return curie
 
 @lru_cache(maxsize=1000)
 def fetch_rdf(term_url):
@@ -99,14 +127,17 @@ def is_valid_url(url):
     except:
         return False
 
-def process_term(term, term_data):
+def process_term(term, term_data, prefixes):
     """Process a single term and return its data for CSV writing"""
     if term_data is None or not isinstance(term_data, dict):
         return None
 
     urls = []
-    if 'meaning' in term_data and is_valid_url(term_data['meaning']):
-        urls.append(('meaning', term_data['meaning']))
+    if 'meaning' in term_data:
+        # Expand CURIE to full URI
+        full_url = expand_curie(term_data['meaning'], prefixes)
+        if is_valid_url(full_url):
+            urls.append(('meaning', full_url))
 
     if not urls:
         return None
@@ -127,6 +158,10 @@ def main():
         # Read the YAML file
         with open('dist/NF.yaml', 'r') as f:
             data = yaml.safe_load(f)
+        
+        # Load prefixes for CURIE expansion
+        prefixes = load_prefixes_from_yaml('dist/NF.yaml')
+        print(f"Loaded {len(prefixes)} prefixes")
         
         # Collect all terms to process
         terms_to_process = []
@@ -189,7 +224,7 @@ def main():
                 # Process batch in parallel
                 with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
                     future_to_term = {
-                        executor.submit(process_term, term, term_data): term 
+                        executor.submit(process_term, term, term_data, prefixes): term 
                         for term, term_data in batch
                     }
                     

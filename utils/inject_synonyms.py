@@ -2,6 +2,7 @@
 """
 Script to inject synonyms from CSV file into NF.yaml as aliases.
 Also implements fuzzy matching to handle case-only differences.
+Supports both full URIs and CURIEs in the meaning field.
 """
 import os
 import sys
@@ -9,6 +10,23 @@ import yaml
 import csv
 import re
 from difflib import SequenceMatcher
+
+def expand_curie(curie, prefixes):
+    """Expand a CURIE to a full URI using prefix mappings"""
+    if not curie or not isinstance(curie, str):
+        return curie
+    
+    # If it's already a full URI, return as-is
+    if curie.startswith('http://') or curie.startswith('https://'):
+        return curie
+    
+    # Check if it's a CURIE (contains colon)
+    if ':' in curie:
+        prefix, suffix = curie.split(':', 1)
+        if prefix in prefixes:
+            return prefixes[prefix] + suffix
+    
+    return curie
 
 def normalize_for_comparison(text):
     """Normalize text for fuzzy comparison (remove spaces, punctuation, lowercase)"""
