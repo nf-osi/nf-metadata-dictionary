@@ -158,7 +158,7 @@ classes:
       accessType:
         title: Access Type
         range: AccessTypeEnum
-        description: Access type for the dataset. Most datasets are public access, meaning logged-in users can download (after accepting any terms and fulfilling requirements). Private datasets may be listed but assets are not accessible without contacting the creators.
+        description: Access type label. Most datasets are public access or controlled access -- on Synapse, this can be distinguished via https://rest-docs.synapse.org/rest/GET/entity/id/accessRequirement.html, and if the ARs include the ACTAccessRequirement type, then it is controlled access (other ARs like Self-signedAR are not considered controlled access). When datasets are catalogued from other repositories, controlled access is translated/interpreted using that repo's methods. Note that even if only one part of the dataset is controlled access, the dataset should be considered controlled access.
         required: true
       license:
         title: License
