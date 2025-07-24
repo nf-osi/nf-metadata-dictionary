@@ -121,13 +121,13 @@ classes:
         required: false
       yearProcessed:
         title: Year Processed
-        description: Year data were processed. Only for processed dataset type and when data series is "NF-OSI Processed Data"; omit if not applicable/unknown.
+        description: Year data were processed. Only for processed data types and when data series is "NF-OSI Processed Data"; omit if not applicable/unknown.
         range: integer
         required: false
       datePublished:
         title: Date Published
-        description: Date data were published/available on Synapse.
-        range: string
+        description: Date data were published/available on Synapse. This can be set automatically from other dates tracked in Synapse system so does not need to be manually added.
+        range: integer
         required: false
       includedInDataCatalog:
         title: Included In Data Catalog
