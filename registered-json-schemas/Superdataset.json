@@ -3,7 +3,7 @@
   "description": "A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets.",
   "properties": {
     "accessType": {
-      "description": "Access type for the dataset.",
+      "description": "Access type label. Most datasets are public access or controlled access -- on Synapse, this can be distinguished via https://rest-docs.synapse.org/rest/GET/entity/id/accessRequirement.html, and if the ARs include the ACTAccessRequirement type, then it is controlled access (other ARs like Self-signedAR are not considered controlled access). When datasets are catalogued from other repositories, controlled access is translated/interpreted using that repo's methods. Note that even if only one part of the dataset is controlled access, the dataset should be considered controlled access.",
       "title": "Access Type",
       "enum": [
         "Public Access",
@@ -19,7 +19,7 @@
       "type": "string"
     },
     "citation": {
-      "description": "identifies academic articles that are recommended by the data provider be cited in addition to the dataset itself.",
+      "description": "Academic articles that are recommended by the data provider to be cited in addition to the dataset doi itself.",
       "title": "Citation",
       "type": "string"
     },
@@ -29,7 +29,7 @@
       "type": "string"
     },
     "contributor": {
-      "description": "Institution or person responsible for collecting and managing the files and records in the dataset.",
+      "description": "Institution or person responsible for collecting, managing, distributing, or otherwise contributing to the development of the resource. Expects properly formatted name of the organization or person (e.g. \"NF-OSI\" or \"Robert Allaway\"), not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/contributor/.",
       "items": {
         "type": "string"
       },
@@ -45,7 +45,7 @@
       "type": "array"
     },
     "creator": {
-      "description": "Properly formatted name of the organization or person that is creator of the dataset (e.g. \"NF-OSI\" or \"Robert Allaway\"), not an id. Most preferred is the project PI or data lead who's responsible for its conception and initial content creation.",
+      "description": "Main researchers involved in producing the data, in priority order. Usually matches the project PI(s) and data lead(s) responsible for conception and initial content creation. For tools this is the manufacturer or developer of the instrument. Expects properly formatted name of the organization or person (e.g. \"NF-OSI\" or \"Robert Allaway\"), not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/creator/.",
       "items": {
         "type": "string"
       },
@@ -159,7 +159,7 @@
       "type": "array"
     },
     "datePublished": {
-      "description": "Date data were published/available on Synapse.",
+      "description": "Date data were published/available on Synapse. This can be set automatically from other dates tracked in Synapse system so does not need to be manually added.",
       "title": "Date Published",
       "type": "integer"
     },
@@ -188,7 +188,7 @@
       "type": "array"
     },
     "doi": {
-      "description": "The Digital Object Identifier (DOI) associated with the dataset, used for citation and persistent identification.",
+      "description": "The Digital Object Identifier (DOI) of the dataset (if one has been created), used for citation and persistent identification.",
       "pattern": "^10\\\\.\\\\d{4,9}/[-._;()/:A-Z0-9]+$",
       "title": "doi",
       "type": "string"
@@ -224,6 +224,7 @@
       "type": "integer"
     },
     "keywords": {
+      "description": "Typically between 1 to 5 informative terms or phrases that help users find the dataset.",
       "items": {
         "type": "string"
       },
@@ -281,7 +282,7 @@
       "type": "array"
     },
     "measurementTechnique": {
-      "description": "What's used to generate data in dataset, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).",
+      "description": "Method used to generate data in dataset, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).",
       "items": {
         "description": "",
         "enum": [
@@ -548,7 +549,7 @@
       "type": "array"
     },
     "yearProcessed": {
-      "description": "Year data were processed. Only for processed dataset type and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
+      "description": "Year data were processed. Only for processed data types and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
       "title": "Year Processed",
       "type": "integer"
     }
