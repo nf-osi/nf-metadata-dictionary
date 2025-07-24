@@ -39,13 +39,13 @@ classes:
       creator:
         title: Creator
         range: string
-        description: Properly formatted name of the organization or person that is creator of the dataset (e.g. "NF-OSI" or "Robert Allaway"), not an id. Most preferred is the project PI or data lead who's responsible for its conception and initial content creation.
+        description: Main researchers involved in producing the data, in priority order. Usually matches the project PI(s) and data lead(s) responsible for conception and initial content creation. For tools this is the manufacturer or developer of the instrument. Expects properly formatted name of the organization or person (e.g. "NF-OSI" or "Robert Allaway"), not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/creator/. 
         multivalued: true
         required: true
       contributor:
         title: Contributor(s)
         range: string
-        description: Institution or person responsible for collecting and managing the files and records in the dataset.
+        description: Institution or person responsible for collecting, managing, distributing, or otherwise contributing to the development of the resource. Expects properly formatted name of the organization or person (e.g. "NF-OSI" or "Robert Allaway"), not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/contributor/.
         multivalued: true
         required: false
       studyId:
@@ -57,12 +57,12 @@ classes:
         title: Measurement Technique
         range: AssayEnum
         multivalued: true
-        description: What's used to generate data in dataset, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).
+        description: Method used to generate data in dataset, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).
       keywords:
         title: Keywords
         range: string
         multivalued: true
-        required: true
+        required: false
       subject:
         title: Subject
         range: string
@@ -126,7 +126,7 @@ classes:
       datePublished:
         title: Date Published
         description: Date data were published/available on Synapse.
-        range: integer
+        range: string
         required: false
       includedInDataCatalog:
         title: Included In Data Catalog
@@ -136,7 +136,7 @@ classes:
       citation:
         title: Citation
         range: string
-        description: identifies academic articles that are recommended by the data provider be cited in addition to the dataset itself.
+        description: Academic articles that are recommended by the data provider to be cited in addition to the dataset doi itself.
         required: false
       countryOfOrigin:
         title: Country of Origin
@@ -147,7 +147,7 @@ classes:
       doi:
         title: doi
         range: string
-        description:  The Digital Object Identifier (DOI) associated with the dataset, used for citation and persistent identification.
+        description: The Digital Object Identifier (DOI) of the dataset (if one has been created), used for citation and persistent identification.
         required: false
         pattern: '^10\\.\\d{4,9}/[-._;()/:A-Z0-9]+$'
       croissant_file_s3_object:
@@ -158,7 +158,7 @@ classes:
       accessType:
         title: Access Type
         range: AccessTypeEnum
-        description: Access type for the dataset.
+        description: Access type for the dataset. Most datasets are public access, meaning logged-in users can download (after accepting any terms and fulfilling requirements). Private datasets may be listed but assets are not accessible without contacting the creators.
         required: true
       license:
         title: License
