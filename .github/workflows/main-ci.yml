@@ -38,8 +38,10 @@ jobs:
           make -B
   
       - name: Install tools and regenerate registered jsons for *all* templates (classes)
+        env:
+          SYNAPSE_AUTH_TOKEN: ${{ secrets.SYNAPSE_AUTH_TOKEN }}
         run: |
-          echo "Here we go!"
+          echo "Generating JSON schemas and validating them!"
       
       # Set up supported python.
       - uses: actions/setup-python@v5
