@@ -1,0 +1,54 @@
+{
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-publicationtemplate",
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "description": "A generalized data model template for Publications to be hopefully used across dccs",
+  "properties": {
+    "abstract": {
+      "type": "string"
+    },
+    "accessibility": {
+      "description": "",
+      "enum": [
+        "Open Access",
+        "Restricted Access"
+      ],
+      "title": "PublicationAccessibilityEnum",
+      "type": "string"
+    },
+    "author": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "doi": {
+      "type": "string"
+    },
+    "grantNumber": {
+      "type": "string"
+    },
+    "journal": {
+      "type": "string"
+    },
+    "pmid": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "year": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "doi",
+    "journal",
+    "pmid",
+    "title",
+    "year",
+    "author",
+    "abstract"
+  ],
+  "title": "PublicationTemplate",
+  "type": "object"
+}

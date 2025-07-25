@@ -1,0 +1,118 @@
+{
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-biospecimentemplate",
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "description": "Specimen-level data, whether from human or animal.",
+  "properties": {
+    "aliquotID": {
+      "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
+      "type": "string"
+    },
+    "bodySite": {
+      "description": "",
+      "enum": [
+        "axilla",
+        "groin",
+        "leg",
+        "thoracic spine",
+        "forearm",
+        "acetabulum",
+        "muscle",
+        "finger",
+        "iliac spine",
+        "head",
+        "neck",
+        "shoulder",
+        "back",
+        "spine",
+        "scalp",
+        "scapula",
+        "pelvis",
+        "dorsolateral prefrontal cortex",
+        "occcipital lobe"
+      ],
+      "title": "BodyPartEnum",
+      "type": "string"
+    },
+    "experimentalCondition": {
+      "description": "A free-text description of the experimental condition (e.g. 5 mM doxorubicin).",
+      "type": "string"
+    },
+    "individualID": {
+      "description": "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
+      "type": "string"
+    },
+    "parentSpecimenID": {
+      "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
+      "type": "string"
+    },
+    "specimenID": {
+      "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
+      "type": "string"
+    },
+    "tumorType": {
+      "description": "",
+      "enum": [
+        "Diffuse Astrocytoma",
+        "Subcutaneous Neurofibroma",
+        "Pilomyxoid Astrocytoma",
+        "Juvenile Myelomonocytic Leukemia",
+        "Anaplastic Astrocytoma",
+        "Malignant Peripheral Nerve Sheath Tumor",
+        "Localized Neurofibroma",
+        "Cutaneous Neurofibroma",
+        "Colorectal Adenocarcinoma",
+        "Anaplastic Pilocytic Astrocytoma",
+        "Schwannoma",
+        "Hemorrhagic Neoplasm",
+        "Not Applicable",
+        "Pilocytic Astrocytoma",
+        "Ganglioglioma",
+        "Plexiform Neurofibroma",
+        "NF2-Associated Tumor",
+        "Fibrosarcoma",
+        "Low-Grade Glioma NOS",
+        "Glioblastoma",
+        "Anaplastic Pleomorphic Xanthoastrocytoma",
+        "Glioblastoma Multiforme",
+        "Unknown",
+        "Atypical Pilocytic Astrocytoma",
+        "Optic Pathway Glioma",
+        "Diffuse Infiltrating Neurofibroma",
+        "Fibromatosis",
+        "Neurofibroma with Degenerative Atypia",
+        "Necrotic Neoplasm",
+        "Pleomorphic Xanthoastrocytoma",
+        "Teratoma",
+        "Sarcoma",
+        "Massive Soft Tissue Neurofibroma",
+        "Glioma",
+        "Oligoastrocytoma",
+        "Colorectal Carcinoma",
+        "Meningioma",
+        "ANNUBP",
+        "High-Grade Glioma NOS",
+        "NF1-Associated Tumor",
+        "Atypical Neurofibroma",
+        "Cellular Neurofibroma",
+        "Neurofibroma",
+        "Recurrent MPNST",
+        "Anaplastic Ganglioglioma",
+        "tumor",
+        "metastatic tumor",
+        "metastatic/recurrent tumor",
+        "recurrent tumor",
+        "Melanoma",
+        "Nodular Neurofibroma"
+      ],
+      "title": "Tumor",
+      "type": "string"
+    }
+  },
+  "required": [
+    "individualID",
+    "specimenID",
+    "tumorType"
+  ],
+  "title": "BiospecimenTemplate",
+  "type": "object"
+}
