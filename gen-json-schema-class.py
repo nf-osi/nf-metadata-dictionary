@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 
 import subprocess
+import yaml
 import json
+import time
+import os
 from pathlib import Path
 import jsonref
+import synapseclient
 
 # Config
 SCHEMA_YAML = Path("dist/NF.yaml")
@@ -53,8 +57,43 @@ def process_schema(raw_schema, cls_name):
     
     return deref
 
+def validate_schema(path: Path):
+    """Validate schema against Synapse API (dry run)."""
+    print(f"\n🔍 Validating: {path.name}")
+    try:
+        data = json.loads(path.read_text())
+        body = json.dumps({"schema": data, "dryRun": True})
+        
+        # Initialize Synapse client with auth token
+        syn = synapseclient.Synapse()
+        auth_token = os.environ.get('SYNAPSE_AUTH_TOKEN')
+        if not auth_token:
+            raise ValueError("SYNAPSE_AUTH_TOKEN environment variable is required for validation")
+        syn.login(authToken=auth_token)
+        
+        # Start validation job
+        resp = syn.restPOST("/schema/type/create/async/start", body)
+        token = resp["token"]
+        
+        # Poll for completion
+        status = syn.restGET(f"/asynchronous/job/{token}")
+        while status["jobState"] == "PROCESSING":
+            time.sleep(1)
+            status = syn.restGET(f"/asynchronous/job/{token}")
+        
+        # Check result
+        if status["jobState"] == "FAILED":
+            print(f"❌ {path.name} FAILED: {status.get('errorMessage')}")
+            return False
+        else:
+            print(f"✅ {path.name} OK")
+            return True
+            
+    except Exception as e:
+        print(f"❌ Exception validating {path.name}: {e}")
+        return False
+
 def main():
-    import yaml
     
     # Get class names
     master = yaml.safe_load(SCHEMA_YAML.read_text())
@@ -69,7 +108,7 @@ def main():
         schema_str = run_cmd([
             "gen-json-schema",
             "--top-class", cls_name,
-            "--inline", "--no-metadata", "--closed",
+            "--inline", "--no-metadata", "--not-closed",
             str(SCHEMA_YAML)
         ])
         
@@ -87,7 +126,21 @@ def main():
         except json.JSONDecodeError:
             continue
     
-    print(f"✅ Generated {len(list(OUT_DIR.glob('*.json')))} JSON schemas")
+    generated_count = len(list(OUT_DIR.glob('*.json')))
+    print(f"✅ Generated {generated_count} JSON schemas")
+    
+    print(f"\n🔨 Validating {generated_count} schemas against Synapse...")
+    validation_results = []
+    
+    for json_file in OUT_DIR.glob('*.json'):
+        result = validate_schema(json_file)
+        validation_results.append(result)
+    
+    # Summary
+    passed = sum(validation_results)
+    failed = len(validation_results) - passed
+    
+    print(f"\n🎉 Validation complete: {passed} passed, {failed} failed")
 
 if __name__ == "__main__":
     main()
