@@ -37,13 +37,9 @@ jobs:
           npm install -g json-dereference-cli
           make -B
   
-      - name: Install tools and regenerate registered jsons for Superdataset, PortalDataset, etc
+      - name: Install tools and regenerate registered jsons for *all* templates (classes)
         run: |
-          make PortalDataset
-          make PortalStudy
-          make Superdataset
-          make PortalPublication
-          make Protocol
+          echo "Here we go!"
       
       # Set up supported python.
       - uses: actions/setup-python@v5
