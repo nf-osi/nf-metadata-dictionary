@@ -33,7 +33,7 @@ Before a schema can actually be used for validation, the schema must be register
 
 The specification describes [If-Then-Else](https://json-schema.org/understanding-json-schema/reference/conditionals#ifthenelse), which in Synapse [parlance/docs](https://help.synapse.org/docs/JSON-Schemas.3107291536.html#JSONSchemas-DerivedAnnotations) is called "derived annotations". 
 This means that on Synapse, the schema can help materialize an annotation value based on another value. 
-In this repo, this type of definition is most often referred to as "rules" and stored separately under `rules` for now, to keep rules separate from validation that can be defined in the schema, though that may change.
+In this repo, this type of definition is most often referred to as "rules" and stored separately under `rules` for now, though that may change.
 
 **However**, thinking of this as only "derived annotations" may not fully convey what can be done with If-then-else definitions. If-then-else can also be used to apply an appropriate schema based on a value. This is better used with an "abstract" schema applied at the top-level. When the value for dataType is changed, the relevant attributes, allowable values, and validation requirements may be able to be updated instantly. This is useful because when dataType is (raw) "gene expression", the ranges for "assay", "platform", "fileFormat", etc. that are selectable and validated against are different than when dataType is "image". As well, "image" expects different attributes, where "libraryPrep" is irrelevant and not seen in that template.
 
