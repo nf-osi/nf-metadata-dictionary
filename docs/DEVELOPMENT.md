@@ -51,7 +51,7 @@ Example:
 				"aligned reads",
                 "image",
                 "clinical data",
-                "manifest",
+                "workflow report",
 				...
 			]
 		},
@@ -104,7 +104,7 @@ Example:
 		"if": {
 			"properties": {
 				"dataType": {
-					"const": "manifest"
+					"const": "workflow report"
 				}
 			}
 		},
