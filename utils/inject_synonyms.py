@@ -8,8 +8,12 @@ import os
 import sys
 import yaml
 import csv
-import re
 from difflib import SequenceMatcher
+
+# Global flag for dry-run mode
+DRY_RUN_MODE = False
+
+import re
 
 def expand_curie(curie, prefixes):
     """Expand a CURIE to a full URI using prefix mappings"""
@@ -137,14 +141,19 @@ def inject_synonyms_into_yaml(yaml_file, synonyms_dict, output_file=None):
         
         # Write output
         output_path = output_file or yaml_file
-        with open(output_path, 'w', encoding='utf-8') as f:
-            yaml.dump(data, f, default_flow_style=False, allow_unicode=True, width=1000)
-            
-        print(f"\nCompleted! Modified {modifications_made} terms.")
-        if output_file:
-            print(f"Results written to {output_file}")
+        
+        if DRY_RUN_MODE:
+            print(f"\n[DRY-RUN] Would write changes to: {output_path}")
+            print(f"[DRY-RUN] Would modify {modifications_made} terms")
         else:
-            print(f"Updated {yaml_file} in place")
+            with open(output_path, 'w', encoding='utf-8') as f:
+                yaml.dump(data, f, default_flow_style=False, allow_unicode=True, width=1000)
+            
+        print(f"\nCompleted! {'Would modify' if DRY_RUN_MODE else 'Modified'} {modifications_made} terms.")
+        if output_file:
+            print(f"Results {'would be written' if DRY_RUN_MODE else 'written'} to {output_file}")
+        else:
+            print(f"{'Would update' if DRY_RUN_MODE else 'Updated'} {yaml_file} in place")
             
         return modifications_made > 0
         
@@ -197,6 +206,7 @@ def inject_synonyms_into_modules(modules_dir, synonyms_dict):
 def main():
     """Main function"""
     import argparse
+    global DRY_RUN_MODE
     
     parser = argparse.ArgumentParser(description='Inject synonyms from CSV into YAML as aliases')
     parser.add_argument('--csv', default='term_synonyms.csv', 
@@ -209,12 +219,19 @@ def main():
                        help='Output file path (only works with --yaml option)')
     parser.add_argument('--fuzzy-threshold', type=float, default=0.9,
                        help='Fuzzy matching threshold (0.0-1.0, default: 0.9)')
+    parser.add_argument('--dry-run', action='store_true',
+                       help='Show what would be changed without making actual modifications')
     
     args = parser.parse_args()
+    
+    # Set global dry-run mode
+    DRY_RUN_MODE = args.dry_run
     
     print("=== Synonym Injection Tool ===")
     print(f"CSV file: {args.csv}")
     print(f"Fuzzy threshold: {args.fuzzy_threshold}")
+    if DRY_RUN_MODE:
+        print("Mode: DRY-RUN (no files will be modified)")
     
     # Check arguments
     if args.yaml and args.modules_dir != 'modules':
