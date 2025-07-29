@@ -1,10 +1,6 @@
----
 enums:
   PlatformEnum:
     permissible_values:
-      7T Bruker Biospec:
-        description: A preclinical MRI system designed for advanced imaging of small animals
-        meaning: https://www.bruker.com/en/products-and-solutions/preclinical-imaging/mri/biospec-maxwell.html
       10x Visium Spatial Gene Expression:
         description: '10x Genomics product that includes special slides, reagents and technology to allow whole transcriptome profiling with morphological (spatial) context in FFPE or fresh-frozen tissues. Vendor ref: https://www.10xgenomics.com/products/spatial-gene-expression'
         meaning: http://www.ebi.ac.uk/efo/EFO_0010961
@@ -14,6 +10,9 @@ enums:
       2D Incucyte:
         description: Commercial platform for cell viability assay on a 2D monolayer model.
         source: https://www.essenbioscience.com/en/resources/documents/
+      7T Bruker Biospec:
+        description: A preclinical MRI system designed for advanced imaging of small animals
+        meaning: https://www.bruker.com/en/products-and-solutions/preclinical-imaging/mri/biospec-maxwell.html
       Affymetrix Genome-Wide Human SNP 5.0 Array:
         description: Affymetrix Genome-Wide Human SNP 5.0 Array
         source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL6804
@@ -60,17 +59,17 @@ enums:
         source: https://www.gehealthcare.com/courses/discovery-mr750-30t
       GE Optima MR450W 1.5T:
         source: https://www.mritechnologies.com/l/ge-450w-1.5t/18
+      GE Signa Excite 1.5T:
+        source: https://www.probomedical.com/shop/mri/ge/ge-signa-excite-1-5t/
+      GE Signa Genesis 1.5T:
+        source: ''
       GE Signa HDxt 1.5T:
         source: https://www.gehealthcare.com/courses/signa-hdxt-15t
-      GE Signa Genesis 1.5T:
-        source: ""
       GE Signa HDxt 3T:
         source: https://www.gehealthcare.com/courses/signa-hdxt-3t
       GE Signa Premier 3T:
         description: The GE Premier 3T is an advanced MRI scanner that offers high-resolution imaging capabilities and a 70 cm wide bore for patient comfort
         source: https://www.gehealthcare.com/products/magnetic-resonance-imaging/3t-mri-scanners/signa-premier-wide-bore-mri-scanner
-      GE Signa Excite 1.5T:
-        source: https://www.probomedical.com/shop/mri/ge/ge-signa-excite-1-5t/
       Hitachi Echelon 1.5T:
         source: https://clinicalimagingsystems.com/product/hitachi-echelon-1-5t-mri-scanner/
       Hitachi Oasis 1.2T:
@@ -167,7 +166,7 @@ enums:
       Leica Aperio AT2:
         description: (From vendor) The Aperio AT2 is the most compact, highest capacity, brightfield Digital Pathology scanner available.
         source: https://www.leicabiosystems.com/sites/default/files/2020-10/Aperio_AT2_Brochure_USA.pdf
-      Leica MZ16:
+      Leica MZ16: null
       Leica S9 Stereomicroscope:
         description: ''
       LifeViz Infinity System:
@@ -181,7 +180,7 @@ enums:
         source: https://en.mgi-tech.com/products/
       Malvern Zetasizer:
         description: Instrument for Dynamic Light Scattering, Static Light Scattering, or Electrophoretic Light Scattering assays.
-        source: https://www.malvernpanalytical.com/en/products/product-range/zetasizer-range 
+        source: https://www.malvernpanalytical.com/en/products/product-range/zetasizer-range
       NanoFCM:
         description: Instrument for assessing sizing,concentration & phenotyping of bio-nanoparticles.
         source: https://www.nanofcm.com/
@@ -201,7 +200,7 @@ enums:
       Orbitrap Fusion Lumos Tribrid:
         description: Thermo Scientific Orbitrap Fusion Lumos Tribrid Mass Spectrometer
         source: https://www.thermofisher.com/us/en/home/industrial/mass-spectrometry/liquid-chromatography-mass-spectrometry-lc-ms/lc-ms-systems/orbitrap-lc-ms/orbitrap-tribrid-mass-spectrometers/orbitrap-fusion-lumos-mass-spectrometer.html
-      Other Platform: 
+      Other Platform:
         description: Placeholder for platform not in list.
       Oxford Nanopore:
         description: Nanopore sequencing allows a much larger read length range, with easy prep from native or amplified DNA and RNA.
@@ -219,22 +218,20 @@ enums:
       Perlegen 300Karray:
         description: ''
       Philips Achieva 1.5T:
-        source: 
+        source: null
       Philips Achieva 3T:
         description: Complete 3T MRI system, it offers an extremely broad clinical reach from routine head, spine and musculoskeletal imaging to the most advanced exams.
         source: https://clinicalimagingsystems.com/product/philips-achieva-3-0t-mri-scanner/
-      Philips FEI Tecnai 12: 
-        description: PHILIPS / FEI Tecnai 12 is a scanning electron microscope (SEM) designed to provide high performance imaging, boasting high resolution and contrast. 
-        source: https://caeonline.com/buy/scanning-electron-microscopes/philips-fei-tecnai-12/293646081 
-      Philips Intera Achieva 3T:
-        description: >
-          A Philips Intera Achieva is a model that has been upgraded to the Achieva. 
-          The Philips Intera Achievas are ones usually manufactured between 2000-2005, while the true Achievas were manufactured between 2005-2009. 
-        source: https://www.atlantisworldwide.com/atlantis_products/philips-intera-achieva/
+      Philips FEI Tecnai 12:
+        description: PHILIPS / FEI Tecnai 12 is a scanning electron microscope (SEM) designed to provide high performance imaging, boasting high resolution and contrast.
+        source: https://caeonline.com/buy/scanning-electron-microscopes/philips-fei-tecnai-12/293646081
       Philips Ingenia 1.5T:
         source: https://www.philips.co.uk/healthcare/product/HC781341/ingenia-15t-mr-system
       Philips Ingenia 3T:
-        source: ""
+        source: ''
+      Philips Intera Achieva 3T:
+        description: "A Philips Intera Achieva is a model that has been upgraded to the Achieva.  The Philips Intera Achievas are ones usually manufactured between 2000-2005, while the true Achievas were manufactured between 2005-2009. \n"
+        source: https://www.atlantisworldwide.com/atlantis_products/philips-intera-achieva/
       Philips Panorama 1.0T:
         description: A conventional MRI scanner from Philips.
       Promega GloMax Discover:
@@ -259,6 +256,8 @@ enums:
       Siemens Magnetom Prisma 3T:
         description: A Siemens model of open bore MRI systems for clinical oncology.
         source: https://www.oncologysystems.com/resources/mri-system-guides/siemens-open-bore-mri-systems-comparison-chart
+      Siemens Magnetom Prisma Fit 3T:
+        source: https://www.imaging.psu.edu/facilities/3t-mri/siemens-3t-magnetom-prisma-fit
       Siemens Magnetom Skyra 3T:
         description: A Siemens model of open bore MRI systems for clinical oncology.
         source: https://www.oncologysystems.com/resources/mri-system-guides/siemens-open-bore-mri-systems-comparison-chart
@@ -267,8 +266,6 @@ enums:
       Siemens Magnetom Verio 3T:
         description: A Siemens model of open bore MRI systems for clinical oncology.
         source: https://www.oncologysystems.com/resources/mri-system-guides/siemens-open-bore-mri-systems-comparison-chart
-      Siemens Magnetom Prisma Fit 3T:
-        source: https://www.imaging.psu.edu/facilities/3t-mri/siemens-3t-magnetom-prisma-fit
       Spectramax M Series:
         description: A Spectramax M Series Microplate Reader
         source: https://www.moleculardevices.com/products/microplate-readers/multi-mode-readers/spectramax-m-series-readers
@@ -304,5 +301,3 @@ enums:
         source: https://pubmed.ncbi.nlm.nih.gov/29286982/
       ZetaView:
         source: https://particle-metrix.com/zetaview/
-
-
