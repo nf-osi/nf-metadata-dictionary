@@ -146,11 +146,53 @@ def inject_synonyms_into_yaml(yaml_file, synonyms_dict, output_file=None):
         else:
             print(f"Updated {yaml_file} in place")
             
-        return True
+        return modifications_made > 0
         
     except Exception as e:
         print(f"Error processing YAML file: {str(e)}")
         return False
+
+def inject_synonyms_into_modules(modules_dir, synonyms_dict):
+    """Inject synonyms as aliases into all module YAML files"""
+    import glob
+    
+    if not os.path.exists(modules_dir):
+        print(f"Error: Modules directory {modules_dir} not found")
+        return False
+        
+    # Find all YAML files in modules directory (recursively)
+    yaml_pattern = os.path.join(modules_dir, "**/*.yaml")
+    yaml_files = glob.glob(yaml_pattern, recursive=True)
+    
+    if not yaml_files:
+        print(f"No YAML files found in {modules_dir}")
+        return False
+        
+    print(f"Found {len(yaml_files)} YAML files in modules directory")
+    
+    total_modifications = 0
+    modified_files = []
+    
+    for yaml_file in yaml_files:
+        print(f"\nProcessing: {yaml_file}")
+        
+        # Process this file
+        file_modified = inject_synonyms_into_yaml(yaml_file, synonyms_dict)
+        
+        if file_modified:
+            modified_files.append(yaml_file)
+            total_modifications += 1
+    
+    print(f"\n=== Summary ===")
+    print(f"Processed {len(yaml_files)} files")
+    print(f"Modified {len(modified_files)} files")
+    
+    if modified_files:
+        print("\nModified files:")
+        for file_path in modified_files:
+            print(f"  {file_path}")
+    
+    return len(modified_files) > 0
 
 def main():
     """Main function"""
@@ -159,10 +201,12 @@ def main():
     parser = argparse.ArgumentParser(description='Inject synonyms from CSV into YAML as aliases')
     parser.add_argument('--csv', default='term_synonyms.csv', 
                        help='Path to CSV file with synonyms (default: term_synonyms.csv)')
-    parser.add_argument('--yaml', default='dist/NF.yaml',
-                       help='Path to YAML file to modify (default: dist/NF.yaml)')
+    parser.add_argument('--yaml', 
+                       help='Path to single YAML file to modify (use either --yaml or --modules-dir)')
+    parser.add_argument('--modules-dir', default='modules',
+                       help='Path to modules directory containing YAML files (default: modules)')
     parser.add_argument('--output', 
-                       help='Output file path (default: modify input YAML in place)')
+                       help='Output file path (only works with --yaml option)')
     parser.add_argument('--fuzzy-threshold', type=float, default=0.9,
                        help='Fuzzy matching threshold (0.0-1.0, default: 0.9)')
     
@@ -170,8 +214,16 @@ def main():
     
     print("=== Synonym Injection Tool ===")
     print(f"CSV file: {args.csv}")
-    print(f"YAML file: {args.yaml}")
     print(f"Fuzzy threshold: {args.fuzzy_threshold}")
+    
+    # Check arguments
+    if args.yaml and args.modules_dir != 'modules':
+        print("Error: Cannot specify both --yaml and --modules-dir")
+        return 1
+        
+    if args.output and not args.yaml:
+        print("Error: --output can only be used with --yaml")
+        return 1
     
     # Load synonyms from CSV
     synonyms_dict = load_synonyms_from_csv(args.csv)
@@ -179,10 +231,15 @@ def main():
     if not synonyms_dict:
         print("No synonyms loaded. Exiting.")
         return 1
-        
-    # Inject synonyms into YAML
-    success = inject_synonyms_into_yaml(args.yaml, synonyms_dict, args.output)
     
+    # Determine operation mode
+    if args.yaml:
+        print(f"Mode: Single file - {args.yaml}")
+        success = inject_synonyms_into_yaml(args.yaml, synonyms_dict, args.output)
+    else:
+        print(f"Mode: Modules directory - {args.modules_dir}")
+        success = inject_synonyms_into_modules(args.modules_dir, synonyms_dict)
+        
     return 0 if success else 1
 
 if __name__ == "__main__":

@@ -1,12 +1,13 @@
 # Synonym Injection Automation
 
 ## Overview
-This update enhances the GitHub workflow to automatically parse synonyms from a CSV file and inject them as `aliases` into the `dist/NF.yaml` file, with intelligent filtering to avoid redundant entries.
+This update enhances the GitHub workflow to automatically parse synonyms from a CSV file and inject them as `aliases` into the source module YAML files in the `modules/` directory, with intelligent filtering to avoid redundant entries.
 
 ## Key Features
 
-### 1. Parse & Inject Synonyms
-- **New Script**: `utils/inject_synonyms.py` reads `term_synonyms.csv` and injects synonyms as `aliases` into YAML terms
+### 1. Source-Level Synonym Injection
+- **New Script**: `utils/inject_synonyms.py` reads `term_synonyms.csv` and injects synonyms as `aliases` directly into source module YAML files
+- **Persistent**: Changes are made to source files in `modules/` directory, ensuring they survive build processes
 - **Example Output**:
   ```yaml
   3D electron microscopy:
@@ -14,7 +15,7 @@ This update enhances the GitHub workflow to automatically parse synonyms from a 
     meaning: http://purl.obolibrary.org/obo/MI_0410
     aliases:
       - 3D-EM
-      - electron tomog
+      - electron tomography
   ```
 
 ### 2. Improve Case-Only Matches
@@ -59,10 +60,19 @@ The GitHub workflow now includes these enhanced steps:
    - **Resume capability**: Can resume from partial CSV if interrupted
    - **Batch processing**: Processes terms in smaller batches for better reliability
    - **Reduced timeouts**: Individual requests limited to 15 seconds, terms to 30 seconds
-2. **Inject synonyms** (new): `python utils/inject_synonyms.py --csv term_synonyms.csv --yaml dist/NF.yaml`
-3. **Validate changes**: Check if YAML was modified and show diff statistics
-4. **Commit changes**: Automatically commit and push the updated `dist/NF.yaml` back to the repository
-5. **Upload artifacts**: Both CSV and updated YAML are now included in releases and artifacts
+2. **Inject synonyms** (new): `python utils/inject_synonyms.py --csv term_synonyms.csv --modules-dir modules`
+3. **Create Pull Request**: Automatically creates a PR with the updated CSV and module files for review
+4. **Upload artifacts**: CSV file and processing logs available as workflow artifacts
+
+## Review Process
+
+When the workflow runs, it creates a pull request with:
+- **Updated CSV**: `term_synonyms.csv` with newly extracted synonyms
+- **Modified modules**: Source YAML files with injected aliases
+- **Detailed description**: Summary of changes and quality filtering applied
+- **Review checklist**: Guide for reviewers to validate the changes
+
+This ensures that all synonym additions are reviewed before being merged into the main branch.
 
 ## Script Options
 
@@ -73,19 +83,23 @@ python utils/inject_synonyms.py [options]
 
 Options:
   --csv PATH              CSV file with synonyms (default: term_synonyms.csv)
-  --yaml PATH             YAML file to modify (default: dist/NF.yaml)
-  --output PATH           Output file (default: modify input YAML in place)
+  --yaml PATH             Single YAML file to modify (alternative to --modules-dir)
+  --modules-dir PATH      Directory containing module YAML files (default: modules)
+  --output PATH           Output file (only works with --yaml option)
   --fuzzy-threshold FLOAT Similarity threshold 0.0-1.0 (default: 0.9)
 ```
 
 ## Benefits
 
-1. **Automated synonym integration**: No more manual copying of synonyms
-2. **Quality filtering**: Prevents low-quality aliases through intelligent deduplication
-3. **Consistent format**: All aliases follow the same YAML structure
-4. **Workflow integration**: Seamlessly fits into existing CI/CD pipeline
-5. **Automatic updates**: Changes are automatically committed back to the repository
-6. **Release assets**: Both CSV and updated YAML are available as release artifacts
+1. **Source-level integration**: Synonyms are injected directly into source module files
+2. **Build-process compatibility**: Changes survive the automatic build process that generates `dist/NF.yaml`
+3. **Persistent synonyms**: Synonyms become part of the authoritative source metadata
+4. **Quality filtering**: Prevents low-quality aliases through intelligent deduplication
+5. **Consistent format**: All aliases follow the same YAML structure
+6. **Review workflow**: All changes go through PR review process for quality control
+7. **Automatic updates**: Workflow can be triggered manually or on releases
+8. **Traceable changes**: Git history shows exactly which module files were updated
+9. **Artifact preservation**: CSV files and logs are preserved for 30 days
 
 ## Example Processing Output
 
@@ -93,14 +107,28 @@ The script provides detailed feedback during processing:
 ```
 === Synonym Injection Tool ===
 CSV file: term_synonyms.csv
-YAML file: dist/NF.yaml
+Mode: Modules directory - modules
 Fuzzy threshold: 0.9
 Loaded synonyms for 159 terms from term_synonyms.csv
+Found 25 YAML files in modules directory
+
+Processing: modules/Assay/Assay.yaml
   Skipping case-only difference: '3D imaging' vs '3-D Imaging'
   Skipping fuzzy duplicate: 'Three-Dimensional Imaging' (similar to 'Three Dimensional Imaging')
 Added 3 aliases to '3D imaging'
 ...
-Completed! Modified 149 terms.
+Processing: modules/Sample/Species.yaml
+Added 2 aliases to 'Homo sapiens'
+...
+
+=== Summary ===
+Processed 25 files
+Modified 8 files
+
+Modified files:
+  modules/Assay/Assay.yaml
+  modules/Sample/Species.yaml
+  ...
 ```
 
-This automation ensures the metadata dictionary maintains high-quality synonym mappings while reducing manual maintenance overhead.
+This automation ensures the metadata dictionary maintains high-quality synonym mappings at the source level while reducing manual maintenance overhead.
