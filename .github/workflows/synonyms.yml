@@ -7,13 +7,14 @@ on:
     inputs:
       action:
         description: 'Action to perform'
-        required: true
+        required: false
         type: choice
         options:
           - 'extract-and-inject'
           - 'extract-only'
           - 'inject-only'
-        default: 'extract-and-inject'
+          - 'test-inject'
+        default: 'test-inject'
       csv_file:
         description: 'Path to synonym CSV file (for inject-only mode)'
         required: false
@@ -23,7 +24,7 @@ on:
         description: 'Run in test mode with dry-run'
         required: false
         type: boolean
-        default: false
+        default: true
 
 jobs:
   synonyms:
@@ -36,6 +37,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Print workflow info
+        run: |
+          echo "🔄 Synonyms Management Workflow"
+          echo "==============================="
+          echo "Branch: $(git rev-parse --abbrev-ref HEAD)"
+          echo "Commit: $(git rev-parse --short HEAD)"
+          echo "Action: ${{ github.event.inputs.action || 'test-inject' }}"
+          echo "CSV File: ${{ github.event.inputs.csv_file || 'term_synonyms.csv' }}"
+          echo "Test Mode: ${{ github.event.inputs.test_mode || 'true' }}"
+          echo "Trigger: ${{ github.event_name }}"
+          echo ""
+          echo "Latest commit:"
+          git log -1 --pretty=oneline
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -47,9 +62,10 @@ jobs:
           pip install pyyaml requests rdflib tqdm
 
       - name: Extract synonyms
-        if: contains(github.event.inputs.action, 'extract') || github.event_name == 'release'
+        if: (contains(github.event.inputs.action, 'extract') || github.event_name == 'release') && (github.event.inputs.action != 'test-inject')
         run: |
           echo "🔍 Starting synonym extraction..."
+          ACTION="${{ github.event.inputs.action || 'extract-and-inject' }}"
           if [ "${{ github.event.inputs.test_mode }}" = "true" ]; then
             echo "🧪 Test mode: Running extraction with timeout handling..."
             timeout 1800 python utils/extract_synonyms.py || {
@@ -76,7 +92,7 @@ jobs:
         continue-on-error: true
 
       - name: Check extraction results
-        if: contains(github.event.inputs.action, 'extract') || github.event_name == 'release'
+        if: (contains(github.event.inputs.action, 'extract') || github.event_name == 'release') && (github.event.inputs.action != 'test-inject')
         run: |
           if [ ! -f term_synonyms.csv ]; then
             echo "❌ Error: term_synonyms.csv was not created"
@@ -88,7 +104,7 @@ jobs:
           head -5 term_synonyms.csv
 
       - name: Verify CSV file for injection
-        if: contains(github.event.inputs.action, 'inject')
+        if: contains(github.event.inputs.action, 'inject') || github.event.inputs.action == 'test-inject' || github.event_name == 'release'
         run: |
           CSV_FILE="${{ github.event.inputs.csv_file || 'term_synonyms.csv' }}"
           if [ ! -f "$CSV_FILE" ]; then
@@ -104,14 +120,14 @@ jobs:
           head -5 "$CSV_FILE"
 
       - name: Inject synonyms (dry-run)
-        if: (contains(github.event.inputs.action, 'inject') && github.event.inputs.test_mode == 'true')
+        if: ((contains(github.event.inputs.action, 'inject') || github.event.inputs.action == 'test-inject') && github.event.inputs.test_mode == 'true')
         run: |
           CSV_FILE="${{ github.event.inputs.csv_file || 'term_synonyms.csv' }}"
           echo "🧪 Running synonym injection in test mode (dry-run)..."
           python utils/inject_synonyms.py --csv "$CSV_FILE" --modules-dir modules --dry-run
 
       - name: Inject synonyms (production)
-        if: (contains(github.event.inputs.action, 'inject') && github.event.inputs.test_mode != 'true') || github.event_name == 'release'
+        if: ((contains(github.event.inputs.action, 'inject') && github.event.inputs.test_mode != 'true') || github.event_name == 'release') && github.event.inputs.action != 'test-inject'
         run: |
           CSV_FILE="${{ github.event.inputs.csv_file || 'term_synonyms.csv' }}"
           echo "🚀 Running synonym injection in production mode..."
@@ -119,7 +135,7 @@ jobs:
 
       - name: Check if changes were made
         id: check_changes
-        if: github.event.inputs.test_mode != 'true'
+        if: github.event.inputs.test_mode != 'true' && github.event.inputs.action != 'test-inject'
         run: |
           # Check if CSV file exists and has content
           CSV_FILE="${{ github.event.inputs.csv_file || 'term_synonyms.csv' }}"
@@ -147,7 +163,7 @@ jobs:
           fi
 
       - name: Create Pull Request with synonym updates
-        if: steps.check_changes.outputs.changes_made == 'true' && github.event.inputs.test_mode != 'true'
+        if: steps.check_changes.outputs.changes_made == 'true' && github.event.inputs.test_mode != 'true' && github.event.inputs.action != 'test-inject'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -203,7 +219,7 @@ jobs:
             ${{ github.event.inputs.action }}
 
       - name: Upload CSV artifact
-        if: contains(github.event.inputs.action, 'extract') || github.event_name == 'release'
+        if: (contains(github.event.inputs.action, 'extract') || github.event_name == 'release') && github.event.inputs.action != 'test-inject'
         uses: actions/upload-artifact@v4
         with:
           name: synonym-csv-${{ github.run_id }}
@@ -217,14 +233,22 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           
           CSV_FILE="${{ github.event.inputs.csv_file || 'term_synonyms.csv' }}"
+          ACTION="${{ github.event.inputs.action || 'test-inject' }}"
           
-          echo "**Action**: \`${{ github.event.inputs.action }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Action**: \`$ACTION\`" >> $GITHUB_STEP_SUMMARY
           echo "**CSV File**: \`$CSV_FILE\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Test Mode**: \`${{ github.event.inputs.test_mode }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Test Mode**: \`${{ github.event.inputs.test_mode || 'true' }}\`" >> $GITHUB_STEP_SUMMARY
           echo "**Trigger**: \`${{ github.event_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch**: \`$(git rev-parse --abbrev-ref HEAD)\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
-          if [ "${{ github.event.inputs.test_mode }}" = "true" ]; then
+          if [ "$ACTION" = "test-inject" ]; then
+            echo "🧪 **Test Injection**: Quick validation completed" >> $GITHUB_STEP_SUMMARY
+            echo "- 📊 CSV file: Verified and tested" >> $GITHUB_STEP_SUMMARY
+            echo "- 📁 Module injection: Simulated (dry-run)" >> $GITHUB_STEP_SUMMARY
+            echo "- 🔄 No actual changes made" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ Workflow functionality validated" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ github.event.inputs.test_mode || 'true' }}" = "true" ]; then
             echo "🧪 **Test Mode**: Dry-run completed" >> $GITHUB_STEP_SUMMARY
             echo "- 📊 CSV file: Verified" >> $GITHUB_STEP_SUMMARY
             echo "- 📁 Module injection: Simulated only" >> $GITHUB_STEP_SUMMARY
@@ -243,5 +267,5 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Workflow Details:**" >> $GITHUB_STEP_SUMMARY
           echo "- Run ID: ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Action: ${{ github.event.inputs.action }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Action: $ACTION" >> $GITHUB_STEP_SUMMARY
           echo "- CSV Source: $CSV_FILE" >> $GITHUB_STEP_SUMMARY
