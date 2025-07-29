@@ -213,10 +213,6 @@ jobs:
             ```
           branch: synonyms-update-${{ github.run_id }}
           delete-branch: true
-          labels: |
-            automated
-            synonyms
-            ${{ github.event.inputs.action }}
 
       - name: Upload CSV artifact
         if: (contains(github.event.inputs.action, 'extract') || github.event_name == 'release') && github.event.inputs.action != 'test-inject'
