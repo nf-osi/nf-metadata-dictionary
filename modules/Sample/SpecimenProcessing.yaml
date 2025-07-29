@@ -1,24 +1,4 @@
 enums:
-  SpecimenPreparationMethodEnum:
-    permissible_values:
-      Fresh collected:
-        description: 'Fresh collected'
-      Flash frozen:
-        description: 'Flash frozen'
-      FFPE:
-        description: 'Formalin-fixed, paraffin-embedded (FFPE) tissue preservation'
-      Cryopreserved:
-        description: 'Cryopreserved'
-      OCT:
-        description: 'Tissue embedded in optimal cutting temperature compound'
-      RNAlater:
-        description: 'In storage reagent that rapidly permeates tissue to stabilize and protect cellular RNA in situ in unfrozen specimens'
-      formalin-fixed:
-        description: 'Formalin-fixed'
-      ethanol:
-        description: 'Preserved in ethanol'
-      Viably frozen:
-        description: 'Viably frozen'
   DissociationMethodEnum:
     permissible_values:
       10x_v2:
@@ -33,15 +13,35 @@ enums:
       drop-seq:
         description: ''
         meaning: https://github.com/HumanCellAtlas/metadata-schema/blob/master/json_schema/type/process/sequencing/library_preparation_process.json
-      inDrop:
-        description: ''
-        meaning: https://github.com/HumanCellAtlas/metadata-schema/blob/master/json_schema/type/process/sequencing/library_preparation_process.json
-      mouth pipette:
-        description: ''
-        meaning: https://github.com/HumanCellAtlas/metadata-schema/blob/master/json_schema/type/process/sequencing/library_preparation_process.json
       enzymatic:
+        description: ''
+        meaning: https://github.com/HumanCellAtlas/metadata-schema/blob/master/json_schema/type/process/sequencing/library_preparation_process.json
+      inDrop:
         description: ''
         meaning: https://github.com/HumanCellAtlas/metadata-schema/blob/master/json_schema/type/process/sequencing/library_preparation_process.json
       mechanical:
         description: ''
         meaning: https://github.com/HumanCellAtlas/metadata-schema/blob/master/json_schema/type/process/sequencing/library_preparation_process.json
+      mouth pipette:
+        description: ''
+        meaning: https://github.com/HumanCellAtlas/metadata-schema/blob/master/json_schema/type/process/sequencing/library_preparation_process.json
+  SpecimenPreparationMethodEnum:
+    permissible_values:
+      Cryopreserved:
+        description: Cryopreserved
+      FFPE:
+        description: Formalin-fixed, paraffin-embedded (FFPE) tissue preservation
+      Flash frozen:
+        description: Flash frozen
+      Fresh collected:
+        description: Fresh collected
+      OCT:
+        description: Tissue embedded in optimal cutting temperature compound
+      RNAlater:
+        description: In storage reagent that rapidly permeates tissue to stabilize and protect cellular RNA in situ in unfrozen specimens
+      Viably frozen:
+        description: Viably frozen
+      ethanol:
+        description: Preserved in ethanol
+      formalin-fixed:
+        description: Formalin-fixed

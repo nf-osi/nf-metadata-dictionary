@@ -8,8 +8,8 @@ enums:
         description: Fluorescent dye used for the red channel on an array
         meaning: http://purl.obolibrary.org/obo/FBbi_00000450
       Not Applicable:
-        description:
-        meaning: 
+        description: null
+        meaning: null
   GenePerturbationEnum:
     permissible_values:
       knockdown:
@@ -31,25 +31,31 @@ enums:
       CRISPR:
         description: ''
       RNAi:
+        aliases:
+        - Post-Transcriptional Gene Silencing
+        - Quelling
+        - RNA Interference
+        - RNA Silencing
+        - Sequence-Specific Posttranscriptional Gene Silencing
         description: High throughput sample analysis of RNAi molecules for potential application in gene knockdown or gene silencing of target genes
         meaning: http://purl.obolibrary.org/obo/ERO_0001688
   GenomicReferenceEnum:
     permissible_values:
+      GRCh37:
+        description: Genome Reference Consortium Human Build 37
+        source: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/
       GRCh38:
         description: Genome Reference Consortium Human Build 38
         source: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.26
       GRCh38_Verily_v1:
         description: Custom build of Genome Reference Consortium Human Build 38 by Verily (company)
         source: https://cloud.google.com/life-sciences/docs/resources/public-datasets/reference-genomes
-      GRCh37:
-        description: Genome Reference Consortium Human Build 37
-        source: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/
-      MMUL1.0:
-        description: Ensembl preliminary assembly Macaca mulatta
-        source: https://jul2016.archive.ensembl.org/Macaca_mulatta/Info/Index
       HRC:
         description: Human haplotype reference panel
         source: http://www.haplotype-reference-consortium.org
+      MMUL1.0:
+        description: Ensembl preliminary assembly Macaca mulatta
+        source: https://jul2016.archive.ensembl.org/Macaca_mulatta/Info/Index
   LibraryPrepEnum:
     permissible_values:
       lncRNAenrichment:
@@ -76,13 +82,13 @@ enums:
       IDT xGen Exome Research Panel:
         description: ''
         source: https://www.idtdna.com/pages/products/next-generation-sequencing/targeted-sequencing/hybridization-capture/predesigned-panels/xgen-exome-research-panel-v2
-      Illumina TruSeq DNA Nano:
-        description: ''
-      Illumina Tn5 Transposase:
-        description: Tn5 simultaneously fragments DNA, preferentially inserts into open chromatin sites, and adds sequencing primers (a process known as tagmentation). 
-        source: https://www.illumina.com/techniques/multiomics/epigenetics/atac-seq-chromatin-accessibility.html
       Illumina Ribo-Zero Plus:
         source: https://www.illumina.com/products/by-type/accessory-products/ribo-zero-plus-rrna-depletion.html
+      Illumina Tn5 Transposase:
+        description: Tn5 simultaneously fragments DNA, preferentially inserts into open chromatin sites, and adds sequencing primers (a process known as tagmentation).
+        source: https://www.illumina.com/techniques/multiomics/epigenetics/atac-seq-chromatin-accessibility.html
+      Illumina TruSeq DNA Nano:
+        description: ''
       KAPA HyperPrep Kit PCR-free:
         description: KAPA HyperPrep Kits offer a streamlined library preparation protocol that combines several enzymatic steps and eliminates bead cleanups to significantly reduce library preparation time and improve consistency.
         source: https://sequencing.roche.com/en/products-solutions/products/sample-preparation/dna-reagents/library-preparation/kapa-hyperprep/ordering.html
@@ -98,6 +104,11 @@ enums:
       Omni-ATAC:
         description: Omni-ATAC-seq library preparation
         source: https://protocolexchange.researchsquare.com/article/nprot-6107/v1
+      Oxford Nanopore Direct RNA Sequencing Kit:
+        description: Vendor catalog SQK-RNA004.
+        source: https://store.nanoporetech.com/us/sequencing-kits.html
+      QIAseq FX DNA Library Kit:
+        source: https://www.qiagen.com/us/products/discovery-and-translational-research/next-generation-sequencing/metagenomics/qiaseq-fx-dna-library-kit
       QuantSeq FWD V2 with UDI:
         description: Prep kit for next-gen sequencing with low-abundance samples. For analysis, note that this only provides gene-level counts, not transcript-level.
         source: https://www.lexogen.com/quantseq-fwd-udi-v2/
@@ -113,12 +124,7 @@ enums:
       TruSeq standard total RNA library kit:
         description: ''
         source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/truseq-stranded-total-rna.html
-      Oxford Nanopore Direct RNA Sequencing Kit:
-        description: Vendor catalog SQK-RNA004.
-        source: https://store.nanoporetech.com/us/sequencing-kits.html 
-      QIAseq FX DNA Library Kit:
-        source: https://www.qiagen.com/us/products/discovery-and-translational-research/next-generation-sequencing/metagenomics/qiaseq-fx-dna-library-kit
-      unknown: 
+      unknown:
         description: information not provided
   MRISequenceEnum:
     permissible_values:
@@ -189,17 +195,17 @@ enums:
       FirstStranded:
         description: Sequences of read 1 align to the RNA strand, regular "stranded".
       SecondStranded:
-        description: Sequences of read 2 align to the RNA strand, "reverse stranded". 
+        description: Sequences of read 2 align to the RNA strand, "reverse stranded".
       Unstranded:
         description: Either read 1 or read 2 can align to the RNA strand.
   WorkflowEnum:
     permissible_values:
       CNVkit:
         source: https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004873
-      DeepVariant:
-        source: https://github.com/google/deepvariant
       DESeq2:
         source: https://bioconductor.org/packages/release/bioc/html/DESeq2.html
+      DeepVariant:
+        source: https://github.com/google/deepvariant
       FastQC:
         source: https://github.com/s-andrews/FastQC
       FreeBayes:
@@ -212,20 +218,19 @@ enums:
         source: https://multiqc.info/
       Mutect2:
         source: https://www.biorxiv.org/content/10.1101/861054v1.full.pdf
+      STAR and Salmon: null
       Sarek:
         source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7111497/
-      STAR and Salmon:
       Strelka2:
         source: https://www.nature.com/articles/s41592-018-0051-x
       StringTie:
         source: https://www.nature.com/articles/nbt.3122
       TrimGalore:
         source: https://github.com/FelixKrueger/TrimGalore
-      
   WorkingDistanceUnitEnum:
     permissible_values:
-      angstrom:
-      nanometer:
-      micrometer:
-      millimeter:
-      centimeter:
+      angstrom: null
+      centimeter: null
+      micrometer: null
+      millimeter: null
+      nanometer: null
