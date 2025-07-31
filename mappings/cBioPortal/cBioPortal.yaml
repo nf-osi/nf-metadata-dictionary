@@ -52,7 +52,7 @@ mapping:
       attribute_type: PATIENT
       data_type: STRING
       required: false
-  - source: specimenID
+  - source: ID
     target:
       label: SAMPLE_ID
       description: Sample ID
@@ -361,8 +361,8 @@ mapping:
       comments: Standard cBioPortal attribute
   - source: TumorNumber
     target:
-      label: SPECIMEN_NUMBER
-      description: Specimen number
+      label: _NUMBER
+      description:  number
       attribute_type: SAMPLE
       data_type: STRING
       required: false
@@ -375,14 +375,6 @@ mapping:
       data_type: NUMBER
       required: false
       comments: Custom attribute
-  - source: specimenID
-    target:
-      label: SAMPLE_ID
-      description: Sample identifier
-      attribute_type: SAMPLE
-      data_type: STRING
-      required: true
-      comments: Standard cBioPortal attribute
   - source: race_ethnicity
     target:
       label: RACE
