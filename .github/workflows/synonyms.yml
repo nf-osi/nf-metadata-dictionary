@@ -1,0 +1,31 @@
+# .github/workflows/extract-synonyms.yml
+
+name: “github-action-synoynms Branch Test”
+
+# Only allow manual dispatch:
+on:
+  workflow_dispatch:
+    inputs:
+      target-branch:
+        description: 'Branch to run this workflow on'
+        required: true
+        default: 'github-action-synoynms'
+
+jobs:
+  checkout-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code from chosen branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.target-branch }}
+
+      - name: Print branch info
+        run: |
+          echo "Running on branch: $(git rev-parse --abbrev-ref HEAD)"
+          echo "Latest commit:"
+          git log -1 --pretty=oneline
+
+      # (Optional) add more test steps below
+      - name: Placeholder test step
+        run: echo "💡 Your branch is hooked up and this step succeeded."

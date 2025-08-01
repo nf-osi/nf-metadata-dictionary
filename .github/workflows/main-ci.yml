@@ -35,6 +35,7 @@ jobs:
           git clone --depth 1 https://github.com/anngvu/retold.git
           pip install linkml==v1.8.1
           npm install -g json-dereference-cli
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
           make -B
   
       - name: Install tools and regenerate registered jsons for *all* templates (classes)
@@ -42,6 +43,8 @@ jobs:
           SYNAPSE_AUTH_TOKEN: ${{ secrets.SYNAPSE_AUTH_TOKEN }}
         run: |
           echo "Generating JSON schemas and validating them!"
+          
+          make Superdataset
       
       # Set up supported python.
       - uses: actions/setup-python@v5
@@ -54,6 +57,7 @@ jobs:
           pip install schematicpy==${{ env.SCHEMATIC_VERSION }}
           pip show schematicpy
           schematic schema convert NF.jsonld
+          python utils/fix_display_names.py retold_NF.jsonld NF.jsonld
     
       - name: Commit files if there are changes
         run: |
