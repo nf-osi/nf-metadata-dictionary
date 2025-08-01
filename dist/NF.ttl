@@ -12009,11 +12009,11 @@ Examples: avoidance behavior, choice-making.
     skos:definition "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ],
-        [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModelManual> ],
         [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/AnimalModel> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ],
         [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/AnimalModelManual> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/modelSystemName> ;
@@ -12094,9 +12094,9 @@ Examples: avoidance behavior, choice-making.
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sex> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -12122,9 +12122,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Genotype of NF2 gene in the biospecimen from which the data were derived, if known" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/nf2Genotype> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -12480,90 +12480,90 @@ Examples: avoidance behavior, choice-making.
 
 <https://w3id.org/synapse/nfosi/vocab/> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace <http://purl.obolibrary.org/obo/ZFA_> ;
-            sh:prefix "ZFA" ],
-        [ sh:namespace <http://snomed.info/id/> ;
-            sh:prefix "SNOMED" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/OMIABIS_> ;
-            sh:prefix "OMIABIS" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/PATO_> ;
-            sh:prefix "PATO" ],
-        [ sh:namespace <http://www.ebi.ac.uk/swo/data/SWO_> ;
-            sh:prefix "SWO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MAXO_> ;
-            sh:prefix "MAXO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/CL_> ;
-            sh:prefix "CL" ],
-        [ sh:namespace <http://www.ebi.ac.uk/efo/EFO_> ;
-            sh:prefix "EFO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/UBERON_> ;
-            sh:prefix "UBERON" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/DOID_> ;
-            sh:prefix "DOID" ],
-        [ sh:namespace <http://dicom.nema.org/resources/ontology/DCM/> ;
-            sh:prefix "DCM" ],
-        [ sh:namespace skos: ;
-            sh:prefix "skos" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/VT_> ;
-            sh:prefix "VT" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MONDO_> ;
-            sh:prefix "MONDO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/FBbi_> ;
-            sh:prefix "FBbi" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/UO_> ;
-            sh:prefix "UO" ],
+    sh:declare [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
+            sh:prefix "nf" ],
         [ sh:namespace <http://purl.obolibrary.org/obo/BTO_> ;
             sh:prefix "BTO" ],
-        [ sh:namespace <http://purl.enanomapper.org/onto/ENM_> ;
-            sh:prefix "ENM" ],
-        [ sh:namespace rdfs: ;
-            sh:prefix "rdfs" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/CL_> ;
+            sh:prefix "CL" ],
         [ sh:namespace <http://purl.obolibrary.org/obo/FMA_> ;
             sh:prefix "FMA" ],
-        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
-            sh:prefix "htan" ],
-        [ sh:namespace schema1: ;
-            sh:prefix "schema" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MS_> ;
-            sh:prefix "MS" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/NCIT_> ;
-            sh:prefix "NCIT" ],
-        [ sh:namespace <http://www.ebi.ac.uk/cmpo/CMPO_> ;
-            sh:prefix "CMPO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MI_> ;
-            sh:prefix "MI" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/GENO_> ;
-            sh:prefix "GENO" ],
-        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
-            sh:prefix "nf" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/GO_> ;
-            sh:prefix "GO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/UO_> ;
+            sh:prefix "UO" ],
+        [ sh:namespace <http://dicom.nema.org/resources/ontology/DCM/> ;
+            sh:prefix "DCM" ],
         [ sh:namespace <http://purl.obolibrary.org/obo/OBI_> ;
             sh:prefix "OBI" ],
-        [ sh:namespace prov: ;
-            sh:prefix "prov" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/ERO_> ;
-            sh:prefix "ERO" ],
-        [ sh:namespace linkml: ;
-            sh:prefix "linkml" ],
-        [ sh:namespace <http://semanticscience.org/resource/CHEMINF_> ;
-            sh:prefix "CHEMINF" ],
+        [ sh:namespace <http://snomed.info/id/> ;
+            sh:prefix "SNOMED" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MMO_> ;
+            sh:prefix "MMO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MI_> ;
+            sh:prefix "MI" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/FBcv_> ;
+            sh:prefix "FBcv" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/GO_> ;
+            sh:prefix "GO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/GENO_> ;
+            sh:prefix "GENO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/NCIT_> ;
+            sh:prefix "NCIT" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/CLO_> ;
+            sh:prefix "CLO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/DOID_> ;
+            sh:prefix "DOID" ],
+        [ sh:namespace schema1: ;
+            sh:prefix "schema" ],
+        [ sh:namespace <http://www.ebi.ac.uk/efo/EFO_> ;
+            sh:prefix "EFO" ],
         [ sh:namespace <http://purl.obolibrary.org/obo/CHMO_> ;
             sh:prefix "CHMO" ],
         [ sh:namespace <http://www.bioassayontology.org/bao#BAO_> ;
             sh:prefix "BAO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/CLO_> ;
-            sh:prefix "CLO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/IAO_> ;
-            sh:prefix "IAO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/VT_> ;
+            sh:prefix "VT" ],
         [ sh:namespace <http://edamontology.org/> ;
             sh:prefix "EDAM" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/ZFA_> ;
+            sh:prefix "ZFA" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MS_> ;
+            sh:prefix "MS" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/FBbi_> ;
+            sh:prefix "FBbi" ],
+        [ sh:namespace <http://semanticscience.org/resource/CHEMINF_> ;
+            sh:prefix "CHEMINF" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MONDO_> ;
+            sh:prefix "MONDO" ],
+        [ sh:namespace skos: ;
+            sh:prefix "skos" ],
+        [ sh:namespace <http://www.ebi.ac.uk/swo/data/SWO_> ;
+            sh:prefix "SWO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/OMIABIS_> ;
+            sh:prefix "OMIABIS" ],
         [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
             sh:prefix "personinfo" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MMO_> ;
-            sh:prefix "MMO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/FBcv_> ;
-            sh:prefix "FBcv" ] ;
+        [ sh:namespace prov: ;
+            sh:prefix "prov" ],
+        [ sh:namespace linkml: ;
+            sh:prefix "linkml" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MAXO_> ;
+            sh:prefix "MAXO" ],
+        [ sh:namespace rdfs: ;
+            sh:prefix "rdfs" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/IAO_> ;
+            sh:prefix "IAO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/UBERON_> ;
+            sh:prefix "UBERON" ],
+        [ sh:namespace <http://purl.enanomapper.org/onto/ENM_> ;
+            sh:prefix "ENM" ],
+        [ sh:namespace <http://www.ebi.ac.uk/cmpo/CMPO_> ;
+            sh:prefix "CMPO" ],
+        [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
+            sh:prefix "htan" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/PATO_> ;
+            sh:prefix "PATO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/ERO_> ;
+            sh:prefix "ERO" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
@@ -12707,7 +12707,7 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-08-01T18:40:17"^^xsd:dateTime ;
+    linkml:generation_date "2025-08-01T22:13:49"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -13008,7 +13008,7 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-08-01T18:40:15"^^xsd:dateTime ;
+    linkml:source_file_date "2025-08-01T22:13:47"^^xsd:dateTime ;
     linkml:source_file_size 375168 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
