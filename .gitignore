@@ -1,6 +1,7 @@
 # Secrets
 .synapseConfig
 creds.json
+.coreModelsConfig
 
 # Dist and test artifacts 
 tests/schematic/generate/creds.json
@@ -19,6 +20,7 @@ nfosi.xlsx
 *.test.xlsx
 
 # IDE and code tools
+.venv
 venv
 retold
 .idea
@@ -27,6 +29,24 @@ retold
 .Rhistory
 */__pycache__/
 __pycache__/
+
+# Python cache and artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# R / R Studio stuff
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# Generated LinkML artifacts
+merged.yaml
+merged_no_extra_meta.yaml
+merged_no_inlined_range.yaml
+retold_NF.jsonld
 
 # Misc
 .Rhistory

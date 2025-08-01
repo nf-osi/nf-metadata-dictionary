@@ -1,39 +1,36 @@
 {
-  "additionalProperties": false,
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portaldataset",
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
   "description": "A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets.",
   "properties": {
     "accessType": {
-      "description": "Access type for the dataset.",
-      "title": "Access Type",
+      "description": "",
       "enum": [
         "Public Access",
         "Open Access",
         "Controlled Access",
         "Private Access"
       ],
+      "title": "AccessTypeEnum",
       "type": "string"
     },
     "alternateName": {
       "description": "An altername name that can be used for search and discovery improvement.",
-      "title": "Alternate Name",
       "type": "string"
     },
     "citation": {
-      "description": "identifies academic articles that are recommended by the data provider be cited in addition to the dataset itself.",
-      "title": "Citation",
+      "description": "Academic articles that are recommended by the data provider to be cited in addition to the dataset doi itself.",
       "type": "string"
     },
     "conditionsOfAccess": {
       "description": "Additional requirements a user may need outside of Data Use Modifiers. This could include additional registration, updating profile information, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown.",
-      "title": "User Specific Restriction",
       "type": "string"
     },
     "contributor": {
-      "description": "Institution or person responsible for collecting and managing the files and records in the dataset.",
+      "description": "Institution or person responsible for collecting, managing, distributing, or otherwise contributing to the development of the resource. Expects properly formatted name of the organization or person (e.g. \"NF-OSI\" or \"Robert Allaway\"), not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/contributor/.",
       "items": {
         "type": "string"
       },
-      "title": "Contributor(s)",
       "type": "array"
     },
     "countryOfOrigin": {
@@ -41,20 +38,17 @@
       "items": {
         "type": "string"
       },
-      "title": "Country of Origin",
       "type": "array"
     },
     "creator": {
-      "description": "Properly formatted name of the organization or person that is creator of the dataset (e.g. \"NF-OSI\" or \"Robert Allaway\"), not an id. Most preferred is the project PI or data lead who's responsible for its conception and initial content creation.",
+      "description": "Main researchers involved in producing the data, in priority order. Usually matches the project PI(s) and data lead(s) responsible for conception and initial content creation. For tools this is the manufacturer or developer of the instrument. Expects properly formatted name of the organization or person (e.g. \"NF-OSI\" or \"Robert Allaway\"), not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/creator/.",
       "items": {
         "type": "string"
       },
-      "title": "Creator",
       "type": "array"
     },
     "croissant_file_s3_object": {
       "description": "Link to croissant file for dataset.",
-      "title": "Croissant File",
       "type": "string"
     },
     "dataType": {
@@ -64,8 +58,10 @@
         "enum": [
           "immunoassay",
           "behavioral data",
+          "capsid sequence",
           "clinical",
           "demographics",
+          "epidemiological data",
           "particle characterization",
           "drug combination screen",
           "isoform expression",
@@ -108,6 +104,7 @@
           "over-representation data",
           "plot",
           "nucleic acid sequence record",
+          "promoter sequence",
           "protein interaction data",
           "protein interaction raw data",
           "molecular property",
@@ -117,7 +114,6 @@
         "title": "Data",
         "type": "string"
       },
-      "title": "Data Type",
       "type": "array"
     },
     "dataUseModifiers": {
@@ -149,20 +145,17 @@
           "Time Limit on Use",
           "User Specific Restriction"
         ],
-        "title": "Data Use Modifiers",
+        "title": "DuoEnum",
         "type": "string"
       },
-      "title": "Data Use Modifiers",
       "type": "array"
     },
     "datePublished": {
-      "description": "Date data were published/available on Synapse.",
-      "title": "Date Published",
+      "description": "Date data were published/available on Synapse. This can be set automatically from other dates tracked in Synapse system so does not need to be manually added.",
       "type": "integer"
     },
     "description": {
       "description": "Blurb for the dataset; should be no more than 500 characters.",
-      "title": "Description",
       "type": "string"
     },
     "diseaseFocus": {
@@ -178,16 +171,14 @@
           "Schwannomatosis-NEC",
           "Multiple"
         ],
-        "title": "Disease Focus",
+        "title": "DiseaseFocusEnum",
         "type": "string"
       },
-      "title": "Disease Focus",
       "type": "array"
     },
     "doi": {
-      "description": "The Digital Object Identifier (DOI) associated with the dataset, used for citation and persistent identification.",
+      "description": "The Digital Object Identifier (DOI) of the dataset (if one has been created), used for citation and persistent identification.",
       "pattern": "^10\\\\.\\\\d{4,9}/[-._;()/:A-Z0-9]+$",
-      "title": "doi",
       "type": "string"
     },
     "funder": {
@@ -204,32 +195,29 @@
         "title": "FundingAgencyEnum",
         "type": "string"
       },
-      "title": "Funder",
       "type": "array"
     },
     "includedInDataCatalog": {
-      "description": "Link(s) to known data catalog(s) the dataset is included in.",
-      "title": "Included In Data Catalog",
+      "description": "",
       "enum": [
         "https://www.synapse.org/DataCatalog:0"
       ],
+      "title": "DataCatalogEnum",
       "type": "string"
     },
     "individualCount": {
       "description": "Number of unique individuals included in the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown.",
-      "title": "Individual Count",
       "type": "integer"
     },
     "keywords": {
+      "description": "Typically between 1 to 5 informative terms or phrases that help users find the dataset.",
       "items": {
         "type": "string"
       },
-      "title": "Keywords",
       "type": "array"
     },
     "license": {
-      "description": "Unless information for license is clear, this should default to UNKNOWN.",
-      "title": "License",
+      "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
       "enum": [
         "UNKNOWN",
         "Public Domain",
@@ -244,6 +232,7 @@
         "CC BY-NC-SA",
         "CC BY-NC-ND"
       ],
+      "title": "License",
       "type": "string"
     },
     "manifestation": {
@@ -251,7 +240,7 @@
       "items": {
         "description": "",
         "enum": [
-          "Aneurysmal Bone Cyst (ANNUBP)",
+          "Atypical Neurofibromatous Neoplasm with Uncertain Biologic Potential (ANNUBP)",
           "Atypical Neurofibroma",
           "Behavioral",
           "Breast Cancer",
@@ -274,11 +263,10 @@
         "title": "ManifestationEnum",
         "type": "string"
       },
-      "title": "Manifestation(s)",
       "type": "array"
     },
     "measurementTechnique": {
-      "description": "What's used to generate data in dataset, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).",
+      "description": "Method used to generate data in dataset, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).",
       "items": {
         "description": "",
         "enum": [
@@ -299,6 +287,7 @@
           "ChIP-seq",
           "Child Behavior Checklist for Ages 1.5-5",
           "Child Behavior Checklist for Ages 6-18",
+          "cell permeability assay",
           "CODEX",
           "confocal microscopy",
           "Corsi blocks",
@@ -311,6 +300,7 @@
           "EdU proliferation assay",
           "FIA-MSMS",
           "FLIPR high-throughput cellular screening",
+          "fluorescence microscopy assay",
           "Fluorescence In Situ Hybridization",
           "Focus group",
           "FTIR spectroscopy",
@@ -378,6 +368,8 @@
           "gel filtration chromatography",
           "gel permeation chromatography",
           "genotyping",
+          "grip strength",
+          "hand-held dynamometry",
           "high content screen",
           "high frequency ultrasound",
           "high-performance liquid chromatography/tandem mass spectrometry",
@@ -452,6 +444,7 @@
           "single-cell RNA-seq",
           "single cell ATAC-seq",
           "single-nucleus RNA-seq",
+          "six-minute walk test",
           "small molecule library screen",
           "sorbitol dehydrogenase activity level assay",
           "spatial frequency domain imaging",
@@ -461,6 +454,7 @@
           "survival",
           "targeted exome sequencing",
           "traction force microscopy",
+          "trans-endothelial electrical resistance",
           "transcranial doppler ultrasonography",
           "twin spot assay",
           "ultra high-performance liquid chromatography/tandem mass spectrometry",
@@ -471,18 +465,17 @@
           "word recognition score",
           "STR profile"
         ],
-        "title": "Assay",
+        "title": "AssayEnum",
         "type": "string"
       },
-      "title": "Measurement Technique",
       "type": "array"
     },
     "series": {
-      "description": "Datasets may belong to a curated series. Should be assigned by staff only; omit property if not applicable/unknown.",
-      "title": "Data Series",
+      "description": "",
       "enum": [
         "NF-OSI Processed Data"
       ],
+      "title": "DataSeriesEnum",
       "type": "string"
     },
     "species": {
@@ -505,17 +498,14 @@
         "title": "SpeciesEnum",
         "type": "string"
       },
-      "title": "Species",
       "type": "array"
     },
     "specimenCount": {
       "description": "Number of unique specimens included in the dataset. Omit if not applicable/unknown.",
-      "title": "Specimen Count",
       "type": "integer"
     },
     "studyId": {
       "description": "Identifier for the study (project) from which the dataset was derived.",
-      "title": "Study ID",
       "type": "string"
     },
     "subject": {
@@ -523,11 +513,9 @@
       "items": {
         "type": "string"
       },
-      "title": "Subject",
       "type": "array"
     },
     "title": {
-      "title": "Title",
       "type": "string"
     },
     "visualizeDataOn": {
@@ -535,12 +523,10 @@
       "items": {
         "type": "string"
       },
-      "title": "Visualize Data On",
       "type": "array"
     },
     "yearProcessed": {
-      "description": "Year data were processed. Only for processed dataset type and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
-      "title": "Year Processed",
+      "description": "Year data were processed. Only for processed data types and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
       "type": "integer"
     }
   },
@@ -548,7 +534,6 @@
     "title",
     "creator",
     "studyId",
-    "keywords",
     "dataType",
     "diseaseFocus",
     "funder",
@@ -556,6 +541,5 @@
     "license"
   ],
   "title": "PortalDataset",
-  "type": "object",
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portaldataset"
+  "type": "object"
 }

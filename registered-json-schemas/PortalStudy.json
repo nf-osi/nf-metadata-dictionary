@@ -1,11 +1,18 @@
 {
-  "additionalProperties": false,
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalstudy",
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
   "description": "A scientific project of some planned duration with PIs and key contributors, specific research topics, and potential publication/data/other outputs.  A study is often represented as a Synapse project and so is also referred to as \"project\". The study schema here is specifically for studies listed on the NF Portal at https://nf.synapse.org/Explore/Studies.",
   "properties": {
     "accessRequirements": {
       "type": "string"
     },
     "acknowledgementStatements": {
+      "type": "string"
+    },
+    "alternateDataRepository": {
+      "type": "string"
+    },
+    "clinicalTrialID": {
       "type": "string"
     },
     "dataStatus": {
@@ -27,8 +34,10 @@
         "enum": [
           "immunoassay",
           "behavioral data",
+          "capsid sequence",
           "clinical",
           "demographics",
+          "epidemiological data",
           "particle characterization",
           "drug combination screen",
           "isoform expression",
@@ -71,6 +80,7 @@
           "over-representation data",
           "plot",
           "nucleic acid sequence record",
+          "promoter sequence",
           "protein interaction data",
           "protein interaction raw data",
           "molecular property",
@@ -204,8 +214,8 @@
           "Indiana University, Bloomington",
           "Indiana University-Purdue University at Indianapolis",
           "Infixion Bioscience",
-          "Institut d'Investigació Biomédica de Bellvitge",
-          "Institut d'Investigació en Ciències de la Salut Germans Trias i Pujol",
+          "Institut d'Investigaci\u00f3 Biom\u00e9dica de Bellvitge",
+          "Institut d'Investigaci\u00f3 en Ci\u00e8ncies de la Salut Germans Trias i Pujol",
           "Inserm",
           "IMBA - Institute of Molecular Biotechnology",
           "Iowa State University",
@@ -216,7 +226,7 @@
           "Kent State University",
           "Langston University",
           "Lehigh University",
-          "Leibniz Institute on Aging – Fritz Lipmann Institute",
+          "Leibniz Institute on Aging \u2013 Fritz Lipmann Institute",
           "Loma Linda University",
           "Long Island University",
           "Louisiana State University, Baton Rouge",
@@ -224,7 +234,7 @@
           "Louisiana State University, Health Sciences Center, Shreveport",
           "Louisiana Tech University",
           "Loyola University, Chicago",
-          "L’Inserm dans Paris et l’Île-de-France Centre Nord",
+          "L\u2019Inserm dans Paris et l\u2019\u00cele-de-France Centre Nord",
           "Marquette University",
           "Marshall University",
           "Massachusetts General Hospital",
@@ -246,6 +256,7 @@
           "Morgan State University",
           "NCI Center for Cancer Research",
           "National Institutes of Health",
+          "Nemours Children's Clinic",
           "New Jersey Institute of Technology",
           "New Mexico State University",
           "New York Medical College",
@@ -302,6 +313,7 @@
           "Stevens Institute of Technology",
           "Stony Brook University",
           "Syracuse University",
+          "Technische Universit\u00e4t Dresden",
           "Temple University",
           "Tennessee State University",
           "Tennessee Technological University",
@@ -437,7 +449,7 @@
           "University of Wisconsin-Madison",
           "University of Wisconsin-Milwaukee",
           "University of Wyoming",
-          "Université Paris-Est Créteil",
+          "Universit\u00e9 Paris-Est Cr\u00e9teil",
           "Utah State University",
           "Van Andel Research Institute",
           "Vanderbilt University",
@@ -517,6 +529,5 @@
     "studyFileviewId"
   ],
   "title": "PortalStudy",
-  "type": "object",
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalstudy"
+  "type": "object"
 }
