@@ -1,89 +1,81 @@
-#######################################
-# Portal          
-#######################################
-
-# Note: this template definition uses the alternate syntax with 'attribute'
-
 classes:
+  PortalPublication:
+    attributes:
+      dataset:
+        multivalued: true
+        range: string
+        required: false
+        title: Linked Datasets
+      diseaseFocus:
+        multivalued: true
+        range: DiseaseFocusEnum
+        required: false
+        title: Disease Focus
+      fundingAgency:
+        multivalued: true
+        range: string
+        required: true
+        title: Linked Funder(s)
+      manifestation:
+        range: string
+        required: false
+        title: Manifestation
+      publicationType:
+        description: 'Type of publication in relation to the linked study on the NF Portal. A primary publication is the main publication for the study and may describe data or resources generated from the study. A secondary publication references or describes reuse of resources for the linked study.
+
+          '
+        range: PublicationTypeEnum
+        required: true
+        title: Publication Type
+      studyId:
+        range: string
+        required: true
+        title: Linked Study ID
+      studyName:
+        range: string
+        required: true
+        title: Linked Study Name
+    description: A slightly more specialized publication concept intended for the specific scope of the NF Portal.
+    is_a: PublicationTemplate
   PublicationTemplate:
+    attributes:
+      abstract:
+        range: string
+        required: true
+        title: Abstract
+      accessibility:
+        range: PublicationAccessibilityEnum
+        required: false
+        title: Accessibility
+      author:
+        multivalued: true
+        range: string
+        required: true
+        title: Author(s)
+      doi:
+        range: string
+        required: true
+        title: Digital Object Identifier
+      grantNumber:
+        range: string
+        required: false
+        title: Grant Number
+      journal:
+        range: string
+        required: true
+        title: Journal
+      pmid:
+        range: string
+        required: true
+        title: PubMed ID
+      title:
+        range: string
+        required: true
+        title: Title
+      year:
+        range: integer
+        required: true
+        title: Year
     description: A generalized data model template for Publications to be hopefully used across dccs
     notes:
     - This structure is based on a CSV file from MC2 annotations with customized fields as attributes.
-    attributes:
-      grantNumber:
-        title: Grant Number
-        range: string
-        required: false
-      doi:
-        title: Digital Object Identifier
-        range: string
-        required: true
-      journal:
-        title: Journal
-        range: string
-        required: true
-      pmid:
-        title: PubMed ID
-        range: string
-        required: true
-      title:
-        title: Title
-        range: string
-        required: true
-      year:
-        title: Year
-        range: integer
-        required: true
-      author:
-        title: Author(s)
-        range: string
-        multivalued: true
-        required: true
-      abstract:
-        title: Abstract
-        range: string
-        required: true
-      accessibility:
-        title: Accessibility
-        range: PublicationAccessibilityEnum
-        required: false
-
-  PortalPublication:
-    is_a: PublicationTemplate
-    description: A slightly more specialized publication concept intended for the specific scope of the NF Portal.
-    attributes:
-      publicationType:
-        title: Publication Type
-        description: >
-          Type of publication in relation to the linked study on the NF Portal.
-          A primary publication is the main publication for the study and may describe data or resources generated from the study.
-          A secondary publication references or describes reuse of resources for the linked study.
-        range: PublicationTypeEnum
-        required: true
-      diseaseFocus:
-        title: Disease Focus
-        range: DiseaseFocusEnum
-        multivalued: true
-        required: false
-      dataset:
-        title: Linked Datasets
-        range: string
-        multivalued: true
-        required: false
-      manifestation:
-        title: Manifestation
-        range: string
-        required: false
-      fundingAgency:
-        title: Linked Funder(s)
-        range: string
-        multivalued: true
-        required: true
-      studyId:
-        title: Linked Study ID
-        range: string
-        required: true
-      studyName: 
-        title: Linked Study Name
-        range: string
-        required: true

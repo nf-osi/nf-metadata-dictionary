@@ -1,135 +1,112 @@
 enums:
+  AgeGroupEnum:
+    permissible_values:
+      adolescence:
+      adulthood:
+      childhood:
+      infancy:
+      unknown:
+  BinaryImagingDiagnosisEnum:
+    description: Enumerations describing the manifestation of tumors confirmed via imaging with mainly absent or present being the most relevant result.
+    permissible_values:
+      absent by imaging:
+      not imaged:
+      present:
+      unknown:
   DiagnosisEnum:
     permissible_values:
-      Neurofibromatosis type 1:
-        description: >
-          (NF1) - A disease characterized by patches of skin pigmentation (cafe-au-lait spots), Lisch nodules of the iris, tumors in the peripheral nervous system and fibromatous skin tumors. 
-          Individuals with the disorder have increased susceptibility to the development of benign and malignant tumors.
-      #Neurofibromatosis type 2:
-      #  description: > 
-      #    (NF2) - Genetic disorder characterized by bilateral vestibular schwannomas (formerly called acoustic neuromas), schwannomas of other cranial and peripheral nerves, meningiomas, and ependymomas. 
-      #    It is inherited in an autosomal dominant fashion with full penetrance.
-      #  source: https://www.ebi.ac.uk/ols/ontologies/cco/terms?iri=http%3A%2F%2Fidentifiers.org%2Fomim%2F101000
-      Schwannomatosis:
-        description: A rare genetic disorder characterized by the presence of multiple schwannomas.
-        meaning: NCIT:C6557
+      22q-related schwannomatosis:
+        description: 'A schwannomatosis that causes a predisposition to develop multiple schwannoma. It is diagnosed when an individual does not meet criteria for NF2-related schwannomatosis, SMARCB1-related schwannomatosis, or LTZR1-related schwannomatosis and both of the following molecular features exist: a loss of heterozygosity (LOH) of the same chromosome 22q markers in two anatomically distinct tumors or hybrid nerve sheath tumors and a different NF2 pathogenic variant in each tumor which cannot be detected in unaffected tissue.
+
+          '
+        meaning: http://purl.obolibrary.org/obo/MONDO_1030016
+      LZTR1-related schwannomatosis:
+        meaning: http://purl.obolibrary.org/obo/MONDO_0014299
       NF2-related schwannomatosis:
         description: A tumor-prone disorder characterized by the development of multiple schwannomas and meningiomas.
         meaning: http://purl.obolibrary.org/obo/MONDO_0007039
-      SMARCB1-related schwannomatosis:
-        meaning: http://purl.obolibrary.org/obo/MONDO_0024517
-      LZTR1-related schwannomatosis:
-        meaning: http://purl.obolibrary.org/obo/MONDO_0014299
-      22q-related schwannomatosis:
-        description: >
-          A schwannomatosis that causes a predisposition to develop multiple schwannoma. It is diagnosed when an individual does not meet criteria for NF2-related schwannomatosis, SMARCB1-related schwannomatosis, or LTZR1-related schwannomatosis and both of the following molecular features exist: a loss of heterozygosity (LOH) of the same chromosome 22q markers in two anatomically distinct tumors or hybrid nerve sheath tumors and a different NF2 pathogenic variant in each tumor which cannot be detected in unaffected tissue.
-        meaning: http://purl.obolibrary.org/obo/MONDO_1030016
-      Schwannomatosis-NOS:
-        description: Schwannomatosis, not otherwise specified. Used when the specific genetic cause or subtype cannot be determined or is not available.
-      Schwannomatosis-NEC:
-        description: Schwannomatosis, not elsewhere classified. Used for cases that do not fit into other established diagnostic categories.
-      Sporadic Schwannoma:
-        description: >
-          Sporadic schwannomas and neurofibromas are tumors that arise from the nerve sheaths of cranial nerves, nerve roots, spinal nerves, and peripheral nerves. 
-          Most schwannomas originate from the eighth cranial nerve, whereas neurofibromas more commonly arise along the spinal nerve roots.
-        notes:
-        - Not in NCIT as of 2023-06-07
-      Vestibular Schwannoma:
-        meaning: NCIT:C3276
-      atypical neurofibroma:
-        meaning: MONDO:0003306
-      Noonan Syndrome: 
+      Neurofibromatosis type 1:
+        description: '(NF1) - A disease characterized by patches of skin pigmentation (cafe-au-lait spots), Lisch nodules of the iris, tumors in the peripheral nervous system and fibromatous skin tumors.  Individuals with the disorder have increased susceptibility to the development of benign and malignant tumors.
+
+          '
+      Noonan Syndrome:
         description: A rare, highly variable, multisystemic disorder mainly characterized by short stature, distinctive facial features, congenital heart defects, cardiomyopathy and an increased risk to develop tumors in childhood.
         source: http://www.orpha.net/ORDO/Orphanet_648
       Not Applicable:
+      SMARCB1-related schwannomatosis:
+        meaning: http://purl.obolibrary.org/obo/MONDO_0024517
+      Schwannomatosis:
+        aliases:
+        - Neurilemmomatosis
+        - Neurinomatosis
+        description: A rare genetic disorder characterized by the presence of multiple schwannomas.
+        meaning: NCIT:C6557
+      Schwannomatosis-NEC:
+        description: Schwannomatosis, not elsewhere classified. Used for cases that do not fit into other established diagnostic categories.
+      Schwannomatosis-NOS:
+        description: Schwannomatosis, not otherwise specified. Used when the specific genetic cause or subtype cannot be determined or is not available.
+      Sporadic Schwannoma:
+        description: 'Sporadic schwannomas and neurofibromas are tumors that arise from the nerve sheaths of cranial nerves, nerve roots, spinal nerves, and peripheral nerves.  Most schwannomas originate from the eighth cranial nerve, whereas neurofibromas more commonly arise along the spinal nerve roots.
+
+          '
+        notes:
+        - Not in NCIT as of 2023-06-07
       Unknown:
-  
-  AgeGroupEnum:
-    permissible_values:
-      infancy:
-      childhood:
-      adolescence:
-      adulthood:
-      unknown:
-  
+        aliases:
+        - Not Known
+        - U
+        - UNK
+        - Unknown/Not Stated
+      Vestibular Schwannoma:
+        aliases:
+        - Acoustic Neurilemmoma
+        - Acoustic Neuroma
+        - Acoustic Schwannoma
+        - Neurilemoma, Acoustic
+        - Neuroma, Acoustic
+        - Vestibular Neurilemmoma
+        meaning: NCIT:C3276
+      atypical neurofibroma:
+        meaning: MONDO:0003306
   InheritanceEnum:
     permissible_values:
       parent affected:
       parent not affected:
       unknown:
-  
+  LateralManifestationEnum:
+    description: Enumerations describing the manifestation of tumors confirmed via imaging (MRI or other), where lateral information is most relevant.
+    permissible_values:
+      absent by imaging:
+      bilateral:
+      not imaged:
+      unilateral:
+      unknown:
   MosaicismEnum:
     permissible_values:
       mosaic:
       not mosaic:
       unknown:
-  
-  TestSummaryEnum:
+  MultipleImagingDiagnosisEnum:
+    description: Enumerations describing the manifestation of tumors confirmed via imaging with one or multiple sites being the most relevant result.
     permissible_values:
-      not tested:
-      tested but unknown:
-      
-  VitalStatusEnum:
-    permissible_values:
-      alive:
-      deceased:
+      absent by imaging:
+      multiple:
+      not imaged:
+      single:
       unknown:
-  
-  WHOPerformanceStatusScores:
-    description: https://www.ncbi.nlm.nih.gov/books/NBK97482/
-    permissible_values:
-      '0':
-      '1':
-      '2':
-      '3':
-      '4':
-
-  PainEnum:
-    permissible_values:
-      not a problem:
-      occasional:
-      disabling:
-  
-  TumorTreatmentEnum:
-    permissible_values:
-      no specific therapy:
-      chemotherapy:
-      surgery:
-      radiation:
-      targeted therapy:
-      clinical trial:
-  
-  PresenceEnum:
-    description: Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.
-    permissible_values:
-      absent:
-      present:
-      unknown:
-
   NeurofibromaManifestationEnum:
     description: Enumerations describing how neurofibromas can manifest more generally.
     permissible_values:
       absent:
-      scattered:
       dense:
+      scattered:
       unknown:
-
-  SpinalNeuromaManifestationEnum:
-    description: Enumerations describing the manifestation of spinal neurofibromas, combining information on presence and the cervical locations.
+  NonvestibularSchwannomaManifestationEnum:
     permissible_values:
-      not imaged:
-      absent:
-      levels 1-3:
-      all levels:
-  
-  PlexiformNeurofibromaManifestationEnum:
-    description: Enumerations describing the manifestation of plexiform neurofibromas, combining information on presence and the certainty via MRI imaging technique.
-    permissible_values:
-      present:
-      absent by MRI:
-      absent clinically - no MRI:
+      1 pathogically confirmed:
+      2 or more, at least 1 pathogically confirmed:
+      only by imaging evidence:
       unknown:
-
   OpticGliomaManifestationEnum:
     description: Enumerations describing the manifestation of optic gliomas, combining information on presence, symptoms, and treatment.
     permissible_values:
@@ -138,68 +115,72 @@ enums:
       present - symptomatic - not treated:
       present - symptomatic - treated:
       unknown:
-  
-  PubertyOnsetEnum:
+  PainEnum:
     permissible_values:
-      prebubertal:
-      precocious:
-      normal:
-      late:
-
+      disabling:
+      not a problem:
+      occasional:
   Percentiles-2SD:
     description: Enumerations corresponding to 3 bins using 2 standard deviations as a cutoff.
     permissible_values:
-      '< 5th centile':
-      '5th-95th centile':
+      5th-95th centile:
+      < 5th centile:
       '> 95th centile':
-
-  BinaryImagingDiagnosisEnum:
-    description: Enumerations describing the manifestation of tumors confirmed via imaging with mainly absent or present being the most relevant result.
+  PlexiformNeurofibromaManifestationEnum:
+    description: Enumerations describing the manifestation of plexiform neurofibromas, combining information on presence and the certainty via MRI imaging technique.
     permissible_values:
-      not imaged:
-      absent by imaging:
+      absent by MRI:
+      absent clinically - no MRI:
       present:
       unknown:
-  
-  MultipleImagingDiagnosisEnum:
-    description: Enumerations describing the manifestation of tumors confirmed via imaging with one or multiple sites being the most relevant result.
+  PresenceEnum:
+    description: Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.
     permissible_values:
-      not imaged:
-      absent by imaging:
-      single:
-      multiple:
+      absent:
+      present:
       unknown:
-
-  LateralManifestationEnum:
-    description: Enumerations describing the manifestation of tumors confirmed via imaging (MRI or other), where lateral information is most relevant.
+  PubertyOnsetEnum:
     permissible_values:
-      not imaged:
-      absent by imaging:
-      unilateral:
-      bilateral:
-      unknown:
-
-
+      late:
+      normal:
+      prebubertal:
+      precocious:
   SchwannomaManifestationEnum:
     description: Enumerations describing the manifestation of schwannomas.
     permissible_values:
-      single:
-      scattered:
       dense:
+      scattered:
+      single:
       unknown:
-  
-  NonvestibularSchwannomaManifestationEnum:
+  SpinalNeuromaManifestationEnum:
+    description: Enumerations describing the manifestation of spinal neurofibromas, combining information on presence and the cervical locations.
     permissible_values:
-      only by imaging evidence:
-      '1 pathogically confirmed':
-      '2 or more, at least 1 pathogically confirmed':
+      absent:
+      all levels:
+      levels 1-3:
+      not imaged:
+  TestSummaryEnum:
+    permissible_values:
+      not tested:
+      tested but unknown:
+  TumorTreatmentEnum:
+    permissible_values:
+      chemotherapy:
+      clinical trial:
+      no specific therapy:
+      radiation:
+      surgery:
+      targeted therapy:
+  VitalStatusEnum:
+    permissible_values:
+      alive:
+      deceased:
       unknown:
-
-
-
-
-    
-
-
-
-
+  WHOPerformanceStatusScores:
+    description: https://www.ncbi.nlm.nih.gov/books/NBK97482/
+    permissible_values:
+      '0':
+      '1':
+      '2':
+      '3':
+      '4':

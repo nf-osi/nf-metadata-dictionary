@@ -1,151 +1,184 @@
 enums:
   Tumor:
     permissible_values:
-      Diffuse Astrocytoma:
-        description: DA
-        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=DA
-      Subcutaneous Neurofibroma:
-        description: A neurofibroma that occurs along the peripheral nerves beneath the skin.
-        notes: Not in NCIT, but see https://nyulangone.org/conditions/neurofibromatosis/types
-      Pilomyxoid Astrocytoma:
-        description: PMA
-        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PMA
-      Juvenile Myelomonocytic Leukemia:
-        description: (JMML) A myelodysplastic/myeloproliferative neoplasm of childhood that is characterized by proliferation principally of the granulocytic and monocytic lineages
-        meaning: obo:NCIT_C9233
+      ANNUBP:
+        description: 'Atypical neurofibromatous neoplasms of uncertain biologic potential is a provisional classification for lesions displaying at least two features: atypia, loss of neurofibroma architecture, high cellularity, and/or mitotic activity >1/50 but <3/10 high power fields. They can be inconsistently diagnosed as atypical neurofibroma or low-grade MPNST. See https://pubmed.ncbi.nlm.nih.gov/28551330/.'
       Anaplastic Astrocytoma:
         description: AASTR
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=AASTR
-      Malignant Peripheral Nerve Sheath Tumor:
-        description: MPNST
-        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=MPNST
-      Localized Neurofibroma:
-        description: Refers to Cutaneous Neurofibroma; this is a synonym used mainly for compatibility with JHU Biobank.
-        notes: 
-        - JHU Biobank
-      Cutaneous Neurofibroma:
-        description: A neurofibroma that grows along small branches of nerves in the dermis in patients with neurofibromatosis. It presents as a solid cutaneous tumor.
-        meaning: NCIT:C128451
-      Colorectal Adenocarcinoma:
-        description: (COADREAD) The most common type of colorectal carcinoma. It is chararactized by the presence of malignant glandular epithelial cells invading through the muscularis mucosa into the submucosa.
-        meaning: obo:NCIT_C5105
+      Anaplastic Ganglioglioma:
+        description: AGNG
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=AGNG
       Anaplastic Pilocytic Astrocytoma:
         description: Pilocytic astrocytoma with anaplastic features exhibits a spectrum of morphologies and is associated with decreased survival when compared with typical PA.
         source: https://doi.org/10.1097/pas.0b013e3181c75238
-      Schwannoma:
-        description: SCHW
-        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=SCHW
-      Hemorrhagic Neoplasm:
-        description: A neoplasm with hemorrhagic findings.
-        notes: This is based after the NCIT term 'Necrotic Neoplasm' to accomodate records using only 'hemorrhage' for tumor description -- it may be of limited usefulness long-term.
-      Not Applicable:
-        description: ''
-      Pilocytic Astrocytoma:
-        description: PAST
-        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PAST
-      Ganglioglioma:
-        description: GNG
-        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GNG
-      Plexiform Neurofibroma:
-        description: An elongated and multinodular neurofibroma, formed when the tumor involves either multiple trunks of a plexus or multiple fascicles of a large nerve, such as the sciatic. Some plexiform neurofibromas resemble a bag of worms, others produce a massive ropy enlargement of the nerve.
-        meaning: NCIT:C3797
-      NF2-Associated Tumor:
-        description: Unspecified NF2-associated tumor; use a more specific tumor classification if available.
-        notes: This was added to accomodate records that only specified 'NF2' and is patterned after the existence of the NCIT term 'NF1-Associated Malignant Peripheral Nerve Sheath Tumor'
-      Fibrosarcoma:
-        description: (FIBS) A malignant mesenchymal fibroblastic neoplasm affecting the soft tissue and bone.
-        meaning: obo:NCIT_C3043
-      Low-Grade Glioma NOS:
-        description: LGGNOS
-        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=LGGNOS
-      Glioblastoma:
-        description: GB
-        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GB
       Anaplastic Pleomorphic Xanthoastrocytoma:
         description: APXA
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=APXA
-      Glioblastoma Multiforme:
-        description: GBM
-        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GBM
-      Unknown:
-        description: 'A tumor of unknown origin, or tumor type missing. '
+      Atypical Neurofibroma:
+        aliases:
+        - Ancient Neurofibroma
+        - Neurofibroma with Atypia
+        description: A neurofibroma characterized by the presence of cellular pleomorphism.
+        meaning: NCIT:C41426
       Atypical Pilocytic Astrocytoma:
         description: Pilocytic astrocytoma with atypical features.
-      Optic Pathway Glioma:
-        description: A glioma that affects the optic nerve. This condition can be seen in association with neurofibromatosis 1. It is most commonly seen in the pediatric age group.
-        source: https://ncit.nci.nih.gov/ncitbrowser/ConceptReport.jsp?dictionary=NCI_Thesaurus&ns=ncit&code=C4537
+      Cellular Neurofibroma:
+        description: A neurofibroma characterized by the presence of areas with increased cellularity.
+        meaning: NCIT:C41427
+      Colorectal Adenocarcinoma:
+        description: (COADREAD) The most common type of colorectal carcinoma. It is chararactized by the presence of malignant glandular epithelial cells invading through the muscularis mucosa into the submucosa.
+        meaning: obo:NCIT_C5105
+      Colorectal Carcinoma:
+        description: A malignant epithelial neoplasm that arrises from the colon or rectum and invates through the muscularis mucosa into the submucosa. 95 percent of colorectal carcinoma are colorectal adenocarcinoma -- use this more specific term if it applies.
+        meaning: obo:NCIT_C2955
+      Cutaneous Neurofibroma:
+        aliases:
+        - Dermal Neurofibroma
+        description: A neurofibroma that grows along small branches of nerves in the dermis in patients with neurofibromatosis. It presents as a solid cutaneous tumor.
+        meaning: NCIT:C128451
+      Diffuse Astrocytoma:
+        description: DA
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=DA
       Diffuse Infiltrating Neurofibroma:
         description: 'Diffuse infiltrating neurofibroma can present as slow-growing, soft tissue masses with overlying skin thickening. These le-sions infiltrate the dermis and the subcutaneous tissue and  characteristically spread along the connective tissues enveloping islands of normal fat. Some of these lesions develop fatty proliferation and can mimic lipomas,  angiolipomas, or angiomyolipomas on imaging and histological evaluation '
         source: https://doi.org/10.1007/s00256-014-1965-8
       Fibromatosis:
         description: A poorly circumscribed neoplasm arising from the soft tissues. It is characterized by the presence of spindle-shaped fibroblasts and an infiltrative growth pattern.
         meaning: obo:NCIT_C3042
-      Neurofibroma with Degenerative Atypia:
-        description: ''
-        notes: 
-        - JHU Biobank
-      Necrotic Neoplasm:
-        description: A neoplasm characterized by focal or diffuse tumor cell necrosis.
-        meaning: obo:NCIT_C36029
-      Pleomorphic Xanthoastrocytoma:
-        description: PXA
-        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PXA
-      Teratoma:
-        description: TT
-        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=TT
-      Sarcoma:
-        description: (SARCNOS) An usually aggressive malignant neoplasm of the soft tissue or bone...Representative subtypes are liposarcoma, leiomyosarcoma, osteosarcoma, and chondrosarcoma.
-        meaning: obo:NCIT_C9118
-      Massive Soft Tissue Neurofibroma:
-        description: Massive soft tissue neurofibroma is characterized  by local infiltration and extension to multiple nerve branches,  as well as substantial overgrowth of adjacent soft tissue and  skin, which distinguishes it from its more benign variant, plexiform neurofibroma. With striking presentation and  severe dysmorphism, massive soft tissue neurofibroma is also labeled elephantiasis neuromatosa. Although considered benign it  shares similarities with malignant peripheral nerve sheath  tumors such as local infiltration and cell mitogenesis. Massive soft tissue neurofibroma is associated with significant morbidity and mortality and almost no response to  conventional chemotherapy and radiotherapy. Surgery is eventually pursued, although bleeding may be a life-threatening  complication as massive soft tissue neurofibromas are highly  vascularized.
-        source: https://doi.org/10.1177%2F0883073815571635
+      Fibrosarcoma:
+        description: (FIBS) A malignant mesenchymal fibroblastic neoplasm affecting the soft tissue and bone.
+        meaning: obo:NCIT_C3043
+      Ganglioglioma:
+        description: GNG
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GNG
+      Glioblastoma:
+        description: GB
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GB
+      Glioblastoma Multiforme:
+        description: GBM
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GBM
       Glioma:
+        aliases:
+        - glial neoplasm
+        - glial tumor
+        - neoplasm of neuroglia
+        - neuroglial neoplasm
+        - neuroglial tumor
+        - tumor of neuroglia
+        - tumour of the neuroglia
         description: A benign or malignant brain and spinal cord tumor that arises from glial cells (astrocytes, oligodendrocytes, ependymal cells). Tumors that arise from astrocytes are called astrocytic tumors or astrocytomas. Tumors that arise from oligodendrocytes are called oligodendroglial tumors. Tumors that arise from ependymal cells are called ependymomas.
         meaning: MONDO:0021042
-      Oligoastrocytoma:
-        description: OAST
-        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=OAST
-      Colorectal Carcinoma:
-        description: A malignant epithelial neoplasm that arrises from the colon or rectum and invates through the muscularis mucosa into the submucosa. 95 percent of colorectal carcinoma are colorectal adenocarcinoma -- use this more specific term if it applies.
-        meaning: obo:NCIT_C2955
-      Meningioma:
-        description: MNG
-        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=MNG
-      ANNUBP:
-        description: 'Atypical neurofibromatous neoplasms of uncertain biologic potential is a provisional classification for lesions displaying at least two features: atypia, loss of neurofibroma architecture, high cellularity, and/or mitotic activity >1/50 but <3/10 high power fields. They can be inconsistently diagnosed as atypical neurofibroma or low-grade MPNST. See https://pubmed.ncbi.nlm.nih.gov/28551330/.'
+      Hemorrhagic Neoplasm:
+        description: A neoplasm with hemorrhagic findings.
+        notes: This is based after the NCIT term 'Necrotic Neoplasm' to accomodate records using only 'hemorrhage' for tumor description -- it may be of limited usefulness long-term.
       High-Grade Glioma NOS:
         description: HGGNOS
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=HGGNOS
+      Juvenile Myelomonocytic Leukemia:
+        description: (JMML) A myelodysplastic/myeloproliferative neoplasm of childhood that is characterized by proliferation principally of the granulocytic and monocytic lineages
+        meaning: obo:NCIT_C9233
+      Localized Neurofibroma:
+        description: Refers to Cutaneous Neurofibroma; this is a synonym used mainly for compatibility with JHU Biobank.
+        notes:
+        - JHU Biobank
+      Low-Grade Glioma NOS:
+        description: LGGNOS
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=LGGNOS
+      Malignant Peripheral Nerve Sheath Tumor:
+        description: MPNST
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=MPNST
+      Massive Soft Tissue Neurofibroma:
+        description: Massive soft tissue neurofibroma is characterized  by local infiltration and extension to multiple nerve branches,  as well as substantial overgrowth of adjacent soft tissue and  skin, which distinguishes it from its more benign variant, plexiform neurofibroma. With striking presentation and  severe dysmorphism, massive soft tissue neurofibroma is also labeled elephantiasis neuromatosa. Although considered benign it  shares similarities with malignant peripheral nerve sheath  tumors such as local infiltration and cell mitogenesis. Massive soft tissue neurofibroma is associated with significant morbidity and mortality and almost no response to  conventional chemotherapy and radiotherapy. Surgery is eventually pursued, although bleeding may be a life-threatening  complication as massive soft tissue neurofibromas are highly  vascularized.
+        source: https://doi.org/10.1177%2F0883073815571635
+      Melanoma:
+        aliases:
+        - MELANOMA, MALIGNANT
+        - Malignant Melanoma
+        - Melanoma, NOS
+        description: 'A malignant, usually aggressive tumor composed of atypical, neoplastic melanocytes. Most often, melanomas arise in the skin (cutaneous melanomas) and include the following histologic subtypes: superficial spreading melanoma, nodular melanoma, acral lentiginous melanoma, and lentigo maligna melanoma. Cutaneous melanomas may arise from acquired or congenital melanocytic or dysplastic nevi. Melanomas may also arise in other anatomic sites including the gastrointestinal system, eye, urinary tract, and reproductive system. Melanomas frequently metastasize to lymph nodes, liver, lungs, and brain. [ NCI ]'
+        meaning: NCIT:C3224
+      Meningioma:
+        description: MNG
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=MNG
       NF1-Associated Tumor:
         description: Unspecified NF1-associated tumor; use a more specific tumor classification if available.
         notes: This was added to accomodate records that only specified 'NF1' and is patterned after the existence of the NCIT term 'NF1-Associated Malignant Peripheral Nerve Sheath Tumor'
-      Atypical Neurofibroma:
-        description: A neurofibroma characterized by the presence of cellular pleomorphism.
-        meaning: NCIT:C41426
-      Cellular Neurofibroma:
-        description: A neurofibroma characterized by the presence of areas with increased cellularity.
-        meaning: NCIT:C41427
+      NF2-Associated Tumor:
+        description: Unspecified NF2-associated tumor; use a more specific tumor classification if available.
+        notes: This was added to accomodate records that only specified 'NF2' and is patterned after the existence of the NCIT term 'NF1-Associated Malignant Peripheral Nerve Sheath Tumor'
+      Necrotic Neoplasm:
+        description: A neoplasm characterized by focal or diffuse tumor cell necrosis.
+        meaning: obo:NCIT_C36029
       Neurofibroma:
         description: NFIB
+      Neurofibroma with Degenerative Atypia:
+        description: ''
+        notes:
+        - JHU Biobank
+      Nodular Neurofibroma:
+        description: TBD
+      Not Applicable:
+        description: ''
+      Oligoastrocytoma:
+        description: OAST
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=OAST
+      Optic Pathway Glioma:
+        description: A glioma that affects the optic nerve. This condition can be seen in association with neurofibromatosis 1. It is most commonly seen in the pediatric age group.
+        source: https://ncit.nci.nih.gov/ncitbrowser/ConceptReport.jsp?dictionary=NCI_Thesaurus&ns=ncit&code=C4537
+      Pilocytic Astrocytoma:
+        description: PAST
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PAST
+      Pilomyxoid Astrocytoma:
+        description: PMA
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PMA
+      Pleomorphic Xanthoastrocytoma:
+        description: PXA
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PXA
+      Plexiform Neurofibroma:
+        description: An elongated and multinodular neurofibroma, formed when the tumor involves either multiple trunks of a plexus or multiple fascicles of a large nerve, such as the sciatic. Some plexiform neurofibromas resemble a bag of worms, others produce a massive ropy enlargement of the nerve.
+        meaning: NCIT:C3797
       Recurrent MPNST:
         description: The reemergence of malignant peripheral nerve sheath tumor after a period of remission.
         meaning: obo:NCIT_C8823
-      Anaplastic Ganglioglioma:
-        description: AGNG
-        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=AGNG
-      tumor:
-        description: General term for tumor sample – use when it is unknown when a more specific clinical classification is unknown, e.g. whether it is primary or secondary.
-        meaning: NCIT:C18009
+      Sarcoma:
+        description: (SARCNOS) An usually aggressive malignant neoplasm of the soft tissue or bone...Representative subtypes are liposarcoma, leiomyosarcoma, osteosarcoma, and chondrosarcoma.
+        meaning: obo:NCIT_C9118
+      Schwannoma:
+        description: SCHW
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=SCHW
+      Subcutaneous Neurofibroma:
+        description: A neurofibroma that occurs along the peripheral nerves beneath the skin.
+        notes: Not in NCIT, but see https://nyulangone.org/conditions/neurofibromatosis/types
+      Teratoma:
+        description: TT
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=TT
+      Unknown:
+        aliases:
+        - Not Known
+        - U
+        - UNK
+        - Unknown/Not Stated
+        description: 'A tumor of unknown origin, or tumor type missing. '
       metastatic tumor:
+        aliases:
+        - BENIGN
         description: For neoplasms, a non-infiltrating and non-metastasizing neoplastic process that is characterized by the absence of morphologic features associated with malignancy (e.g., severe atypia, nuclear pleomorphism, tumor cell necrosis, and abnormal mitoses).
         meaning: NCIT:C14172
       metastatic/recurrent tumor:
         description: A tumor with metastatic/recurrent characteristic.
       recurrent tumor:
+        aliases:
+        - Neoplasm Recurrence
+        - Recurrence
+        - Recurrent
+        - Recurrent Neoplasm
         description: A tumor described with recurrent characteristic.
         meaning: NCIT:C4798
-      Melanoma:
-        description: 'A malignant, usually aggressive tumor composed of atypical, neoplastic melanocytes. Most often, melanomas arise in the skin (cutaneous melanomas) and include the following histologic subtypes: superficial spreading melanoma, nodular melanoma, acral lentiginous melanoma, and lentigo maligna melanoma. Cutaneous melanomas may arise from acquired or congenital melanocytic or dysplastic nevi. Melanomas may also arise in other anatomic sites including the gastrointestinal system, eye, urinary tract, and reproductive system. Melanomas frequently metastasize to lymph nodes, liver, lungs, and brain. [ NCI ]'
-        meaning: NCIT:C3224
-      Nodular Neurofibroma:
-        description: TBD
+      tumor:
+        aliases:
+        - TUMOR TISSUE
+        - Tumor Sample
+        - Tumor Tissue Sample
+        description: General term for tumor sample – use when it is unknown when a more specific clinical classification is unknown, e.g. whether it is primary or secondary.
+        meaning: NCIT:C18009

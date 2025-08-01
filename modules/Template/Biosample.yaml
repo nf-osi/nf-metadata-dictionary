@@ -1,17 +1,9 @@
-# Important editor notes
-# - Here [mappings](https://linkml.io/linkml/schemas/uris-and-mappings.html#mappings) indicate closely related templates in other data models
-# - Here `extensions.suggests` are used to track the relationship between templates and their intended application to assay data types
-# - `abstract` means the template is not meant to be used for annotation, it's just there for others to inherit props from
-
 classes:
-
-#######################################
-# Patient Clinical Data         
-#######################################
-  
-
   AnimalIndividualTemplate:
-    description: Template for non-human individual-level data. 
+    annotations:
+      required: false
+      requiresComponent: ''
+    description: Template for non-human individual-level data.
     slots:
     - individualID
     - sex
@@ -26,15 +18,11 @@ classes:
     - germlineMutation
     - species
     - modelSystemName
-    annotations:
-      requiresComponent: ''
-      required: false
-
   BiospecimenTemplate:
-    description: Specimen-level data, whether from human or animal.
     annotations:
-      requiresComponent: ''
       required: false
+      requiresComponent: ''
+    description: Specimen-level data, whether from human or animal.
     slots:
     - individualID
     - parentSpecimenID
@@ -43,81 +31,69 @@ classes:
     - tumorType
     - bodySite
     - experimentalCondition
-
   HumanCohortTemplate:
-    description: >
-      Data of biosamples from human patients. Adapted from Table 2 of http://nrs.harvard.edu/urn-3:HUL.InstRepos:32725809.
-      This template should be used when biosamples are from NF patients to provides a more valuable characterization and make additional gene-phenotype insights possible.
+    annotations:
+      required: false
+      requiresComponent: ''
+    description: 'Data of biosamples from human patients. Adapted from Table 2 of http://nrs.harvard.edu/urn-3:HUL.InstRepos:32725809. This template should be used when biosamples are from NF patients to provides a more valuable characterization and make additional gene-phenotype insights possible.
+
+      '
     notes:
     - Instead of collecting birth month/year, age is collected.
     - What has been required is still required, while all new recommendations are optional.
     - Include attributes used for the portal but not in recommendations (nf1Genotype, nf1Genotype, species).
-    annotations:
-      requiresComponent: ''
-      required: false
     slots:
-      
-      # Base / demographics
-      - individualID
-      # - individualIDSource # do we need this? Id formats are obvious, e.g. JHU-123 vs WU-123, but might be good to know the id authority
-      - sex
-      - age
-      - ageUnit
-      - diagnosis
-      - diagnosisAgeGroup
-      - inheritance
-      - mosaicism
-      - nf1Genotype
-      - nf2Genotype
-      - germlineMutationIndicator
-      - species # this is a little awkward/redundant
-
-      # General clinical statuses
-      - vitalStatus
-      - WHOPerformanceStatus
-      - painStatus
-      - tumorTreatmentStatus
-
-      # NF1-relevant clinical phenotypes
-      - cafeaulaitMacules
-      - skinFoldFreckling
-      - IrisLischNodules
-      - dermalNeurofibromas
-      - subcutaneousNodularNeurofibromas
-      - diffuseDermalNeurofibromas
-      - spinalNeurofibromas
-      - plexiformNeurofibromas
-      - opticGlioma
-      - heartDefect
-      - vascularDisease
-      - pubertyOnset
-      - stature
-      - peripheralNeuropathy
-      - aqueductalStenosis
-      - longBoneDysplasia
-      - sphenoidDysplasia
-      - scoliosis
-      - intellectualDisability
-      - learningDisability
-      - attentionDeficitDisorder
-      - pheochromocytoma
-      - glomusTumor
-      - MPNSTCharacterization
-      - nonopticGlioma
-      - GIST
-      - leukemia
-      - breastCancer
-      - otherTumors
-      
-      # NF2-relevant clinical phenotypes
-      - vestibularSchwannoma
-      - meningioma
-      - gliomaOrEpendymoma
-      - spinalSchwannoma
-      - dermalSchwannoma
-      - nonvestibularCranialSchwannoma
-      - lenticularOpacity
-      
-      # Scwhwannomatosis-relevant clinical phenotypes, some overlapping with NF2 are already captured above
-      - nonvestibularSchwannomas
-      - numberOfSchwannomas
+    - individualID
+    - sex
+    - age
+    - ageUnit
+    - diagnosis
+    - diagnosisAgeGroup
+    - inheritance
+    - mosaicism
+    - nf1Genotype
+    - nf2Genotype
+    - germlineMutationIndicator
+    - species
+    - vitalStatus
+    - WHOPerformanceStatus
+    - painStatus
+    - tumorTreatmentStatus
+    - cafeaulaitMacules
+    - skinFoldFreckling
+    - IrisLischNodules
+    - dermalNeurofibromas
+    - subcutaneousNodularNeurofibromas
+    - diffuseDermalNeurofibromas
+    - spinalNeurofibromas
+    - plexiformNeurofibromas
+    - opticGlioma
+    - heartDefect
+    - vascularDisease
+    - pubertyOnset
+    - stature
+    - peripheralNeuropathy
+    - aqueductalStenosis
+    - longBoneDysplasia
+    - sphenoidDysplasia
+    - scoliosis
+    - intellectualDisability
+    - learningDisability
+    - attentionDeficitDisorder
+    - pheochromocytoma
+    - glomusTumor
+    - MPNSTCharacterization
+    - nonopticGlioma
+    - GIST
+    - leukemia
+    - breastCancer
+    - otherTumors
+    - vestibularSchwannoma
+    - meningioma
+    - gliomaOrEpendymoma
+    - spinalSchwannoma
+    - dermalSchwannoma
+    - nonvestibularCranialSchwannoma
+    - lenticularOpacity
+    - nonvestibularSchwannomas
+    - numberOfSchwannomas
