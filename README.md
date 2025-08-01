@@ -21,6 +21,7 @@ In general, .jsonld or .ttl artifacts facilate model querying and comparison if 
 
 - `modules/*.yaml`: Source files. Refer to [Data Model Framework](#data-model-framework) for editing guidelines.
 - `Makefile`: Scripts to build the artifacts from the source files.
+- Read docs/DEVELOPMENT.md
 
 ```mermaid
 graph LR
