@@ -5,7 +5,8 @@ analyze:
 	@echo "Analyzing data model..."
 
 NF.jsonld:
-	bb ./retold/retold as-jsonld --dir modules --out NF.jsonld 
+	bb ./retold/retold as-jsonld --dir modules --out retold_NF.jsonld
+	cp retold_NF.jsonld NF.jsonld 
 
 
 NF.yaml:

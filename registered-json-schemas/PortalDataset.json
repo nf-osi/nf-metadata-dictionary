@@ -19,7 +19,7 @@
       "type": "string"
     },
     "citation": {
-      "description": "identifies academic articles that are recommended by the data provider be cited in addition to the dataset itself.",
+      "description": "Academic articles that are recommended by the data provider to be cited in addition to the dataset doi itself.",
       "type": "string"
     },
     "conditionsOfAccess": {
@@ -27,7 +27,7 @@
       "type": "string"
     },
     "contributor": {
-      "description": "Institution or person responsible for collecting and managing the files and records in the dataset.",
+      "description": "Institution or person responsible for collecting, managing, distributing, or otherwise contributing to the development of the resource. Expects properly formatted name of the organization or person (e.g. \"NF-OSI\" or \"Robert Allaway\"), not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/contributor/.",
       "items": {
         "type": "string"
       },
@@ -41,7 +41,7 @@
       "type": "array"
     },
     "creator": {
-      "description": "Properly formatted name of the organization or person that is creator of the dataset (e.g. \"NF-OSI\" or \"Robert Allaway\"), not an id. Most preferred is the project PI or data lead who's responsible for its conception and initial content creation.",
+      "description": "Main researchers involved in producing the data, in priority order. Usually matches the project PI(s) and data lead(s) responsible for conception and initial content creation. For tools this is the manufacturer or developer of the instrument. Expects properly formatted name of the organization or person (e.g. \"NF-OSI\" or \"Robert Allaway\"), not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/creator/.",
       "items": {
         "type": "string"
       },
@@ -58,6 +58,7 @@
         "enum": [
           "immunoassay",
           "behavioral data",
+          "capsid sequence",
           "clinical",
           "demographics",
           "epidemiological data",
@@ -103,6 +104,7 @@
           "over-representation data",
           "plot",
           "nucleic acid sequence record",
+          "promoter sequence",
           "protein interaction data",
           "protein interaction raw data",
           "molecular property",
@@ -149,7 +151,7 @@
       "type": "array"
     },
     "datePublished": {
-      "description": "Date data were published/available on Synapse.",
+      "description": "Date data were published/available on Synapse. This can be set automatically from other dates tracked in Synapse system so does not need to be manually added.",
       "type": "integer"
     },
     "description": {
@@ -175,7 +177,7 @@
       "type": "array"
     },
     "doi": {
-      "description": "The Digital Object Identifier (DOI) associated with the dataset, used for citation and persistent identification.",
+      "description": "The Digital Object Identifier (DOI) of the dataset (if one has been created), used for citation and persistent identification.",
       "pattern": "^10\\\\.\\\\d{4,9}/[-._;()/:A-Z0-9]+$",
       "type": "string"
     },
@@ -208,6 +210,7 @@
       "type": "integer"
     },
     "keywords": {
+      "description": "Typically between 1 to 5 informative terms or phrases that help users find the dataset.",
       "items": {
         "type": "string"
       },
@@ -237,7 +240,7 @@
       "items": {
         "description": "",
         "enum": [
-          "Aneurysmal Bone Cyst (ANNUBP)",
+          "Atypical Neurofibromatous Neoplasm with Uncertain Biologic Potential (ANNUBP)",
           "Atypical Neurofibroma",
           "Behavioral",
           "Breast Cancer",
@@ -263,7 +266,7 @@
       "type": "array"
     },
     "measurementTechnique": {
-      "description": "What's used to generate data in dataset, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).",
+      "description": "Method used to generate data in dataset, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).",
       "items": {
         "description": "",
         "enum": [
@@ -284,6 +287,7 @@
           "ChIP-seq",
           "Child Behavior Checklist for Ages 1.5-5",
           "Child Behavior Checklist for Ages 6-18",
+          "cell permeability assay",
           "CODEX",
           "confocal microscopy",
           "Corsi blocks",
@@ -296,6 +300,7 @@
           "EdU proliferation assay",
           "FIA-MSMS",
           "FLIPR high-throughput cellular screening",
+          "fluorescence microscopy assay",
           "Fluorescence In Situ Hybridization",
           "Focus group",
           "FTIR spectroscopy",
@@ -363,6 +368,8 @@
           "gel filtration chromatography",
           "gel permeation chromatography",
           "genotyping",
+          "grip strength",
+          "hand-held dynamometry",
           "high content screen",
           "high frequency ultrasound",
           "high-performance liquid chromatography/tandem mass spectrometry",
@@ -437,6 +444,7 @@
           "single-cell RNA-seq",
           "single cell ATAC-seq",
           "single-nucleus RNA-seq",
+          "six-minute walk test",
           "small molecule library screen",
           "sorbitol dehydrogenase activity level assay",
           "spatial frequency domain imaging",
@@ -446,6 +454,7 @@
           "survival",
           "targeted exome sequencing",
           "traction force microscopy",
+          "trans-endothelial electrical resistance",
           "transcranial doppler ultrasonography",
           "twin spot assay",
           "ultra high-performance liquid chromatography/tandem mass spectrometry",
@@ -517,7 +526,7 @@
       "type": "array"
     },
     "yearProcessed": {
-      "description": "Year data were processed. Only for processed dataset type and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
+      "description": "Year data were processed. Only for processed data types and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
       "type": "integer"
     }
   },
@@ -525,7 +534,6 @@
     "title",
     "creator",
     "studyId",
-    "keywords",
     "dataType",
     "diseaseFocus",
     "funder",
