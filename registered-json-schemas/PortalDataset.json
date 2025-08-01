@@ -1,31 +1,29 @@
 {
-  "additionalProperties": false,
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portaldataset",
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
   "description": "A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets.",
   "properties": {
     "accessType": {
-      "description": "Access type label. Most datasets are public access or controlled access -- on Synapse, this can be distinguished via https://rest-docs.synapse.org/rest/GET/entity/id/accessRequirement.html, and if the ARs include the ACTAccessRequirement type, then it is controlled access (other ARs like Self-signedAR are not considered controlled access). When datasets are catalogued from other repositories, controlled access is translated/interpreted using that repo's methods. Note that even if only one part of the dataset is controlled access, the dataset should be considered controlled access.",
-      "title": "Access Type",
+      "description": "",
       "enum": [
         "Public Access",
         "Open Access",
         "Controlled Access",
         "Private Access"
       ],
+      "title": "AccessTypeEnum",
       "type": "string"
     },
     "alternateName": {
       "description": "An altername name that can be used for search and discovery improvement.",
-      "title": "Alternate Name",
       "type": "string"
     },
     "citation": {
       "description": "Academic articles that are recommended by the data provider to be cited in addition to the dataset doi itself.",
-      "title": "Citation",
       "type": "string"
     },
     "conditionsOfAccess": {
       "description": "Additional requirements a user may need outside of Data Use Modifiers. This could include additional registration, updating profile information, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown.",
-      "title": "User Specific Restriction",
       "type": "string"
     },
     "contributor": {
@@ -33,7 +31,6 @@
       "items": {
         "type": "string"
       },
-      "title": "Contributor(s)",
       "type": "array"
     },
     "countryOfOrigin": {
@@ -41,7 +38,6 @@
       "items": {
         "type": "string"
       },
-      "title": "Country of Origin",
       "type": "array"
     },
     "creator": {
@@ -49,12 +45,10 @@
       "items": {
         "type": "string"
       },
-      "title": "Creator",
       "type": "array"
     },
     "croissant_file_s3_object": {
       "description": "Link to croissant file for dataset.",
-      "title": "Croissant File",
       "type": "string"
     },
     "dataType": {
@@ -120,7 +114,6 @@
         "title": "Data",
         "type": "string"
       },
-      "title": "Data Type",
       "type": "array"
     },
     "dataUseModifiers": {
@@ -152,20 +145,17 @@
           "Time Limit on Use",
           "User Specific Restriction"
         ],
-        "title": "Data Use Modifiers",
+        "title": "DuoEnum",
         "type": "string"
       },
-      "title": "Data Use Modifiers",
       "type": "array"
     },
     "datePublished": {
       "description": "Date data were published/available on Synapse. This can be set automatically from other dates tracked in Synapse system so does not need to be manually added.",
-      "title": "Date Published",
       "type": "integer"
     },
     "description": {
       "description": "Blurb for the dataset; should be no more than 500 characters.",
-      "title": "Description",
       "type": "string"
     },
     "diseaseFocus": {
@@ -181,16 +171,14 @@
           "Schwannomatosis-NEC",
           "Multiple"
         ],
-        "title": "Disease Focus",
+        "title": "DiseaseFocusEnum",
         "type": "string"
       },
-      "title": "Disease Focus",
       "type": "array"
     },
     "doi": {
       "description": "The Digital Object Identifier (DOI) of the dataset (if one has been created), used for citation and persistent identification.",
       "pattern": "^10\\\\.\\\\d{4,9}/[-._;()/:A-Z0-9]+$",
-      "title": "doi",
       "type": "string"
     },
     "funder": {
@@ -207,20 +195,18 @@
         "title": "FundingAgencyEnum",
         "type": "string"
       },
-      "title": "Funder",
       "type": "array"
     },
     "includedInDataCatalog": {
-      "description": "Link(s) to known data catalog(s) the dataset is included in.",
-      "title": "Included In Data Catalog",
+      "description": "",
       "enum": [
         "https://www.synapse.org/DataCatalog:0"
       ],
+      "title": "DataCatalogEnum",
       "type": "string"
     },
     "individualCount": {
       "description": "Number of unique individuals included in the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown.",
-      "title": "Individual Count",
       "type": "integer"
     },
     "keywords": {
@@ -228,12 +214,10 @@
       "items": {
         "type": "string"
       },
-      "title": "Keywords",
       "type": "array"
     },
     "license": {
-      "description": "Unless information for license is clear, this should default to UNKNOWN.",
-      "title": "License",
+      "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
       "enum": [
         "UNKNOWN",
         "Public Domain",
@@ -248,6 +232,7 @@
         "CC BY-NC-SA",
         "CC BY-NC-ND"
       ],
+      "title": "License",
       "type": "string"
     },
     "manifestation": {
@@ -278,7 +263,6 @@
         "title": "ManifestationEnum",
         "type": "string"
       },
-      "title": "Manifestation(s)",
       "type": "array"
     },
     "measurementTechnique": {
@@ -481,18 +465,17 @@
           "word recognition score",
           "STR profile"
         ],
-        "title": "Assay",
+        "title": "AssayEnum",
         "type": "string"
       },
-      "title": "Measurement Technique",
       "type": "array"
     },
     "series": {
-      "description": "Datasets may belong to a curated series. Should be assigned by staff only; omit property if not applicable/unknown.",
-      "title": "Data Series",
+      "description": "",
       "enum": [
         "NF-OSI Processed Data"
       ],
+      "title": "DataSeriesEnum",
       "type": "string"
     },
     "species": {
@@ -515,17 +498,14 @@
         "title": "SpeciesEnum",
         "type": "string"
       },
-      "title": "Species",
       "type": "array"
     },
     "specimenCount": {
       "description": "Number of unique specimens included in the dataset. Omit if not applicable/unknown.",
-      "title": "Specimen Count",
       "type": "integer"
     },
     "studyId": {
       "description": "Identifier for the study (project) from which the dataset was derived.",
-      "title": "Study ID",
       "type": "string"
     },
     "subject": {
@@ -533,11 +513,9 @@
       "items": {
         "type": "string"
       },
-      "title": "Subject",
       "type": "array"
     },
     "title": {
-      "title": "Title",
       "type": "string"
     },
     "visualizeDataOn": {
@@ -545,12 +523,10 @@
       "items": {
         "type": "string"
       },
-      "title": "Visualize Data On",
       "type": "array"
     },
     "yearProcessed": {
       "description": "Year data were processed. Only for processed data types and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
-      "title": "Year Processed",
       "type": "integer"
     }
   },
@@ -565,6 +541,5 @@
     "license"
   ],
   "title": "PortalDataset",
-  "type": "object",
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portaldataset"
+  "type": "object"
 }
