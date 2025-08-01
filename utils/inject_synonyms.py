@@ -15,6 +15,12 @@ DRY_RUN_MODE = False
 
 import re
 
+# Configure YAML to represent None as empty string instead of 'null'
+def represent_none(self, data):
+    return self.represent_scalar('tag:yaml.org,2002:null', '')
+
+yaml.add_representer(type(None), represent_none)
+
 def expand_curie(curie, prefixes):
     """Expand a CURIE to a full URI using prefix mappings"""
     if not curie or not isinstance(curie, str):
