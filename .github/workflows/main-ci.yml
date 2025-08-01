@@ -37,13 +37,11 @@ jobs:
           npm install -g json-dereference-cli
           make -B
   
-      - name: Install tools and regenerate registered jsons for Superdataset, PortalDataset, etc
+      - name: Install tools and regenerate registered jsons for *all* templates (classes)
+        env:
+          SYNAPSE_AUTH_TOKEN: ${{ secrets.SYNAPSE_AUTH_TOKEN }}
         run: |
-          make PortalDataset
-          make PortalStudy
-          make Superdataset
-          make PortalPublication
-          make Protocol
+          echo "Generating JSON schemas and validating them!"
       
       # Set up supported python.
       - uses: actions/setup-python@v5

@@ -1,24 +1,106 @@
 {
-  "$defs": {
-    "PortalPublication": {
-      "additionalProperties": false,
-      "description": "A slightly more specialized publication concept intended for the specific scope of the NF Portal.",
-      "title": "PortalPublication",
-      "type": "object"
-    },
-    "PublicationTemplate": {
-      "additionalProperties": false,
-      "description": "A generalized data model template for Publications to be hopefully used across dccs",
-      "title": "PublicationTemplate",
-      "type": "object"
-    }
-  },
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalpublication",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
-  "additionalProperties": false,
   "description": "A slightly more specialized publication concept intended for the specific scope of the NF Portal.",
-  "metamodel_version": "1.7.0",
+  "properties": {
+    "abstract": {
+      "type": "string"
+    },
+    "accessibility": {
+      "description": "",
+      "enum": [
+        "Open Access",
+        "Restricted Access"
+      ],
+      "title": "PublicationAccessibilityEnum",
+      "type": "string"
+    },
+    "author": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "dataset": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "diseaseFocus": {
+      "items": {
+        "description": "",
+        "enum": [
+          "Neurofibromatosis type 1",
+          "NF2-related schwannomatosis",
+          "SMARCB1-related schwannomatosis",
+          "LZTR1-related schwannomatosis",
+          "22q-related schwannomatosis",
+          "Schwannomatosis-NOS",
+          "Schwannomatosis-NEC",
+          "Multiple"
+        ],
+        "title": "DiseaseFocusEnum",
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "doi": {
+      "type": "string"
+    },
+    "fundingAgency": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "grantNumber": {
+      "type": "string"
+    },
+    "journal": {
+      "type": "string"
+    },
+    "manifestation": {
+      "type": "string"
+    },
+    "pmid": {
+      "type": "string"
+    },
+    "publicationType": {
+      "description": "",
+      "enum": [
+        "Primary",
+        "Secondary"
+      ],
+      "title": "PublicationTypeEnum",
+      "type": "string"
+    },
+    "studyId": {
+      "type": "string"
+    },
+    "studyName": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "year": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "publicationType",
+    "fundingAgency",
+    "studyId",
+    "studyName",
+    "doi",
+    "journal",
+    "pmid",
+    "title",
+    "year",
+    "author",
+    "abstract"
+  ],
   "title": "PortalPublication",
-  "type": "object",
-  "version": null
+  "type": "object"
 }

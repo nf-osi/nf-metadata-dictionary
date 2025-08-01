@@ -1,31 +1,179 @@
-id: https://w3id.org/nfosi/
-default_curi_maps:
-- semweb_context
-prefixes:
-  nf: https://w3id.org/synapse/nfosi/vocab/
-  personinfo: https://w3id.org/linkml/examples/personinfo/
-  linkml: https://w3id.org/linkml/
-  schema: http://schema.org/
-  rdfs: http://www.w3.org/2000/01/rdf-schema#
-  skos: http://www.w3.org/2004/02/skos/core#
-  prov: http://www.w3.org/ns/prov#
-  htan: https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld
-default_prefix: nf
-default_range: string
-emit_prefixes:
-- rdf
-- rdfs
-- xsd
-- skos
-imports:
-- linkml:types
-name: PortalDataset
+#######################################
+# Portal
+#######################################
+
+# Note: this template definition uses the alternate syntax with 'attribute'
+
 classes:
   PortalDataset:
-    description: 'A slightly more specialized dataset concept intended for the specific
-      scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets.
-
-      '
-    slots: []
-slots: {}
-enums: {}
+    description: >
+      A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets.
+    notes:
+    - The compiled JSON schema for this should be bound to [Dataset](https://rest-docs.synapse.org/rest/org/sagebionetworks/repo/model/table/Dataset.html) entities, not folders.
+    - While "publisher" (repository) may seem redundant given that all Datasets are obviously on Synapse, it's for explicit compatibility with DataCite, and eventually may want to have "symbolic" datasets like Cancer Complexity Portal that list datasets hosted somewhere else.
+    attributes:
+    # Meta autoset by Synapse or technically should not edit via annotations are commented out
+    # - name
+    # - id
+    # - count
+    # - currentVersion
+    # - doi (if minted) (written as identifier)
+    # - createdBy # user id/handle, creator allows setting name more explicitly for citations
+    # - datasetItemCount
+    # - datasetSizeInBytes
+    # - publisher # should be autoset
+      title:
+        title: Title
+        range: string
+        required: true
+      description:
+        title: Description
+        range: string
+        description: Blurb for the dataset; should be no more than 500 characters.
+        required: false
+      alternateName:
+        title: Alternate Name
+        description: An altername name that can be used for search and discovery improvement.
+        range: string
+        required: false
+      creator:
+        title: Creator
+        range: string
+        description: Main researchers involved in producing the data, in priority order. Usually matches the project PI(s) and data lead(s) responsible for conception and initial content creation. For tools this is the manufacturer or developer of the instrument. Expects properly formatted name of the organization or person (e.g. "NF-OSI" or "Robert Allaway"), not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/creator/. 
+        multivalued: true
+        required: true
+      contributor:
+        title: Contributor(s)
+        range: string
+        description: Institution or person responsible for collecting, managing, distributing, or otherwise contributing to the development of the resource. Expects properly formatted name of the organization or person (e.g. "NF-OSI" or "Robert Allaway"), not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/contributor/.
+        multivalued: true
+        required: false
+      studyId:
+        title: Study ID
+        range: string
+        description: Identifier for the study (project) from which the dataset was derived.
+        required: true
+      measurementTechnique:
+        title: Measurement Technique
+        range: AssayEnum
+        multivalued: true
+        description: Method used to generate data in dataset, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).
+      keywords:
+        title: Keywords
+        range: string
+        multivalued: true
+        required: false
+        description: Typically between 1 to 5 informative terms or phrases that help users find the dataset.
+      subject:
+        title: Subject
+        range: string
+        description: Applicable subject term(s) for dataset cataloging; use the Library of Congress Subject Headings (LCSH) scheme.
+        multivalued: true
+        required: false
+      dataType:
+        title: Data Type
+        range: Data
+        description: Reflects the data types within the dataset.
+        multivalued: true
+        required: true
+      species:
+        title: Species
+        range: SpeciesEnum
+        description: Species of the organism(s) from which the data were generated. Omit property if not applicable, such as for data like compounds or other non-biological data.
+        multivalued: true
+        required: false # not all datasets from assays that use biological samples
+      manifestation:
+        title: Manifestation(s)
+        range: ManifestationEnum
+        description: Refers to the phenotype(s) studied in the dataset. Omit if not applicable.
+        multivalued: true
+        required: false
+      diseaseFocus:
+        title: Disease Focus
+        range: DiseaseFocusEnum
+        multivalued: true
+        required: true
+      funder:
+        title: Funder
+        range: FundingAgencyEnum
+        multivalued: true
+        required: true
+      individualCount:
+        title: Individual Count
+        range: integer
+        description: Number of unique individuals included in the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown.
+        required: false
+      specimenCount:
+        title: Specimen Count
+        range: integer
+        description: Number of unique specimens included in the dataset. Omit if not applicable/unknown.
+        required: false
+      series:
+        title: Data Series
+        range: DataSeriesEnum
+        description: Datasets may belong to a curated series. Should be assigned by staff only; omit property if not applicable/unknown.
+        required: false
+      visualizeDataOn:
+        title: Visualize Data On
+        description: Link(s) to where data may be visualized in a separate application. Omit property if not applicable/unknown.
+        range: string
+        multivalued: true
+        required: false
+      yearProcessed:
+        title: Year Processed
+        description: Year data were processed. Only for processed data types and when data series is "NF-OSI Processed Data"; omit if not applicable/unknown.
+        range: integer
+        required: false
+      datePublished:
+        title: Date Published
+        description: Date data were published/available on Synapse. This can be set automatically from other dates tracked in Synapse system so does not need to be manually added.
+        range: integer
+        required: false
+      includedInDataCatalog:
+        title: Included In Data Catalog
+        description: Link(s) to known data catalog(s) the dataset is included in.
+        range: DataCatalogEnum
+        required: false
+      citation:
+        title: Citation
+        range: string
+        description: Academic articles that are recommended by the data provider to be cited in addition to the dataset doi itself.
+        required: false
+      countryOfOrigin:
+        title: Country of Origin
+        range: string
+        description: Origin of individuals from which data were generated. Omit if not applicable/unknown.
+        multivalued: true
+        required: false
+      doi:
+        title: doi
+        range: string
+        description: The Digital Object Identifier (DOI) of the dataset (if one has been created), used for citation and persistent identification.
+        required: false
+        pattern: '^10\\.\\d{4,9}/[-._;()/:A-Z0-9]+$'
+      croissant_file_s3_object:
+        title: Croissant File
+        range: string
+        description:  Link to croissant file for dataset.
+        required: false      
+      accessType:
+        title: Access Type
+        range: AccessTypeEnum
+        description: Access type label. Most datasets are public access or controlled access -- on Synapse, this can be distinguished via https://rest-docs.synapse.org/rest/GET/entity/id/accessRequirement.html, and if the ARs include the ACTAccessRequirement type, then it is controlled access (other ARs like Self-signedAR are not considered controlled access). When datasets are catalogued from other repositories, controlled access is translated/interpreted using that repo's methods. Note that even if only one part of the dataset is controlled access, the dataset should be considered controlled access.
+        required: true
+      license:
+        title: License
+        range: License
+        description: Unless information for license is clear, this should default to UNKNOWN.
+        required: true
+      dataUseModifiers:
+        title: Data Use Modifiers
+        description: List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Most datasets allow "General Research Use" unless otherwise specified.
+        range: DuoEnum
+        multivalued: true
+        required: false
+      conditionsOfAccess:
+        title: User Specific Restriction
+        description: Additional requirements a user may need outside of Data Use Modifiers. This could include additional registration, updating profile information, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown.
+        range: string
+        required: false
