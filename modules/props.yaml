@@ -432,11 +432,7 @@ slots:
   genomicReferenceLink:
     description: Link to genome reference data file used for alignment in processing workflow
     required: false
-  germlineMutation:
-    description: The individual's actual germline mutation.
-    notes:
-    - More sensitive information than germlineMutationIndicator.
-    - Free-text field that possibly suggests *any* mutations could be put here, while nf1GermlineMutation, etc. are more specific in terms of disease.
+# Removed duplicate definition of germlineMutation to resolve schema validation issues.
   germlineMutationIndicator:
     description: Indicates a summary testing result for individual's germline mutation only.
     range: TestSummaryEnum
