@@ -1,48 +1,57 @@
 enums:
   CuratedDataEnum:
     permissible_values:
-      gene symbol:
-        description: A unique gene name approved by an organism specific nomenclature committee.
-        meaning: NCIT:C43568
+      chemical descriptor:
+        description: A chemical descriptor is a data item (quantity or value) about a chemical entity that conforms to a specification for how it is calculated, measured or recorded.
+        meaning: CHEMINF:000123
       clinical data:
+        aliases:
+        - Clinical
         description: Data obtained through patient examination or treatment.
         meaning: NCIT:C15783
       gene function:
         description: A term that expresses the function of a gene product.
         meaning: NCIT:C48933
-      chemical descriptor:
-        description: A chemical descriptor is a data item (quantity or value) about a chemical entity that conforms to a specification for how it is calculated, measured or recorded.
-        meaning: CHEMINF:000123
-  
+      gene symbol:
+        aliases:
+        - Gene Name
+        - Official Gene Name
+        - gene
+        description: A unique gene name approved by an organism specific nomenclature committee.
+        meaning: NCIT:C43568
   Resource:
-    description: > 
-      Resource classes. Most resource entities expected to be some type of "experimental data" and further specified via `dataType`.
+    description: 'Resource classes. Most resource entities expected to be some type of "experimental data" and further specified via `dataType`.
 
+      '
     permissible_values:
       experimentalData:
         description: Any file derived from or pertaining to a scientific experiment. Experimental data annotations should be applied, possibly disease-related.
-      result:
-        description: Any file that reports data results. Examples include figures, presentations, analysis, etc.
-        comments: This resource category is somewhat more general than `report`.
-        source: https://synapse.org
-      tool:
-        description: Any file or link that represents a tool, model, or algorithm; the tool annotations could be applied
-        source: https://synapse.org
-      workflow report:
-        description: Workflow-generated reports of analysis of primary data, usually created programmatically at completion of workflow step.
-      report:
-        description: > 
-          A document assembled by an author for the purpose of providing information for the audience. 
-          A report is the output of a documenting process and has the objective to be consumed by a specific audience. 
-          Topic of the report is on something that has completed. A report is not a single figure. 
-          Examples of reports are journal article, patent application, grant progress report, case report (not patient record).
-        meaning: IAO:0000088
       metadata:
         description: Data about data, information that describes another set of data.
         meaning: NCIT:C52095
       protocol:
         description: A plan specification which has sufficient level of detail and quantitative information to communicate it between investigation agents, so that different investigation agents will reliably be able to independently reproduce the process.
         meaning: OBI:0000272
+      report:
+        aliases:
+        - Document
+        - Record
+        description: 'A document assembled by an author for the purpose of providing information for the audience.  A report is the output of a documenting process and has the objective to be consumed by a specific audience.  Topic of the report is on something that has completed. A report is not a single figure.  Examples of reports are journal article, patent application, grant progress report, case report (not patient record).
+
+          '
+        meaning: IAO:0000088
+      result:
+        comments: This resource category is somewhat more general than `report`.
+        description: Any file that reports data results. Examples include figures, presentations, analysis, etc.
+        source: https://synapse.org
+      tool:
+        description: Any file or link that represents a tool, model, or algorithm; the tool annotations could be applied
+        source: https://synapse.org
       weblink:
+        aliases:
+        - URL
+        - Uniform Resource Locator
         description: An address to another document or other resource on the World Wide Web.
         meaning: NCIT:C42743
+      workflow report:
+        description: Workflow-generated reports of analysis of primary data, usually created programmatically at completion of workflow step.

@@ -1,13 +1,18 @@
 enums:
   Genotype:
     permissible_values:
-      '-/-':
-        description: Homozygous deletion or mutation.
-      '+/-':
-        description: Heterozygous deletion or mutation
       '+/+':
         description: Homozygous wildtype
+      '+/-':
+        description: Heterozygous deletion or mutation
+      '-/-':
+        description: Homozygous deletion or mutation.
       Unknown:
+        aliases:
+        - Not Known
+        - U
+        - UNK
+        - Unknown/Not Stated
         description: unknown
   NF1Variant:
     permissible_values:

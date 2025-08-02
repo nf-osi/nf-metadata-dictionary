@@ -1,26 +1,32 @@
 enums:
   GenePerturbationMethodEnum:
     permissible_values:
-      RNAi: 
-        meaning: NCIT:C20153
-      CRISPR: 
-        meaning: BAO:0010249
       CRE Recombinase:
         meaning: NCIT:C17285
+      CRISPR:
+        meaning: BAO:0010249
       CRISPR Assisted mRNA Fragment Trans-splicing (CRAFT):
         description: A more specific technique repurposing CRISPR to assist trans-splicing of exogenous RNA fragments into an endogenous pre-mRNA transcript.
         source: https://www.nature.com/articles/s41467-024-46172-4
+      RNAi:
+        aliases:
+        - Post-Transcriptional Gene Silencing
+        - Quelling
+        - RNA Interference
+        - RNA Silencing
+        - Sequence-Specific Posttranscriptional Gene Silencing
+        meaning: NCIT:C20153
   TransplantationType:
     permissible_values:
       allograft:
         description: Tissues, cells, or organs transplanted between genetically different individuals of the same species
         source: https://www.ncbi.nlm.nih.gov/mesh/68064591
-      xenograft:
-        description: Tissues, cells or organs transplanted between animals of different species
-        source: https://www.ncbi.nlm.nih.gov/mesh/68064593
       autograft:
         description: Transplant comprised of an individual's own tissue, transferred from one part of the body to another.
         source: https://www.ncbi.nlm.nih.gov/mesh/68064592
       isograft:
         description: Tissues, cells or organs transplanted between genetically identical individuals
         source: https://www.ncbi.nlm.nih.gov/mesh/68064596
+      xenograft:
+        description: Tissues, cells or organs transplanted between animals of different species
+        source: https://www.ncbi.nlm.nih.gov/mesh/68064593
