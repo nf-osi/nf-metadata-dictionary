@@ -2381,9 +2381,7 @@ enums:
       - See also https://github.com/PAIR-code/datacardsplaybook/blob/main/templates/DataCardsExtendedTemplate.md#access-type
     permissible_values:
       Controlled Access:
-        description: 'Access is restricted and only available after fulfilling specific requirements, such as submitting a research statement or getting approval directly from the data owner through Synapse. Note that for datasets, if any component file is under controlled access, the entire dataset is considered to be under controlled access.
-
-'
+        description: 'Access is restricted and only available after fulfilling specific requirements, such as submitting a research statement or getting approval directly from the data owner through Synapse. Note that for datasets, if any component file is under controlled access, the entire dataset is considered to be under controlled access.'
       Open Access:
         description: Access without any additional steps/requirements without even needing to be logged in to Synapse account.
       Private Access:
@@ -2394,9 +2392,11 @@ enums:
   DataCatalogEnum:
     permissible_values:
       https://www.synapse.org/DataCatalog:0:
+      https://nf.synapse.org/Explore/Datasets:
   DataSeriesEnum:
     permissible_values:
       NF-OSI Processed Data:
+      None:
   DataStatusEnum:
     permissible_values:
       Available:
@@ -2491,33 +2491,23 @@ enums:
       - https://help.figshare.com/article/what-is-the-most-appropriate-licence-for-my-research
     permissible_values:
       CC BY-NC:
-        description: 'This license is one of the Creative Commons licenses and allows users to share and adapt the dataset if they give credit to the copyright holder and do not use the dataset for any commercial purposes.
-
-'
+        description: 'This license is one of the Creative Commons licenses and allows users to share and adapt the dataset if they give credit to the copyright holder and do not use the dataset for any commercial purposes.'
         source: https://creativecommons.org/licenses/by-nc/4.0/
         title: Creative Commons Attribution-NonCommercial 4.0 International
       CC BY-NC-ND:
-        description: 'This license is one of the Creative Commons licenses and allows users to use only your unmodified dataset if they give credit to the copyright holder and do not share it for commercial purposes. Users cannot make any additions, transformations or changes to the dataset under this license.
-
-'
+        description: 'This license is one of the Creative Commons licenses and allows users to use only your unmodified dataset if they give credit to the copyright holder and do not share it for commercial purposes. Users cannot make any additions, transformations or changes to the dataset under this license.'
         source: https://creativecommons.org/licenses/by-nc-nd/4.0/
         title: Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
       CC BY-NC-SA:
-        description: 'This license is one of the Creative Commons licenses and allows users to share the dataset only if they (1) give credit to the copyright holder, (2) do not use the dataset for any commercial purposes, and (3) distribute any additions, transformations or changes to the dataset under this same license.
-
-'
+        description: 'This license is one of the Creative Commons licenses and allows users to share the dataset only if they (1) give credit to the copyright holder, (2) do not use the dataset for any commercial purposes, and (3) distribute any additions, transformations or changes to the dataset under this same license.'
         source: https://creativecommons.org/licenses/by-nc-sa/4.0/
         title: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
       CC BY-ND:
-        description: 'This license is one of the Creative Commons licenses and allows users to share the dataset if they give credit to copyright holder, but they cannot make any additions, transformations or changes to the dataset under this license.
-
-'
+        description: 'This license is one of the Creative Commons licenses and allows users to share the dataset if they give credit to copyright holder, but they cannot make any additions, transformations or changes to the dataset under this license.'
         source: https://creativecommons.org/licenses/by-nd/4.0/
         title: Creative Commons Attribution-NoDerivatives 4.0 International
       CC BY-SA:
-        description: 'This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformations or changes to the dataset under this same https://creativecommons.org/licenses/by/4.0/
-
-'
+        description: 'This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformations or changes to the dataset under this same https://creativecommons.org/licenses/by/4.0/'
         source: https://creativecommons.org/licenses/by-nc-sa/4.0/
         title: Creative Commons Attribution-ShareAlike 4.0 International
       CC-0:
@@ -2533,15 +2523,11 @@ enums:
         source: https://opendatacommons.org/licenses/by/
         title: Open Data Commons Attribution License
       ODC-ODbL:
-        description: 'This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformation or changes to the dataset.
-
-'
+        description: 'This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformation or changes to the dataset.'
         source: https://opendatacommons.org/licenses/odbl/
         title: Open Data Commons Open Database License
       ODC-PDDL:
-        description: 'This license is one of the Open Data Commons licenses and is like a public domain dedication. The copyright holder surrenders rights in a dataset using this license.
-
-'
+        description: 'This license is one of the Open Data Commons licenses and is like a public domain dedication. The copyright holder surrenders rights in a dataset using this license.'
         source: https://opendatacommons.org/licenses/pddl/
         title: Open Data Commons Public Domain Dedication and License
       Public Domain:
