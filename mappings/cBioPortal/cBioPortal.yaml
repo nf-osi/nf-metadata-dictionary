@@ -1,5 +1,5 @@
 title: NF data dictionary to cBioPortal data dictionary for public clinical data
-description: This maps the limited number of NF clinical data elements to cBioPortal clinical data elements.
+description: This maps selected NF clinical data elements that are relevant for analysis and appropriate for public use to cBioPortal clinical data elements.
 source_scope: https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.jsonld
 target_scope: https://github.com/cBioPortal/clinical-data-dictionary/blob/master/docs/resource_uri_to_clinical_attribute_mapping.txt
 mapping:
@@ -66,6 +66,13 @@ mapping:
       attribute_type: PATIENT
       data_type: NUMBER
       required: false
+  - source: Age
+    target:
+      label: AGE
+      description: Age of patient
+      attribute_type: PATIENT
+      data_type: NUMBER
+      required: false
   - source: tumorType
     target:
       label: TUMOR
@@ -95,3 +102,506 @@ mapping:
       attribute_type: SAMPLE
       data_type: STRING
       required: false
+  - source: Patient
+    target:
+      label: PATIENT_ID
+      description: Patient identifier
+      attribute_type: [PATIENT,SAMPLE]
+      data_type: STRING
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: Race
+    target:
+      label: RACE
+      description: Race of the patient
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: Gender
+    target:
+      label: SEX
+      description: Sex of the patient
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: Inherited
+    target:
+      label: FAMILY_HISTORY
+      description: Family history of genetic condition
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: Pregnancies
+    target:
+      label: PREGNANCIES
+      description: Number of pregnancies
+      attribute_type: PATIENT
+      data_type: NUMBER
+      required: false
+      comments: Custom attribute
+  - source: Births
+    target:
+      label: BIRTHS
+      description: Number of births
+      attribute_type: PATIENT
+      data_type: NUMBER
+      required: false
+      comments: Custom attribute
+  - source: Pain
+    target:
+      label: PAIN_SYMPTOMS
+      description: Presence of pain symptoms
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: Itching
+    target:
+      label: ITCHING_SYMPTOMS
+      description: Presence of itching symptoms
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: genetic_test_confirmation_nf1
+    target:
+      label: NF1_GENETIC_TEST
+      description: NF1 genetic test confirmation
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: age_of_nf1_diagnosis
+    target:
+      label: NF1_DIAGNOSIS_AGE
+      description: Age at NF1 diagnosis
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: cafe_au_lait_spots
+    target:
+      label: CAFE_AU_LAIT_SPOTS
+      description: Presence of cafe au lait spots
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: neurofibroma
+    target:
+      label: NEUROFIBROMA
+      description: Presence of neurofibromas
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: plexiform_neurofibroma
+    target:
+      label: PLEXIFORM_NEUROFIBROMA
+      description: Presence of plexiform neurofibromas
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: family_member_with_nf1
+    target:
+      label: FAMILY_HISTORY_NF1
+      description: Family member with NF1
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: Menopause
+    target:
+      label: MENOPAUSE_STATUS
+      description: Menopause status
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: NumberOfPlexiforms
+    target:
+      label: PLEXIFORM_NEUROFIBROMA_COUNT
+      description: Number of plexiform neurofibromas
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: Manifestations
+    target:
+      label: CLINICAL_MANIFESTATIONS
+      description: Clinical manifestations
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: armpit_freckles
+    target:
+      label: ARMPIT_FRECKLES
+      description: Presence of armpit freckles
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: groin_freckles
+    target:
+      label: GROIN_FRECKLES
+      description: Presence of groin freckles
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: lisch_nodules
+    target:
+      label: LISCH_NODULES
+      description: Presence of Lisch nodules
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: age_of_neurofibromas
+    target:
+      label: AGE_AT_NEUROFIBROMA_ONSET
+      description: Age at neurofibroma onset
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: location_plexiform
+    target:
+      label: TUMOR_SITE
+      description: Location of plexiform neurofibromas
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: history_of_low_vitamin_d
+    target:
+      label: VITAMIN_D_DEFICIENCY_HISTORY
+      description: History of low vitamin D
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: vitamin_d_tablets
+    target:
+      label: VITAMIN_D_SUPPLEMENT
+      description: Vitamin D tablet usage
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: regular_mutivitamin
+    target:
+      label: MULTIVITAMIN_USAGE
+      description: Regular multivitamin usage
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: before_first_period
+    target:
+      label: SYMPTOMS_BEFORE_MENARCHE
+      description: Symptoms before first menstrual period
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: during_pregnancy
+    target:
+      label: SYMPTOMS_DURING_PREGNANCY
+      description: Symptoms during pregnancy
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: increased_during_pregnancy
+    target:
+      label: SYMPTOMS_INCREASED_PREGNANCY
+      description: Symptoms increased during pregnancy
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: grew_during_pregnancy
+    target:
+      label: LESIONS_GREW_PREGNANCY
+      description: Lesions grew during pregnancy
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: rapidly_growing_lesions
+    target:
+      label: RAPIDLY_GROWING_LESIONS
+      description: Presence of rapidly growing lesions
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: sampleIdentifier
+    target:
+      label: SAMPLE_ID
+      description: Sample identifier
+      attribute_type: SAMPLE
+      data_type: STRING
+      required: true
+      comments: Standard cBioPortal attribute
+  - source: TumorLocation
+    target:
+      label: TISSUE_SITE
+      description: Site of tissue collection
+      attribute_type: SAMPLE
+      data_type: STRING
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: TumorNumber
+    target:
+      label: TUMOR_NUMBER
+      description: Tumor number
+      attribute_type: SAMPLE
+      data_type: STRING
+      required: false
+  - source: Length_in_mm
+    target:
+      label: TUMOR_SIZE_MM
+      description: Tumor length in millimeters
+      attribute_type: SAMPLE
+      data_type: NUMBER
+      required: false
+      comments: Custom attribute
+  - source: race_ethnicity
+    target:
+      label: RACE
+      description: Race and ethnicity of the patient
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: nf1_inheritance
+    target:
+      label: NF1_INHERITANCE
+      description: NF1 inheritance pattern
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: nf1_diagnosis
+    target:
+      label: NF1_DIAGNOSIS
+      description: NF1 diagnosis status
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: binnedTumorLocation
+    target:
+      label: TUMOR_SITE
+      description: Binned tumor location
+      attribute_type: SAMPLE
+      data_type: STRING
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: binnedBiopsySite
+    target:
+      label: BIOPSY_SITE
+      description: Binned biopsy site
+      attribute_type: SAMPLE
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: age_biopsy_year
+    target:
+      label: AGE_AT_BIOPSY
+      description: Age at biopsy in years
+      attribute_type: SAMPLE
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: age_biopsy_month
+    target:
+      label: AGE_AT_BIOPSY_MONTHS
+      description: Age at biopsy in months
+      attribute_type: SAMPLE
+      data_type: NUMBER
+      required: false
+      comments: Custom attribute
+  - source: treatment_prior_biopsy
+    target:
+      label: PRIOR_TREATMENT
+      description: Treatment prior to biopsy
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: treatment_prior_agent
+    target:
+      label: PRIOR_TREATMENT_AGENT
+      description: Agent used in prior treatment
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: treatment_another_prior_biospy
+    target:
+      label: ADDITIONAL_PRIOR_TREATMENT
+      description: Another prior treatment before biopsy
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: treatment_another_agent
+    target:
+      label: ADDITIONAL_PRIOR_AGENT
+      description: Agent used in additional prior treatment
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: treatment_post_biopsy
+    target:
+      label: POST_TREATMENT
+      description: Treatment after biopsy
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: treatment_post_agent
+    target:
+      label: POST_TREATMENT_AGENT
+      description: Agent used in post-biopsy treatment
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: binnedReasonBiopsy
+    target:
+      label: BIOPSY_REASON
+      description: Binned reason for biopsy
+      attribute_type: SAMPLE
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: Binned_Treatment_Chemo
+    target:
+      label: CHEMOTHERAPY
+      description: Binned chemotherapy treatment
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: other_glioma
+    target:
+      label: OTHER_GLIOMA
+      description: Other glioma presence
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: visual_acuity
+    target:
+      label: VISUAL_ACUITY
+      description: Visual acuity status
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Custom attribute
+  - source: clinical_status
+    target:
+      label: DISEASE_STATUS
+      description: Clinical status of patient
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: age_death_year
+    target:
+      label: AGE_AT_DEATH
+      description: Age at death in years
+      attribute_type: PATIENT
+      data_type: NUMBER
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: age_death_month
+    target:
+      label: AGE_AT_DEATH_MONTHS
+      description: Age at death in months
+      attribute_type: PATIENT
+      data_type: NUMBER
+      required: false
+      comments: Custom attribute
+  - source: age_last_follow_up_year
+    target:
+      label: AGE_AT_LAST_FOLLOWUP
+      description: Age at last follow-up in years
+      attribute_type: PATIENT
+      data_type: NUMBER
+      required: false
+      comments: Custom attribute
+  - source: age_last_follow_up_month
+    target:
+      label: AGE_AT_LAST_FOLLOWUP_MONTHS
+      description: Age at last follow-up in months
+      attribute_type: PATIENT
+      data_type: NUMBER
+      required: false
+      comments: Custom attribute
+  - source: Germline_NF1
+    target:
+      label: NF1_GERMLINE
+      description: Germline NF1 mutation status
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: NF1_genotype
+    target:
+      label: NF1_GENOTYPE
+      description: NF1 genotype
+      attribute_type: PATIENT
+      data_type: STRING
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: Somatic_NF1
+    target:
+      label: NF1_SOMATIC
+      description: Somatic NF1 mutation status
+      attribute_type: SAMPLE
+      data_type: STRING
+      required: false
+      comments: Standard cBioPortal attribute
+  - source: Second_hit_1st
+    target:
+      label: NF1_SECOND_HIT_1
+      description: First NF1 second hit mutation
+      attribute_type: SAMPLE
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: Second_hit_2nd
+    target:
+      label: NF1_SECOND_HIT_2
+      description: Second NF1 second hit mutation
+      attribute_type: SAMPLE
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: Second_hit_3rd
+    target:
+      label: NF1_SECOND_HIT_3
+      description: Third NF1 second hit mutation
+      attribute_type: SAMPLE
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
+  - source: Second_hit_4th
+    target:
+      label: NF1_SECOND_HIT_4
+      description: Fourth NF1 second hit mutation
+      attribute_type: SAMPLE
+      data_type: STRING
+      required: false
+      comments: Custom NF1-specific attribute
