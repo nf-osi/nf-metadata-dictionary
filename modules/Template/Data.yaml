@@ -1,4 +1,33 @@
 classes:
+  BehavioralAssayTemplate:
+    annotations:
+      match:
+        assay:
+        - feeding assay
+        - contextual conditioning behavior assay
+        - elevated plus maze test
+        - active avoidance learning behavior assay
+        - novelty response behavior assay
+        - open field test
+        - rotarod performance test
+        - actigraphy
+      required: false
+      requiresComponent: ''
+    description: Template for behavioral assay data from model organisms measuring behaviors such as feeding, learning, memory, motor coordination, and activity patterns.
+    is_a: BiologicalAssayDataTemplate
+    slots:
+    - modelSystemName
+    - experimentalFactor
+    - experimentalCondition
+    - experimentalTimepoint
+    - timepointUnit
+    - compoundName
+    - compoundDose
+    - compoundDoseUnit
+    - genePerturbed
+    - genePerturbationType
+    - genePerturbationTechnology
+    - comments
   BiologicalAssayDataTemplate:
     abstract: true
     description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples.  This is an abstract template; "real" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing).
@@ -72,9 +101,7 @@ classes:
         - blood chemistry measurement
         - body size trait measurement
         - survival
-        - contextual conditioning behavior assay
         - Corsi blocks
-        - elevated plus maze test
         - gait measurement
         - NIH Toolbox
         - questionnaire
