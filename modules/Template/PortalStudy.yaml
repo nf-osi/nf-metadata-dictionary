@@ -13,6 +13,11 @@ classes:
       clinicalTrialID:
         range: string
         required: false
+      dataCoordinatingCenter:
+        range: string
+        required: false
+        description: The organization or center responsible for coordinating data management and sharing for this study. Defaults to "NF-OSI".
+        ifabsent: string(NF-OSI)
       dataStatus:
         range: DataStatusEnum
         required: true
@@ -48,6 +53,18 @@ classes:
         multivalued: true
         range: string
         required: false
+      nextPhaseProject:
+        range: string
+        required: false
+        description: Synapse project ID of a follow-up project that represents a subsequent funding phase, extension, or continuation of this study's research effort.
+        exact_mappings:
+          - successorProject
+      previousPhaseProject:
+        range: string
+        required: false
+        description: Synapse project ID of the previous project that this study continues or extends, typically representing an earlier funding phase of the same research effort.
+        exact_mappings:
+          - predecessorProject
       relatedStudies:
         multivalued: true
         range: string
