@@ -7827,13 +7827,13 @@ classes:
         required: false
         description: Synapse project ID of a follow-up project that represents a subsequent funding phase, extension, or continuation of this study's research effort.
         exact_mappings:
-          - successorProject
+          - https://schema.org/successorOf
       previousPhaseProject:
         range: string
         required: false
         description: Synapse project ID of the previous project that this study continues or extends, typically representing an earlier funding phase of the same research effort.
         exact_mappings:
-          - predecessorProject
+          - https://schema.org/predecessorOf
       relatedStudies:
         multivalued: true
         range: string
