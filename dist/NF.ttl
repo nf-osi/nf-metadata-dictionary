@@ -4,6 +4,7 @@
 @prefix linkml: <https://w3id.org/linkml/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <https://schema.org/> .
 @prefix schema1: <http://schema.org/> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix shex: <http://www.w3.org/ns/shex#> .
@@ -5486,6 +5487,11 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Link to croissant file for dataset." ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
 
+<https://w3id.org/synapse/nfosi/vocab/dataCoordinatingCenter> a linkml:SlotDefinition ;
+    skos:definition "The organization or center responsible for coordinating data management and sharing for this study. Defaults to \"NF-OSI\"." ;
+    linkml:ifabsent "string(NF-OSI)" ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
+
 <https://w3id.org/synapse/nfosi/vocab/dataUseModifiers> a linkml:SlotDefinition ;
     dcterms:title "Data Use Modifiers" ;
     skos:definition "List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Most datasets allow \"General Research Use\" unless otherwise specified." ;
@@ -5578,6 +5584,11 @@ Examples: avoidance behavior, choice-making.
 
 <https://w3id.org/synapse/nfosi/vocab/mitochondria> dcterms:source <https://github.com/HumanCellAtlas/metadata-schema/blob/master/json_schema/type/process/sequencing/library_preparation_process.json> ;
     skos:definition "Mitochondria only" .
+
+<https://w3id.org/synapse/nfosi/vocab/nextPhaseProject> a linkml:SlotDefinition ;
+    skos:definition "Synapse project ID of a follow-up project that represents a subsequent funding phase, extension, or continuation of this study's research effort." ;
+    skos:exactMatch schema:successorOf ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
 
 <https://w3id.org/synapse/nfosi/vocab/pmid> a linkml:SlotDefinition ;
     dcterms:title "PubMed ID" ;
@@ -5997,6 +6008,16 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/clinicalTrialID> .
 
+<https://w3id.org/synapse/nfosi/vocab/portalStudy__dataCoordinatingCenter> a linkml:SlotDefinition ;
+    skos:definition "The organization or center responsible for coordinating data management and sharing for this study. Defaults to \"NF-OSI\"." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "dataCoordinatingCenter" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalStudy> ;
+    linkml:ifabsent "string(NF-OSI)" ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PortalStudy> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/dataCoordinatingCenter> .
+
 <https://w3id.org/synapse/nfosi/vocab/portalStudy__dataStatus> a linkml:SlotDefinition ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "dataStatus" ;
@@ -6094,6 +6115,26 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/manifestation> .
 
+<https://w3id.org/synapse/nfosi/vocab/portalStudy__nextPhaseProject> a linkml:SlotDefinition ;
+    skos:definition "Synapse project ID of a follow-up project that represents a subsequent funding phase, extension, or continuation of this study's research effort." ;
+    skos:exactMatch schema:successorOf ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "nextPhaseProject" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalStudy> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PortalStudy> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/nextPhaseProject> .
+
+<https://w3id.org/synapse/nfosi/vocab/portalStudy__previousPhaseProject> a linkml:SlotDefinition ;
+    skos:definition "Synapse project ID of the previous project that this study continues or extends, typically representing an earlier funding phase of the same research effort." ;
+    skos:exactMatch schema:predecessorOf ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "previousPhaseProject" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/PortalStudy> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PortalStudy> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/previousPhaseProject> .
+
 <https://w3id.org/synapse/nfosi/vocab/portalStudy__relatedStudies> a linkml:SlotDefinition ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     skos:prefLabel "relatedStudies" ;
@@ -6165,6 +6206,11 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:required true ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/summary> .
+
+<https://w3id.org/synapse/nfosi/vocab/previousPhaseProject> a linkml:SlotDefinition ;
+    skos:definition "Synapse project ID of the previous project that this study continues or extends, typically representing an earlier funding phase of the same research effort." ;
+    skos:exactMatch schema:predecessorOf ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
 
 <https://w3id.org/synapse/nfosi/vocab/publicationType> a linkml:SlotDefinition ;
     dcterms:title "Publication Type" ;
@@ -10009,6 +10055,17 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/DissociationMethodEnum> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/dissociationMethod> .
 
+<https://w3id.org/synapse/nfosi/vocab/experimentalFactor> a linkml:SlotDefinition ;
+    skos:definition "An ontology concept for experimental factor measured with this data." ;
+    skos:editorialNote "Note that this enforces a concept term from EFO (currently preferred), while the related `experimentalCondition` is free-text and much more specific." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/experimentalFactor> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/Measurement> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/experimentalFactor> .
+
 <https://w3id.org/synapse/nfosi/vocab/grantDOI> a linkml:SlotDefinition ;
     skos:definition "Doi of a grant (e.g. in ProposalCentral) that can be associated with the entity." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -10559,18 +10616,6 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/bisulfiteConversionKitID> .
 
-<https://w3id.org/synapse/nfosi/vocab/experimentalFactor> a linkml:SlotDefinition ;
-    skos:definition "An ontology concept for experimental factor measured with this data." ;
-    skos:editorialNote "Note that this enforces a concept term from EFO (currently preferred), while the related `experimentalCondition` is free-text and much more specific." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/experimentalFactor> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/Measurement> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/experimentalFactor> .
-
 <https://w3id.org/synapse/nfosi/vocab/isCellLine> a linkml:SlotDefinition ;
     skos:definition "Whether or not sample source is a cell line (Yes; No)" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -10777,6 +10822,42 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/citation> .
 
+<https://w3id.org/synapse/nfosi/vocab/compoundDose> a linkml:SlotDefinition ;
+    skos:definition "A dose quantity for the treatment compound. To be used with compoundDoseUnit." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/compoundDose> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/PharmacokineticsAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/compoundDose> .
+
+<https://w3id.org/synapse/nfosi/vocab/compoundDoseUnit> a linkml:SlotDefinition ;
+    skos:definition "A unit associated with the value(s) in compoundDose." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/compoundDoseUnit> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/PharmacokineticsAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/compoundDoseUnit> .
+
+<https://w3id.org/synapse/nfosi/vocab/compoundName> a linkml:SlotDefinition ;
+    skos:definition "Common name for a compound, e.g. “Selumetinib” (https://pubchem.ncbi.nlm.nih.gov/compound/10127622)" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/compoundName> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/PharmacokineticsAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/compoundName> .
+
 <https://w3id.org/synapse/nfosi/vocab/doi> a linkml:SlotDefinition ;
     dcterms:title "Digital Object Identifier",
         "doi" ;
@@ -10798,6 +10879,42 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:required true ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/fundingAgency> .
+
+<https://w3id.org/synapse/nfosi/vocab/genePerturbationTechnology> a linkml:SlotDefinition ;
+    skos:definition "Technology used to perturb gene" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/genePerturbationTechnology> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplateExtended>,
+        <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/GenePerturbationMethodEnum> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/genePerturbationTechnology> .
+
+<https://w3id.org/synapse/nfosi/vocab/genePerturbationType> a linkml:SlotDefinition ;
+    skos:definition "Specific way in which a single gene was perturbed in a sample" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/genePerturbationType> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplateExtended>,
+        <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/GenePerturbationTechnologyEnum> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/genePerturbationType> .
+
+<https://w3id.org/synapse/nfosi/vocab/genePerturbed> a linkml:SlotDefinition ;
+    skos:definition "The HUGO gene symbol for the gene that is perturbed." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/genePerturbed> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplateExtended>,
+        <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/genePerturbed> .
 
 <https://w3id.org/synapse/nfosi/vocab/license> a linkml:SlotDefinition ;
     dcterms:title "License" ;
@@ -10927,84 +11044,6 @@ Examples: avoidance behavior, choice-making.
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/assayTarget> .
-
-<https://w3id.org/synapse/nfosi/vocab/compoundDose> a linkml:SlotDefinition ;
-    skos:definition "A dose quantity for the treatment compound. To be used with compoundDoseUnit." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/compoundDose> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/PharmacokineticsAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/compoundDose> .
-
-<https://w3id.org/synapse/nfosi/vocab/compoundDoseUnit> a linkml:SlotDefinition ;
-    skos:definition "A unit associated with the value(s) in compoundDose." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/compoundDoseUnit> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/PharmacokineticsAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/compoundDoseUnit> .
-
-<https://w3id.org/synapse/nfosi/vocab/compoundName> a linkml:SlotDefinition ;
-    skos:definition "Common name for a compound, e.g. “Selumetinib” (https://pubchem.ncbi.nlm.nih.gov/compound/10127622)" ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/compoundName> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/PharmacokineticsAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/compoundName> .
-
-<https://w3id.org/synapse/nfosi/vocab/genePerturbationTechnology> a linkml:SlotDefinition ;
-    skos:definition "Technology used to perturb gene" ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/genePerturbationTechnology> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplateExtended>,
-        <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/GenePerturbationMethodEnum> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/genePerturbationTechnology> .
-
-<https://w3id.org/synapse/nfosi/vocab/genePerturbationType> a linkml:SlotDefinition ;
-    skos:definition "Specific way in which a single gene was perturbed in a sample" ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/genePerturbationType> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplateExtended>,
-        <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/GenePerturbationTechnologyEnum> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/genePerturbationType> .
-
-<https://w3id.org/synapse/nfosi/vocab/genePerturbed> a linkml:SlotDefinition ;
-    skos:definition "The HUGO gene symbol for the gene that is perturbed." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/genePerturbed> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplateExtended>,
-        <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/genePerturbed> .
 
 <https://w3id.org/synapse/nfosi/vocab/workflow> a linkml:SlotDefinition ;
     skos:definition "Name and version of the workflow used to generate/analyze the data" ;
@@ -11296,6 +11335,21 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/timepointUnit>,
         <https://w3id.org/synapse/nfosi/vocab/tumorType> .
 
+<https://w3id.org/synapse/nfosi/vocab/experimentalTimepoint> a linkml:SlotDefinition ;
+    skos:definition "The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/experimentalTimepoint> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ElectrophysiologyAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplateExtended>,
+        <https://w3id.org/synapse/nfosi/vocab/MRIAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/PdxGenomicsAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/PharmacokineticsAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/experimentalTimepoint> .
+
 <https://w3id.org/synapse/nfosi/vocab/MethylationArrayTemplate> a linkml:ClassDefinition ;
     dcterms:source <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=raw_methylation_array> ;
     skos:definition "Template for raw data files (idat) from DNA methylation arrays." ;
@@ -11405,11 +11459,11 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/targetDepth>,
         <https://w3id.org/synapse/nfosi/vocab/tumorType> .
 
-<https://w3id.org/synapse/nfosi/vocab/experimentalTimepoint> a linkml:SlotDefinition ;
-    skos:definition "The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit" ;
+<https://w3id.org/synapse/nfosi/vocab/timepointUnit> a linkml:SlotDefinition ;
+    skos:definition "For timed experiments this represents the unit of time measured" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/experimentalTimepoint> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/timepointUnit> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ElectrophysiologyAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplateExtended>,
@@ -11418,8 +11472,8 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/PharmacokineticsAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/experimentalTimepoint> .
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/TimeUnit> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/timepointUnit> .
 
 <https://w3id.org/synapse/nfosi/vocab/ElectrophysiologyAssayTemplate> a linkml:ClassDefinition ;
     dcterms:source <https://arxiv.org/pdf/1605.07673.pdf> ;
@@ -11466,23 +11520,6 @@ Examples: avoidance behavior, choice-making.
     linkml:definition_uri linkml:Integer ;
     linkml:imported_from "linkml:types" ;
     linkml:uri xsd:integer .
-
-<https://w3id.org/synapse/nfosi/vocab/timepointUnit> a linkml:SlotDefinition ;
-    skos:definition "For timed experiments this represents the unit of time measured" ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/timepointUnit> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ElectrophysiologyAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplateExtended>,
-        <https://w3id.org/synapse/nfosi/vocab/MRIAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/PdxGenomicsAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/PharmacokineticsAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/TimeUnit> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/timepointUnit> .
 
 <https://w3id.org/synapse/nfosi/vocab/PharmacokineticsAssayTemplate> a linkml:ClassDefinition ;
     skos:definition "Generic template for describing data from a pharmacokinetics assay." ;
@@ -11600,44 +11637,26 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/workflow>,
         <https://w3id.org/synapse/nfosi/vocab/workflowLink> .
 
-<https://w3id.org/synapse/nfosi/vocab/unknown> skos:definition "information not provided" .
-
-<https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate> a linkml:ClassDefinition ;
-    skos:definition "Template for behavioral assay data from model organisms measuring behaviors such as feeding, learning, memory, motor coordination, and activity patterns." ;
+<https://w3id.org/synapse/nfosi/vocab/experimentalCondition> a linkml:SlotDefinition ;
+    skos:definition "A free-text description of the experimental condition (e.g. 5 mM doxorubicin)." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate> ;
-    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate> ;
-    linkml:slot_usage [ ] ;
-    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
-        <https://w3id.org/synapse/nfosi/vocab/Filename>,
-        <https://w3id.org/synapse/nfosi/vocab/age>,
-        <https://w3id.org/synapse/nfosi/vocab/ageUnit>,
-        <https://w3id.org/synapse/nfosi/vocab/assay>,
-        <https://w3id.org/synapse/nfosi/vocab/comments>,
-        <https://w3id.org/synapse/nfosi/vocab/compoundDose>,
-        <https://w3id.org/synapse/nfosi/vocab/compoundDoseUnit>,
-        <https://w3id.org/synapse/nfosi/vocab/compoundName>,
-        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
-        <https://w3id.org/synapse/nfosi/vocab/dataType>,
-        <https://w3id.org/synapse/nfosi/vocab/diagnosis>,
-        <https://w3id.org/synapse/nfosi/vocab/experimentalCondition>,
-        <https://w3id.org/synapse/nfosi/vocab/experimentalFactor>,
-        <https://w3id.org/synapse/nfosi/vocab/experimentalTimepoint>,
-        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
-        <https://w3id.org/synapse/nfosi/vocab/genePerturbationTechnology>,
-        <https://w3id.org/synapse/nfosi/vocab/genePerturbationType>,
-        <https://w3id.org/synapse/nfosi/vocab/genePerturbed>,
-        <https://w3id.org/synapse/nfosi/vocab/individualID>,
-        <https://w3id.org/synapse/nfosi/vocab/modelSystemName>,
-        <https://w3id.org/synapse/nfosi/vocab/nf1Genotype>,
-        <https://w3id.org/synapse/nfosi/vocab/nf2Genotype>,
-        <https://w3id.org/synapse/nfosi/vocab/organ>,
-        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
-        <https://w3id.org/synapse/nfosi/vocab/sex>,
-        <https://w3id.org/synapse/nfosi/vocab/species>,
-        <https://w3id.org/synapse/nfosi/vocab/timepointUnit>,
-        <https://w3id.org/synapse/nfosi/vocab/tumorType> .
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/experimentalCondition> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ElectrophysiologyAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplateExtended>,
+        <https://w3id.org/synapse/nfosi/vocab/MRIAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/PdxGenomicsAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/PharmacokineticsAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/experimentalCondition> .
+
+<https://w3id.org/synapse/nfosi/vocab/unknown> skos:definition "information not provided" .
 
 <https://w3id.org/synapse/nfosi/vocab/ProcessedMergedDataTemplate> a linkml:ClassDefinition ;
     skos:closeMatch <https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aggregated_somatic_mutation>,
@@ -11718,26 +11737,6 @@ Examples: avoidance behavior, choice-making.
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/batchID> .
-
-<https://w3id.org/synapse/nfosi/vocab/experimentalCondition> a linkml:SlotDefinition ;
-    skos:definition "A free-text description of the experimental condition (e.g. 5 mM doxorubicin)." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/experimentalCondition> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ElectrophysiologyAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplateExtended>,
-        <https://w3id.org/synapse/nfosi/vocab/MRIAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/PdxGenomicsAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/PharmacokineticsAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/PlateBasedReporterAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ScRNASeqTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/experimentalCondition> .
 
 <https://w3id.org/synapse/nfosi/vocab/libraryPrep> a linkml:SlotDefinition ;
     skos:definition "The general strategy by which the library was prepared" ;
@@ -12369,8 +12368,7 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Brief free-text comments that may also be important to understanding the resource." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/comments> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplateExtended>,
@@ -12383,16 +12381,15 @@ Examples: avoidance behavior, choice-making.
     skos:definition "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/AnimalModel> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ],
         [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModelManual> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/AnimalModelManual> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/AnimalModel> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/AnimalModelManual> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/modelSystemName> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/PdxGenomicsAssayTemplate> ;
@@ -12452,9 +12449,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Genotype of NF1 gene in the biospecimen from which the data were derived, if known." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/nf1Genotype> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -12467,9 +12464,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ],
-        [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ],
         [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sex> ;
@@ -12497,9 +12494,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Genotype of NF2 gene in the biospecimen from which the data were derived, if known" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/nf2Genotype> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -12640,9 +12637,9 @@ Examples: avoidance behavior, choice-making.
         "Reflects the data types within the dataset." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/MetadataEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/MetadataEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/dataType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/EpidemiologyDataTemplate>,
@@ -12664,6 +12661,7 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/acknowledgementStatements>,
         <https://w3id.org/synapse/nfosi/vocab/alternateDataRepository>,
         <https://w3id.org/synapse/nfosi/vocab/clinicalTrialID>,
+        <https://w3id.org/synapse/nfosi/vocab/dataCoordinatingCenter>,
         <https://w3id.org/synapse/nfosi/vocab/dataStatus>,
         <https://w3id.org/synapse/nfosi/vocab/dataType>,
         <https://w3id.org/synapse/nfosi/vocab/diseaseFocus>,
@@ -12675,6 +12673,8 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/initiative>,
         <https://w3id.org/synapse/nfosi/vocab/institutions>,
         <https://w3id.org/synapse/nfosi/vocab/manifestation>,
+        <https://w3id.org/synapse/nfosi/vocab/nextPhaseProject>,
+        <https://w3id.org/synapse/nfosi/vocab/previousPhaseProject>,
         <https://w3id.org/synapse/nfosi/vocab/relatedStudies>,
         <https://w3id.org/synapse/nfosi/vocab/releasedDate>,
         <https://w3id.org/synapse/nfosi/vocab/studyFileviewId>,
@@ -12690,6 +12690,7 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__acknowledgementStatements>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__alternateDataRepository>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__clinicalTrialID>,
+        <https://w3id.org/synapse/nfosi/vocab/portalStudy__dataCoordinatingCenter>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__dataStatus>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__dataType>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__diseaseFocus>,
@@ -12701,6 +12702,8 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__initiative>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__institutions>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__manifestation>,
+        <https://w3id.org/synapse/nfosi/vocab/portalStudy__nextPhaseProject>,
+        <https://w3id.org/synapse/nfosi/vocab/portalStudy__previousPhaseProject>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__relatedStudies>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__releasedDate>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__studyFileviewId>,
@@ -12855,92 +12858,91 @@ Examples: avoidance behavior, choice-making.
 
 <https://w3id.org/synapse/nfosi/vocab/> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace <http://purl.obolibrary.org/obo/MMO_> ;
-            sh:prefix "MMO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/VT_> ;
-            sh:prefix "VT" ],
-        [ sh:namespace prov: ;
-            sh:prefix "prov" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/PATO_> ;
-            sh:prefix "PATO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MS_> ;
+    sh:declare [ sh:namespace <http://purl.obolibrary.org/obo/MS_> ;
             sh:prefix "MS" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MI_> ;
-            sh:prefix "MI" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/FBcv_> ;
-            sh:prefix "FBcv" ],
-        [ sh:namespace skos: ;
-            sh:prefix "skos" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/ZFA_> ;
-            sh:prefix "ZFA" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/IAO_> ;
-            sh:prefix "IAO" ],
         [ sh:namespace <http://purl.obolibrary.org/obo/MONDO_> ;
             sh:prefix "MONDO" ],
-        [ sh:namespace rdfs: ;
-            sh:prefix "rdfs" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/UO_> ;
-            sh:prefix "UO" ],
-        [ sh:namespace <http://purl.enanomapper.org/onto/ENM_> ;
-            sh:prefix "ENM" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/DOID_> ;
-            sh:prefix "DOID" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/NCIT_> ;
-            sh:prefix "NCIT" ],
-        [ sh:namespace schema1: ;
-            sh:prefix "schema" ],
-        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
-            sh:prefix "personinfo" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/CL_> ;
-            sh:prefix "CL" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MAXO_> ;
-            sh:prefix "MAXO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/ERO_> ;
-            sh:prefix "ERO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/OBI_> ;
-            sh:prefix "OBI" ],
-        [ sh:namespace <http://dicom.nema.org/resources/ontology/DCM/> ;
-            sh:prefix "DCM" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/FBbi_> ;
-            sh:prefix "FBbi" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/OMIABIS_> ;
-            sh:prefix "OMIABIS" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/CLO_> ;
-            sh:prefix "CLO" ],
-        [ sh:namespace <http://www.ebi.ac.uk/efo/EFO_> ;
-            sh:prefix "EFO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/BTO_> ;
-            sh:prefix "BTO" ],
-        [ sh:namespace <http://semanticscience.org/resource/CHEMINF_> ;
-            sh:prefix "CHEMINF" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/GO_> ;
-            sh:prefix "GO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/CHMO_> ;
-            sh:prefix "CHMO" ],
-        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
-            sh:prefix "nf" ],
-        [ sh:namespace linkml: ;
-            sh:prefix "linkml" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/GENO_> ;
-            sh:prefix "GENO" ],
         [ sh:namespace <http://purl.obolibrary.org/obo/FMA_> ;
             sh:prefix "FMA" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MAXO_> ;
+            sh:prefix "MAXO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/PATO_> ;
+            sh:prefix "PATO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/CHMO_> ;
+            sh:prefix "CHMO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/FBbi_> ;
+            sh:prefix "FBbi" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/ERO_> ;
+            sh:prefix "ERO" ],
+        [ sh:namespace linkml: ;
+            sh:prefix "linkml" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/BTO_> ;
+            sh:prefix "BTO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/ZFA_> ;
+            sh:prefix "ZFA" ],
+        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
+            sh:prefix "personinfo" ],
+        [ sh:namespace rdfs: ;
+            sh:prefix "rdfs" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/DOID_> ;
+            sh:prefix "DOID" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/GENO_> ;
+            sh:prefix "GENO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/FBcv_> ;
+            sh:prefix "FBcv" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/OBI_> ;
+            sh:prefix "OBI" ],
+        [ sh:namespace <http://semanticscience.org/resource/CHEMINF_> ;
+            sh:prefix "CHEMINF" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MI_> ;
+            sh:prefix "MI" ],
+        [ sh:namespace <http://www.ebi.ac.uk/cmpo/CMPO_> ;
+            sh:prefix "CMPO" ],
         [ sh:namespace <http://purl.obolibrary.org/obo/UBERON_> ;
             sh:prefix "UBERON" ],
-        [ sh:namespace <http://www.ebi.ac.uk/swo/data/SWO_> ;
-            sh:prefix "SWO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/GO_> ;
+            sh:prefix "GO" ],
+        [ sh:namespace <http://www.ebi.ac.uk/efo/EFO_> ;
+            sh:prefix "EFO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/VT_> ;
+            sh:prefix "VT" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/IAO_> ;
+            sh:prefix "IAO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MMO_> ;
+            sh:prefix "MMO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/NCIT_> ;
+            sh:prefix "NCIT" ],
         [ sh:namespace <http://snomed.info/id/> ;
             sh:prefix "SNOMED" ],
+        [ sh:namespace prov: ;
+            sh:prefix "prov" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/OMIABIS_> ;
+            sh:prefix "OMIABIS" ],
+        [ sh:namespace <http://www.ebi.ac.uk/swo/data/SWO_> ;
+            sh:prefix "SWO" ],
         [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
             sh:prefix "htan" ],
-        [ sh:namespace <http://www.bioassayontology.org/bao#BAO_> ;
-            sh:prefix "BAO" ],
+        [ sh:namespace <http://purl.enanomapper.org/onto/ENM_> ;
+            sh:prefix "ENM" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/CL_> ;
+            sh:prefix "CL" ],
+        [ sh:namespace skos: ;
+            sh:prefix "skos" ],
+        [ sh:namespace <http://dicom.nema.org/resources/ontology/DCM/> ;
+            sh:prefix "DCM" ],
         [ sh:namespace <http://edamontology.org/> ;
             sh:prefix "EDAM" ],
-        [ sh:namespace <http://www.ebi.ac.uk/cmpo/CMPO_> ;
-            sh:prefix "CMPO" ] ;
+        [ sh:namespace <http://purl.obolibrary.org/obo/CLO_> ;
+            sh:prefix "CLO" ],
+        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
+            sh:prefix "nf" ],
+        [ sh:namespace schema1: ;
+            sh:prefix "schema" ],
+        [ sh:namespace <http://www.bioassayontology.org/bao#BAO_> ;
+            sh:prefix "BAO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/UO_> ;
+            sh:prefix "UO" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiospecimenTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate>,
@@ -13083,7 +13085,7 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-09-03T16:56:03"^^xsd:dateTime ;
+    linkml:generation_date "2025-09-04T16:15:27"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -13284,6 +13286,7 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__acknowledgementStatements>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__alternateDataRepository>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__clinicalTrialID>,
+        <https://w3id.org/synapse/nfosi/vocab/portalStudy__dataCoordinatingCenter>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__dataStatus>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__dataType>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__diseaseFocus>,
@@ -13295,6 +13298,8 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__initiative>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__institutions>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__manifestation>,
+        <https://w3id.org/synapse/nfosi/vocab/portalStudy__nextPhaseProject>,
+        <https://w3id.org/synapse/nfosi/vocab/portalStudy__previousPhaseProject>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__relatedStudies>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__releasedDate>,
         <https://w3id.org/synapse/nfosi/vocab/portalStudy__studyFileviewId>,
@@ -13384,8 +13389,8 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-09-03T16:56:01"^^xsd:dateTime ;
-    linkml:source_file_size 385921 ;
+    linkml:source_file_date "2025-09-04T16:14:08"^^xsd:dateTime ;
+    linkml:source_file_size 386249 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,
@@ -13405,5 +13410,4 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/time>,
         <https://w3id.org/synapse/nfosi/vocab/uri>,
         <https://w3id.org/synapse/nfosi/vocab/uriorcurie> .
-
 
