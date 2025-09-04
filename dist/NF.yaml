@@ -7077,6 +7077,22 @@ classes:
       - lenticularOpacity
       - nonvestibularSchwannomas
       - numberOfSchwannomas
+  BehavioralAssayTemplate:
+    description: Template for behavioral assay data from model organisms measuring behaviors such as feeding, learning, memory, motor coordination, and activity patterns.
+    is_a: BiologicalAssayDataTemplate
+    slots:
+      - modelSystemName
+      - experimentalFactor
+      - experimentalCondition
+      - experimentalTimepoint
+      - timepointUnit
+      - compoundName
+      - compoundDose
+      - compoundDoseUnit
+      - genePerturbed
+      - genePerturbationType
+      - genePerturbationTechnology
+      - comments
   BiologicalAssayDataTemplate:
     abstract: true
     description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples.  This is an abstract template; "real" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing).
