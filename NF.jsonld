@@ -50565,6 +50565,9 @@
           "@id": "bts:ClinicalTrialID"
         },
         {
+          "@id": "bts:DataCoordinatingCenter"
+        },
+        {
           "@id": "bts:DataStatus"
         },
         {
@@ -50598,6 +50601,12 @@
           "@id": "bts:Manifestation"
         },
         {
+          "@id": "bts:NextPhaseProject"
+        },
+        {
+          "@id": "bts:PreviousPhaseProject"
+        },
+        {
           "@id": "bts:RelatedStudies"
         },
         {
@@ -50622,6 +50631,23 @@
           "@id": "bts:Summary"
         }
       ],
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:DataCoordinatingCenter",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "DataCoordinatingCenter",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "dataCoordinatingCenter",
+      "sms:required": "sms:false",
       "sms:validationRules": []
     },
     {
@@ -50689,6 +50715,40 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "institutions",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NextPhaseProject",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NextPhaseProject",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "nextPhaseProject",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PreviousPhaseProject",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PreviousPhaseProject",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "previousPhaseProject",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
