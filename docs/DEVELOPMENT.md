@@ -134,7 +134,7 @@ The validation process ensures all schemas are syntactically correct and compati
 
 #### Schema Registration (Post-merge)
 
-After successful merge to main branch, schemas can be registered with Synapse using:
+After successful merge to main branch, (new, updated) schemas are automatically registered via with Synapse using:
 
 ```bash
 python utils/register-schemas.py
