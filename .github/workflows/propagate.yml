@@ -41,8 +41,6 @@ jobs:
           pip install jsonref synapseclient
 
       - name: Register changed JSON schemas with Synapse
-        env:
-          SYNAPSE_AUTH_TOKEN: ${{ secrets.NF_SERVICE_TOKEN }}
         run: |
           CHANGED=$(git diff --name-only HEAD HEAD~1 registered-json-schemas)
           if [ -n "$CHANGED" ]; then
