@@ -52,12 +52,12 @@
     "ageUnit": {
       "description": "",
       "enum": [
-        "seconds",
-        "minutes",
-        "hours",
         "days",
-        "weeks",
+        "hours",
+        "minutes",
         "months",
+        "seconds",
+        "weeks",
         "years"
       ],
       "title": "TimeUnit",
@@ -107,8 +107,8 @@
       "description": "Enumerations describing how neurofibromas can manifest more generally.",
       "enum": [
         "absent",
-        "scattered",
         "dense",
+        "scattered",
         "unknown"
       ],
       "title": "NeurofibromaManifestationEnum",
@@ -127,20 +127,20 @@
     "diagnosis": {
       "description": "",
       "enum": [
-        "Neurofibromatosis type 1",
-        "Schwannomatosis",
-        "NF2-related schwannomatosis",
-        "SMARCB1-related schwannomatosis",
-        "LZTR1-related schwannomatosis",
         "22q-related schwannomatosis",
-        "Schwannomatosis-NOS",
-        "Schwannomatosis-NEC",
-        "Sporadic Schwannoma",
-        "Vestibular Schwannoma",
-        "atypical neurofibroma",
+        "LZTR1-related schwannomatosis",
+        "NF2-related schwannomatosis",
+        "Neurofibromatosis type 1",
         "Noonan Syndrome",
         "Not Applicable",
-        "Unknown"
+        "SMARCB1-related schwannomatosis",
+        "Schwannomatosis",
+        "Schwannomatosis-NEC",
+        "Schwannomatosis-NOS",
+        "Sporadic Schwannoma",
+        "Unknown",
+        "Vestibular Schwannoma",
+        "atypical neurofibroma"
       ],
       "title": "DiagnosisEnum",
       "type": "string"
@@ -148,10 +148,10 @@
     "diagnosisAgeGroup": {
       "description": "",
       "enum": [
-        "infancy",
-        "childhood",
         "adolescence",
         "adulthood",
+        "childhood",
+        "infancy",
         "unknown"
       ],
       "title": "AgeGroupEnum",
@@ -161,8 +161,8 @@
       "description": "Enumerations describing how neurofibromas can manifest more generally.",
       "enum": [
         "absent",
-        "scattered",
         "dense",
+        "scattered",
         "unknown"
       ],
       "title": "NeurofibromaManifestationEnum",
@@ -180,8 +180,8 @@
     "gliomaOrEpendymoma": {
       "description": "Enumerations describing the manifestation of tumors confirmed via imaging with mainly absent or present being the most relevant result.",
       "enum": [
-        "not imaged",
         "absent by imaging",
+        "not imaged",
         "present",
         "unknown"
       ],
@@ -275,10 +275,10 @@
     "meningioma": {
       "description": "Enumerations describing the manifestation of tumors confirmed via imaging with one or multiple sites being the most relevant result.",
       "enum": [
-        "not imaged",
         "absent by imaging",
-        "single",
         "multiple",
+        "not imaged",
+        "single",
         "unknown"
       ],
       "title": "MultipleImagingDiagnosisEnum",
@@ -299,9 +299,9 @@
         {
           "description": "",
           "enum": [
-            "-/-",
-            "+/-",
             "+/+",
+            "+/-",
+            "-/-",
             "Unknown"
           ],
           "title": "Genotype",
@@ -324,9 +324,9 @@
         {
           "description": "",
           "enum": [
-            "-/-",
-            "+/-",
             "+/+",
+            "+/-",
+            "-/-",
             "Unknown"
           ],
           "title": "Genotype",
@@ -357,8 +357,8 @@
     "nonvestibularCranialSchwannoma": {
       "description": "Enumerations describing the manifestation of tumors confirmed via imaging with mainly absent or present being the most relevant result.",
       "enum": [
-        "not imaged",
         "absent by imaging",
+        "not imaged",
         "present",
         "unknown"
       ],
@@ -368,9 +368,9 @@
     "nonvestibularSchwannomas": {
       "description": "",
       "enum": [
-        "only by imaging evidence",
         "1 pathogically confirmed",
         "2 or more, at least 1 pathogically confirmed",
+        "only by imaging evidence",
         "unknown"
       ],
       "title": "NonvestibularSchwannomaManifestationEnum",
@@ -379,9 +379,9 @@
     "numberOfSchwannomas": {
       "description": "Enumerations describing the manifestation of schwannomas.",
       "enum": [
-        "single",
-        "scattered",
         "dense",
+        "scattered",
+        "single",
         "unknown"
       ],
       "title": "SchwannomaManifestationEnum",
@@ -412,9 +412,9 @@
     "painStatus": {
       "description": "",
       "enum": [
+        "disabling",
         "not a problem",
-        "occasional",
-        "disabling"
+        "occasional"
       ],
       "title": "PainEnum",
       "type": "string"
@@ -442,9 +442,9 @@
     "plexiformNeurofibromas": {
       "description": "Enumerations describing the manifestation of plexiform neurofibromas, combining information on presence and the certainty via MRI imaging technique.",
       "enum": [
-        "present",
         "absent by MRI",
         "absent clinically - no MRI",
+        "present",
         "unknown"
       ],
       "title": "PlexiformNeurofibromaManifestationEnum",
@@ -453,10 +453,10 @@
     "pubertyOnset": {
       "description": "",
       "enum": [
-        "prebubertal",
-        "precocious",
+        "late",
         "normal",
-        "late"
+        "prebubertal",
+        "precocious"
       ],
       "title": "PubertyOnsetEnum",
       "type": "string"
@@ -476,8 +476,8 @@
         {
           "description": "",
           "enum": [
-            "Male",
-            "Female"
+            "Female",
+            "Male"
           ],
           "title": "SexEnum",
           "type": "string"
@@ -515,17 +515,17 @@
     "species": {
       "description": "",
       "enum": [
-        "Rattus norvegicus",
-        "Gallus gallus",
-        "Pan troglodytes",
-        "Mus musculus (humanized)",
-        "Homo sapiens",
         "Danio rerio",
         "Drosophila melanogaster",
-        "Rhesus macaque",
-        "Sus scrofa",
+        "Gallus gallus",
+        "Homo sapiens",
+        "Mus musculus",
+        "Mus musculus (humanized)",
         "Oryctolagus cuniculus",
-        "Mus musculus"
+        "Pan troglodytes",
+        "Rattus norvegicus",
+        "Rhesus macaque",
+        "Sus scrofa"
       ],
       "title": "SpeciesEnum",
       "type": "string"
@@ -543,10 +543,10 @@
     "spinalNeurofibromas": {
       "description": "Enumerations describing the manifestation of spinal neurofibromas, combining information on presence and the cervical locations.",
       "enum": [
-        "not imaged",
         "absent",
+        "all levels",
         "levels 1-3",
-        "all levels"
+        "not imaged"
       ],
       "title": "SpinalNeuromaManifestationEnum",
       "type": "string"
@@ -554,10 +554,10 @@
     "spinalSchwannoma": {
       "description": "Enumerations describing the manifestation of tumors confirmed via imaging with one or multiple sites being the most relevant result.",
       "enum": [
-        "not imaged",
         "absent by imaging",
-        "single",
         "multiple",
+        "not imaged",
+        "single",
         "unknown"
       ],
       "title": "MultipleImagingDiagnosisEnum",
@@ -566,8 +566,8 @@
     "stature": {
       "description": "Enumerations corresponding to 3 bins using 2 standard deviations as a cutoff.",
       "enum": [
-        "< 5th centile",
         "5th-95th centile",
+        "< 5th centile",
         "> 95th centile"
       ],
       "title": "Percentiles-2SD",
@@ -577,8 +577,8 @@
       "description": "Enumerations describing how neurofibromas can manifest more generally.",
       "enum": [
         "absent",
-        "scattered",
         "dense",
+        "scattered",
         "unknown"
       ],
       "title": "NeurofibromaManifestationEnum",
@@ -587,12 +587,12 @@
     "tumorTreatmentStatus": {
       "description": "",
       "enum": [
-        "no specific therapy",
         "chemotherapy",
-        "surgery",
+        "clinical trial",
+        "no specific therapy",
         "radiation",
-        "targeted therapy",
-        "clinical trial"
+        "surgery",
+        "targeted therapy"
       ],
       "title": "TumorTreatmentEnum",
       "type": "string"
@@ -610,10 +610,10 @@
     "vestibularSchwannoma": {
       "description": "Enumerations describing the manifestation of tumors confirmed via imaging (MRI or other), where lateral information is most relevant.",
       "enum": [
-        "not imaged",
         "absent by imaging",
-        "unilateral",
         "bilateral",
+        "not imaged",
+        "unilateral",
         "unknown"
       ],
       "title": "LateralManifestationEnum",

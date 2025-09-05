@@ -5,14 +5,10 @@ import yaml
 import json
 import time
 import os
+import argparse
 from pathlib import Path
 import jsonref
 import synapseclient
-
-# Config
-SCHEMA_YAML = Path("dist/NF.yaml")
-OUT_DIR = Path("registered-json-schemas")
-OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 def run_cmd(cmd):
     """Run command and return output."""
@@ -94,6 +90,27 @@ def validate_schema(path: Path):
         return False
 
 def main():
+    parser = argparse.ArgumentParser(description="Generate and validate JSON schemas from LinkML")
+    parser.add_argument("--schema-yaml", 
+                       default="dist/NF.yaml",
+                       help="Path to LinkML YAML schema file (default: dist/NF.yaml)")
+    parser.add_argument("--output-dir", 
+                       default="registered-json-schemas", 
+                       help="Output directory for JSON schemas (default: registered-json-schemas)")
+    parser.add_argument("--log-file",
+                       default="schema-validation-log.md",
+                       help="Path to validation log file (default: schema-validation-log.md)")
+    
+    args = parser.parse_args()
+    
+    # Set up paths
+    SCHEMA_YAML = Path(args.schema_yaml)
+    OUT_DIR = Path(args.output_dir)
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    
+    if not SCHEMA_YAML.exists():
+        print(f"❌ Schema file not found: {SCHEMA_YAML}")
+        exit(1)
     
     # Get class names
     master = yaml.safe_load(SCHEMA_YAML.read_text())
@@ -141,6 +158,36 @@ def main():
     failed = len(validation_results) - passed
     
     print(f"\n🎉 Validation complete: {passed} passed, {failed} failed")
+    
+    # Log validation results to markdown file
+    log_content = f"""# Schema Validation Report
+
+Generated: {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}
+
+## Summary
+- **Generated schemas:** {generated_count}
+- **Validation passed:** {passed}
+- **Validation failed:** {failed}
+
+## Details
+"""
+    
+    # Add details for each schema
+    for json_file in OUT_DIR.glob('*.json'):
+        status = "✅ PASSED" if json_file in [f for f, r in zip(OUT_DIR.glob('*.json'), validation_results) if r] else "❌ FAILED"
+        log_content += f"- `{json_file.name}`: {status}\n"
+    
+    # Write log file
+    log_file = Path(args.log_file)
+    log_file.write_text(log_content)
+    print(f"\n📝 Validation report written to {log_file}")
+    
+    # Exit with error code if any validations failed
+    if failed > 0:
+        print(f"\n❌ {failed} schema(s) failed validation. Please fix and try again.")
+        exit(1)
+    else:
+        print(f"\n✅ All {passed} schemas passed validation!")
 
 if __name__ == "__main__":
     main()

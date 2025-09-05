@@ -116,3 +116,45 @@ Example:
     ]
 }
 ```
+
+### CI/CD Workflows for Schema Management
+
+The repository includes automated workflows that handle JSON schema validation and registration:
+
+#### Schema Validation (PR Workflow)
+
+During pull requests, the `main-ci` workflow automatically:
+
+1. **Generates JSON schemas** from LinkML source files using `utils/gen-json-schema-class.py`
+2. **Validates schemas** against Synapse API (dry-run validation)  
+3. **Reports results** as a PR comment with detailed validation status for each schema
+4. **Blocks merge** if any schemas fail validation (workflow exits with error code 1)
+
+The validation process ensures all schemas are syntactically correct and compatible with Synapse before they're merged to main.
+
+#### Schema Registration (Post-merge)
+
+After successful merge to main branch, (new, updated) schemas are automatically registered via with Synapse using:
+
+```bash
+python utils/register-schemas.py
+```
+
+This script:
+- Registers all validated schemas with the Synapse platform (sets `dryRun: false`)
+- Generates a registration log with detailed results
+- Can exclude specific schemas if needed (e.g., `--exclude Superdataset.json`)
+
+#### Script Usage
+
+Both utilities support command-line configuration (refer to `.github/workflows/main-ci.yaml` for expected tools and versions in environment before running). Local testing examples:
+
+```bash
+# Schema validation (used in PR workflow)
+SYNAPSE_AUTH_TOKEN="$NF_SERVICE_TOKEN" .python utils/gen-json-schema-class.py --schema-yaml dist/NF.yaml --output-dir registered-json-schemas
+
+# Schema registration (used post-merge)  
+SYNAPSE_AUTH_TOKEN="$NF_SERVICE_TOKEN" python utils/register-schemas.py --schema-dir registered-json-schemas
+```
+
+Generated log files (`schema-validation-log.md`, `schema-registration-log.md`) are automatically excluded from version control but provide detailed audit trails of the validation and registration processes.
