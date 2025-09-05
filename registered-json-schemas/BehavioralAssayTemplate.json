@@ -1,7 +1,7 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-epigeneticsassaytemplate",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-behavioralassaytemplate",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
-  "description": "Alias for EpigenomicsAssayTemplate for backwards-compatibility.",
+  "description": "Template for behavioral assay data from model organisms measuring behaviors such as feeding, learning, memory, motor coordination, and activity patterns.",
   "properties": {
     "Component": {
       "description": "Type of metadata template; provide the same one for all items/rows.",
@@ -27,10 +27,6 @@
         "years"
       ],
       "title": "TimeUnit",
-      "type": "string"
-    },
-    "aliquotID": {
-      "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
       "type": "string"
     },
     "assay": {
@@ -235,16 +231,20 @@
       "title": "AssayEnum",
       "type": "string"
     },
-    "batchID": {
-      "description": "Batch identifier, can be used in any context where added batch information is helpful, such as different sequencing runs or collection times.",
-      "type": "string"
-    },
-    "bisulfiteConversionKitID": {
-      "description": "Name of kit used in bisulfite conversion.",
-      "type": "string"
-    },
     "comments": {
       "description": "Brief free-text comments that may also be important to understanding the resource.",
+      "type": "string"
+    },
+    "compoundDose": {
+      "description": "A dose quantity for the treatment compound. To be used with compoundDoseUnit.",
+      "type": "string"
+    },
+    "compoundDoseUnit": {
+      "description": "A unit associated with the value(s) in compoundDose.",
+      "type": "string"
+    },
+    "compoundName": {
+      "description": "Common name for a compound, e.g. \u201cSelumetinib\u201d (https://pubchem.ncbi.nlm.nih.gov/compound/10127622)",
       "type": "string"
     },
     "dataSubtype": {
@@ -357,6 +357,29 @@
         "atypical neurofibroma"
       ],
       "title": "DiagnosisEnum",
+      "type": "string"
+    },
+    "experimentalCondition": {
+      "description": "A free-text description of the experimental condition (e.g. 5 mM doxorubicin).",
+      "type": "string"
+    },
+    "experimentalFactor": {
+      "description": "",
+      "enum": [
+        "body weight",
+        "brain growth measurement",
+        "brain volume measurement",
+        "clinical laboratory measurement",
+        "cognitive function measurement",
+        "gait measurement",
+        "motor development measurement",
+        "pain measurement"
+      ],
+      "title": "Measurement",
+      "type": "string"
+    },
+    "experimentalTimepoint": {
+      "description": "The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit",
       "type": "string"
     },
     "fileFormat": {
@@ -482,71 +505,33 @@
       "title": "FileFormatEnum",
       "type": "string"
     },
+    "genePerturbationTechnology": {
+      "description": "",
+      "enum": [
+        "CRE Recombinase",
+        "CRISPR",
+        "CRISPR Assisted mRNA Fragment Trans-splicing (CRAFT)",
+        "RNAi"
+      ],
+      "title": "GenePerturbationMethodEnum",
+      "type": "string"
+    },
+    "genePerturbationType": {
+      "description": "",
+      "enum": [
+        "CRE Recombinase",
+        "CRISPR",
+        "RNAi"
+      ],
+      "title": "GenePerturbationTechnologyEnum",
+      "type": "string"
+    },
+    "genePerturbed": {
+      "description": "The HUGO gene symbol for the gene that is perturbed.",
+      "type": "string"
+    },
     "individualID": {
       "description": "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
-      "type": "string"
-    },
-    "libraryPrep": {
-      "description": "",
-      "enum": [
-        "lncRNAenrichment",
-        "miRNAenrichment",
-        "polyAselection",
-        "rRNAdepletion"
-      ],
-      "title": "LibraryPrepEnum",
-      "type": "string"
-    },
-    "libraryPreparationMethod": {
-      "description": "",
-      "enum": [
-        "10x",
-        "CEL-seq",
-        "Drop-Seq",
-        "GTAC@WUSTL in-house prep",
-        "IDT xGen Exome Research Panel",
-        "Illumina Ribo-Zero Plus",
-        "Illumina Tn5 Transposase",
-        "Illumina TruSeq DNA Nano",
-        "KAPA HyperPrep Kit PCR-free",
-        "KAPA RNA HyperPrep Kit with RiboErase (HMR)",
-        "KAPA mRNA HyperPrep Kit",
-        "NEBNext mRNA Library Prep Reagent Set for Illumina",
-        "Omni-ATAC",
-        "Oxford Nanopore Direct RNA Sequencing Kit",
-        "QIAseq FX DNA Library Kit",
-        "QuantSeq FWD V2 with UDI",
-        "Smart-seq2",
-        "Smart-seq4",
-        "TruSeq",
-        "TruSeq standard total RNA library kit",
-        "unknown"
-      ],
-      "title": "LibraryPreparationMethodEnum",
-      "type": "string"
-    },
-    "libraryStrand": {
-      "anyOf": [
-        {
-          "description": "",
-          "enum": [
-            "FirstStranded",
-            "SecondStranded",
-            "Unstranded"
-          ],
-          "title": "StrandednessEnum",
-          "type": "string"
-        },
-        {
-          "description": "",
-          "enum": [
-            "Not Applicable"
-          ],
-          "title": "NotApplicableEnum",
-          "type": "string"
-        }
-      ],
-      "description": "Strandedness of paired-end RNA-Sequencing data. This is an important parameter for RNA-seq analysis.",
       "type": "string"
     },
     "modelSystemName": {
@@ -1440,18 +1425,6 @@
       "description": "Genotype of NF2 gene in the biospecimen from which the data were derived, if known",
       "type": "string"
     },
-    "nucleicAcidSource": {
-      "description": "",
-      "enum": [
-        "bulk cell",
-        "bulk nuclei",
-        "mitochondria",
-        "single cell",
-        "single nucleus"
-      ],
-      "title": "NucleicAcidSourceEnum",
-      "type": "string"
-    },
     "organ": {
       "description": "",
       "enum": [
@@ -1479,144 +1452,6 @@
       "title": "OrganEnum",
       "type": "string"
     },
-    "parentSpecimenID": {
-      "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
-      "type": "string"
-    },
-    "platform": {
-      "description": "",
-      "enum": [
-        "10x Visium Spatial Gene Expression",
-        "2D CellTiter-Glo",
-        "2D Incucyte",
-        "7T Bruker Biospec",
-        "Affymetrix Genome-Wide Human SNP 5.0 Array",
-        "Affymetrix Genome-Wide Human SNP 6.0 Array",
-        "Affymetrix Human Gene 1.0 ST Array",
-        "Affymetrix Human Genome U133 Plus 2.0 Array",
-        "Affymetrix U133AB",
-        "Agilent 44Karray",
-        "BD FACS Calibur",
-        "BD FACSymphony",
-        "BGISEQ-500",
-        "Bionano Irys",
-        "Caliper",
-        "Cherry Imaging FACE Platform",
-        "Cherry Imaging TRACE Platform",
-        "Chromium X",
-        "ECHO Confocal",
-        "EnVision 2103 Multiplate Reader",
-        "GE Discovery MR750 3T",
-        "GE Optima MR450W 1.5T",
-        "GE Signa Excite 1.5T",
-        "GE Signa Genesis 1.5T",
-        "GE Signa HDxt 1.5T",
-        "GE Signa HDxt 3T",
-        "GE Signa Premier 3T",
-        "Hitachi Echelon 1.5T",
-        "Hitachi Oasis 1.2T",
-        "IVIS Spectrum In Vivo Imaging System",
-        "Illumina 1M",
-        "Illumina Genome Analyzer IIx",
-        "Illumina HiSeq 2000",
-        "Illumina HiSeq 2500",
-        "Illumina HiSeq 3000",
-        "Illumina HiSeq 4000",
-        "Illumina HiSeq X",
-        "Illumina Human660W-Quad v1.0 BeadChip",
-        "Illumina HumanHap300",
-        "Illumina HumanMethylation450",
-        "Illumina HumanOmni1-Quadv1.0",
-        "Illumina HumanOmniExpress-24 v1.0 BeadChip",
-        "Illumina HumanOmniExpress-24 v1.2 BeadChip",
-        "Illumina Infinium MethylationEPIC BeadChip v1.0 (850k)",
-        "Illumina Infinium MethylationEPIC BeadChip v2.0 (935k)",
-        "Illumina MiSeq",
-        "Illumina MouseWG-6 v2.0 expression beadchip",
-        "Illumina NextSeq 1000",
-        "Illumina NextSeq 2000",
-        "Illumina NextSeq 500",
-        "Illumina NextSeq 550",
-        "Illumina NovaSeq 6000",
-        "Illumina NovaSeq X",
-        "Illumina NovaSeq X Plus",
-        "Illumina Omni2pt5M",
-        "Illumina Omni5M",
-        "Illumina WholeGenome DASL",
-        "Illumina h650",
-        "Infinium HumanOmniExpressExome",
-        "LI-COR Odyssey CLx",
-        "LTQ Orbitrap XL",
-        "Leica Aperio AT2",
-        "Leica MZ16",
-        "Leica S9 Stereomicroscope",
-        "LifeViz Infinity System",
-        "LifeViz Micro System",
-        "MGI T-series",
-        "Malvern Zetasizer",
-        "NanoFCM",
-        "NanoString Human nCounter PanCancer IO360 Panel",
-        "Nanostring Counter",
-        "Nanostring GeoMx",
-        "Not Applicable",
-        "Olympus DP80",
-        "Olympus IX73",
-        "Orbitrap Fusion Lumos Tribrid",
-        "Other Platform",
-        "Oxford Nanopore",
-        "PacBio RS II",
-        "PacBio Sequel II System",
-        "PacBio Sequel IIe System",
-        "Pannoramic 250 Flash",
-        "Perlegen 300Karray",
-        "Philips Achieva 1.5T",
-        "Philips Achieva 3T",
-        "Philips FEI Tecnai 12",
-        "Philips Ingenia 1.5T",
-        "Philips Ingenia 3T",
-        "Philips Intera Achieva 3T",
-        "Philips Panorama 1.0T",
-        "Promega GloMax Discover",
-        "Q Exative HF",
-        "Scale",
-        "Siemens Avanto 1.5T",
-        "Siemens Avanto Fit 1.5T",
-        "Siemens Magnetom Aera 1.5T",
-        "Siemens Magnetom Espree 1.5T",
-        "Siemens Magnetom Prisma 3T",
-        "Siemens Magnetom Prisma Fit 3T",
-        "Siemens Magnetom Skyra 3T",
-        "Siemens Magnetom Trio 3T",
-        "Siemens Magnetom Verio 3T",
-        "Spectramax M Series",
-        "TOOsonix System ONE-M",
-        "Toshiba Vantage Titan 1.5T",
-        "Varioskan LUX",
-        "Vectra H1 3D Imaging System",
-        "Ventana Benchmark XT",
-        "Vevo 3100 Imaging System",
-        "XF24 Extracellular Flux Analyzer",
-        "Zeiss LSM",
-        "Zeiss LSM 700",
-        "Zeiss LSM 980",
-        "Zeno Electronic Walkway",
-        "ZetaView"
-      ],
-      "title": "PlatformEnum",
-      "type": "string"
-    },
-    "readDepth": {
-      "description": "If available, the coverage statistic as output from bedtools coverage or samtools stats.",
-      "type": "string"
-    },
-    "readLength": {
-      "description": "Number of base pairs (bp) sequenced for a read",
-      "type": "string"
-    },
-    "readPair": {
-      "description": "The read of origin, Read 1 or Read 2",
-      "type": "string"
-    },
     "resourceType": {
       "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
       "enum": [
@@ -1630,15 +1465,6 @@
         "workflow report"
       ],
       "title": "Resource",
-      "type": "string"
-    },
-    "runType": {
-      "description": "",
-      "enum": [
-        "pairedEnd",
-        "singleEnd"
-      ],
-      "title": "RunTypeEnum",
       "type": "string"
     },
     "sex": {
@@ -1690,77 +1516,18 @@
       "title": "SpeciesEnum",
       "type": "string"
     },
-    "specimenID": {
-      "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
-      "type": "string"
-    },
-    "specimenPreparationMethod": {
+    "timepointUnit": {
       "description": "",
       "enum": [
-        "Cryopreserved",
-        "FFPE",
-        "Flash frozen",
-        "Fresh collected",
-        "OCT",
-        "RNAlater",
-        "Viably frozen",
-        "ethanol",
-        "formalin-fixed"
+        "days",
+        "hours",
+        "minutes",
+        "months",
+        "seconds",
+        "weeks",
+        "years"
       ],
-      "title": "SpecimenPreparationMethodEnum",
-      "type": "string"
-    },
-    "specimenType": {
-      "anyOf": [
-        {
-          "description": "Tissue is a group of cells that have similar structure and that function together as a unit.",
-          "enum": [
-            "Buccal Mucosa",
-            "Buffy Coat",
-            "CDX tissue",
-            "Dorsal Root Ganglion",
-            "PDX tissue",
-            "blood",
-            "bone marrow",
-            "cerebral cortex",
-            "connective tissue",
-            "embryonic tissue",
-            "meninges",
-            "microtissue",
-            "nerve tissue",
-            "optic nerve",
-            "organoid",
-            "plasma",
-            "primary tumor",
-            "retina",
-            "sciatic nerve",
-            "serum",
-            "spheroid",
-            "splenocyte",
-            "tumor-adjacent normal",
-            "whole brain"
-          ],
-          "title": "Tissue",
-          "type": "string"
-        },
-        {
-          "description": "This preferred root in the UBERON ontology is meant to cover organism-produced substances (bodily secretions and excreta) commonly used as assay specimens.",
-          "enum": [
-            "mucus",
-            "saliva",
-            "stool",
-            "sweat",
-            "urine"
-          ],
-          "title": "OrganismSubstance",
-          "type": "string"
-        }
-      ],
-      "description": "The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory substances.\n",
-      "type": "string"
-    },
-    "targetDepth": {
-      "description": "The targeted read depth prior to sequencing.",
+      "title": "TimeUnit",
       "type": "string"
     },
     "tumorType": {
@@ -1823,12 +1590,6 @@
     }
   },
   "required": [
-    "libraryStrand",
-    "libraryPreparationMethod",
-    "specimenID",
-    "tumorType",
-    "platform",
-    "specimenPreparationMethod",
     "Component",
     "fileFormat",
     "resourceType",
@@ -1837,8 +1598,9 @@
     "assay",
     "individualID",
     "species",
-    "diagnosis"
+    "diagnosis",
+    "tumorType"
   ],
-  "title": "EpigeneticsAssayTemplate",
+  "title": "BehavioralAssayTemplate",
   "type": "object"
 }

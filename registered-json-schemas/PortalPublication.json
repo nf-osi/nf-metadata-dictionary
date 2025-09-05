@@ -31,14 +31,14 @@
       "items": {
         "description": "",
         "enum": [
-          "Neurofibromatosis type 1",
-          "NF2-related schwannomatosis",
-          "SMARCB1-related schwannomatosis",
-          "LZTR1-related schwannomatosis",
           "22q-related schwannomatosis",
-          "Schwannomatosis-NOS",
+          "LZTR1-related schwannomatosis",
+          "Multiple",
+          "NF2-related schwannomatosis",
+          "Neurofibromatosis type 1",
+          "SMARCB1-related schwannomatosis",
           "Schwannomatosis-NEC",
-          "Multiple"
+          "Schwannomatosis-NOS"
         ],
         "title": "DiseaseFocusEnum",
         "type": "string"
@@ -89,17 +89,17 @@
     }
   },
   "required": [
-    "publicationType",
     "fundingAgency",
+    "publicationType",
     "studyId",
     "studyName",
+    "abstract",
+    "author",
     "doi",
     "journal",
     "pmid",
     "title",
-    "year",
-    "author",
-    "abstract"
+    "year"
   ],
   "title": "PortalPublication",
   "type": "object"
