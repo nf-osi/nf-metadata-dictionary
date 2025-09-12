@@ -3,6 +3,9 @@
 Data model developer-oriented information. 
 While the root README gives a general overview of the repo organization and LinkML framework, this goes into history and implementation details helpful to know.
 
+## Confluence page
+https://sagebionetworks.jira.com/wiki/x/QIBD-/
+
 ### A brief history
 
 Initially, the source file for the data model was a single `.csv` that compiled to a JSONLD file compliant with the Sage-specific [schematic]() framework/ 
