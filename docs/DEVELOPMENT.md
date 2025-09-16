@@ -3,9 +3,6 @@
 Data model developer-oriented information. 
 While the root README gives a general overview of the repo organization and LinkML framework, this goes into history and implementation details helpful to know.
 
-## Confluence page
-https://sagebionetworks.jira.com/wiki/x/QIBD-/
-
 ### A brief history
 
 Initially, the source file for the data model was a single `.csv` that compiled to a JSONLD file compliant with the Sage-specific [schematic]() framework/ 
@@ -20,6 +17,9 @@ The main artifacts to provide for the downstream validation implementation is no
 
 You are developing a data model as JSON schemas with the knowledge that they will be used by Synapse. 
 So there are a couple of things to keep in mind in how Synapse deals with/uses the JSON schema.
+
+## Confluence page
+https://sagebionetworks.jira.com/wiki/x/QIBD-/
 
 #### 1: Schema registration and binding
 
@@ -161,3 +161,5 @@ SYNAPSE_AUTH_TOKEN="$NF_SERVICE_TOKEN" python utils/register-schemas.py --schema
 ```
 
 Generated log files (`schema-validation-log.md`, `schema-registration-log.md`) are automatically excluded from version control but provide detailed audit trails of the validation and registration processes.
+
+
