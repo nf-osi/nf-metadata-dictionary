@@ -18,7 +18,9 @@ The main artifacts to provide for the downstream validation implementation is no
 You are developing a data model as JSON schemas with the knowledge that they will be used by Synapse. 
 So there are a couple of things to keep in mind in how Synapse deals with/uses the JSON schema.
 
-## Confluence page
+#### See also: schematic tooling in development
+
+Schematic tooling for schema registration, binding, and creating fileviews from the schema
 https://sagebionetworks.jira.com/wiki/x/QIBD-/
 
 #### 1: Schema registration and binding
