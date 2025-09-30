@@ -18,6 +18,11 @@ The main artifacts to provide for the downstream validation implementation is no
 You are developing a data model as JSON schemas with the knowledge that they will be used by Synapse. 
 So there are a couple of things to keep in mind in how Synapse deals with/uses the JSON schema.
 
+#### See also: schematic tooling in development
+
+Schematic tooling for schema registration, binding, and creating fileviews from the schema
+https://sagebionetworks.jira.com/wiki/x/QIBD-/
+
 #### 1: Schema registration and binding
 
 Before a schema can actually be used for validation, the schema must be registered in Synapse and then "bound" to an entity of interest. Children entities (e.g. a folder or file under another folder) inherit the same bound schema of a parent unless they have a schema bound to them, similar to local sharing settings.
@@ -158,3 +163,5 @@ SYNAPSE_AUTH_TOKEN="$NF_SERVICE_TOKEN" python utils/register-schemas.py --schema
 ```
 
 Generated log files (`schema-validation-log.md`, `schema-registration-log.md`) are automatically excluded from version control but provide detailed audit trails of the validation and registration processes.
+
+
