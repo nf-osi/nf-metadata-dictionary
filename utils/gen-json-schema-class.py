@@ -50,7 +50,12 @@ def process_schema(raw_schema, cls_name):
     # Remove unwanted metadata
     for key in ["additionalProperties", "metamodel_version", "version"]:
         deref.pop(key, None)
-    
+
+    # Remove Filename and Component properties (issue #708)
+    if "properties" in deref:
+        for field in ["Filename", "Component"]:
+            deref["properties"].pop(field, None)
+
     return deref
 
 def validate_schema(path: Path):
