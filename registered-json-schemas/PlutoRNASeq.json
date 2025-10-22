@@ -7,7 +7,7 @@
   "items": {
     "type": "object",
     "required": [
-      "sample",
+      "sample_id",
       "r1_fastq",
       "r2_fastq",
       "diagnosis",
@@ -17,16 +17,16 @@
       "species"
     ],
     "properties": {
-      "sample": {
+      "sample_id": {
         "type": "string",
         "pattern": "^\\S+$",
-        "errorMessage": "Sample name must be provided and cannot contain spaces",
+        "errorMessage": "Sample id must be provided and cannot contain spaces. This should mirror specimenID, sample, etc.; workflow makes use of this attribute, not specimenID.",
         "meta": ["id"],
         "description": "Unique sample identifier (e.g., MS_1446, MS02_10, MS02_1.all.srtd)."
       },
       "r1_fastq": {
         "type": "string",
-        "description": "Read 1 FASTQ file (optionally with path), gzipped.",
+        "description": "Read 1 FASTQ file, typically gzipped.",
         "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
         "examples": [
           "1446.all.srtd_1.fastq.gz",
@@ -36,7 +36,7 @@
       },
       "r2_fastq": {
         "type": "string",
-        "description": "Read 2 FASTQ file (optionally with path), gzipped.",
+        "description": "Read 2 FASTQ file, typically gzipped.",
         "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
         "examples": [
           "1446.all.srtd_2.fastq.gz",
