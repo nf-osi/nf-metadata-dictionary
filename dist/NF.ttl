@@ -4781,6 +4781,9 @@ Examples: avoidance behavior, choice-making.
 <https://w3id.org/synapse/nfosi/vocab/pancreas> skos:definition "A large lobulated gland of vertebrates that secretes digestive enzymes and the hormones insulin and glucagon." ;
     linkml:meaning <BTO:0000988> .
 
+<https://w3id.org/synapse/nfosi/vocab/parquet> skos:definition "An open, columnar table format that stores data by column with built-in compression and schema metadata for fast analytics." ;
+    linkml:meaning <https://parquet.apache.org/> .
+
 <https://w3id.org/synapse/nfosi/vocab/particle%20characterization> skos:definition "Data providing information about entities such as composition, structure and defects." ;
     skos:editorialNote "More general than `molecular property`" ;
     linkml:meaning NCIT:C62317 .
@@ -7342,6 +7345,7 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/mzML>,
         <https://w3id.org/synapse/nfosi/vocab/nii>,
         <https://w3id.org/synapse/nfosi/vocab/ome-tiff>,
+        <https://w3id.org/synapse/nfosi/vocab/parquet>,
         <https://w3id.org/synapse/nfosi/vocab/pdf>,
         <https://w3id.org/synapse/nfosi/vocab/plink>,
         <https://w3id.org/synapse/nfosi/vocab/png>,
@@ -12502,9 +12506,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Genotype of NF1 gene in the biospecimen from which the data were derived, if known." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/nf1Genotype> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -12517,11 +12521,11 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ],
         [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/SexEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/sex> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
