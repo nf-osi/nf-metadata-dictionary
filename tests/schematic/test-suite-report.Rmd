@@ -70,9 +70,13 @@ knitr::kable(val_report[, c("manifest", "result", "expectation")])
 
 ```{r parse-submission-logs, echo=FALSE}
 
-sub_pass <- check_logs(log_dir = "submit/logs",
-                       pass_phrase = "Associated manifest file with dataset on Synapse.")
-sub_report <- sub_pass
-sub_report$pass <- sapply(sub_report$pass, test_reaction)
-knitr::kable(sub_report)
+if(dir.exists("submit/logs") && length(list.files("submit/logs")) > 0) {
+  sub_pass <- check_logs(log_dir = "submit/logs",
+                         pass_phrase = "Associated manifest file with dataset on Synapse.")
+  sub_report <- sub_pass
+  sub_report$pass <- sapply(sub_report$pass, test_reaction)
+  knitr::kable(sub_report)
+} else {
+  cat("_Manifest submission tests are currently in revision due to system migration._")
+}
 ```
