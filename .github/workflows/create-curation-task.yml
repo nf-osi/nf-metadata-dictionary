@@ -1,0 +1,133 @@
+name: Create Synapse Curation Task
+
+on:
+  workflow_dispatch:
+    inputs:
+      upload_folder_id:
+        description: 'Upload folder Synapse ID (e.g., syn12345678)'
+        required: true
+        type: string
+      template:
+        description: 'JSON Schema template name'
+        required: true
+        type: choice
+        options:
+          - AnimalIndividualTemplate
+          - BehavioralAssayTemplate
+          - BiologicalAssayDataTemplate
+          - BiospecimenTemplate
+          - BulkSequencingAssayTemplate
+          - ChIPSeqTemplate
+          - ClinicalAssayTemplate
+          - ElectrophysiologyAssayTemplate
+          - EpidemiologyDataTemplate
+          - EpigeneticsAssayTemplate
+          - EpigenomicsAssayTemplate
+          - FlowCytometryTemplate
+          - GeneralMeasureDataTemplate
+          - GeneticsAssayTemplate
+          - GenomicsArrayTemplate
+          - GenomicsAssayTemplate
+          - GenomicsAssayTemplateExtended
+          - HumanCohortTemplate
+          - ImagingAssayTemplate
+          - ImmunoMicroscopyTemplate
+          - LightScatteringAssayTemplate
+          - MassSpecAssayTemplate
+          - MaterialScienceAssayTemplate
+          - MethylationArrayTemplate
+          - MicroscopyAssayTemplate
+          - MRIAssayTemplate
+          - NonBiologicalAssayDataTemplate
+          - PartialTemplate
+          - PdxGenomicsAssayTemplate
+          - PharmacokineticsAssayTemplate
+          - PlateBasedReporterAssayTemplate
+          - PortalDataset
+          - PortalPublication
+          - PortalStudy
+          - ProcessedAlignedReadsTemplate
+          - ProcessedExpressionTemplate
+          - ProcessedMergedDataTemplate
+          - ProcessedVariantCallsTemplate
+          - ProteinArrayTemplate
+          - ProteinAssayTemplate
+          - ProteomicsAssayTemplate
+          - ProtocolTemplate
+          - PublicationTemplate
+          - RNASeqTemplate
+          - ScRNASeqTemplate
+          - ScSequencingAssayTemplate
+          - SourceCodeTemplate
+          - Superdataset
+          - Template
+          - UpdateMilestoneReport
+          - WESTemplate
+          - WGSTemplate
+          - WorkflowReport
+      instructions:
+        description: 'Instructions to the data contributor'
+        required: false
+        type: string
+        default: 'Please add metadata for your files'
+
+jobs:
+  create-task:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate inputs
+        run: |
+          if [[ ! "${{ inputs.upload_folder_id }}" =~ ^syn[0-9]+$ ]]; then
+            echo "Error: upload_folder_id must be a valid Synapse ID (e.g., syn12345678)"
+            exit 1
+          fi
+
+          if [[ -z "${{ inputs.template }}" ]]; then
+            echo "Error: template cannot be empty"
+            exit 1
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Synapse Python client
+        run: |
+          # Install from develop branch which has curation task support
+          pip install git+https://github.com/Sage-Bionetworks/synapsePythonClient.git@develop
+
+      - name: Create curation task and bind schema
+        id: create_task
+        env:
+          SYNAPSE_AUTH_TOKEN: ${{ secrets.SYNAPSE_AUTH_TOKEN }}
+        run: |
+          python utils/create_curation_task.py \
+            --folder-id "${{ inputs.upload_folder_id }}" \
+            --template "${{ inputs.template }}" \
+            --instructions "${{ inputs.instructions }}" \
+            --bind-schema \
+            --output-format github
+
+      - name: Display task summary
+        if: success()
+        run: |
+          echo "## Curation Task Created Successfully" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Task Details" >> $GITHUB_STEP_SUMMARY
+          echo "- **Task ID:** ${{ steps.create_task.outputs.task_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Data Type:** ${{ steps.create_task.outputs.data_type }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Template:** ${{ inputs.template }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Schema URI:** ${{ steps.create_task.outputs.schema_uri }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Resources Created" >> $GITHUB_STEP_SUMMARY
+          echo "- **Project:** [${{ steps.create_task.outputs.project_id }}](https://www.synapse.org/#!Synapse:${{ steps.create_task.outputs.project_id }})" >> $GITHUB_STEP_SUMMARY
+          echo "- **Upload Folder:** [${{ inputs.upload_folder_id }}](https://www.synapse.org/#!Synapse:${{ inputs.upload_folder_id }})" >> $GITHUB_STEP_SUMMARY
+          echo "- **File View:** [${{ steps.create_task.outputs.fileview_id }}](https://www.synapse.org/#!Synapse:${{ steps.create_task.outputs.fileview_id }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Instructions" >> $GITHUB_STEP_SUMMARY
+          echo "${{ inputs.instructions }}" >> $GITHUB_STEP_SUMMARY
