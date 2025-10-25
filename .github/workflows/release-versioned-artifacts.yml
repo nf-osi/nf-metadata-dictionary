@@ -1,0 +1,112 @@
+name: Release Versioned Artifacts
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Trigger on semantic version tags (e.g., v9.9.0)
+
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to use (e.g., 9.9.0 - without v prefix)'
+        required: true
+        type: string
+
+env:
+  SCHEMATIC_VERSION: 24.7.2
+
+jobs:
+  release-versioned-artifacts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from tag or input
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            # Remove 'v' prefix from tag (v9.9.0 -> 9.9.0)
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Building schemas for version: $VERSION"
+
+      - name: Setup custom build tools and make jsonld
+        shell: bash
+        run: |
+          bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
+          git clone --depth 1 https://github.com/anngvu/retold.git
+          pip install linkml==v1.8.1 synapseclient jsonref
+          npm install -g json-dereference-cli
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          make -B
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12'
+
+      - name: Setup schematic
+        run: |
+          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}
+          pip show schematicpy
+          schematic schema convert NF.jsonld
+          python utils/fix_display_names.py retold_NF.jsonld NF.jsonld
+
+      - name: Generate versioned JSON schemas
+        env:
+          SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
+          SCHEMA_VERSION: ${{ steps.get_version.outputs.version }}
+        run: |
+          echo "Generating versioned JSON schemas for version $SCHEMA_VERSION"
+          python utils/gen-json-schema-class.py \
+            --output-dir "registered-json-schemas-$SCHEMA_VERSION" \
+            --log-file "schema-validation-log-$SCHEMA_VERSION.md" \
+            --version "$SCHEMA_VERSION"
+
+      - name: Register versioned JSON schemas with Synapse
+        env:
+          SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
+          SCHEMA_VERSION: ${{ steps.get_version.outputs.version }}
+        run: |
+          echo "Registering versioned JSON schemas with Synapse for version $SCHEMA_VERSION"
+          python utils/register-schemas.py \
+            --schema-dir "registered-json-schemas-$SCHEMA_VERSION" \
+            --log-file "schema-registration-log-$SCHEMA_VERSION.md" \
+            --exclude Superdataset.json
+
+      - name: Upload versioned schemas as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: json-schemas-${{ steps.get_version.outputs.version }}
+          path: |
+            registered-json-schemas-${{ steps.get_version.outputs.version }}
+            schema-validation-log-${{ steps.get_version.outputs.version }}.md
+            schema-registration-log-${{ steps.get_version.outputs.version }}.md
+
+      - name: Create release with schemas
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+
+          # Create a tarball of the versioned schemas
+          tar -czf "json-schemas-${VERSION}.tar.gz" "registered-json-schemas-${VERSION}"
+
+          # Get the release notes if they exist
+          RELEASE_NOTES="Versioned JSON schemas for ${VERSION}"
+          if gh release view "v${VERSION}" > /dev/null 2>&1; then
+            echo "Release v${VERSION} already exists, adding schemas as asset"
+            gh release upload "v${VERSION}" "json-schemas-${VERSION}.tar.gz" --clobber
+          else
+            echo "Creating new release v${VERSION} with schemas"
+            gh release create "v${VERSION}" \
+              "json-schemas-${VERSION}.tar.gz" \
+              --title "Release v${VERSION}" \
+              --notes "${RELEASE_NOTES}"
+          fi

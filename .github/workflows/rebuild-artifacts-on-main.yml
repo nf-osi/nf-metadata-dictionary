@@ -1,0 +1,109 @@
+name: Rebuild Artifacts and Propagate Updates
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'modules/**'
+
+env:
+  SCHEMATIC_VERSION: 24.7.2
+  SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
+
+jobs:
+  rebuild-and-propagate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup custom build tools
+        shell: bash
+        run: |
+          bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
+          git clone --depth 1 https://github.com/anngvu/retold.git
+          pip install linkml==v1.8.1 synapseclient jsonref
+          npm install -g json-dereference-cli
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12'
+
+      - name: Rebuild all artifacts
+        run: |
+          echo "Rebuilding all artifacts on main branch"
+          make -B
+          echo "Generating JSON schemas"
+          python utils/gen-json-schema-class.py
+          make Superdataset
+
+      - name: Setup schematic and do convert pass
+        run: |
+          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}
+          pip show schematicpy
+          schematic schema convert NF.jsonld
+          python utils/fix_display_names.py retold_NF.jsonld NF.jsonld
+
+      - name: Commit all artifacts if there are changes
+        id: commit_artifacts
+        run: |
+          if [[ $(git diff --exit-code) ]]; then
+            echo "Artifacts have changed and will be committed to main"
+            git config --local user.email "nf-osi@sagebionetworks.org"
+            git config --local user.name "nf-osi[bot]"
+            git add NF.jsonld dist/NF.yaml dist/NF.ttl registered-json-schemas/
+            git commit -m "Rebuild all artifacts [skip ci]"
+            echo "artifacts_changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No artifact changes"
+            echo "artifacts_changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Push changes to main
+        if: steps.commit_artifacts.outputs.artifacts_changed == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+
+      - name: Dispatch update workflow for dcc-site
+        if: steps.commit_artifacts.outputs.artifacts_changed == 'true'
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Handle data model update
+          repo: nf-osi/dcc-site
+          ref: refs/heads/main
+          token: ${{ secrets.SERVICE_TOKEN }}
+
+      - name: Register changed JSON schemas with Synapse
+        if: steps.commit_artifacts.outputs.artifacts_changed == 'true'
+        run: |
+          CHANGED=$(git diff --name-only HEAD HEAD~1 registered-json-schemas)
+          if [ -n "$CHANGED" ]; then
+            echo "Changed schemas detected: $CHANGED"
+            # Convert file paths to just filenames for exclusion list
+            ALL_SCHEMAS=$(ls registered-json-schemas/*.json | xargs -n1 basename)
+            CHANGED_SCHEMAS=$(echo "$CHANGED" | xargs -n1 basename)
+            EXCLUDE_LIST=""
+
+            # Build exclude list of schemas that haven't changed
+            for schema in $ALL_SCHEMAS; do
+              if ! echo "$CHANGED_SCHEMAS" | grep -q "$schema"; then
+                EXCLUDE_LIST="$EXCLUDE_LIST $schema"
+              fi
+            done
+
+            if [ -n "$EXCLUDE_LIST" ]; then
+              echo "Registering only changed schemas, excluding: $EXCLUDE_LIST"
+              python utils/register-schemas.py --schema-dir registered-json-schemas --exclude $EXCLUDE_LIST
+            else
+              echo "All schemas changed, registering everything"
+              python utils/register-schemas.py --schema-dir registered-json-schemas
+            fi
+          else
+            echo "No schema files changed, skipping registration"
+          fi
