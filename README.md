@@ -7,13 +7,15 @@ We keep the main one, `NF.jsonld`, in the root of the repository, while others a
 
 #### A nice table summarizing what you might want to grab for different purposes
 
-| Artifact | Description |
-| -------- | ----------- |
-| `NF.jsonld` | Main output in schematic-compatible JSON-LD format, for distribution and use with schematic and Data Curator. |
-| `registered-json-schemas/*.json` | JSON serializations for a subset of the data model, for native functionality with Synapse platform or wherever a JSON definition is preferred. |
-| `dist/NF.yaml` | Data model as as a single LinkML-valid YAML file, useful for using LinkML tooling to create Excel spreadsheets. |
-| `dist/NF_linkml.jsonld` | JSON-LD from LinkML, best if you want to compare/combine our model with others maintained in LinkML, e.g. see here. There are differences with the `NF.jsonld`. |
-| `dist/NF.ttl` | Basically same as above but in Turtle format. |
+| Artifact | Description | Generated During PRs | Committed to PRs | Updated on Main |
+| -------- | ----------- | :------------------: | :--------------: | :-------------: |
+| `NF.jsonld` | Main output in schematic-compatible JSON-LD format, for distribution and use with schematic and Data Curator. | ✅ (validated) | ❌ | ✅ (auto-committed) |
+| `registered-json-schemas/*.json` | JSON serializations for a subset of the data model, for native functionality with Synapse platform or wherever a JSON definition is preferred. | ✅ (validated) | ❌ | ✅ (auto-committed) |
+| `dist/NF.yaml` | Data model as as a single LinkML-valid YAML file, useful for using LinkML tooling to create Excel spreadsheets. | ✅ (validated) | ❌ | ✅ (auto-committed) |
+| `dist/NF_linkml.jsonld` | JSON-LD from LinkML, best if you want to compare/combine our model with others maintained in LinkML, e.g. see here. There are differences with the `NF.jsonld`. | ✅ (validated) | ❌ | ✅ (auto-committed) |
+| `dist/NF.ttl` | Basically same as above but in Turtle format. | ✅ (validated) | ❌ | ✅ (auto-committed) |
+
+**Note:** All artifacts are built and validated during PRs but not committed to avoid merge conflicts. All artifacts are automatically rebuilt and committed to `main` after merge.
 
 In general, .jsonld or .ttl artifacts facilate model querying and comparison if you know how to load them into compatible linked data tooling. 
 
@@ -226,11 +228,11 @@ Aside from meta specific to each type (class, slot, or enum) above, terms have c
 1. Create a new [branch](https://github.com/nf-osi/nf-metadata-dictionary/branches) in the NF-metadata-dictionary repository. (example: patch/add-attribute)
 2. Find the yaml file in the new branch where the attribute belongs. The components of the data model are organized in the folder labeled [modules](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules).
 
-3. Create a [pull request (PR)](https://github.com/nf-osi/nf-metadata-dictionary/compare) to merge the branch to "main". Add either @allaway, @anngvu, or @cconrad8 as a reviewer. Creating the PR will:  
-   i. Build the [NF.jsonld](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.jsonld) from the module source files. This is the format needed by schematic.
-   **Therefore, you do not need to edit the `NF.jsonld` directly, because it will be done automatically by our service bot.**
-   
-   ii. If build succeeds, also run some tests to make sure all looks good/generate previews. After some minutes, a test report will appear in the PR that hopefully looks like the below with generated manifest and test results. Note: Trivial changes can skip tests by labeling the PR with https://github.com/nf-osi/nf-metadata-dictionary/labels/skip%20tests.
+3. Create a [pull request (PR)](https://github.com/nf-osi/nf-metadata-dictionary/compare) to merge the branch to "main". Add either @allaway, @anngvu, or @cconrad8 as a reviewer. Creating the PR will:
+   i. Build and validate all artifacts ([NF.jsonld](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.jsonld), JSON schemas, etc.) from the module source files.
+   **Artifacts are not committed to the PR to avoid merge conflicts, but will be automatically rebuilt and committed to main after merge.**
+
+   ii. Run tests to make sure all looks good/generate previews. After some minutes, test reports will appear in the PR including artifact build status, schema validation, and test results. Note: Trivial changes can skip tests by labeling the PR with https://github.com/nf-osi/nf-metadata-dictionary/labels/skip%20tests.
    
    <img width="464" alt="image" src="https://github.com/nf-osi/nf-metadata-dictionary/assets/32753274/067f65ff-e39d-4b45-abae-ef22cf7df5eb">
 4. Make any necessary changes and then merge the new branch that was created to the main branch.
