@@ -18,10 +18,13 @@ def run_cmd(cmd):
     except subprocess.CalledProcessError:
         return None
 
-def process_schema(raw_schema, cls_name):
+def process_schema(raw_schema, cls_name, version=None):
     """Process and clean the JSON schema."""
-    # Set metadata
-    raw_schema["$id"] = f"https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-{cls_name.lower()}"
+    # Set metadata with optional version
+    if version:
+        raw_schema["$id"] = f"https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-{cls_name.lower()}-{version}"
+    else:
+        raw_schema["$id"] = f"https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-{cls_name.lower()}"
     raw_schema["title"] = cls_name
     
     # Dereference and inline enums
@@ -96,16 +99,19 @@ def validate_schema(path: Path):
 
 def main():
     parser = argparse.ArgumentParser(description="Generate and validate JSON schemas from LinkML")
-    parser.add_argument("--schema-yaml", 
+    parser.add_argument("--schema-yaml",
                        default="dist/NF.yaml",
                        help="Path to LinkML YAML schema file (default: dist/NF.yaml)")
-    parser.add_argument("--output-dir", 
-                       default="registered-json-schemas", 
+    parser.add_argument("--output-dir",
+                       default="registered-json-schemas",
                        help="Output directory for JSON schemas (default: registered-json-schemas)")
     parser.add_argument("--log-file",
                        default="schema-validation-log.md",
                        help="Path to validation log file (default: schema-validation-log.md)")
-    
+    parser.add_argument("--version",
+                       default=None,
+                       help="Semantic version to include in schema URIs (e.g., 9.9.0)")
+
     args = parser.parse_args()
     
     # Set up paths
@@ -139,8 +145,8 @@ def main():
         
         try:
             raw_schema = json.loads(schema_str)
-            final_schema = process_schema(raw_schema, cls_name)
-            
+            final_schema = process_schema(raw_schema, cls_name, args.version)
+
             # Write output
             output_file = OUT_DIR / f"{cls_name}.json"
             output_file.write_text(json.dumps(final_schema, indent=2))
