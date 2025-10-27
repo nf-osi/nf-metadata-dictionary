@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-plutornaseq-0.1.0.json",
   "title": "NF2 Sample FASTQ Manifest",
-  "description": "Pluto-ready schema for paired-end FASTQ files to be processed.",
+  "description": "Schema for harmonization with Pluto for paired-end FASTQ files to be processed.",
   "type": "array",
   "items": {
     "type": "object",
@@ -46,16 +46,11 @@
       },
       "diagnosis": {
         "type": "string",
-        "description": "Clinical diagnosis for the sample.",
-        "const": "Neurofibromatosis type 2"
+        "description": "Clinical diagnosis for the sample."
       },
       "tumorType": {
         "type": "string",
-        "description": "Tumor histology/type.",
-        "enum": [
-          "Tissue-derived Schwannoma",
-          "Schwannoma"
-        ]
+        "description": "Tumor histology/type."
       },
       "specimenID": {
         "type": "string",
@@ -71,8 +66,7 @@
       },
       "species": {
         "type": "string",
-        "description": "Scientific name of the organism.",
-        "const": "Mus musculus"
+        "description": "Scientific name of the organism."
       }
     }
   },
