@@ -26,7 +26,7 @@
       },
       "r1_fastq": {
         "type": "string",
-        "description": "Read 1 FASTQ file, typically gzipped.",
+        "description": "Read #1 FASTQ file, typically gzipped.",
         "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
         "examples": [
           "1446.all.srtd_1.fastq.gz",
@@ -36,7 +36,7 @@
       },
       "r2_fastq": {
         "type": "string",
-        "description": "Read 2 FASTQ file, typically gzipped.",
+        "description": "Read #2 FASTQ file, typically gzipped. If runType is pairedEnd, this is required.",
         "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
         "examples": [
           "1446.all.srtd_2.fastq.gz",
@@ -67,6 +67,14 @@
       "species": {
         "type": "string",
         "description": "Scientific name of the organism."
+      },
+      "runType": {
+        "type": "string",
+        "description": "Run type."
+      },
+      "readPair": {
+        "type": "string",
+        "description": "Indicates whether read 1 or read 2."
       }
     }
   },
