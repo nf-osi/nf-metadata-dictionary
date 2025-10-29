@@ -59,6 +59,10 @@ def process_schema(raw_schema, cls_name, version=None):
         for field in ["Filename", "Component"]:
             deref["properties"].pop(field, None)
 
+    # Also remove from required array if present
+    if "required" in deref:
+        deref["required"] = [r for r in deref["required"] if r not in ["Filename", "Component"]]
+
     return deref
 
 def validate_schema(path: Path):
