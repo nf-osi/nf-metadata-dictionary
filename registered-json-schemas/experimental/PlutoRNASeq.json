@@ -1,0 +1,151 @@
+{
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-plutornaseq-0.1.0",
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Pluto-centric RNA-seq schema",
+  "description": "This schema describes an RNA-seq data file and requirements for computational processing in Pluto, a GDPR-compliant platform.",
+  "type": "object",
+  "required": [
+    "sample_id", 
+    "r1_fastq", 
+    "strandedness"],
+  "properties": {
+    "sample_id": {
+      "type": "string",
+      "pattern": "^\\S+$",
+      "description": "Sample identifier must be provided and cannot contain spaces. The computational workflow makes use of this attribute; values can typically be copied from `specimenID`, `sample`, etc."
+    },
+    "r1_fastq": {
+      "type": "string",
+      "description": "Read #1 FASTQ file, typically gzipped.",
+      "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$"
+    },
+    "r2_fastq": {
+      "type": "string",
+      "description": "Read #2 FASTQ file, typically gzipped. If runType is pairedEnd, this is required.",
+      "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$"
+    },
+    "strandedness": {
+      "type": "string",
+      "description": "Strandedness must be provided and be one of 'auto', 'forward', 'reverse' or 'unstranded'; can default to 'auto'.",
+      "enum": ["forward", "reverse", "unstranded", "auto"]
+    },
+    "diagnosis": {
+      "type": "string",
+      "description": "Clinical diagnosis for the sample.",
+      "enum": [
+        "22q-related schwannomatosis",
+        "LZTR1-related schwannomatosis",
+        "NF2-related schwannomatosis",
+        "Neurofibromatosis type 1",
+        "Noonan Syndrome",
+        "Not Applicable",
+        "SMARCB1-related schwannomatosis",
+        "Schwannomatosis",
+        "Schwannomatosis-NEC",
+        "Schwannomatosis-NOS",
+        "Sporadic Schwannoma",
+        "Unknown",
+        "Vestibular Schwannoma",
+        "atypical neurofibroma"
+      ]
+    },
+    "tumorType": {
+      "type": "string",
+      "description": "Tumor histology/type.",
+      "enum": [
+        "ANNUBP",
+        "Anaplastic Astrocytoma",
+        "Anaplastic Ganglioglioma",
+        "Anaplastic Pilocytic Astrocytoma",
+        "Anaplastic Pleomorphic Xanthoastrocytoma",
+        "Atypical Neurofibroma",
+        "Atypical Pilocytic Astrocytoma",
+        "Cellular Neurofibroma",
+        "Colorectal Adenocarcinoma",
+        "Colorectal Carcinoma",
+        "Cutaneous Neurofibroma",
+        "Diffuse Astrocytoma",
+        "Diffuse Infiltrating Neurofibroma",
+        "Fibromatosis",
+        "Fibrosarcoma",
+        "Ganglioglioma",
+        "Glioblastoma",
+        "Glioblastoma Multiforme",
+        "Glioma",
+        "Hemorrhagic Neoplasm",
+        "High-Grade Glioma NOS",
+        "Juvenile Myelomonocytic Leukemia",
+        "Localized Neurofibroma",
+        "Low-Grade Glioma NOS",
+        "Malignant Peripheral Nerve Sheath Tumor",
+        "Massive Soft Tissue Neurofibroma",
+        "Melanoma",
+        "Meningioma",
+        "NF1-Associated Tumor",
+        "NF2-Associated Tumor",
+        "Necrotic Neoplasm",
+        "Neurofibroma",
+        "Neurofibroma with Degenerative Atypia",
+        "Nodular Neurofibroma",
+        "Not Applicable",
+        "Oligoastrocytoma",
+        "Optic Pathway Glioma",
+        "Pilocytic Astrocytoma",
+        "Pilomyxoid Astrocytoma",
+        "Pleomorphic Xanthoastrocytoma",
+        "Plexiform Neurofibroma",
+        "Recurrent MPNST",
+        "Sarcoma",
+        "Schwannoma",
+        "Subcutaneous Neurofibroma",
+        "Teratoma",
+        "Unknown",
+        "metastatic tumor",
+        "metastatic/recurrent tumor",
+        "recurrent tumor",
+        "tumor"
+      ]
+    },
+    "specimenID": {
+      "type": "string",
+      "description": "Specimen identifier.",
+      "pattern": "^\\S+$",
+      "minLength": 1
+    },
+    "individualID": {
+      "type": "string",
+      "description": "Subject/individual identifier.",
+      "pattern": "^\\S+$",
+      "minLength": 1
+    },
+    "species": {
+      "type": "string",
+      "description": "Scientific name of the organism.",
+      "enum": [
+        "Danio rerio",
+        "Drosophila melanogaster",
+        "Gallus gallus",
+        "Homo sapiens",
+        "Mus musculus",
+        "Mus musculus (humanized)",
+        "Oryctolagus cuniculus",
+        "Pan troglodytes",
+        "Rattus norvegicus",
+        "Rhesus macaque",
+        "Sus scrofa"
+      ]
+    },
+    "runType": {
+      "type": "string",
+      "description": "Run type (singleEnd or pairedEnd).",
+      "enum": [
+        "pairedEnd",
+        "singleEnd"
+      ]
+    },
+    "readPair": {
+      "type": "string",
+      "description": "Indicates whether FASTQ file represents read 1 or read 2; relevant only for pairedEnd."
+    }
+  }
+}
