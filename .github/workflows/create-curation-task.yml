@@ -126,7 +126,7 @@ jobs:
       - name: Create curation task and bind schema
         id: create_task
         env:
-          SYNAPSE_AUTH_TOKEN: ${{ secrets.SYNAPSE_AUTH_TOKEN }}
+          SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
         run: |
           python utils/create_curation_task.py \
             --folder-id "${{ inputs.upload_folder_id }}" \
