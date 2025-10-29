@@ -144,9 +144,9 @@ def _create_columns_from_json_schema(json_schema: dict[str, Any]) -> list[Column
         maximum_size = None
         enum_values = None
 
-        # Extract enum values if present
+        # Extract enum values if present (limit to first 100)
         if "enum" in prop_schema:
-            enum_values = [str(v) for v in prop_schema["enum"]]
+            enum_values = [str(v) for v in prop_schema["enum"][:100]]
 
         if column_type == "STRING":
             maximum_size = 100
