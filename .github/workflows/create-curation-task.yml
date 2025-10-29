@@ -12,10 +12,12 @@ on:
         required: true
         type: choice
         options:
-          - AnimalIndividualTemplate
+          # Default option - most commonly used for genomics data
+          - GenomicsAssayTemplate
+
+          # Assay technical metadata templates
           - BehavioralAssayTemplate
           - BiologicalAssayDataTemplate
-          - BiospecimenTemplate
           - BulkSequencingAssayTemplate
           - ChIPSeqTemplate
           - ClinicalAssayTemplate
@@ -27,9 +29,7 @@ on:
           - GeneralMeasureDataTemplate
           - GeneticsAssayTemplate
           - GenomicsArrayTemplate
-          - GenomicsAssayTemplate
           - GenomicsAssayTemplateExtended
-          - HumanCohortTemplate
           - ImagingAssayTemplate
           - ImmunoMicroscopyTemplate
           - LightScatteringAssayTemplate
@@ -39,37 +39,59 @@ on:
           - MicroscopyAssayTemplate
           - MRIAssayTemplate
           - NonBiologicalAssayDataTemplate
-          - PartialTemplate
           - PdxGenomicsAssayTemplate
           - PharmacokineticsAssayTemplate
           - PlateBasedReporterAssayTemplate
-          - PortalDataset
-          - PortalPublication
-          - PortalStudy
+          - ProteinArrayTemplate
+          - ProteinAssayTemplate
+          - ProteomicsAssayTemplate
+          - RNASeqTemplate
+          - ScRNASeqTemplate
+          - ScSequencingAssayTemplate
+          - WESTemplate
+          - WGSTemplate
+
+          # Processed data products (downstream analysis outputs)
           - ProcessedAlignedReadsTemplate
           - ProcessedExpressionTemplate
           - ProcessedMergedDataTemplate
           - ProcessedVariantCallsTemplate
-          - ProteinArrayTemplate
-          - ProteinAssayTemplate
-          - ProteomicsAssayTemplate
-          - ProtocolTemplate
-          - PublicationTemplate
-          - RNASeqTemplate
-          - ScRNASeqTemplate
-          - ScSequencingAssayTemplate
-          - SourceCodeTemplate
-          - Superdataset
-          - Template
-          - UpdateMilestoneReport
-          - WESTemplate
-          - WGSTemplate
-          - WorkflowReport
+
+          # Sample-level data templates
+          # - AnimalIndividualTemplate
+          # - BiospecimenTemplate
+          # - HumanCohortTemplate
+
+          # Portal/Documentation templates
+          # - PortalDataset
+          # - PortalPublication
+          # - PortalStudy
+          # - PublicationTemplate
+
+          # Administrative/Workflow templates
+          # - WorkflowReport
+          # - UpdateMilestoneReport
+
+          # Source code templates
+          # - SourceCodeTemplate
+
+          # Abstract/Generic templates (not meant for direct use)
+          # - Template
+          # - PartialTemplate
+          # - Superdataset
+
+          # Protocol documentation templates
+          # - ProtocolTemplate
       instructions:
         description: 'Instructions to the data contributor'
         required: false
         type: string
         default: 'Please add metadata for your files'
+      create_issue:
+        description: 'Create a GitHub issue with task details'
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   create-task:
@@ -131,3 +153,31 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Instructions" >> $GITHUB_STEP_SUMMARY
           echo "${{ inputs.instructions }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create GitHub issue
+        if: success() && inputs.create_issue == true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "Curation Test Task Created: ${{ inputs.template }} (${{ inputs.upload_folder_id }})" \
+            --assignee "${{ github.actor }}" \
+            --label "curation-task" \
+            --body "## Curation Task Created Successfully
+
+          ### Task Details
+          - **Task ID:** ${{ steps.create_task.outputs.task_id }}
+          - **Data Type:** ${{ steps.create_task.outputs.data_type }}
+          - **Template:** ${{ inputs.template }}
+          - **Schema URI:** ${{ steps.create_task.outputs.schema_uri }}
+
+          ### Resources Created
+          - **Project:** [${{ steps.create_task.outputs.project_id }}](https://www.synapse.org/#!Synapse:${{ steps.create_task.outputs.project_id }})
+          - **Upload Folder:** [${{ inputs.upload_folder_id }}](https://www.synapse.org/#!Synapse:${{ inputs.upload_folder_id }})
+          - **File View:** [${{ steps.create_task.outputs.fileview_id }}](https://www.synapse.org/#!Synapse:${{ steps.create_task.outputs.fileview_id }})
+
+          ### Instructions
+          ${{ inputs.instructions }}
+
+          ---
+          *Created by @${{ github.actor }} via [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})*"
