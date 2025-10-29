@@ -64,7 +64,7 @@ jobs:
         run: |
           echo "Generating versioned JSON schemas for version $SCHEMA_VERSION"
           python utils/gen-json-schema-class.py \
-            --output-dir "registered-json-schemas-$SCHEMA_VERSION" \
+            --output-dir "registered-json-schemas" \
             --log-file "schema-validation-log-$SCHEMA_VERSION.md" \
             --version "$SCHEMA_VERSION"
 
@@ -75,7 +75,7 @@ jobs:
         run: |
           echo "Registering versioned JSON schemas with Synapse for version $SCHEMA_VERSION"
           python utils/register-schemas.py \
-            --schema-dir "registered-json-schemas-$SCHEMA_VERSION" \
+            --schema-dir "registered-json-schemas" \
             --log-file "schema-registration-log-$SCHEMA_VERSION.md" \
             --exclude Superdataset.json
 
@@ -84,7 +84,7 @@ jobs:
         with:
           name: json-schemas-${{ steps.get_version.outputs.version }}
           path: |
-            registered-json-schemas-${{ steps.get_version.outputs.version }}
+            registered-json-schemas
             schema-validation-log-${{ steps.get_version.outputs.version }}.md
             schema-registration-log-${{ steps.get_version.outputs.version }}.md
 
@@ -96,7 +96,7 @@ jobs:
           VERSION="${{ steps.get_version.outputs.version }}"
 
           # Create a tarball of the versioned schemas
-          tar -czf "json-schemas-${VERSION}.tar.gz" "registered-json-schemas-${VERSION}"
+          tar -czf "json-schemas-${VERSION}.tar.gz" "registered-json-schemas"
 
           # Get the release notes if they exist
           RELEASE_NOTES="Versioned JSON schemas for ${VERSION}"
