@@ -12,7 +12,7 @@
     "sample_id": {
       "type": "string",
       "pattern": "^\\S+$",
-      "description": "Sample identifier must be provided and cannot contain spaces. The computational workflow makes use of this attribute; values can typically copied from `specimenID`, `sample`, etc.."
+      "description": "Sample identifier must be provided and cannot contain spaces. The computational workflow makes use of this attribute; values can typically be copied from `specimenID`, `sample`, etc."
     },
     "r1_fastq": {
       "type": "string",
@@ -31,11 +31,80 @@
     },
     "diagnosis": {
       "type": "string",
-      "description": "Clinical diagnosis for the sample."
+      "description": "Clinical diagnosis for the sample.",
+      "enum": [
+        "22q-related schwannomatosis",
+        "LZTR1-related schwannomatosis",
+        "NF2-related schwannomatosis",
+        "Neurofibromatosis type 1",
+        "Noonan Syndrome",
+        "Not Applicable",
+        "SMARCB1-related schwannomatosis",
+        "Schwannomatosis",
+        "Schwannomatosis-NEC",
+        "Schwannomatosis-NOS",
+        "Sporadic Schwannoma",
+        "Unknown",
+        "Vestibular Schwannoma",
+        "atypical neurofibroma"
+      ]
     },
     "tumorType": {
       "type": "string",
-      "description": "Tumor histology/type."
+      "description": "Tumor histology/type.",
+      "enum": [
+        "ANNUBP",
+        "Anaplastic Astrocytoma",
+        "Anaplastic Ganglioglioma",
+        "Anaplastic Pilocytic Astrocytoma",
+        "Anaplastic Pleomorphic Xanthoastrocytoma",
+        "Atypical Neurofibroma",
+        "Atypical Pilocytic Astrocytoma",
+        "Cellular Neurofibroma",
+        "Colorectal Adenocarcinoma",
+        "Colorectal Carcinoma",
+        "Cutaneous Neurofibroma",
+        "Diffuse Astrocytoma",
+        "Diffuse Infiltrating Neurofibroma",
+        "Fibromatosis",
+        "Fibrosarcoma",
+        "Ganglioglioma",
+        "Glioblastoma",
+        "Glioblastoma Multiforme",
+        "Glioma",
+        "Hemorrhagic Neoplasm",
+        "High-Grade Glioma NOS",
+        "Juvenile Myelomonocytic Leukemia",
+        "Localized Neurofibroma",
+        "Low-Grade Glioma NOS",
+        "Malignant Peripheral Nerve Sheath Tumor",
+        "Massive Soft Tissue Neurofibroma",
+        "Melanoma",
+        "Meningioma",
+        "NF1-Associated Tumor",
+        "NF2-Associated Tumor",
+        "Necrotic Neoplasm",
+        "Neurofibroma",
+        "Neurofibroma with Degenerative Atypia",
+        "Nodular Neurofibroma",
+        "Not Applicable",
+        "Oligoastrocytoma",
+        "Optic Pathway Glioma",
+        "Pilocytic Astrocytoma",
+        "Pilomyxoid Astrocytoma",
+        "Pleomorphic Xanthoastrocytoma",
+        "Plexiform Neurofibroma",
+        "Recurrent MPNST",
+        "Sarcoma",
+        "Schwannoma",
+        "Subcutaneous Neurofibroma",
+        "Teratoma",
+        "Unknown",
+        "metastatic tumor",
+        "metastatic/recurrent tumor",
+        "recurrent tumor",
+        "tumor"
+      ]
     },
     "specimenID": {
       "type": "string",
@@ -51,11 +120,28 @@
     },
     "species": {
       "type": "string",
-      "description": "Scientific name of the organism."
+      "description": "Scientific name of the organism.",
+      "enum": [
+        "Danio rerio",
+        "Drosophila melanogaster",
+        "Gallus gallus",
+        "Homo sapiens",
+        "Mus musculus",
+        "Mus musculus (humanized)",
+        "Oryctolagus cuniculus",
+        "Pan troglodytes",
+        "Rattus norvegicus",
+        "Rhesus macaque",
+        "Sus scrofa"
+      ]
     },
     "runType": {
       "type": "string",
-      "description": "Run type (singleEnd or pairedEnd)."
+      "description": "Run type (singleEnd or pairedEnd).",
+      "enum": [
+        "pairedEnd",
+        "singleEnd"
+      ]
     },
     "readPair": {
       "type": "string",
