@@ -26,11 +26,11 @@ def process_schema(raw_schema, cls_name, version=None):
     else:
         raw_schema["$id"] = f"https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-{cls_name.lower()}"
     raw_schema["title"] = cls_name
-    
+
     # Dereference and inline enums
     deref = jsonref.replace_refs(raw_schema, merge_props=False, proxies=False)
     defs = deref.pop("$defs", {})
-    
+
     def inline_enums(obj):
         if isinstance(obj, dict):
             if "$ref" in obj:
@@ -47,9 +47,56 @@ def process_schema(raw_schema, cls_name, version=None):
         elif isinstance(obj, list):
             for item in obj:
                 inline_enums(item)
-    
+
     inline_enums(deref.get("properties", {}))
-    
+
+    # Combine anyOf enums into single enum for efficiency
+    def combine_anyof_enums(obj):
+        if isinstance(obj, dict):
+            # Check if this is an anyOf with multiple enum options
+            if "anyOf" in obj and isinstance(obj["anyOf"], list):
+                # Check if all items in anyOf are enums
+                all_enums = all(
+                    isinstance(item, dict) and "enum" in item
+                    for item in obj["anyOf"]
+                )
+
+                if all_enums:
+                    # Save anyOf items before deleting
+                    anyof_items = obj["anyOf"]
+
+                    # Combine all enum values into a single list
+                    combined_enums = []
+                    for item in anyof_items:
+                        combined_enums.extend(item["enum"])
+
+                    # Replace anyOf with single enum
+                    obj["enum"] = combined_enums
+                    del obj["anyOf"]
+
+                    # Keep the description if not already present
+                    if "description" not in obj and any("description" in item for item in anyof_items):
+                        # Use first non-empty description
+                        for item in anyof_items:
+                            if "description" in item and item["description"]:
+                                obj["description"] = item["description"]
+                                break
+
+            # Recurse into nested objects
+            for value in obj.values():
+                combine_anyof_enums(value)
+        elif isinstance(obj, list):
+            for item in obj:
+                combine_anyof_enums(item)
+
+    combine_anyof_enums(deref.get("properties", {}))
+
+    # Set title to match property key name
+    if "properties" in deref:
+        for prop_name, prop_schema in deref["properties"].items():
+            if isinstance(prop_schema, dict):
+                prop_schema["title"] = prop_name
+
     # Remove unwanted metadata
     for key in ["additionalProperties", "metamodel_version", "version"]:
         deref.pop(key, None)

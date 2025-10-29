@@ -1,5 +1,5 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-humancohorttemplate-0.1.0",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-humancohorttemplate-0.1.1",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "description": "Data of biosamples from human patients. Adapted from Table 2 of http://nrs.harvard.edu/urn-3:HUL.InstRepos:32725809. This template should be used when biosamples are from NF patients to provides a more valuable characterization and make additional gene-phenotype insights possible.",
   "properties": {
@@ -10,7 +10,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "IrisLischNodules": {
@@ -20,7 +20,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "MPNSTCharacterization": {
@@ -30,7 +30,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "WHOPerformanceStatus": {
@@ -42,12 +42,13 @@
         "3",
         "4"
       ],
-      "title": "WHOPerformanceStatusScores",
+      "title": "WHOPerformanceStatus",
       "type": "string"
     },
     "age": {
       "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
-      "type": "string"
+      "type": "string",
+      "title": "age"
     },
     "ageUnit": {
       "description": "",
@@ -60,7 +61,7 @@
         "weeks",
         "years"
       ],
-      "title": "TimeUnit",
+      "title": "ageUnit",
       "type": "string"
     },
     "aqueductalStenosis": {
@@ -70,7 +71,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "attentionDeficitDisorder": {
@@ -80,7 +81,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "breastCancer": {
@@ -90,7 +91,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "cafeaulaitMacules": {
@@ -100,7 +101,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "dermalNeurofibromas": {
@@ -111,7 +112,7 @@
         "scattered",
         "unknown"
       ],
-      "title": "NeurofibromaManifestationEnum",
+      "title": "subcutaneousNodularNeurofibromas",
       "type": "string"
     },
     "dermalSchwannoma": {
@@ -121,7 +122,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "diagnosis": {
@@ -142,7 +143,7 @@
         "Vestibular Schwannoma",
         "atypical neurofibroma"
       ],
-      "title": "DiagnosisEnum",
+      "title": "diagnosis",
       "type": "string"
     },
     "diagnosisAgeGroup": {
@@ -154,7 +155,7 @@
         "infancy",
         "unknown"
       ],
-      "title": "AgeGroupEnum",
+      "title": "diagnosisAgeGroup",
       "type": "string"
     },
     "diffuseDermalNeurofibromas": {
@@ -165,7 +166,7 @@
         "scattered",
         "unknown"
       ],
-      "title": "NeurofibromaManifestationEnum",
+      "title": "subcutaneousNodularNeurofibromas",
       "type": "string"
     },
     "germlineMutationIndicator": {
@@ -174,7 +175,7 @@
         "not tested",
         "tested but unknown"
       ],
-      "title": "TestSummaryEnum",
+      "title": "germlineMutationIndicator",
       "type": "string"
     },
     "gliomaOrEpendymoma": {
@@ -185,7 +186,7 @@
         "present",
         "unknown"
       ],
-      "title": "BinaryImagingDiagnosisEnum",
+      "title": "nonvestibularCranialSchwannoma",
       "type": "string"
     },
     "glomusTumor": {
@@ -195,7 +196,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "heartDefect": {
@@ -205,12 +206,13 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "individualID": {
       "description": "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
-      "type": "string"
+      "type": "string",
+      "title": "individualID"
     },
     "inheritance": {
       "description": "",
@@ -219,7 +221,7 @@
         "parent not affected",
         "unknown"
       ],
-      "title": "InheritanceEnum",
+      "title": "inheritance",
       "type": "string"
     },
     "intellectualDisability": {
@@ -229,7 +231,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "learningDisability": {
@@ -239,7 +241,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "lenticularOpacity": {
@@ -249,7 +251,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "leukemia": {
@@ -259,7 +261,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "longBoneDysplasia": {
@@ -269,7 +271,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "meningioma": {
@@ -281,7 +283,7 @@
         "single",
         "unknown"
       ],
-      "title": "MultipleImagingDiagnosisEnum",
+      "title": "spinalSchwannoma",
       "type": "string"
     },
     "mosaicism": {
@@ -291,58 +293,32 @@
         "not mosaic",
         "unknown"
       ],
-      "title": "MosaicismEnum",
+      "title": "mosaicism",
       "type": "string"
     },
     "nf1Genotype": {
-      "anyOf": [
-        {
-          "description": "",
-          "enum": [
-            "+/+",
-            "+/-",
-            "-/-",
-            "Unknown"
-          ],
-          "title": "Genotype",
-          "type": "string"
-        },
-        {
-          "description": "",
-          "enum": [
-            "Unknown"
-          ],
-          "title": "UnknownEnum",
-          "type": "string"
-        }
-      ],
       "description": "Genotype of NF1 gene in the biospecimen from which the data were derived, if known.",
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "+/+",
+        "+/-",
+        "-/-",
+        "Unknown",
+        "Unknown"
+      ],
+      "title": "nf1Genotype"
     },
     "nf2Genotype": {
-      "anyOf": [
-        {
-          "description": "",
-          "enum": [
-            "+/+",
-            "+/-",
-            "-/-",
-            "Unknown"
-          ],
-          "title": "Genotype",
-          "type": "string"
-        },
-        {
-          "description": "",
-          "enum": [
-            "Unknown"
-          ],
-          "title": "UnknownEnum",
-          "type": "string"
-        }
-      ],
       "description": "Genotype of NF2 gene in the biospecimen from which the data were derived, if known",
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "+/+",
+        "+/-",
+        "-/-",
+        "Unknown",
+        "Unknown"
+      ],
+      "title": "nf2Genotype"
     },
     "nonopticGlioma": {
       "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
@@ -351,7 +327,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "nonvestibularCranialSchwannoma": {
@@ -362,7 +338,7 @@
         "present",
         "unknown"
       ],
-      "title": "BinaryImagingDiagnosisEnum",
+      "title": "nonvestibularCranialSchwannoma",
       "type": "string"
     },
     "nonvestibularSchwannomas": {
@@ -373,7 +349,7 @@
         "only by imaging evidence",
         "unknown"
       ],
-      "title": "NonvestibularSchwannomaManifestationEnum",
+      "title": "nonvestibularSchwannomas",
       "type": "string"
     },
     "numberOfSchwannomas": {
@@ -384,7 +360,7 @@
         "single",
         "unknown"
       ],
-      "title": "SchwannomaManifestationEnum",
+      "title": "numberOfSchwannomas",
       "type": "string"
     },
     "opticGlioma": {
@@ -396,7 +372,7 @@
         "present - symptomatic - treated",
         "unknown"
       ],
-      "title": "OpticGliomaManifestationEnum",
+      "title": "opticGlioma",
       "type": "string"
     },
     "otherTumors": {
@@ -406,7 +382,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "painStatus": {
@@ -416,7 +392,7 @@
         "not a problem",
         "occasional"
       ],
-      "title": "PainEnum",
+      "title": "painStatus",
       "type": "string"
     },
     "peripheralNeuropathy": {
@@ -426,7 +402,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "pheochromocytoma": {
@@ -436,7 +412,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "plexiformNeurofibromas": {
@@ -447,7 +423,7 @@
         "present",
         "unknown"
       ],
-      "title": "PlexiformNeurofibromaManifestationEnum",
+      "title": "plexiformNeurofibromas",
       "type": "string"
     },
     "pubertyOnset": {
@@ -458,7 +434,7 @@
         "prebubertal",
         "precocious"
       ],
-      "title": "PubertyOnsetEnum",
+      "title": "pubertyOnset",
       "type": "string"
     },
     "scoliosis": {
@@ -468,39 +444,19 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "sex": {
-      "anyOf": [
-        {
-          "description": "",
-          "enum": [
-            "Female",
-            "Male"
-          ],
-          "title": "SexEnum",
-          "type": "string"
-        },
-        {
-          "description": "",
-          "enum": [
-            "Unknown"
-          ],
-          "title": "UnknownEnum",
-          "type": "string"
-        },
-        {
-          "description": "",
-          "enum": [
-            "Not Applicable"
-          ],
-          "title": "NotApplicableEnum",
-          "type": "string"
-        }
-      ],
       "description": "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other.",
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "Female",
+        "Male",
+        "Unknown",
+        "Not Applicable"
+      ],
+      "title": "sex"
     },
     "skinFoldFreckling": {
       "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
@@ -509,7 +465,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "species": {
@@ -527,7 +483,7 @@
         "Rhesus macaque",
         "Sus scrofa"
       ],
-      "title": "SpeciesEnum",
+      "title": "species",
       "type": "string"
     },
     "sphenoidDysplasia": {
@@ -537,7 +493,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "spinalNeurofibromas": {
@@ -548,7 +504,7 @@
         "levels 1-3",
         "not imaged"
       ],
-      "title": "SpinalNeuromaManifestationEnum",
+      "title": "spinalNeurofibromas",
       "type": "string"
     },
     "spinalSchwannoma": {
@@ -560,7 +516,7 @@
         "single",
         "unknown"
       ],
-      "title": "MultipleImagingDiagnosisEnum",
+      "title": "spinalSchwannoma",
       "type": "string"
     },
     "stature": {
@@ -570,7 +526,7 @@
         "< 5th centile",
         "> 95th centile"
       ],
-      "title": "Percentiles-2SD",
+      "title": "stature",
       "type": "string"
     },
     "subcutaneousNodularNeurofibromas": {
@@ -581,7 +537,7 @@
         "scattered",
         "unknown"
       ],
-      "title": "NeurofibromaManifestationEnum",
+      "title": "subcutaneousNodularNeurofibromas",
       "type": "string"
     },
     "tumorTreatmentStatus": {
@@ -594,7 +550,7 @@
         "surgery",
         "targeted therapy"
       ],
-      "title": "TumorTreatmentEnum",
+      "title": "tumorTreatmentStatus",
       "type": "string"
     },
     "vascularDisease": {
@@ -604,7 +560,7 @@
         "present",
         "unknown"
       ],
-      "title": "PresenceEnum",
+      "title": "vascularDisease",
       "type": "string"
     },
     "vestibularSchwannoma": {
@@ -616,7 +572,7 @@
         "unilateral",
         "unknown"
       ],
-      "title": "LateralManifestationEnum",
+      "title": "vestibularSchwannoma",
       "type": "string"
     },
     "vitalStatus": {
@@ -626,7 +582,7 @@
         "deceased",
         "unknown"
       ],
-      "title": "VitalStatusEnum",
+      "title": "vitalStatus",
       "type": "string"
     }
   },

@@ -1,5 +1,5 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-processedmergeddatatemplate-0.1.0",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-processedmergeddatatemplate-0.1.1",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "description": "Further processed data with multiple samples aggregated into one file. This may be also be known as level-4 data. Unlike level-2 and level-3 data, individual-level attributes such as age and sex are no longer surfaced on the data file directly.",
   "properties": {
@@ -202,12 +202,13 @@
         "whole-cell patch clamp",
         "word recognition score"
       ],
-      "title": "AssayEnum",
+      "title": "assay",
       "type": "string"
     },
     "auxiliaryAsset": {
       "description": "URI to supplemental asset(s), e.g. QC reports or other auxiliary files to support the processing, analysis, or interpretation of the current entity.\n",
-      "type": "string"
+      "type": "string",
+      "title": "auxiliaryAsset"
     },
     "dataSubtype": {
       "description": "Categorizes data based on its processing state. This is the main classification axis used for data types.  Not all data types can use this dimensions (e.g. clinical data).",
@@ -219,86 +220,73 @@
         "raw",
         "synthetic"
       ],
-      "title": "DataSubtypeEnum",
+      "title": "dataSubtype",
       "type": "string"
     },
     "dataType": {
-      "anyOf": [
-        {
-          "description": "Type of data represented by the entity (File, Dataset, etc.).",
-          "enum": [
-            "aggregated data",
-            "aligned reads",
-            "annotated germline variants",
-            "annotated somatic mutation",
-            "audio transcript",
-            "behavioral data",
-            "capsid sequence",
-            "cellular physiology",
-            "characteristic",
-            "chromatin activity",
-            "clinical",
-            "copy number variants",
-            "count matrix",
-            "data index",
-            "data sharing plan",
-            "demographics",
-            "drug combination screen",
-            "drug screen",
-            "electrophysiology",
-            "epidemiological data",
-            "gene expression",
-            "genomic features",
-            "genomic variants",
-            "germline variants",
-            "image",
-            "immunoassay",
-            "isoform expression",
-            "kinomics",
-            "mask image",
-            "mass spectrometry data",
-            "metabolomics",
-            "molecular property",
-            "morphology parameter",
-            "network",
-            "normalized intensities",
-            "nucleic acid sequence record",
-            "over-representation data",
-            "particle characterization",
-            "pharmacokinetics",
-            "physiology parameter",
-            "plot",
-            "promoter sequence",
-            "protein interaction data",
-            "protein interaction raw data",
-            "proteomics",
-            "raw counts",
-            "raw intensities",
-            "report",
-            "somatic variants",
-            "structural variants",
-            "survey data",
-            "text data",
-            "volume",
-            "weight"
-          ],
-          "title": "Data",
-          "type": "string"
-        },
-        {
-          "description": "Data that provides information about other data",
-          "enum": [
-            "descriptive metadata",
-            "image metadata",
-            "metadata",
-            "workflow metadata"
-          ],
-          "title": "MetadataEnum",
-          "type": "string"
-        }
-      ],
       "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "aggregated data",
+        "aligned reads",
+        "annotated germline variants",
+        "annotated somatic mutation",
+        "audio transcript",
+        "behavioral data",
+        "capsid sequence",
+        "cellular physiology",
+        "characteristic",
+        "chromatin activity",
+        "clinical",
+        "copy number variants",
+        "count matrix",
+        "data index",
+        "data sharing plan",
+        "demographics",
+        "drug combination screen",
+        "drug screen",
+        "electrophysiology",
+        "epidemiological data",
+        "gene expression",
+        "genomic features",
+        "genomic variants",
+        "germline variants",
+        "image",
+        "immunoassay",
+        "isoform expression",
+        "kinomics",
+        "mask image",
+        "mass spectrometry data",
+        "metabolomics",
+        "molecular property",
+        "morphology parameter",
+        "network",
+        "normalized intensities",
+        "nucleic acid sequence record",
+        "over-representation data",
+        "particle characterization",
+        "pharmacokinetics",
+        "physiology parameter",
+        "plot",
+        "promoter sequence",
+        "protein interaction data",
+        "protein interaction raw data",
+        "proteomics",
+        "raw counts",
+        "raw intensities",
+        "report",
+        "somatic variants",
+        "structural variants",
+        "survey data",
+        "text data",
+        "volume",
+        "weight",
+        "descriptive metadata",
+        "image metadata",
+        "metadata",
+        "workflow metadata"
+      ],
+      "title": "dataType"
     },
     "fileFormat": {
       "description": "",
@@ -421,7 +409,7 @@
         "yaml",
         "zip"
       ],
-      "title": "FileFormatEnum",
+      "title": "fileFormat",
       "type": "string"
     },
     "resourceType": {
@@ -436,7 +424,7 @@
         "weblink",
         "workflow report"
       ],
-      "title": "Resource",
+      "title": "resourceType",
       "type": "string"
     },
     "workflow": {
@@ -457,12 +445,13 @@
         "StringTie",
         "TrimGalore"
       ],
-      "title": "WorkflowEnum",
+      "title": "workflow",
       "type": "string"
     },
     "workflowLink": {
       "description": "Workflow URL reference",
-      "type": "string"
+      "type": "string",
+      "title": "workflowLink"
     }
   },
   "required": [

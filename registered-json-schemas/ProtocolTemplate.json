@@ -1,5 +1,5 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-protocoltemplate-0.1.0",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-protocoltemplate-0.1.1",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "description": "Describes protocol document based on https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT.",
   "properties": {
@@ -8,15 +8,18 @@
       "items": {
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "author"
     },
     "citation": {
       "description": "Citation (e.g. doi) that usage of data or resource should be cited with.",
-      "type": "string"
+      "type": "string",
+      "title": "citation"
     },
     "comments": {
       "description": "Brief free-text comments that may also be important to understanding the resource.",
-      "type": "string"
+      "type": "string",
+      "title": "comments"
     },
     "fileFormat": {
       "description": "",
@@ -139,7 +142,7 @@
         "yaml",
         "zip"
       ],
-      "title": "FileFormatEnum",
+      "title": "fileFormat",
       "type": "string"
     },
     "license": {
@@ -158,7 +161,7 @@
         "Public Domain",
         "UNKNOWN"
       ],
-      "title": "License",
+      "title": "license",
       "type": "string"
     },
     "protocolAssay": {
@@ -360,20 +363,23 @@
         "whole-cell patch clamp",
         "word recognition score"
       ],
-      "title": "AssayEnum",
+      "title": "protocolAssay",
       "type": "string"
     },
     "protocolPurpose": {
       "description": "Brief description of the protocol purpose.",
-      "type": "string"
+      "type": "string",
+      "title": "protocolPurpose"
     },
     "sampleType": {
       "description": "Type of sample used",
-      "type": "string"
+      "type": "string",
+      "title": "sampleType"
     },
     "title": {
       "description": "Title of a resource.",
-      "type": "string"
+      "type": "string",
+      "title": "title"
     }
   },
   "required": [

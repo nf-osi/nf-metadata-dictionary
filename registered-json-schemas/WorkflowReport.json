@@ -1,5 +1,5 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-workflowreport-0.1.0",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-workflowreport-0.1.1",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "description": "Template used for miscellaneous workflow reports and accessory files",
   "properties": {
@@ -202,7 +202,7 @@
         "whole-cell patch clamp",
         "word recognition score"
       ],
-      "title": "AssayEnum",
+      "title": "assay",
       "type": "string"
     },
     "fileFormat": {
@@ -326,12 +326,13 @@
         "yaml",
         "zip"
       ],
-      "title": "FileFormatEnum",
+      "title": "fileFormat",
       "type": "string"
     },
     "relatedDataset": {
       "description": "Reference to a relevant dataset entity.",
-      "type": "string"
+      "type": "string",
+      "title": "relatedDataset"
     },
     "resourceType": {
       "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
@@ -345,7 +346,7 @@
         "weblink",
         "workflow report"
       ],
-      "title": "Resource",
+      "title": "resourceType",
       "type": "string"
     },
     "workflow": {
@@ -366,12 +367,13 @@
         "StringTie",
         "TrimGalore"
       ],
-      "title": "WorkflowEnum",
+      "title": "workflow",
       "type": "string"
     },
     "workflowLink": {
       "description": "Workflow URL reference",
-      "type": "string"
+      "type": "string",
+      "title": "workflowLink"
     }
   },
   "required": [

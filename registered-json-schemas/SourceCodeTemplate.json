@@ -1,5 +1,5 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-sourcecodetemplate-0.1.0",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-sourcecodetemplate-0.1.1",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "description": "Template for describing scripts or software code.",
   "properties": {
@@ -8,15 +8,18 @@
       "items": {
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "author"
     },
     "citation": {
       "description": "Citation (e.g. doi) that usage of data or resource should be cited with.",
-      "type": "string"
+      "type": "string",
+      "title": "citation"
     },
     "documentation": {
       "description": "URL to any documentation describing the resource and its use.",
-      "type": "string"
+      "type": "string",
+      "title": "documentation"
     },
     "license": {
       "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
@@ -34,20 +37,23 @@
         "Public Domain",
         "UNKNOWN"
       ],
-      "title": "License",
+      "title": "license",
       "type": "string"
     },
     "programmingLanguage": {
       "description": "A computer programming language",
-      "type": "string"
+      "type": "string",
+      "title": "programmingLanguage"
     },
     "runtimePlatform": {
       "description": "Runtime platform or script interpreter dependencies (e.g. Java v1, Python 2.3).",
-      "type": "string"
+      "type": "string",
+      "title": "runtimePlatform"
     },
     "title": {
       "description": "Title of a resource.",
-      "type": "string"
+      "type": "string",
+      "title": "title"
     }
   },
   "required": [

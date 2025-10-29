@@ -1,10 +1,11 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-publicationtemplate-0.1.0",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-publicationtemplate-0.1.1",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "description": "A generalized data model template for Publications to be hopefully used across dccs",
   "properties": {
     "abstract": {
-      "type": "string"
+      "type": "string",
+      "title": "abstract"
     },
     "accessibility": {
       "description": "",
@@ -12,32 +13,39 @@
         "Open Access",
         "Restricted Access"
       ],
-      "title": "PublicationAccessibilityEnum",
+      "title": "accessibility",
       "type": "string"
     },
     "author": {
       "items": {
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "author"
     },
     "doi": {
-      "type": "string"
+      "type": "string",
+      "title": "doi"
     },
     "grantNumber": {
-      "type": "string"
+      "type": "string",
+      "title": "grantNumber"
     },
     "journal": {
-      "type": "string"
+      "type": "string",
+      "title": "journal"
     },
     "pmid": {
-      "type": "string"
+      "type": "string",
+      "title": "pmid"
     },
     "title": {
-      "type": "string"
+      "type": "string",
+      "title": "title"
     },
     "year": {
-      "type": "integer"
+      "type": "integer",
+      "title": "year"
     }
   },
   "required": [
