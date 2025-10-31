@@ -1,27 +1,32 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-plutornaseq-0.1.0",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-plutornaseq-0.2.0",
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "title": "Pluto-centric RNA-seq schema",
-  "description": "This schema describes an RNA-seq data file and requirements for computational processing in Pluto, a GDPR-compliant platform.",
+  "description": "This schema describes attributes required for computational processing in Pluto, a GDPR-compliant platform, as well as additional metadata that may be available for use downstream.",
   "type": "object",
   "required": [
     "sample_id", 
     "r1_fastq", 
     "strandedness"],
   "properties": {
+    "name": {
+      "type": "string",
+      "description": "FASTQ file name, must be gzipped for workflow.",
+      "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$"
+    },
     "sample_id": {
       "type": "string",
       "pattern": "^\\S+$",
-      "description": "Sample identifier must be provided and cannot contain spaces. The computational workflow makes use of this attribute; values can typically be copied from `specimenID`, `sample`, etc."
+      "description": "Sample identifier must be provided and cannot contain spaces. Required for computational workflow; values can typically be copied from `specimenID`, `sample`, etc."
     },
     "r1_fastq": {
       "type": "string",
-      "description": "Read #1 FASTQ file, typically gzipped.",
+      "description": "Read #1 FASTQ file, typically gzipped. This should be the file name of the file with readPair=1.",
       "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$"
     },
     "r2_fastq": {
       "type": "string",
-      "description": "Read #2 FASTQ file, typically gzipped. If runType is pairedEnd, this is required.",
+      "description": "Read #2 FASTQ file, typically gzipped. If runType is pairedEnd, this is required. This should be the file name of the file with readPair=2 (if runType=pairedEnd).",
       "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$"
     },
     "strandedness": {
@@ -37,6 +42,7 @@
         "LZTR1-related schwannomatosis",
         "NF2-related schwannomatosis",
         "Neurofibromatosis type 1",
+        "Neurofibromatosis type 2",
         "Noonan Syndrome",
         "Not Applicable",
         "SMARCB1-related schwannomatosis",
@@ -109,14 +115,12 @@
     "specimenID": {
       "type": "string",
       "description": "Specimen identifier.",
-      "pattern": "^\\S+$",
-      "minLength": 1
+      "pattern": "^\\S+$"
     },
     "individualID": {
       "type": "string",
       "description": "Subject/individual identifier.",
-      "pattern": "^\\S+$",
-      "minLength": 1
+      "pattern": "^\\S+$"
     },
     "species": {
       "type": "string",
@@ -146,6 +150,47 @@
     "readPair": {
       "type": "string",
       "description": "Indicates whether FASTQ file represents read 1 or read 2; relevant only for pairedEnd."
+    },
+    "nf1Genotype": {
+      "type": "string",
+      "description": "Genotype of NF1 gene in the biospecimen from which the data were derived, if known.",
+      "enum": [
+        "+/+",
+        "+/-",
+        "-/-",
+        "Unknown"
+      ]
+    },
+    "nf2Genotype": {
+      "type": "string",
+      "description": "Genotype of NF2 gene in the biospecimen from which the data were derived, if known",
+      "enum": [
+        "+/+",
+        "+/-",
+        "-/-",
+        "Unknown"
+      ]
+    },
+    "batch": {
+      "type": "string",
+      "description": "Batch identifier, can be used in any context where added batch information is helpful, such as different sequencing runs or collection times."
+    },
+    "assay": {
+      "type": "string",
+      "description": "Assay type for this data.",
+      "const": "RNA-seq"
+    },
+    "sampleSource": {
+      "type": "string",
+      "description": "Broad geographic source of the sample.",
+      "enum": [
+        "US",
+        "EU"
+      ]
+    },
+    "sampleType": {
+      "type": "string",
+      "description": "The type of material sample taken from a biological entity."
     }
   }
 }

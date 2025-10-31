@@ -120,6 +120,9 @@ def create_curation_task(
     template: str,
     instructions: str = "Please add metadata for your files",
     bind_schema: bool = True,
+    file_view_id: str = None,
+    schema_dir: str = "registered-json-schemas",
+    staging: bool = False,
     auth_token: str = None
 ) -> dict:
     """
@@ -134,6 +137,9 @@ def create_curation_task(
         template: Template name (e.g., 'ImagingAssayTemplate')
         instructions: Instructions for data contributors
         bind_schema: Whether to bind JSON schema to folder (default: True)
+        file_view_id: Optional existing file view ID to use (if None, creates new one)
+        schema_dir: Directory containing schema files (default: "registered-json-schemas")
+        staging: Use Synapse staging endpoint (default: False)
         auth_token: Synapse authentication token (if None, reads from env)
 
     Returns:
@@ -154,8 +160,13 @@ def create_curation_task(
                 "Set SYNAPSE_AUTH_TOKEN environment variable or pass auth_token parameter"
             )
 
-    # Initialize Synapse client
-    syn = Synapse()
+    # Initialize Synapse client with staging endpoint if requested
+    if staging:
+        syn = Synapse(service_endpoint="https://repo-staging.prod.sagebase.org")
+        print("Using Synapse staging endpoint")
+    else:
+        syn = Synapse()
+
     syn.login(authToken=auth_token)
 
     # Get folder to derive project ID
@@ -182,7 +193,7 @@ def create_curation_task(
 
     # Load schema URI and content
     print(f"\nLoading schema: {template}")
-    schema_uri, json_schema = load_schema_uri(template)
+    schema_uri, json_schema = load_schema_uri(template, schema_dir=schema_dir)
     print(f"  Schema URI: {schema_uri}")
 
     # Determine template name for dataType generation
@@ -203,56 +214,62 @@ def create_curation_task(
     if bind_schema:
         bind_schema_to_folder(upload_folder_id, schema_uri, syn)
 
-    # Create EntityView (file view) using the better implementation from json_schema_entity_view
-    print(f"\nCreating file view for folder...")
-    from synapseclient.models import Column, ColumnType, ViewTypeMask, EntityView
+    # Use existing file view or create new one
+    if file_view_id:
+        print(f"\nUsing existing file view: {file_view_id}")
+        final_file_view_id = file_view_id
+    else:
+        # Create EntityView (file view) using the better implementation from json_schema_entity_view
+        print(f"\nCreating file view for folder...")
+        from synapseclient.models import Column, ColumnType, ViewTypeMask, EntityView
 
-    # Fetch the schema if we don't have it yet
-    if json_schema is None:
-        print("  Fetching schema from URI...")
-        import requests
-        response = requests.get(schema_uri)
-        if response.status_code == 200:
-            json_schema = response.json()
-        else:
-            print(f"  ⚠ Could not fetch schema, using local template if available...")
-            try:
-                _, json_schema = load_schema_uri(template_name)
-            except FileNotFoundError:
-                print("  ⚠ No schema available - creating view with default columns only")
-                json_schema = {}
+        # Fetch the schema if we don't have it yet
+        if json_schema is None:
+            print("  Fetching schema from URI...")
+            import requests
+            response = requests.get(schema_uri)
+            if response.status_code == 200:
+                json_schema = response.json()
+            else:
+                print(f"  ⚠ Could not fetch schema, using local template if available...")
+                try:
+                    _, json_schema = load_schema_uri(template_name, schema_dir=schema_dir)
+                except FileNotFoundError:
+                    print("  ⚠ No schema available - creating view with default columns only")
+                    json_schema = {}
 
-    # Create columns from schema using the helper function
-    import sys
-    sys.path.insert(0, str(Path(__file__).parent))
-    from json_schema_entity_view import _create_columns_from_json_schema
+        # Create columns from schema using the helper function
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent))
+        from json_schema_entity_view import _create_columns_from_json_schema
 
-    try:
-        columns = _create_columns_from_json_schema(json_schema)
-        print(f"  Adding {len(columns)} columns from schema")
-    except ValueError as e:
-        print(f"  ⚠ Schema has no properties: {e}")
-        columns = []
+        try:
+            columns = _create_columns_from_json_schema(json_schema)
+            print(f"  Adding {len(columns)} columns from schema")
+        except ValueError as e:
+            print(f"  ⚠ Schema has no properties: {e}")
+            columns = []
 
-    # Add essential columns first: id and name only
-    essential_columns = [
-        Column(name="id", column_type=ColumnType.ENTITYID),
-        Column(name="name", column_type=ColumnType.STRING, maximum_size=256),
-    ]
+        # Add essential columns first: id and name only
+        essential_columns = [
+            Column(name="id", column_type=ColumnType.ENTITYID),
+            Column(name="name", column_type=ColumnType.STRING, maximum_size=256),
+        ]
 
-    # Combine essential columns with schema columns
-    all_columns = essential_columns + columns
+        # Combine essential columns with schema columns
+        all_columns = essential_columns + columns
 
-    # Create the entity view using the new models API
-    file_view = EntityView(
-        name=f"{data_type}_FileView",
-        parent_id=project_id,
-        scope_ids=[upload_folder_id],
-        view_type_mask=ViewTypeMask.FILE,
-        columns=all_columns,
-    ).store(synapse_client=syn)
+        # Create the entity view using the new models API
+        file_view = EntityView(
+            name=f"{data_type}_FileView",
+            parent_id=project_id,
+            scope_ids=[upload_folder_id],
+            view_type_mask=ViewTypeMask.FILE,
+            columns=all_columns,
+        ).store(synapse_client=syn)
 
-    print(f"  File View ID: {file_view.id}")
+        final_file_view_id = file_view.id
+        print(f"  File View ID: {final_file_view_id}")
 
     # Create file-based metadata task
     print(f"\nCreating file-based metadata task...")
@@ -265,7 +282,7 @@ def create_curation_task(
         instructions=instructions,
         task_properties=FileBasedMetadataTaskProperties(
             upload_folder_id=upload_folder_id,
-            file_view_id=file_view.id
+            file_view_id=final_file_view_id
         )
     )
 
@@ -277,7 +294,7 @@ def create_curation_task(
 
     return {
         "task_id": task.task_id,
-        "fileview_id": file_view.id,
+        "fileview_id": final_file_view_id,
         "data_type": data_type,
         "schema_uri": schema_uri,
         "project_id": project_id
@@ -307,6 +324,25 @@ Examples:
     --template BiospecimenTemplate \\
     --no-bind-schema
 
+  # Use existing file view instead of creating new one
+  python create_curation_task.py \\
+    --folder-id syn12345678 \\
+    --template GenomicsAssayTemplate \\
+    --fileview-id syn87654321
+
+  # Use experimental schema
+  python create_curation_task.py \\
+    --folder-id syn12345678 \\
+    --template PlutoRNASeq \\
+    --schema-dir registered-json-schemas/experimental \\
+    --fileview-id syn87654321
+
+  # Use staging endpoint
+  python create_curation_task.py \\
+    --folder-id syn12345678 \\
+    --template GenomicsAssayTemplate \\
+    --staging
+
   # Use external schema URI
   python create_curation_task.py \\
     --folder-id syn12345678 \\
@@ -319,7 +355,9 @@ Notes:
   - Project ID is automatically derived from the folder
   - DataType is auto-generated as: {template_base}-{folder_id}
   - Schema binding is enabled by default (use --no-bind-schema to skip)
-  - Schema URI is loaded from registered-json-schemas/ directory
+  - A new file view is created by default (use --fileview-id to use existing one)
+  - Schema URI is loaded from schema directory (default: registered-json-schemas/)
+  - Use --schema-dir for experimental schemas (e.g., registered-json-schemas/experimental)
         """
     )
 
@@ -356,6 +394,25 @@ Notes:
     )
 
     parser.add_argument(
+        '--fileview-id',
+        default=None,
+        help='Optional existing file view ID to use (e.g., syn12345678). If not provided, a new file view will be created.'
+    )
+
+    parser.add_argument(
+        '--schema-dir',
+        default='registered-json-schemas',
+        help='Directory containing schema files (default: registered-json-schemas). Use "registered-json-schemas/experimental" for experimental schemas.'
+    )
+
+    parser.add_argument(
+        '--staging',
+        action='store_true',
+        default=False,
+        help='Use Synapse staging endpoint (default: False)'
+    )
+
+    parser.add_argument(
         '--output-format',
         choices=['json', 'github'],
         default='json',
@@ -369,7 +426,10 @@ Notes:
             upload_folder_id=args.folder_id,
             template=args.template,
             instructions=args.instructions,
-            bind_schema=args.bind_schema
+            bind_schema=args.bind_schema,
+            file_view_id=args.fileview_id,
+            schema_dir=args.schema_dir,
+            staging=args.staging
         )
 
         if args.output_format == 'github':
