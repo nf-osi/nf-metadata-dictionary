@@ -78,32 +78,3 @@ jobs:
           repo: nf-osi/dcc-site
           ref: refs/heads/main
           token: ${{ secrets.SERVICE_TOKEN }}
-
-      - name: Register changed JSON schemas with Synapse
-        if: steps.commit_artifacts.outputs.artifacts_changed == 'true'
-        run: |
-          CHANGED=$(git diff --name-only HEAD HEAD~1 registered-json-schemas)
-          if [ -n "$CHANGED" ]; then
-            echo "Changed schemas detected: $CHANGED"
-            # Convert file paths to just filenames for exclusion list
-            ALL_SCHEMAS=$(ls registered-json-schemas/*.json | xargs -n1 basename)
-            CHANGED_SCHEMAS=$(echo "$CHANGED" | xargs -n1 basename)
-            EXCLUDE_LIST=""
-
-            # Build exclude list of schemas that haven't changed
-            for schema in $ALL_SCHEMAS; do
-              if ! echo "$CHANGED_SCHEMAS" | grep -q "$schema"; then
-                EXCLUDE_LIST="$EXCLUDE_LIST $schema"
-              fi
-            done
-
-            if [ -n "$EXCLUDE_LIST" ]; then
-              echo "Registering only changed schemas, excluding: $EXCLUDE_LIST"
-              python utils/register-schemas.py --schema-dir registered-json-schemas --exclude $EXCLUDE_LIST
-            else
-              echo "All schemas changed, registering everything"
-              python utils/register-schemas.py --schema-dir registered-json-schemas
-            fi
-          else
-            echo "No schema files changed, skipping registration"
-          fi
