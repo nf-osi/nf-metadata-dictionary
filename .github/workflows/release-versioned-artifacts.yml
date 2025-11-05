@@ -36,6 +36,10 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Building schemas for version: $VERSION"
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12'
+
       - name: Setup custom build tools and make jsonld
         shell: bash
         run: |
@@ -45,17 +49,6 @@ jobs:
           npm install -g json-dereference-cli
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           make -B
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10.12'
-
-      - name: Setup schematic
-        run: |
-          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}
-          pip show schematicpy
-          schematic schema convert NF.jsonld
-          python utils/fix_display_names.py retold_NF.jsonld NF.jsonld
 
       - name: Generate versioned JSON schemas
         env:
@@ -78,6 +71,13 @@ jobs:
             --schema-dir "registered-json-schemas-$SCHEMA_VERSION" \
             --log-file "schema-registration-log-$SCHEMA_VERSION.md" \
             --exclude Superdataset.json
+
+      - name: Setup schematic
+        run: |
+          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}
+          pip show schematicpy
+          schematic schema convert NF.jsonld
+          python utils/fix_display_names.py retold_NF.jsonld NF.jsonld
 
       - name: Upload versioned schemas as artifact
         uses: actions/upload-artifact@v4
