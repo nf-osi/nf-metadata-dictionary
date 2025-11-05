@@ -26,6 +26,9 @@ def process_schema(raw_schema, cls_name, version=None):
     else:
         raw_schema["$id"] = f"https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-{cls_name.lower()}"
     raw_schema["title"] = cls_name
+
+    # Force JSON Schema Draft 7
+    raw_schema["$schema"] = "http://json-schema.org/draft-07/schema#"
     
     # Dereference and inline enums
     deref = jsonref.replace_refs(raw_schema, merge_props=False, proxies=False)
