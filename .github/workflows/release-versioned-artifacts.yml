@@ -33,8 +33,24 @@ jobs:
             # Remove 'v' prefix from tag (v9.9.0 -> 9.9.0)
             VERSION="${GITHUB_REF#refs/tags/v}"
           fi
+
+          # Validate semantic version format
+          # Valid: 1.0.0, 10.5.2, 0.1.0
+          # Invalid: 01.0.0, 1.05.0, 1.0.01, 10.08.1
+          if ! echo "$VERSION" | grep -E '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$' > /dev/null; then
+            echo "❌ ERROR: Invalid version format: $VERSION"
+            echo "Version must follow semantic versioning (MAJOR.MINOR.PATCH) with no leading zeros."
+            echo "Valid examples: 1.0.0, 10.5.2, 0.1.0"
+            echo "Invalid examples: 01.0.0, 1.05.0, 1.0.01, 10.08.1"
+            exit 1
+          fi
+
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Building schemas for version: $VERSION"
+          echo "✅ Building schemas for version: $VERSION"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12'
 
       - name: Setup custom build tools and make jsonld
         shell: bash
@@ -45,17 +61,6 @@ jobs:
           npm install -g json-dereference-cli
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           make -B
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10.12'
-
-      - name: Setup schematic
-        run: |
-          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}
-          pip show schematicpy
-          schematic schema convert NF.jsonld
-          python utils/fix_display_names.py retold_NF.jsonld NF.jsonld
 
       - name: Generate versioned JSON schemas
         env:
@@ -78,6 +83,13 @@ jobs:
             --schema-dir "registered-json-schemas-$SCHEMA_VERSION" \
             --log-file "schema-registration-log-$SCHEMA_VERSION.md" \
             --exclude Superdataset.json
+
+      - name: Setup schematic
+        run: |
+          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}
+          pip show schematicpy
+          schematic schema convert NF.jsonld
+          python utils/fix_display_names.py retold_NF.jsonld NF.jsonld
 
       - name: Upload versioned schemas as artifact
         uses: actions/upload-artifact@v4
