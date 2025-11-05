@@ -20,6 +20,10 @@ jobs:
         with:
           fetch-depth: 2
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12'
+
       - name: Setup custom build tools
         shell: bash
         run: |
@@ -28,10 +32,6 @@ jobs:
           pip install linkml==v1.8.1 synapseclient jsonref
           npm install -g json-dereference-cli
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10.12'
 
       - name: Rebuild all artifacts
         run: |
