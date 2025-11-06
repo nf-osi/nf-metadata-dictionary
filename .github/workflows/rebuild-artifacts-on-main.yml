@@ -7,6 +7,10 @@ on:
     paths:
       - 'modules/**'
 
+concurrency:
+  group: rebuild-artifacts-main
+  cancel-in-progress: true
+
 env:
   SCHEMATIC_VERSION: 24.7.2
   SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
