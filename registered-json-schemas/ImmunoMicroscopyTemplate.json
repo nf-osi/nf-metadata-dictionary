@@ -1,6 +1,6 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-immunomicroscopytemplate",
-  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Template for describing immunofluorescence or immunohistochemistry images.",
   "properties": {
     "age": {
@@ -41,6 +41,7 @@
         "ATAC-seq",
         "ATPase activity assay",
         "AlgometRx Nociometer",
+        "quantitative sensory testing",
         "BrdU proliferation assay",
         "CAPP-seq",
         "CODEX",
@@ -99,9 +100,12 @@
         "bisulfite sequencing",
         "blood chemistry measurement",
         "blue native PAGE",
+        "SDS-PAGE",
         "body size trait measurement",
         "bone histomorphometry",
         "brightfield microscopy",
+        "live imaging",
+        "histology",
         "cAMP-Glo Max Assay",
         "cNF-Skindex",
         "calcium retention capacity assay",
@@ -198,6 +202,7 @@
         "questionnaire",
         "reactive oxygen species assay",
         "reporter gene assay",
+        "split-GFP assay",
         "rheometry",
         "ribo-seq",
         "rotarod performance test",
@@ -350,7 +355,9 @@
         "Sporadic Schwannoma",
         "Unknown",
         "Vestibular Schwannoma",
-        "atypical neurofibroma"
+        "atypical neurofibroma",
+        "High Grade Malignant Peripheral Nerve Sheath Tumor",
+        "Juvenile myelomonocytic leukemia"
       ],
       "title": "DiagnosisEnum",
       "type": "string"
@@ -1410,9 +1417,13 @@
         "nose",
         "ovary",
         "pancreas",
+        "placenta",
         "prostate",
         "skin",
-        "spleen"
+        "spleen",
+        "smooth muscle",
+        "tonsil",
+        "thymus"
       ],
       "title": "OrganEnum",
       "type": "string"
@@ -1454,6 +1465,7 @@
         "Hitachi Echelon 1.5T",
         "Hitachi Oasis 1.2T",
         "IVIS Spectrum In Vivo Imaging System",
+        "Itae Vasculoscope",
         "Illumina 1M",
         "Illumina Genome Analyzer IIx",
         "Illumina HiSeq 2000",
@@ -1494,6 +1506,7 @@
         "Malvern Zetasizer",
         "NanoFCM",
         "NanoString Human nCounter PanCancer IO360 Panel",
+        "Nanostring CosMx",
         "Nanostring Counter",
         "Nanostring GeoMx",
         "Not Applicable",
@@ -1689,7 +1702,6 @@
   "required": [
     "specimenID",
     "platform",
-    "Component",
     "fileFormat",
     "resourceType",
     "dataType",
