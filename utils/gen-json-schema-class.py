@@ -9,6 +9,7 @@ import argparse
 from pathlib import Path
 import jsonref
 import synapseclient
+from collections import OrderedDict
 
 def run_cmd(cmd):
     """Run command and return output."""
@@ -18,7 +19,54 @@ def run_cmd(cmd):
     except subprocess.CalledProcessError:
         return None
 
-def process_schema(raw_schema, cls_name, version=None):
+def get_class_property_order(schema_yaml_path, cls_name):
+    """Get the property order from the original YAML schema."""
+    try:
+        # Use a custom YAML loader that preserves order
+        from yaml import load
+        try:
+            from yaml import CLoader as Loader
+        except ImportError:
+            from yaml import Loader
+
+        with open(schema_yaml_path, 'r') as f:
+            # Load YAML while preserving key order
+            schema_data = load(f, Loader=Loader)
+
+        cls_def = schema_data.get('classes', {}).get(cls_name, {})
+
+        # Check if properties are defined in 'attributes' (PortalDataset style)
+        if 'attributes' in cls_def:
+            return list(cls_def['attributes'].keys())
+        # Otherwise check for 'slots' (Template style)
+        elif 'slots' in cls_def:
+            return cls_def['slots']
+
+        return []
+    except Exception as e:
+        print(f"Warning: Could not determine property order for {cls_name}: {e}")
+        return []
+
+def reorder_properties(properties, property_order):
+    """Reorder properties dict based on specified order."""
+    if not property_order or not properties:
+        return properties
+
+    ordered = OrderedDict()
+
+    # First add properties in the specified order
+    for prop in property_order:
+        if prop in properties:
+            ordered[prop] = properties[prop]
+
+    # Then add any remaining properties not in the order list (alphabetically)
+    for prop in sorted(properties.keys()):
+        if prop not in ordered:
+            ordered[prop] = properties[prop]
+
+    return dict(ordered)
+
+def process_schema(raw_schema, cls_name, version=None, schema_yaml_path=None):
     """Process and clean the JSON schema."""
     # Set metadata with optional version
     if version:
@@ -26,6 +74,9 @@ def process_schema(raw_schema, cls_name, version=None):
     else:
         raw_schema["$id"] = f"https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-{cls_name.lower()}"
     raw_schema["title"] = cls_name
+
+    # Force JSON Schema Draft 7
+    raw_schema["$schema"] = "http://json-schema.org/draft-07/schema#"
 
     # Dereference and inline enums
     deref = jsonref.replace_refs(raw_schema, merge_props=False, proxies=False)
@@ -110,6 +161,11 @@ def process_schema(raw_schema, cls_name, version=None):
     if "required" in deref:
         deref["required"] = [r for r in deref["required"] if r not in ["Filename", "Component"]]
 
+    # Reorder properties to match YAML order
+    if schema_yaml_path and "properties" in deref:
+        property_order = get_class_property_order(schema_yaml_path, cls_name)
+        deref["properties"] = reorder_properties(deref["properties"], property_order)
+
     return deref
 
 def validate_schema(path: Path):
@@ -162,6 +218,9 @@ def main():
     parser.add_argument("--version",
                        default=None,
                        help="Semantic version to include in schema URIs (e.g., 9.9.0)")
+    parser.add_argument("--skip-validation",
+                       action="store_true",
+                       help="Skip validation step and only generate JSON schemas")
 
     args = parser.parse_args()
     
@@ -196,7 +255,7 @@ def main():
         
         try:
             raw_schema = json.loads(schema_str)
-            final_schema = process_schema(raw_schema, cls_name, args.version)
+            final_schema = process_schema(raw_schema, cls_name, args.version, SCHEMA_YAML)
 
             # Write output
             output_file = OUT_DIR / f"{cls_name}.json"
@@ -207,20 +266,24 @@ def main():
     
     generated_count = len(list(OUT_DIR.glob('*.json')))
     print(f"✅ Generated {generated_count} JSON schemas")
-    
+
+    if args.skip_validation:
+        print("\n⏭️  Skipping validation (--skip-validation flag set)")
+        return
+
     print(f"\n🔨 Validating {generated_count} schemas against Synapse...")
     validation_results = []
-    
+
     for json_file in OUT_DIR.glob('*.json'):
         result = validate_schema(json_file)
         validation_results.append(result)
-    
+
     # Summary
     passed = sum(validation_results)
     failed = len(validation_results) - passed
-    
+
     print(f"\n🎉 Validation complete: {passed} passed, {failed} failed")
-    
+
     # Log validation results to markdown file
     log_content = f"""# Schema Validation Report
 
@@ -233,17 +296,17 @@ Generated: {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}
 
 ## Details
 """
-    
+
     # Add details for each schema
     for json_file in OUT_DIR.glob('*.json'):
         status = "✅ PASSED" if json_file in [f for f, r in zip(OUT_DIR.glob('*.json'), validation_results) if r] else "❌ FAILED"
         log_content += f"- `{json_file.name}`: {status}\n"
-    
+
     # Write log file
     log_file = Path(args.log_file)
     log_file.write_text(log_content)
     print(f"\n📝 Validation report written to {log_file}")
-    
+
     # Exit with error code if any validations failed
     if failed > 0:
         print(f"\n❌ {failed} schema(s) failed validation. Please fix and try again.")

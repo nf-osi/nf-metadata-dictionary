@@ -45,7 +45,7 @@ def register_schema(path: Path):
 
 def main():
     parser = argparse.ArgumentParser(description="Register JSON schemas with Synapse")
-    parser.add_argument("--schema-dir", 
+    parser.add_argument("--schema-dir",
                        default="registered-json-schemas",
                        help="Directory containing JSON schemas to register (default: registered-json-schemas)")
     parser.add_argument("--log-file",
@@ -55,26 +55,43 @@ def main():
                        nargs="*",
                        default=[],
                        help="Schema files to exclude from registration (e.g., --exclude Superdataset.json)")
-    
+    parser.add_argument("--include",
+                       nargs="*",
+                       default=[],
+                       help="Only register specific schema files (e.g., --include DataLandscape.json). Overrides --exclude.")
+
     args = parser.parse_args()
-    
+
     # Set up paths
     SCHEMA_DIR = Path(args.schema_dir)
-    
+
     if not SCHEMA_DIR.exists():
         print(f"❌ Schema directory not found: {SCHEMA_DIR}")
         exit(1)
-    
+
     # Get existing schemas from directory
-    json_files = [f for f in SCHEMA_DIR.glob('*.json') if f.name not in args.exclude]
+    if args.include:
+        # If --include is specified, only register those schemas
+        json_files = [SCHEMA_DIR / name for name in args.include if (SCHEMA_DIR / name).exists()]
+        missing = [name for name in args.include if not (SCHEMA_DIR / name).exists()]
+        if missing:
+            print(f"⚠️  Warning: Specified schemas not found: {', '.join(missing)}")
+    else:
+        # Otherwise, register all except excluded ones
+        json_files = [f for f in SCHEMA_DIR.glob('*.json') if f.name not in args.exclude]
     
     if not json_files:
         print(f"❌ No JSON schemas found in {SCHEMA_DIR}")
         return
     
     schema_count = len(json_files)
-    excluded_info = f" (excluding {', '.join(args.exclude)})" if args.exclude else ""
-    print(f"🚀 Registering {schema_count} existing schemas with Synapse{excluded_info}...")
+    if args.include:
+        filter_info = f" (only: {', '.join(args.include)})"
+    elif args.exclude:
+        filter_info = f" (excluding: {', '.join(args.exclude)})"
+    else:
+        filter_info = ""
+    print(f"🚀 Registering {schema_count} schema(s) with Synapse{filter_info}...")
     
     registration_results = []
     detailed_results = []
@@ -91,6 +108,13 @@ def main():
     print(f"\n🎉 Registration complete: {passed} registered successfully, {failed} failed")
     
     # Log registration results to markdown file
+    filter_lines = []
+    if args.include:
+        filter_lines.append(f"- **Included:** {', '.join(args.include)}")
+    if args.exclude:
+        filter_lines.append(f"- **Excluded:** {', '.join(args.exclude)}")
+    filter_text = "\n".join(filter_lines)
+
     log_content = f"""# Schema Registration Report
 
 Generated: {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}
@@ -99,7 +123,7 @@ Generated: {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}
 - **Schemas processed:** {schema_count}
 - **Registration successful:** {passed}
 - **Registration failed:** {failed}
-{f"- **Excluded:** {', '.join(args.exclude)}" if args.exclude else ""}
+{filter_text}
 
 ## Details
 """
