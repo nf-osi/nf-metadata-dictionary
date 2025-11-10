@@ -1,11 +1,10 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalpublication-0.1.1",
-  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalpublication",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "A slightly more specialized publication concept intended for the specific scope of the NF Portal.",
   "properties": {
     "abstract": {
-      "type": "string",
-      "title": "abstract"
+      "type": "string"
     },
     "accessibility": {
       "description": "",
@@ -13,22 +12,20 @@
         "Open Access",
         "Restricted Access"
       ],
-      "title": "accessibility",
+      "title": "PublicationAccessibilityEnum",
       "type": "string"
     },
     "author": {
       "items": {
         "type": "string"
       },
-      "type": "array",
-      "title": "author"
+      "type": "array"
     },
     "dataset": {
       "items": {
         "type": "string"
       },
-      "type": "array",
-      "title": "dataset"
+      "type": "array"
     },
     "diseaseFocus": {
       "items": {
@@ -46,35 +43,28 @@
         "title": "DiseaseFocusEnum",
         "type": "string"
       },
-      "type": "array",
-      "title": "diseaseFocus"
+      "type": "array"
     },
     "doi": {
-      "type": "string",
-      "title": "doi"
+      "type": "string"
     },
     "fundingAgency": {
       "items": {
         "type": "string"
       },
-      "type": "array",
-      "title": "fundingAgency"
+      "type": "array"
     },
     "grantNumber": {
-      "type": "string",
-      "title": "grantNumber"
+      "type": "string"
     },
     "journal": {
-      "type": "string",
-      "title": "journal"
+      "type": "string"
     },
     "manifestation": {
-      "type": "string",
-      "title": "manifestation"
+      "type": "string"
     },
     "pmid": {
-      "type": "string",
-      "title": "pmid"
+      "type": "string"
     },
     "publicationType": {
       "description": "",
@@ -82,24 +72,20 @@
         "Primary",
         "Secondary"
       ],
-      "title": "publicationType",
+      "title": "PublicationTypeEnum",
       "type": "string"
     },
     "studyId": {
-      "type": "string",
-      "title": "studyId"
+      "type": "string"
     },
     "studyName": {
-      "type": "string",
-      "title": "studyName"
+      "type": "string"
     },
     "title": {
-      "type": "string",
-      "title": "title"
+      "type": "string"
     },
     "year": {
-      "type": "integer",
-      "title": "year"
+      "type": "integer"
     }
   },
   "required": [

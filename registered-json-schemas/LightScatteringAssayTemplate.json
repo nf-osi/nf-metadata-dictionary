@@ -1,6 +1,6 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-lightscatteringassaytemplate-0.1.1",
-  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-lightscatteringassaytemplate",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.",
   "properties": {
     "assay": {
@@ -15,6 +15,7 @@
         "ATAC-seq",
         "ATPase activity assay",
         "AlgometRx Nociometer",
+        "quantitative sensory testing",
         "BrdU proliferation assay",
         "CAPP-seq",
         "CODEX",
@@ -73,9 +74,12 @@
         "bisulfite sequencing",
         "blood chemistry measurement",
         "blue native PAGE",
+        "SDS-PAGE",
         "body size trait measurement",
         "bone histomorphometry",
         "brightfield microscopy",
+        "live imaging",
+        "histology",
         "cAMP-Glo Max Assay",
         "cNF-Skindex",
         "calcium retention capacity assay",
@@ -172,6 +176,7 @@
         "questionnaire",
         "reactive oxygen species assay",
         "reporter gene assay",
+        "split-GFP assay",
         "rheometry",
         "ribo-seq",
         "rotarod performance test",
@@ -202,13 +207,12 @@
         "whole-cell patch clamp",
         "word recognition score"
       ],
-      "title": "assay",
+      "title": "AssayEnum",
       "type": "string"
     },
     "concentrationMaterial": {
       "description": "Numeric value for concentration of the material",
-      "type": "string",
-      "title": "concentrationMaterial"
+      "type": "string"
     },
     "concentrationMaterialUnit": {
       "description": "",
@@ -217,13 +221,12 @@
         "mg/mL",
         "particles/mL"
       ],
-      "title": "concentrationNaClUnit",
+      "title": "ConcentrationUnit",
       "type": "string"
     },
     "concentrationNaCl": {
       "description": "Numeric value for NaCl concentration",
-      "type": "string",
-      "title": "concentrationNaCl"
+      "type": "string"
     },
     "concentrationNaClUnit": {
       "description": "",
@@ -232,7 +235,7 @@
         "mg/mL",
         "particles/mL"
       ],
-      "title": "concentrationNaClUnit",
+      "title": "ConcentrationUnit",
       "type": "string"
     },
     "dataSubtype": {
@@ -245,73 +248,86 @@
         "raw",
         "synthetic"
       ],
-      "title": "dataSubtype",
+      "title": "DataSubtypeEnum",
       "type": "string"
     },
     "dataType": {
-      "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
-      "type": "string",
-      "enum": [
-        "aggregated data",
-        "aligned reads",
-        "annotated germline variants",
-        "annotated somatic mutation",
-        "audio transcript",
-        "behavioral data",
-        "capsid sequence",
-        "cellular physiology",
-        "characteristic",
-        "chromatin activity",
-        "clinical",
-        "copy number variants",
-        "count matrix",
-        "data index",
-        "data sharing plan",
-        "demographics",
-        "drug combination screen",
-        "drug screen",
-        "electrophysiology",
-        "epidemiological data",
-        "gene expression",
-        "genomic features",
-        "genomic variants",
-        "germline variants",
-        "image",
-        "immunoassay",
-        "isoform expression",
-        "kinomics",
-        "mask image",
-        "mass spectrometry data",
-        "metabolomics",
-        "molecular property",
-        "morphology parameter",
-        "network",
-        "normalized intensities",
-        "nucleic acid sequence record",
-        "over-representation data",
-        "particle characterization",
-        "pharmacokinetics",
-        "physiology parameter",
-        "plot",
-        "promoter sequence",
-        "protein interaction data",
-        "protein interaction raw data",
-        "proteomics",
-        "raw counts",
-        "raw intensities",
-        "report",
-        "somatic variants",
-        "structural variants",
-        "survey data",
-        "text data",
-        "volume",
-        "weight",
-        "descriptive metadata",
-        "image metadata",
-        "metadata",
-        "workflow metadata"
+      "anyOf": [
+        {
+          "description": "Type of data represented by the entity (File, Dataset, etc.).",
+          "enum": [
+            "aggregated data",
+            "aligned reads",
+            "annotated germline variants",
+            "annotated somatic mutation",
+            "audio transcript",
+            "behavioral data",
+            "capsid sequence",
+            "cellular physiology",
+            "characteristic",
+            "chromatin activity",
+            "clinical",
+            "copy number variants",
+            "count matrix",
+            "data index",
+            "data sharing plan",
+            "demographics",
+            "drug combination screen",
+            "drug screen",
+            "electrophysiology",
+            "epidemiological data",
+            "gene expression",
+            "genomic features",
+            "genomic variants",
+            "germline variants",
+            "image",
+            "immunoassay",
+            "isoform expression",
+            "kinomics",
+            "mask image",
+            "mass spectrometry data",
+            "metabolomics",
+            "molecular property",
+            "morphology parameter",
+            "network",
+            "normalized intensities",
+            "nucleic acid sequence record",
+            "over-representation data",
+            "particle characterization",
+            "pharmacokinetics",
+            "physiology parameter",
+            "plot",
+            "promoter sequence",
+            "protein interaction data",
+            "protein interaction raw data",
+            "proteomics",
+            "raw counts",
+            "raw intensities",
+            "report",
+            "somatic variants",
+            "structural variants",
+            "survey data",
+            "text data",
+            "volume",
+            "weight"
+          ],
+          "title": "Data",
+          "type": "string"
+        },
+        {
+          "description": "Data that provides information about other data",
+          "enum": [
+            "descriptive metadata",
+            "image metadata",
+            "metadata",
+            "workflow metadata"
+          ],
+          "title": "MetadataEnum",
+          "type": "string"
+        }
       ],
-      "title": "dataType"
+      "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
+      "type": "string"
     },
     "fileFormat": {
       "description": "",
@@ -434,18 +450,16 @@
         "yaml",
         "zip"
       ],
-      "title": "fileFormat",
+      "title": "FileFormatEnum",
       "type": "string"
     },
     "materialType": {
       "description": "Type of material in the characterization",
-      "type": "string",
-      "title": "materialType"
+      "type": "string"
     },
     "pH": {
       "description": "Numeric value for pH (range 0-14)",
-      "type": "string",
-      "title": "pH"
+      "type": "string"
     },
     "platform": {
       "description": "",
@@ -480,6 +494,7 @@
         "Hitachi Echelon 1.5T",
         "Hitachi Oasis 1.2T",
         "IVIS Spectrum In Vivo Imaging System",
+        "Itae Vasculoscope",
         "Illumina 1M",
         "Illumina Genome Analyzer IIx",
         "Illumina HiSeq 2000",
@@ -520,6 +535,7 @@
         "Malvern Zetasizer",
         "NanoFCM",
         "NanoString Human nCounter PanCancer IO360 Panel",
+        "Nanostring CosMx",
         "Nanostring Counter",
         "Nanostring GeoMx",
         "Not Applicable",
@@ -566,7 +582,7 @@
         "Zeno Electronic Walkway",
         "ZetaView"
       ],
-      "title": "platform",
+      "title": "PlatformEnum",
       "type": "string"
     },
     "resourceType": {
@@ -581,13 +597,12 @@
         "weblink",
         "workflow report"
       ],
-      "title": "resourceType",
+      "title": "Resource",
       "type": "string"
     },
     "specimenID": {
       "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
-      "type": "string",
-      "title": "specimenID"
+      "type": "string"
     }
   },
   "required": [

@@ -1,6 +1,6 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-workflowreport-0.1.1",
-  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-workflowreport",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Template used for miscellaneous workflow reports and accessory files",
   "properties": {
     "assay": {
@@ -15,6 +15,7 @@
         "ATAC-seq",
         "ATPase activity assay",
         "AlgometRx Nociometer",
+        "quantitative sensory testing",
         "BrdU proliferation assay",
         "CAPP-seq",
         "CODEX",
@@ -73,9 +74,12 @@
         "bisulfite sequencing",
         "blood chemistry measurement",
         "blue native PAGE",
+        "SDS-PAGE",
         "body size trait measurement",
         "bone histomorphometry",
         "brightfield microscopy",
+        "live imaging",
+        "histology",
         "cAMP-Glo Max Assay",
         "cNF-Skindex",
         "calcium retention capacity assay",
@@ -172,6 +176,7 @@
         "questionnaire",
         "reactive oxygen species assay",
         "reporter gene assay",
+        "split-GFP assay",
         "rheometry",
         "ribo-seq",
         "rotarod performance test",
@@ -202,7 +207,7 @@
         "whole-cell patch clamp",
         "word recognition score"
       ],
-      "title": "assay",
+      "title": "AssayEnum",
       "type": "string"
     },
     "fileFormat": {
@@ -326,13 +331,12 @@
         "yaml",
         "zip"
       ],
-      "title": "fileFormat",
+      "title": "FileFormatEnum",
       "type": "string"
     },
     "relatedDataset": {
       "description": "Reference to a relevant dataset entity.",
-      "type": "string",
-      "title": "relatedDataset"
+      "type": "string"
     },
     "resourceType": {
       "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
@@ -346,7 +350,7 @@
         "weblink",
         "workflow report"
       ],
-      "title": "resourceType",
+      "title": "Resource",
       "type": "string"
     },
     "workflow": {
@@ -367,13 +371,12 @@
         "StringTie",
         "TrimGalore"
       ],
-      "title": "workflow",
+      "title": "WorkflowEnum",
       "type": "string"
     },
     "workflowLink": {
       "description": "Workflow URL reference",
-      "type": "string",
-      "title": "workflowLink"
+      "type": "string"
     }
   },
   "required": [

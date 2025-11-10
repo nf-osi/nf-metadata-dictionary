@@ -1,28 +1,23 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalstudy-0.1.1",
-  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalstudy",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "A scientific project of some planned duration with PIs and key contributors, specific research topics, and potential publication/data/other outputs.  A study is often represented as a Synapse project and so is also referred to as \"project\". The study schema here is specifically for studies listed on the NF Portal at https://nf.synapse.org/Explore/Studies.",
   "properties": {
     "accessRequirements": {
-      "type": "string",
-      "title": "accessRequirements"
+      "type": "string"
     },
     "acknowledgementStatements": {
-      "type": "string",
-      "title": "acknowledgementStatements"
+      "type": "string"
     },
     "alternateDataRepository": {
-      "type": "string",
-      "title": "alternateDataRepository"
+      "type": "string"
     },
     "clinicalTrialID": {
-      "type": "string",
-      "title": "clinicalTrialID"
+      "type": "string"
     },
     "dataCoordinatingCenter": {
       "description": "The organization or center responsible for coordinating data management and sharing for this study. Defaults to \"NF-OSI\".",
-      "type": "string",
-      "title": "dataCoordinatingCenter"
+      "type": "string"
     },
     "dataStatus": {
       "description": "",
@@ -34,7 +29,7 @@
         "Rolling Release",
         "Under Embargo"
       ],
-      "title": "dataStatus",
+      "title": "DataStatusEnum",
       "type": "string"
     },
     "dataType": {
@@ -99,8 +94,7 @@
         "title": "Data",
         "type": "string"
       },
-      "type": "array",
-      "title": "dataType"
+      "type": "array"
     },
     "diseaseFocus": {
       "items": {
@@ -118,35 +112,28 @@
         "title": "DiseaseFocusEnum",
         "type": "string"
       },
-      "type": "array",
-      "title": "diseaseFocus"
+      "type": "array"
     },
     "embargoEndDate": {
-      "type": "string",
-      "title": "embargoEndDate"
+      "type": "string"
     },
     "fundingAgency": {
-      "type": "string",
-      "title": "fundingAgency"
+      "type": "string"
     },
     "grantDOI": {
       "items": {
         "type": "string"
       },
-      "type": "array",
-      "title": "grantDOI"
+      "type": "array"
     },
     "grantEndDate": {
-      "type": "string",
-      "title": "grantEndDate"
+      "type": "string"
     },
     "grantStartDate": {
-      "type": "string",
-      "title": "grantStartDate"
+      "type": "string"
     },
     "initiative": {
-      "type": "string",
-      "title": "initiative"
+      "type": "string"
     },
     "institutions": {
       "items": {
@@ -487,55 +474,45 @@
         "title": "Institution",
         "type": "string"
       },
-      "type": "array",
-      "title": "institutions"
+      "type": "array"
     },
     "manifestation": {
       "items": {
         "type": "string"
       },
-      "type": "array",
-      "title": "manifestation"
+      "type": "array"
     },
     "nextPhaseProject": {
       "description": "Synapse project ID of a follow-up project that represents a subsequent funding phase, extension, or continuation of this study's research effort.",
-      "type": "string",
-      "title": "nextPhaseProject"
+      "type": "string"
     },
     "previousPhaseProject": {
       "description": "Synapse project ID of the previous project that this study continues or extends, typically representing an earlier funding phase of the same research effort.",
-      "type": "string",
-      "title": "previousPhaseProject"
+      "type": "string"
     },
     "relatedStudies": {
       "items": {
         "type": "string"
       },
-      "type": "array",
-      "title": "relatedStudies"
+      "type": "array"
     },
     "releasedDate": {
-      "type": "string",
-      "title": "releasedDate"
+      "type": "string"
     },
     "studyFileviewId": {
-      "type": "string",
-      "title": "studyFileviewId"
+      "type": "string"
     },
     "studyId": {
-      "type": "string",
-      "title": "studyId"
+      "type": "string"
     },
     "studyLeads": {
       "items": {
         "type": "string"
       },
-      "type": "array",
-      "title": "studyLeads"
+      "type": "array"
     },
     "studyName": {
-      "type": "string",
-      "title": "studyName"
+      "type": "string"
     },
     "studyStatus": {
       "description": "",
@@ -544,12 +521,11 @@
         "Completed",
         "Withdrawn"
       ],
-      "title": "studyStatus",
+      "title": "StudyStatusEnum",
       "type": "string"
     },
     "summary": {
-      "type": "string",
-      "title": "summary"
+      "type": "string"
     }
   },
   "required": [

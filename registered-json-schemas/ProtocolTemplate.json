@@ -1,6 +1,6 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-protocoltemplate-0.1.1",
-  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-protocoltemplate",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Describes protocol document based on https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT.",
   "properties": {
     "author": {
@@ -8,18 +8,15 @@
       "items": {
         "type": "string"
       },
-      "type": "array",
-      "title": "author"
+      "type": "array"
     },
     "citation": {
       "description": "Citation (e.g. doi) that usage of data or resource should be cited with.",
-      "type": "string",
-      "title": "citation"
+      "type": "string"
     },
     "comments": {
       "description": "Brief free-text comments that may also be important to understanding the resource.",
-      "type": "string",
-      "title": "comments"
+      "type": "string"
     },
     "fileFormat": {
       "description": "",
@@ -142,7 +139,7 @@
         "yaml",
         "zip"
       ],
-      "title": "fileFormat",
+      "title": "FileFormatEnum",
       "type": "string"
     },
     "license": {
@@ -161,7 +158,7 @@
         "Public Domain",
         "UNKNOWN"
       ],
-      "title": "license",
+      "title": "License",
       "type": "string"
     },
     "protocolAssay": {
@@ -176,6 +173,7 @@
         "ATAC-seq",
         "ATPase activity assay",
         "AlgometRx Nociometer",
+        "quantitative sensory testing",
         "BrdU proliferation assay",
         "CAPP-seq",
         "CODEX",
@@ -234,9 +232,12 @@
         "bisulfite sequencing",
         "blood chemistry measurement",
         "blue native PAGE",
+        "SDS-PAGE",
         "body size trait measurement",
         "bone histomorphometry",
         "brightfield microscopy",
+        "live imaging",
+        "histology",
         "cAMP-Glo Max Assay",
         "cNF-Skindex",
         "calcium retention capacity assay",
@@ -333,6 +334,7 @@
         "questionnaire",
         "reactive oxygen species assay",
         "reporter gene assay",
+        "split-GFP assay",
         "rheometry",
         "ribo-seq",
         "rotarod performance test",
@@ -363,23 +365,20 @@
         "whole-cell patch clamp",
         "word recognition score"
       ],
-      "title": "protocolAssay",
+      "title": "AssayEnum",
       "type": "string"
     },
     "protocolPurpose": {
       "description": "Brief description of the protocol purpose.",
-      "type": "string",
-      "title": "protocolPurpose"
+      "type": "string"
     },
     "sampleType": {
       "description": "Type of sample used",
-      "type": "string",
-      "title": "sampleType"
+      "type": "string"
     },
     "title": {
       "description": "Title of a resource.",
-      "type": "string",
-      "title": "title"
+      "type": "string"
     }
   },
   "required": [
