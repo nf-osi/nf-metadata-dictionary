@@ -155,13 +155,165 @@ This script:
 Both utilities support command-line configuration (refer to `.github/workflows/main-ci.yaml` for expected tools and versions in environment before running). Local testing examples:
 
 ```bash
-# Schema validation (used in PR workflow)
-SYNAPSE_AUTH_TOKEN="$NF_SERVICE_TOKEN" .python utils/gen-json-schema-class.py --schema-yaml dist/NF.yaml --output-dir registered-json-schemas
+# Schema validation - all classes (used in PR workflow)
+SYNAPSE_AUTH_TOKEN="$NF_SERVICE_TOKEN" python utils/gen-json-schema-class.py --schema-yaml dist/NF.yaml --output-dir registered-json-schemas
 
-# Schema registration (used post-merge)  
+# Schema validation - single class (useful for development/testing)
+SYNAPSE_AUTH_TOKEN="$NF_SERVICE_TOKEN" python utils/gen-json-schema-class.py --class DataLandscape --skip-validation
+
+# Schema validation - single class with validation
+SYNAPSE_AUTH_TOKEN="$NF_SERVICE_TOKEN" python utils/gen-json-schema-class.py --class DataLandscape
+
+# Schema registration (used post-merge)
 SYNAPSE_AUTH_TOKEN="$NF_SERVICE_TOKEN" python utils/register-schemas.py --schema-dir registered-json-schemas
 ```
 
+**gen-json-schema-class.py options:**
+- `--schema-yaml`: Path to LinkML YAML schema file (default: `dist/NF.yaml`)
+- `--output-dir`: Output directory for JSON schemas (default: `registered-json-schemas`)
+- `--class`: Generate schema for a specific class only (e.g., `DataLandscape`)
+- `--skip-validation`: Skip validation step and only generate JSON schemas
+- `--version`: Semantic version to include in schema URIs (e.g., `0.1.0`)
+- `--log-file`: Path to validation log file (default: `schema-validation-log.md`)
+
+**register-schemas.py options:**
+- `--schema-dir`: Directory containing JSON schemas to register (default: `registered-json-schemas`)
+- `--log-file`: Path to registration log file (default: `schema-registration-log.md`)
+- `--exclude`: Schema files to exclude from registration (e.g., `--exclude Superdataset.json Template.json`)
+- `--include`: Only register specific schema files (e.g., `--include DataLandscape.json`). Overrides `--exclude`
+
+**Additional registration examples:**
+```bash
+# Register only specific schemas
+SYNAPSE_AUTH_TOKEN="$NF_SERVICE_TOKEN" python utils/register-schemas.py --include DataLandscape.json PortalDataset.json
+
+# Register all schemas except specific ones
+SYNAPSE_AUTH_TOKEN="$NF_SERVICE_TOKEN" python utils/register-schemas.py --exclude Superdataset.json Template.json
+```
+
 Generated log files (`schema-validation-log.md`, `schema-registration-log.md`) are automatically excluded from version control but provide detailed audit trails of the validation and registration processes.
+
+### Curation Task Management
+
+The repository includes utilities for creating metadata curation tasks in Synapse. These tasks enable structured data collection using registered JSON schemas.
+
+#### File-Based Metadata Curation
+
+File-based curation tasks are used when metadata should be associated with uploaded files in a folder. The script automatically creates an EntityView (file view) and CurationTask.
+
+**Script:** `utils/create_curation_task.py`
+
+**Usage examples:**
+
+```bash
+# Create file-based curation task with schema binding (default)
+SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_curation_task.py \
+  --folder-id syn12345678 \
+  --template ImagingAssayTemplate
+
+# Create task with custom instructions
+SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_curation_task.py \
+  --folder-id syn12345678 \
+  --template RNASeqTemplate \
+  --instructions "Please upload RNA-seq data with complete metadata"
+
+# Skip schema binding to folder
+SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_curation_task.py \
+  --folder-id syn12345678 \
+  --template BiospecimenTemplate \
+  --no-bind-schema
+
+# Use external schema URI
+SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_curation_task.py \
+  --folder-id syn12345678 \
+  --template https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/sage.schemas.v2571-nf.ChIPSeqTemplate.schema-9.14.0
+```
+
+**Options:**
+- `--folder-id`: Upload folder Synapse ID (required)
+- `--template`: Template name or full schema URI (required)
+- `--instructions`: Instructions for data contributors (default: "Please add metadata for your files")
+- `--bind-schema`: Bind JSON schema to folder (default: True)
+- `--no-bind-schema`: Skip binding JSON schema to folder
+- `--output-format`: Output format - `json` for testing, `github` for GitHub Actions (default: json)
+
+**What it does:**
+1. Derives project ID from folder hierarchy
+2. Loads schema URI from `registered-json-schemas/` or uses provided URI
+3. Optionally binds JSON schema to the folder for validation
+4. Creates EntityView (file view) with columns derived from schema
+5. Creates CurationTask with auto-generated dataType: `{template_base}-{folder_id}`
+6. Returns task_id, fileview_id, data_type, schema_uri, and project_id
+
+#### Record-Based Metadata Curation
+
+Record-based curation tasks are used for structured metadata records not directly tied to individual files (e.g., dataset planning, study metadata). The script creates a RecordSet, CurationTask, and DataGrid interface.
+
+**Script:** `utils/create_recordset_task.py`
+
+**Usage examples:**
+
+```bash
+# Create recordset task with schema binding (default)
+SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_recordset_task.py \
+  --project-id syn12345678 \
+  --folder-id syn87654321 \
+  --recordset-name "YIA_Smith_2025" \
+  --template DataLandscape
+
+# Create task with upsert keys for record uniqueness
+SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_recordset_task.py \
+  --project-id syn12345678 \
+  --folder-id syn87654321 \
+  --recordset-name "DDI_Doe_2026" \
+  --template DataLandscape \
+  --description "Data sharing plan tracking" \
+  --task-name "DataLandscape_Curation" \
+  --upsert-keys study name \
+  --instructions "Please complete all required metadata fields"
+
+# Create task without explicit upsert keys (use synapseclient defaults)
+SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_recordset_task.py \
+  --project-id syn12345678 \
+  --folder-id syn87654321 \
+  --recordset-name "Vu_2020" \
+  --template DataLandscape
+
+# Skip schema binding
+SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_recordset_task.py \
+  --project-id syn12345678 \
+  --folder-id syn87654321 \
+  --recordset-name "Allaway_2025" \
+  --template DataLandscape \
+  --no-bind-schema
+```
+
+**Options:**
+- `--project-id`: Synapse project ID (required)
+- `--folder-id`: Synapse folder ID associated with RecordSet (required)
+- `--recordset-name`: Name/identifier for the RecordSet (required)
+- `--template`: Template name or full schema URI (required)
+- `--description`: Description of the RecordSet purpose (auto-generated if not provided)
+- `--task-name`: Name for the curation task (auto-generated if not provided)
+- `--upsert-keys`: Field names that uniquely identify records (optional; space-separated list)
+- `--instructions`: Instructions for data contributors (default: "Please add metadata records")
+- `--bind-schema`: Bind JSON schema to RecordSet (default: True)
+- `--no-bind-schema`: Skip binding JSON schema to RecordSet
+- `--output-format`: Output format - `json` for testing, `github` for GitHub Actions (default: json)
+
+**What it does:**
+1. Loads schema URI from `registered-json-schemas/` or uses provided URI
+2. Creates RecordSet with schema binding (validates records against JSON schema)
+3. Creates CurationTask for the record-based workflow
+4. Creates DataGrid interface for editing records in the UI
+5. Returns recordset_id, task_id, data_grid_session_id, schema_uri, project_id, folder_id, and record_set_name
+
+**Requirements:**
+
+Both scripts require the develop branch of synapsePythonClient:
+
+```bash
+pip install git+https://github.com/Sage-Bionetworks/synapsePythonClient.git@develop
+```
 
 

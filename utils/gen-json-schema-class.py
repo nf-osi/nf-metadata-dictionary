@@ -221,6 +221,10 @@ def main():
     parser.add_argument("--skip-validation",
                        action="store_true",
                        help="Skip validation step and only generate JSON schemas")
+    parser.add_argument("--class",
+                       dest="class_name",
+                       default=None,
+                       help="Generate schema for a specific class only (e.g., DataLandscape)")
 
     args = parser.parse_args()
     
@@ -236,9 +240,18 @@ def main():
     # Get class names
     master = yaml.safe_load(SCHEMA_YAML.read_text())
     classes = master.get("classes", {})
-    
-    print(f"🔨 Generating JSON schemas for {len(classes)} classes...")
-    
+
+    # Filter to specific class if requested
+    if args.class_name:
+        if args.class_name not in classes:
+            print(f"❌ Class '{args.class_name}' not found in schema")
+            print(f"Available classes: {', '.join(sorted(classes.keys()))}")
+            exit(1)
+        classes = {args.class_name: classes[args.class_name]}
+        print(f"🔨 Generating JSON schema for class: {args.class_name}")
+    else:
+        print(f"🔨 Generating JSON schemas for {len(classes)} classes...")
+
     for cls_name in classes:
         print(f"  🔨 {cls_name}")
         
@@ -264,17 +277,29 @@ def main():
         except json.JSONDecodeError:
             continue
     
-    generated_count = len(list(OUT_DIR.glob('*.json')))
-    print(f"✅ Generated {generated_count} JSON schemas")
+    # Count only the schemas we generated in this run
+    if args.class_name:
+        generated_count = 1 if (OUT_DIR / f"{args.class_name}.json").exists() else 0
+    else:
+        generated_count = len(list(OUT_DIR.glob('*.json')))
+
+    print(f"✅ Generated {generated_count} JSON schema{'s' if generated_count != 1 else ''}")
 
     if args.skip_validation:
         print("\n⏭️  Skipping validation (--skip-validation flag set)")
         return
 
-    print(f"\n🔨 Validating {generated_count} schemas against Synapse...")
+    # Only validate the schemas we generated in this run
+    if args.class_name:
+        schemas_to_validate = [OUT_DIR / f"{args.class_name}.json"]
+        print(f"\n🔨 Validating {args.class_name} schema against Synapse...")
+    else:
+        schemas_to_validate = list(OUT_DIR.glob('*.json'))
+        print(f"\n🔨 Validating {len(schemas_to_validate)} schemas against Synapse...")
+
     validation_results = []
 
-    for json_file in OUT_DIR.glob('*.json'):
+    for json_file in schemas_to_validate:
         result = validate_schema(json_file)
         validation_results.append(result)
 
@@ -297,9 +322,9 @@ Generated: {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}
 ## Details
 """
 
-    # Add details for each schema
-    for json_file in OUT_DIR.glob('*.json'):
-        status = "✅ PASSED" if json_file in [f for f, r in zip(OUT_DIR.glob('*.json'), validation_results) if r] else "❌ FAILED"
+    # Add details for each validated schema
+    for json_file, result in zip(schemas_to_validate, validation_results):
+        status = "✅ PASSED" if result else "❌ FAILED"
         log_content += f"- `{json_file.name}`: {status}\n"
 
     # Write log file
