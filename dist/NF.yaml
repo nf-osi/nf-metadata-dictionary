@@ -1041,6 +1041,11 @@ enums:
           - See also https://www.bellbrooklabs.com/atpase-activity-assay-for-drug-discovery/ for discussion
       AlgometRx Nociometer:
         description: Assay that can selectively measure the sensitivity of three different nerve fiber types. An overall score can be derived to indicate the type of pain a person is experiencing and can be used to monitor how well a patient responds to treatment of pain.
+      quantitative sensory testing:
+        aliases:
+          - QST
+        description: A battery of psychophysical tests to assess sensory nerve function and pain perception across modalities (e.g., thermal, mechanical, vibration) and quantify sensory thresholds.
+        meaning: NCIT:C155860
       BrdU proliferation assay:
         description: A cell proliferation assay in which cells are cultured in the presence of BrdU which is incorporated into newly synthesized DNA of replicating cells (during the S phase of the cell cycle).
         meaning: OBI:0000664
@@ -1275,6 +1280,12 @@ enums:
           - bn-page
         description: Blue native PAGE (BN-PAGE) permits a high-resolution separation of multi-protein complexes under native conditions.
         meaning: MI:0276
+      SDS-PAGE:
+        aliases:
+          - SDS PAGE
+          - sodium dodecyl sulfate polyacrylamide gel electrophoresis
+        description: Denaturing polyacrylamide gel electrophoresis using SDS to separate proteins primarily by molecular weight.
+        meaning: EFO:0010936
       body size trait measurement:
         description: Any measurable or observable characteristic related to the overall physical magnitude of an organism.
         meaning: VT:0100005
@@ -1286,6 +1297,14 @@ enums:
           - transmitted light microscopy
         description: Microscopy where the specimen is illuminated with light transmitted from a source on the opposite side of the specimen from the objective
         meaning: CHMO:0000104
+      live imaging:
+        aliases:
+          - Live imaging
+        description: Imaging of live cells, tissues, or organisms over time to observe dynamic biological processes and behavior.
+        meaning: OBI:0001815
+      histology:
+        description: Microscopic examination of stained tissue sections to evaluate tissue architecture and cellular morphology.
+        meaning: NCIT:C16681
       cAMP-Glo Max Assay:
         description: The cAMP-Glo Max Assay from Promega is a bioluminescent assay used for the quantification of cyclic AMP (cAMP) in cell-based assays. It utilizes a luminescent luciferase-based detection system to detect the levels of cAMP in cell lysates, which can be used to study G protein-coupled receptor (GPCR) signaling and other intracellular signaling pathways.
         source: https://www.promega.com/products/cell-signaling/gpcr-signaling/camp_glo-max-assay/?catNum=V1681
@@ -1698,6 +1717,10 @@ enums:
 
 '
         meaning: OBI:0002082
+      split-GFP assay:
+        aliases:
+          - split GFP assay
+        description: An assay where complementary non-fluorescent fragments of GFP are fused to interacting proteins or brought into proximity; reconstitution of fluorescence indicates interaction or proximity.
       rheometry:
         aliases:
           - rheological measurements
@@ -1761,7 +1784,6 @@ enums:
       static light scattering:
         aliases:
           - static light scattering spectrometry
-          - TILS
           - integrated light scattering
           - differential light-scattering spectroscopy
           - total intensity light scattering
@@ -1773,9 +1795,6 @@ enums:
         description: Static Light Scattering is a method for determining structure by measuring the total or time-averaged scattering intensity of scattered visible light as a function of angle.
         meaning: CHMO:0000180
       survival:
-        aliases:
-          - 3D-EM
-          - electron tomog
         description: Any quantitative measurement of survival of or in an individual or study population.
         meaning: MI:0410
       targeted exome sequencing:
@@ -2156,6 +2175,9 @@ enums:
       IVIS Spectrum In Vivo Imaging System:
         description: Combines 2D optical and 3D optical tomography in one platform.
         source: https://www.perkinelmer.com/product/ivis-instrument-spectrum-120v-andor-c-124262
+      Itae Vasculoscope:
+        description: Medical imaging device for real-time visualization of blood microcirculation. Available in dermatology and surgical models with embedded display and image recording capabilities.
+        source: https://itae.fr/index.php/the-microvaculoscope/
       Illumina 1M:
         description: ''
       Illumina Genome Analyzer IIx:
@@ -2265,6 +2287,8 @@ enums:
         source: https://www.nanofcm.com/
       NanoString Human nCounter PanCancer IO360 Panel:
         source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL32069
+      Nanostring CosMx:
+        source: https://ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL33484
       Nanostring Counter:
         description: ''
       Nanostring GeoMx:
@@ -4579,6 +4603,9 @@ enums:
       pancreas:
         description: A large lobulated gland of vertebrates that secretes digestive enzymes and the hormones insulin and glucagon.
         meaning: BTO:0000988
+      placenta:
+        description: The vascular organ in mammals except monotremes and marsupials that unites the fetus to the maternal uterus and mediates its metabolic exchanges through a more or less intimate association of uterine mucosal with chorionic and usually allantoic tissues.
+        meaning: BTO:0001078
       prostate:
         description: Lobular organ the parenchyma of which has as its parts glandular acini which are continuous with the prostatic part of the urethra.
         meaning: FMA:9600
@@ -4588,6 +4615,15 @@ enums:
       spleen:
         description: A highly vascular ductless organ that is located in the left abdominal region near the stomach or intestine of most vertebrates and is concerned with final destruction of red blood cells, filtration and storage of blood, and production of lymphocytes.
         meaning: BTO:0001281
+      smooth muscle:
+        description: Muscle tissue that lacks cross striations, that is made up of elongated spindle-shaped cells having a central nucleus, and that is found in vertebrate visceral structures (as the stomach and bladder) as thin sheets performing functions not subject to conscious control by the mind and in all or most of the musculature of invertebrates other than arthropods.
+        meaning: BTO:0001260
+      tonsil:
+        description: The human palatine tonsils and the nasopharyngeal tonsil are lymphoepithelial tissues located in strategic areas of the oropharynx and nasopharynx, although most commonly, the term tonsils refers to the palatine tonsils that can be seen in the back of the throat.
+        meaning: BTO:0001387
+      thymus:
+        description: A glandular structure of largely lymphoid tissue that functions especially in the development of the body's immune system, is present in the young of most vertebrates typically in the upper anterior chest or at the base of the neck, and tends to atrophy in the adult.
+        meaning: BTO:0001374
   Cell:
     permissible_values:
       B-lymphocytes:
@@ -6453,6 +6489,16 @@ enums:
         meaning: NCIT:C3276
       atypical neurofibroma:
         meaning: MONDO:0003306
+      High Grade Malignant Peripheral Nerve Sheath Tumor:
+        aliases:
+          - High Grade MPNST
+        description: A malignant peripheral nerve sheath tumor that is high-grade.
+        meaning: NCIT:C9030
+      Juvenile myelomonocytic leukemia:
+        aliases:
+          - JMML
+        description: A rare myeloproliferative/myelodysplastic neoplasm of early childhood characterized by overproduction of myelomonocytic cells.
+        meaning: OMIM:607785
   InheritanceEnum:
     permissible_values:
       parent affected:
@@ -6603,7 +6649,6 @@ enums:
         meaning: NCIT:C16576
       Male:
         aliases:
-          - Human, Male
           - M
         description: A person who belongs to the sex that normally produces sperm. The term is used to indicate biological sex distinctions, cultural gender role distinctions, or both.
         meaning: NCIT:C20197
@@ -6964,8 +7009,6 @@ enums:
           - Unknown/Not Stated
         description: 'A tumor of unknown origin, or tumor type missing. '
       metastatic tumor:
-        aliases:
-          - BENIGN
         description: For neoplasms, a non-infiltrating and non-metastasizing neoplastic process that is characterized by the absence of morphologic features associated with malignancy (e.g., severe atypia, nuclear pleomorphism, tumor cell necrosis, and abnormal mitoses).
         meaning: NCIT:C14172
       metastatic/recurrent tumor:
