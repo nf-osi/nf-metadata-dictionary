@@ -199,15 +199,8 @@ Examples:
     --template DataLandscape \\
     --description "Data sharing plan" \\
     --task-name "DataLandscape_Curation" \\
-    --upsert-keys studyId datasetId \\
-    --instructions "Please complete all required metadata fields"
-
-  # Create task without upsert keys (let synapseclient use defaults)
-  python create_recordset_task.py \\
-    --project-id syn12345678 \\
-    --folder-id syn87654321 \\
-    --recordset-name "Vu_2020" \\
-    --template DataLandscape
+    --upsert-keys study name \\
+    --instructions "Please fill out Data Landscape records"
 
   # Skip schema binding
   python create_recordset_task.py \\
@@ -221,8 +214,8 @@ Examples:
   python create_recordset_task.py \\
     --project-id syn12345678 \\
     --folder-id syn87654321 \\
-    --recordset-name "ChIPSeqRecords" \\
-    --template https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/sage.schemas.v2571-nf.ChIPSeqTemplate.schema-9.14.0
+    --recordset-name "Publication" \\
+    --template $URI
 
 Environment Variables:
   SYNAPSE_AUTH_TOKEN    Synapse authentication token (required)
@@ -230,7 +223,6 @@ Environment Variables:
 Notes:
   - RecordSet is a structured data container for (meta)data records
   - Upsert keys define which fields uniquely identify each record
-  - If upsert_keys is omitted, synapseclient will determine default behavior
   - Schema binding validates records against the JSON schema
   - DataGrid provides a UI for editing records
         """
@@ -276,12 +268,12 @@ Notes:
         '--upsert-keys',
         nargs='+',
         default=None,
-        help='Field names that uniquely identify records (optional; synapseclient may require this)'
+        help='Field names that uniquely identify records'
     )
 
     parser.add_argument(
         '--instructions',
-        default='Please add metadata records',
+        default='Please update records',
         help='Instructions for data contributors'
     )
 
