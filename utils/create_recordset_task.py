@@ -66,7 +66,6 @@ def load_schema_uri(template_name_or_uri: str, schema_dir: str = "registered-jso
 
 
 def create_recordset_task(
-    project_id: str,
     folder_id: str,
     record_set_name: str,
     template: str,
@@ -81,9 +80,9 @@ def create_recordset_task(
     Create a record-based metadata curation task.
 
     Automatically creates RecordSet, CurationTask, and DataGrid.
+    Project ID is derived from the folder.
 
     Args:
-        project_id: Synapse project ID where resources will be created
         folder_id: Synapse folder ID associated with the RecordSet
         record_set_name: Name/identifier for the RecordSet
         template: Template name (e.g., 'ImagingAssayTemplate') or full schema URI
@@ -112,8 +111,30 @@ def create_recordset_task(
     syn = Synapse()
     syn.login(authToken=auth_token)
 
+    # Get folder to derive project ID
+    print(f"Getting folder information: {folder_id}")
+    folder = syn.get(folder_id, downloadFile=False)
+
+    # Try to get project ID - may need to traverse hierarchy
+    project_id = None
+    if hasattr(folder, 'properties') and folder.properties:
+        project_id = folder.properties.get('projectId')
+
+    # If not in properties, traverse parent hierarchy to find project
+    if not project_id:
+        print("  Project ID not in folder properties, traversing hierarchy...")
+        current = folder
+        while current.get('concreteType') != 'org.sagebionetworks.repo.model.Project':
+            parent_id = current.get('parentId')
+            if not parent_id:
+                raise ValueError(f"Could not find project for folder {folder_id}")
+            current = syn.get(parent_id, downloadFile=False)
+        project_id = current.id
+
+    print(f"  Project: {project_id}")
+
     # Load schema URI
-    print(f"Loading schema: {template}")
+    print(f"\nLoading schema: {template}")
     schema_uri = load_schema_uri(template)
     print(f"  Schema URI: {schema_uri}")
 
@@ -186,14 +207,12 @@ def main():
 Examples:
   # Create recordset task with schema binding (default)
   python create_recordset_task.py \\
-    --project-id syn12345678 \\
     --folder-id syn87654321 \\
     --recordset-name "YIA_Smith_2025" \\
     --template DataLandscape
 
   # Create task with custom parameters and upsert keys
   python create_recordset_task.py \\
-    --project-id syn12345678 \\
     --folder-id syn87654321 \\
     --recordset-name "DDI_Doe_2026" \\
     --template DataLandscape \\
@@ -204,7 +223,6 @@ Examples:
 
   # Skip schema binding
   python create_recordset_task.py \\
-    --project-id syn12345678 \\
     --folder-id syn87654321 \\
     --recordset-name "Allaway_2025" \\
     --template DataLandscape \\
@@ -212,7 +230,6 @@ Examples:
 
   # Use external schema URI
   python create_recordset_task.py \\
-    --project-id syn12345678 \\
     --folder-id syn87654321 \\
     --recordset-name "Publication" \\
     --template $URI
@@ -221,17 +238,12 @@ Environment Variables:
   SYNAPSE_AUTH_TOKEN    Synapse authentication token (required)
 
 Notes:
+  - Project ID is automatically derived from the folder
   - RecordSet is a structured data container for (meta)data records
   - Upsert keys define which fields uniquely identify each record
   - Schema binding validates records against the JSON schema
   - DataGrid provides a UI for editing records
         """
-    )
-
-    parser.add_argument(
-        '--project-id',
-        required=True,
-        help='Synapse project ID (e.g., syn12345678)'
     )
 
     parser.add_argument(
@@ -302,7 +314,6 @@ Notes:
 
     try:
         result = create_recordset_task(
-            project_id=args.project_id,
             folder_id=args.folder_id,
             record_set_name=args.recordset_name,
             template=args.template,

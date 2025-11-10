@@ -11,7 +11,7 @@ Developer-oriented documentation for the NF Metadata Dictionary. For general ove
 | **Validate all schemas** | `python utils/gen-json-schema-class.py` |
 | **Register schemas** | `python utils/register-schemas.py` |
 | **Create file-based task** | `python utils/create_curation_task.py --folder-id syn123 --template RNASeqTemplate` |
-| **Create record-based task** | `python utils/create_recordset_task.py --project-id syn123 --folder-id syn456 --recordset-name "Study_2025" --template DataLandscape` |
+| **Create record-based task** | `python utils/create_recordset_task.py --folder-id syn456 --recordset-name "Study_2025" --template DataLandscape` |
 
 ---
 
@@ -258,7 +258,6 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_curation_task.py \
 ```bash
 # Basic recordset task with upsert keys (defines record uniqueness)
 SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_recordset_task.py \
-  --project-id syn12345678 \
   --folder-id syn87654321 \
   --recordset-name "DDI_Doe_2026" \
   --template DataLandscape \
@@ -269,7 +268,6 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_recordset_task.py \
 
 | Option | Description | Default |
 |--------|-------------|---------|
-| `--project-id` | Synapse project ID (required) | - |
 | `--folder-id` | Folder ID for RecordSet (required) | - |
 | `--recordset-name` | RecordSet name/identifier (required) | - |
 | `--template` | Template name or schema URI (required) | - |
@@ -282,7 +280,9 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_recordset_task.py \
 
 **Output:** `recordset_id`, `task_id`, `data_grid_session_id`, `schema_uri`, `project_id`, `folder_id`, `record_set_name`
 
-**Note on upsert keys:** Specify field names that uniquely identify each record. This enables updates to existing records rather than creating duplicates. Common choices: `study`, `name`, `individualID`, etc.
+**Notes:**
+- **Project ID** is automatically derived from the folder
+- **Upsert keys:** Specify field names that uniquely identify each record. This enables updates to existing records rather than creating duplicates. Common choices: `study`, `name`, `individualID`, etc.
 
 ---
 
