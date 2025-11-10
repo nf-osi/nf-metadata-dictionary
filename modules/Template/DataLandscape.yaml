@@ -1,0 +1,72 @@
+classes:
+  DataLandscape:
+    attributes:
+      aim:
+        description: The research aim number that this dataset is related to or supports (e.g., 1 for Aim 1, 2 for Aim 2)
+        range: integer
+        required: true
+        title: Associated Aim
+      name:
+        description: A short, unique name/label that will be used for the folder storing the dataset. For example, if you have RNA Sequencing data in multiple aims, label them "RNA Sequencing - Aim 1", "RNA Sequencing - Aim 2", etc.
+        range: string
+        required: true
+        title: Dataset Name
+      description:
+        description: Description of the dataset and experimental details. Use this field to provide more details about the experiment.
+        range: string
+        required: false
+        title: Description
+      dataType:
+        description: The type of data that will be uploaded in this dataset
+        multivalued: true
+        range: Data
+        required: false
+        title: Type
+      assay:
+        description: The assay or experimental method used to generate this dataset. If you cannot find the appropriate term in the dropdown list, please use 'TBD' and email nf-osi@sagebase.org to request addition of the term.
+        range: AssayEnum
+        required: true
+        title: Assay
+      species:
+        description: The species from which samples in this dataset were derived. If you cannot find the appropriate term in the dropdown list, please use 'TBD' and email nf-osi@sagebase.org to request addition of the term.
+        range: SpeciesEnum
+        required: true
+        title: Species
+      nSamples:
+        description: Estimated or actual number of samples in the dataset. This can be an estimate.
+        range: integer
+        required: true
+        title: '# Samples'
+      fileFormat:
+        description: The primary file format(s) expected in this dataset. If you cannot find the appropriate term in the dropdown list, please use 'TBD' and email nf-osi@sagebase.org to request addition of the term.
+        multivalued: true
+        range: FileFormatEnum
+        required: true
+        title: File format
+      nFiles:
+        description: Estimated or actual number of files in the dataset. This can be an estimate.
+        range: integer
+        required: true
+        title: '# Files'
+      deadline:
+        description: Target date for uploading this dataset. This can be an estimate.
+        range: date
+        required: false
+        title: Upload by
+      milestone:
+        description: Reference to a milestone or progress report number associated with this dataset, e.g. '1' or '2.2'
+        range: string
+        required: false
+        title: 'Associated Milestone / Progress Report'
+      comments:
+        description: Additional comments or notes about this dataset
+        range: string
+        required: false
+        title: Comments
+    description: Template for planning and tracking datasets to be deposited in a study. Complete details below about the datasets you expect to upload for this study. These datasets will be automatically generated as folders in your Synapse project. "Upload by" dates, "#Files", and "#Samples" can be estimates.
+    notes:
+    - This template is used for data deposit planning rather than describing actual data files
+    - The label should be unique within a project and will be used as the folder name
+    - All numeric fields and dates can be estimates
+    - If appropriate terms are not found in dropdown lists, contact nf-osi@sagebase.org
+    title: Datasets Expected
