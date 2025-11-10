@@ -20,7 +20,7 @@ Developer-oriented documentation for the NF Metadata Dictionary. For general ove
 1. [Background & Architecture](#background--architecture)
 2. [JSON Schema Integration with Synapse](#json-schema-integration-with-synapse)
 3. [Schema Generation & Management](#schema-generation--management)
-4. [Curation Task Management](#curation-task-management)
+4. [Curation Tasks](#curation-tasks)
 
 ---
 
@@ -194,17 +194,17 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/register-schemas.py \
 
 ---
 
-## Curation Task Utilities (Downstream Schema Setup and Testing)
+## Curation Tasks
 
-Synapse curation tasks enable structured metadata collection using the registered JSON schemas. Two task types are supported:
+Synapse curation tasks enable structured metadata collection using the registered JSON schemas. 
+They are part of the downstream schema setup and testing workflow. 
+Two task types are supported.
 
-### Dependencies
-
-Scripts require synapsePythonClient develop branch:
-
-```bash
-pip install git+https://github.com/Sage-Bionetworks/synapsePythonClient.git@develop
-```
+> [!IMPORTANT]
+> Currently, this functionality requires synapsePythonClient develop branch:
+> ```bash
+> pip install git+https://github.com/Sage-Bionetworks/synapsePythonClient.git@develop
+> ```
 
 ### File-Based Curation Tasks
 
