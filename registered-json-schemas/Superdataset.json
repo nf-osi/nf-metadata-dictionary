@@ -11,45 +11,52 @@
         "Private Access",
         "Public Access"
       ],
-      "title": "AccessTypeEnum",
+      "title": "accessType",
       "type": "string"
     },
     "alternateName": {
       "description": "An altername name that can be used for search and discovery improvement.",
-      "type": "string"
+      "type": "string",
+      "title": "alternateName"
     },
     "citation": {
       "description": "Academic articles that are recommended by the data provider to be cited in addition to the dataset doi itself.",
-      "type": "string"
+      "type": "string",
+      "title": "citation"
     },
     "conditionsOfAccess": {
       "description": "Additional requirements a user may need outside of Data Use Modifiers. This could include additional registration, updating profile information, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown.",
-      "type": "string"
+      "type": "string",
+      "title": "conditionsOfAccess"
     },
     "contributor": {
       "description": "Institution or person responsible for collecting, managing, distributing, or otherwise contributing to the development of the resource. Expects properly formatted name of the organization or person (e.g. \"NF-OSI\" or \"Robert Allaway\"), not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/contributor/.",
       "items": {
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "contributor"
     },
     "countryOfOrigin": {
       "description": "Origin of individuals from which data were generated. Omit if not applicable/unknown.",
       "items": {
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "countryOfOrigin"
     },
     "creator": {
       "description": "Main researchers involved in producing the data, in priority order. Usually matches the project PI(s) and data lead(s) responsible for conception and initial content creation. For tools this is the manufacturer or developer of the instrument. Expects properly formatted name of the organization or person (e.g. \"NF-OSI\" or \"Robert Allaway\"), not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/creator/.",
       "items": {
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "creator"
     },
     "croissant_file_s3_object": {
       "description": "Link to croissant file for dataset.",
-      "type": "string"
+      "type": "string",
+      "title": "croissant_file_s3_object"
     },
     "dataType": {
       "description": "Reflects the data types within the dataset.",
@@ -114,7 +121,8 @@
         "title": "Data",
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "dataType"
     },
     "dataUseModifiers": {
       "description": "List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Most datasets allow \"General Research Use\" unless otherwise specified.",
@@ -148,15 +156,18 @@
         "title": "DuoEnum",
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "dataUseModifiers"
     },
     "datePublished": {
       "description": "Date data were published/available on Synapse. This can be set automatically from other dates tracked in Synapse system so does not need to be manually added.",
-      "type": "integer"
+      "type": "integer",
+      "title": "datePublished"
     },
     "description": {
       "description": "Blurb for the dataset; should be no more than 500 characters.",
-      "type": "string"
+      "type": "string",
+      "title": "description"
     },
     "diseaseFocus": {
       "items": {
@@ -174,12 +185,14 @@
         "title": "DiseaseFocusEnum",
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "diseaseFocus"
     },
     "doi": {
       "description": "The Digital Object Identifier (DOI) of the dataset (if one has been created), used for citation and persistent identification.",
       "pattern": "^10\\\\.\\\\d{4,9}/[-._;()/:A-Z0-9]+$",
-      "type": "string"
+      "type": "string",
+      "title": "doi"
     },
     "funder": {
       "items": {
@@ -195,7 +208,8 @@
         "title": "FundingAgencyEnum",
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "funder"
     },
     "includedInDataCatalog": {
       "description": "",
@@ -203,19 +217,21 @@
         "https://www.synapse.org/DataCatalog:0",
         "https://nf.synapse.org/Explore/Datasets"
       ],
-      "title": "DataCatalogEnum",
+      "title": "includedInDataCatalog",
       "type": "string"
     },
     "individualCount": {
       "description": "Number of unique individuals included in the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown.",
-      "type": "integer"
+      "type": "integer",
+      "title": "individualCount"
     },
     "keywords": {
       "description": "Typically between 1 to 5 informative terms or phrases that help users find the dataset.",
       "items": {
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "keywords"
     },
     "license": {
       "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
@@ -233,7 +249,7 @@
         "Public Domain",
         "UNKNOWN"
       ],
-      "title": "License",
+      "title": "license",
       "type": "string"
     },
     "manifestation": {
@@ -264,7 +280,8 @@
         "title": "ManifestationEnum",
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "manifestation"
     },
     "measurementTechnique": {
       "description": "Method used to generate data in dataset, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).",
@@ -475,7 +492,8 @@
         "title": "AssayEnum",
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "measurementTechnique"
     },
     "series": {
       "description": "",
@@ -483,7 +501,7 @@
         "NF-OSI Processed Data",
         "None"
       ],
-      "title": "DataSeriesEnum",
+      "title": "series",
       "type": "string"
     },
     "species": {
@@ -506,36 +524,43 @@
         "title": "SpeciesEnum",
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "species"
     },
     "specimenCount": {
       "description": "Number of unique specimens included in the dataset. Omit if not applicable/unknown.",
-      "type": "integer"
+      "type": "integer",
+      "title": "specimenCount"
     },
     "studyId": {
       "description": "Identifier for the study (project) from which the dataset was derived.",
-      "type": "string"
+      "type": "string",
+      "title": "studyId"
     },
     "subject": {
       "description": "Applicable subject term(s) for dataset cataloging; use the Library of Congress Subject Headings (LCSH) scheme.",
       "items": {
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "subject"
     },
     "title": {
-      "type": "string"
+      "type": "string",
+      "title": "title"
     },
     "visualizeDataOn": {
       "description": "Link(s) to where data may be visualized in a separate application. Omit property if not applicable/unknown.",
       "items": {
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "visualizeDataOn"
     },
     "yearProcessed": {
       "description": "Year data were processed. Only for processed data types and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
-      "type": "integer"
+      "type": "integer",
+      "title": "yearProcessed"
     }
   },
   "title": "PortalDataset",

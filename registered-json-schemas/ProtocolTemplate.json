@@ -3,21 +3,6 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Describes protocol document based on https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT.",
   "properties": {
-    "author": {
-      "description": "The author of the resource; preferably use an ORCID ID, GitHub profile link, etc., if available and a text name if not.",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "citation": {
-      "description": "Citation (e.g. doi) that usage of data or resource should be cited with.",
-      "type": "string"
-    },
-    "comments": {
-      "description": "Brief free-text comments that may also be important to understanding the resource.",
-      "type": "string"
-    },
     "fileFormat": {
       "description": "",
       "enum": [
@@ -139,8 +124,26 @@
         "yaml",
         "zip"
       ],
-      "title": "FileFormatEnum",
+      "title": "fileFormat",
       "type": "string"
+    },
+    "title": {
+      "description": "Title of a resource.",
+      "type": "string",
+      "title": "title"
+    },
+    "author": {
+      "description": "The author of the resource; preferably use an ORCID ID, GitHub profile link, etc., if available and a text name if not.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "author"
+    },
+    "citation": {
+      "description": "Citation (e.g. doi) that usage of data or resource should be cited with.",
+      "type": "string",
+      "title": "citation"
     },
     "license": {
       "description": "License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.",
@@ -158,7 +161,7 @@
         "Public Domain",
         "UNKNOWN"
       ],
-      "title": "License",
+      "title": "license",
       "type": "string"
     },
     "protocolAssay": {
@@ -365,20 +368,23 @@
         "whole-cell patch clamp",
         "word recognition score"
       ],
-      "title": "AssayEnum",
+      "title": "protocolAssay",
       "type": "string"
     },
     "protocolPurpose": {
       "description": "Brief description of the protocol purpose.",
-      "type": "string"
+      "type": "string",
+      "title": "protocolPurpose"
     },
     "sampleType": {
       "description": "Type of sample used",
-      "type": "string"
+      "type": "string",
+      "title": "sampleType"
     },
-    "title": {
-      "description": "Title of a resource.",
-      "type": "string"
+    "comments": {
+      "description": "Brief free-text comments that may also be important to understanding the resource.",
+      "type": "string",
+      "title": "comments"
     }
   },
   "required": [

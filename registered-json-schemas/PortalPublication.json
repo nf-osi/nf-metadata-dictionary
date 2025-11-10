@@ -3,29 +3,12 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "A slightly more specialized publication concept intended for the specific scope of the NF Portal.",
   "properties": {
-    "abstract": {
-      "type": "string"
-    },
-    "accessibility": {
-      "description": "",
-      "enum": [
-        "Open Access",
-        "Restricted Access"
-      ],
-      "title": "PublicationAccessibilityEnum",
-      "type": "string"
-    },
-    "author": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
     "dataset": {
       "items": {
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "dataset"
     },
     "diseaseFocus": {
       "items": {
@@ -43,28 +26,19 @@
         "title": "DiseaseFocusEnum",
         "type": "string"
       },
-      "type": "array"
-    },
-    "doi": {
-      "type": "string"
+      "type": "array",
+      "title": "diseaseFocus"
     },
     "fundingAgency": {
       "items": {
         "type": "string"
       },
-      "type": "array"
-    },
-    "grantNumber": {
-      "type": "string"
-    },
-    "journal": {
-      "type": "string"
+      "type": "array",
+      "title": "fundingAgency"
     },
     "manifestation": {
-      "type": "string"
-    },
-    "pmid": {
-      "type": "string"
+      "type": "string",
+      "title": "manifestation"
     },
     "publicationType": {
       "description": "",
@@ -72,20 +46,60 @@
         "Primary",
         "Secondary"
       ],
-      "title": "PublicationTypeEnum",
+      "title": "publicationType",
       "type": "string"
     },
     "studyId": {
-      "type": "string"
+      "type": "string",
+      "title": "studyId"
     },
     "studyName": {
+      "type": "string",
+      "title": "studyName"
+    },
+    "abstract": {
+      "type": "string",
+      "title": "abstract"
+    },
+    "accessibility": {
+      "description": "",
+      "enum": [
+        "Open Access",
+        "Restricted Access"
+      ],
+      "title": "accessibility",
       "type": "string"
+    },
+    "author": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "author"
+    },
+    "doi": {
+      "type": "string",
+      "title": "doi"
+    },
+    "grantNumber": {
+      "type": "string",
+      "title": "grantNumber"
+    },
+    "journal": {
+      "type": "string",
+      "title": "journal"
+    },
+    "pmid": {
+      "type": "string",
+      "title": "pmid"
     },
     "title": {
-      "type": "string"
+      "type": "string",
+      "title": "title"
     },
     "year": {
-      "type": "integer"
+      "type": "integer",
+      "title": "year"
     }
   },
   "required": [

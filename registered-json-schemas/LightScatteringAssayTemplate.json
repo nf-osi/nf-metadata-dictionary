@@ -3,6 +3,26 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.",
   "properties": {
+    "pH": {
+      "description": "Numeric value for pH (range 0-14)",
+      "type": "string",
+      "title": "pH"
+    },
+    "concentrationNaCl": {
+      "description": "Numeric value for NaCl concentration",
+      "type": "string",
+      "title": "concentrationNaCl"
+    },
+    "concentrationNaClUnit": {
+      "description": "",
+      "enum": [
+        "mM",
+        "mg/mL",
+        "particles/mL"
+      ],
+      "title": "concentrationNaClUnit",
+      "type": "string"
+    },
     "assay": {
       "description": "",
       "enum": [
@@ -207,12 +227,13 @@
         "whole-cell patch clamp",
         "word recognition score"
       ],
-      "title": "AssayEnum",
+      "title": "assay",
       "type": "string"
     },
     "concentrationMaterial": {
       "description": "Numeric value for concentration of the material",
-      "type": "string"
+      "type": "string",
+      "title": "concentrationMaterial"
     },
     "concentrationMaterialUnit": {
       "description": "",
@@ -221,21 +242,7 @@
         "mg/mL",
         "particles/mL"
       ],
-      "title": "ConcentrationUnit",
-      "type": "string"
-    },
-    "concentrationNaCl": {
-      "description": "Numeric value for NaCl concentration",
-      "type": "string"
-    },
-    "concentrationNaClUnit": {
-      "description": "",
-      "enum": [
-        "mM",
-        "mg/mL",
-        "particles/mL"
-      ],
-      "title": "ConcentrationUnit",
+      "title": "concentrationNaClUnit",
       "type": "string"
     },
     "dataSubtype": {
@@ -248,86 +255,73 @@
         "raw",
         "synthetic"
       ],
-      "title": "DataSubtypeEnum",
+      "title": "dataSubtype",
       "type": "string"
     },
     "dataType": {
-      "anyOf": [
-        {
-          "description": "Type of data represented by the entity (File, Dataset, etc.).",
-          "enum": [
-            "aggregated data",
-            "aligned reads",
-            "annotated germline variants",
-            "annotated somatic mutation",
-            "audio transcript",
-            "behavioral data",
-            "capsid sequence",
-            "cellular physiology",
-            "characteristic",
-            "chromatin activity",
-            "clinical",
-            "copy number variants",
-            "count matrix",
-            "data index",
-            "data sharing plan",
-            "demographics",
-            "drug combination screen",
-            "drug screen",
-            "electrophysiology",
-            "epidemiological data",
-            "gene expression",
-            "genomic features",
-            "genomic variants",
-            "germline variants",
-            "image",
-            "immunoassay",
-            "isoform expression",
-            "kinomics",
-            "mask image",
-            "mass spectrometry data",
-            "metabolomics",
-            "molecular property",
-            "morphology parameter",
-            "network",
-            "normalized intensities",
-            "nucleic acid sequence record",
-            "over-representation data",
-            "particle characterization",
-            "pharmacokinetics",
-            "physiology parameter",
-            "plot",
-            "promoter sequence",
-            "protein interaction data",
-            "protein interaction raw data",
-            "proteomics",
-            "raw counts",
-            "raw intensities",
-            "report",
-            "somatic variants",
-            "structural variants",
-            "survey data",
-            "text data",
-            "volume",
-            "weight"
-          ],
-          "title": "Data",
-          "type": "string"
-        },
-        {
-          "description": "Data that provides information about other data",
-          "enum": [
-            "descriptive metadata",
-            "image metadata",
-            "metadata",
-            "workflow metadata"
-          ],
-          "title": "MetadataEnum",
-          "type": "string"
-        }
-      ],
       "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "aggregated data",
+        "aligned reads",
+        "annotated germline variants",
+        "annotated somatic mutation",
+        "audio transcript",
+        "behavioral data",
+        "capsid sequence",
+        "cellular physiology",
+        "characteristic",
+        "chromatin activity",
+        "clinical",
+        "copy number variants",
+        "count matrix",
+        "data index",
+        "data sharing plan",
+        "demographics",
+        "drug combination screen",
+        "drug screen",
+        "electrophysiology",
+        "epidemiological data",
+        "gene expression",
+        "genomic features",
+        "genomic variants",
+        "germline variants",
+        "image",
+        "immunoassay",
+        "isoform expression",
+        "kinomics",
+        "mask image",
+        "mass spectrometry data",
+        "metabolomics",
+        "molecular property",
+        "morphology parameter",
+        "network",
+        "normalized intensities",
+        "nucleic acid sequence record",
+        "over-representation data",
+        "particle characterization",
+        "pharmacokinetics",
+        "physiology parameter",
+        "plot",
+        "promoter sequence",
+        "protein interaction data",
+        "protein interaction raw data",
+        "proteomics",
+        "raw counts",
+        "raw intensities",
+        "report",
+        "somatic variants",
+        "structural variants",
+        "survey data",
+        "text data",
+        "volume",
+        "weight",
+        "descriptive metadata",
+        "image metadata",
+        "metadata",
+        "workflow metadata"
+      ],
+      "title": "dataType"
     },
     "fileFormat": {
       "description": "",
@@ -450,16 +444,13 @@
         "yaml",
         "zip"
       ],
-      "title": "FileFormatEnum",
+      "title": "fileFormat",
       "type": "string"
     },
     "materialType": {
       "description": "Type of material in the characterization",
-      "type": "string"
-    },
-    "pH": {
-      "description": "Numeric value for pH (range 0-14)",
-      "type": "string"
+      "type": "string",
+      "title": "materialType"
     },
     "platform": {
       "description": "",
@@ -582,7 +573,7 @@
         "Zeno Electronic Walkway",
         "ZetaView"
       ],
-      "title": "PlatformEnum",
+      "title": "platform",
       "type": "string"
     },
     "resourceType": {
@@ -597,12 +588,13 @@
         "weblink",
         "workflow report"
       ],
-      "title": "Resource",
+      "title": "resourceType",
       "type": "string"
     },
     "specimenID": {
       "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
-      "type": "string"
+      "type": "string",
+      "title": "specimenID"
     }
   },
   "required": [

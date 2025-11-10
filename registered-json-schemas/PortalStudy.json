@@ -4,20 +4,25 @@
   "description": "A scientific project of some planned duration with PIs and key contributors, specific research topics, and potential publication/data/other outputs.  A study is often represented as a Synapse project and so is also referred to as \"project\". The study schema here is specifically for studies listed on the NF Portal at https://nf.synapse.org/Explore/Studies.",
   "properties": {
     "accessRequirements": {
-      "type": "string"
+      "type": "string",
+      "title": "accessRequirements"
     },
     "acknowledgementStatements": {
-      "type": "string"
+      "type": "string",
+      "title": "acknowledgementStatements"
     },
     "alternateDataRepository": {
-      "type": "string"
+      "type": "string",
+      "title": "alternateDataRepository"
     },
     "clinicalTrialID": {
-      "type": "string"
+      "type": "string",
+      "title": "clinicalTrialID"
     },
     "dataCoordinatingCenter": {
       "description": "The organization or center responsible for coordinating data management and sharing for this study. Defaults to \"NF-OSI\".",
-      "type": "string"
+      "type": "string",
+      "title": "dataCoordinatingCenter"
     },
     "dataStatus": {
       "description": "",
@@ -29,7 +34,7 @@
         "Rolling Release",
         "Under Embargo"
       ],
-      "title": "DataStatusEnum",
+      "title": "dataStatus",
       "type": "string"
     },
     "dataType": {
@@ -94,7 +99,8 @@
         "title": "Data",
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "dataType"
     },
     "diseaseFocus": {
       "items": {
@@ -112,28 +118,35 @@
         "title": "DiseaseFocusEnum",
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "diseaseFocus"
     },
     "embargoEndDate": {
-      "type": "string"
+      "type": "string",
+      "title": "embargoEndDate"
     },
     "fundingAgency": {
-      "type": "string"
+      "type": "string",
+      "title": "fundingAgency"
     },
     "grantDOI": {
       "items": {
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "grantDOI"
     },
     "grantEndDate": {
-      "type": "string"
+      "type": "string",
+      "title": "grantEndDate"
     },
     "grantStartDate": {
-      "type": "string"
+      "type": "string",
+      "title": "grantStartDate"
     },
     "initiative": {
-      "type": "string"
+      "type": "string",
+      "title": "initiative"
     },
     "institutions": {
       "items": {
@@ -474,45 +487,55 @@
         "title": "Institution",
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "institutions"
     },
     "manifestation": {
       "items": {
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "manifestation"
     },
     "nextPhaseProject": {
       "description": "Synapse project ID of a follow-up project that represents a subsequent funding phase, extension, or continuation of this study's research effort.",
-      "type": "string"
+      "type": "string",
+      "title": "nextPhaseProject"
     },
     "previousPhaseProject": {
       "description": "Synapse project ID of the previous project that this study continues or extends, typically representing an earlier funding phase of the same research effort.",
-      "type": "string"
+      "type": "string",
+      "title": "previousPhaseProject"
     },
     "relatedStudies": {
       "items": {
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "relatedStudies"
     },
     "releasedDate": {
-      "type": "string"
+      "type": "string",
+      "title": "releasedDate"
     },
     "studyFileviewId": {
-      "type": "string"
+      "type": "string",
+      "title": "studyFileviewId"
     },
     "studyId": {
-      "type": "string"
+      "type": "string",
+      "title": "studyId"
     },
     "studyLeads": {
       "items": {
         "type": "string"
       },
-      "type": "array"
+      "type": "array",
+      "title": "studyLeads"
     },
     "studyName": {
-      "type": "string"
+      "type": "string",
+      "title": "studyName"
     },
     "studyStatus": {
       "description": "",
@@ -521,11 +544,12 @@
         "Completed",
         "Withdrawn"
       ],
-      "title": "StudyStatusEnum",
+      "title": "studyStatus",
       "type": "string"
     },
     "summary": {
-      "type": "string"
+      "type": "string",
+      "title": "summary"
     }
   },
   "required": [

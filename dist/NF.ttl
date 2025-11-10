@@ -3864,18 +3864,6 @@ Examples: avoidance behavior, choice-making.
         "Use for tagging uploaded data sharing plans." ;
     linkml:meaning <EDAM:data_4040> .
 
-<https://w3id.org/synapse/nfosi/vocab/date> a linkml:TypeDefinition ;
-    skos:definition "a date (year, month and day) in an idealized calendar" ;
-    skos:editorialNote "If you are authoring schemas in LinkML YAML, the type is referenced with the lower case \"date\".",
-        "URI is dateTime because OWL reasoners don't work with straight date or time" ;
-    skos:exactMatch schema1:Date ;
-    skos:inScheme linkml:types ;
-    linkml:base "XSDDate" ;
-    linkml:definition_uri linkml:Date ;
-    linkml:imported_from "linkml:types" ;
-    linkml:repr "str" ;
-    linkml:uri xsd:date .
-
 <https://w3id.org/synapse/nfosi/vocab/date_or_datetime> a linkml:TypeDefinition ;
     skos:definition "Either a date or a datetime" ;
     skos:editorialNote "If you are authoring schemas in LinkML YAML, the type is referenced with the lower case \"date_or_datetime\"." ;
@@ -5493,6 +5481,11 @@ Examples: avoidance behavior, choice-making.
     dcterms:title "Accessibility" ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/PublicationAccessibilityEnum> .
 
+<https://w3id.org/synapse/nfosi/vocab/aim> a linkml:SlotDefinition ;
+    dcterms:title "Associated Aim" ;
+    skos:definition "Study context: The research aim within the study and associated with the expected dataset (e.g., 1 for Aim 1, 2 for Aim 2)" ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/integer> .
+
 <https://w3id.org/synapse/nfosi/vocab/alternateName> a linkml:SlotDefinition ;
     dcterms:title "Alternate Name" ;
     skos:definition "An altername name that can be used for search and discovery improvement." ;
@@ -5537,6 +5530,176 @@ Examples: avoidance behavior, choice-making.
     linkml:ifabsent "string(NF-OSI)" ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
 
+<https://w3id.org/synapse/nfosi/vocab/dataLandscape__aim> a linkml:SlotDefinition ;
+    dcterms:title "Associated Aim" ;
+    skos:definition "Study context: The research aim within the study and associated with the expected dataset (e.g., 1 for Aim 1, 2 for Aim 2)" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "aim" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/integer> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/aim> .
+
+<https://w3id.org/synapse/nfosi/vocab/dataLandscape__assay> a linkml:SlotDefinition ;
+    dcterms:title "Assay" ;
+    skos:definition "Scientific characteristics: The assay or experimental method used to generate this dataset. If you are unsure or cannot find the appropriate term, please use 'Unknown' and email nf-osi@sagebase.org for help." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "assay" ;
+    linkml:any_of [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/AssayEnum> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/assay> .
+
+<https://w3id.org/synapse/nfosi/vocab/dataLandscape__comments> a linkml:SlotDefinition ;
+    dcterms:title "Comments" ;
+    skos:definition "Project management: Additional comments or notes about this dataset" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "comments" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/comments> .
+
+<https://w3id.org/synapse/nfosi/vocab/dataLandscape__dataLead> a linkml:SlotDefinition ;
+    dcterms:title "Data Lead" ;
+    skos:definition "Dataset identification: The person or team responsible for generating and curating this dataset" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "dataLead" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/dataLead> .
+
+<https://w3id.org/synapse/nfosi/vocab/dataLandscape__dataType> a linkml:SlotDefinition ;
+    dcterms:title "Type" ;
+    skos:definition "Scientific characteristics: The type of data that will be uploaded in this dataset. If you are unsure or cannot find the appropriate term, please use 'Unknown' and email nf-osi@sagebase.org for help." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "dataType" ;
+    linkml:any_of [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:multivalued true ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/dataType> .
+
+<https://w3id.org/synapse/nfosi/vocab/dataLandscape__deadline> a linkml:SlotDefinition ;
+    dcterms:title "Data Upload Deadline" ;
+    skos:definition "Project management: Target date for data to be uploaded for this dataset. This can be an estimate." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "deadline" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/date> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/deadline> .
+
+<https://w3id.org/synapse/nfosi/vocab/dataLandscape__description> a linkml:SlotDefinition ;
+    dcterms:title "Description" ;
+    skos:definition "Dataset identification: Short description of the dataset and experimental details." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "description" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/description> .
+
+<https://w3id.org/synapse/nfosi/vocab/dataLandscape__fileFormat> a linkml:SlotDefinition ;
+    dcterms:title "File format" ;
+    skos:definition "Scientific characteristics: The primary file format(s) expected in this dataset. If you are unsure or cannot find the appropriate term, please use 'Unknown' and email nf-osi@sagebase.org for help." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "fileFormat" ;
+    linkml:any_of [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/FileFormatEnum> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:multivalued true ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/fileFormat> .
+
+<https://w3id.org/synapse/nfosi/vocab/dataLandscape__milestone> a linkml:SlotDefinition ;
+    dcterms:title "Associated Milestone" ;
+    skos:definition "Project management: Reference to a milestone (aka \"progress report number\") associated with this dataset, e.g. '1' or '2.2'" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "milestone" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/milestone> .
+
+<https://w3id.org/synapse/nfosi/vocab/dataLandscape__nFiles> a linkml:SlotDefinition ;
+    dcterms:title "Number of Files" ;
+    skos:definition "Quantitative estimates: Expected number of files in the dataset. This can be an estimate." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "nFiles" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/integer> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/nFiles> .
+
+<https://w3id.org/synapse/nfosi/vocab/dataLandscape__nSamples> a linkml:SlotDefinition ;
+    dcterms:title "Number of Samples" ;
+    skos:definition "Quantitative estimates: Expected number of samples in the dataset. This can be an estimate." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "nSamples" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/integer> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/nSamples> .
+
+<https://w3id.org/synapse/nfosi/vocab/dataLandscape__name> a linkml:SlotDefinition ;
+    dcterms:title "Dataset Name" ;
+    skos:definition "Dataset identification: Short, unique name/label that will be used for the folder storing the data. For example, with RNA Sequencing data in multiple aims, label them \"RNA Sequencing - Aim 1\", \"RNA Sequencing - Aim 2\", etc. The associated sample cohort or species can also be used to help distinguish datasets." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "name" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/name> .
+
+<https://w3id.org/synapse/nfosi/vocab/dataLandscape__species> a linkml:SlotDefinition ;
+    dcterms:title "Species" ;
+    skos:definition "Scientific characteristics: The species from which sample data were derived. If you are unsure or cannot find the appropriate term, please use 'Unknown' and email nf-osi@sagebase.org for help." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "species" ;
+    linkml:any_of [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/SpeciesEnum> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/species> .
+
+<https://w3id.org/synapse/nfosi/vocab/dataLandscape__study> a linkml:SlotDefinition ;
+    dcterms:title "Study" ;
+    skos:definition "Study context: The study or project that this dataset belongs to" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    skos:prefLabel "study" ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/study> .
+
+<https://w3id.org/synapse/nfosi/vocab/dataLead> a linkml:SlotDefinition ;
+    dcterms:title "Data Lead" ;
+    skos:definition "Dataset identification: The person or team responsible for generating and curating this dataset" ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
+
 <https://w3id.org/synapse/nfosi/vocab/dataUseModifiers> a linkml:SlotDefinition ;
     dcterms:title "Data Use Modifiers" ;
     skos:definition "List of data use ontology (DUO) terms that are true for dataset, which describes the allowable scope and terms for data use. Most datasets allow \"General Research Use\" unless otherwise specified." ;
@@ -5552,6 +5715,11 @@ Examples: avoidance behavior, choice-making.
     dcterms:title "Date Published" ;
     skos:definition "Date data were published/available on Synapse. This can be set automatically from other dates tracked in Synapse system so does not need to be manually added." ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/integer> .
+
+<https://w3id.org/synapse/nfosi/vocab/deadline> a linkml:SlotDefinition ;
+    dcterms:title "Data Upload Deadline" ;
+    skos:definition "Project management: Target date for data to be uploaded for this dataset. This can be an estimate." ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/date> .
 
 <https://w3id.org/synapse/nfosi/vocab/embargoEndDate> a linkml:SlotDefinition ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
@@ -5627,8 +5795,31 @@ Examples: avoidance behavior, choice-making.
         "Most general label for data that contains information about data." ;
     linkml:meaning NCIT:C52095 .
 
+<https://w3id.org/synapse/nfosi/vocab/milestone> a linkml:SlotDefinition ;
+    dcterms:title "Associated Milestone" ;
+    skos:definition "Project management: Reference to a milestone (aka \"progress report number\") associated with this dataset, e.g. '1' or '2.2'" ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> .
+
 <https://w3id.org/synapse/nfosi/vocab/mitochondria> dcterms:source <https://github.com/HumanCellAtlas/metadata-schema/blob/master/json_schema/type/process/sequencing/library_preparation_process.json> ;
     skos:definition "Mitochondria only" .
+
+<https://w3id.org/synapse/nfosi/vocab/nFiles> a linkml:SlotDefinition ;
+    dcterms:title "Number of Files" ;
+    skos:definition "Quantitative estimates: Expected number of files in the dataset. This can be an estimate." ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/integer> ;
+    linkml:required true .
+
+<https://w3id.org/synapse/nfosi/vocab/nSamples> a linkml:SlotDefinition ;
+    dcterms:title "Number of Samples" ;
+    skos:definition "Quantitative estimates: Expected number of samples in the dataset. This can be an estimate." ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/integer> ;
+    linkml:required true .
+
+<https://w3id.org/synapse/nfosi/vocab/name> a linkml:SlotDefinition ;
+    dcterms:title "Dataset Name" ;
+    skos:definition "Dataset identification: Short, unique name/label that will be used for the folder storing the data. For example, with RNA Sequencing data in multiple aims, label them \"RNA Sequencing - Aim 1\", \"RNA Sequencing - Aim 2\", etc. The associated sample cohort or species can also be used to help distinguish datasets." ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:required true .
 
 <https://w3id.org/synapse/nfosi/vocab/nextPhaseProject> a linkml:SlotDefinition ;
     skos:definition "Synapse project ID of a follow-up project that represents a subsequent funding phase, extension, or continuation of this study's research effort." ;
@@ -6287,6 +6478,12 @@ Examples: avoidance behavior, choice-making.
     dcterms:title "Specimen Count" ;
     skos:definition "Number of unique specimens included in the dataset. Omit if not applicable/unknown." ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/integer> .
+
+<https://w3id.org/synapse/nfosi/vocab/study> a linkml:SlotDefinition ;
+    dcterms:title "Study" ;
+    skos:definition "Study context: The study or project that this dataset belongs to" ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:required true .
 
 <https://w3id.org/synapse/nfosi/vocab/subject> a linkml:SlotDefinition ;
     dcterms:title "Subject" ;
@@ -7302,126 +7499,6 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/Raw%20Counts>,
         <https://w3id.org/synapse/nfosi/vocab/TPM> .
 
-<https://w3id.org/synapse/nfosi/vocab/FileFormatEnum> skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/FileFormatEnum> ;
-    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/7z>,
-        <https://w3id.org/synapse/nfosi/vocab/DICOM>,
-        <https://w3id.org/synapse/nfosi/vocab/MATLAB%20data>,
-        <https://w3id.org/synapse/nfosi/vocab/MATLAB%20script>,
-        <https://w3id.org/synapse/nfosi/vocab/MPEG-4>,
-        <https://w3id.org/synapse/nfosi/vocab/NWB>,
-        <https://w3id.org/synapse/nfosi/vocab/PAR>,
-        <https://w3id.org/synapse/nfosi/vocab/Python%20script>,
-        <https://w3id.org/synapse/nfosi/vocab/R%20script>,
-        <https://w3id.org/synapse/nfosi/vocab/RCC>,
-        <https://w3id.org/synapse/nfosi/vocab/RData>,
-        <https://w3id.org/synapse/nfosi/vocab/REC>,
-        <https://w3id.org/synapse/nfosi/vocab/SDAT>,
-        <https://w3id.org/synapse/nfosi/vocab/SPAR>,
-        <https://w3id.org/synapse/nfosi/vocab/Sentrix%20descriptor%20file>,
-        <https://w3id.org/synapse/nfosi/vocab/ab1>,
-        <https://w3id.org/synapse/nfosi/vocab/abf>,
-        <https://w3id.org/synapse/nfosi/vocab/aci>,
-        <https://w3id.org/synapse/nfosi/vocab/ai>,
-        <https://w3id.org/synapse/nfosi/vocab/avi>,
-        <https://w3id.org/synapse/nfosi/vocab/bai>,
-        <https://w3id.org/synapse/nfosi/vocab/bam>,
-        <https://w3id.org/synapse/nfosi/vocab/bash%20script>,
-        <https://w3id.org/synapse/nfosi/vocab/bcf>,
-        <https://w3id.org/synapse/nfosi/vocab/bed>,
-        <https://w3id.org/synapse/nfosi/vocab/bed%20broadPeak>,
-        <https://w3id.org/synapse/nfosi/vocab/bed%20gappedPeak>,
-        <https://w3id.org/synapse/nfosi/vocab/bed%20narrowPeak>,
-        <https://w3id.org/synapse/nfosi/vocab/bedgraph>,
-        <https://w3id.org/synapse/nfosi/vocab/bgzip>,
-        <https://w3id.org/synapse/nfosi/vocab/bigwig>,
-        <https://w3id.org/synapse/nfosi/vocab/bmp>,
-        <https://w3id.org/synapse/nfosi/vocab/bpm>,
-        <https://w3id.org/synapse/nfosi/vocab/cel>,
-        <https://w3id.org/synapse/nfosi/vocab/chp>,
-        <https://w3id.org/synapse/nfosi/vocab/cnn>,
-        <https://w3id.org/synapse/nfosi/vocab/cnr>,
-        <https://w3id.org/synapse/nfosi/vocab/cns>,
-        <https://w3id.org/synapse/nfosi/vocab/crai>,
-        <https://w3id.org/synapse/nfosi/vocab/cram>,
-        <https://w3id.org/synapse/nfosi/vocab/csi>,
-        <https://w3id.org/synapse/nfosi/vocab/csv>,
-        <https://w3id.org/synapse/nfosi/vocab/ctab>,
-        <https://w3id.org/synapse/nfosi/vocab/czi>,
-        <https://w3id.org/synapse/nfosi/vocab/dat>,
-        <https://w3id.org/synapse/nfosi/vocab/dna>,
-        <https://w3id.org/synapse/nfosi/vocab/doc>,
-        <https://w3id.org/synapse/nfosi/vocab/docker%20image>,
-        <https://w3id.org/synapse/nfosi/vocab/dup>,
-        <https://w3id.org/synapse/nfosi/vocab/edat3>,
-        <https://w3id.org/synapse/nfosi/vocab/excel>,
-        <https://w3id.org/synapse/nfosi/vocab/fasta>,
-        <https://w3id.org/synapse/nfosi/vocab/fastq>,
-        <https://w3id.org/synapse/nfosi/vocab/fcs>,
-        <https://w3id.org/synapse/nfosi/vocab/fig>,
-        <https://w3id.org/synapse/nfosi/vocab/flagstat>,
-        <https://w3id.org/synapse/nfosi/vocab/gb>,
-        <https://w3id.org/synapse/nfosi/vocab/gct>,
-        <https://w3id.org/synapse/nfosi/vocab/gff3>,
-        <https://w3id.org/synapse/nfosi/vocab/gtf>,
-        <https://w3id.org/synapse/nfosi/vocab/gzip>,
-        <https://w3id.org/synapse/nfosi/vocab/hdf5>,
-        <https://w3id.org/synapse/nfosi/vocab/hdr>,
-        <https://w3id.org/synapse/nfosi/vocab/hic>,
-        <https://w3id.org/synapse/nfosi/vocab/html>,
-        <https://w3id.org/synapse/nfosi/vocab/hyperlink>,
-        <https://w3id.org/synapse/nfosi/vocab/idat>,
-        <https://w3id.org/synapse/nfosi/vocab/idx>,
-        <https://w3id.org/synapse/nfosi/vocab/img>,
-        <https://w3id.org/synapse/nfosi/vocab/jpg>,
-        <https://w3id.org/synapse/nfosi/vocab/js>,
-        <https://w3id.org/synapse/nfosi/vocab/json>,
-        <https://w3id.org/synapse/nfosi/vocab/lif>,
-        <https://w3id.org/synapse/nfosi/vocab/locs>,
-        <https://w3id.org/synapse/nfosi/vocab/maf>,
-        <https://w3id.org/synapse/nfosi/vocab/md>,
-        <https://w3id.org/synapse/nfosi/vocab/mov>,
-        <https://w3id.org/synapse/nfosi/vocab/msf>,
-        <https://w3id.org/synapse/nfosi/vocab/mtx>,
-        <https://w3id.org/synapse/nfosi/vocab/mzML>,
-        <https://w3id.org/synapse/nfosi/vocab/nii>,
-        <https://w3id.org/synapse/nfosi/vocab/ome-tiff>,
-        <https://w3id.org/synapse/nfosi/vocab/parquet>,
-        <https://w3id.org/synapse/nfosi/vocab/pdf>,
-        <https://w3id.org/synapse/nfosi/vocab/plink>,
-        <https://w3id.org/synapse/nfosi/vocab/png>,
-        <https://w3id.org/synapse/nfosi/vocab/powerpoint>,
-        <https://w3id.org/synapse/nfosi/vocab/psydat>,
-        <https://w3id.org/synapse/nfosi/vocab/pzfx>,
-        <https://w3id.org/synapse/nfosi/vocab/raw>,
-        <https://w3id.org/synapse/nfosi/vocab/rds>,
-        <https://w3id.org/synapse/nfosi/vocab/recal>,
-        <https://w3id.org/synapse/nfosi/vocab/rmd>,
-        <https://w3id.org/synapse/nfosi/vocab/sam>,
-        <https://w3id.org/synapse/nfosi/vocab/sav>,
-        <https://w3id.org/synapse/nfosi/vocab/sdf>,
-        <https://w3id.org/synapse/nfosi/vocab/seg>,
-        <https://w3id.org/synapse/nfosi/vocab/sf>,
-        <https://w3id.org/synapse/nfosi/vocab/sif>,
-        <https://w3id.org/synapse/nfosi/vocab/sqlite>,
-        <https://w3id.org/synapse/nfosi/vocab/sra>,
-        <https://w3id.org/synapse/nfosi/vocab/svg>,
-        <https://w3id.org/synapse/nfosi/vocab/svs>,
-        <https://w3id.org/synapse/nfosi/vocab/sws>,
-        <https://w3id.org/synapse/nfosi/vocab/tagAlign>,
-        <https://w3id.org/synapse/nfosi/vocab/tar>,
-        <https://w3id.org/synapse/nfosi/vocab/tbi>,
-        <https://w3id.org/synapse/nfosi/vocab/tif>,
-        <https://w3id.org/synapse/nfosi/vocab/tom>,
-        <https://w3id.org/synapse/nfosi/vocab/tranches>,
-        <https://w3id.org/synapse/nfosi/vocab/tsv>,
-        <https://w3id.org/synapse/nfosi/vocab/txt>,
-        <https://w3id.org/synapse/nfosi/vocab/vcf>,
-        <https://w3id.org/synapse/nfosi/vocab/wiggle>,
-        <https://w3id.org/synapse/nfosi/vocab/xml>,
-        <https://w3id.org/synapse/nfosi/vocab/yaml>,
-        <https://w3id.org/synapse/nfosi/vocab/zip> .
-
 <https://w3id.org/synapse/nfosi/vocab/GenePerturbationMethodEnum> skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/GenePerturbationMethodEnum> ;
     linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/CRE%20Recombinase>,
@@ -8093,6 +8170,18 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/datasetSizeInBytes> .
 
+<https://w3id.org/synapse/nfosi/vocab/date> a linkml:TypeDefinition ;
+    skos:definition "a date (year, month and day) in an idealized calendar" ;
+    skos:editorialNote "If you are authoring schemas in LinkML YAML, the type is referenced with the lower case \"date\".",
+        "URI is dateTime because OWL reasoners don't work with straight date or time" ;
+    skos:exactMatch schema1:Date ;
+    skos:inScheme linkml:types ;
+    linkml:base "XSDDate" ;
+    linkml:definition_uri linkml:Date ;
+    linkml:imported_from "linkml:types" ;
+    linkml:repr "str" ;
+    linkml:uri xsd:date .
+
 <https://w3id.org/synapse/nfosi/vocab/drugScreenType> a linkml:SlotDefinition ;
     skos:definition "String describing general class of drug screen" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -8647,20 +8736,6 @@ Examples: avoidance behavior, choice-making.
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/PublicationTypeEnum> ;
     linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/Primary>,
         <https://w3id.org/synapse/nfosi/vocab/Secondary> .
-
-<https://w3id.org/synapse/nfosi/vocab/SpeciesEnum> skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/SpeciesEnum> ;
-    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/Danio%20rerio>,
-        <https://w3id.org/synapse/nfosi/vocab/Drosophila%20melanogaster>,
-        <https://w3id.org/synapse/nfosi/vocab/Gallus%20gallus>,
-        <https://w3id.org/synapse/nfosi/vocab/Homo%20sapiens>,
-        <https://w3id.org/synapse/nfosi/vocab/Mus%20musculus>,
-        <https://w3id.org/synapse/nfosi/vocab/Mus%20musculus%20%28humanized%29>,
-        <https://w3id.org/synapse/nfosi/vocab/Oryctolagus%20cuniculus>,
-        <https://w3id.org/synapse/nfosi/vocab/Pan%20troglodytes>,
-        <https://w3id.org/synapse/nfosi/vocab/Rattus%20norvegicus>,
-        <https://w3id.org/synapse/nfosi/vocab/Rhesus%20macaque>,
-        <https://w3id.org/synapse/nfosi/vocab/Sus%20scrofa> .
 
 <https://w3id.org/synapse/nfosi/vocab/StudyStatusEnum> dcterms:title "Study Status" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -9462,6 +9537,126 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/VitalStatusEnum> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/vitalStatus> .
 
+<https://w3id.org/synapse/nfosi/vocab/FileFormatEnum> skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/FileFormatEnum> ;
+    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/7z>,
+        <https://w3id.org/synapse/nfosi/vocab/DICOM>,
+        <https://w3id.org/synapse/nfosi/vocab/MATLAB%20data>,
+        <https://w3id.org/synapse/nfosi/vocab/MATLAB%20script>,
+        <https://w3id.org/synapse/nfosi/vocab/MPEG-4>,
+        <https://w3id.org/synapse/nfosi/vocab/NWB>,
+        <https://w3id.org/synapse/nfosi/vocab/PAR>,
+        <https://w3id.org/synapse/nfosi/vocab/Python%20script>,
+        <https://w3id.org/synapse/nfosi/vocab/R%20script>,
+        <https://w3id.org/synapse/nfosi/vocab/RCC>,
+        <https://w3id.org/synapse/nfosi/vocab/RData>,
+        <https://w3id.org/synapse/nfosi/vocab/REC>,
+        <https://w3id.org/synapse/nfosi/vocab/SDAT>,
+        <https://w3id.org/synapse/nfosi/vocab/SPAR>,
+        <https://w3id.org/synapse/nfosi/vocab/Sentrix%20descriptor%20file>,
+        <https://w3id.org/synapse/nfosi/vocab/ab1>,
+        <https://w3id.org/synapse/nfosi/vocab/abf>,
+        <https://w3id.org/synapse/nfosi/vocab/aci>,
+        <https://w3id.org/synapse/nfosi/vocab/ai>,
+        <https://w3id.org/synapse/nfosi/vocab/avi>,
+        <https://w3id.org/synapse/nfosi/vocab/bai>,
+        <https://w3id.org/synapse/nfosi/vocab/bam>,
+        <https://w3id.org/synapse/nfosi/vocab/bash%20script>,
+        <https://w3id.org/synapse/nfosi/vocab/bcf>,
+        <https://w3id.org/synapse/nfosi/vocab/bed>,
+        <https://w3id.org/synapse/nfosi/vocab/bed%20broadPeak>,
+        <https://w3id.org/synapse/nfosi/vocab/bed%20gappedPeak>,
+        <https://w3id.org/synapse/nfosi/vocab/bed%20narrowPeak>,
+        <https://w3id.org/synapse/nfosi/vocab/bedgraph>,
+        <https://w3id.org/synapse/nfosi/vocab/bgzip>,
+        <https://w3id.org/synapse/nfosi/vocab/bigwig>,
+        <https://w3id.org/synapse/nfosi/vocab/bmp>,
+        <https://w3id.org/synapse/nfosi/vocab/bpm>,
+        <https://w3id.org/synapse/nfosi/vocab/cel>,
+        <https://w3id.org/synapse/nfosi/vocab/chp>,
+        <https://w3id.org/synapse/nfosi/vocab/cnn>,
+        <https://w3id.org/synapse/nfosi/vocab/cnr>,
+        <https://w3id.org/synapse/nfosi/vocab/cns>,
+        <https://w3id.org/synapse/nfosi/vocab/crai>,
+        <https://w3id.org/synapse/nfosi/vocab/cram>,
+        <https://w3id.org/synapse/nfosi/vocab/csi>,
+        <https://w3id.org/synapse/nfosi/vocab/csv>,
+        <https://w3id.org/synapse/nfosi/vocab/ctab>,
+        <https://w3id.org/synapse/nfosi/vocab/czi>,
+        <https://w3id.org/synapse/nfosi/vocab/dat>,
+        <https://w3id.org/synapse/nfosi/vocab/dna>,
+        <https://w3id.org/synapse/nfosi/vocab/doc>,
+        <https://w3id.org/synapse/nfosi/vocab/docker%20image>,
+        <https://w3id.org/synapse/nfosi/vocab/dup>,
+        <https://w3id.org/synapse/nfosi/vocab/edat3>,
+        <https://w3id.org/synapse/nfosi/vocab/excel>,
+        <https://w3id.org/synapse/nfosi/vocab/fasta>,
+        <https://w3id.org/synapse/nfosi/vocab/fastq>,
+        <https://w3id.org/synapse/nfosi/vocab/fcs>,
+        <https://w3id.org/synapse/nfosi/vocab/fig>,
+        <https://w3id.org/synapse/nfosi/vocab/flagstat>,
+        <https://w3id.org/synapse/nfosi/vocab/gb>,
+        <https://w3id.org/synapse/nfosi/vocab/gct>,
+        <https://w3id.org/synapse/nfosi/vocab/gff3>,
+        <https://w3id.org/synapse/nfosi/vocab/gtf>,
+        <https://w3id.org/synapse/nfosi/vocab/gzip>,
+        <https://w3id.org/synapse/nfosi/vocab/hdf5>,
+        <https://w3id.org/synapse/nfosi/vocab/hdr>,
+        <https://w3id.org/synapse/nfosi/vocab/hic>,
+        <https://w3id.org/synapse/nfosi/vocab/html>,
+        <https://w3id.org/synapse/nfosi/vocab/hyperlink>,
+        <https://w3id.org/synapse/nfosi/vocab/idat>,
+        <https://w3id.org/synapse/nfosi/vocab/idx>,
+        <https://w3id.org/synapse/nfosi/vocab/img>,
+        <https://w3id.org/synapse/nfosi/vocab/jpg>,
+        <https://w3id.org/synapse/nfosi/vocab/js>,
+        <https://w3id.org/synapse/nfosi/vocab/json>,
+        <https://w3id.org/synapse/nfosi/vocab/lif>,
+        <https://w3id.org/synapse/nfosi/vocab/locs>,
+        <https://w3id.org/synapse/nfosi/vocab/maf>,
+        <https://w3id.org/synapse/nfosi/vocab/md>,
+        <https://w3id.org/synapse/nfosi/vocab/mov>,
+        <https://w3id.org/synapse/nfosi/vocab/msf>,
+        <https://w3id.org/synapse/nfosi/vocab/mtx>,
+        <https://w3id.org/synapse/nfosi/vocab/mzML>,
+        <https://w3id.org/synapse/nfosi/vocab/nii>,
+        <https://w3id.org/synapse/nfosi/vocab/ome-tiff>,
+        <https://w3id.org/synapse/nfosi/vocab/parquet>,
+        <https://w3id.org/synapse/nfosi/vocab/pdf>,
+        <https://w3id.org/synapse/nfosi/vocab/plink>,
+        <https://w3id.org/synapse/nfosi/vocab/png>,
+        <https://w3id.org/synapse/nfosi/vocab/powerpoint>,
+        <https://w3id.org/synapse/nfosi/vocab/psydat>,
+        <https://w3id.org/synapse/nfosi/vocab/pzfx>,
+        <https://w3id.org/synapse/nfosi/vocab/raw>,
+        <https://w3id.org/synapse/nfosi/vocab/rds>,
+        <https://w3id.org/synapse/nfosi/vocab/recal>,
+        <https://w3id.org/synapse/nfosi/vocab/rmd>,
+        <https://w3id.org/synapse/nfosi/vocab/sam>,
+        <https://w3id.org/synapse/nfosi/vocab/sav>,
+        <https://w3id.org/synapse/nfosi/vocab/sdf>,
+        <https://w3id.org/synapse/nfosi/vocab/seg>,
+        <https://w3id.org/synapse/nfosi/vocab/sf>,
+        <https://w3id.org/synapse/nfosi/vocab/sif>,
+        <https://w3id.org/synapse/nfosi/vocab/sqlite>,
+        <https://w3id.org/synapse/nfosi/vocab/sra>,
+        <https://w3id.org/synapse/nfosi/vocab/svg>,
+        <https://w3id.org/synapse/nfosi/vocab/svs>,
+        <https://w3id.org/synapse/nfosi/vocab/sws>,
+        <https://w3id.org/synapse/nfosi/vocab/tagAlign>,
+        <https://w3id.org/synapse/nfosi/vocab/tar>,
+        <https://w3id.org/synapse/nfosi/vocab/tbi>,
+        <https://w3id.org/synapse/nfosi/vocab/tif>,
+        <https://w3id.org/synapse/nfosi/vocab/tom>,
+        <https://w3id.org/synapse/nfosi/vocab/tranches>,
+        <https://w3id.org/synapse/nfosi/vocab/tsv>,
+        <https://w3id.org/synapse/nfosi/vocab/txt>,
+        <https://w3id.org/synapse/nfosi/vocab/vcf>,
+        <https://w3id.org/synapse/nfosi/vocab/wiggle>,
+        <https://w3id.org/synapse/nfosi/vocab/xml>,
+        <https://w3id.org/synapse/nfosi/vocab/yaml>,
+        <https://w3id.org/synapse/nfosi/vocab/zip> .
+
 <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplate> a linkml:ClassDefinition ;
     skos:definition "Alias to BulkSequencingAssayTemplate, use for sequence data on a large scale when there is no template available that is more specific." ;
     skos:editorialNote "It's possible that not all raw genomics data equates to sequencing output." ;
@@ -9885,10 +10080,6 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/specimenID>,
         <https://w3id.org/synapse/nfosi/vocab/tumorType> .
 
-<https://w3id.org/synapse/nfosi/vocab/UnknownEnum> skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ;
-    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/Unknown> .
-
 <https://w3id.org/synapse/nfosi/vocab/WESTemplate> a linkml:ClassDefinition ;
     skos:closeMatch <htan:BulkWESLevel1> ;
     skos:definition "Template for describing raw data from Whole Exome Sequencing (WES/WXS)" ;
@@ -10080,15 +10271,6 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/DataStatusEnum> ;
     linkml:required true ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/dataStatus> .
-
-<https://w3id.org/synapse/nfosi/vocab/description> a linkml:SlotDefinition ;
-    dcterms:title "Description" ;
-    skos:definition "Blurb for the dataset; should be no more than 500 characters.",
-        "Text describing a resource." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/description> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/description> .
 
 <https://w3id.org/synapse/nfosi/vocab/diagnosisAgeGroup> a linkml:SlotDefinition ;
     dcterms:title "Diagnosis age group" ;
@@ -10295,6 +10477,406 @@ Examples: avoidance behavior, choice-making.
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/yearProcessed> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/integer> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/yearProcessed> .
+
+<https://w3id.org/synapse/nfosi/vocab/DiseaseFocusEnum> dcterms:title "Disease Focus" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/DiseaseFocusEnum> ;
+    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/22q-related%20schwannomatosis>,
+        <https://w3id.org/synapse/nfosi/vocab/LZTR1-related%20schwannomatosis>,
+        <https://w3id.org/synapse/nfosi/vocab/Multiple>,
+        <https://w3id.org/synapse/nfosi/vocab/NF2-related%20schwannomatosis>,
+        <https://w3id.org/synapse/nfosi/vocab/Neurofibromatosis%20type%201>,
+        <https://w3id.org/synapse/nfosi/vocab/SMARCB1-related%20schwannomatosis>,
+        <https://w3id.org/synapse/nfosi/vocab/Schwannomatosis-NEC>,
+        <https://w3id.org/synapse/nfosi/vocab/Schwannomatosis-NOS> .
+
+<https://w3id.org/synapse/nfosi/vocab/FlowCytometryTemplate> a linkml:ClassDefinition ;
+    skos:closeMatch <https://www.immport.org/shared/dataModelDocumentation?table=fcs_analyzed_result> ;
+    skos:definition "Template for flow cytometry assay" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/FlowCytometryTemplate> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/FlowCytometryTemplate> ;
+    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate> ;
+    linkml:slot_usage [ ] ;
+    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
+        <https://w3id.org/synapse/nfosi/vocab/Filename>,
+        <https://w3id.org/synapse/nfosi/vocab/age>,
+        <https://w3id.org/synapse/nfosi/vocab/ageUnit>,
+        <https://w3id.org/synapse/nfosi/vocab/assay>,
+        <https://w3id.org/synapse/nfosi/vocab/auxiliaryAsset>,
+        <https://w3id.org/synapse/nfosi/vocab/cellType>,
+        <https://w3id.org/synapse/nfosi/vocab/comments>,
+        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
+        <https://w3id.org/synapse/nfosi/vocab/dataType>,
+        <https://w3id.org/synapse/nfosi/vocab/diagnosis>,
+        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
+        <https://w3id.org/synapse/nfosi/vocab/individualID>,
+        <https://w3id.org/synapse/nfosi/vocab/modelSystemName>,
+        <https://w3id.org/synapse/nfosi/vocab/nf1Genotype>,
+        <https://w3id.org/synapse/nfosi/vocab/nf2Genotype>,
+        <https://w3id.org/synapse/nfosi/vocab/organ>,
+        <https://w3id.org/synapse/nfosi/vocab/platform>,
+        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
+        <https://w3id.org/synapse/nfosi/vocab/sex>,
+        <https://w3id.org/synapse/nfosi/vocab/species>,
+        <https://w3id.org/synapse/nfosi/vocab/tumorType> .
+
+<https://w3id.org/synapse/nfosi/vocab/MassSpecAssayTemplate> a linkml:ClassDefinition ;
+    skos:closeMatch <htan:MassSpectrometryLevel1> ;
+    skos:definition "Template for raw mass spec-based proteomics data." ;
+    skos:editorialNote "Technically, mass spec does not have to be considered a biological assay, but we'll classify it as such when used with a biological sample." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/MassSpecAssayTemplate> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/MassSpecAssayTemplate> ;
+    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/ProteinAssayTemplate> ;
+    linkml:slot_usage [ ] ;
+    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
+        <https://w3id.org/synapse/nfosi/vocab/Filename>,
+        <https://w3id.org/synapse/nfosi/vocab/age>,
+        <https://w3id.org/synapse/nfosi/vocab/ageUnit>,
+        <https://w3id.org/synapse/nfosi/vocab/aliquotID>,
+        <https://w3id.org/synapse/nfosi/vocab/assay>,
+        <https://w3id.org/synapse/nfosi/vocab/comments>,
+        <https://w3id.org/synapse/nfosi/vocab/dataCollectionMode>,
+        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
+        <https://w3id.org/synapse/nfosi/vocab/dataType>,
+        <https://w3id.org/synapse/nfosi/vocab/diagnosis>,
+        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
+        <https://w3id.org/synapse/nfosi/vocab/individualID>,
+        <https://w3id.org/synapse/nfosi/vocab/modelSystemName>,
+        <https://w3id.org/synapse/nfosi/vocab/nf1Genotype>,
+        <https://w3id.org/synapse/nfosi/vocab/nf2Genotype>,
+        <https://w3id.org/synapse/nfosi/vocab/organ>,
+        <https://w3id.org/synapse/nfosi/vocab/parentSpecimenID>,
+        <https://w3id.org/synapse/nfosi/vocab/platform>,
+        <https://w3id.org/synapse/nfosi/vocab/proteinExtractSource>,
+        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
+        <https://w3id.org/synapse/nfosi/vocab/sex>,
+        <https://w3id.org/synapse/nfosi/vocab/species>,
+        <https://w3id.org/synapse/nfosi/vocab/specimenID>,
+        <https://w3id.org/synapse/nfosi/vocab/tumorType> .
+
+<https://w3id.org/synapse/nfosi/vocab/SpeciesEnum> skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/SpeciesEnum> ;
+    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/Danio%20rerio>,
+        <https://w3id.org/synapse/nfosi/vocab/Drosophila%20melanogaster>,
+        <https://w3id.org/synapse/nfosi/vocab/Gallus%20gallus>,
+        <https://w3id.org/synapse/nfosi/vocab/Homo%20sapiens>,
+        <https://w3id.org/synapse/nfosi/vocab/Mus%20musculus>,
+        <https://w3id.org/synapse/nfosi/vocab/Mus%20musculus%20%28humanized%29>,
+        <https://w3id.org/synapse/nfosi/vocab/Oryctolagus%20cuniculus>,
+        <https://w3id.org/synapse/nfosi/vocab/Pan%20troglodytes>,
+        <https://w3id.org/synapse/nfosi/vocab/Rattus%20norvegicus>,
+        <https://w3id.org/synapse/nfosi/vocab/Rhesus%20macaque>,
+        <https://w3id.org/synapse/nfosi/vocab/Sus%20scrofa> .
+
+<https://w3id.org/synapse/nfosi/vocab/accessRequirements> a linkml:SlotDefinition ;
+    skos:definition "Statement describing access requirements for an entity." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/accessRequirements> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/accessRequirements> .
+
+<https://w3id.org/synapse/nfosi/vocab/antibodyID> a linkml:SlotDefinition ;
+    skos:definition "Antibody ID such as RRID if available, otherwise use vendor ID." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/antibodyID> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ChIPSeqTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ImmunoMicroscopyTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ProteinArrayTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProteinArrayTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/antibodyID> .
+
+<https://w3id.org/synapse/nfosi/vocab/bisulfiteConversionKitID> a linkml:SlotDefinition ;
+    skos:definition "Name of kit used in bisulfite conversion." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/bisulfiteConversionKitID> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/EpigenomicsAssayTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/EpigenomicsAssayTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/bisulfiteConversionKitID> .
+
+<https://w3id.org/synapse/nfosi/vocab/experimentalFactor> a linkml:SlotDefinition ;
+    skos:definition "An ontology concept for experimental factor measured with this data." ;
+    skos:editorialNote "Note that this enforces a concept term from EFO (currently preferred), while the related `experimentalCondition` is free-text and much more specific." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/experimentalFactor> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/Measurement> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/experimentalFactor> .
+
+<https://w3id.org/synapse/nfosi/vocab/isCellLine> a linkml:SlotDefinition ;
+    skos:definition "Whether or not sample source is a cell line (Yes; No)" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/isCellLine> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/BooleanEnum> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/isCellLine> .
+
+<https://w3id.org/synapse/nfosi/vocab/ChIPSeqTemplate> a linkml:ClassDefinition ;
+    skos:definition "Template for describing raw data from ChIP-Seq assays, typically used to identify DNA-protein interactions." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/ChIPSeqTemplate> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/ChIPSeqTemplate> ;
+    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/EpigenomicsAssayTemplate> ;
+    linkml:slot_usage [ ] ;
+    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
+        <https://w3id.org/synapse/nfosi/vocab/Filename>,
+        <https://w3id.org/synapse/nfosi/vocab/age>,
+        <https://w3id.org/synapse/nfosi/vocab/ageUnit>,
+        <https://w3id.org/synapse/nfosi/vocab/aliquotID>,
+        <https://w3id.org/synapse/nfosi/vocab/antibodyID>,
+        <https://w3id.org/synapse/nfosi/vocab/assay>,
+        <https://w3id.org/synapse/nfosi/vocab/batchID>,
+        <https://w3id.org/synapse/nfosi/vocab/bisulfiteConversionKitID>,
+        <https://w3id.org/synapse/nfosi/vocab/comments>,
+        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
+        <https://w3id.org/synapse/nfosi/vocab/dataType>,
+        <https://w3id.org/synapse/nfosi/vocab/diagnosis>,
+        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
+        <https://w3id.org/synapse/nfosi/vocab/individualID>,
+        <https://w3id.org/synapse/nfosi/vocab/libraryPrep>,
+        <https://w3id.org/synapse/nfosi/vocab/libraryPreparationMethod>,
+        <https://w3id.org/synapse/nfosi/vocab/libraryStrand>,
+        <https://w3id.org/synapse/nfosi/vocab/modelSystemName>,
+        <https://w3id.org/synapse/nfosi/vocab/nf1Genotype>,
+        <https://w3id.org/synapse/nfosi/vocab/nf2Genotype>,
+        <https://w3id.org/synapse/nfosi/vocab/nucleicAcidSource>,
+        <https://w3id.org/synapse/nfosi/vocab/organ>,
+        <https://w3id.org/synapse/nfosi/vocab/parentSpecimenID>,
+        <https://w3id.org/synapse/nfosi/vocab/peakCallingAlgorithm>,
+        <https://w3id.org/synapse/nfosi/vocab/platform>,
+        <https://w3id.org/synapse/nfosi/vocab/readDepth>,
+        <https://w3id.org/synapse/nfosi/vocab/readLength>,
+        <https://w3id.org/synapse/nfosi/vocab/readPair>,
+        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
+        <https://w3id.org/synapse/nfosi/vocab/runType>,
+        <https://w3id.org/synapse/nfosi/vocab/sex>,
+        <https://w3id.org/synapse/nfosi/vocab/species>,
+        <https://w3id.org/synapse/nfosi/vocab/specimenID>,
+        <https://w3id.org/synapse/nfosi/vocab/specimenPreparationMethod>,
+        <https://w3id.org/synapse/nfosi/vocab/specimenType>,
+        <https://w3id.org/synapse/nfosi/vocab/targetDepth>,
+        <https://w3id.org/synapse/nfosi/vocab/tumorType> .
+
+<https://w3id.org/synapse/nfosi/vocab/EpigenomicsAssayTemplate> a linkml:ClassDefinition ;
+    skos:closeMatch <htan:BulkMethylation-seqLevel1> ;
+    skos:definition "Template for describing raw data from epigenetics sequencing assays such as bisulfite sequencing." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/EpigenomicsAssayTemplate> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/EpigenomicsAssayTemplate> ;
+    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
+    linkml:slot_usage [ ] ;
+    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
+        <https://w3id.org/synapse/nfosi/vocab/Filename>,
+        <https://w3id.org/synapse/nfosi/vocab/age>,
+        <https://w3id.org/synapse/nfosi/vocab/ageUnit>,
+        <https://w3id.org/synapse/nfosi/vocab/aliquotID>,
+        <https://w3id.org/synapse/nfosi/vocab/assay>,
+        <https://w3id.org/synapse/nfosi/vocab/batchID>,
+        <https://w3id.org/synapse/nfosi/vocab/bisulfiteConversionKitID>,
+        <https://w3id.org/synapse/nfosi/vocab/comments>,
+        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
+        <https://w3id.org/synapse/nfosi/vocab/dataType>,
+        <https://w3id.org/synapse/nfosi/vocab/diagnosis>,
+        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
+        <https://w3id.org/synapse/nfosi/vocab/individualID>,
+        <https://w3id.org/synapse/nfosi/vocab/libraryPrep>,
+        <https://w3id.org/synapse/nfosi/vocab/libraryPreparationMethod>,
+        <https://w3id.org/synapse/nfosi/vocab/libraryStrand>,
+        <https://w3id.org/synapse/nfosi/vocab/modelSystemName>,
+        <https://w3id.org/synapse/nfosi/vocab/nf1Genotype>,
+        <https://w3id.org/synapse/nfosi/vocab/nf2Genotype>,
+        <https://w3id.org/synapse/nfosi/vocab/nucleicAcidSource>,
+        <https://w3id.org/synapse/nfosi/vocab/organ>,
+        <https://w3id.org/synapse/nfosi/vocab/parentSpecimenID>,
+        <https://w3id.org/synapse/nfosi/vocab/platform>,
+        <https://w3id.org/synapse/nfosi/vocab/readDepth>,
+        <https://w3id.org/synapse/nfosi/vocab/readLength>,
+        <https://w3id.org/synapse/nfosi/vocab/readPair>,
+        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
+        <https://w3id.org/synapse/nfosi/vocab/runType>,
+        <https://w3id.org/synapse/nfosi/vocab/sex>,
+        <https://w3id.org/synapse/nfosi/vocab/species>,
+        <https://w3id.org/synapse/nfosi/vocab/specimenID>,
+        <https://w3id.org/synapse/nfosi/vocab/specimenPreparationMethod>,
+        <https://w3id.org/synapse/nfosi/vocab/specimenType>,
+        <https://w3id.org/synapse/nfosi/vocab/targetDepth>,
+        <https://w3id.org/synapse/nfosi/vocab/tumorType> .
+
+<https://w3id.org/synapse/nfosi/vocab/GenomicsArrayTemplate> a linkml:ClassDefinition ;
+    skos:definition "A template for describing raw data from array-based genomics/epigenomics, e.g. CEL files." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/GenomicsArrayTemplate> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/GenomicsArrayTemplate> ;
+    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/GeneticsAssayTemplate> ;
+    linkml:slot_usage [ ] ;
+    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
+        <https://w3id.org/synapse/nfosi/vocab/Filename>,
+        <https://w3id.org/synapse/nfosi/vocab/age>,
+        <https://w3id.org/synapse/nfosi/vocab/ageUnit>,
+        <https://w3id.org/synapse/nfosi/vocab/aliquotID>,
+        <https://w3id.org/synapse/nfosi/vocab/assay>,
+        <https://w3id.org/synapse/nfosi/vocab/channel>,
+        <https://w3id.org/synapse/nfosi/vocab/comments>,
+        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
+        <https://w3id.org/synapse/nfosi/vocab/dataType>,
+        <https://w3id.org/synapse/nfosi/vocab/diagnosis>,
+        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
+        <https://w3id.org/synapse/nfosi/vocab/individualID>,
+        <https://w3id.org/synapse/nfosi/vocab/modelSystemName>,
+        <https://w3id.org/synapse/nfosi/vocab/nf1Genotype>,
+        <https://w3id.org/synapse/nfosi/vocab/nf2Genotype>,
+        <https://w3id.org/synapse/nfosi/vocab/nucleicAcidSource>,
+        <https://w3id.org/synapse/nfosi/vocab/organ>,
+        <https://w3id.org/synapse/nfosi/vocab/parentSpecimenID>,
+        <https://w3id.org/synapse/nfosi/vocab/platform>,
+        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
+        <https://w3id.org/synapse/nfosi/vocab/sex>,
+        <https://w3id.org/synapse/nfosi/vocab/species>,
+        <https://w3id.org/synapse/nfosi/vocab/specimenID>,
+        <https://w3id.org/synapse/nfosi/vocab/specimenPreparationMethod>,
+        <https://w3id.org/synapse/nfosi/vocab/tumorType> .
+
+<https://w3id.org/synapse/nfosi/vocab/LightScatteringAssayTemplate> a linkml:ClassDefinition ;
+    dcterms:source <https://wiki.nci.nih.gov/display/icr/isa-tab-nano> ;
+    skos:definition "Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/LightScatteringAssayTemplate> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/LightScatteringAssayTemplate> ;
+    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/MaterialScienceAssayTemplate> ;
+    linkml:slot_usage [ ] ;
+    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
+        <https://w3id.org/synapse/nfosi/vocab/Filename>,
+        <https://w3id.org/synapse/nfosi/vocab/assay>,
+        <https://w3id.org/synapse/nfosi/vocab/concentrationMaterial>,
+        <https://w3id.org/synapse/nfosi/vocab/concentrationMaterialUnit>,
+        <https://w3id.org/synapse/nfosi/vocab/concentrationNaCl>,
+        <https://w3id.org/synapse/nfosi/vocab/concentrationNaClUnit>,
+        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
+        <https://w3id.org/synapse/nfosi/vocab/dataType>,
+        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
+        <https://w3id.org/synapse/nfosi/vocab/materialType>,
+        <https://w3id.org/synapse/nfosi/vocab/pH>,
+        <https://w3id.org/synapse/nfosi/vocab/platform>,
+        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
+        <https://w3id.org/synapse/nfosi/vocab/specimenID> .
+
+<https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> a linkml:ClassDefinition ;
+    skos:definition "Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> ;
+    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/PartialTemplate> ;
+    linkml:slot_usage [ ] ;
+    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Filename>,
+        <https://w3id.org/synapse/nfosi/vocab/progressReportNumber>,
+        <https://w3id.org/synapse/nfosi/vocab/resourceType> .
+
+<https://w3id.org/synapse/nfosi/vocab/author> a linkml:SlotDefinition ;
+    dcterms:title "Author(s)" ;
+    skos:definition "The author of the resource; preferably use an ORCID ID, GitHub profile link, etc., if available and a text name if not." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/author> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
+    linkml:multivalued true ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/author> .
+
+<https://w3id.org/synapse/nfosi/vocab/cellType> a linkml:SlotDefinition ;
+    skos:definition "A cell type is a distinct morphological or functional form of cell." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/cellType> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ElectrophysiologyAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/FlowCytometryTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/Cell> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/cellType> .
+
+<https://w3id.org/synapse/nfosi/vocab/citation> a linkml:SlotDefinition ;
+    dcterms:title "Citation" ;
+    skos:definition "Academic articles that are recommended by the data provider to be cited in addition to the dataset doi itself.",
+        "Citation (e.g. doi) that usage of data or resource should be cited with." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/citation> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/citation> .
+
+<https://w3id.org/synapse/nfosi/vocab/description> a linkml:SlotDefinition ;
+    dcterms:title "Description" ;
+    skos:definition "Blurb for the dataset; should be no more than 500 characters.",
+        "Dataset identification: Short description of the dataset and experimental details.",
+        "Text describing a resource." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/description> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/description> .
+
+<https://w3id.org/synapse/nfosi/vocab/doi> a linkml:SlotDefinition ;
+    dcterms:title "Digital Object Identifier",
+        "doi" ;
+    skos:definition "Digital object identifier of the resource.",
+        "The Digital Object Identifier (DOI) of the dataset (if one has been created), used for citation and persistent identification." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/doi> ;
+    linkml:pattern "^10\\\\.\\\\d{4,9}/[-._;()/:A-Z0-9]+$" ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/doi> .
+
+<https://w3id.org/synapse/nfosi/vocab/fundingAgency> a linkml:SlotDefinition ;
+    dcterms:title "Linked Funder(s)" ;
+    skos:definition "Refers to the funding organization for the generated resource. This annotation is handled by the DCC." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/fundingAgency> ;
+    linkml:multivalued true ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/fundingAgency> .
+
+<https://w3id.org/synapse/nfosi/vocab/license> a linkml:SlotDefinition ;
+    dcterms:title "License" ;
+    skos:definition "Link to a license or name of license applicable for the resource.",
+        "Unless information for license is clear, this should default to UNKNOWN." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/license> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/License> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/license> .
+
+<https://w3id.org/synapse/nfosi/vocab/proteinExtractSource> a linkml:SlotDefinition ;
+    skos:definition "Source of the extracted protein used in the experiment" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/proteinExtractSource> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ProteinAssayTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProteinAssayTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/ProteinExtractSourceEnum> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/proteinExtractSource> .
+
+<https://w3id.org/synapse/nfosi/vocab/studyName> a linkml:SlotDefinition ;
+    dcterms:title "Linked Study Name" ;
+    skos:definition "Name of a study." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/studyName> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/studyName> .
 
 <https://w3id.org/synapse/nfosi/vocab/AssayEnum> dcterms:title "Assay" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -10559,382 +11141,6 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/text%20data>,
         <https://w3id.org/synapse/nfosi/vocab/volume>,
         <https://w3id.org/synapse/nfosi/vocab/weight> .
-
-<https://w3id.org/synapse/nfosi/vocab/DiseaseFocusEnum> dcterms:title "Disease Focus" ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/DiseaseFocusEnum> ;
-    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/22q-related%20schwannomatosis>,
-        <https://w3id.org/synapse/nfosi/vocab/LZTR1-related%20schwannomatosis>,
-        <https://w3id.org/synapse/nfosi/vocab/Multiple>,
-        <https://w3id.org/synapse/nfosi/vocab/NF2-related%20schwannomatosis>,
-        <https://w3id.org/synapse/nfosi/vocab/Neurofibromatosis%20type%201>,
-        <https://w3id.org/synapse/nfosi/vocab/SMARCB1-related%20schwannomatosis>,
-        <https://w3id.org/synapse/nfosi/vocab/Schwannomatosis-NEC>,
-        <https://w3id.org/synapse/nfosi/vocab/Schwannomatosis-NOS> .
-
-<https://w3id.org/synapse/nfosi/vocab/FlowCytometryTemplate> a linkml:ClassDefinition ;
-    skos:closeMatch <https://www.immport.org/shared/dataModelDocumentation?table=fcs_analyzed_result> ;
-    skos:definition "Template for flow cytometry assay" ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/FlowCytometryTemplate> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/FlowCytometryTemplate> ;
-    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate> ;
-    linkml:slot_usage [ ] ;
-    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
-        <https://w3id.org/synapse/nfosi/vocab/Filename>,
-        <https://w3id.org/synapse/nfosi/vocab/age>,
-        <https://w3id.org/synapse/nfosi/vocab/ageUnit>,
-        <https://w3id.org/synapse/nfosi/vocab/assay>,
-        <https://w3id.org/synapse/nfosi/vocab/auxiliaryAsset>,
-        <https://w3id.org/synapse/nfosi/vocab/cellType>,
-        <https://w3id.org/synapse/nfosi/vocab/comments>,
-        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
-        <https://w3id.org/synapse/nfosi/vocab/dataType>,
-        <https://w3id.org/synapse/nfosi/vocab/diagnosis>,
-        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
-        <https://w3id.org/synapse/nfosi/vocab/individualID>,
-        <https://w3id.org/synapse/nfosi/vocab/modelSystemName>,
-        <https://w3id.org/synapse/nfosi/vocab/nf1Genotype>,
-        <https://w3id.org/synapse/nfosi/vocab/nf2Genotype>,
-        <https://w3id.org/synapse/nfosi/vocab/organ>,
-        <https://w3id.org/synapse/nfosi/vocab/platform>,
-        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
-        <https://w3id.org/synapse/nfosi/vocab/sex>,
-        <https://w3id.org/synapse/nfosi/vocab/species>,
-        <https://w3id.org/synapse/nfosi/vocab/tumorType> .
-
-<https://w3id.org/synapse/nfosi/vocab/MassSpecAssayTemplate> a linkml:ClassDefinition ;
-    skos:closeMatch <htan:MassSpectrometryLevel1> ;
-    skos:definition "Template for raw mass spec-based proteomics data." ;
-    skos:editorialNote "Technically, mass spec does not have to be considered a biological assay, but we'll classify it as such when used with a biological sample." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/MassSpecAssayTemplate> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/MassSpecAssayTemplate> ;
-    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/ProteinAssayTemplate> ;
-    linkml:slot_usage [ ] ;
-    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
-        <https://w3id.org/synapse/nfosi/vocab/Filename>,
-        <https://w3id.org/synapse/nfosi/vocab/age>,
-        <https://w3id.org/synapse/nfosi/vocab/ageUnit>,
-        <https://w3id.org/synapse/nfosi/vocab/aliquotID>,
-        <https://w3id.org/synapse/nfosi/vocab/assay>,
-        <https://w3id.org/synapse/nfosi/vocab/comments>,
-        <https://w3id.org/synapse/nfosi/vocab/dataCollectionMode>,
-        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
-        <https://w3id.org/synapse/nfosi/vocab/dataType>,
-        <https://w3id.org/synapse/nfosi/vocab/diagnosis>,
-        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
-        <https://w3id.org/synapse/nfosi/vocab/individualID>,
-        <https://w3id.org/synapse/nfosi/vocab/modelSystemName>,
-        <https://w3id.org/synapse/nfosi/vocab/nf1Genotype>,
-        <https://w3id.org/synapse/nfosi/vocab/nf2Genotype>,
-        <https://w3id.org/synapse/nfosi/vocab/organ>,
-        <https://w3id.org/synapse/nfosi/vocab/parentSpecimenID>,
-        <https://w3id.org/synapse/nfosi/vocab/platform>,
-        <https://w3id.org/synapse/nfosi/vocab/proteinExtractSource>,
-        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
-        <https://w3id.org/synapse/nfosi/vocab/sex>,
-        <https://w3id.org/synapse/nfosi/vocab/species>,
-        <https://w3id.org/synapse/nfosi/vocab/specimenID>,
-        <https://w3id.org/synapse/nfosi/vocab/tumorType> .
-
-<https://w3id.org/synapse/nfosi/vocab/accessRequirements> a linkml:SlotDefinition ;
-    skos:definition "Statement describing access requirements for an entity." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/accessRequirements> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/accessRequirements> .
-
-<https://w3id.org/synapse/nfosi/vocab/antibodyID> a linkml:SlotDefinition ;
-    skos:definition "Antibody ID such as RRID if available, otherwise use vendor ID." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/antibodyID> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ChIPSeqTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ImmunoMicroscopyTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ProteinArrayTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProteinArrayTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/antibodyID> .
-
-<https://w3id.org/synapse/nfosi/vocab/bisulfiteConversionKitID> a linkml:SlotDefinition ;
-    skos:definition "Name of kit used in bisulfite conversion." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/bisulfiteConversionKitID> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/EpigenomicsAssayTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/EpigenomicsAssayTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/bisulfiteConversionKitID> .
-
-<https://w3id.org/synapse/nfosi/vocab/experimentalFactor> a linkml:SlotDefinition ;
-    skos:definition "An ontology concept for experimental factor measured with this data." ;
-    skos:editorialNote "Note that this enforces a concept term from EFO (currently preferred), while the related `experimentalCondition` is free-text and much more specific." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/experimentalFactor> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/Measurement> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/experimentalFactor> .
-
-<https://w3id.org/synapse/nfosi/vocab/isCellLine> a linkml:SlotDefinition ;
-    skos:definition "Whether or not sample source is a cell line (Yes; No)" ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/isCellLine> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/RNASeqTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/BooleanEnum> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/isCellLine> .
-
-<https://w3id.org/synapse/nfosi/vocab/ChIPSeqTemplate> a linkml:ClassDefinition ;
-    skos:definition "Template for describing raw data from ChIP-Seq assays, typically used to identify DNA-protein interactions." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/ChIPSeqTemplate> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/ChIPSeqTemplate> ;
-    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/EpigenomicsAssayTemplate> ;
-    linkml:slot_usage [ ] ;
-    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
-        <https://w3id.org/synapse/nfosi/vocab/Filename>,
-        <https://w3id.org/synapse/nfosi/vocab/age>,
-        <https://w3id.org/synapse/nfosi/vocab/ageUnit>,
-        <https://w3id.org/synapse/nfosi/vocab/aliquotID>,
-        <https://w3id.org/synapse/nfosi/vocab/antibodyID>,
-        <https://w3id.org/synapse/nfosi/vocab/assay>,
-        <https://w3id.org/synapse/nfosi/vocab/batchID>,
-        <https://w3id.org/synapse/nfosi/vocab/bisulfiteConversionKitID>,
-        <https://w3id.org/synapse/nfosi/vocab/comments>,
-        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
-        <https://w3id.org/synapse/nfosi/vocab/dataType>,
-        <https://w3id.org/synapse/nfosi/vocab/diagnosis>,
-        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
-        <https://w3id.org/synapse/nfosi/vocab/individualID>,
-        <https://w3id.org/synapse/nfosi/vocab/libraryPrep>,
-        <https://w3id.org/synapse/nfosi/vocab/libraryPreparationMethod>,
-        <https://w3id.org/synapse/nfosi/vocab/libraryStrand>,
-        <https://w3id.org/synapse/nfosi/vocab/modelSystemName>,
-        <https://w3id.org/synapse/nfosi/vocab/nf1Genotype>,
-        <https://w3id.org/synapse/nfosi/vocab/nf2Genotype>,
-        <https://w3id.org/synapse/nfosi/vocab/nucleicAcidSource>,
-        <https://w3id.org/synapse/nfosi/vocab/organ>,
-        <https://w3id.org/synapse/nfosi/vocab/parentSpecimenID>,
-        <https://w3id.org/synapse/nfosi/vocab/peakCallingAlgorithm>,
-        <https://w3id.org/synapse/nfosi/vocab/platform>,
-        <https://w3id.org/synapse/nfosi/vocab/readDepth>,
-        <https://w3id.org/synapse/nfosi/vocab/readLength>,
-        <https://w3id.org/synapse/nfosi/vocab/readPair>,
-        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
-        <https://w3id.org/synapse/nfosi/vocab/runType>,
-        <https://w3id.org/synapse/nfosi/vocab/sex>,
-        <https://w3id.org/synapse/nfosi/vocab/species>,
-        <https://w3id.org/synapse/nfosi/vocab/specimenID>,
-        <https://w3id.org/synapse/nfosi/vocab/specimenPreparationMethod>,
-        <https://w3id.org/synapse/nfosi/vocab/specimenType>,
-        <https://w3id.org/synapse/nfosi/vocab/targetDepth>,
-        <https://w3id.org/synapse/nfosi/vocab/tumorType> .
-
-<https://w3id.org/synapse/nfosi/vocab/EpigenomicsAssayTemplate> a linkml:ClassDefinition ;
-    skos:closeMatch <htan:BulkMethylation-seqLevel1> ;
-    skos:definition "Template for describing raw data from epigenetics sequencing assays such as bisulfite sequencing." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/EpigenomicsAssayTemplate> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/EpigenomicsAssayTemplate> ;
-    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
-    linkml:slot_usage [ ] ;
-    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
-        <https://w3id.org/synapse/nfosi/vocab/Filename>,
-        <https://w3id.org/synapse/nfosi/vocab/age>,
-        <https://w3id.org/synapse/nfosi/vocab/ageUnit>,
-        <https://w3id.org/synapse/nfosi/vocab/aliquotID>,
-        <https://w3id.org/synapse/nfosi/vocab/assay>,
-        <https://w3id.org/synapse/nfosi/vocab/batchID>,
-        <https://w3id.org/synapse/nfosi/vocab/bisulfiteConversionKitID>,
-        <https://w3id.org/synapse/nfosi/vocab/comments>,
-        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
-        <https://w3id.org/synapse/nfosi/vocab/dataType>,
-        <https://w3id.org/synapse/nfosi/vocab/diagnosis>,
-        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
-        <https://w3id.org/synapse/nfosi/vocab/individualID>,
-        <https://w3id.org/synapse/nfosi/vocab/libraryPrep>,
-        <https://w3id.org/synapse/nfosi/vocab/libraryPreparationMethod>,
-        <https://w3id.org/synapse/nfosi/vocab/libraryStrand>,
-        <https://w3id.org/synapse/nfosi/vocab/modelSystemName>,
-        <https://w3id.org/synapse/nfosi/vocab/nf1Genotype>,
-        <https://w3id.org/synapse/nfosi/vocab/nf2Genotype>,
-        <https://w3id.org/synapse/nfosi/vocab/nucleicAcidSource>,
-        <https://w3id.org/synapse/nfosi/vocab/organ>,
-        <https://w3id.org/synapse/nfosi/vocab/parentSpecimenID>,
-        <https://w3id.org/synapse/nfosi/vocab/platform>,
-        <https://w3id.org/synapse/nfosi/vocab/readDepth>,
-        <https://w3id.org/synapse/nfosi/vocab/readLength>,
-        <https://w3id.org/synapse/nfosi/vocab/readPair>,
-        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
-        <https://w3id.org/synapse/nfosi/vocab/runType>,
-        <https://w3id.org/synapse/nfosi/vocab/sex>,
-        <https://w3id.org/synapse/nfosi/vocab/species>,
-        <https://w3id.org/synapse/nfosi/vocab/specimenID>,
-        <https://w3id.org/synapse/nfosi/vocab/specimenPreparationMethod>,
-        <https://w3id.org/synapse/nfosi/vocab/specimenType>,
-        <https://w3id.org/synapse/nfosi/vocab/targetDepth>,
-        <https://w3id.org/synapse/nfosi/vocab/tumorType> .
-
-<https://w3id.org/synapse/nfosi/vocab/GenomicsArrayTemplate> a linkml:ClassDefinition ;
-    skos:definition "A template for describing raw data from array-based genomics/epigenomics, e.g. CEL files." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/GenomicsArrayTemplate> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/GenomicsArrayTemplate> ;
-    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/GeneticsAssayTemplate> ;
-    linkml:slot_usage [ ] ;
-    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
-        <https://w3id.org/synapse/nfosi/vocab/Filename>,
-        <https://w3id.org/synapse/nfosi/vocab/age>,
-        <https://w3id.org/synapse/nfosi/vocab/ageUnit>,
-        <https://w3id.org/synapse/nfosi/vocab/aliquotID>,
-        <https://w3id.org/synapse/nfosi/vocab/assay>,
-        <https://w3id.org/synapse/nfosi/vocab/channel>,
-        <https://w3id.org/synapse/nfosi/vocab/comments>,
-        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
-        <https://w3id.org/synapse/nfosi/vocab/dataType>,
-        <https://w3id.org/synapse/nfosi/vocab/diagnosis>,
-        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
-        <https://w3id.org/synapse/nfosi/vocab/individualID>,
-        <https://w3id.org/synapse/nfosi/vocab/modelSystemName>,
-        <https://w3id.org/synapse/nfosi/vocab/nf1Genotype>,
-        <https://w3id.org/synapse/nfosi/vocab/nf2Genotype>,
-        <https://w3id.org/synapse/nfosi/vocab/nucleicAcidSource>,
-        <https://w3id.org/synapse/nfosi/vocab/organ>,
-        <https://w3id.org/synapse/nfosi/vocab/parentSpecimenID>,
-        <https://w3id.org/synapse/nfosi/vocab/platform>,
-        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
-        <https://w3id.org/synapse/nfosi/vocab/sex>,
-        <https://w3id.org/synapse/nfosi/vocab/species>,
-        <https://w3id.org/synapse/nfosi/vocab/specimenID>,
-        <https://w3id.org/synapse/nfosi/vocab/specimenPreparationMethod>,
-        <https://w3id.org/synapse/nfosi/vocab/tumorType> .
-
-<https://w3id.org/synapse/nfosi/vocab/LightScatteringAssayTemplate> a linkml:ClassDefinition ;
-    dcterms:source <https://wiki.nci.nih.gov/display/icr/isa-tab-nano> ;
-    skos:definition "Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/LightScatteringAssayTemplate> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/LightScatteringAssayTemplate> ;
-    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/MaterialScienceAssayTemplate> ;
-    linkml:slot_usage [ ] ;
-    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Component>,
-        <https://w3id.org/synapse/nfosi/vocab/Filename>,
-        <https://w3id.org/synapse/nfosi/vocab/assay>,
-        <https://w3id.org/synapse/nfosi/vocab/concentrationMaterial>,
-        <https://w3id.org/synapse/nfosi/vocab/concentrationMaterialUnit>,
-        <https://w3id.org/synapse/nfosi/vocab/concentrationNaCl>,
-        <https://w3id.org/synapse/nfosi/vocab/concentrationNaClUnit>,
-        <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
-        <https://w3id.org/synapse/nfosi/vocab/dataType>,
-        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
-        <https://w3id.org/synapse/nfosi/vocab/materialType>,
-        <https://w3id.org/synapse/nfosi/vocab/pH>,
-        <https://w3id.org/synapse/nfosi/vocab/platform>,
-        <https://w3id.org/synapse/nfosi/vocab/resourceType>,
-        <https://w3id.org/synapse/nfosi/vocab/specimenID> .
-
-<https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> a linkml:ClassDefinition ;
-    skos:definition "Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/UpdateMilestoneReport> ;
-    linkml:is_a <https://w3id.org/synapse/nfosi/vocab/PartialTemplate> ;
-    linkml:slot_usage [ ] ;
-    linkml:slots <https://w3id.org/synapse/nfosi/vocab/Filename>,
-        <https://w3id.org/synapse/nfosi/vocab/progressReportNumber>,
-        <https://w3id.org/synapse/nfosi/vocab/resourceType> .
-
-<https://w3id.org/synapse/nfosi/vocab/author> a linkml:SlotDefinition ;
-    dcterms:title "Author(s)" ;
-    skos:definition "The author of the resource; preferably use an ORCID ID, GitHub profile link, etc., if available and a text name if not." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/author> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
-    linkml:multivalued true ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:required true ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/author> .
-
-<https://w3id.org/synapse/nfosi/vocab/cellType> a linkml:SlotDefinition ;
-    skos:definition "A cell type is a distinct morphological or functional form of cell." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/cellType> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ElectrophysiologyAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/FlowCytometryTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/Cell> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/cellType> .
-
-<https://w3id.org/synapse/nfosi/vocab/citation> a linkml:SlotDefinition ;
-    dcterms:title "Citation" ;
-    skos:definition "Academic articles that are recommended by the data provider to be cited in addition to the dataset doi itself.",
-        "Citation (e.g. doi) that usage of data or resource should be cited with." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/citation> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/citation> .
-
-<https://w3id.org/synapse/nfosi/vocab/doi> a linkml:SlotDefinition ;
-    dcterms:title "Digital Object Identifier",
-        "doi" ;
-    skos:definition "Digital object identifier of the resource.",
-        "The Digital Object Identifier (DOI) of the dataset (if one has been created), used for citation and persistent identification." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/doi> ;
-    linkml:pattern "^10\\\\.\\\\d{4,9}/[-._;()/:A-Z0-9]+$" ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:required true ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/doi> .
-
-<https://w3id.org/synapse/nfosi/vocab/fundingAgency> a linkml:SlotDefinition ;
-    dcterms:title "Linked Funder(s)" ;
-    skos:definition "Refers to the funding organization for the generated resource. This annotation is handled by the DCC." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/fundingAgency> ;
-    linkml:multivalued true ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:required true ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/fundingAgency> .
-
-<https://w3id.org/synapse/nfosi/vocab/license> a linkml:SlotDefinition ;
-    dcterms:title "License" ;
-    skos:definition "Link to a license or name of license applicable for the resource.",
-        "Unless information for license is clear, this should default to UNKNOWN." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/license> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/SourceCodeTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/License> ;
-    linkml:required true ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/license> .
-
-<https://w3id.org/synapse/nfosi/vocab/proteinExtractSource> a linkml:SlotDefinition ;
-    skos:definition "Source of the extracted protein used in the experiment" ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/proteinExtractSource> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/ProteinAssayTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProteinAssayTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/ProteinExtractSourceEnum> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/proteinExtractSource> .
-
-<https://w3id.org/synapse/nfosi/vocab/studyName> a linkml:SlotDefinition ;
-    dcterms:title "Linked Study Name" ;
-    skos:definition "Name of a study." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/studyName> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:required true ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/studyName> .
 
 <https://w3id.org/synapse/nfosi/vocab/ImagingAssayTemplate> a linkml:ClassDefinition ;
     skos:definition "General template for describing imaging data." ;
@@ -11563,16 +11769,6 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/timepointUnit>,
         <https://w3id.org/synapse/nfosi/vocab/tumorType> .
 
-<https://w3id.org/synapse/nfosi/vocab/integer> a linkml:TypeDefinition ;
-    skos:definition "An integer" ;
-    skos:editorialNote "If you are authoring schemas in LinkML YAML, the type is referenced with the lower case \"integer\"." ;
-    skos:exactMatch schema1:Integer ;
-    skos:inScheme linkml:types ;
-    linkml:base "int" ;
-    linkml:definition_uri linkml:Integer ;
-    linkml:imported_from "linkml:types" ;
-    linkml:uri xsd:integer .
-
 <https://w3id.org/synapse/nfosi/vocab/timepointUnit> a linkml:SlotDefinition ;
     skos:definition "For timed experiments this represents the unit of time measured" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -11627,14 +11823,18 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/timepointUnit>,
         <https://w3id.org/synapse/nfosi/vocab/tumorType> .
 
+<https://w3id.org/synapse/nfosi/vocab/UnknownEnum> skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ;
+    linkml:permissible_values <https://w3id.org/synapse/nfosi/vocab/Unknown> .
+
 <https://w3id.org/synapse/nfosi/vocab/specimenType> a linkml:SlotDefinition ;
     skos:definition """The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory substances.
 """ ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganismSubstance> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Tissue> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/specimenType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate> ;
@@ -11872,9 +12072,9 @@ Examples: avoidance behavior, choice-making.
         "https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/StrandednessEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/NotApplicableEnum> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/libraryStrand> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ScSequencingAssayTemplate> ;
@@ -12058,6 +12258,16 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/programmingLanguage>,
         <https://w3id.org/synapse/nfosi/vocab/runtimePlatform>,
         <https://w3id.org/synapse/nfosi/vocab/title> .
+
+<https://w3id.org/synapse/nfosi/vocab/integer> a linkml:TypeDefinition ;
+    skos:definition "An integer" ;
+    skos:editorialNote "If you are authoring schemas in LinkML YAML, the type is referenced with the lower case \"integer\"." ;
+    skos:exactMatch schema1:Integer ;
+    skos:inScheme linkml:types ;
+    linkml:base "int" ;
+    linkml:definition_uri linkml:Integer ;
+    linkml:imported_from "linkml:types" ;
+    linkml:uri xsd:integer .
 
 <https://w3id.org/synapse/nfosi/vocab/nucleicAcidSource> a linkml:SlotDefinition ;
     skos:definition "Source of the extracted nucleic acid used in the experiment" ;
@@ -12325,6 +12535,46 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/parentSpecimenID> .
 
+<https://w3id.org/synapse/nfosi/vocab/DataLandscape> a linkml:ClassDefinition ;
+    dcterms:title "Datasets Expected" ;
+    skos:definition "Template for planning and tracking datasets to be deposited in a study. Complete details below about the datasets you expect to upload for this study. These datasets will be automatically generated as folders in your Synapse project. \"Upload by\" dates, \"#Files\", and \"#Samples\" can be estimates." ;
+    skos:editorialNote "All numeric fields and dates can be estimates",
+        "If appropriate terms are not found, contact nf-osi@sagebase.org",
+        "The label should be unique within a project and will be used as the folder name",
+        "This template is used for dataset contribution planning" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:attributes <https://w3id.org/synapse/nfosi/vocab/aim>,
+        <https://w3id.org/synapse/nfosi/vocab/assay>,
+        <https://w3id.org/synapse/nfosi/vocab/comments>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLead>,
+        <https://w3id.org/synapse/nfosi/vocab/dataType>,
+        <https://w3id.org/synapse/nfosi/vocab/deadline>,
+        <https://w3id.org/synapse/nfosi/vocab/description>,
+        <https://w3id.org/synapse/nfosi/vocab/fileFormat>,
+        <https://w3id.org/synapse/nfosi/vocab/milestone>,
+        <https://w3id.org/synapse/nfosi/vocab/nFiles>,
+        <https://w3id.org/synapse/nfosi/vocab/nSamples>,
+        <https://w3id.org/synapse/nfosi/vocab/name>,
+        <https://w3id.org/synapse/nfosi/vocab/species>,
+        <https://w3id.org/synapse/nfosi/vocab/study> ;
+    linkml:class_uri <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/DataLandscape> ;
+    linkml:slot_usage [ ] ;
+    linkml:slots <https://w3id.org/synapse/nfosi/vocab/dataLandscape__aim>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__assay>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__comments>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__dataLead>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__dataType>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__deadline>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__description>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__fileFormat>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__milestone>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__nFiles>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__nSamples>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__name>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__species>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__study> .
+
 <https://w3id.org/synapse/nfosi/vocab/ProcessedAlignedReadsTemplate> a linkml:ClassDefinition ;
     skos:closeMatch <htan:BulkRNA-seqLevel2>,
         <htan:BulkWESLevel2>,
@@ -12470,32 +12720,17 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/OrganEnum> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/organ> .
 
-<https://w3id.org/synapse/nfosi/vocab/comments> a linkml:SlotDefinition ;
-    dcterms:title "Comments" ;
-    skos:definition "Brief free-text comments that may also be important to understanding the resource." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/comments> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplateExtended>,
-        <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/comments> .
-
 <https://w3id.org/synapse/nfosi/vocab/modelSystemName> a linkml:SlotDefinition ;
     skos:definition "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/AnimalModelManual> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/AnimalModel> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModelManual> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/AnimalModelManual> ],
         [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModel> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/AnimalModel> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/CellLineModelManual> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/modelSystemName> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
@@ -12558,9 +12793,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Genotype of NF1 gene in the biospecimen from which the data were derived, if known." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/nf1Genotype> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -12586,6 +12821,22 @@ Examples: avoidance behavior, choice-making.
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/sex> .
 
+<https://w3id.org/synapse/nfosi/vocab/comments> a linkml:SlotDefinition ;
+    dcterms:title "Comments" ;
+    skos:definition "Brief free-text comments that may also be important to understanding the resource.",
+        "Project management: Additional comments or notes about this dataset" ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/comments> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/GeneralMeasureDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/GenomicsAssayTemplateExtended>,
+        <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/comments> .
+
 <https://w3id.org/synapse/nfosi/vocab/individualID> a linkml:SlotDefinition ;
     skos:definition "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -12603,9 +12854,9 @@ Examples: avoidance behavior, choice-making.
     skos:definition "Genotype of NF2 gene in the biospecimen from which the data were derived, if known" ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ],
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Genotype> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/nf2Genotype> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -12626,21 +12877,6 @@ Examples: avoidance behavior, choice-making.
     linkml:required true ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/dataSubtype> .
 
-<https://w3id.org/synapse/nfosi/vocab/species> a linkml:SlotDefinition ;
-    dcterms:title "Species" ;
-    skos:definition "Species of the organism(s) from which the data were generated. Omit property if not applicable, such as for data like compounds or other non-biological data.",
-        "The name of a species (typically a taxonomic group) of organism." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/species> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/HumanCohortTemplate> ;
-    linkml:multivalued true ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/SpeciesEnum> ;
-    linkml:required true ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/species> .
-
 <https://w3id.org/synapse/nfosi/vocab/Component> a linkml:SlotDefinition ;
     skos:definition "Type of metadata template; provide the same one for all items/rows." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -12654,19 +12890,6 @@ Examples: avoidance behavior, choice-making.
     linkml:required true ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/Component> .
 
-<https://w3id.org/synapse/nfosi/vocab/assay> a linkml:SlotDefinition ;
-    skos:definition "The technology used to generate the data in this file." ;
-    skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/assay> ;
-    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/NonBiologicalAssayDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ProcessedMergedDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/WorkflowReport> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/WorkflowReport> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/AssayEnum> ;
-    linkml:required true ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/assay> .
-
 <https://w3id.org/synapse/nfosi/vocab/Filename> a linkml:SlotDefinition ;
     skos:definition "The name of the file." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
@@ -12679,6 +12902,26 @@ Examples: avoidance behavior, choice-making.
     linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
     linkml:range <https://w3id.org/synapse/nfosi/vocab/string> ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/Filename> .
+
+<https://w3id.org/synapse/nfosi/vocab/species> a linkml:SlotDefinition ;
+    dcterms:title "Species" ;
+    skos:definition "Scientific characteristics: The species from which sample data were derived. If you are unsure or cannot find the appropriate term, please use 'Unknown' and email nf-osi@sagebase.org for help.",
+        "Species of the organism(s) from which the data were generated. Omit property if not applicable, such as for data like compounds or other non-biological data.",
+        "The name of a species (typically a taxonomic group) of organism." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:any_of [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/SpeciesEnum> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/species> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/HumanCohortTemplate> ;
+    linkml:multivalued true ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/SpeciesEnum> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/species> .
 
 <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate> a linkml:ClassDefinition ;
     skos:definition """A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples.  This is an abstract template; "real" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing).
@@ -12709,20 +12952,24 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/species>,
         <https://w3id.org/synapse/nfosi/vocab/tumorType> .
 
-<https://w3id.org/synapse/nfosi/vocab/fileFormat> a linkml:SlotDefinition ;
-    skos:definition "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software" ;
+<https://w3id.org/synapse/nfosi/vocab/assay> a linkml:SlotDefinition ;
+    dcterms:title "Assay" ;
+    skos:definition "Scientific characteristics: The assay or experimental method used to generate this dataset. If you are unsure or cannot find the appropriate term, please use 'Unknown' and email nf-osi@sagebase.org for help.",
+        "The technology used to generate the data in this file." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
-    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/fileFormat> ;
+    linkml:any_of [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/AssayEnum> ] ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/assay> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/EpidemiologyDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/NonBiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ProcessedMergedDataTemplate>,
-        <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowReport> ;
-    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
-    linkml:range <https://w3id.org/synapse/nfosi/vocab/FileFormatEnum> ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/WorkflowReport> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/AssayEnum> ;
     linkml:required true ;
-    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/fileFormat> .
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/assay> .
 
 <https://w3id.org/synapse/nfosi/vocab/resourceType> a linkml:SlotDefinition ;
     skos:definition "The type of resource being stored and annotated" ;
@@ -12739,16 +12986,44 @@ Examples: avoidance behavior, choice-making.
     linkml:required true ;
     linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/resourceType> .
 
-<https://w3id.org/synapse/nfosi/vocab/dataType> a linkml:SlotDefinition ;
-    dcterms:title "Data Type" ;
-    skos:definition """Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.
-""",
-        "Reflects the data types within the dataset." ;
+<https://w3id.org/synapse/nfosi/vocab/fileFormat> a linkml:SlotDefinition ;
+    dcterms:title "File format" ;
+    skos:definition "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
+        "Scientific characteristics: The primary file format(s) expected in this dataset. If you are unsure or cannot find the appropriate term, please use 'Unknown' and email nf-osi@sagebase.org for help." ;
     skos:inScheme <https://w3id.org/nfosi/> ;
     linkml:any_of [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/FileFormatEnum> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ] ;
+    linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/fileFormat> ;
+    linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/EpidemiologyDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/NonBiologicalAssayDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ProcessedMergedDataTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/WorkflowReport> ;
+    linkml:multivalued true ;
+    linkml:owner <https://w3id.org/synapse/nfosi/vocab/ProtocolTemplate> ;
+    linkml:range <https://w3id.org/synapse/nfosi/vocab/FileFormatEnum> ;
+    linkml:required true ;
+    linkml:slot_uri <https://w3id.org/synapse/nfosi/vocab/fileFormat> .
+
+<https://w3id.org/synapse/nfosi/vocab/dataType> a linkml:SlotDefinition ;
+    dcterms:title "Data Type",
+        "Type" ;
+    skos:definition """Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.
+""",
+        "Reflects the data types within the dataset.",
+        "Scientific characteristics: The type of data that will be uploaded in this dataset. If you are unsure or cannot find the appropriate term, please use 'Unknown' and email nf-osi@sagebase.org for help." ;
+    skos:inScheme <https://w3id.org/nfosi/> ;
+    linkml:any_of [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/MetadataEnum> ],
+        [ a linkml:AnonymousSlotExpression ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/UnknownEnum> ],
+        [ a linkml:AnonymousSlotExpression ;
             linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ],
         [ a linkml:AnonymousSlotExpression ;
-            linkml:range <https://w3id.org/synapse/nfosi/vocab/MetadataEnum> ] ;
+            linkml:range <https://w3id.org/synapse/nfosi/vocab/Data> ] ;
     linkml:definition_uri <https://w3id.org/synapse/nfosi/vocab/dataType> ;
     linkml:domain_of <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/EpidemiologyDataTemplate>,
@@ -12967,90 +13242,90 @@ Examples: avoidance behavior, choice-making.
 
 <https://w3id.org/synapse/nfosi/vocab/> a linkml:SchemaDefinition ;
     dcterms:license "https://creativecommons.org/publicdomain/zero/1.0/" ;
-    sh:declare [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
-            sh:prefix "nf" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/FBbi_> ;
-            sh:prefix "FBbi" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/OMIABIS_> ;
-            sh:prefix "OMIABIS" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/CL_> ;
-            sh:prefix "CL" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/ERO_> ;
-            sh:prefix "ERO" ],
-        [ sh:namespace prov: ;
-            sh:prefix "prov" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/GO_> ;
-            sh:prefix "GO" ],
-        [ sh:namespace rdfs: ;
-            sh:prefix "rdfs" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MAXO_> ;
-            sh:prefix "MAXO" ],
-        [ sh:namespace <http://www.ebi.ac.uk/swo/data/SWO_> ;
-            sh:prefix "SWO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/BTO_> ;
-            sh:prefix "BTO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/GENO_> ;
-            sh:prefix "GENO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MONDO_> ;
-            sh:prefix "MONDO" ],
+    sh:declare [ sh:namespace <http://purl.obolibrary.org/obo/OBI_> ;
+            sh:prefix "OBI" ],
+        [ sh:namespace <http://snomed.info/id/> ;
+            sh:prefix "SNOMED" ],
         [ sh:namespace <http://purl.obolibrary.org/obo/MI_> ;
             sh:prefix "MI" ],
         [ sh:namespace <http://purl.obolibrary.org/obo/CHMO_> ;
             sh:prefix "CHMO" ],
-        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
-            sh:prefix "personinfo" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/DOID_> ;
-            sh:prefix "DOID" ],
-        [ sh:namespace linkml: ;
-            sh:prefix "linkml" ],
-        [ sh:namespace skos: ;
-            sh:prefix "skos" ],
-        [ sh:namespace <http://dicom.nema.org/resources/ontology/DCM/> ;
-            sh:prefix "DCM" ],
-        [ sh:namespace <http://purl.enanomapper.org/onto/ENM_> ;
-            sh:prefix "ENM" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/IAO_> ;
-            sh:prefix "IAO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/ZFA_> ;
-            sh:prefix "ZFA" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/FBcv_> ;
-            sh:prefix "FBcv" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/UO_> ;
-            sh:prefix "UO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/UBERON_> ;
-            sh:prefix "UBERON" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/VT_> ;
-            sh:prefix "VT" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MS_> ;
-            sh:prefix "MS" ],
-        [ sh:namespace <http://snomed.info/id/> ;
-            sh:prefix "SNOMED" ],
         [ sh:namespace <http://www.bioassayontology.org/bao#BAO_> ;
             sh:prefix "BAO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/FMA_> ;
-            sh:prefix "FMA" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/GO_> ;
+            sh:prefix "GO" ],
+        [ sh:namespace <https://w3id.org/synapse/nfosi/vocab/> ;
+            sh:prefix "nf" ],
+        [ sh:namespace skos: ;
+            sh:prefix "skos" ],
+        [ sh:namespace linkml: ;
+            sh:prefix "linkml" ],
+        [ sh:namespace prov: ;
+            sh:prefix "prov" ],
+        [ sh:namespace <http://www.ebi.ac.uk/cmpo/CMPO_> ;
+            sh:prefix "CMPO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/OMIABIS_> ;
+            sh:prefix "OMIABIS" ],
+        [ sh:namespace <http://semanticscience.org/resource/CHEMINF_> ;
+            sh:prefix "CHEMINF" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/CLO_> ;
+            sh:prefix "CLO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/DOID_> ;
+            sh:prefix "DOID" ],
+        [ sh:namespace <http://edamontology.org/> ;
+            sh:prefix "EDAM" ],
+        [ sh:namespace rdfs: ;
+            sh:prefix "rdfs" ],
+        [ sh:namespace <https://w3id.org/linkml/examples/personinfo/> ;
+            sh:prefix "personinfo" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/FBcv_> ;
+            sh:prefix "FBcv" ],
         [ sh:namespace <http://purl.obolibrary.org/obo/PATO_> ;
             sh:prefix "PATO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/MMO_> ;
-            sh:prefix "MMO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/FMA_> ;
+            sh:prefix "FMA" ],
+        [ sh:namespace schema1: ;
+            sh:prefix "schema" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/GENO_> ;
+            sh:prefix "GENO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/BTO_> ;
+            sh:prefix "BTO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MAXO_> ;
+            sh:prefix "MAXO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/UO_> ;
+            sh:prefix "UO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MONDO_> ;
+            sh:prefix "MONDO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/ERO_> ;
+            sh:prefix "ERO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MS_> ;
+            sh:prefix "MS" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/ZFA_> ;
+            sh:prefix "ZFA" ],
+        [ sh:namespace <http://www.ebi.ac.uk/swo/data/SWO_> ;
+            sh:prefix "SWO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/UBERON_> ;
+            sh:prefix "UBERON" ],
         [ sh:namespace <http://www.ebi.ac.uk/efo/EFO_> ;
             sh:prefix "EFO" ],
         [ sh:namespace <http://purl.obolibrary.org/obo/NCIT_> ;
             sh:prefix "NCIT" ],
-        [ sh:namespace <http://semanticscience.org/resource/CHEMINF_> ;
-            sh:prefix "CHEMINF" ],
-        [ sh:namespace <http://www.ebi.ac.uk/cmpo/CMPO_> ;
-            sh:prefix "CMPO" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/CLO_> ;
-            sh:prefix "CLO" ],
+        [ sh:namespace <http://dicom.nema.org/resources/ontology/DCM/> ;
+            sh:prefix "DCM" ],
         [ sh:namespace <https://raw.githubusercontent.com/ncihtan/data-models/main/HTAN.model.jsonld> ;
             sh:prefix "htan" ],
-        [ sh:namespace <http://purl.obolibrary.org/obo/OBI_> ;
-            sh:prefix "OBI" ],
-        [ sh:namespace <http://edamontology.org/> ;
-            sh:prefix "EDAM" ],
-        [ sh:namespace schema1: ;
-            sh:prefix "schema" ] ;
+        [ sh:namespace <http://purl.obolibrary.org/obo/FBbi_> ;
+            sh:prefix "FBbi" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/MMO_> ;
+            sh:prefix "MMO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/IAO_> ;
+            sh:prefix "IAO" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/CL_> ;
+            sh:prefix "CL" ],
+        [ sh:namespace <http://purl.enanomapper.org/onto/ENM_> ;
+            sh:prefix "ENM" ],
+        [ sh:namespace <http://purl.obolibrary.org/obo/VT_> ;
+            sh:prefix "VT" ] ;
     linkml:classes <https://w3id.org/synapse/nfosi/vocab/AnimalIndividualTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BehavioralAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/BiologicalAssayDataTemplate>,
@@ -13058,6 +13333,7 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/BulkSequencingAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ChIPSeqTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/ClinicalAssayTemplate>,
+        <https://w3id.org/synapse/nfosi/vocab/DataLandscape>,
         <https://w3id.org/synapse/nfosi/vocab/ElectrophysiologyAssayTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/EpidemiologyDataTemplate>,
         <https://w3id.org/synapse/nfosi/vocab/EpigeneticsAssayTemplate>,
@@ -13195,7 +13471,7 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/WHOPerformanceStatusScores>,
         <https://w3id.org/synapse/nfosi/vocab/WorkflowEnum>,
         <https://w3id.org/synapse/nfosi/vocab/WorkingDistanceUnitEnum> ;
-    linkml:generation_date "2025-11-07T02:08:16"^^xsd:dateTime ;
+    linkml:generation_date "2025-11-10T22:49:50"^^xsd:dateTime ;
     linkml:id <https://w3id.org/nfosi/> ;
     linkml:imports linkml:types ;
     linkml:metamodel_version "1.7.0" ;
@@ -13257,6 +13533,20 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/currentVersion>,
         <https://w3id.org/synapse/nfosi/vocab/dataCollectionMode>,
         <https://w3id.org/synapse/nfosi/vocab/dataFileHandleId>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__aim>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__assay>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__comments>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__dataLead>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__dataType>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__deadline>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__description>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__fileFormat>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__milestone>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__nFiles>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__nSamples>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__name>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__species>,
+        <https://w3id.org/synapse/nfosi/vocab/dataLandscape__study>,
         <https://w3id.org/synapse/nfosi/vocab/dataStatus>,
         <https://w3id.org/synapse/nfosi/vocab/dataSubtype>,
         <https://w3id.org/synapse/nfosi/vocab/dataType>,
@@ -13499,8 +13789,8 @@ Examples: avoidance behavior, choice-making.
         <https://w3id.org/synapse/nfosi/vocab/yearProcessed>,
         <https://w3id.org/synapse/nfosi/vocab/yearPublished> ;
     linkml:source_file "NF.yaml" ;
-    linkml:source_file_date "2025-11-07T02:08:14"^^xsd:dateTime ;
-    linkml:source_file_size 390633 ;
+    linkml:source_file_date "2025-11-10T22:49:48"^^xsd:dateTime ;
+    linkml:source_file_size 395084 ;
     linkml:types <https://w3id.org/synapse/nfosi/vocab/boolean>,
         <https://w3id.org/synapse/nfosi/vocab/curie>,
         <https://w3id.org/synapse/nfosi/vocab/date>,

@@ -3,6 +3,21 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Template used for miscellaneous workflow reports and accessory files",
   "properties": {
+    "resourceType": {
+      "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
+      "enum": [
+        "experimentalData",
+        "metadata",
+        "protocol",
+        "report",
+        "result",
+        "tool",
+        "weblink",
+        "workflow report"
+      ],
+      "title": "resourceType",
+      "type": "string"
+    },
     "assay": {
       "description": "",
       "enum": [
@@ -207,7 +222,7 @@
         "whole-cell patch clamp",
         "word recognition score"
       ],
-      "title": "AssayEnum",
+      "title": "assay",
       "type": "string"
     },
     "fileFormat": {
@@ -331,27 +346,13 @@
         "yaml",
         "zip"
       ],
-      "title": "FileFormatEnum",
+      "title": "fileFormat",
       "type": "string"
     },
     "relatedDataset": {
       "description": "Reference to a relevant dataset entity.",
-      "type": "string"
-    },
-    "resourceType": {
-      "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
-      "enum": [
-        "experimentalData",
-        "metadata",
-        "protocol",
-        "report",
-        "result",
-        "tool",
-        "weblink",
-        "workflow report"
-      ],
-      "title": "Resource",
-      "type": "string"
+      "type": "string",
+      "title": "relatedDataset"
     },
     "workflow": {
       "description": "",
@@ -371,12 +372,13 @@
         "StringTie",
         "TrimGalore"
       ],
-      "title": "WorkflowEnum",
+      "title": "workflow",
       "type": "string"
     },
     "workflowLink": {
       "description": "Workflow URL reference",
-      "type": "string"
+      "type": "string",
+      "title": "workflowLink"
     }
   },
   "required": [

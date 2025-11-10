@@ -3,51 +3,25 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Specimen-level data, whether from human or animal.",
   "properties": {
-    "aliquotID": {
-      "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
-      "type": "string"
-    },
-    "bodySite": {
-      "description": "",
-      "enum": [
-        "acetabulum",
-        "axilla",
-        "back",
-        "dorsolateral prefrontal cortex",
-        "finger",
-        "forearm",
-        "groin",
-        "head",
-        "iliac spine",
-        "leg",
-        "muscle",
-        "neck",
-        "occcipital lobe",
-        "pelvis",
-        "scalp",
-        "scapula",
-        "shoulder",
-        "spine",
-        "thoracic spine"
-      ],
-      "title": "BodyPartEnum",
-      "type": "string"
-    },
-    "experimentalCondition": {
-      "description": "A free-text description of the experimental condition (e.g. 5 mM doxorubicin).",
-      "type": "string"
-    },
     "individualID": {
       "description": "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
-      "type": "string"
+      "type": "string",
+      "title": "individualID"
     },
     "parentSpecimenID": {
       "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
-      "type": "string"
+      "type": "string",
+      "title": "parentSpecimenID"
     },
     "specimenID": {
       "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
-      "type": "string"
+      "type": "string",
+      "title": "specimenID"
+    },
+    "aliquotID": {
+      "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
+      "type": "string",
+      "title": "aliquotID"
     },
     "tumorType": {
       "description": "",
@@ -104,8 +78,39 @@
         "recurrent tumor",
         "tumor"
       ],
-      "title": "Tumor",
+      "title": "tumorType",
       "type": "string"
+    },
+    "bodySite": {
+      "description": "",
+      "enum": [
+        "acetabulum",
+        "axilla",
+        "back",
+        "dorsolateral prefrontal cortex",
+        "finger",
+        "forearm",
+        "groin",
+        "head",
+        "iliac spine",
+        "leg",
+        "muscle",
+        "neck",
+        "occcipital lobe",
+        "pelvis",
+        "scalp",
+        "scapula",
+        "shoulder",
+        "spine",
+        "thoracic spine"
+      ],
+      "title": "bodySite",
+      "type": "string"
+    },
+    "experimentalCondition": {
+      "description": "A free-text description of the experimental condition (e.g. 5 mM doxorubicin).",
+      "type": "string",
+      "title": "experimentalCondition"
     }
   },
   "required": [
