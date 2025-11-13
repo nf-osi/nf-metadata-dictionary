@@ -109,6 +109,7 @@ slots:
     required: false
   age:
     description: A numeric value representing age of the individual. Use with `ageUnit`.
+    range: float
     required: false
   ageUnit:
     description: A time unit that can be used with a given age value, e.g. years.
@@ -198,6 +199,7 @@ slots:
   cellType:
     description: A cell type is a distinct morphological or functional form of cell.
     range: Cell
+    multivalued: true
     required: false
   channel:
     description: Color channel used to generate data file.
@@ -238,6 +240,7 @@ slots:
     required: false
   concentrationMaterial:
     description: Numeric value for concentration of the material
+    range: float
     required: false
   concentrationMaterialUnit:
     description: Unit used for the material concentration, e.g. mg/mL
@@ -376,6 +379,7 @@ slots:
     required: false
   experimentalTimepoint:
     description: The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit
+    range: float
     required: false
   expressionUnit:
     description: Measure used for transcript expression quantification
@@ -455,6 +459,7 @@ slots:
     required: false
   individualID:
     description: A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.
+    multivalued: true
     required: true
   individualIdSource:
     description: Database or repository to which individual ID maps
@@ -517,6 +522,7 @@ slots:
     title: Learning disability
   lensAperture:
     description: Numerical aperture of the lens. Floating point value > 0.
+    range: float
     required: false
   lenticularOpacity:
     description: Characterization of the manifestation of Lenticular opacity.
@@ -580,6 +586,7 @@ slots:
       - range: AnimalModel
       - range: AnimalModelManual
     description: 'A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)'
+    multivalued: true
     required: false
   modifiedBy:
     description: Refers to a user who last modified the resource on the platform.
@@ -613,6 +620,7 @@ slots:
     required: false
   nominalMagnification:
     description: magnification of the lens as specified by the manufacturer - i.e. '60' is a 60X lens.
+    range: float
     required: false
   nonopticGlioma:
     description: Characterization of the manifestation of Nonoptic glioma.
@@ -657,6 +665,7 @@ slots:
     title: Other tumors
   pH:
     description: Numeric value for pH (range 0-14)
+    range: float
     required: false
   painStatus:
     description: Pain status rating.
@@ -664,6 +673,7 @@ slots:
     title: Pain status
   pairsOnDifferentChr:
     description: Pairs on different chromosomes collected from samtools
+    range: integer
     required: false
   parentId:
     description: 'The id of the parent resource, i.e. the parent folder on the platform. '
@@ -714,9 +724,11 @@ slots:
     required: false
   proportionCoverage10x:
     description: Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 10X or greater coverage from Picard Tools
+    range: float
     required: false
   proportionCoverage30x:
     description: Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 30X or greater coverage from Picard Tools
+    range: float
     required: false
   proteinExtractSource:
     description: Source of the extracted protein used in the experiment
@@ -746,12 +758,17 @@ slots:
     see_also: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/publisher
   readDepth:
     description: If available, the coverage statistic as output from bedtools coverage or samtools stats.
+    range: integer
     required: false
   readLength:
     description: Number of base pairs (bp) sequenced for a read
+    range: integer
     required: false
   readPair:
     description: The read of origin, Read 1 or Read 2
+    range: integer
+    minimum_value: 1
+    maximum_value: 2
     required: false
   readPairOrientation:
     deprecated: See `libraryStrand`.
@@ -768,6 +785,7 @@ slots:
     required: false
   readsMappedPercent:
     description: Percent of mapped reads collected from samtools
+    range: float
     required: false
   recordingSource:
     description: Source of electrophysiology recording.
@@ -942,6 +960,7 @@ slots:
     see_also: https://www.w3.org/TR/vocab-dcat-3/#Property:resource_title
   totalReads:
     description: If available, the total number of reads collected from samtools.
+    range: integer
     required: false
   transplantationRecipientSpecies:
     description: Species into which donor  was grown
@@ -988,6 +1007,7 @@ slots:
     required: false
   workingDistance:
     description: Working distance of the lens expressed as a floating point number > 0.
+    range: float
     required: false
   workingDistanceUnit:
     description: Unit for working distance.

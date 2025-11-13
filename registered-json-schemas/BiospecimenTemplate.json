@@ -5,7 +5,10 @@
   "properties": {
     "individualID": {
       "description": "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
-      "type": "string",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
       "title": "individualID"
     },
     "parentSpecimenID": {
