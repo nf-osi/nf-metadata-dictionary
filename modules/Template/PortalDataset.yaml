@@ -112,7 +112,13 @@ classes:
       measurementTechnique:
         description: Method used to generate data in dataset, typically referring to the assay. Omit if not applicable (e.g. for curated dataset such as a list compounds from a database or text extracted from Wikipedia).
         multivalued: true
-        range: AssayEnum
+        any_of:
+        - range: SequencingAssayEnum
+        - range: ImagingAssayEnum
+        - range: MassSpectrometryAssayEnum
+        - range: ClinicalBehavioralAssayEnum
+        - range: CellBasedAssayEnum
+        - range: DrugScreenAssayEnum
         title: Measurement Technique
       series:
         description: Datasets may belong to a curated series. Should be assigned by staff only; omit property if not applicable/unknown.

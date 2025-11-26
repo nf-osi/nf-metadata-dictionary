@@ -1,90 +1,11 @@
 enums:
-  PlatformEnum:
+  SequencingPlatformEnum:
+    description: Sequencing platforms for DNA/RNA sequencing
+    title: Sequencing Platform
     permissible_values:
-      10x Visium Spatial Gene Expression:
-        description: '10x Genomics product that includes special slides, reagents and technology to allow whole transcriptome profiling with morphological (spatial) context in FFPE or fresh-frozen tissues. Vendor ref: https://www.10xgenomics.com/products/spatial-gene-expression'
-        meaning: EFO:0010961
-      2D CellTiter-Glo:
-        description: Commercial platform for cell viability assay based on detection of ATP.
-        source: https://www.promega.com/products/cell-health-assays/cell-viability-and-cytotoxicity-assays/celltiter_glo-2_0-assay/?catNum=G9241
-      2D Incucyte:
-        description: Commercial platform for cell viability assay on a 2D monolayer model.
-        source: https://www.essenbioscience.com/en/resources/documents/
-      7T Bruker Biospec:
-        description: A preclinical MRI system designed for advanced imaging of small animals
-        source: https://www.bruker.com/en/products-and-solutions/preclinical-imaging/mri/biospec-maxwell.html
-      Affymetrix Genome-Wide Human SNP 5.0 Array:
-        description: Affymetrix Genome-Wide Human SNP 5.0 Array
-        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL6804
-      Affymetrix Genome-Wide Human SNP 6.0 Array:
-        description: Affymetrix Genome-Wide Human SNP 6.0 Array
-        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL6801
-      Affymetrix Human Gene 1.0 ST Array:
-        description: Affymetrix Human Gene 1.0 ST Array [transcript (gene) version] in situ oligonucleotide
-        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL6244
-      Affymetrix Human Genome U133 Plus 2.0 Array:
-        description: Affymetrix Human Genome U133 Plus 2.0 Array
-        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL570
-      Affymetrix U133AB:
-        description: ''
-      Agilent 44Karray:
-        description: ''
-      BD FACS Calibur:
-        description: Flow cytometry system.
-        source: https://www.bd.com/documents/bd-legacy/brochures/biosciences/BDB_BD-FACSCalibur-Flow-Cytometry-BR-TR.pdf
-      BD FACSymphony:
-        description: Flow cytometry system
-        source: https://lp.bd.com/202204-BDB22-EU_EN-Research_instruments-Symphony_family-LP_LP-EN-01-MainLP.html?utm_medium=cpc&utm_source=Linkedin&utm_campaign=202204-FY22-BDB-EU_EN-Research_instruments-Symphony_family&utm_term=Family
       BGISEQ-500:
         description: (From vendor) BGISEQ-500 is an industry leading high-throughput sequencing solution, powered by combinatorial Probe-Anchor Synthesis (cPAS) and improved DNA Nanoballs (DNB™) technology.
         source: https://www.bgi.com/wp-content/uploads/sites/4/2017/05/GLOBAL_BGISEQ-500_WholeGenomeSeq_ServiceOverview_04-17.pdf
-      Bionano Irys:
-        description: Performs whole genome mapping in a nanoscale fluidic environment enabling the structure of the genome to be imaged and then analyzed at the single molecule level
-        source: https://bionanogenomics.com/products/irys/
-      Caliper:
-        description: General instrument or machine for volume measurements.
-        meaning: SNOMED:44056008
-      Cherry Imaging FACE Platform:
-        description: (From vendor) A micro-ultrasound imaging system for anatomical, hemodynamic, functional, and molecular data all in one platform.
-        source: https://www.cherryimaging.com/home
-      Cherry Imaging TRACE Platform:
-        description: (From vendor) Full skin 3D imaging platform designed for research; uses a handheld scanner to capture thousands of images from multiple angles, which can be analyzed to create precise skin morphology model with a 100 micron accuracy to assess treatment results over time.
-        source: https://www.cherryimaging.com/home
-      Chromium X:
-        description: (From 10x Genomics) Single-cell platform that can analyze hundreds to hundreds of thousands of cells in single run for e.g. gene expression, chromatin accessibility, cell surface proteins, immune clonotype, antigen specificity, CRISPR perturbation screens).
-        source: https://www.10xgenomics.com/chromium-x
-      ECHO Confocal:
-        description: Advanced spinning-disk confocal microscope system by Discover Echo (BICO company) that combines confocal and widefield imaging modes with automated features like z-stacking, stitching, and time-lapse.
-        source: https://discover-echo.com/confocal/
-      EnVision 2103 Multiplate Reader:
-        description: EnVision 2103 Multiplate Reader
-      GE Discovery MR750 3T:
-        source: https://www.gehealthcare.com/courses/discovery-mr750-30t
-      GE Optima MR450W 1.5T:
-        source: https://www.mritechnologies.com/l/ge-450w-1.5t/18
-      GE Signa Excite 1.5T:
-        source: https://www.probomedical.com/shop/mri/ge/ge-signa-excite-1-5t/
-      GE Signa Genesis 1.5T:
-        source: ''
-      GE Signa HDxt 1.5T:
-        source: https://www.gehealthcare.com/courses/signa-hdxt-15t
-      GE Signa HDxt 3T:
-        source: https://www.gehealthcare.com/courses/signa-hdxt-3t
-      GE Signa Premier 3T:
-        description: The GE Premier 3T is an advanced MRI scanner that offers high-resolution imaging capabilities and a 70 cm wide bore for patient comfort
-        source: https://www.gehealthcare.com/products/magnetic-resonance-imaging/3t-mri-scanners/signa-premier-wide-bore-mri-scanner
-      Hitachi Echelon 1.5T:
-        source: https://clinicalimagingsystems.com/product/hitachi-echelon-1-5t-mri-scanner/
-      Hitachi Oasis 1.2T:
-        source: https://clinicalimagingsystems.com/product/hitachi-oasis-1-2t-mri-scanner/
-      IVIS Spectrum In Vivo Imaging System:
-        description: Combines 2D optical and 3D optical tomography in one platform.
-        source: https://www.perkinelmer.com/product/ivis-instrument-spectrum-120v-andor-c-124262
-      Itae Vasculoscope:
-        description: Medical imaging device for real-time visualization of blood microcirculation. Available in dermatology and surgical models with embedded display and image recording capabilities.
-        source: https://itae.fr/index.php/the-microvaculoscope/
-      Illumina 1M:
-        description: ''
       Illumina Genome Analyzer IIx:
         description: Illumina Genome Analyzer IIx
         source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL16061
@@ -103,6 +24,71 @@ enums:
       Illumina HiSeq X:
         description: Illumina HiSeq X Platform for whole-genome sequencing
         source: https://www.illumina.com/systems/sequencing-platforms/hiseq-x.html
+      Illumina MiSeq:
+        description: Illumina MiSeq
+        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL15520
+      Illumina NextSeq 1000:
+        description: Illumina NextSeq 1000
+      Illumina NextSeq 2000:
+        description: Illumina NextSeq 2000
+      Illumina NextSeq 500:
+        description: Illumina NextSeq 500
+        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL18573
+      Illumina NextSeq 550:
+        description: Illumina NextSeq 550
+        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL21697
+      Illumina NovaSeq 6000:
+        description: A DNA sequencer which is manufactured by the Illumina corporation, with two flow cells and an output of up to 6000 Gb (32-40 reads per run). The sequencer utilizes synthesis technology and patterned flow cells to optimize throughput and even spacing of sequencing clusters.
+        meaning: OBI:0002630
+      Illumina NovaSeq X:
+        description: A DNA sequencer which is manufactured by the Illumina corporation, with three flow cell types and up to 16 Tb output per run. Ultra-high-density flow cells and ultra-high-resolution optics enable output of up to 26 billion single reads per flow cell.
+        source: https://www.illumina.com/systems/sequencing-platforms/novaseq-x-plus.html
+      Illumina NovaSeq X Plus:
+        description: A DNA sequencer which is manufactured by the Illumina corporation, with three flow cell types and up to 8 Tb outpet per run. Ultra-high-density flow cells and ultra-high-resolution optics enable output of up to 26 billion single reads per flow cell.
+        source: https://www.illumina.com/systems/sequencing-platforms/novaseq-x-plus.html
+      MGI T-series:
+        description: deep whole genome sequencing
+        source: https://en.mgi-tech.com/products/
+      Oxford Nanopore:
+        description: Nanopore sequencing allows a much larger read length range, with easy prep from native or amplified DNA and RNA.
+        source: https://nanoporetech.com/platform
+      PacBio RS II:
+        description: PacBio RS II
+        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL21311
+      PacBio Sequel II System:
+        description: PacBio Sequel II System
+      PacBio Sequel IIe System:
+        description: PacBio Sequel IIe System
+      Bionano Irys:
+        description: Performs whole genome mapping in a nanoscale fluidic environment enabling the structure of the genome to be imaged and then analyzed at the single molecule level
+        source: https://bionanogenomics.com/products/irys/
+      Chromium X:
+        description: (From 10x Genomics) Single-cell platform that can analyze hundreds to hundreds of thousands of cells in single run for e.g. gene expression, chromatin accessibility, cell surface proteins, immune clonotype, antigen specificity, CRISPR perturbation screens).
+        source: https://www.10xgenomics.com/chromium-x
+  ArrayPlatformEnum:
+    description: Array-based platforms for genomic and transcriptomic measurements
+    title: Array Platform
+    permissible_values:
+      Affymetrix Genome-Wide Human SNP 5.0 Array:
+        description: Affymetrix Genome-Wide Human SNP 5.0 Array
+        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL6804
+      Affymetrix Genome-Wide Human SNP 6.0 Array:
+        description: Affymetrix Genome-Wide Human SNP 6.0 Array
+        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL6801
+      Affymetrix Human Gene 1.0 ST Array:
+        description: Affymetrix Human Gene 1.0 ST Array [transcript (gene) version] in situ oligonucleotide
+        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL6244
+      Affymetrix Human Genome U133 Plus 2.0 Array:
+        description: Affymetrix Human Genome U133 Plus 2.0 Array
+        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL570
+      Affymetrix U133AB:
+        description: ''
+      Agilent 44Karray:
+        description: ''
+      Illumina 1M:
+        description: ''
+      Illumina h650:
+        description: ''
       Illumina Human660W-Quad v1.0 BeadChip:
         description: ''
         source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL8888
@@ -126,113 +112,102 @@ enums:
         meaning: OBI:0002131
       Illumina Infinium MethylationEPIC BeadChip v2.0 (935k):
         description: The version 2.0 Illumina beadchip array interrogates ~935,000 methylation sites per sample at single-nucleotide resolution.
-      Illumina MiSeq:
-        description: Illumina MiSeq
-        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL15520
       Illumina MouseWG-6 v2.0 expression beadchip:
         description: Whole-genome expression profiling in the mouse
         source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL6887
-      Illumina NextSeq 1000:
-        description: Illumina NextSeq 1000
-      Illumina NextSeq 2000:
-        description: Illumina NextSeq 2000
-      Illumina NextSeq 500:
-        description: Illumina NextSeq 500
-        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL18573
-      Illumina NextSeq 550:
-        description: Illumina NextSeq 550
-        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL21697
-      Illumina NovaSeq 6000:
-        description: A DNA sequencer which is manufactured by the Illumina corporation, with two flow cells and an output of up to 6000 Gb (32-40 reads per run). The sequencer utilizes synthesis technology and patterned flow cells to optimize throughput and even spacing of sequencing clusters.
-        meaning: OBI:0002630
-      Illumina NovaSeq X:
-        description: A DNA sequencer which is manufactured by the Illumina corporation, with three flow cell types and up to 16 Tb output per run. Ultra-high-density flow cells and ultra-high-resolution optics enable output of up to 26 billion single reads per flow cell.
-        source: https://www.illumina.com/systems/sequencing-platforms/novaseq-x-plus.html
-      Illumina NovaSeq X Plus:
-        description: A DNA sequencer which is manufactured by the Illumina corporation, with three flow cell types and up to 8 Tb outpet per run. Ultra-high-density flow cells and ultra-high-resolution optics enable output of up to 26 billion single reads per flow cell.
-        source: https://www.illumina.com/systems/sequencing-platforms/novaseq-x-plus.html
+      Illumina WholeGenome DASL:
+        description: Illumina Human Whole-Genome DASL HT
+        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL13369
       Illumina Omni2pt5M:
         description: ''
       Illumina Omni5M:
         description: ''
-      Illumina WholeGenome DASL:
-        description: Illumina Human Whole-Genome DASL HT
-        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL13369
-      Illumina h650:
-        description: ''
       Infinium HumanOmniExpressExome:
         description: Infinium HumanOmniExpressExome BeadChip
         source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL18224
-      LI-COR Odyssey CLx:
-        description: A LI-COR Odyssey CLx imaging system
-        source: https://www.licor.com/bio/odyssey-clx/
-      LTQ Orbitrap XL:
-        description: LTQ Orbitrap XL Hybrid Ion Trap-Orbitrap Mass Spectrometer
-        source: https://www.thermofisher.com/order/catalog/product/IQLAAEGAAPFADBMAOK
+      NanoString Human nCounter PanCancer IO360 Panel:
+        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL32069
+      Nanostring Counter:
+        description: ''
+      Perlegen 300Karray:
+        description: ''
+      10x Visium Spatial Gene Expression:
+        description: '10x Genomics product that includes special slides, reagents and technology to allow whole transcriptome profiling with morphological (spatial) context in FFPE or fresh-frozen tissues. Vendor ref: https://www.10xgenomics.com/products/spatial-gene-expression'
+        meaning: EFO:0010961
+  MicroscopyImagingPlatformEnum:
+    description: Microscopy and general imaging platforms
+    title: Microscopy and Imaging Platform
+    permissible_values:
+      Cherry Imaging FACE Platform:
+        description: (From vendor) A micro-ultrasound imaging system for anatomical, hemodynamic, functional, and molecular data all in one platform.
+        source: https://www.cherryimaging.com/home
+      Cherry Imaging TRACE Platform:
+        description: (From vendor) Full skin 3D imaging platform designed for research; uses a handheld scanner to capture thousands of images from multiple angles, which can be analyzed to create precise skin morphology model with a 100 micron accuracy to assess treatment results over time.
+        source: https://www.cherryimaging.com/home
+      ECHO Confocal:
+        description: Advanced spinning-disk confocal microscope system by Discover Echo (BICO company) that combines confocal and widefield imaging modes with automated features like z-stacking, stitching, and time-lapse.
+        source: https://discover-echo.com/confocal/
+      Itae Vasculoscope:
+        description: Medical imaging device for real-time visualization of blood microcirculation. Available in dermatology and surgical models with embedded display and image recording capabilities.
+        source: https://itae.fr/index.php/the-microvaculoscope/
       Leica Aperio AT2:
         description: (From vendor) The Aperio AT2 is the most compact, highest capacity, brightfield Digital Pathology scanner available.
         source: https://www.leicabiosystems.com/sites/default/files/2020-10/Aperio_AT2_Brochure_USA.pdf
-      Leica MZ16:
+      Leica MZ16: null
       Leica S9 Stereomicroscope:
         description: ''
-      LifeViz Infinity System:
-        description: (From vendor) All-in-one 3D imaging system for face, body and breast.
-        source: https://www.quantificare.com/3d-photography-systems_old/lifeviz-infinity/
-      LifeViz Micro System:
-        description: (From vendor) Portable 3D imaging system for skin microstructure analysis.
-        source: https://www.quantificare.com/3d-photography-systems_old/lifeviz-micro/
-      MGI T-series:
-        description: deep whole genome sequencing
-        source: https://en.mgi-tech.com/products/
-      Malvern Zetasizer:
-        description: Instrument for Dynamic Light Scattering, Static Light Scattering, or Electrophoretic Light Scattering assays.
-        source: https://www.malvernpanalytical.com/en/products/product-range/zetasizer-range
-      NanoFCM:
-        description: Instrument for assessing sizing,concentration & phenotyping of bio-nanoparticles.
-        source: https://www.nanofcm.com/
-      NanoString Human nCounter PanCancer IO360 Panel:
-        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL32069
-      Nanostring CosMx:
-        source: https://ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL33484
-      Nanostring Counter:
-        description: ''
-      Nanostring GeoMx:
-        description: NanostringGeoMx
-      Not Applicable:
-        description: ''
+      LI-COR Odyssey CLx:
+        description: A LI-COR Odyssey CLx imaging system
+        source: https://www.licor.com/bio/odyssey-clx/
       Olympus DP80:
         description: Dual-Sensor Monochrome and Color Camera
         source: https://www.olympus-lifescience.com/en/camera/color/dp80/
       Olympus IX73:
         source: https://www.olympus-lifescience.com/en/microscopes/inverted/ix73/
-      Orbitrap Fusion Lumos Tribrid:
-        description: Thermo Scientific Orbitrap Fusion Lumos Tribrid Mass Spectrometer
-        source: https://www.thermofisher.com/us/en/home/industrial/mass-spectrometry/liquid-chromatography-mass-spectrometry-lc-ms/lc-ms-systems/orbitrap-lc-ms/orbitrap-tribrid-mass-spectrometers/orbitrap-fusion-lumos-mass-spectrometer.html
-      Other Platform:
-        description: Placeholder for platform not in list.
-      Oxford Nanopore:
-        description: Nanopore sequencing allows a much larger read length range, with easy prep from native or amplified DNA and RNA.
-        source: https://nanoporetech.com/platform
-      PacBio RS II:
-        description: PacBio RS II
-        source: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL21311
-      PacBio Sequel II System:
-        description: PacBio Sequel II System
-      PacBio Sequel IIe System:
-        description: PacBio Sequel IIe System
       Pannoramic 250 Flash:
         description: Digital slide scanner for high-throughput digital pathology.
         source: https://www.3dhistech.com/research/pannoramic-digital-slide-scanners/pannoramic-250-flash-iii/
-      Perlegen 300Karray:
-        description: ''
-      Philips Achieva 1.5T:
-        source:
-      Philips Achieva 3T:
-        description: Complete 3T MRI system, it offers an extremely broad clinical reach from routine head, spine and musculoskeletal imaging to the most advanced exams.
-        source: https://clinicalimagingsystems.com/product/philips-achieva-3-0t-mri-scanner/
       Philips FEI Tecnai 12:
         description: PHILIPS / FEI Tecnai 12 is a scanning electron microscope (SEM) designed to provide high performance imaging, boasting high resolution and contrast.
         source: https://caeonline.com/buy/scanning-electron-microscopes/philips-fei-tecnai-12/293646081
+      Zeiss LSM:
+        description: Zeiss Confocal Microscope -- use when model number is not important.
+      Zeiss LSM 700:
+        description: A Zeiss Confocal Microscope
+      Zeiss LSM 980:
+        description: A Zeiss Confocal Microscope
+        source: https://pages.zeiss.com/rs/896-XMS-794/images/ZEISS-Microscopy_Product-Brochure_ZEISS-LSM-980.pdf
+  MRIPlatformEnum:
+    description: Magnetic Resonance Imaging (MRI) platforms
+    title: MRI Platform
+    permissible_values:
+      7T Bruker Biospec:
+        description: A preclinical MRI system designed for advanced imaging of small animals
+        source: https://www.bruker.com/en/products-and-solutions/preclinical-imaging/mri/biospec-maxwell.html
+      GE Discovery MR750 3T:
+        source: https://www.gehealthcare.com/courses/discovery-mr750-30t
+      GE Optima MR450W 1.5T:
+        source: https://www.mritechnologies.com/l/ge-450w-1.5t/18
+      GE Signa Excite 1.5T:
+        source: https://www.probomedical.com/shop/mri/ge/ge-signa-excite-1-5t/
+      GE Signa Genesis 1.5T:
+        source: ''
+      GE Signa HDxt 1.5T:
+        source: https://www.gehealthcare.com/courses/signa-hdxt-15t
+      GE Signa HDxt 3T:
+        source: https://www.gehealthcare.com/courses/signa-hdxt-3t
+      GE Signa Premier 3T:
+        description: The GE Premier 3T is an advanced MRI scanner that offers high-resolution imaging capabilities and a 70 cm wide bore for patient comfort
+        source: https://www.gehealthcare.com/products/magnetic-resonance-imaging/3t-mri-scanners/signa-premier-wide-bore-mri-scanner
+      Hitachi Echelon 1.5T:
+        source: https://clinicalimagingsystems.com/product/hitachi-echelon-1-5t-mri-scanner/
+      Hitachi Oasis 1.2T:
+        source: https://clinicalimagingsystems.com/product/hitachi-oasis-1-2t-mri-scanner/
+      Philips Achieva 1.5T:
+        source: null
+      Philips Achieva 3T:
+        description: Complete 3T MRI system, it offers an extremely broad clinical reach from routine head, spine and musculoskeletal imaging to the most advanced exams.
+        source: https://clinicalimagingsystems.com/product/philips-achieva-3-0t-mri-scanner/
       Philips Ingenia 1.5T:
         source: https://www.philips.co.uk/healthcare/product/HC781341/ingenia-15t-mr-system
       Philips Ingenia 3T:
@@ -242,15 +217,6 @@ enums:
         source: https://www.atlantisworldwide.com/atlantis_products/philips-intera-achieva/
       Philips Panorama 1.0T:
         description: A conventional MRI scanner from Philips.
-      Promega GloMax Discover:
-        description: (From vendor) Microplate reader with high-performance luminescence, fluorescence, UV-Visible absorbance, BRET and FRET, two-color filtered luminescence and kinetic measurement capabilities.
-        source: https://www.promega.com/products/microplate-readers-fluorometers-luminometers/microplate-readers/glomax-discover-system/?catNum=GM3000
-      Q Exative HF:
-        description: Thermo scientific Q Exative
-        meaning: MS:10025223
-      Scale:
-        description: General instrument or machine for mass measurements.
-        meaning: MMO:0000217
       Siemens Avanto 1.5T:
         source: https://www.siemens-healthineers.com/en-us/magnetic-resonance-imaging/0-35-to-1-5t-mri-scanner/magnetom-avanto
       Siemens Avanto Fit 1.5T:
@@ -274,36 +240,104 @@ enums:
       Siemens Magnetom Verio 3T:
         description: A Siemens model of open bore MRI systems for clinical oncology.
         source: https://www.oncologysystems.com/resources/mri-system-guides/siemens-open-bore-mri-systems-comparison-chart
+      Toshiba Vantage Titan 1.5T:
+        source: https://www.oncologysystems.com/inventory/medical-equipment-for-sale/used-mri-systems/toshiba-vantage-titan-wide-bore-1-5t-mri-systems
+  MassSpectrometryPlatformEnum:
+    description: Mass spectrometry platforms
+    title: Mass Spectrometry Platform
+    permissible_values:
+      LTQ Orbitrap XL:
+        description: LTQ Orbitrap XL Hybrid Ion Trap-Orbitrap Mass Spectrometer
+        source: https://www.thermofisher.com/order/catalog/product/IQLAAEGAAPFADBMAOK
+      Orbitrap Fusion Lumos Tribrid:
+        description: Thermo Scientific Orbitrap Fusion Lumos Tribrid Mass Spectrometer
+        source: https://www.thermofisher.com/us/en/home/industrial/mass-spectrometry/liquid-chromatography-mass-spectrometry-lc-ms/lc-ms-systems/orbitrap-lc-ms/orbitrap-tribrid-mass-spectrometers/orbitrap-fusion-lumos-mass-spectrometer.html
+      Q Exative HF:
+        description: Thermo scientific Q Exative
+        meaning: MS:10025223
+  PlateReaderPlatformEnum:
+    description: Microplate readers and plate-based assay platforms
+    title: Plate Reader Platform
+    permissible_values:
+      2D CellTiter-Glo:
+        description: Commercial platform for cell viability assay based on detection of ATP.
+        source: https://www.promega.com/products/cell-health-assays/cell-viability-and-cytotoxicity-assays/celltiter_glo-2_0-assay/?catNum=G9241
+      EnVision 2103 Multiplate Reader:
+        description: EnVision 2103 Multiplate Reader
+      Promega GloMax Discover:
+        description: (From vendor) Microplate reader with high-performance luminescence, fluorescence, UV-Visible absorbance, BRET and FRET, two-color filtered luminescence and kinetic measurement capabilities.
+        source: https://www.promega.com/products/microplate-readers-fluorometers-luminometers/microplate-readers/glomax-discover-system/?catNum=GM3000
       Spectramax M Series:
         description: A Spectramax M Series Microplate Reader
         source: https://www.moleculardevices.com/products/microplate-readers/multi-mode-readers/spectramax-m-series-readers
-      TOOsonix System ONE-M:
-        description: High intensity focused ultrasound (HIFU) technology which delivers highly accurate and non-invasive ultrasound energy to target areas within the human skin.
-        source: https://www.toosonix.com/
-      Toshiba Vantage Titan 1.5T:
-        source: https://www.oncologysystems.com/inventory/medical-equipment-for-sale/used-mri-systems/toshiba-vantage-titan-wide-bore-1-5t-mri-systems
       Varioskan LUX:
         description: Microplate reader for ELISAs, etc.
         source: https://www.thermofisher.com/us/en/home/life-science/lab-equipment/microplate-instruments/plate-readers/models/varioskan.html
+  FlowCytometryPlatformEnum:
+    description: Flow cytometry platforms
+    title: Flow Cytometry Platform
+    permissible_values:
+      BD FACS Calibur:
+        description: Flow cytometry system.
+        source: https://www.bd.com/documents/bd-legacy/brochures/biosciences/BDB_BD-FACSCalibur-Flow-Cytometry-BR-TR.pdf
+      BD FACSymphony:
+        description: Flow cytometry system
+        source: https://lp.bd.com/202204-BDB22-EU_EN-Research_instruments-Symphony_family-LP_LP-EN-01-MainLP.html?utm_medium=cpc&utm_source=Linkedin&utm_campaign=202204-FY22-BDB-EU_EN-Research_instruments-Symphony_family&utm_term=Family
+  ImagingSystemPlatformEnum:
+    description: Specialized imaging systems including in vivo imaging and digital pathology
+    title: Imaging System Platform
+    permissible_values:
+      IVIS Spectrum In Vivo Imaging System:
+        description: Combines 2D optical and 3D optical tomography in one platform.
+        source: https://www.perkinelmer.com/product/ivis-instrument-spectrum-120v-andor-c-124262
+      LifeViz Infinity System:
+        description: (From vendor) All-in-one 3D imaging system for face, body and breast.
+        source: https://www.quantificare.com/3d-photography-systems_old/lifeviz-infinity/
+      LifeViz Micro System:
+        description: (From vendor) Portable 3D imaging system for skin microstructure analysis.
+        source: https://www.quantificare.com/3d-photography-systems_old/lifeviz-micro/
+      Nanostring CosMx:
+        source: https://ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL33484
+      Nanostring GeoMx:
+        description: NanostringGeoMx
+      TOOsonix System ONE-M:
+        description: High intensity focused ultrasound (HIFU) technology which delivers highly accurate and non-invasive ultrasound energy to target areas within the human skin.
+        source: https://www.toosonix.com/
       Vectra H1 3D Imaging System:
         description: (From vendor) Handheld imaging system for clinical-quality 3D imaging; applications for facial aesthetics and clinical documention.
         source: https://www.canfieldsci.com/imaging-systems/vectra-h1-3d-imaging-system/
-      Ventana Benchmark XT:
-        description: An instrument for automatic preparation of tissues throughout process of baking, deparaffisation up to staining, with the ability to work both IHC and ISH methods at the same time, thus allowing increasing menu of tests that will work as well to process more tissues, more effectively and in a shorter time.
-        source: https://www.adriamed.mk/en/tissue-diagnostics-ventana-benchmark-xt/
       Vevo 3100 Imaging System:
         description: (From vendor) A micro-ultrasound imaging system for anatomical, hemodynamic, functional, and molecular data all in one platform.
         source: https://www.visualsonics.com/product/imaging-systems/vevo-3100
+      Ventana Benchmark XT:
+        description: An instrument for automatic preparation of tissues throughout process of baking, deparaffisation up to staining, with the ability to work both IHC and ISH methods at the same time, thus allowing increasing menu of tests that will work as well to process more tissues, more effectively and in a shorter time.
+        source: https://www.adriamed.mk/en/tissue-diagnostics-ventana-benchmark-xt/
+  OtherPlatformEnum:
+    description: Other platforms and analysis tools
+    title: Other Platform
+    permissible_values:
+      2D Incucyte:
+        description: Commercial platform for cell viability assay on a 2D monolayer model.
+        source: https://www.essenbioscience.com/en/resources/documents/
+      Caliper:
+        description: General instrument or machine for volume measurements.
+        meaning: SNOMED:44056008
+      Malvern Zetasizer:
+        description: Instrument for Dynamic Light Scattering, Static Light Scattering, or Electrophoretic Light Scattering assays.
+        source: https://www.malvernpanalytical.com/en/products/product-range/zetasizer-range
+      NanoFCM:
+        description: Instrument for assessing sizing,concentration & phenotyping of bio-nanoparticles.
+        source: https://www.nanofcm.com/
+      Not Applicable:
+        description: ''
+      Other Platform:
+        description: Placeholder for platform not in list.
+      Scale:
+        description: General instrument or machine for mass measurements.
+        meaning: MMO:0000217
       XF24 Extracellular Flux Analyzer:
         description: measures real time kinetic of the media flux in live cellular environment to determine in vitro oxygen consumption rate (OCR), and extracellular acidification rate (ECAR), in order to assess cellular metabolic functions such as oxidative phosphorylation, glycolysis, and fatty acid oxidation. XFe-24 assays apply to all fields of biomedical research.
         source: https://cehs.unl.edu/borc/xfe-24-extracellular-flux-analyzer-seahorse-bioscience/
-      Zeiss LSM:
-        description: Zeiss Confocal Microscope -- use when model number is not important.
-      Zeiss LSM 700:
-        description: A Zeiss Confocal Microscope
-      Zeiss LSM 980:
-        description: A Zeiss Confocal Microscope
-        source: https://pages.zeiss.com/rs/896-XMS-794/images/ZEISS-Microscopy_Product-Brochure_ZEISS-LSM-980.pdf
       Zeno Electronic Walkway:
         description: System for gait analysis.
         source: https://pubmed.ncbi.nlm.nih.gov/29286982/

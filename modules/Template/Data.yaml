@@ -28,6 +28,11 @@ classes:
     - genePerturbationType
     - genePerturbationTechnology
     - comments
+    slot_usage:
+      assay:
+        range: ClinicalBehavioralAssayEnum
+      fileFormat:
+        range: TabularFileFormatEnum
   BiologicalAssayDataTemplate:
     abstract: true
     description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples.  This is an abstract template; "real" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing).
@@ -70,6 +75,13 @@ classes:
       requiresComponent: ''
     description: General template for raw (level 1) RNA/DNA data, i.e. sequence data from a sequencing assay.
     is_a: GeneticsAssayTemplate
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
     slots:
     - specimenType
     - runType
@@ -94,6 +106,13 @@ classes:
     - antibodyID
     - platform
     - peakCallingAlgorithm
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
   ClinicalAssayTemplate:
     annotations:
       match:
@@ -127,6 +146,13 @@ classes:
     - compoundDose
     - compoundDoseUnit
     - comments
+    slot_usage:
+      assay:
+        range: ClinicalBehavioralAssayEnum
+      fileFormat:
+        any_of:
+        - range: TabularFileFormatEnum
+        - range: DocumentFileFormatEnum
   ElectrophysiologyAssayTemplate:
     annotations:
       match:
@@ -148,6 +174,11 @@ classes:
     - experimentalCondition
     - auxiliaryAsset
     source: https://arxiv.org/pdf/1605.07673.pdf
+    slot_usage:
+      assay:
+        range: CellBasedAssayEnum
+      fileFormat:
+        range: OtherFileFormatEnum
   EpidemiologyDataTemplate:
     description: For aggregated data from defined populations or cohorts, used in/derived from epidemiology studies.
     is_a: Template
@@ -163,7 +194,7 @@ classes:
       requiresComponent: ''
     description: Alias for EpigenomicsAssayTemplate for backwards-compatibility.
     is_a: EpigenomicsAssayTemplate
-    slots:
+    slots: null
   EpigenomicsAssayTemplate:
     annotations:
       match:
@@ -184,6 +215,17 @@ classes:
     is_a: BulkSequencingAssayTemplate
     slots:
     - bisulfiteConversionKitID
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        any_of:
+        - range: SequencingPlatformEnum
+        - range: ArrayPlatformEnum
+      fileFormat:
+        any_of:
+        - range: SequencingFileFormatEnum
+        - range: ArrayFileFormatEnum
   FlowCytometryTemplate:
     annotations:
       match:
@@ -199,6 +241,13 @@ classes:
     - platform
     - cellType
     - auxiliaryAsset
+    slot_usage:
+      assay:
+        range: CellBasedAssayEnum
+      platform:
+        range: FlowCytometryPlatformEnum
+      fileFormat:
+        range: OtherFileFormatEnum
   GeneralMeasureDataTemplate:
     annotations:
       match:
@@ -257,6 +306,13 @@ classes:
     - platform
     - nucleicAcidSource
     - specimenPreparationMethod
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
   GenomicsArrayTemplate:
     annotations:
       match:
@@ -275,6 +331,13 @@ classes:
     slots:
     - platform
     - channel
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: ArrayPlatformEnum
+      fileFormat:
+        range: ArrayFileFormatEnum
   GenomicsAssayTemplate:
     annotations:
       required: false
@@ -283,7 +346,14 @@ classes:
     is_a: BulkSequencingAssayTemplate
     notes:
     - It's possible that not all raw genomics data equates to sequencing output.
-    slots:
+    slots: null
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
   GenomicsAssayTemplateExtended:
     annotations:
       required: false
@@ -315,6 +385,16 @@ classes:
       requiresComponent: ''
     description: General template for describing imaging data.
     is_a: BiologicalAssayDataTemplate
+    slot_usage:
+      assay:
+        range: ImagingAssayEnum
+      platform:
+        any_of:
+        - range: MicroscopyImagingPlatformEnum
+        - range: MRIPlatformEnum
+        - range: ImagingSystemPlatformEnum
+      fileFormat:
+        range: ImagingFileFormatEnum
     slots:
     - platform
     - assayTarget
@@ -331,6 +411,13 @@ classes:
     is_a: MicroscopyAssayTemplate
     slots:
     - antibodyID
+    slot_usage:
+      assay:
+        range: ImagingAssayEnum
+      platform:
+        range: MicroscopyImagingPlatformEnum
+      fileFormat:
+        range: ImagingFileFormatEnum
   LightScatteringAssayTemplate:
     annotations:
       match:
@@ -348,6 +435,13 @@ classes:
     - concentrationNaCl
     - concentrationNaClUnit
     source: https://wiki.nci.nih.gov/display/icr/isa-tab-nano
+    slot_usage:
+      assay:
+        range: CellBasedAssayEnum
+      platform:
+        range: OtherPlatformEnum
+      fileFormat:
+        range: TabularFileFormatEnum
   MRIAssayTemplate:
     annotations:
       match:
@@ -364,6 +458,13 @@ classes:
     - experimentalCondition
     - experimentalTimepoint
     - timepointUnit
+    slot_usage:
+      assay:
+        range: ImagingAssayEnum
+      platform:
+        range: MRIPlatformEnum
+      fileFormat:
+        range: ImagingFileFormatEnum
   MassSpecAssayTemplate:
     annotations:
       match:
@@ -386,6 +487,13 @@ classes:
     - Technically, mass spec does not have to be considered a biological assay, but we'll classify it as such when used with a biological sample.
     slots:
     - dataCollectionMode
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+      platform:
+        range: MassSpectrometryPlatformEnum
+      fileFormat:
+        range: MassSpecFileFormatEnum
   MaterialScienceAssayTemplate:
     annotations:
       match:
@@ -420,6 +528,13 @@ classes:
     - plateName
     - plateWell
     source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=raw_methylation_array
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: ArrayPlatformEnum
+      fileFormat:
+        range: ArrayFileFormatEnum
   MicroscopyAssayTemplate:
     annotations:
       match:
@@ -447,6 +562,13 @@ classes:
     - workingDistance
     - workingDistanceUnit
     - immersion
+    slot_usage:
+      assay:
+        range: ImagingAssayEnum
+      platform:
+        range: MicroscopyImagingPlatformEnum
+      fileFormat:
+        range: ImagingFileFormatEnum
   NonBiologicalAssayDataTemplate:
     abstract: true
     description: 'Describes data artifacts (i.e. files) from an experimental/physical-sciences assay  where input specimens are more at the level of synthesized molecules or inorganic materials.
@@ -477,6 +599,13 @@ classes:
     - experimentalCondition
     - experimentalTimepoint
     - timepointUnit
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
   PharmacokineticsAssayTemplate:
     annotations:
       match:
@@ -528,6 +657,13 @@ classes:
     - timepointUnit
     - reporterGene
     - reporterSubstance
+    slot_usage:
+      assay:
+        range: CellBasedAssayEnum
+      platform:
+        range: PlateReaderPlatformEnum
+      fileFormat:
+        range: TabularFileFormatEnum
   ProcessedAlignedReadsTemplate:
     annotations:
       match:
@@ -576,6 +712,9 @@ classes:
     - workflowLink
     - auxiliaryAsset
     - specimenID
+    slot_usage:
+      fileFormat:
+        range: SequencingFileFormatEnum
   ProcessedExpressionTemplate:
     annotations:
       match:
@@ -654,6 +793,9 @@ classes:
     - workflowLink
     - auxiliaryAsset
     - specimenID
+    slot_usage:
+      fileFormat:
+        range: SequencingFileFormatEnum
   ProteinArrayTemplate:
     annotations:
       match:
@@ -667,6 +809,13 @@ classes:
     is_a: ProteinAssayTemplate
     slots:
     - antibodyID
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+      platform:
+        range: ArrayPlatformEnum
+      fileFormat:
+        range: ArrayFileFormatEnum
   ProteinAssayTemplate:
     abstract: true
     annotations:
@@ -680,13 +829,27 @@ classes:
     - aliquotID
     - platform
     - proteinExtractSource
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+      platform:
+        range: MassSpectrometryPlatformEnum
+      fileFormat:
+        range: MassSpecFileFormatEnum
   ProteomicsAssayTemplate:
     annotations:
       required: false
       requiresComponent: ''
     description: Alias to MassSpecAssayTemplate for backwards-compatibility.
     is_a: MassSpecAssayTemplate
-    slots:
+    slots: null
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+      platform:
+        range: MassSpectrometryPlatformEnum
+      fileFormat:
+        range: MassSpecFileFormatEnum
   RNASeqTemplate:
     annotations:
       match:
@@ -707,6 +870,13 @@ classes:
     - genePerturbationTechnology
     - experimentalCondition
     - isCellLine
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
   ScRNASeqTemplate:
     annotations:
       match:
@@ -723,6 +893,13 @@ classes:
     - genePerturbationType
     - genePerturbationTechnology
     - experimentalCondition
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
   ScSequencingAssayTemplate:
     annotations:
       match:
@@ -755,6 +932,13 @@ classes:
     - targetDepth
     - batchID
     - auxiliaryAsset
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
   UpdateMilestoneReport:
     annotations:
       required: false
@@ -780,6 +964,13 @@ classes:
     is_a: BulkSequencingAssayTemplate
     slots:
     - targetCaptureKitID
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
   WGSTemplate:
     annotations:
       match:
@@ -791,7 +982,14 @@ classes:
       requiresComponent: ''
     description: Template for describing raw data from Whole Genome Sequencing (WGS)
     is_a: BulkSequencingAssayTemplate
-    slots:
+    slots: null
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
   WorkflowReport:
     description: Template used for miscellaneous workflow reports and accessory files
     is_a: Template
