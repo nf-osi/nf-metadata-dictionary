@@ -96,13 +96,60 @@ jobs:
 
             **Note:** Artifacts are not committed to this PR to avoid merge conflicts. All artifacts will be automatically rebuilt and committed to `main` after merge.
 
-      - name: Upload NF.ttl artifact for analysis job
+      - name: Upload artifacts for subsequent jobs
         uses: actions/upload-artifact@v4
         with:
-          name: nf-ttl
-          path: dist/NF.ttl
+          name: build-artifacts
+          path: |
+            NF.jsonld
+            dist/NF.yaml
+            dist/NF.ttl
+            registered-json-schemas/*.json
           retention-days: 1
 
+  analyze:
+    name: Analyze data model changes
+    needs: [build]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12'
+
+      - name: Install dependencies
+        run: |
+          pip install rdflib
+
+      - name: Get main branch pre-built NF.ttl for comparison
+        run: |
+          git fetch origin main:main
+          git checkout main -- dist/NF.ttl
+          mv dist/NF.ttl dist/NF_main.ttl
+          git checkout ${{ github.event.pull_request.head.ref }}
+
+      - name: Download built NF.ttl from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .
+
+      - name: Run comparison analysis
+        run: |
+          python utils/compare.py > analysis_output.txt
+
+      - name: Post analysis as PR comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          message-id: data-model-analysis
+          message-path: analysis_output.txt
 
   # Additionally test PRs
   test:
@@ -110,13 +157,14 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     env:
+      SCHEMATIC_VERSION: 24.7.2
       SCHEMATIC_SERVICE_ACCT_CREDS: ${{ secrets.SCHEMATIC_SERVICE_ACCT_CREDS }}
     permissions:
       pull-requests: write
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip tests') }}
     # strategy:
-    #  matrix:  
-    # cannot actually do parallel/concurrent testing because of API rate limits, 
+    #  matrix:
+    # cannot actually do parallel/concurrent testing because of API rate limits,
     # so we currently only test with one schematic version because it takes much too long with sequential
 
     steps:
@@ -127,8 +175,14 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.10.12' 
-      
+          python-version: '3.10.12'
+
+      - name: Download built artifacts from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .
+
       - name: Setup schematic
         id: setup-schematic
         run: |
@@ -162,48 +216,4 @@ jobs:
         with:
           name: test-logs-${{ env.SCHEMATIC_VERSION }}
           path: tests/**/logs
-
-  analyze:
-    name: Analyze data model changes
-    needs: [build]
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10.12'
-
-      - name: Install dependencies
-        run: |
-          pip install rdflib
-
-      - name: Download NF.ttl artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: nf-ttl
-          path: dist/
-
-      - name: Get main branch pre-built NF.ttl for comparison
-        run: |
-          git fetch origin main:main
-          git checkout main -- dist/NF.ttl
-          mv dist/NF.ttl dist/NF_main.ttl
-          git checkout ${{ github.event.pull_request.head.ref }}
-
-      - name: Run comparison analysis
-        run: |
-          python utils/compare.py > analysis_output.txt
-
-      - name: Post analysis as PR comment
-        uses: mshick/add-pr-comment@v2
-        with:
-          message-id: data-model-analysis
-          message-path: analysis_output.txt
 
