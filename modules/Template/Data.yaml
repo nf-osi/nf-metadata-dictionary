@@ -1,4 +1,23 @@
 classes:
+  FileBasedTemplate:
+    abstract: true
+    description: 'Abstract template for metadata on file-based resources, i.e. data artifacts stored as files.'
+    is_a: Template
+    notes:
+    - FileBasedTemplate and RecordBasedTemplate are not technically mutually exclusive; some resources may have both file and record representations.
+    slots:
+    - Component
+    - Filename
+    - fileFormat
+    - resourceType
+
+  RecordBasedTemplate:
+    abstract: true
+    description: 'Abstract template for metadata on record-based resources, i.e. structured records in a database or registry rather than file artifacts.'
+    is_a: Template
+    notes:
+    - FileBasedTemplate and RecordBasedTemplate are not technically mutually exclusive; some resources may have both file and record representations.
+
   BehavioralAssayTemplate:
     annotations:
       match:
@@ -38,12 +57,8 @@ classes:
     description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples.  This is an abstract template; "real" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing).
 
       '
-    is_a: Template
+    is_a: FileBasedTemplate
     slots:
-    - Component
-    - Filename
-    - fileFormat
-    - resourceType
     - dataType
     - dataSubtype
     - assay
@@ -181,11 +196,9 @@ classes:
         range: OtherFileFormatEnum
   EpidemiologyDataTemplate:
     description: For aggregated data from defined populations or cohorts, used in/derived from epidemiology studies.
-    is_a: Template
+    is_a: FileBasedTemplate
     slots:
-    - resourceType
     - dataType
-    - fileFormat
     - populationCoverage
     - epidemiologyMetric
   EpigeneticsAssayTemplate:
@@ -574,14 +587,10 @@ classes:
     description: 'Describes data artifacts (i.e. files) from an experimental/physical-sciences assay  where input specimens are more at the level of synthesized molecules or inorganic materials.
 
       '
-    is_a: Template
+    is_a: FileBasedTemplate
     notes:
     - Name of this base abstraction is not great, may need to revise.
     slots:
-    - Component
-    - Filename
-    - fileFormat
-    - resourceType
     - dataType
     - dataSubtype
     - assay
@@ -755,11 +764,8 @@ classes:
     description: 'Further processed data with multiple samples aggregated into one file. This may be also be known as level-4 data. Unlike level-2 and level-3 data, individual-level attributes such as age and sex are no longer surfaced on the data file directly.
 
       '
+    is_a: FileBasedTemplate
     slots:
-    - Component
-    - Filename
-    - fileFormat
-    - resourceType
     - dataType
     - dataSubtype
     - workflow
@@ -992,14 +998,12 @@ classes:
         range: SequencingFileFormatEnum
   WorkflowReport:
     description: Template used for miscellaneous workflow reports and accessory files
-    is_a: Template
+    is_a: FileBasedTemplate
     notes:
     - resourceType should default to "workflow report"
     - note that `dataType` and `dataSubtype` don't apply
     slots:
-    - resourceType
     - assay
-    - fileFormat
     - relatedDataset
     - workflow
     - workflowLink
