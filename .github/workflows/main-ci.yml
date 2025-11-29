@@ -95,9 +95,15 @@ jobs:
             - `registered-json-schemas/*.json` (Synapse JSON schemas)
 
             **Note:** Artifacts are not committed to this PR to avoid merge conflicts. All artifacts will be automatically rebuilt and committed to `main` after merge.
-      
 
-  
+      - name: Upload NF.ttl artifact for analysis job
+        uses: actions/upload-artifact@v4
+        with:
+          name: nf-ttl
+          path: dist/NF.ttl
+          retention-days: 1
+
+
   # Additionally test PRs
   test:
     name: Test with schematic current version
@@ -156,4 +162,48 @@ jobs:
         with:
           name: test-logs-${{ env.SCHEMATIC_VERSION }}
           path: tests/**/logs
-  
+
+  analyze:
+    name: Analyze data model changes
+    needs: [build]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12'
+
+      - name: Install dependencies
+        run: |
+          pip install rdflib
+
+      - name: Download NF.ttl artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: nf-ttl
+          path: dist/
+
+      - name: Get main branch pre-built NF.ttl for comparison
+        run: |
+          git fetch origin main:main
+          git checkout main -- dist/NF.ttl
+          mv dist/NF.ttl dist/NF_main.ttl
+          git checkout ${{ github.event.pull_request.head.ref }}
+
+      - name: Run comparison analysis
+        run: |
+          python utils/compare.py > analysis_output.txt
+
+      - name: Post analysis as PR comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          message-id: data-model-analysis
+          message-path: analysis_output.txt
+
