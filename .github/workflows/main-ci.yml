@@ -143,13 +143,13 @@ jobs:
 
       - name: Run comparison analysis
         run: |
-          python utils/compare.py > analysis_output.txt
+          python utils/compare.py > analysis_output.md
 
       - name: Post analysis as PR comment
         uses: mshick/add-pr-comment@v2
         with:
           message-id: data-model-analysis
-          message-path: analysis_output.txt
+          message-path: analysis_output.md
 
   # Additionally test PRs
   test:

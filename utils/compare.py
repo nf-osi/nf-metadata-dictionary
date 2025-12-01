@@ -11,7 +11,7 @@ import argparse
 LINKML = Namespace("https://w3id.org/linkml/")
 DCTERMS = Namespace("http://purl.org/dc/terms/")
 RDFS = Namespace("http://www.w3.org/2000/01/rdf-schema#")
-SYNAPSE = Namespace("https://w3id.org/synapse/nfosi/vocab/")
+NFOSI = Namespace("https://w3id.org/synapse/nfosi/vocab/")
 
 def load_graph(filepath, format="turtle"):
     """Load an RDF file into a graph."""
@@ -63,7 +63,7 @@ def get_slot_anonymous_expressions(graph, slot):
 def get_templates(graph):
     """Get all templates (transitive subclasses of Template using linkml:is_a)."""
     templates = set()
-    template_class = SYNAPSE.Template
+    template_class = NFOSI.Template
 
     # Recursively find all subclasses using is_a (transitive closure)
     def find_subclasses(parent):
@@ -178,15 +178,23 @@ def get_range_changes(g_main, g_current):
 
     return range_changes
 
+def print_section(title, content, level=3, collapsible=False):
+    """Print a section in GitHub-flavored markdown format."""
+    if collapsible:
+        print(f"\n<details>")
+        print(f"<summary><strong>{title}</strong></summary>\n")
+        print(content)
+        print("\n</details>")
+    else:
+        print(f"\n{'#' * level} {title}\n")
+        print(content)
+
 def main():
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='Compare two Turtle RDF files and report differences')
-    parser.add_argument('--show-range-details', action='store_true',
-                        help='Show detailed information for all range changes (default: summary only)')
     args = parser.parse_args()
 
     # Load both graphs
-    print("Loading graphs...")
     g_main = load_graph("dist/NF_main.ttl")
     g_current = load_graph("dist/NF.ttl")
 
@@ -229,23 +237,26 @@ def main():
     main_categories = categorize_entities(g_main, entities_main)
     current_categories = categorize_entities(g_current, entities_current)
 
-    # Compare counts
-    print(f"\n=== Entity Counts ===")
-    print(f"Main branch:    {len(entities_main)} entities")
-    print(f"  Classes:      {len(main_categories['classes'])}")
-    print(f"  Slots:        {len(main_categories['slots'])}")
-    print(f"  Enums:        {len(main_categories['enums'])}")
-    print(f"  Anonymous:    {len(main_categories['anonymous'])}")
-    print(f"  Other:        {len(main_categories['other'])}")
+    # Build entity counts content
+    counts_content = []
+    counts_content.append(f"**Main branch:** {len(entities_main)} entities")
+    counts_content.append(f"- Classes: {len(main_categories['classes'])}")
+    counts_content.append(f"- Slots: {len(main_categories['slots'])}")
+    counts_content.append(f"- Enums: {len(main_categories['enums'])}")
+    counts_content.append(f"- Anonymous: {len(main_categories['anonymous'])}")
+    counts_content.append(f"- Other: {len(main_categories['other'])}")
+    counts_content.append("")
+    counts_content.append(f"**Current branch:** {len(entities_current)} entities")
+    counts_content.append(f"- Classes: {len(current_categories['classes'])}")
+    counts_content.append(f"- Slots: {len(current_categories['slots'])}")
+    counts_content.append(f"- Enums: {len(current_categories['enums'])}")
+    counts_content.append(f"- Anonymous: {len(current_categories['anonymous'])}")
+    counts_content.append(f"- Other: {len(current_categories['other'])}")
+    counts_content.append("")
+    diff = len(entities_current) - len(entities_main)
+    counts_content.append(f"**Difference:** {diff:+d} entities")
 
-    print(f"\nCurrent branch: {len(entities_current)} entities")
-    print(f"  Classes:      {len(current_categories['classes'])}")
-    print(f"  Slots:        {len(current_categories['slots'])}")
-    print(f"  Enums:        {len(current_categories['enums'])}")
-    print(f"  Anonymous:    {len(current_categories['anonymous'])}")
-    print(f"  Other:        {len(current_categories['other'])}")
-
-    print(f"\nDifference:     {len(entities_current) - len(entities_main):+d} entities")
+    print_section("Entity Counts", "\n".join(counts_content))
 
     # Find differences by category
     for cat_name, cat_label in [
@@ -257,177 +268,153 @@ def main():
         removed = main_categories[cat_name] - current_categories[cat_name]
 
         if added or removed:
-            print(f"\n=== {cat_label} ===")
+            cat_content = []
             if added:
-                print(f"Added ({len(added)}):")
+                cat_content.append(f"**Added ({len(added)}):**")
                 for entity in sorted(added):
                     entity_name = str(entity).split('/')[-1]
                     title = g_current.value(entity, DCTERMS.title)
                     if title:
-                        print(f"  + {entity_name} ({title})")
+                        cat_content.append(f"- {entity_name} ({title})")
                     else:
-                        print(f"  + {entity_name}")
+                        cat_content.append(f"- {entity_name}")
+                cat_content.append("")
 
             if removed:
-                print(f"Removed ({len(removed)}):")
+                cat_content.append(f"**Removed ({len(removed)}):**")
                 for entity in sorted(removed):
                     entity_name = str(entity).split('/')[-1]
                     title = g_main.value(entity, DCTERMS.title)
                     if title:
-                        print(f"  - {entity_name} ({title})")
+                        cat_content.append(f"- ~~{entity_name}~~ ({title})")
                     else:
-                        print(f"  - {entity_name}")
+                        cat_content.append(f"- ~~{entity_name}~~")
+
+            print_section(cat_label, "\n".join(cat_content), level=3, collapsible=True)
 
     # Compare triple counts
-    print(f"\n=== Triple Counts ===")
-    print(f"Main branch:    {len(g_main)} triples")
-    print(f"Current branch: {len(g_current)} triples")
-    print(f"Difference:     {len(g_current) - len(g_main):+d} triples")
+    triple_diff = len(g_current) - len(g_main)
+    triple_content = []
+    triple_content.append(f"**Main branch:** {len(g_main)} triples")
+    triple_content.append(f"**Current branch:** {len(g_current)} triples")
+    triple_content.append(f"**Difference:** {triple_diff:+d} triples")
 
-    # Find triple differences
-    triples_only_current = g_current - g_main
-    triples_only_main = g_main - g_current
-
-    if len(triples_only_current) > 0:
-        print(f"\n=== New triples in current branch ({len(triples_only_current)}) ===")
-        if len(triples_only_current) <= 20:
-            for s, p, o in sorted(triples_only_current):
-                print(f"  + {s} {p} {o}")
-        else:
-            print(f"  (Too many to display - {len(triples_only_current)} new triples)")
-
-    if len(triples_only_main) > 0:
-        print(f"\n=== Triples removed from main branch ({len(triples_only_main)}) ===")
-        if len(triples_only_main) <= 20:
-            for s, p, o in sorted(triples_only_main):
-                print(f"  - {s} {p} {o}")
-        else:
-            print(f"  (Too many to display - {len(triples_only_main)} removed triples)")
+    print_section("Triple Counts", "\n".join(triple_content), collapsible=True)
 
     # Analyze template changes
-    print("\n=== Template Changes ===")
     template_changes = compare_templates(g_main, g_current)
 
     # Get total template counts for summary
-    templates_main = get_templates(g_main)
     templates_current = get_templates(g_current)
     total_templates = len(templates_current)
     modified_count = len(template_changes['modified'])
     added_count = len(template_changes['added'])
     removed_count = len(template_changes['removed'])
 
-    # Print summary
-    print(f"Modified: {modified_count}/{total_templates} templates")
+    # Build template summary
+    template_summary = []
+    template_summary.append(f"**Modified:** {modified_count}/{total_templates} templates")
     if added_count > 0:
-        print(f"Added: {added_count} templates")
+        template_summary.append(f"**Added:** {added_count} templates")
     if removed_count > 0:
-        print(f"Removed: {removed_count} templates")
+        template_summary.append(f"**Removed:** {removed_count} templates")
 
-    if template_changes['added'] or template_changes['removed'] or template_changes['modified']:
-        if template_changes['added']:
-            print(f"\nAdded templates ({len(template_changes['added'])}):")
-            for template in sorted(template_changes['added']):
-                template_name = str(template).split('/')[-1]
-                title = g_current.value(template, DCTERMS.title)
-                if title:
-                    print(f"  + {template_name} ({title})")
-                else:
-                    print(f"  + {template_name}")
+    print_section("Template Changes", "\n".join(template_summary))
 
-        if template_changes['removed']:
-            print(f"\nRemoved templates ({len(template_changes['removed'])}):")
-            for template in sorted(template_changes['removed']):
-                template_name = str(template).split('/')[-1]
-                title = g_main.value(template, DCTERMS.title)
-                if title:
-                    print(f"  - {template_name} ({title})")
-                else:
-                    print(f"  - {template_name}")
+    # Show details in collapsible sections
+    if template_changes['added']:
+        added_content = []
+        for template in sorted(template_changes['added']):
+            template_name = str(template).split('/')[-1]
+            title = g_current.value(template, DCTERMS.title)
+            if title:
+                added_content.append(f"- {template_name} ({title})")
+            else:
+                added_content.append(f"- {template_name}")
+        print_section(f"Added Templates ({len(template_changes['added'])})", "\n".join(added_content), level=3, collapsible=True)
 
-        if template_changes['modified']:
-            print(f"\nModified templates ({len(template_changes['modified'])}):")
-            for change in sorted(template_changes['modified'], key=lambda x: str(x['template'])):
-                template = change['template']
-                template_name = str(template).split('/')[-1]
-                title = g_current.value(template, DCTERMS.title)
-                if title:
-                    print(f"  * {template_name} ({title})")
-                else:
-                    print(f"  * {template_name}")
+    if template_changes['removed']:
+        removed_content = []
+        for template in sorted(template_changes['removed']):
+            template_name = str(template).split('/')[-1]
+            title = g_main.value(template, DCTERMS.title)
+            if title:
+                removed_content.append(f"- ~~{template_name}~~ ({title})")
+            else:
+                removed_content.append(f"- ~~{template_name}~~")
+        print_section(f"Removed Templates ({len(template_changes['removed'])})", "\n".join(removed_content), level=3, collapsible=True)
 
-                added_props = change['added_props']
-                removed_props = change['removed_props']
-
-                if added_props:
-                    print(f"    Added {len(added_props)} properties")
-                if removed_props:
-                    print(f"    Removed {len(removed_props)} properties")
-    else:
-        print("No template changes detected.")
+    if template_changes['modified']:
+        modified_content = []
+        for change in sorted(template_changes['modified'], key=lambda x: str(x['template'])):
+            template = change['template']
+            template_name = str(template).split('/')[-1]
+            title = g_current.value(template, DCTERMS.title)
+            if title:
+                modified_content.append(f"- {template_name} ({title})")
+            else:
+                modified_content.append(f"- {template_name}")
+        print_section(f"Modified Templates ({len(template_changes['modified'])})", "\n".join(modified_content), level=3, collapsible=True)
 
     # Analyze range changes
-    print("\n=== Analyzing linkml:range changes ===")
     range_changes = get_range_changes(g_main, g_current)
 
+    range_summary = f"**Found {len(range_changes)} slots with semantic range changes**" if range_changes else "No semantic range changes detected."
+    print_section("Range Changes", range_summary)
+
     if range_changes:
-        print(f"Found {len(range_changes)} slots with semantic range changes")
+        range_details = []
+        for change in sorted(range_changes, key=lambda x: str(x['slot'])):
+            slot = change['slot']
 
-        if args.show_range_details:
-            print()
-            for change in sorted(range_changes, key=lambda x: str(x['slot'])):
-                slot = change['slot']
+            # Get slot name and title
+            slot_name = str(slot).split('/')[-1]
+            slot_title = g_current.value(slot, DCTERMS.title)
+            if not slot_title:
+                slot_title = g_main.value(slot, DCTERMS.title)
 
-                # Get slot name and title
-                slot_name = str(slot).split('/')[-1]
-                slot_title = g_current.value(slot, DCTERMS.title)
-                if not slot_title:
-                    slot_title = g_main.value(slot, DCTERMS.title)
+            if slot_title:
+                range_details.append(f"**{slot_name}** ({slot_title})")
+            else:
+                range_details.append(f"**{slot_name}**")
 
-                print(f"Slot: {slot_name}", end='')
-                if slot_title:
-                    print(f" ({slot_title})")
-                else:
-                    print()
+            # Handle direct range changes
+            if change.get('direct'):
+                removed = change.get('main_ranges', set()) - change.get('current_ranges', set())
+                added = change.get('current_ranges', set()) - change.get('main_ranges', set())
 
-                # Handle direct range changes
-                if change.get('direct'):
-                    removed = change.get('main_ranges', set()) - change.get('current_ranges', set())
-                    added = change.get('current_ranges', set()) - change.get('main_ranges', set())
+                if removed:
+                    for r in sorted(removed):
+                        range_name = str(r).split('/')[-1]
+                        range_details.append(f"  - Removed: `{range_name}`")
+                if added:
+                    for r in sorted(added):
+                        range_name = str(r).split('/')[-1]
+                        range_details.append(f"  - Added: `{range_name}`")
+            else:
+                # Handle contextual range changes
+                removed_sigs = change.get('removed', set())
+                added_sigs = change.get('added', set())
 
-                    if removed:
-                        for r in sorted(removed):
-                            range_name = str(r).split('/')[-1]
-                            print(f"  - Removed: {range_name}")
-                    if added:
-                        for r in sorted(added):
-                            range_name = str(r).split('/')[-1]
-                            print(f"  + Added: {range_name}")
-                else:
-                    # Handle contextual range changes
-                    removed_sigs = change.get('removed', set())
-                    added_sigs = change.get('added', set())
+                if removed_sigs:
+                    range_details.append("  - Removed contextual ranges:")
+                    for sig in sorted(removed_sigs):
+                        for prop, val in sig:
+                            if prop == 'range':
+                                range_name = val.split('/')[-1]
+                                range_details.append(f"    - `{range_name}`")
 
-                    if removed_sigs:
-                        print(f"  Removed contextual ranges:")
-                        for sig in sorted(removed_sigs):
-                            for prop, val in sig:
-                                if prop == 'range':
-                                    range_name = val.split('/')[-1]
-                                    print(f"    - {range_name}")
+                if added_sigs:
+                    range_details.append("  - Added contextual ranges:")
+                    for sig in sorted(added_sigs):
+                        for prop, val in sig:
+                            if prop == 'range':
+                                range_name = val.split('/')[-1]
+                                range_details.append(f"    - `{range_name}`")
 
-                    if added_sigs:
-                        print(f"  Added contextual ranges:")
-                        for sig in sorted(added_sigs):
-                            for prop, val in sig:
-                                if prop == 'range':
-                                    range_name = val.split('/')[-1]
-                                    print(f"    + {range_name}")
+            range_details.append("")
 
-                print()
-        else:
-            print("(Use --show-range-details to see all affected slots)")
-    else:
-        print("No semantic range changes detected.")
+        print_section(f"Range Change Details ({len(range_changes)} slots)", "\n".join(range_details), collapsible=True)
 
 if __name__ == "__main__":
     main()
