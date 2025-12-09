@@ -82,7 +82,13 @@ slots:
     title: Aqueductal stenosis
   assay:
     description: The technology used to generate the data in this file.
-    range: AssayEnum
+    any_of:
+    - range: SequencingAssayEnum
+    - range: ImagingAssayEnum
+    - range: MassSpectrometryAssayEnum
+    - range: ClinicalBehavioralAssayEnum
+    - range: CellBasedAssayEnum
+    - range: DrugScreenAssayEnum
     required: true
   assayTarget:
     description: Target of the assay such as a HUGO gene symbol, cell type, or tissue region depending on the capabilities of the assay.
@@ -367,7 +373,7 @@ slots:
     required: false
   drugScreenType:
     description: String describing general class of drug screen
-    range: DrugScreen
+    range: DrugScreenAssayEnum
     required: false
   epidemiologyMetric:
     description: Common metrics used in epidemiology studies.
@@ -418,7 +424,17 @@ slots:
     required: false
   fileFormat:
     description: Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software
-    range: FileFormatEnum
+    any_of:
+    - range: SequencingFileFormatEnum
+    - range: ImagingFileFormatEnum
+    - range: ArrayFileFormatEnum
+    - range: MassSpecFileFormatEnum
+    - range: TabularFileFormatEnum
+    - range: ScriptFileFormatEnum
+    - range: DataFileFormatEnum
+    - range: ArchiveFileFormatEnum
+    - range: DocumentFileFormatEnum
+    - range: OtherFileFormatEnum
     required: true
   fileSize:
     description: Size of file in bytes.
@@ -777,7 +793,16 @@ slots:
     source: https://github.com/NCI-GDC/gdcdictionary/tree/develop/src/gdcdictionary/schemas
   platform:
     description: A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data.
-    range: PlatformEnum
+    any_of:
+    - range: SequencingPlatformEnum
+    - range: ArrayPlatformEnum
+    - range: MicroscopyImagingPlatformEnum
+    - range: MRIPlatformEnum
+    - range: MassSpectrometryPlatformEnum
+    - range: PlateReaderPlatformEnum
+    - range: FlowCytometryPlatformEnum
+    - range: ImagingSystemPlatformEnum
+    - range: OtherPlatformEnum
     required: true
   plexiformNeurofibromas:
     description: Characterization of the manifestation of Plexiform neurofibromas.
@@ -837,7 +862,13 @@ slots:
       '
     in_subset:
     - registered
-    range: AssayEnum
+    any_of:
+    - range: SequencingAssayEnum
+    - range: ImagingAssayEnum
+    - range: MassSpectrometryAssayEnum
+    - range: ClinicalBehavioralAssayEnum
+    - range: CellBasedAssayEnum
+    - range: DrugScreenAssayEnum
     required: false
     title: Protocol assay
   protocolPurpose:

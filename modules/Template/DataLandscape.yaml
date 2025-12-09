@@ -37,7 +37,12 @@ classes:
       assay:
         description: 'Scientific characteristics: The assay or experimental method used to generate this dataset. If you are unsure or cannot find the appropriate term, please use ''Unknown'' and email nf-osi@sagebase.org for help.'
         any_of:
-        - range: AssayEnum
+        - range: SequencingAssayEnum
+        - range: ImagingAssayEnum
+        - range: MassSpectrometryAssayEnum
+        - range: ClinicalBehavioralAssayEnum
+        - range: CellBasedAssayEnum
+        - range: DrugScreenAssayEnum
         - range: UnknownEnum
         required: true
         title: Assay
@@ -52,7 +57,16 @@ classes:
         description: 'Scientific characteristics: The primary file format(s) expected in this dataset. If you are unsure or cannot find the appropriate term, please use ''Unknown'' and email nf-osi@sagebase.org for help.'
         multivalued: true
         any_of:
-        - range: FileFormatEnum
+        - range: SequencingFileFormatEnum
+        - range: ImagingFileFormatEnum
+        - range: ArrayFileFormatEnum
+        - range: MassSpecFileFormatEnum
+        - range: TabularFileFormatEnum
+        - range: ScriptFileFormatEnum
+        - range: DataFileFormatEnum
+        - range: ArchiveFileFormatEnum
+        - range: DocumentFileFormatEnum
+        - range: OtherFileFormatEnum
         - range: UnknownEnum
         required: true
         title: File format
