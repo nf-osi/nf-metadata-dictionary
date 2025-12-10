@@ -91,6 +91,7 @@ classes:
       includedInDataCatalog:
         description: Link(s) to known data catalog(s) the dataset is included in.
         range: DataCatalogEnum
+        multivalued: true
         required: false
         title: Included In Data Catalog
       individualCount:
@@ -168,9 +169,7 @@ classes:
         range: integer
         required: false
         title: Year Processed
-    description: 'A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets.
-
-      '
+    description: 'Dataset entity for NF Data Portal; see https://nf.synapse.org/Explore/Datasets.'
     notes:
     - The compiled JSON schema for this should be bound to [Dataset](https://rest-docs.synapse.org/rest/org/sagebionetworks/repo/model/table/Dataset.html) entities, not folders.
     - While "publisher" (repository) may seem redundant given that all Datasets are obviously on Synapse, it's for explicit compatibility with DataCite, and eventually may want to have "symbolic" datasets like Cancer Complexity Portal that list datasets hosted somewhere else.
