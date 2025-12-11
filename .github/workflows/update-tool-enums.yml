@@ -66,12 +66,18 @@ jobs:
           python scripts/validate_generated_schemas.py \
             --directory auto-generated/
 
+      - name: Integrate mappings with registered schemas
+        run: |
+          python scripts/integrate_tool_mappings.py \
+            --schemas-dir registered-json-schemas \
+            --auto-generated-dir auto-generated
+
       - name: Check for changes
         id: check_changes
         run: |
-          if [[ $(git status --porcelain auto-generated/) ]]; then
+          if [[ $(git status --porcelain auto-generated/ registered-json-schemas/) ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
-            echo "✓ Changes detected in auto-generated files"
+            echo "✓ Changes detected in auto-generated files and/or registered schemas"
 
             # Count changes by type
             NEW_ANIMAL_MODELS=$(git diff auto-generated/enums/modelSystemName_enum.json 2>/dev/null | grep -c '^\+  ' || echo 0)

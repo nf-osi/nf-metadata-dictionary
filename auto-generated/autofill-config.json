@@ -1,0 +1,31 @@
+{
+  "$schema": "auto-generated/schemas/autofill-config-schema.json",
+  "version": "1.0.0",
+  "description": "Configuration for auto-filling metadata fields based on research tool selection",
+  "rules": [
+    {
+      "schema": "AnimalIndividualTemplate.json",
+      "triggerField": "modelSystemName",
+      "mappingSource": "auto-generated/mappings/animal_models_mappings.json",
+      "autoFields": {
+        "species": "species",
+        "genotype": "genotype",
+        "backgroundStrain": "backgroundStrain"
+      },
+      "behavior": "suggest",
+      "description": "Auto-fill fields when modelSystemName is selected"
+    },
+    {
+      "schema": "BiospecimenTemplate.json",
+      "triggerField": "modelSystemName",
+      "mappingSource": "auto-generated/mappings/cell_lines_mappings.json",
+      "autoFields": {
+        "species": "species",
+        "tissue": "tissue",
+        "organ": "organ"
+      },
+      "behavior": "suggest",
+      "description": "Auto-fill fields when modelSystemName is selected"
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-biospecimentemplate",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Specimen-level data, whether from human or animal.",
+  "properties": {
+    "individualID": {
+      "description": "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "individualID"
+    },
+    "parentSpecimenID": {
+      "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
+      "type": "string",
+      "title": "parentSpecimenID"
+    },
+    "specimenID": {
+      "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
+      "type": "string",
+      "title": "specimenID"
+    },
+    "aliquotID": {
+      "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
+      "type": "string",
+      "title": "aliquotID"
+    },
+    "tumorType": {
+      "description": "",
+      "enum": [
+        "ANNUBP",
+        "Anaplastic Astrocytoma",
+        "Anaplastic Ganglioglioma",
+        "Anaplastic Pilocytic Astrocytoma",
+        "Anaplastic Pleomorphic Xanthoastrocytoma",
+        "Atypical Neurofibroma",
+        "Atypical Pilocytic Astrocytoma",
+        "Cellular Neurofibroma",
+        "Colorectal Adenocarcinoma",
+        "Colorectal Carcinoma",
+        "Cutaneous Neurofibroma",
+        "Diffuse Astrocytoma",
+        "Diffuse Infiltrating Neurofibroma",
+        "Fibromatosis",
+        "Fibrosarcoma",
+        "Ganglioglioma",
+        "Glioblastoma",
+        "Glioblastoma Multiforme",
+        "Glioma",
+        "Hemorrhagic Neoplasm",
+        "High-Grade Glioma NOS",
+        "Juvenile Myelomonocytic Leukemia",
+        "Localized Neurofibroma",
+        "Low-Grade Glioma NOS",
+        "Malignant Peripheral Nerve Sheath Tumor",
+        "Massive Soft Tissue Neurofibroma",
+        "Melanoma",
+        "Meningioma",
+        "NF1-Associated Tumor",
+        "NF2-Associated Tumor",
+        "Necrotic Neoplasm",
+        "Neurofibroma",
+        "Neurofibroma with Degenerative Atypia",
+        "Nodular Neurofibroma",
+        "Not Applicable",
+        "Oligoastrocytoma",
+        "Optic Pathway Glioma",
+        "Pilocytic Astrocytoma",
+        "Pilomyxoid Astrocytoma",
+        "Pleomorphic Xanthoastrocytoma",
+        "Plexiform Neurofibroma",
+        "Recurrent MPNST",
+        "Sarcoma",
+        "Schwannoma",
+        "Subcutaneous Neurofibroma",
+        "Teratoma",
+        "Unknown",
+        "metastatic tumor",
+        "metastatic/recurrent tumor",
+        "recurrent tumor",
+        "tumor"
+      ],
+      "title": "tumorType",
+      "type": "string"
+    },
+    "bodySite": {
+      "description": "",
+      "enum": [
+        "acetabulum",
+        "axilla",
+        "back",
+        "dorsolateral prefrontal cortex",
+        "finger",
+        "forearm",
+        "groin",
+        "head",
+        "iliac spine",
+        "leg",
+        "muscle",
+        "neck",
+        "occcipital lobe",
+        "pelvis",
+        "scalp",
+        "scapula",
+        "shoulder",
+        "spine",
+        "thoracic spine"
+      ],
+      "title": "bodySite",
+      "type": "string"
+    },
+    "experimentalCondition": {
+      "description": "A free-text description of the experimental condition (e.g. 5 mM doxorubicin).",
+      "type": "string",
+      "title": "experimentalCondition"
+    }
+  },
+  "required": [
+    "individualID",
+    "specimenID",
+    "tumorType"
+  ],
+  "title": "BiospecimenTemplate",
+  "type": "object"
+}
