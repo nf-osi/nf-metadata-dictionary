@@ -1,0 +1,160 @@
+name: Update Research Tool Enums
+
+on:
+  schedule:
+    # Run every Monday at 6:00 AM UTC
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    # Allow manual triggering
+  repository_dispatch:
+    # Triggered by research tools scraper
+    types: [tools-updated]
+
+env:
+  # Synapse table IDs for NF research tools
+  TABLE_ANIMAL_MODELS: syn26486808
+  TABLE_CELL_LINES: syn26486823
+  TABLE_ANTIBODIES: syn26486811
+  TABLE_GENETIC_REAGENTS: syn26486832
+  TABLE_BIOBANKS: syn26486821
+  TABLE_MATERIALIZED_VIEW: syn51730943
+
+jobs:
+  update-enums:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Get current date
+        id: date
+        run: |
+          echo "date=$(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_OUTPUT
+          echo "date-short=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install synapseclient pandas jsonschema pyyaml
+
+      - name: Fetch research tools data from Synapse
+        env:
+          SYNAPSE_AUTH_TOKEN: ${{ secrets.SYNAPSE_AUTH_TOKEN }}
+        run: |
+          python scripts/fetch_synapse_tools.py \
+            --use-materialized-view \
+            --output auto-generated/raw/
+
+      - name: Generate enums and mappings
+        run: |
+          python scripts/generate_tool_schemas_from_view.py \
+            --input auto-generated/raw/materialized_view.json \
+            --output auto-generated/ \
+            --source-table ${{ env.TABLE_MATERIALIZED_VIEW }}
+
+      - name: Validate generated schemas
+        run: |
+          python scripts/validate_generated_schemas.py \
+            --directory auto-generated/
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if [[ $(git status --porcelain auto-generated/) ]]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "✓ Changes detected in auto-generated files"
+
+            # Count changes by type
+            NEW_ANIMAL_MODELS=$(git diff auto-generated/enums/modelSystemName_enum.json 2>/dev/null | grep -c '^\+  ' || echo 0)
+            NEW_CELL_LINES=$(git diff auto-generated/enums/cellLineName_enum.json 2>/dev/null | grep -c '^\+  ' || echo 0)
+            NEW_ANTIBODIES=$(git diff auto-generated/enums/antibodyName_enum.json 2>/dev/null | grep -c '^\+  ' || echo 0)
+            NEW_REAGENTS=$(git diff auto-generated/enums/reagentName_enum.json 2>/dev/null | grep -c '^\+  ' || echo 0)
+
+            echo "new_animal_models=$NEW_ANIMAL_MODELS" >> $GITHUB_OUTPUT
+            echo "new_cell_lines=$NEW_CELL_LINES" >> $GITHUB_OUTPUT
+            echo "new_antibodies=$NEW_ANTIBODIES" >> $GITHUB_OUTPUT
+            echo "new_reagents=$NEW_REAGENTS" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  No changes detected"
+          fi
+
+      - name: Generate change summary
+        if: steps.check_changes.outputs.changed == 'true'
+        id: summary
+        run: |
+          SUMMARY="**Automated update from NF research tools database**\n\n"
+          SUMMARY+="**Source Tables:**\n"
+          SUMMARY+="- Animal Models: \`${{ env.TABLE_ANIMAL_MODELS }}\`\n"
+          SUMMARY+="- Cell Lines: \`${{ env.TABLE_CELL_LINES }}\`\n"
+          SUMMARY+="- Antibodies: \`${{ env.TABLE_ANTIBODIES }}\`\n"
+          SUMMARY+="- Genetic Reagents: \`${{ env.TABLE_GENETIC_REAGENTS }}\`\n"
+          SUMMARY+="- Biobanks: \`${{ env.TABLE_BIOBANKS }}\`\n\n"
+          SUMMARY+="**Updated:** ${{ steps.date.outputs.date }}\n\n"
+          SUMMARY+="**Summary of Changes:**\n"
+          SUMMARY+="- Animal models: ~${{ steps.check_changes.outputs.new_animal_models }} changes\n"
+          SUMMARY+="- Cell lines: ~${{ steps.check_changes.outputs.new_cell_lines }} changes\n"
+          SUMMARY+="- Antibodies: ~${{ steps.check_changes.outputs.new_antibodies }} changes\n"
+          SUMMARY+="- Genetic reagents: ~${{ steps.check_changes.outputs.new_reagents }} changes\n\n"
+          SUMMARY+="**Files Updated:**\n"
+          SUMMARY+="- \`auto-generated/enums/*.json\`\n"
+          SUMMARY+="- \`auto-generated/mappings/*.json\`\n"
+          SUMMARY+="- \`auto-generated/LAST_UPDATED.txt\`\n\n"
+          SUMMARY+="**Next Steps:**\n"
+          SUMMARY+="1. Review the changes to ensure they look correct\n"
+          SUMMARY+="2. Check for any unexpected additions or removals\n"
+          SUMMARY+="3. Merge this PR to update the metadata dictionary\n"
+          SUMMARY+="4. Coordinate with schematic/DCA teams for deployment\n\n"
+          SUMMARY+="**Validation Results:**\n"
+          SUMMARY+="✅ All generated schemas pass JSON Schema Draft 07 validation\n\n"
+          SUMMARY+="---\n"
+          SUMMARY+="*Auto-generated by:* \`.github/workflows/update-tool-enums.yml\`"
+
+          # Save to file for PR body
+          echo -e "$SUMMARY" > /tmp/pr_body.txt
+
+      - name: Create Pull Request
+        if: steps.check_changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: auto-update research tool enums from Synapse"
+          title: "🤖 Update Research Tool Controlled Vocabularies - ${{ steps.date.outputs.date }}"
+          body-path: /tmp/pr_body.txt
+          branch: auto-update-tools-${{ steps.date.outputs.date-short }}
+          labels: |
+            automated
+            research-tools
+            auto-generated
+          draft: false
+          delete-branch: true
+
+      - name: Comment on success
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          echo "✅ Research tool enum update completed successfully."
+          echo "📝 A pull request has been created with the updates."
+
+      - name: Comment on no changes
+        if: steps.check_changes.outputs.changed == 'false'
+        run: |
+          echo "ℹ️  Research tool enum sync completed."
+          echo "✓ No changes were needed - the dictionary is up to date."
+
+      - name: Upload artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-output
+          path: |
+            auto-generated/
+          retention-days: 7
