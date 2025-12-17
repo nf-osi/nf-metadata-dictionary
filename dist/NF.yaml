@@ -122,11 +122,11 @@ slots:
   aliquotID:
     description: A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.
     required: false
-  alternateDataRepository:
-    description: Reference to other portals or visualization tools where data is located.  Examples - ega.study:EGAS00001003186, dbgap:phs003519.v1.p1, cellxgene.collection:c11009b8-b113-4a99-9890-78b2f9df9d79, cbioportal:schw_ctf_synodos_2025
+  externalRepositoryUri:
+    description: Reference to dataset in an external repository using CURIE-style format. Examples - zenodo:12345678, figshare:12345678, ega.study:EGAS00001003186, dbgap:phs003519.v1.p1, cellxgene.collection:c11009b8-b113-4a99-9890-78b2f9df9d79, cbioportal:schw_ctf_synodos_2025
     range: string
     required: false
-    title: alternateDataRepository
+    title: External Repository URI
   antibodyID:
     description: Antibody ID such as RRID if available, otherwise use vendor ID.
     required: false
@@ -2173,6 +2173,9 @@ enums:
     description: Sequencing platforms for DNA/RNA sequencing
     title: Sequencing Platform
     permissible_values:
+      Applied Biosystems 3730xl DNA Analyzer:
+        description: High-throughput capillary electrophoresis system for DNA sequencing and fragment analysis.
+        source: https://www.thermofisher.com/order/catalog/product/3730XL
       BGISEQ-500:
         description: (From vendor) BGISEQ-500 is an industry leading high-throughput sequencing solution, powered by combinatorial Probe-Anchor Synthesis (cPAS) and improved DNA Nanoballs (DNB™) technology.
         source: https://www.bgi.com/wp-content/uploads/sites/4/2017/05/GLOBAL_BGISEQ-500_WholeGenomeSeq_ServiceOverview_04-17.pdf
@@ -2308,6 +2311,12 @@ enums:
     description: Microscopy and general imaging platforms
     title: Microscopy and Imaging Platform
     permissible_values:
+      Aperio CS2:
+        description: Digital pathology slide scanner for high-throughput whole slide imaging.
+        source: https://www.leicabiosystems.com/digital-pathology/scan/aperio-cs2/
+      BioRad ChemiDoc MP Imaging System:
+        description: Multipurpose imaging system for detecting chemiluminescent, fluorescent, and colorimetric samples including Western blots, protein and nucleic acid gels.
+        source: https://www.bio-rad.com/en-us/product/chemidoc-mp-imaging-system
       Cherry Imaging FACE Platform:
         description: (From vendor) A micro-ultrasound imaging system for anatomical, hemodynamic, functional, and molecular data all in one platform.
         source: https://www.cherryimaging.com/home
@@ -2457,6 +2466,9 @@ enums:
     description: Specialized imaging systems including in vivo imaging and digital pathology
     title: Imaging System Platform
     permissible_values:
+      Epson Perfection V370:
+        description: Flatbed photo and document scanner with transparency unit for scanning slides, negatives, and documents.
+        source: https://epson.com/Support/Scanners/Perfection-Series/Epson-Perfection-V370-Photo/s/SPT_B11B207221
       IVIS Spectrum In Vivo Imaging System:
         description: Combines 2D optical and 3D optical tomography in one platform.
         source: https://www.perkinelmer.com/product/ivis-instrument-spectrum-120v-andor-c-124262
@@ -2631,49 +2643,217 @@ enums:
       - https://help.figshare.com/article/what-is-the-most-appropriate-licence-for-my-research
     permissible_values:
       CC BY-NC:
+        aliases:
+          - cc-by-nc
         description: 'This license is one of the Creative Commons licenses and allows users to share and adapt the dataset if they give credit to the copyright holder and do not use the dataset for any commercial purposes.'
         source: https://creativecommons.org/licenses/by-nc/4.0/
         title: Creative Commons Attribution-NonCommercial 4.0 International
+      CC BY-NC 4.0:
+        aliases:
+          - cc-by-nc-4.0
+          - cc by-nc 4.0
+        meaning: https://creativecommons.org/licenses/by-nc/4.0/
+      CC BY-NC 3.0:
+        aliases:
+          - cc-by-nc-3.0
+        meaning: https://creativecommons.org/licenses/by-nc/3.0/
+      CC BY-NC 2.5:
+        aliases:
+          - cc-by-nc-2.5
+        meaning: https://creativecommons.org/licenses/by-nc/2.5/
+      CC BY-NC 2.0:
+        aliases:
+          - cc-by-nc-2.0
+        meaning: https://creativecommons.org/licenses/by-nc/2.0/
+      CC BY-NC 1.0:
+        aliases:
+          - cc-by-nc-1.0
+        meaning: https://creativecommons.org/licenses/by-nc/1.0/
       CC BY-NC-ND:
+        aliases:
+          - cc-by-nc-nd
         description: 'This license is one of the Creative Commons licenses and allows users to use only your unmodified dataset if they give credit to the copyright holder and do not share it for commercial purposes. Users cannot make any additions, transformations or changes to the dataset under this license.'
         source: https://creativecommons.org/licenses/by-nc-nd/4.0/
         title: Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+      CC BY-NC-ND 4.0:
+        aliases:
+          - cc-by-nc-nd-4.0
+        meaning: https://creativecommons.org/licenses/by-nc-nd/4.0/
+      CC BY-NC-ND 3.0:
+        aliases:
+          - cc-by-nc-nd-3.0
+        meaning: https://creativecommons.org/licenses/by-nc-nd/3.0/
+      CC BY-NC-ND 2.5:
+        aliases:
+          - cc-by-nc-nd-2.5
+        meaning: https://creativecommons.org/licenses/by-nc-nd/2.5/
+      CC BY-NC-ND 2.0:
+        aliases:
+          - cc-by-nc-nd-2.0
+        meaning: https://creativecommons.org/licenses/by-nc-nd/2.0/
+      CC BY-NC-ND 1.0:
+        aliases:
+          - cc-by-nc-nd-1.0
+        meaning: https://creativecommons.org/licenses/by-nc-nd/1.0/
       CC BY-NC-SA:
+        aliases:
+          - cc-by-nc-sa
         description: 'This license is one of the Creative Commons licenses and allows users to share the dataset only if they (1) give credit to the copyright holder, (2) do not use the dataset for any commercial purposes, and (3) distribute any additions, transformations or changes to the dataset under this same license.'
         source: https://creativecommons.org/licenses/by-nc-sa/4.0/
         title: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+      CC BY-NC-SA 4.0:
+        aliases:
+          - cc-by-nc-sa-4.0
+        meaning: https://creativecommons.org/licenses/by-nc-sa/4.0/
+      CC BY-NC-SA 3.0:
+        aliases:
+          - cc-by-nc-sa-3.0
+        meaning: https://creativecommons.org/licenses/by-nc-sa/3.0/
+      CC BY-NC-SA 2.5:
+        aliases:
+          - cc-by-nc-sa-2.5
+        meaning: https://creativecommons.org/licenses/by-nc-sa/2.5/
+      CC BY-NC-SA 2.0:
+        aliases:
+          - cc-by-nc-sa-2.0
+        meaning: https://creativecommons.org/licenses/by-nc-sa/2.0/
+      CC BY-NC-SA 1.0:
+        aliases:
+          - cc-by-nc-sa-1.0
+        meaning: https://creativecommons.org/licenses/by-nc-sa/1.0/
       CC BY-ND:
+        aliases:
+          - cc-by-nd
         description: 'This license is one of the Creative Commons licenses and allows users to share the dataset if they give credit to copyright holder, but they cannot make any additions, transformations or changes to the dataset under this license.'
         source: https://creativecommons.org/licenses/by-nd/4.0/
         title: Creative Commons Attribution-NoDerivatives 4.0 International
+      CC BY-ND 4.0:
+        aliases:
+          - cc-by-nd-4.0
+        meaning: https://creativecommons.org/licenses/by-nd/4.0/
+      CC BY-ND 3.0:
+        aliases:
+          - cc-by-nd-3.0
+        meaning: https://creativecommons.org/licenses/by-nd/3.0/
+      CC BY-ND 2.5:
+        aliases:
+          - cc-by-nd-2.5
+        meaning: https://creativecommons.org/licenses/by-nd/2.5/
+      CC BY-ND 2.0:
+        aliases:
+          - cc-by-nd-2.0
+        meaning: https://creativecommons.org/licenses/by-nd/2.0/
+      CC BY-ND 1.0:
+        aliases:
+          - cc-by-nd-1.0
+        meaning: https://creativecommons.org/licenses/by-nd/1.0/
       CC BY-SA:
+        aliases:
+          - cc-by-sa
         description: 'This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformations or changes to the dataset under this same https://creativecommons.org/licenses/by/4.0/'
         source: https://creativecommons.org/licenses/by-nc-sa/4.0/
         title: Creative Commons Attribution-ShareAlike 4.0 International
+      CC BY-SA 4.0:
+        aliases:
+          - cc-by-sa-4.0
+        meaning: https://creativecommons.org/licenses/by-sa/4.0/
+      CC BY-SA 3.0:
+        aliases:
+          - cc-by-sa-3.0
+        meaning: https://creativecommons.org/licenses/by-sa/3.0/
+      CC BY-SA 2.5:
+        aliases:
+          - cc-by-sa-2.5
+        meaning: https://creativecommons.org/licenses/by-sa/2.5/
+      CC BY-SA 2.0:
+        aliases:
+          - cc-by-sa-2.0
+        meaning: https://creativecommons.org/licenses/by-sa/2.0/
+      CC BY-SA 1.0:
+        aliases:
+          - cc-by-sa-1.0
+        meaning: https://creativecommons.org/licenses/by-sa/1.0/
       CC-0:
+        aliases:
+          - cc0
+          - cc-zero
+          - cc-by-+-cc0
         description: A Creative Commons license and is like a public domain dedication. The copyright holder surrenders rights in a dataset using this license.
         source: https://creativecommons.org/publicdomain/zero/1.0/
         title: Creative Commons Zero
+      CC0 1.0:
+        aliases:
+          - cc0-1.0
+        meaning: https://creativecommons.org/publicdomain/zero/1.0/
       CC-BY:
+        aliases:
+          - cc-by
         description: This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset so long as they give credit to the copyright holder.
         source: https://creativecommons.org/licenses/by/4.0/
         title: Creative Commons Attribution 4.0 International
+      CC-BY 4.0:
+        aliases:
+          - cc-by-4.0
+          - cc by 4.0
+        meaning: https://creativecommons.org/licenses/by/4.0/
+      CC-BY 3.0:
+        aliases:
+          - cc-by-3.0
+        meaning: https://creativecommons.org/licenses/by/3.0/
+      CC-BY 2.5:
+        aliases:
+          - cc-by-2.5
+        meaning: https://creativecommons.org/licenses/by/2.5/
+      CC-BY 2.0:
+        aliases:
+          - cc-by-2.0
+        meaning: https://creativecommons.org/licenses/by/2.0/
+      CC-BY 1.0:
+        aliases:
+          - cc-by-1.0
+        meaning: https://creativecommons.org/licenses/by/1.0/
       ODC-BY:
+        aliases:
+          - odc-by
         description: This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder.
         source: https://opendatacommons.org/licenses/by/
         title: Open Data Commons Attribution License
+      ODC-BY 1.0:
+        aliases:
+          - odc-by-1.0
+        meaning: https://opendatacommons.org/licenses/by/1-0/
       ODC-ODbL:
+        aliases:
+          - odc-odbl
         description: 'This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformation or changes to the dataset.'
         source: https://opendatacommons.org/licenses/odbl/
         title: Open Data Commons Open Database License
+      ODC-ODbL 1.0:
+        aliases:
+          - odc-odbl-1.0
+        meaning: https://opendatacommons.org/licenses/odbl/1-0/
       ODC-PDDL:
+        aliases:
+          - odc-pddl
         description: 'This license is one of the Open Data Commons licenses and is like a public domain dedication. The copyright holder surrenders rights in a dataset using this license.'
         source: https://opendatacommons.org/licenses/pddl/
         title: Open Data Commons Public Domain Dedication and License
+      ODC-PDDL 1.0:
+        aliases:
+          - odc-pddl-1.0
+        meaning: https://opendatacommons.org/licenses/pddl/1-0/
       Public Domain:
+        aliases:
+          - public domain
+          - publicdomain
         description: Technically not a license, the public domain mark relinquishes all rights to a dataset and dedicates the dataset to the public domain.
         source: https://creativecommons.org/public-domain/pdm/
       UNKNOWN:
+        aliases:
+          - notspecified
+          - other-open
+          - other-closed
+          - restricted-access
         description: The license for the dataset is not known.
   ManifestationEnum:
     permissible_values:
@@ -8149,6 +8329,11 @@ classes:
         range: string
         required: false
         title: doi
+      externalRepositoryUri:
+        description: Reference to dataset in an external repository using CURIE-style format, e.g. zenodo:12345678.
+        range: string
+        required: false
+        title: External Repository URI
       funder:
         multivalued: true
         range: FundingAgencyEnum
@@ -8327,7 +8512,7 @@ classes:
       acknowledgementStatements:
         range: string
         required: false
-      alternateDataRepository:
+      externalRepositoryUri:
         range: string
         required: false
       clinicalTrialID:
