@@ -115,6 +115,10 @@ slots:
     description: A time unit that can be used with a given age value, e.g. years.
     range: TimeUnit
     required: false
+  ageGroup:
+    description: Age demographic classification based on MeSH age groups (Infant, Child, Adolescent, Adult). Supports simpler queries and harmonization with other resources.
+    range: HumanAgeGroupEnum
+    required: false
   aliquotID:
     description: A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.
     required: false
@@ -340,7 +344,7 @@ slots:
     required: true
   diagnosisAgeGroup:
     description: Age group of the individual at the time of diagnosis.
-    range: AgeGroupEnum
+    range: HumanAgeGroupEnum
     title: Diagnosis age group
   diffuseDermalNeurofibromas:
     description: Characterization of the manifestation of Diffuse dermal neurofibromas.
@@ -6563,13 +6567,50 @@ enums:
         description: sMPNST
       sc93.1:
         description: sc93.1
-  AgeGroupEnum:
+  HumanAgeGroupEnum:
+    description: Human age demographic groups based on Age Ontology, which is a refinement of MeSH age classifications for classification and harmonization purposes.
+    notes:
+      - See https://www.researchgate.net/figure/Age-range-classes-defined-by-the-Age-Ontology-Age-range-classes-were-generally-defined_fig1_271840217
     permissible_values:
-      adolescence:
-      adulthood:
-      childhood:
-      infancy:
-      unknown:
+      Infant:
+        description: A child between 1 and 23 months of age.
+        meaning: MESH:D007223
+      Child:
+        description: A person 2 to 12 years of age.
+        meaning: MESH:D002648
+      Adolescent:
+        description: A person 13 to 18 years of age.
+        meaning: MESH:D000293
+      Adult:
+        description: A person having attained full growth or maturity. Adults are of 19 to 120 years of age.
+        meaning: MESH:D000328
+  MouseAgeGroupEnum:
+    description: Mouse age demographic groups using postnatal day (P) notation commonly used in laboratory research.
+    permissible_values:
+      P0-P3 Neonatal:
+        description: Neonatal mice from birth to postnatal day 3.
+      P4-P21 Pre-weaning:
+        description: Pre-weaning mice from postnatal day 4 to 21 (typical weaning age).
+      P21-P60 Young Adult:
+        description: Young adult mice from postnatal day 21 to 60 (3 weeks to 2 months).
+      P60-P180 Adult:
+        description: Adult mice from postnatal day 60 to 180 (2 to 6 months).
+      P180-P365 Middle-Aged:
+        description: Middle-aged mice from postnatal day 180 to 365 (6 to 12 months).
+      P365+ Aged:
+        description: Aged mice from postnatal day 365 onwards (12+ months).
+  SexEnum:
+    permissible_values:
+      Female:
+        aliases:
+          - F
+        description: A person who belongs to the sex that normally produces ova. The term is used to indicate biological sex distinctions, or cultural gender role distinctions, or both.
+        meaning: NCIT:C16576
+      Male:
+        aliases:
+          - M
+        description: A person who belongs to the sex that normally produces sperm. The term is used to indicate biological sex distinctions, cultural gender role distinctions, or both.
+        meaning: NCIT:C20197
   BinaryImagingDiagnosisEnum:
     description: Enumerations describing the manifestation of tumors confirmed via imaging with mainly absent or present being the most relevant result.
     permissible_values:
@@ -6783,18 +6824,6 @@ enums:
         description: DNA (deoxyribonucleic acid) is a polymer of nucleotides and is the genetic material in organisms and some viruses.
       Polymeric nanoparticles:
         description: 'Polymeric nanoparticles (PNPs) are solid and spherical (in most cases) structures prepared from natural or synthetic polymers with drug delivery being known to be one of the most important biomedical applications (reference: Hirvonen et al., Nanoengineered Biomaterials for Advanced Drug Delivery, 2020)'
-  SexEnum:
-    permissible_values:
-      Female:
-        aliases:
-          - F
-        description: A person who belongs to the sex that normally produces ova. The term is used to indicate biological sex distinctions, or cultural gender role distinctions, or both.
-        meaning: NCIT:C16576
-      Male:
-        aliases:
-          - M
-        description: A person who belongs to the sex that normally produces sperm. The term is used to indicate biological sex distinctions, cultural gender role distinctions, or both.
-        meaning: NCIT:C20197
   SpeciesEnum:
     permissible_values:
       Danio rerio:
@@ -8043,6 +8072,12 @@ classes:
         range: AccessTypeEnum
         required: true
         title: Access Type
+      ageGroup:
+        description: Age demographic groups represented in the dataset. Use to indicate which age groups are included in the data.
+        multivalued: true
+        range: HumanAgeGroupEnum
+        required: false
+        title: Age Group Coverage
       alternateName:
         description: An altername name that can be used for search and discovery improvement.
         range: string
@@ -8122,6 +8157,7 @@ classes:
       includedInDataCatalog:
         description: Link(s) to known data catalog(s) the dataset is included in.
         range: DataCatalogEnum
+        multivalued: true
         required: false
         title: Included In Data Catalog
       individualCount:
@@ -8199,9 +8235,7 @@ classes:
         range: integer
         required: false
         title: Year Processed
-    description: 'A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets.
-
-'
+    description: 'Dataset entity for NF Data Portal; see https://nf.synapse.org/Explore/Datasets.'
     notes:
       - The compiled JSON schema for this should be bound to [Dataset](https://rest-docs.synapse.org/rest/org/sagebionetworks/repo/model/table/Dataset.html) entities, not folders.
       - While "publisher" (repository) may seem redundant given that all Datasets are obviously on Synapse, it's for explicit compatibility with DataCite, and eventually may want to have "symbolic" datasets like Cancer Complexity Portal that list datasets hosted somewhere else.

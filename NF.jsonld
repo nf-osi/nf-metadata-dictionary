@@ -7242,9 +7242,6 @@
           "@id": "bts:VestibularSchwannoma"
         },
         {
-          "@id": "bts:DiagnosisAgeGroup"
-        },
-        {
           "@id": "bts:Meningioma"
         },
         {
@@ -8309,6 +8306,117 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "grantDOI",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:AgeGroup",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Age demographic classification based on MeSH age groups (Infant, Child, Adolescent, Adult). Supports simpler queries and harmonization with other resources.",
+      "rdfs:label": "AgeGroup",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "schema:rangeIncludes": [
+        {
+          "@id": "bts:Infant"
+        },
+        {
+          "@id": "bts:Child"
+        },
+        {
+          "@id": "bts:Adolescent"
+        },
+        {
+          "@id": "bts:Adult"
+        }
+      ],
+      "sms:displayName": "ageGroup",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Infant",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Infant",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AgeGroup"
+        },
+        {
+          "@id": "bts:DiagnosisAgeGroup"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Infant",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Child",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Child",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AgeGroup"
+        },
+        {
+          "@id": "bts:DiagnosisAgeGroup"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Child",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Adolescent",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Adolescent",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AgeGroup"
+        },
+        {
+          "@id": "bts:DiagnosisAgeGroup"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Adolescent",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Adult",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Adult",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AgeGroup"
+        },
+        {
+          "@id": "bts:DiagnosisAgeGroup"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Adult",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -16562,90 +16670,19 @@
       },
       "schema:rangeIncludes": [
         {
-          "@id": "bts:Adolescence"
+          "@id": "bts:Infant"
         },
         {
-          "@id": "bts:Adulthood"
+          "@id": "bts:Child"
         },
         {
-          "@id": "bts:Childhood"
+          "@id": "bts:Adolescent"
         },
         {
-          "@id": "bts:Infancy"
-        },
-        {
-          "@id": "bts:Unknown"
+          "@id": "bts:Adult"
         }
       ],
       "sms:displayName": "diagnosisAgeGroup",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:Adolescence",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "Adolescence",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:DiagnosisAgeGroup"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "adolescence",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:Adulthood",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "Adulthood",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:DiagnosisAgeGroup"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "adulthood",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:Childhood",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "Childhood",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:DiagnosisAgeGroup"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "childhood",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:Infancy",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "Infancy",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:DiagnosisAgeGroup"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "infancy",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -48300,23 +48337,6 @@
       "sms:validationRules": []
     },
     {
-      "@id": "bts:AgeGroupEnum",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "AgeGroupEnum",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:Thing"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "AgeGroupEnum",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
       "@id": "bts:TumorTreatmentEnum",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
@@ -48381,6 +48401,23 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "GenePerturbationEnum",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:HumanAgeGroupEnum",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Human age demographic groups based on Age Ontology, which is a refinement of MeSH age classifications for classification and harmonization purposes.",
+      "rdfs:label": "HumanAgeGroupEnum",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "HumanAgeGroupEnum",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -49027,6 +49064,23 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "ArrayFileFormatEnum",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAgeGroupEnum",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Mouse age demographic groups using postnatal day (P) notation commonly used in laboratory research.",
+      "rdfs:label": "MouseAgeGroupEnum",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "MouseAgeGroupEnum",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -54958,7 +55012,7 @@
     {
       "@id": "bts:PortalDataset",
       "@type": "rdfs:Class",
-      "rdfs:comment": "//nf.synapse.org/Explore/Datasets.\n",
+      "rdfs:comment": "//nf.synapse.org/Explore/Datasets.",
       "rdfs:label": "PortalDataset",
       "rdfs:subClassOf": [
         {
@@ -54973,6 +55027,9 @@
       "sms:requiresDependency": [
         {
           "@id": "bts:AccessType"
+        },
+        {
+          "@id": "bts:AgeGroup"
         },
         {
           "@id": "bts:AlternateName"
@@ -55496,6 +55553,23 @@
       "sms:displayName": "129T2/SvEmsJ::C57Bl/6NTac Nf1+/+"
     },
     {
+      "@id": "bts:P180-P365Middle-Aged",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "P180-P365Middle-Aged",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "P180-P365 Middle-Aged",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
       "@id": "bts:Not-for-ProfitOrganisationUseOnly",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
@@ -55785,6 +55859,23 @@
       "sms:validationRules": []
     },
     {
+      "@id": "bts:P4-P21Pre-weaning",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "P4-P21Pre-weaning",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "P4-P21 Pre-weaning",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
       "@id": "bts:GFF",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
@@ -55798,6 +55889,23 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "GFF",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:P0-P3Neonatal",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "P0-P3Neonatal",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "P0-P3 Neonatal",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -56159,6 +56267,23 @@
       "sms:validationRules": []
     },
     {
+      "@id": "bts:P21-P60YoungAdult",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "P21-P60YoungAdult",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "P21-P60 Young Adult",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
       "@id": "bts:ReturntoDatabaseorResource",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
@@ -56295,6 +56420,23 @@
       "sms:validationRules": []
     },
     {
+      "@id": "bts:P60-P180Adult",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "P60-P180Adult",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "P60-P180 Adult",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
       "@id": "bts:Pain",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
@@ -56410,6 +56552,23 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "Health or Medical or Biomedical Research",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:P365+Aged",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "P365+Aged",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "P365+ Aged",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },

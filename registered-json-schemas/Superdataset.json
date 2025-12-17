@@ -1,7 +1,7 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-superdataset",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A slightly more specialized dataset concept intended for the specific scope of the NF Portal; see https://nf.synapse.org/Explore/Datasets.",
+  "description": "Dataset entity for NF Data Portal; see https://nf.synapse.org/Explore/Datasets.",
   "properties": {
     "accessType": {
       "description": "",
@@ -13,6 +13,22 @@
       ],
       "title": "accessType",
       "type": "string"
+    },
+    "ageGroup": {
+      "description": "Age demographic groups represented in the dataset. Use to indicate which age groups are included in the data.",
+      "items": {
+        "description": "Human age demographic groups based on Age Ontology, which is a refinement of MeSH age classifications for classification and harmonization purposes.",
+        "enum": [
+          "Infant",
+          "Child",
+          "Adolescent",
+          "Adult"
+        ],
+        "title": "HumanAgeGroupEnum",
+        "type": "string"
+      },
+      "type": "array",
+      "title": "ageGroup"
     },
     "alternateName": {
       "description": "An altername name that can be used for search and discovery improvement.",
@@ -212,13 +228,18 @@
       "title": "funder"
     },
     "includedInDataCatalog": {
-      "description": "",
-      "enum": [
-        "https://www.synapse.org/DataCatalog:0",
-        "https://nf.synapse.org/Explore/Datasets"
-      ],
-      "title": "includedInDataCatalog",
-      "type": "string"
+      "description": "Link(s) to known data catalog(s) the dataset is included in.",
+      "items": {
+        "description": "",
+        "enum": [
+          "https://www.synapse.org/DataCatalog:0",
+          "https://nf.synapse.org/Explore/Datasets"
+        ],
+        "title": "DataCatalogEnum",
+        "type": "string"
+      },
+      "type": "array",
+      "title": "includedInDataCatalog"
     },
     "individualCount": {
       "description": "Number of unique individuals included in the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown.",
