@@ -64,7 +64,7 @@ slots:
     required: false
   ageGroup:
     description: Age demographic classification based on MeSH age groups (Infant, Child, Adolescent, Adult). Supports simpler queries and harmonization with other resources.
-    range: AgeGroupEnum
+    range: HumanAgeGroupEnum
     required: false
   aliquotID:
     description: A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.
@@ -352,7 +352,7 @@ slots:
     required: true
   diagnosisAgeGroup:
     description: Age group of the individual at the time of diagnosis.
-    range: AgeGroupEnum
+    range: HumanAgeGroupEnum
     title: Diagnosis age group
   diffuseDermalNeurofibromas:
     description: Characterization of the manifestation of Diffuse dermal neurofibromas.

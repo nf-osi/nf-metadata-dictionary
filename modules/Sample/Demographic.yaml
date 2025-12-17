@@ -1,6 +1,6 @@
 enums:
-  AgeGroupEnum:
-    description: Age demographic groups based on Age Ontology, which is a refinement of MeSH age classifications for classification and harmonization purposes.
+  HumanAgeGroupEnum:
+    description: Human age demographic groups based on Age Ontology, which is a refinement of MeSH age classifications for classification and harmonization purposes.
     notes:
     - See https://www.researchgate.net/figure/Age-range-classes-defined-by-the-Age-Ontology-Age-range-classes-were-generally-defined_fig1_271840217
     permissible_values:
@@ -16,6 +16,21 @@ enums:
       Adult:
         description: A person having attained full growth or maturity. Adults are of 19 to 120 years of age.
         meaning: MESH:D000328
+  MouseAgeGroupEnum:
+    description: Mouse age demographic groups using postnatal day (P) notation commonly used in laboratory research.
+    permissible_values:
+      P0-P3 Neonatal:
+        description: Neonatal mice from birth to postnatal day 3.
+      P4-P21 Pre-weaning:
+        description: Pre-weaning mice from postnatal day 4 to 21 (typical weaning age).
+      P21-P60 Young Adult:
+        description: Young adult mice from postnatal day 21 to 60 (3 weeks to 2 months).
+      P60-P180 Adult:
+        description: Adult mice from postnatal day 60 to 180 (2 to 6 months).
+      P180-P365 Middle-Aged:
+        description: Middle-aged mice from postnatal day 180 to 365 (6 to 12 months).
+      P365+ Aged:
+        description: Aged mice from postnatal day 365 onwards (12+ months).
   SexEnum:
     permissible_values:
       Female:
