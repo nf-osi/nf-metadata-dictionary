@@ -163,6 +163,7 @@ classes:
     - compoundDose
     - compoundDoseUnit
     - comments
+    - isCellLine
     slot_usage:
       assay:
         range: ClinicalBehavioralAssayEnum
@@ -170,6 +171,8 @@ classes:
         any_of:
         - range: TabularFileFormatEnum
         - range: DocumentFileFormatEnum
+      isCellLine:
+        ifabsent: string(No)
   ElectrophysiologyAssayTemplate:
     annotations:
       match:
@@ -361,7 +364,8 @@ classes:
     is_a: BulkSequencingAssayTemplate
     notes:
     - It's possible that not all raw genomics data equates to sequencing output.
-    slots: null
+    slots:
+    - isXenograft
     slot_usage:
       assay:
         range: SequencingAssayEnum
@@ -369,6 +373,8 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      isXenograft:
+        ifabsent: string(No)
   GenomicsAssayTemplateExtended:
     annotations:
       required: false
@@ -888,6 +894,7 @@ classes:
     - genePerturbationTechnology
     - experimentalCondition
     - isCellLine
+    - isPrimaryCell
     slot_usage:
       assay:
         range: SequencingAssayEnum
@@ -895,6 +902,8 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      isPrimaryCell:
+        ifabsent: string(Yes)
   ScRNASeqTemplate:
     annotations:
       match:
