@@ -320,6 +320,13 @@ slots:
     in_subset:
     - portal
     required: true
+  dcc:
+    description: The Data Coordinating Center (DCC) that manages and coordinates the data. Defaults to "nf-osi" for NF-OSI managed data.
+    ifabsent: string(nf-osi)
+    in_subset:
+    - portal
+    range: string
+    required: false
   datasetItemCount:
     description: Count of files in dataset. Auto-calculated by Synapse.
     in_subset:
