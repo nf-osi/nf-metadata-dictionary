@@ -172,6 +172,23 @@ Rules defined in abstract base classes (like `BiologicalAssayDataTemplate`) are 
 4. **Contextual:** Rules defined where slots are used, making relationships clear
 5. **Self-documenting:** Rule descriptions explain the dependency logic
 
+## Enum Validation for Conditional Dependencies
+
+All slots involved in conditional dependencies now have proper enum validation to ensure data quality:
+
+| Slot | Enum | Values |
+|------|------|--------|
+| genePerturbationType | GenePerturbationEnum | knockdown, knockout, overexpression, non-targeting control |
+| genePerturbationTechnology | GenePerturbationTechnologyEnum | CRISPR, RNAi, CRE Recombinase |
+| genomicReference | GenomicReferenceEnum | GRCh37, GRCh38, GRCh38_Verily_v1, HRC, MMUL1.0, mm10, mm39, rn6 |
+| transplantationType | TransplantationType | xenograft, allograft, autograft, isograft |
+| transplantationRecipientSpecies | (inline) | Human, Mouse |
+| concentrationMaterialUnit | ConcentrationUnit | mM, mg/mL, particles/mL |
+| concentrationNaClUnit | ConcentrationUnit | mM, mg/mL, particles/mL |
+| workingDistanceUnit | WorkingDistanceUnitEnum | angstrom, nanometer, micrometer, millimeter, centimeter |
+
+**Note:** All enum values include ontology mappings (`meaning`) or source references where available, ensuring semantic interoperability.
+
 ## Future Roadmap
 
 ### Phase 1 (Current): Dual System
