@@ -462,7 +462,7 @@ slots:
     required: false
   genePerturbationType:
     description: Specific way in which a single gene was perturbed in a sample
-    range: GenePerturbationTechnologyEnum
+    range: GenePerturbationEnum
     required: false
   genePerturbed:
     annotations:
@@ -473,6 +473,7 @@ slots:
     annotations:
       requiresDependency: genomicReferenceLink
     description: Version of genome reference used for alignment in processing workflow
+    range: GenomicReferenceEnum
     notes:
     - Currently used with nextflow-processed data.
     required: true
