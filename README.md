@@ -178,6 +178,42 @@ readPair:
 ...
 ```
 
+##### Conditional slot dependencies (LinkML rules)
+
+Some slots require other slots to be present when they have values. These dependencies are now enforced using [LinkML rules](https://linkml.io/linkml/schemas/advanced.html) with preconditions and postconditions, in addition to the legacy `requiresDependency` annotations (which are maintained for backward compatibility with schematic).
+
+**Example:** If `age` is provided, `ageUnit` must also be provided.
+
+```yaml
+BiologicalAssayDataTemplate:
+  slots:
+    - age
+    - ageUnit
+  rules:
+    - description: If age is provided, ageUnit must be provided
+      preconditions:
+        slot_conditions:
+          age:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          ageUnit:
+            value_presence: PRESENT
+```
+
+**Current conditional dependencies:**
+
+| Dependent Slot | Required Slot | Templates |
+|----------------|---------------|-----------|
+| age | ageUnit | BiologicalAssayDataTemplate (all assay templates) |
+| compoundDose | compoundDoseUnit | BehavioralAssayTemplate, ClinicalAssayTemplate, GeneralMeasureDataTemplate, PharmacokineticsAssayTemplate, PlateBasedReporterAssayTemplate |
+| dataType | dataSubtype | BiologicalAssayDataTemplate |
+| experimentalTimepoint | timepointUnit | BehavioralAssayTemplate, ElectrophysiologyAssayTemplate, GeneralMeasureDataTemplate, GenomicsAssayTemplateExtended, MRIAssayTemplate, PdxGenomicsAssayTemplate, PharmacokineticsAssayTemplate, PlateBasedReporterAssayTemplate |
+| workflow | workflowLink | ProcessedAlignedReadsTemplate, ProcessedExpressionTemplate, ProcessedMergedDataTemplate, ProcessedVariantCallsTemplate, WorkflowReport |
+| workingDistance | workingDistanceUnit | MicroscopyAssayTemplate |
+
+**Note for schematic users:** These rules are also represented as `requiresDependency` annotations in `modules/props.yaml` for backward compatibility with schematic. Both representations are maintained in sync during this transition period.
+
 #### Enum
 
 An enumeration is a set of controlled values. 
