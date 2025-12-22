@@ -17,6 +17,8 @@ classes:
     is_a: Template
     notes:
     - FileBasedTemplate and RecordBasedTemplate are not technically mutually exclusive; some resources may have both file and record representations.
+    slots:
+    - dcc
 
   BehavioralAssayTemplate:
     annotations:
@@ -722,6 +724,8 @@ classes:
     - auxiliaryAsset
     - specimenID
     slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
       fileFormat:
         range: SequencingFileFormatEnum
   ProcessedExpressionTemplate:
@@ -749,6 +753,9 @@ classes:
     - workflowLink
     - auxiliaryAsset
     - specimenID
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
   ProcessedMergedDataTemplate:
     annotations:
       match:
@@ -772,6 +779,9 @@ classes:
     - workflowLink
     - auxiliaryAsset
     - assay
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
   ProcessedVariantCallsTemplate:
     annotations:
       match:
@@ -800,6 +810,8 @@ classes:
     - auxiliaryAsset
     - specimenID
     slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
       fileFormat:
         range: SequencingFileFormatEnum
   ProteinArrayTemplate:
