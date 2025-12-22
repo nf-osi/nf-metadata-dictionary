@@ -543,6 +543,9 @@ enums:
       six-minute walk test:
         description: The six-minute walk test (6MWT) is a simple, standardized functional assay of exercise capacity that measures how far the human subject can walk within a 6-minute duration; used to to evaluate lung and heart conditions.
         source: https://www.ncbi.nlm.nih.gov/books/NBK576420/
+      weight:
+        description: An assay or measurement that quantifies the mass or weight of a subject, specimen, or sample. Commonly used in clinical assessments, biosample characterization, and longitudinal health monitoring.
+        meaning: EFO:0004338
       word recognition score:
         description: Assays how well a person can understand speech by repeating a list of words. The WRS is a percentage of words correctly repeated. It's a more functional measure because it predicts whether hearing loss can be improved with amplification.
   CellBasedAssayEnum:
@@ -588,8 +591,10 @@ enums:
           '
         meaning: NCIT:C16434
       Matrigel-based tumorigenesis assay:
-        description: An assay in which tumor cells are loaded into a Matrigel matrix and measured for tumor formation characteristics
+        description: An assay in which tumor cells are loaded into a Matrigel matrix and measured for tumor formation characteristics. A specific type of sphere formation assay.
         see_also:
+        - sphere formation
+        - in vitro tumorigenesis
         - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3230200/
       Migration Assay:
         description: An in vitro assay in which cultured cells are monitored and analyzed for their ability to move into an acellular area of a culture material.
@@ -824,6 +829,14 @@ enums:
       small molecule library screen:
         description: High throughput sample analysis of small molecules for purpose such as drug discovery, or biochemical, genetic or pharmacological tests.
         meaning: ERO:0001726
+      sphere formation:
+        aliases:
+        - tumor spheroid formation assay
+        description: An in vitro assay to measure the ability of cells to form three-dimensional spherical structures (spheroids), commonly used to assess tumor-initiating capacity, stem cell properties, and self-renewal capability.
+        see_also:
+        - in vitro tumorigenesis
+        - Matrigel-based tumorigenesis assay
+        source: https://pmc.ncbi.nlm.nih.gov/articles/PMC6121836/
       sorbitol dehydrogenase activity level assay:
         description: An enzymatic activity level assay that measures the activity of sorbitol dehydrogenase in a sample.
         meaning: OBI:0003434
