@@ -67,6 +67,8 @@ slots:
     range: HumanAgeGroupEnum
     required: false
   aliquotID:
+    annotations:
+      requiresDependency: specimenID
     description: A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.
     required: false
   externalRepositoryUri:
@@ -224,6 +226,7 @@ slots:
     required: true
   concentrationMaterial:
     annotations:
+      requiresDependency: concentrationMaterialUnit
       validationRules: num
     description: Numeric value for concentration of the material
     range: float
@@ -233,6 +236,8 @@ slots:
     range: ConcentrationUnit
     required: false
   concentrationNaCl:
+    annotations:
+      requiresDependency: concentrationNaClUnit
     description: Numeric value for NaCl concentration
     required: false
   concentrationNaClUnit:
@@ -460,9 +465,13 @@ slots:
     range: GenePerturbationTechnologyEnum
     required: false
   genePerturbed:
+    annotations:
+      requiresDependency: genePerturbationType,genePerturbationTechnology
     description: The HUGO gene symbol for the gene that is perturbed.
     required: false
   genomicReference:
+    annotations:
+      requiresDependency: genomicReferenceLink
     description: Version of genome reference used for alignment in processing workflow
     notes:
     - Currently used with nextflow-processed data.
@@ -757,6 +766,8 @@ slots:
     description: 'The id of the parent resource, i.e. the parent folder on the platform. '
     required: false
   parentSpecimenID:
+    annotations:
+      requiresDependency: specimenID
     description: 'A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.
 
       '
@@ -1152,6 +1163,8 @@ slots:
     range: Tissue
     required: false
   transplantationType:
+    annotations:
+      requiresDependency: transplantationRecipientSpecies,transplantationRecipientTissue
     description: Type of transplantation involved in the experiment, derived from MESH
     range: TransplantationType
     required: false

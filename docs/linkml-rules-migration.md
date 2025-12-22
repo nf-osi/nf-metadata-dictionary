@@ -70,16 +70,30 @@ This ensures:
 
 ### Migrated Dependencies
 
-All 6 original `requiresDependency` relationships have been migrated to LinkML rules:
+All 6 original `requiresDependency` relationships have been migrated to LinkML rules, plus 7 new conditional dependencies were added:
 
 | Slot Dependency | LinkML Rules Added To |
 |-----------------|----------------------|
 | age → ageUnit | BiologicalAssayDataTemplate |
+| **aliquotID → specimenID** | GeneralMeasureDataTemplate, MicroscopyAssayTemplate |
+| compoundDose → compoundDoseUnit | BehavioralAssayTemplate, ClinicalAssayTemplate, GeneralMeasureDataTemplate, PharmacokineticsAssayTemplate, PlateBasedReporterAssayTemplate |
+| **concentrationMaterial → concentrationMaterialUnit** | MaterialScienceAssayTemplate |
+| **concentrationNaCl → concentrationNaClUnit** | MaterialScienceAssayTemplate, LightScatteringAssayTemplate |
 | dataType → dataSubtype | BiologicalAssayDataTemplate |
 | experimentalTimepoint → timepointUnit | BehavioralAssayTemplate, ElectrophysiologyAssayTemplate, GeneralMeasureDataTemplate, GenomicsAssayTemplateExtended, MRIAssayTemplate, PdxGenomicsAssayTemplate, PharmacokineticsAssayTemplate, PlateBasedReporterAssayTemplate |
-| compoundDose → compoundDoseUnit | BehavioralAssayTemplate, ClinicalAssayTemplate, GeneralMeasureDataTemplate, PharmacokineticsAssayTemplate, PlateBasedReporterAssayTemplate |
+| **genePerturbed → genePerturbationType, genePerturbationTechnology** | BehavioralAssayTemplate, GeneralMeasureDataTemplate, GenomicsAssayTemplateExtended, RNASeqTemplate, ScRNASeqTemplate |
+| **genomicReference → genomicReferenceLink** | ProcessedAlignedReadsTemplate |
+| **parentSpecimenID → specimenID** | GeneralMeasureDataTemplate, MicroscopyAssayTemplate |
+| **transplantationType → transplantationRecipientSpecies, transplantationRecipientTissue** | PdxGenomicsAssayTemplate |
 | workflow → workflowLink | ProcessedAlignedReadsTemplate, ProcessedExpressionTemplate, ProcessedMergedDataTemplate, ProcessedVariantCallsTemplate, WorkflowReport |
 | workingDistance → workingDistanceUnit | MicroscopyAssayTemplate |
+
+**New dependencies added** (shown in bold) improve data quality by ensuring:
+- Specimen hierarchy is properly tracked (aliquotID/parentSpecimenID → specimenID)
+- Gene perturbation experiments include complete metadata (type AND technology)
+- Reference genomes are properly documented (genomicReference → link)
+- PDX experiments include recipient details (transplantationType → species, tissue)
+- Concentration measurements include units (concentrationMaterial/NaCl → units)
 
 ## For Contributors
 

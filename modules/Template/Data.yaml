@@ -71,6 +71,24 @@ classes:
         slot_conditions:
           compoundDoseUnit:
             value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
   BiologicalAssayDataTemplate:
     abstract: true
     description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples.  This is an abstract template; "real" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing).
@@ -377,6 +395,42 @@ classes:
         slot_conditions:
           compoundDoseUnit:
             value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
+    - description: If aliquotID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          aliquotID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+    - description: If parentSpecimenID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          parentSpecimenID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
   GeneticsAssayTemplate:
     abstract: true
     annotations:
@@ -468,6 +522,24 @@ classes:
         slot_conditions:
           timepointUnit:
             value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
   ImagingAssayTemplate:
     annotations:
       match:
@@ -542,6 +614,16 @@ classes:
         range: OtherPlatformEnum
       fileFormat:
         range: TabularFileFormatEnum
+    rules:
+    - description: If concentrationNaCl is provided, concentrationNaClUnit must be provided
+      preconditions:
+        slot_conditions:
+          concentrationNaCl:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          concentrationNaClUnit:
+            value_presence: PRESENT
   MRIAssayTemplate:
     annotations:
       match:
@@ -623,6 +705,25 @@ classes:
     - concentrationMaterialUnit
     - concentrationNaCl
     - concentrationNaClUnit
+    rules:
+    - description: If concentrationMaterial is provided, concentrationMaterialUnit must be provided
+      preconditions:
+        slot_conditions:
+          concentrationMaterial:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          concentrationMaterialUnit:
+            value_presence: PRESENT
+    - description: If concentrationNaCl is provided, concentrationNaClUnit must be provided
+      preconditions:
+        slot_conditions:
+          concentrationNaCl:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          concentrationNaClUnit:
+            value_presence: PRESENT
   MethylationArrayTemplate:
     annotations:
       match:
@@ -689,6 +790,24 @@ classes:
         slot_conditions:
           workingDistanceUnit:
             value_presence: PRESENT
+    - description: If aliquotID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          aliquotID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+    - description: If parentSpecimenID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          parentSpecimenID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
   NonBiologicalAssayDataTemplate:
     abstract: true
     description: 'Describes data artifacts (i.e. files) from an experimental/physical-sciences assay  where input specimens are more at the level of synthesized molecules or inorganic materials.
@@ -731,6 +850,24 @@ classes:
       postconditions:
         slot_conditions:
           timepointUnit:
+            value_presence: PRESENT
+    - description: If transplantationType is provided, transplantationRecipientSpecies must be provided
+      preconditions:
+        slot_conditions:
+          transplantationType:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          transplantationRecipientSpecies:
+            value_presence: PRESENT
+    - description: If transplantationType is provided, transplantationRecipientTissue must be provided
+      preconditions:
+        slot_conditions:
+          transplantationType:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          transplantationRecipientTissue:
             value_presence: PRESENT
   PharmacokineticsAssayTemplate:
     annotations:
@@ -888,6 +1025,15 @@ classes:
       postconditions:
         slot_conditions:
           workflowLink:
+            value_presence: PRESENT
+    - description: If genomicReference is provided, genomicReferenceLink must be provided
+      preconditions:
+        slot_conditions:
+          genomicReference:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genomicReferenceLink:
             value_presence: PRESENT
   ProcessedExpressionTemplate:
     annotations:
@@ -1078,6 +1224,25 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+    rules:
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
   ScRNASeqTemplate:
     annotations:
       match:
@@ -1101,6 +1266,25 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+    rules:
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
   ScSequencingAssayTemplate:
     annotations:
       match:

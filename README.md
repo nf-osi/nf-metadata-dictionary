@@ -206,9 +206,16 @@ BiologicalAssayDataTemplate:
 | Dependent Slot | Required Slot | Templates |
 |----------------|---------------|-----------|
 | age | ageUnit | BiologicalAssayDataTemplate (all assay templates) |
+| aliquotID | specimenID | GeneralMeasureDataTemplate, MicroscopyAssayTemplate |
 | compoundDose | compoundDoseUnit | BehavioralAssayTemplate, ClinicalAssayTemplate, GeneralMeasureDataTemplate, PharmacokineticsAssayTemplate, PlateBasedReporterAssayTemplate |
+| concentrationMaterial | concentrationMaterialUnit | MaterialScienceAssayTemplate |
+| concentrationNaCl | concentrationNaClUnit | MaterialScienceAssayTemplate, LightScatteringAssayTemplate |
 | dataType | dataSubtype | BiologicalAssayDataTemplate |
 | experimentalTimepoint | timepointUnit | BehavioralAssayTemplate, ElectrophysiologyAssayTemplate, GeneralMeasureDataTemplate, GenomicsAssayTemplateExtended, MRIAssayTemplate, PdxGenomicsAssayTemplate, PharmacokineticsAssayTemplate, PlateBasedReporterAssayTemplate |
+| genePerturbed | genePerturbationType, genePerturbationTechnology | BehavioralAssayTemplate, GeneralMeasureDataTemplate, GenomicsAssayTemplateExtended, RNASeqTemplate, ScRNASeqTemplate |
+| genomicReference | genomicReferenceLink | ProcessedAlignedReadsTemplate |
+| parentSpecimenID | specimenID | GeneralMeasureDataTemplate, MicroscopyAssayTemplate |
+| transplantationType | transplantationRecipientSpecies, transplantationRecipientTissue | PdxGenomicsAssayTemplate |
 | workflow | workflowLink | ProcessedAlignedReadsTemplate, ProcessedExpressionTemplate, ProcessedMergedDataTemplate, ProcessedVariantCallsTemplate, WorkflowReport |
 | workingDistance | workingDistanceUnit | MicroscopyAssayTemplate |
 
