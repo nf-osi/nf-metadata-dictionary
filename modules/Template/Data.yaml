@@ -492,6 +492,8 @@ classes:
         range: MRIPlatformEnum
       fileFormat:
         range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
   MassSpecAssayTemplate:
     annotations:
       match:
@@ -597,6 +599,8 @@ classes:
         range: MicroscopyImagingPlatformEnum
       fileFormat:
         range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
   NonBiologicalAssayDataTemplate:
     abstract: true
     description: 'Describes data artifacts (i.e. files) from an experimental/physical-sciences assay  where input specimens are more at the level of synthesized molecules or inorganic materials.
