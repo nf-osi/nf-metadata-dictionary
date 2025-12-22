@@ -171,6 +171,8 @@ classes:
         any_of:
         - range: TabularFileFormatEnum
         - range: DocumentFileFormatEnum
+      dataType:
+        ifabsent: string(clinical)
       isCellLine:
         ifabsent: string(No)
   ElectrophysiologyAssayTemplate:
@@ -730,6 +732,8 @@ classes:
     - auxiliaryAsset
     - specimenID
     slot_usage:
+      dataType:
+        ifabsent: string(AlignedReads)
       dataSubtype:
         ifabsent: string(processed)
       fileFormat:
@@ -902,6 +906,8 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(SequenceReads)
       isPrimaryCell:
         ifabsent: string(Yes)
   ScRNASeqTemplate:
@@ -927,6 +933,8 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(geneExpression)
   ScSequencingAssayTemplate:
     annotations:
       match:
@@ -998,6 +1006,8 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(SequenceReads)
   WGSTemplate:
     annotations:
       match:
@@ -1017,6 +1027,8 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(SequenceReads)
   WorkflowReport:
     description: Template used for miscellaneous workflow reports and accessory files
     is_a: FileBasedTemplate
