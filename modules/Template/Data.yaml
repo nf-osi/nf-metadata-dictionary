@@ -126,6 +126,7 @@ classes:
     slot_usage:
       assay:
         range: SequencingAssayEnum
+        ifabsent: string(ChIP-seq)
       platform:
         range: SequencingPlatformEnum
       fileFormat:
@@ -264,6 +265,7 @@ classes:
     slot_usage:
       assay:
         range: CellBasedAssayEnum
+        ifabsent: string(flow cytometry)
       platform:
         range: FlowCytometryPlatformEnum
       fileFormat:
@@ -418,6 +420,8 @@ classes:
         - range: ImagingSystemPlatformEnum
       fileFormat:
         range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
     slots:
     - platform
     - assayTarget
@@ -554,6 +558,7 @@ classes:
     slot_usage:
       assay:
         range: SequencingAssayEnum
+        ifabsent: string(methylation array)
       platform:
         range: ArrayPlatformEnum
       fileFormat:
@@ -840,6 +845,7 @@ classes:
     slot_usage:
       assay:
         range: MassSpectrometryAssayEnum
+        ifabsent: string(RPPA)
       platform:
         range: ArrayPlatformEnum
       fileFormat:
