@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NF Tooltip Approach Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .resource-field {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .resource-field select {
+            flex: 1;
+        }
+
+        .info-icon {
+            cursor: pointer;
+            font-size: 20px;
+            opacity: 0.6;
+            transition: opacity 0.2s, transform 0.2s;
+            user-select: none;
+        }
+
+        .info-icon:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .tooltip {
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            padding: 16px;
+            min-width: 350px;
+            max-width: 450px;
+            z-index: 1000;
+            display: none;
+            top: 100%;
+            left: 0;
+            margin-top: 8px;
+        }
+
+        .tooltip.show {
+            display: block;
+            animation: fadeIn 0.2s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tooltip-header {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            color: #333;
+        }
+
+        .tooltip-content {
+            margin-bottom: 12px;
+        }
+
+        .tooltip-row {
+            margin: 8px 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .tooltip-row strong {
+            color: #555;
+            display: inline-block;
+            min-width: 120px;
+        }
+
+        .tooltip-actions {
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            gap: 12px;
+        }
+
+        .tooltip-actions a {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .tooltip-actions a:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            color: #888;
+            font-style: italic;
+        }
+
+        .error {
+            color: #d32f2f;
+            padding: 12px;
+            background: #ffebee;
+            border-radius: 4px;
+            margin-top: 12px;
+        }
+
+        .success {
+            color: #2e7d32;
+            padding: 12px;
+            background: #e8f5e9;
+            border-radius: 4px;
+            margin-top: 12px;
+        }
+
+        .note {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🔬 Tooltip Approach Demo</h1>
+        <p>This demonstrates the <strong>tooltip/reference approach</strong> instead of auto-filling fields.</p>
+
+        <form id="specimenForm">
+            <div class="form-group">
+                <label for="specimenId">Specimen ID</label>
+                <input type="text" id="specimenId" placeholder="Enter specimen ID">
+            </div>
+
+            <div class="form-group">
+                <label for="resourceType">Resource Type</label>
+                <select id="resourceType">
+                    <option value="">Select resource type...</option>
+                    <option value="Cell Line">Cell Line</option>
+                    <option value="Animal Model">Animal Model</option>
+                    <option value="Antibody">Antibody</option>
+                    <option value="Genetic Reagent">Genetic Reagent</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="resourceName">Resource Name</label>
+                <div class="resource-field">
+                    <select id="resourceName" disabled>
+                        <option value="">Select resource type first...</option>
+                    </select>
+                    <span class="info-icon" id="infoIcon" style="display:none;">ℹ️</span>
+                    <div class="tooltip" id="tooltip"></div>
+                </div>
+            </div>
+
+            <!-- Note: No species, tissue, diagnosis, age, etc. fields!
+                 That info shows in the tooltip instead. -->
+        </form>
+
+        <div class="note">
+            <strong>💡 How it works:</strong><br>
+            1. Select a resource type (e.g., "Cell Line")<br>
+            2. Select a resource name (e.g., "JH-2-002")<br>
+            3. Hover over the ℹ️ icon to see rich metadata in a tooltip<br>
+            4. Click links to view full details or suggest edits<br>
+            <br>
+            <strong>Key benefit:</strong> Schema only has 2 fields (resourceType + resourceName),
+            all other metadata stays in the tool database and is shown as reference.
+        </div>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        const SERVICE_URL = 'http://localhost:8000';
+
+        const resourceTypeSelect = document.getElementById('resourceType');
+        const resourceNameSelect = document.getElementById('resourceName');
+        const infoIcon = document.getElementById('infoIcon');
+        const tooltip = document.getElementById('tooltip');
+        const messageDiv = document.getElementById('message');
+
+        // Sample data (in real implementation, this comes from API)
+        const SAMPLE_RESOURCES = {
+            'Cell Line': [
+                'JH-2-002',
+                'NF1-14-29',
+                'IPNF06.3'
+            ],
+            'Animal Model': [
+                'B6.129(Cg)-Nf1tm1Par/J (rrid:IMSR_JAX:017640)',
+                'Nf1pArg1947mp1',
+                'B6.129S1-Nf1tm1Cbr/J (rrid:IMSR_JAX:007923)'
+            ]
+        };
+
+        // When resource type changes, load resource names
+        resourceTypeSelect.addEventListener('change', function() {
+            const resourceType = this.value;
+
+            if (!resourceType) {
+                resourceNameSelect.disabled = true;
+                resourceNameSelect.innerHTML = '<option value="">Select resource type first...</option>';
+                infoIcon.style.display = 'none';
+                tooltip.classList.remove('show');
+                return;
+            }
+
+            // Populate resource names (in real app, fetch from /api/v1/enums)
+            resourceNameSelect.disabled = false;
+            resourceNameSelect.innerHTML = '<option value="">Select resource...</option>';
+
+            const resources = SAMPLE_RESOURCES[resourceType] || [];
+            resources.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                resourceNameSelect.appendChild(option);
+            });
+        });
+
+        // When resource name changes, show info icon
+        resourceNameSelect.addEventListener('change', function() {
+            if (this.value) {
+                infoIcon.style.display = 'inline';
+            } else {
+                infoIcon.style.display = 'none';
+                tooltip.classList.remove('show');
+            }
+        });
+
+        // Hover to show tooltip
+        infoIcon.addEventListener('mouseenter', async function() {
+            const resourceType = resourceTypeSelect.value;
+            const resourceName = resourceNameSelect.value;
+
+            if (!resourceType || !resourceName) return;
+
+            tooltip.innerHTML = '<div class="loading">Loading...</div>';
+            tooltip.classList.add('show');
+
+            try {
+                // Fetch tooltip data from service
+                const response = await fetch(
+                    `${SERVICE_URL}/api/v1/tooltip/${encodeURIComponent(resourceType)}/${encodeURIComponent(resourceName)}`
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Build tooltip HTML
+                let html = `
+                    <div class="tooltip-header">
+                        📊 ${data.display_name}
+                    </div>
+                    <div class="tooltip-content">
+                `;
+
+                for (const [key, value] of Object.entries(data.metadata)) {
+                    html += `
+                        <div class="tooltip-row">
+                            <strong>${key}:</strong> ${value}
+                        </div>
+                    `;
+                }
+
+                html += `
+                    </div>
+                    <div class="tooltip-actions">
+                        <a href="${data.detail_url}" target="_blank">
+                            🔗 View details
+                        </a>
+                        <a href="${data.edit_url}" target="_blank">
+                            ✏️ Suggest edits
+                        </a>
+                    </div>
+                `;
+
+                tooltip.innerHTML = html;
+
+                messageDiv.innerHTML = `
+                    <div class="success">
+                        ✓ Loaded metadata for ${data.display_name} from database
+                    </div>
+                `;
+
+            } catch (error) {
+                tooltip.innerHTML = `<div class="error">Error loading data: ${error.message}</div>`;
+
+                messageDiv.innerHTML = `
+                    <div class="error">
+                        ✗ Failed to load metadata. Make sure the service is running at ${SERVICE_URL}
+                    </div>
+                `;
+            }
+        });
+
+        // Hide tooltip when mouse leaves
+        infoIcon.addEventListener('mouseleave', function() {
+            setTimeout(() => {
+                if (!tooltip.matches(':hover')) {
+                    tooltip.classList.remove('show');
+                }
+            }, 200);
+        });
+
+        tooltip.addEventListener('mouseleave', function() {
+            this.classList.remove('show');
+        });
+
+        // Click to keep tooltip open
+        infoIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            tooltip.classList.toggle('show');
+        });
+
+        // Close tooltip when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!tooltip.contains(e.target) && e.target !== infoIcon) {
+                tooltip.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
