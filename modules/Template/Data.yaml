@@ -54,7 +54,7 @@ classes:
         range: TabularFileFormatEnum
   BiologicalAssayDataTemplate:
     abstract: true
-    description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples.  This is an abstract template; "real" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing).
+    description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. Donor/individual attributes (species, sex, age, diagnosis) describe the original donor (e.g., human patient tumor). Model attributes (modelSpecies, modelSex, modelAge) describe any animal model host used. biologicalResourceName typically maps to individualID for cell lines.
 
       '
     is_a: FileBasedTemplate
@@ -63,6 +63,8 @@ classes:
     - dataSubtype
     - assay
     - individualID
+    - biologicalResourceType
+    - biologicalResourceName
     - species
     - sex
     - age
@@ -72,6 +74,10 @@ classes:
     - nf2Genotype
     - tumorType
     - modelSystemName
+    - modelSpecies
+    - modelSex
+    - modelAge
+    - modelAgeUnit
     - organ
     - comments
   BulkSequencingAssayTemplate:

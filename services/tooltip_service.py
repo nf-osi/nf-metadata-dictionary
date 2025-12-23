@@ -260,11 +260,18 @@ async def get_tooltip_data(resource_type: str, resource_name: str):
     This endpoint provides rich metadata for display in tooltips or detail panels,
     supporting the reference-based approach instead of auto-filling fields.
 
+    Schema Field Mapping:
+        - resource_type (API) ← biologicalResourceType (LinkML schema)
+        - resource_name (API) ← biologicalResourceName (LinkML schema)
+        - For cell lines: biologicalResourceName typically equals individualID
+
     Use case: User selects a tool (cell line, animal model, etc.) and hovers over
     it to see contextual information without cluttering the form with auto-filled fields.
 
-    Example:
+    Examples:
         GET /api/v1/tooltip/Cell%20Line/JH-2-002
+        GET /api/v1/tooltip/Animal%20Model/B6.129(Cg)-Nf1tm1Par%2FJ
+        GET /api/v1/tooltip/Antibody/Anti-NF1-mAb
 
     Returns:
         Tooltip data with formatted metadata, detail URL, and edit URL
