@@ -701,6 +701,14 @@ slots:
     range: LibraryPreparationMethodEnum
     title: Library Preparation Method
     required: true
+  libraryPCRCycles:
+    annotations:
+      validationRules: int
+    description: The number of PCR cycles used during the construction of a sequencing library. Important for genomics data generated from cell-free DNA.
+    meaning: http://purl.obolibrary.org/obo/OBI_0002475
+    range: integer
+    required: false
+    title: Library PCR Cycles
   libraryStrand:
     any_of:
     - range: StrandednessEnum
