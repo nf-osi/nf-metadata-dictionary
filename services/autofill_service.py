@@ -172,6 +172,32 @@ class EnumResponse(BaseModel):
     count: int
 
 
+class TooltipResponse(BaseModel):
+    """Response model for tooltip data."""
+    display_name: str
+    type: str
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+    detail_url: Optional[str] = None
+    edit_url: Optional[str] = None
+    last_updated: Optional[str] = None
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "display_name": "JH-2-002",
+                "type": "Cell Line",
+                "metadata": {
+                    "Species": "Homo sapiens",
+                    "Tissue": "Brain",
+                    "Diagnosis": "Glioblastoma",
+                    "RRID": "CVCL_1234"
+                },
+                "detail_url": "https://synapse.org/tools/syn12345678",
+                "edit_url": "https://synapse.org/tools/syn12345678/edit"
+            }
+        }
+
+
 @lru_cache(maxsize=100, typed=False)
 def _cached_query(query: str, cache_timeout: int = 300) -> pd.DataFrame:
     """
@@ -244,9 +270,14 @@ async def root():
         "status": "running",
         "endpoints": {
             "autofill": "POST /api/v1/autofill",
+            "tooltip": "GET /api/v1/tooltip/{resource_type}/{resource_name}",
             "enums": "GET /api/v1/enums/{template}/{field}",
             "health": "GET /health",
             "templates": "GET /api/v1/templates"
+        },
+        "approaches": {
+            "autofill": "Auto-populate form fields (traditional)",
+            "tooltip": "Display metadata in tooltip/hover (recommended)"
         }
     }
 
@@ -450,6 +481,121 @@ async def cache_info():
         "size": info.currsize,
         "maxsize": info.maxsize
     }
+
+
+@app.get("/api/v1/tooltip/{resource_type}/{resource_name}", response_model=TooltipResponse)
+async def get_tooltip_data(resource_type: str, resource_name: str):
+    """
+    Get tooltip/reference data for a selected resource.
+
+    This endpoint provides rich metadata for display in tooltips or detail panels,
+    supporting the reference-based approach instead of auto-filling fields.
+
+    Use case: User selects a tool (cell line, animal model, etc.) and hovers over
+    it to see contextual information without cluttering the form with auto-filled fields.
+    """
+    logger.info(f"Tooltip request: {resource_type} / {resource_name}")
+
+    # Map resource types to templates
+    RESOURCE_TYPE_MAP = {
+        'Cell Line': 'BiospecimenTemplate',
+        'Animal Model': 'AnimalIndividualTemplate',
+        'Antibody': 'AntibodyTemplate',
+        'Genetic Reagent': 'GeneticReagentTemplate'
+    }
+
+    # Get template for this resource type
+    template = RESOURCE_TYPE_MAP.get(resource_type)
+    if not template or template not in TEMPLATE_CONFIG:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Resource type not supported: {resource_type}"
+        )
+
+    config = TEMPLATE_CONFIG[template]
+
+    # Query for tool data
+    column_name = config['key_field']
+    where_clause = f"{column_name} = '{resource_name}' AND toolType = '{config['tool_type']}'"
+
+    try:
+        df = query_synapse_table(config['table_id'], where_clause)
+
+        if df.empty:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Resource not found: {resource_name}"
+            )
+
+        # Get first row
+        row = df.iloc[0]
+
+        # Build metadata dictionary (key-value pairs for tooltip)
+        metadata = {}
+
+        # Define display order and labels
+        field_labels = {
+            'species': 'Species',
+            'organism': 'Organism',
+            'genotype': 'Genotype',
+            'backgroundStrain': 'Background Strain',
+            'tissue': 'Tissue',
+            'organ': 'Organ',
+            'cellType': 'Cell Type',
+            'diagnosis': 'Diagnosis',
+            'age': 'Age',
+            'sex': 'Sex',
+            'RRID': 'RRID',
+            'modelSystemType': 'Type',
+            'geneticModification': 'Genetic Modification',
+            'manifestation': 'Manifestation',
+            'institution': 'Institution',
+            'description': 'Description'
+        }
+
+        # Add fields that are present
+        for field_name, label in field_labels.items():
+            if field_name in row and pd.notna(row[field_name]):
+                value = row[field_name]
+
+                # Format value
+                if isinstance(value, (pd.Timestamp, datetime)):
+                    value = value.isoformat()
+                elif not isinstance(value, str):
+                    value = str(value)
+
+                # Truncate long descriptions
+                if field_name == 'description' and len(value) > 200:
+                    value = value[:197] + "..."
+
+                metadata[label] = value
+
+        # Build URLs (would need actual tool IDs in practice)
+        tool_id = row.get('id', row.get('ROW_ID', 'unknown'))
+        detail_url = f"https://www.synapse.org/#!Synapse:{config['table_id']}/tables/query?queryString=SELECT%20*%20FROM%20{config['table_id']}%20WHERE%20{column_name}=%27{resource_name}%27"
+        edit_url = f"https://www.synapse.org/#!Synapse:{config['table_id']}"
+
+        # Get last updated time if available
+        last_updated = None
+        if 'modifiedOn' in row and pd.notna(row['modifiedOn']):
+            last_updated = row['modifiedOn'].isoformat()
+
+        logger.info(f"  → Returning tooltip with {len(metadata)} fields")
+
+        return TooltipResponse(
+            display_name=resource_name,
+            type=resource_type,
+            metadata=metadata,
+            detail_url=detail_url,
+            edit_url=edit_url,
+            last_updated=last_updated
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"  ✗ Tooltip query failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Query failed: {str(e)}")
 
 
 if __name__ == "__main__":
