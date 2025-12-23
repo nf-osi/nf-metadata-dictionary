@@ -1,18 +1,22 @@
 slots:
   Component:
     description: Type of metadata template; provide the same one for all items/rows.
+    title: Component
     required: true
   Filename:
     description: The name of the file.
+    title: Filename
     required: false
   GIST:
     description: Characterization of the manifestation of Gastrointestinal stromal tumor (GIST).
     range: PresenceEnum
+    title: GIST
     required: false
   InChIKey:
     description: 'A unique hash key for a compound, e.g. for “Selumetinib”, the key is CYOHGALHFOKKQC-UHFFFAOYSA-N (https://pubchem.ncbi.nlm.nih.gov/compound/10127622#section=InChI-Key).  This is a more reliable identifier than the compound name and should be used if available.
 
       '
+    title: InChI Key
     required: false
   IrisLischNodules:
     description: Characterization of the manifestation of Iris Lisch Nodules.
@@ -27,9 +31,11 @@ slots:
   MRISequence:
     description: A mode used in MRI imaging
     range: MRISequenceEnum
+    title: MRI Sequence
     required: false
   Resource_id:
     description: A UUID for a Resource from the NF Research Tools Database
+    title: Resource ID
     required: false
   WHOPerformanceStatus:
     description: Score on the WHO scale describing patient's functional abilities.
@@ -39,10 +45,12 @@ slots:
     description: Statement describing access requirements for an entity.
     in_subset:
     - portal
+    title: Access Requirements
     required: false
   accessType:
     description: Indicates access type / possible procedures needed for access to the resource.
     range: AccessTypeEnum
+    title: Access Type
     required: true
     see_also:
     - accessRequirements
@@ -50,6 +58,7 @@ slots:
     description: Statement describing how resource use should be acknowledged.
     in_subset:
     - portal
+    title: Acknowledgement Statements
     required: false
   age:
     annotations:
@@ -57,17 +66,21 @@ slots:
       validationRules: num
     description: A numeric value representing age of the individual. Use with `ageUnit`.
     range: float
+    title: Age
     required: false
   ageUnit:
     description: A time unit that can be used with a given age value, e.g. years.
     range: TimeUnit
+    title: Age Unit
     required: false
   ageGroup:
     description: Age demographic classification based on MeSH age groups (Infant, Child, Adolescent, Adult). Supports simpler queries and harmonization with other resources.
     range: HumanAgeGroupEnum
+    title: Age Group
     required: false
   aliquotID:
     description: A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.
+    title: Aliquot ID
     required: false
   externalRepositoryUri:
     description: "Reference to dataset in an external repository using CURIE-style format. Examples - zenodo:12345678, figshare:12345678, ega.study:EGAS00001003186, dbgap:phs003519.v1.p1, cellxgene.collection:c11009b8-b113-4a99-9890-78b2f9df9d79, cbioportal:schw_ctf_synodos_2025"
@@ -78,6 +91,7 @@ slots:
     title: External Repository URI
   antibodyID:
     description: Antibody ID such as RRID if available, otherwise use vendor ID.
+    title: Antibody ID
     required: false
   aqueductalStenosis:
     description: Characterization of the manifestation of aqueductal stenosis.
@@ -93,9 +107,11 @@ slots:
     - range: ClinicalBehavioralAssayEnum
     - range: CellBasedAssayEnum
     - range: DrugScreenAssayEnum
+    title: Assay
     required: true
   assayTarget:
     description: Target of the assay such as a HUGO gene symbol, cell type, or tissue region depending on the capabilities of the assay.
+    title: Assay Target
     required: false
   attentionDeficitDisorder:
     description: Characterization of the manifestation of Attention Deficit Disorder.
@@ -116,32 +132,40 @@ slots:
       '
     in_subset:
     - portal
+    title: Auxiliary Asset
     required: false
   averageBaseQuality:
     description: Average base quality collected from samtools
+    title: Average Base Quality
     required: false
   averageInsertSize:
     description: Average insert size as reported by samtools
+    title: Average Insert Size
     required: false
   averageReadLength:
     description: Average read length collected from samtools
+    title: Average Read Length
     required: false
   batchID:
     description: Batch identifier, can be used in any context where added batch information is helpful, such as different sequencing runs or collection times.
+    title: Batch ID
     required: false
   benefactorId:
     description: The id of the resource from which access control is inherited.
     in_subset:
     - Synapse
+    title: Benefactor ID
     required: false
   bisulfiteConversionKitID:
     description: Name of kit used in bisulfite conversion.
+    title: Bisulfite Conversion Kit ID
     required: false
   bodySite:
     comments:
     - Helpful to consider where /cell samples came from, e.g. something like "schwannoma" gets put in `tumorType`, but `bodySite` gives us the original location of the tumor.
     description: Sample location referring to a named area of the body, inclusive of gross anatomical structures and organ parts.
     range: BodyPartEnum
+    title: Body Site
     required: false
     slot_uri: https://cancerdhc.github.io/ccdhmodel/v1.1/BodySite/
   breastCancer:
@@ -166,9 +190,11 @@ slots:
     - B1
     - C1
     - D1
+    title: Capture Area
     required: false
   cellID:
     description: Also known as cell barcode, this value can be added for single-cell experiments to identify data at the cell level.
+    title: Cell ID
     required: false
   cellType:
     annotations:
@@ -176,18 +202,22 @@ slots:
     description: A cell type is a distinct morphological or functional form of cell.
     range: Cell
     multivalued: true
+    title: Cell Type
     required: false
   channel:
     description: Color channel used to generate data file.
     range: ChannelEnum
+    title: Channel
     required: true
     source: https://github.com/NCI-GDC/gdcdictionary/tree/develop/src/gdcdictionary/schemas
   chipID:
     description: User-specified identifier for the chip used to perform the methylation microarray.
+    title: Chip ID
     required: false
     source: https://github.com/NCI-GDC/gdcdictionary/tree/develop/src/gdcdictionary/schemas
   chipPosition:
     description: User-specified identifier for the specific position on the chip that the sample was loaded into to perform the methylation microarray.
+    title: Chip Position
     required: false
     source: https://github.com/NCI-GDC/gdcdictionary/tree/develop/src/gdcdictionary/schemas
   citation:
@@ -215,61 +245,74 @@ slots:
     annotations:
       requiresDependency: compoundDoseUnit
     description: A dose quantity for the treatment compound. To be used with compoundDoseUnit.
+    title: Compound Dose
     required: true
   compoundDoseUnit:
     description: A unit associated with the value(s) in compoundDose.
+    title: Compound Dose Unit
     required: true
   compoundName:
     description: "Common name for a compound, e.g. \"Selumetinib\" (https://pubchem.ncbi.nlm.nih.gov/compound/10127622)"
+    title: Compound Name
     required: true
   concentrationMaterial:
     annotations:
       validationRules: num
     description: Numeric value for concentration of the material
     range: float
+    title: Concentration Material
     required: false
   concentrationMaterialUnit:
     description: Unit used for the material concentration, e.g. mg/mL
     range: ConcentrationUnit
+    title: Concentration Material Unit
     required: false
   concentrationNaCl:
     description: Numeric value for NaCl concentration
+    title: Concentration Na Cl
     required: false
   concentrationNaClUnit:
     description: Unit used for the NaCl concentration, e.g. mM
     range: ConcentrationUnit
+    title: Concentration Na Cl Unit
     required: false
   concreteType:
     description: Refers to the class model the data platform uses for representing the resource. This is a low-level field set by the platform and is not a user annotation.
     in_subset:
     - Synapse
+    title: Concrete Type
     required: false
   contentSize:
     description: (Files only) File size, usually calculated by the backend.
     in_subset:
     - Synapse
+    title: Content Size
     required: false
   contentType:
     description: Refers to the type of content.
     notes:
     - Used by schematic (entities with value = dataset) to detect which folders to surface.
+    title: Content Type
     required: false
   contributor:
     description: An entity responsible for making contributions to the resource.
     in_subset:
     - portal
     range: string
+    title: Contributor
     required: false
     see_also: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#contributor
   createdBy:
     description: Refers to the user who created the resource.
     in_subset:
     - Synapse
+    title: Created By
     required: false
   createdOn:
     description: Refers to when the resource was created.
     in_subset:
     - Synapse
+    title: Created On
     required: false
   creator:
     description: An entity responsible for making the resource.
@@ -278,12 +321,14 @@ slots:
     notes:
     - Recommended practice is to identify the creator with a URI. If this is not possible or feasible, a literal value that identifies the creator may be provided.
     range: string
+    title: Creator
     required: true
     see_also: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#creator
   currentVersion:
     description: (Versionable entities only) The current version number of the resource.
     in_subset:
     - Synapse
+    title: Current Version
     required: false
     see_also: https://www.w3.org/TR/vocab-dcat-3/#Property:resource_version
   dataCollectionMode:
@@ -292,21 +337,25 @@ slots:
     - DDA
     - DIA
     - Other
+    title: Data Collection Mode
     required: true
   dataFileHandleId:
     description: (Files only) Refers to the id of the file.
     in_subset:
     - Synapse
+    title: Data File Handle ID
     required: false
   dataStatus:
     description: Overall status of data in a study.
     in_subset:
     - portal
     range: DataStatusEnum
+    title: Data Status
     required: true
   dataSubtype:
     description: Further qualification of dataType, which may be used to indicate the state of processing of the data, aggregation of the data, or presence of metadata.
     range: DataSubtypeEnum
+    title: Data Subtype
     required: true
   dataType:
     annotations:
@@ -319,16 +368,19 @@ slots:
       '
     in_subset:
     - portal
+    title: Data Type
     required: true
   datasetItemCount:
     description: Count of files in dataset. Auto-calculated by Synapse.
     in_subset:
     - Synapse
+    title: Dataset Item Count
     required: false
   datasetSizeInBytes:
     description: Size of dataset entity in bytes. Auto-calculated by Synapse.
     in_subset:
     - Synapse
+    title: Dataset Size In Bytes
     required: false
   dermalNeurofibromas:
     description: Characterization of the manifestation of Dermal neurofibromas.
@@ -345,10 +397,12 @@ slots:
     in_subset:
     - portal
     range: string
+    title: Description
     required: false
   diagnosis:
     description: Diagnosis for the individual given signs and symptoms. Use the most specific diagnosis term that applies.
     range: DiagnosisEnum
+    title: Diagnosis
     required: true
   diagnosisAgeGroup:
     description: Age group of the individual at the time of diagnosis.
@@ -364,20 +418,25 @@ slots:
     in_subset:
     - portal
     range: string
+    title: Disease Focus
     required: false
   dissociationMethod:
     description: Procedure by which a biological specimen is dissociated into individual cells or a cell suspension
     range: DissociationMethodEnum
+    title: Dissociation Method
     required: false
   documentation:
     description: URL to any documentation describing the resource and its use.
+    title: Documentation
     required: false
   doi:
     description: Digital object identifier of the resource.
+    title: DOI
     required: false
   drugScreenType:
     description: String describing general class of drug screen
     range: DrugScreenAssayEnum
+    title: Drug Screen Type
     required: false
   epidemiologyMetric:
     description: Common metrics used in epidemiology studies.
@@ -386,23 +445,28 @@ slots:
     - Incidence Rate
     - Mortality Rate
     - Standardized Mortality Ratio
+    title: Epidemiology Metric
     required: true
   etag:
     description: Synapse employs an Optimistic Concurrency Control (OCC) scheme to handle concurrent updates. The E-Tag changes every time an entity is updated it is used to detect when a client's current representation of an entity is out-of-date.
     in_subset:
     - Synapse
+    title: ETag
     required: false
   experimentId:
     description: When applicable, an optional identifier that can be used to distinguish or group the experiments that generated the data; also can be used to denote internal batch reference if needed.
+    title: Experiment ID
     required: false
   experimentalCondition:
     description: A free-text description of the experimental condition (e.g. 5 mM doxorubicin).
+    title: Experimental Condition
     required: false
   experimentalFactor:
     description: An ontology concept for experimental factor measured with this data.
     notes:
     - Note that this enforces a concept term from EFO (currently preferred), while the related `experimentalCondition` is free-text and much more specific.
     range: Measurement
+    title: Experimental Factor
     required: false
   experimentalTimepoint:
     annotations:
@@ -410,14 +474,17 @@ slots:
       validationRules: num
     description: The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit
     range: float
+    title: Experimental Timepoint
     required: false
   expressionUnit:
     description: Measure used for transcript expression quantification
     range: ExpressionUnitEnum
+    title: Expression Unit
     required: false
   failedQC:
     description: Whether the sample or data failed QC checks (Yes, No)
     range: BooleanEnum
+    title: Failed QC
     required: false
   fileCount:
     description: Number of files in the resource collection.
@@ -425,6 +492,7 @@ slots:
     - Synapse
     notes:
     - This is auto-generated by Synapse for datasets.
+    title: File Count
     required: false
   fileFormat:
     description: Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software
@@ -439,44 +507,54 @@ slots:
     - range: ArchiveFileFormatEnum
     - range: DocumentFileFormatEnum
     - range: OtherFileFormatEnum
+    title: File Format
     required: true
   fileSize:
     description: Size of file in bytes.
     in_subset:
     - Synapse
+    title: File Size
     required: false
   fundingAgency:
     description: Refers to the funding organization for the generated resource. This annotation is handled by the DCC.
     in_subset:
     - portal
     range: string
+    title: Funding Agency
     required: false
   genePerturbationTechnology:
     description: Technology used to perturb gene
     range: GenePerturbationMethodEnum
+    title: Gene Perturbation Technology
     required: false
   genePerturbationType:
     description: Specific way in which a single gene was perturbed in a sample
     range: GenePerturbationTechnologyEnum
+    title: Gene Perturbation Type
     required: false
   genePerturbed:
     description: The HUGO gene symbol for the gene that is perturbed.
+    title: Gene Perturbed
     required: false
   genomicReference:
     description: Version of genome reference used for alignment in processing workflow
     notes:
     - Currently used with nextflow-processed data.
+    title: Genomic Reference
     required: true
   genomicReferenceLink:
     description: Link to genome reference data file used for alignment in processing workflow
+    title: Genomic Reference Link
     required: false
   germlineMutation:
     description: The individual's actual germline mutation.
     notes:
     - More sensitive information than germlineMutationIndicator.
+    title: Germline Mutation
     - Free-text field that possibly suggests *any* mutations could be put here, while nf1GermlineMutation, etc. are more specific in terms of disease.
   germlineMutationIndicator:
     description: Indicates a summary testing result for individual's germline mutation only.
+    title: Germline Mutation Indicator
     range: TestSummaryEnum
   gliomaOrEpendymoma:
     description: Characterization of the manifestation of Glioma or ependymoma.
@@ -493,6 +571,7 @@ slots:
     in_subset:
     - portal
     range: string
+    title: Grant DOI
     required: false
   heartDefect:
     description: Characterization of the manifestation of Heart defect.
@@ -501,6 +580,7 @@ slots:
     title: Heart defect
   id:
     description: The entity id for the resource automatically assigned by the platform.
+    title: ID
     required: false
   immersion:
     description: Immersion medium
@@ -509,17 +589,20 @@ slots:
     - oil
     - water
     - other
+    title: Immersion
     required: false
   individualID:
     annotations:
       validationRules: list like
     description: A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.
     multivalued: true
+    title: Individual ID
     required: true
   individualIdSource:
     description: Database or repository to which individual ID maps
     notes:
     - Legacy key used in a couple of old studies
+    title: Individual ID Source
     required: false
   inheritance:
     description: Describes whether known inheritance from a parent.
@@ -530,10 +613,12 @@ slots:
     in_subset:
     - portal
     range: string
+    title: Initiative
     required: false
   institution:
     description: Link to affiliated institution.
     range: Institution
+    title: Institution
     required: false
   intellectualDisability:
     description: Characterization of the manifestation of Intellectual disability.
@@ -543,34 +628,42 @@ slots:
   isCellLine:
     description: Whether or not sample source is a cell line (Yes; No)
     range: BooleanEnum
+    title: Is Cell Line
     required: false
   isFilteredReads:
     description: Whether the reads in the processed result has been filtered by adding a 'PASS' filter or other filters as determined by the data generator
+    title: Is Filtered Reads
     required: false
   isMultiIndividual:
     description: Whether or not a file has data for multiple individuals (Yes; No)
     range: BooleanEnum
+    title: Is Multi-Individual
     required: false
   isMultiSpecimen:
     description: Whether or not a file has data for multiple specimens (Yes; No)
     range: BooleanEnum
+    title: Is Multi-Specimen
     required: false
   isPairedEnd:
     deprecated: Note that this can be inferred as 'Yes' when runType=pairedEnd; current templates actually use runType to capture this info.
     description: (Legacy/deprecated annotation) Whether or not is paired-end sequencing (Yes; No).
     range: BooleanEnum
+    title: Is Paired End
     required: false
   isPrimaryCell:
     description: Whether or not cellType is primary (Yes; No)
     range: BooleanEnum
+    title: Is Primary Cell
     required: false
   isStranded:
     description: Whether or not the library is stranded (Yes; No)
     range: BooleanEnum
+    title: Is Stranded
     required: false
   isXenograft:
     description: Whether or not sample source is a xenograft (Yes; No)
     range: BooleanEnum
+    title: Is Xenograft
     required: false
   learningDisability:
     description: Characterization of the manifestation of Learning disability.
@@ -582,6 +675,7 @@ slots:
       validationRules: num
     description: Numerical aperture of the lens. Floating point value > 0.
     range: float
+    title: Lens Aperture
     required: false
   lenticularOpacity:
     description: Characterization of the manifestation of Lenticular opacity.
@@ -595,14 +689,17 @@ slots:
     title: Leukemia
   libraryKitID:
     description: Library kit ID.
+    title: Library Kit ID
     required: true
   libraryPrep:
     description: The general strategy by which the library was prepared
     range: LibraryPrepEnum
+    title: Library Prep
     required: false
   libraryPreparationMethod:
     description: Method by which library was prepared
     range: LibraryPreparationMethodEnum
+    title: Library Preparation Method
     required: true
   libraryStrand:
     any_of:
@@ -612,6 +709,7 @@ slots:
     notes:
     - Meaning originally captured with combination of readPairOrientation and readStrandOrigin.
     - https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/
+    title: Library Strand
     required: true
   license:
     description: Link to a license or name of license applicable for the resource.
@@ -630,6 +728,7 @@ slots:
     in_subset:
     - portal
     range: string
+    title: Manifestation
     required: false
   materialType:
     description: Type of material in the characterization
@@ -638,9 +737,11 @@ slots:
     - polymeric nanoparticles
     - small molecule
     - DNA
+    title: Material Type
     required: false
   meanCoverage:
     description: Mean coverage for whole genome sequencing, or mean target coverage for whole exome and targeted sequencing, collected from Picard Tools
+    title: Mean Coverage
     required: false
   meningioma:
     description: Characterization of the manifestation of Meningioma.
@@ -657,11 +758,13 @@ slots:
     - range: AnimalModelManual
     description: 'A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)'
     multivalued: true
+    title: Model System Name
     required: false
   modifiedBy:
     description: Refers to a user who last modified the resource on the platform.
     in_subset:
     - Synapse
+    title: Modified By
     required: false
   mosaicism:
     description: Whether individual is mosaic.
@@ -672,6 +775,7 @@ slots:
     - range: Genotype
     - range: UnknownEnum
     description: Genotype of NF1 gene in the biospecimen from which the data were derived, if known.
+    title: NF1 Genotype
     required: false
     see_also:
     - nf1Variant
@@ -680,21 +784,25 @@ slots:
     description: NF1 germline mutation.
     notes:
     - Unlike nf1Variant, this is free-text and not constrained to enumerated values of known variants, making it more flexible for new mutations and different nomenclatures.
+    title: NF1 Germline Mutation
     required: false
   nf1SomaticMutation:
     description: NF1 somatic mutation, i.e. in tumor samples.
+    title: NF1 Somatic Mutation
     required: false
   nf2Genotype:
     any_of:
     - range: Genotype
     - range: UnknownEnum
     description: Genotype of NF2 gene in the biospecimen from which the data were derived, if known
+    title: NF2 Genotype
     required: false
   nominalMagnification:
     annotations:
       validationRules: num
     description: magnification of the lens as specified by the manufacturer - i.e. '60' is a 60X lens.
     range: float
+    title: Nominal Magnification
     required: false
   nonopticGlioma:
     description: Characterization of the manifestation of Nonoptic glioma.
@@ -714,6 +822,7 @@ slots:
   nucleicAcidSource:
     description: Source of the extracted nucleic acid used in the experiment
     range: NucleicAcidSourceEnum
+    title: Nucleic Acid Source
     required: false
   numberOfSchwannomas:
     description: Number of schwannomas.
@@ -722,6 +831,7 @@ slots:
     title: Number of schwannomas
   objective:
     description: Microscope objective.
+    title: Objective
     required: false
   opticGlioma:
     description: Characterization of the manifestation of Optic glioma.
@@ -731,6 +841,7 @@ slots:
   organ:
     description: A unique macroscopic (gross) anatomic structure that performs specific functions. It is composed of various tissues. An organ is part of an anatomic system or a body region.
     range: OrganEnum
+    title: Organ
     required: false
   otherTumors:
     description: Characterization of the manifestation of other tumors.
@@ -742,6 +853,7 @@ slots:
       validationRules: num
     description: Numeric value for pH (range 0-14)
     range: float
+    title: pH
     required: false
   painStatus:
     description: Pain status rating.
@@ -752,14 +864,17 @@ slots:
       validationRules: int
     description: Pairs on different chromosomes collected from samtools
     range: integer
+    title: Pairs On Different Chr
     required: false
   parentId:
     description: 'The id of the parent resource, i.e. the parent folder on the platform. '
+    title: Parent ID
     required: false
   parentSpecimenID:
     description: 'A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.
 
       '
+    title: Parent Specimen ID
     required: false
   peakCallingAlgorithm:
     description: A list of commonly used peak-calling algorithms for ChIP-Seq data analysis.
@@ -776,6 +891,7 @@ slots:
     - SWEMBL
     - FSeq
     - ZINBA
+    title: Peak Calling Algorithm
     required: false
   peripheralNeuropathy:
     description: Characterization of the manifestation of Peripheral neuropathy.
@@ -789,10 +905,12 @@ slots:
     title: Pheochromocytoma
   plateName:
     description: User-specified identifier of the plate used to prepare the sample for analysis.
+    title: Plate Name
     required: false
     source: https://github.com/NCI-GDC/gdcdictionary/tree/develop/src/gdcdictionary/schemas
   plateWell:
     description: User-specified identifier for the specific well of the plate used to prepare the sample for analysis.
+    title: Plate Well
     required: false
     source: https://github.com/NCI-GDC/gdcdictionary/tree/develop/src/gdcdictionary/schemas
   platform:
@@ -807,6 +925,7 @@ slots:
     - range: FlowCytometryPlatformEnum
     - range: ImagingSystemPlatformEnum
     - range: OtherPlatformEnum
+    title: Platform
     required: true
   plexiformNeurofibromas:
     description: Characterization of the manifestation of Plexiform neurofibromas.
@@ -815,6 +934,7 @@ slots:
     title: Plexiform neurofibromas
   populationCoverage:
     description: Describes population coverage of the present data.
+    title: Population Coverage
     required: false
   programmingLanguage:
     description: A computer programming language
@@ -828,6 +948,7 @@ slots:
     - C#
     - Javascript
     - bash
+    title: Programming Language
     required: false
   progressReportNumber:
     description: 'Indicates milestone the  data is associated with. Currently only required for projects funded by NTAP, GFF, and NFRI. For GFF studies, this is the ‘progress report’ timeline. Example: if submitting data for the 6-month milestone report for NTAP, progressReportNumber=1.  Also if submitting data associated with first milestone, progressReportNumber =1'
@@ -843,22 +964,26 @@ slots:
     - '9'
     - '10'
     - Not Applicable
+    title: Progress Report Number
     required: false
   proportionCoverage10x:
     annotations:
       validationRules: num
     description: Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 10X or greater coverage from Picard Tools
     range: float
+    title: Proportion Coverage 10x
     required: false
   proportionCoverage30x:
     annotations:
       validationRules: num
     description: Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 30X or greater coverage from Picard Tools
     range: float
+    title: Proportion Coverage 30x
     required: false
   proteinExtractSource:
     description: Source of the extracted protein used in the experiment
     range: ProteinExtractSourceEnum
+    title: Protein Extract Source
     required: false
   protocolAssay:
     description: 'Main assay type that this protocol is related to, e.g. this is a prep protocol for single-cell RNA-seq assay. This is especially helpful for newly-developed or in-house assays.
@@ -892,6 +1017,7 @@ slots:
     in_subset:
     - portal
     range: string
+    title: Publisher
     required: false
     see_also: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/publisher
   readDepth:
@@ -899,12 +1025,14 @@ slots:
       validationRules: int
     description: If available, the coverage statistic as output from bedtools coverage or samtools stats.
     range: integer
+    title: Read Depth
     required: false
   readLength:
     annotations:
       validationRules: int
     description: Number of base pairs (bp) sequenced for a read
     range: integer
+    title: Read Length
     required: false
   readPair:
     annotations:
@@ -913,25 +1041,30 @@ slots:
     range: integer
     minimum_value: 1
     maximum_value: 2
+    title: Read Pair
     required: false
   readPairOrientation:
     deprecated: See `libraryStrand`.
     description: The relative orientation of the reads in a paired-end protocol
     range: ReadPairOrientationEnum
+    title: Read Pair Orientation
     required: false
   readStrandOrigin:
     deprecated: See `libraryStrand`.
     description: The strand from which the read originates in a strand-specific protocol
     range: ReadStrandOriginEnum
+    title: Read Strand Origin
     required: false
   readsDuplicatedPercent:
     description: Percent of duplicated reads collected from samtools
+    title: Reads Duplicated Percent
     required: false
   readsMappedPercent:
     annotations:
       validationRules: num
     description: Percent of mapped reads collected from samtools
     range: float
+    title: Reads Mapped Percent
     required: false
   recordingSource:
     description: Source of electrophysiology recording.
@@ -941,19 +1074,24 @@ slots:
     - shank
     - Utah array
     - other electrode array
+    title: Recording Source
     required: false
   referenceSequence:
     description: Syntactic sequences that has a role as reference of an annotation.
+    title: Reference Sequence
     required: false
   referenceSet:
     description: A set of references (e.g., canonical assembled contigs) which defines a common coordinate space for comparing reference-aligned experimental data.
     range: GenomicReferenceEnum
+    title: Reference Set
     required: false
   relatedDataset:
     description: Reference to a relevant dataset entity.
+    title: Related Dataset
     required: false
   relatedResource:
     description: A related resource.
+    title: Related Resource
     required: false
   relatedStudies:
     description: Studies similar to the current study. Subproperty of `relatedResource`.
@@ -961,27 +1099,33 @@ slots:
     - portal
     multivalued: true
     range: string
+    title: Related Studies
     required: false
   reporterGene:
     description: A gene which produces an easily assayed phenotype. Often used for expression studies of heterologous promoters.
+    title: Reporter Gene
     required: false
   reporterSubstance:
     description: A biological material (clone, oligo, etc.) on an array which will report on some biosequence or biosequences.
     notes:
     - Need to make enums for this.
+    title: Reporter Substance
     required: false
   resourceType:
     description: The type of resource being stored and annotated
     range: Resource
+    title: Resource Type
     required: true
   runType:
     description: Sequencing run type.
     notes:
     - Includes some of same information as concept `library layout` and has been removed in favor of libraryStrand
     range: RunTypeEnum
+    title: Run Type
     required: false
   runtimePlatform:
     description: Runtime platform or script interpreter dependencies (e.g. Java v1, Python 2.3).
+    title: Runtime Platform
     required: false
   sampleType:
     description: Type of sample used
@@ -1000,6 +1144,7 @@ slots:
     in_subset:
     - portal
     range: string
+    title: Series
     required: false
     see_also: http://www.w3.org/ns/dcat#inSeries
   sex:
@@ -1008,6 +1153,7 @@ slots:
     - range: UnknownEnum
     - range: NotApplicableEnum
     description: Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other.
+    title: Sex
     required: false
   skinFoldFreckling:
     description: Characterization of skin fold freckling.
@@ -1017,6 +1163,7 @@ slots:
     description: 'Unique identifier printed on the label of each Visium slide. The serial number starts with V followed by a number which can range between one through five and ends with a dash and a three digit number, such as 123.
 
       '
+    title: Slide ID
     required: false
   slideVersion:
     description: Version of imaging slide used. Slide version is critical for the analysis of the sequencing data as different slides have different capture area layouts.
@@ -1025,27 +1172,33 @@ slots:
     - V2
     - V3
     - V4
+    title: Slide Version
     required: false
   sourceName:
     description: 'Intended for non-biological samples, tf the sample is a nanoparticle sample or some chemical substance not derived from a biological material,  the corresponding source name should refer to the starting sample that was modified by a protocol for the assay.
 
       '
+    title: Source Name
     required: false
   species:
     description: The name of a species (typically a taxonomic group) of organism.
     range: SpeciesEnum
+    title: Species
     required: true
   specimenID:
     description: 'A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.
 
       '
+    title: Specimen ID
     required: true
   specimenIDSource:
     description: Optional annotation describing where the specimen ID source derived from, e.g. the biobank providing samples or a providing lab.
+    title: Specimen ID Source
     required: false
   specimenPreparationMethod:
     description: Term that represents preservation of the sample before usage in, e.g. sequencing
     range: SpecimenPreparationMethodEnum
+    title: Specimen Preparation Method
     required: true
   specimenType:
     any_of:
@@ -1054,6 +1207,7 @@ slots:
     description: 'The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory substances.
 
       '
+    title: Specimen Type
     required: false
   sphenoidDysplasia:
     description: Characterization of the manifestation of Sphenoid dysplasia.
@@ -1080,30 +1234,35 @@ slots:
     in_subset:
     - portal
     range: string
+    title: Study Fileview ID
     required: false
   studyId:
     description: Id of study.
     in_subset:
     - portal
     range: string
+    title: Study ID
     required: true
   studyLeads:
     description: Individuals with lead roles in a study.
     in_subset:
     - portal
     multivalued: true
+    title: Study Leads
     required: true
   studyName:
     description: Name of a study.
     in_subset:
     - portal
     range: string
+    title: Study Name
     required: true
   studyStatus:
     description: Status of a study.
     in_subset:
     - portal
     range: StudyStatusEnum
+    title: Study Status
     required: true
   subcutaneousNodularNeurofibromas:
     description: Characterization of the manifestation of Subcutaneous nodular neurofibromas.
@@ -1115,18 +1274,22 @@ slots:
     in_subset:
     - portal
     range: string
+    title: Summary
     required: true
   targetCaptureKitID:
     description: 'A unique identifier for the kit used to construct a genomic library using target capture-based techniques, which should be composed of the vendor name, kit name and kit version.
 
       '
+    title: Target Capture Kit ID
     required: false
   targetDepth:
     description: The targeted read depth prior to sequencing.
+    title: Target Depth
     required: false
   timepointUnit:
     description: For timed experiments this represents the unit of time measured
     range: TimeUnit
+    title: Timepoint Unit
     required: false
   title:
     description: Title of a resource.
@@ -1140,20 +1303,24 @@ slots:
       validationRules: int
     description: If available, the total number of reads collected from samtools.
     range: integer
+    title: Total Reads
     required: false
   transplantationRecipientSpecies:
     description: Species into which donor  was grown
     enum_range:
     - Human
     - Mouse
+    title: Transplantation Recipient Species
     required: false
   transplantationRecipientTissue:
     description: Tissue into which a xenograph sample is transplanted
     range: Tissue
+    title: Transplantation Recipient Tissue
     required: false
   transplantationType:
     description: Type of transplantation involved in the experiment, derived from MESH
     range: TransplantationType
+    title: Transplantation Type
     required: false
   tumorTreatmentStatus:
     description: Tumor treatment status for the individual.
@@ -1162,11 +1329,13 @@ slots:
   tumorType:
     description: The type of tumor that the biospecimen used to generate the data were collected from.
     range: Tumor
+    title: Tumor Type
     required: true
   type:
     description: Refers to the type of the resource on the platform, e.g. “file”.
     in_subset:
     - Synapse
+    title: Type
     required: false
   vascularDisease:
     description: Characterization of the manifestation of Vascular disease.
@@ -1187,9 +1356,11 @@ slots:
       requiresDependency: workflowLink
     description: Name and version of the workflow used to generate/analyze the data
     range: WorkflowEnum
+    title: Workflow
     required: false
   workflowLink:
     description: Workflow URL reference
+    title: Workflow Link
     required: false
   workingDistance:
     annotations:
@@ -1197,10 +1368,12 @@ slots:
       validationRules: num
     description: Working distance of the lens expressed as a floating point number > 0.
     range: float
+    title: Working Distance
     required: false
   workingDistanceUnit:
     description: Unit for working distance.
     range: WorkingDistanceUnitEnum
+    title: Working Distance Unit
     required: false
   yearProcessed:
     annotations:
@@ -1211,6 +1384,7 @@ slots:
     notes:
     - There is no 'year' validation rule and `date` rule requires actual date format
     range: integer
+    title: Year Processed
     required: false
   yearPublished:
     annotations:
@@ -1219,4 +1393,5 @@ slots:
     in_subset:
     - portal
     range: integer
+    title: Year Published
     required: false
