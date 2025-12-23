@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  tooltip-service:
+    build: .
+    container_name: nf-tooltip-service
+    ports:
+      - "8000:8000"
+    environment:
+      - SYNAPSE_AUTH_TOKEN=${SYNAPSE_AUTH_TOKEN}
+      - HOST=0.0.0.0
+      - PORT=8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  # Optional: Nginx reverse proxy for production
+  nginx:
+    image: nginx:alpine
+    container_name: nf-tooltip-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - tooltip-service
+    restart: unless-stopped
+    profiles:
+      - production
