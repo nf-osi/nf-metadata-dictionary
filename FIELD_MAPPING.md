@@ -2,58 +2,98 @@
 
 ## Overview
 
-This document explains how biological resources (cell lines, animal models, antibodies, genetic reagents) are referenced in the NF metadata schema and how they map to the NF Research Tools Database (syn51730943).
+This document explains how biological resources are referenced in the NF metadata schema and how they map to the NF Research Tools Database (syn51730943).
 
-## Key Principle
+**Key Principle**: Use existing schema fields to reference syn51730943. Detailed metadata is displayed in tooltips, not duplicated in annotation fields.
 
-**Donor information is stored once in syn51730943 and referenced via biologicalResourceName**, which typically maps to `individualID`. Detailed metadata is displayed in tooltips, not duplicated in annotation fields.
+## Field Mapping to syn51730943
 
-## Field Mappings
+| Schema Field | References | Lookup in syn51730943 | Tooltip Endpoint |
+|--------------|------------|----------------------|------------------|
+| `individualID` | Cell line (donor) | `toolType='cell_line'` | `/api/v1/tooltip/cell-line/{individualID}` |
+| `modelSystemName` | Animal model | `toolType='animal'` | `/api/v1/tooltip/animal-model/{modelSystemName}` |
+| `antibodyID` | Antibody | `toolType='antibody'` | `/api/v1/tooltip/antibody/{antibodyID}` |
+| `geneticReagentID` | Genetic reagent | `toolType='genetic_reagent'` | `/api/v1/tooltip/genetic-reagent/{geneticReagentID}` |
 
-### Core Reference Fields
+**No new fields needed!** All references use existing schema fields.
 
-| Field | Description | Example Values |
-|-------|-------------|----------------|
-| `biologicalResourceType` | Type of resource from syn51730943 | "Cell Line", "Animal Model", "Antibody", "Genetic Reagent" |
-| `biologicalResourceName` | Name of the resource | "JH-2-002" (cell line), "Anti-NF1-mAb" (antibody) |
-| `individualID` | Individual/donor identifier | "JH-2-002" (same as cell line name) |
-| `specimenID` | Specimen/replicate identifier | "JH-2-002-rep1", "JH-2-002-rep2" |
+## Field Semantics
 
 ### Donor/Individual Attributes
 
-These describe the **original donor** (e.g., human patient from which tumor was derived):
+Describe the **original donor** (e.g., human patient from which tumor was derived):
 
-| Field | Description | Source |
-|-------|-------------|--------|
-| `species` | Donor species | "Homo sapiens" (human donor) |
-| `sex` | Donor sex | "Male", "Female" |
-| `age` | Donor age | 45 (years) |
+| Field | Description | Example |
+|-------|-------------|---------|
+| `individualID` | Individual/donor identifier; for cell lines, this IS the cell line name | "JH-2-002" |
+| `species` | Donor species | "Homo sapiens" |
+| `sex` | Donor sex | "Male" |
+| `age` | Donor age | 45 |
 | `ageUnit` | Age unit | "years" |
 | `diagnosis` | Donor diagnosis | "Glioblastoma multiforme" |
 | `organ` | Donor organ/tissue | "Brain" |
 
-**For cell lines**: These are looked up from syn51730943 via `biologicalResourceName` and shown in **tooltips**.
+**For cell lines**: Donor metadata comes from syn51730943 via `individualID` and is shown in **tooltips**.
 
-### Animal Model Attributes
+### Animal Model Host Attributes
 
-These describe the **animal model host** (for xenografts or model-only experiments):
+Describe the **animal model host** (for xenografts or model-only experiments):
 
-| Field | Description | Source |
-|-------|-------------|--------|
+| Field | Description | Example |
+|-------|-------------|---------|
 | `modelSystemName` | Genetic model name | "NSG", "B6.129(Cg)-Nf1tm1Par/J" |
 | `modelSpecies` | Model species | "Mus musculus" |
 | `modelSex` | Individual model animal sex | "Female" |
-| `modelAge` | Individual model animal age | 8 (weeks) |
-| `modelAgeUnit` | Model age unit | "weeks" |
+| `modelAge` | Individual model animal age | 8 |
+| `modelAgeUnit` | Model age unit (required if modelAge specified) | "weeks" |
 
 **Genetic information** (genotype, mutations) from `modelSystemName` is in syn51730943 and shown in **tooltips**.
 
-### Legacy Field Mapping
+### Treatment/Reagent Attributes
 
-| Legacy Field | Maps To | Notes |
-|--------------|---------|-------|
-| `antibodyID` | `biologicalResourceName` | When `biologicalResourceType: "Antibody"` |
-| `modelSystemName` (for cell lines) | `biologicalResourceName` | When `biologicalResourceType: "Cell Line"` |
+| Field | Description | Example |
+|-------|-------------|---------|
+| `antibodyID` | Antibody identifier | "AB-12345", "Anti-NF1-mAb" |
+| `geneticReagentID` | Genetic reagent identifier | "CRISPR-NF1-KO", "shRNA-TP53-001" |
+
+## Conditional Requirements
+
+### Annotations in props.yaml
+
+Fields can be conditionally required using the `requiresDependency` annotation:
+
+```yaml
+modelAge:
+  annotations:
+    requiresDependency: modelAgeUnit
+  description: Age of the individual animal model at time of experiment.
+  range: float
+  required: false
+
+modelAgeUnit:
+  annotations:
+    requiresDependency: modelAge
+  description: Time unit for modelAge. Required when modelAge is specified.
+  range: TimeUnit
+  required: false
+```
+
+### Validation Rules
+
+1. **If `modelAge` is specified** → `modelAgeUnit` MUST be specified
+2. **If `age` is specified** → `ageUnit` MUST be specified
+3. **For xenografts**: If `modelSystemName` is specified → should also specify `individualID` (cell line donor)
+4. **For cell lines**: `individualID` references the cell line in syn51730943
+
+### Recommended Practices
+
+| Scenario | Required | Recommended |
+|----------|----------|-------------|
+| Cell line only | `individualID` | None |
+| Xenograft | `individualID`, `modelSystemName` | `modelSex`, `modelAge`, `modelAgeUnit` |
+| Animal model only | `modelSystemName` | `sex`, `age`, `ageUnit` for individual animal |
+| With antibody | Base fields + `antibodyID` | None |
+| With genetic reagent | Base fields + `geneticReagentID` | None |
 
 ## Usage Scenarios
 
@@ -62,14 +102,12 @@ These describe the **animal model host** (for xenografts or model-only experimen
 Patient-derived cell line used for experiments.
 
 ```yaml
-# Minimal required fields
-biologicalResourceType: "Cell Line"
-biologicalResourceName: "JH-2-002"      # → maps to individualID
-individualID: "JH-2-002"                 # Same as cell line name
+# Cell line donor
+individualID: "JH-2-002"                 # → Lookup in syn51730943
 specimenID: "JH-2-002-rep1"              # Technical replicate 1
 specimenID: "JH-2-002-rep2"              # Technical replicate 2
 
-# Donor info from syn51730943 (shown in tooltip):
+# Donor metadata from syn51730943 (shown in tooltip):
 # - species: "Homo sapiens"
 # - diagnosis: "Glioblastoma multiforme"
 # - age: "45 years"
@@ -78,9 +116,14 @@ specimenID: "JH-2-002-rep2"              # Technical replicate 2
 # - organ: "Cerebrum"
 ```
 
+**Tooltip Lookup**:
+```
+GET /api/v1/tooltip/cell-line/JH-2-002
+```
+
 **User Experience**:
-- Select `biologicalResourceName: "JH-2-002"` from dropdown
-- Hover over selection → tooltip shows donor metadata
+- Select `individualID: "JH-2-002"` from dropdown
+- Hover over field → tooltip shows donor metadata
 - Click → view full details in syn51730943
 
 ### Scenario 2: Cell Line in Animal Model (Xenograft)
@@ -89,26 +132,27 @@ Human cell line implanted in immunocompromised mouse.
 
 ```yaml
 # Cell line (donor)
-biologicalResourceType: "Cell Line"
-biologicalResourceName: "JH-2-002"      # Human tumor donor
-individualID: "JH-2-002"
+individualID: "JH-2-002"                 # Human tumor donor
 
 # Animal model host
 modelSystemName: "NSG"                   # NOD scid gamma mouse
 modelSpecies: "Mus musculus"
 modelSex: "Female"                       # Individual mouse sex
 modelAge: 8                              # Individual mouse age
-modelAgeUnit: "weeks"
+modelAgeUnit: "weeks"                    # Required with modelAge
 
 # Specimen from xenograft
 specimenID: "JH-2-002-NSG-001-tumor"    # Tumor grown in mouse
+```
 
-# Donor info (human tumor) from syn51730943 via JH-2-002
-# Model genetic info from syn51730943 via NSG
+**Multiple Tooltips**:
+```
+GET /api/v1/tooltip/cell-line/JH-2-002      # Human donor info
+GET /api/v1/tooltip/animal-model/NSG        # Mouse model genetic info
 ```
 
 **Data Flow**:
-1. `biologicalResourceName: "JH-2-002"` → syn51730943 → human donor metadata (tooltip)
+1. `individualID: "JH-2-002"` → syn51730943 → human donor metadata (tooltip)
 2. `modelSystemName: "NSG"` → syn51730943 → mouse model genetic info (tooltip)
 3. `modelSex`, `modelAge` → specific to individual mouse used
 
@@ -117,268 +161,376 @@ specimenID: "JH-2-002-NSG-001-tumor"    # Tumor grown in mouse
 Genetically engineered mouse model.
 
 ```yaml
-# No cell line involved
-biologicalResourceType: null             # Or omit
-biologicalResourceName: null             # Or omit
-
 # Animal model
 modelSystemName: "B6.129(Cg)-Nf1tm1Par/J"
 individualID: "mouse-001"                # Specific animal
 sex: "Male"                              # Individual animal
 age: 12                                  # Individual animal
-ageUnit: "weeks"
+ageUnit: "weeks"                         # Required with age
 species: "Mus musculus"                  # Can be inferred from model
 
 # Specimen
 specimenID: "mouse-001-liver"
 specimenID: "mouse-001-brain"
-
-# Model genetic info from syn51730943 via modelSystemName:
-# - genotype
-# - backgroundStrain
-# - geneticModification
-# - manifestation
 ```
 
-**Note**: In this case, individual-level attributes (sex, age) are specified directly since there's no cell line donor.
-
-### Scenario 4: With Antibodies
-
-Experiment using antibody treatment or detection.
-
-```yaml
-# Option A: Use antibodyID (legacy, still supported)
-antibodyID: "AB-12345"                   # References antibody in syn51730943
-
-# Option B: Use generic pattern (recommended)
-biologicalResourceType: "Antibody"
-biologicalResourceName: "Anti-NF1-mAb"   # References antibody in syn51730943
-
-# Antibody metadata from syn51730943 (shown in tooltip):
-# - target: "NF1"
-# - host: "Mouse"
-# - clonality: "Monoclonal"
-# - RRID: "AB_12345"
+**Tooltip Lookup**:
+```
+GET /api/v1/tooltip/animal-model/B6.129(Cg)-Nf1tm1Par%2FJ
 ```
 
-### Scenario 5: With Genetic Reagents
+**Model genetic info from syn51730943**:
+- genotype
+- backgroundStrain
+- geneticModification
+- manifestation
 
-CRISPR, shRNA, or other genetic manipulation tools.
+### Scenario 4: Western Blot with Multiple Resources
+
+Xenograft sample analyzed with Western blot using antibody.
 
 ```yaml
+# Cell line (donor)
+individualID: "JH-2-002"                 # Human cell line
+
+# Animal model host
+modelSystemName: "NSG"
+modelSex: "Female"
+modelAge: 8
+modelAgeUnit: "weeks"
+
+# Antibody used
+antibodyID: "Anti-NF1-mAb"               # Primary antibody
+
+# Specimen
+specimenID: "JH-2-002-NSG-001-lysate"
+assay: "western blot"
+```
+
+**Multiple Tooltips** (3 resources):
+```
+GET /api/v1/tooltip/cell-line/JH-2-002      # Cell line donor
+GET /api/v1/tooltip/animal-model/NSG        # Animal model
+GET /api/v1/tooltip/antibody/Anti-NF1-mAb   # Antibody
+```
+
+**User Experience**:
+- Three ℹ️ icons appear (one for each resource)
+- Hover over `individualID` → cell line donor metadata
+- Hover over `modelSystemName` → animal model genetic metadata
+- Hover over `antibodyID` → antibody metadata
+
+### Scenario 5: CRISPR Knockout Cell Line
+
+Cell line with genetic modification using CRISPR.
+
+```yaml
+# Cell line
+individualID: "HEK293"                   # Parent cell line
+
 # Genetic reagent used
-biologicalResourceType: "Genetic Reagent"
-biologicalResourceName: "CRISPR-NF1-KO"  # References reagent in syn51730943
+geneticReagentID: "CRISPR-NF1-KO"        # CRISPR construct
 
-# Cell line or model
-biologicalResourceType: "Cell Line"
-biologicalResourceName: "HEK293"
-
-# Reagent metadata from syn51730943 (shown in tooltip):
-# - reagentType: "CRISPR/Cas9"
-# - target: "NF1"
-# - vector: "pX459"
-# - sequence: "AGCT..."
+# Specimen
+specimenID: "HEK293-NF1-KO-clone1"
 ```
 
-## Data Validation Rules
+**Multiple Tooltips**:
+```
+GET /api/v1/tooltip/cell-line/HEK293             # Parent cell line
+GET /api/v1/tooltip/genetic-reagent/CRISPR-NF1-KO  # CRISPR construct
+```
 
-### Required Relationships
+**Reagent metadata from syn51730943**:
+- reagentType: "CRISPR/Cas9"
+- target: "NF1"
+- vector: "pX459"
+- sequence: "..."
 
-1. If `biologicalResourceName` is specified → `biologicalResourceType` must be specified
-2. For cell lines: `biologicalResourceName` should equal `individualID`
-3. If `modelAge` is specified → `modelAgeUnit` must be specified
-4. If `modelSystemName` is specified for xenografts → `biologicalResourceName` should also be specified
-
-### Field Priority
-
-When both donor and model fields exist:
-
-1. **Donor attributes** (species, sex, age, diagnosis) = original donor/cell line
-2. **Model attributes** (modelSpecies, modelSex, modelAge) = animal host
-3. Donor info takes precedence for biological interpretations
-
-## syn51730943 Lookup Examples
+## syn51730943 Lookup Details
 
 ### Cell Line Lookup
 
+```sql
+SELECT * FROM syn51730943
+WHERE toolType = 'cell_line'
+AND toolName = 'JH-2-002'
 ```
-Query: SELECT * FROM syn51730943
-       WHERE toolType = 'cell_line'
-       AND toolName = 'JH-2-002'
 
-Returns:
-  toolName: "JH-2-002"
-  species: "Homo sapiens"
-  diagnosis: "Glioblastoma multiforme"
-  age: "45 years"
-  sex: "Male"
-  tissue: "Brain"
-  organ: "Cerebrum"
-  cellType: "Tumor"
-  RRID: "CVCL_1234"
-  institution: "Johns Hopkins University"
+**Returns**:
+```json
+{
+  "toolName": "JH-2-002",
+  "toolType": "cell_line",
+  "species": "Homo sapiens",
+  "diagnosis": "Glioblastoma multiforme",
+  "age": "45 years",
+  "sex": "Male",
+  "tissue": "Brain",
+  "organ": "Cerebrum",
+  "cellType": "Tumor",
+  "RRID": "CVCL_1234",
+  "institution": "Johns Hopkins University"
+}
 ```
 
 ### Animal Model Lookup
 
+```sql
+SELECT * FROM syn51730943
+WHERE toolType = 'animal'
+AND toolName = 'B6.129(Cg)-Nf1tm1Par/J'
 ```
-Query: SELECT * FROM syn51730943
-       WHERE toolType = 'animal'
-       AND toolName = 'B6.129(Cg)-Nf1tm1Par/J'
 
-Returns:
-  toolName: "B6.129(Cg)-Nf1tm1Par/J"
-  species: "Mus musculus"
-  genotype: "Nf1 tm1Par/+"
-  backgroundStrain: "C57BL/6"
-  geneticModification: "Nf1 knockout"
-  manifestation: "Neurofibromas"
-  RRID: "IMSR_JAX:017640"
+**Returns**:
+```json
+{
+  "toolName": "B6.129(Cg)-Nf1tm1Par/J",
+  "toolType": "animal",
+  "species": "Mus musculus",
+  "genotype": "Nf1 tm1Par/+",
+  "backgroundStrain": "C57BL/6",
+  "geneticModification": "Nf1 knockout",
+  "manifestation": "Neurofibromas",
+  "RRID": "IMSR_JAX:017640"
+}
 ```
 
 ### Antibody Lookup
 
-```
-Query: SELECT * FROM syn51730943
-       WHERE toolType = 'antibody'
-       AND toolName = 'Anti-NF1-mAb'
-
-Returns:
-  toolName: "Anti-NF1-mAb"
-  target: "NF1"
-  host: "Mouse"
-  clonality: "Monoclonal"
-  clone: "NF1-123"
-  isotype: "IgG1"
-  RRID: "AB_12345"
-  vendor: "Abcam"
+```sql
+SELECT * FROM syn51730943
+WHERE toolType = 'antibody'
+AND toolName = 'Anti-NF1-mAb'
 ```
 
-## Migration from Existing Data
-
-### Step 1: Identify Cell Lines
-
-For records with `modelSystemName` matching cell lines in syn51730943:
-
-```
-# Before
-modelSystemName: "JH-2-002"
-individualID: "JH-2-002"
-
-# After
-biologicalResourceType: "Cell Line"
-biologicalResourceName: "JH-2-002"
-individualID: "JH-2-002"
-modelSystemName: null  # (or remove)
+**Returns**:
+```json
+{
+  "toolName": "Anti-NF1-mAb",
+  "toolType": "antibody",
+  "target": "NF1",
+  "host": "Mouse",
+  "clonality": "Monoclonal",
+  "clone": "NF1-123",
+  "isotype": "IgG1",
+  "RRID": "AB_12345",
+  "vendor": "Abcam"
+}
 ```
 
-### Step 2: Identify Xenografts
+### Genetic Reagent Lookup
 
-For records with both cell line and animal model:
-
-```
-# Before
-modelSystemName: ["JH-2-002", "NSG"]
-individualID: "JH-2-002"
-
-# After
-biologicalResourceType: "Cell Line"
-biologicalResourceName: "JH-2-002"
-individualID: "JH-2-002"
-modelSystemName: "NSG"
-modelSpecies: "Mus musculus"
+```sql
+SELECT * FROM syn51730943
+WHERE toolType = 'genetic_reagent'
+AND toolName = 'CRISPR-NF1-KO'
 ```
 
-### Step 3: Handle Antibodies
-
+**Returns**:
+```json
+{
+  "toolName": "CRISPR-NF1-KO",
+  "toolType": "genetic_reagent",
+  "reagentType": "CRISPR/Cas9",
+  "target": "NF1",
+  "vector": "pX459",
+  "guideSequence": "AGCTAGCTAGCTAGCTAGCT",
+  "PAM": "NGG",
+  "vendor": "Addgene",
+  "catalogNumber": "62988"
+}
 ```
-# Before
-antibodyID: "AB-12345"
 
-# After (both are valid)
-antibodyID: "AB-12345"  # Legacy, still works
-# OR
-biologicalResourceType: "Antibody"
-biologicalResourceName: "Anti-NF1-mAb"
+## Tooltip Service API
+
+### Endpoints
+
+| Endpoint | Schema Field | Example |
+|----------|--------------|---------|
+| `GET /api/v1/tooltip/cell-line/{individualID}` | individualID | `/api/v1/tooltip/cell-line/JH-2-002` |
+| `GET /api/v1/tooltip/animal-model/{modelSystemName}` | modelSystemName | `/api/v1/tooltip/animal-model/NSG` |
+| `GET /api/v1/tooltip/antibody/{antibodyID}` | antibodyID | `/api/v1/tooltip/antibody/AB-12345` |
+| `GET /api/v1/tooltip/genetic-reagent/{geneticReagentID}` | geneticReagentID | `/api/v1/tooltip/genetic-reagent/CRISPR-NF1-KO` |
+
+### Response Format
+
+All endpoints return:
+
+```json
+{
+  "display_name": "JH-2-002",
+  "type": "Cell Line",
+  "metadata": {
+    "Species": "Homo sapiens",
+    "Diagnosis": "Glioblastoma multiforme",
+    "Age": "45 years",
+    "Sex": "Male",
+    "Tissue": "Brain",
+    "Organ": "Cerebrum",
+    "RRID": "CVCL_1234"
+  },
+  "detail_url": "https://synapse.org/...",
+  "edit_url": "https://synapse.org/.../edit",
+  "last_updated": "2025-12-22T10:30:00Z"
+}
+```
+
+## UI Integration
+
+### Form with Multiple Tooltips
+
+```html
+<form>
+  <!-- Cell line -->
+  <div class="field">
+    <label>Individual ID</label>
+    <input id="individualID" value="JH-2-002">
+    <span class="tooltip-icon" data-field="individualID" data-type="cell-line">ℹ️</span>
+  </div>
+
+  <!-- Animal model -->
+  <div class="field">
+    <label>Model System Name</label>
+    <input id="modelSystemName" value="NSG">
+    <span class="tooltip-icon" data-field="modelSystemName" data-type="animal-model">ℹ️</span>
+  </div>
+
+  <!-- Antibody -->
+  <div class="field">
+    <label>Antibody ID</label>
+    <input id="antibodyID" value="Anti-NF1-mAb">
+    <span class="tooltip-icon" data-field="antibodyID" data-type="antibody">ℹ️</span>
+  </div>
+</form>
+
+<script>
+// Attach tooltips to all fields
+document.querySelectorAll('.tooltip-icon').forEach(icon => {
+  const field = icon.dataset.field;
+  const type = icon.dataset.type;
+  const value = document.getElementById(field).value;
+
+  icon.addEventListener('mouseenter', async () => {
+    const response = await fetch(`/api/v1/tooltip/${type}/${encodeURIComponent(value)}`);
+    const data = await response.json();
+    showTooltip(data, icon);
+  });
+});
+</script>
+```
+
+## Validation Rules
+
+### Required Dependencies
+
+Implement these validation rules:
+
+```javascript
+// 1. modelAge requires modelAgeUnit
+if (modelAge && !modelAgeUnit) {
+  error("modelAgeUnit required when modelAge is specified");
+}
+
+// 2. age requires ageUnit
+if (age && !ageUnit) {
+  error("ageUnit required when age is specified");
+}
+
+// 3. Xenografts should have both
+if (modelSystemName && !individualID) {
+  warning("For xenografts, specify individualID (cell line donor)");
+}
+
+// 4. Model age/sex are for individual animals
+if (modelSex && !modelSystemName) {
+  warning("modelSex specified but no modelSystemName");
+}
+```
+
+### LinkML Annotations
+
+Already defined in props.yaml:
+
+```yaml
+modelAge:
+  annotations:
+    requiresDependency: modelAgeUnit  # Validation enforced
 ```
 
 ## Benefits of This Approach
 
-### 1. No Data Duplication
-- Donor metadata stored once in syn51730943
-- Referenced via `biologicalResourceName`
-- Reduces data errors and inconsistencies
+### 1. Uses Existing Fields
+- ✅ No new `biologicalResourceType`/`biologicalResourceName` fields
+- ✅ Leverages `individualID`, `modelSystemName`, `antibodyID`, `geneticReagentID`
+- ✅ Cleaner schema
 
-### 2. Minimal Schema
-- Only 2 reference fields (`biologicalResourceType` + `biologicalResourceName`)
-- vs. 20+ fields if metadata was duplicated
-- 90% reduction in schema complexity
+### 2. Multiple Resources Per Record
+- ✅ Western blot can have: cell line + animal model + antibody
+- ✅ Each field gets its own tooltip
+- ✅ No need to choose one "primary" resource
 
-### 3. Always Up-to-Date
-- Corrections to syn51730943 immediately reflected
-- No need to update individual records
-- Centralized curation
+### 3. No Data Duplication
+- ✅ Donor metadata stored once in syn51730943
+- ✅ Referenced via existing fields
+- ✅ Reduces data errors
 
-### 4. Better User Experience
-- Hover tooltip shows rich context
-- Click to view full details
-- Easy to suggest edits
-- Consistent across all datasets
+### 4. Conditional Requirements
+- ✅ `modelAge` requires `modelAgeUnit` (enforced via annotations)
+- ✅ `age` requires `ageUnit`
+- ✅ Clear dependency relationships
 
-### 5. Clear Separation of Concerns
-- **Donor attributes**: Original patient/cell line (in syn51730943)
-- **Model attributes**: Animal host used in experiment (specified per record)
-- **Individual attributes**: Specific animal or sample characteristics
+### 5. Always Up-to-Date
+- ✅ Corrections to syn51730943 immediately reflected
+- ✅ No need to update individual records
+- ✅ Centralized curation
 
-## Implementation
+### 6. Clear Separation
+- **Donor attributes** (species, sex, age, diagnosis): Original patient/cell line
+- **Model attributes** (modelSpecies, modelSex, modelAge): Animal host
+- **individualID**: Cell line reference
+- **modelSystemName**: Animal model reference
+- **antibodyID**: Antibody reference
+- **geneticReagentID**: Genetic reagent reference
 
-### Tooltip Service API
+## Migration Guide
 
-The tooltip service provides metadata lookups:
+### From Previous Approach
 
-```bash
-# Cell line
-GET /api/v1/tooltip/Cell%20Line/JH-2-002
+If you have `biologicalResourceType`/`biologicalResourceName`:
 
-# Animal model
-GET /api/v1/tooltip/Animal%20Model/B6.129(Cg)-Nf1tm1Par%2FJ
+```yaml
+# OLD (remove these)
+biologicalResourceType: "Cell Line"
+biologicalResourceName: "JH-2-002"
 
-# Antibody
-GET /api/v1/tooltip/Antibody/Anti-NF1-mAb
+# NEW (use existing fields)
+individualID: "JH-2-002"
 ```
 
-### UI Integration
+```yaml
+# OLD (remove these)
+biologicalResourceType: "Animal Model"
+biologicalResourceName: "NSG"
 
-1. User selects `biologicalResourceType` dropdown
-2. User selects/types `biologicalResourceName` (autocomplete from syn51730943)
-3. Info icon (ℹ️) appears next to selection
-4. Hover → tooltip shows metadata
-5. Click → opens detail page
-
-### Form Validation
-
-```javascript
-// Validate biologicalResource fields
-if (biologicalResourceName && !biologicalResourceType) {
-  error("biologicalResourceType required when biologicalResourceName is specified");
-}
-
-// For cell lines, ensure individualID matches
-if (biologicalResourceType === "Cell Line") {
-  if (individualID && individualID !== biologicalResourceName) {
-    warning("For cell lines, individualID should match biologicalResourceName");
-  }
-}
-
-// Ensure model age has units
-if (modelAge && !modelAgeUnit) {
-  error("modelAgeUnit required when modelAge is specified");
-}
+# NEW (use existing fields)
+modelSystemName: "NSG"
 ```
+
+### Field Mapping Table
+
+| Old Field | New Field | Notes |
+|-----------|-----------|-------|
+| `biologicalResourceType: "Cell Line"` | (remove) | Use `individualID` directly |
+| `biologicalResourceName` (cell line) | `individualID` | Same value |
+| `biologicalResourceType: "Animal Model"` | (remove) | Use `modelSystemName` directly |
+| `biologicalResourceName` (animal) | `modelSystemName` | Same value |
+| `biologicalResourceType: "Antibody"` | (remove) | Use `antibodyID` directly |
+| `biologicalResourceName` (antibody) | `antibodyID` | Same value |
 
 ## Questions?
 
-- See `services/TOOLTIP_APPROACH.md` for detailed tooltip implementation
-- See `services/README.md` for tooltip service deployment
+- See `services/TOOLTIP_APPROACH.md` for tooltip implementation details
+- See `services/README.md` for service deployment
 - See syn51730943 for the research tools database
+- See props.yaml for field definitions and conditional requirements

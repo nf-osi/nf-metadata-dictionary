@@ -3,11 +3,9 @@ classes:
     annotations:
       required: false
       requiresComponent: ''
-    description: 'Template for non-human individual-level data. Use biologicalResourceName for cell line donors implanted in animal models (xenografts). Use sex/age/species for the individual animal. Use modelSystemName for the animal model genetic background, with modelSpecies/modelSex/modelAge for the model host animal in xenograft scenarios.'
+    description: 'Template for non-human individual-level data. For xenografts, individualID references the cell line donor. Use sex/age/species for the individual animal. Use modelSystemName for the animal model genetic background, with modelSpecies/modelSex/modelAge for the model host animal.'
     slots:
     - individualID
-    - biologicalResourceType
-    - biologicalResourceName
     - sex
     - age
     - ageUnit
@@ -28,11 +26,9 @@ classes:
     annotations:
       required: false
       requiresComponent: ''
-    description: Specimen-level data, whether from human or animal.
+    description: 'Specimen-level data, whether from human or animal. For cell line specimens, individualID references the cell line. For xenografts, also specify modelSystemName and model attributes.'
     slots:
     - individualID
-    - biologicalResourceType
-    - biologicalResourceName
     - parentSpecimenID
     - specimenID
     - aliquotID

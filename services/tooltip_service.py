@@ -200,20 +200,29 @@ async def root():
         "service": "NF Resource Reference Service",
         "version": "1.0.0",
         "status": "running",
-        "approach": "Display tool metadata in tooltips instead of auto-filling form fields",
+        "approach": "Display tool metadata in tooltips using existing schema fields",
+        "field_mapping": {
+            "individualID": "Cell line → syn51730943 toolType='cell_line'",
+            "modelSystemName": "Animal model → syn51730943 toolType='animal'",
+            "antibodyID": "Antibody → syn51730943 toolType='antibody'",
+            "geneticReagentID": "Genetic reagent → syn51730943 toolType='genetic_reagent'"
+        },
         "benefits": [
-            "Minimal schema (only resourceType + resourceName)",
+            "Uses existing schema fields (no new fields needed)",
             "No data duplication",
-            "Single source of truth",
+            "Single source of truth (syn51730943)",
             "Real-time metadata",
-            "Easy to suggest edits"
+            "Multiple resources per record (cell line + model + antibody)"
         ],
         "endpoints": {
-            "tooltip": "GET /api/v1/tooltip/{resource_type}/{resource_name}",
+            "cell_line": "GET /api/v1/tooltip/cell-line/{individualID}",
+            "animal_model": "GET /api/v1/tooltip/animal-model/{modelSystemName}",
+            "antibody": "GET /api/v1/tooltip/antibody/{antibodyID}",
+            "genetic_reagent": "GET /api/v1/tooltip/genetic-reagent/{geneticReagentID}",
             "resources": "GET /api/v1/resources",
             "health": "GET /health"
         },
-        "documentation": "See TOOLTIP_APPROACH.md for details"
+        "documentation": "See FIELD_MAPPING.md for details"
     }
 
 
@@ -252,29 +261,76 @@ async def list_resources():
     }
 
 
-@app.get("/api/v1/tooltip/{resource_type}/{resource_name}", response_model=TooltipResponse)
-async def get_tooltip_data(resource_type: str, resource_name: str):
+@app.get("/api/v1/tooltip/cell-line/{individual_id}", response_model=TooltipResponse)
+async def get_cell_line_tooltip(individual_id: str):
     """
-    Get tooltip/reference data for a selected resource.
+    Get tooltip data for a cell line.
 
-    This endpoint provides rich metadata for display in tooltips or detail panels,
-    supporting the reference-based approach instead of auto-filling fields.
+    Schema Field: individualID
+    Lookup: syn51730943 WHERE toolType='cell_line' AND toolName='{individual_id}'
 
-    Schema Field Mapping:
-        - resource_type (API) ← biologicalResourceType (LinkML schema)
-        - resource_name (API) ← biologicalResourceName (LinkML schema)
-        - For cell lines: biologicalResourceName typically equals individualID
+    Example: GET /api/v1/tooltip/cell-line/JH-2-002
 
-    Use case: User selects a tool (cell line, animal model, etc.) and hovers over
-    it to see contextual information without cluttering the form with auto-filled fields.
+    Returns donor metadata: species, diagnosis, age, tissue, organ, etc.
+    """
+    return await _get_tooltip_data('Cell Line', individual_id)
 
-    Examples:
-        GET /api/v1/tooltip/Cell%20Line/JH-2-002
-        GET /api/v1/tooltip/Animal%20Model/B6.129(Cg)-Nf1tm1Par%2FJ
-        GET /api/v1/tooltip/Antibody/Anti-NF1-mAb
+
+@app.get("/api/v1/tooltip/animal-model/{model_system_name}", response_model=TooltipResponse)
+async def get_animal_model_tooltip(model_system_name: str):
+    """
+    Get tooltip data for an animal model.
+
+    Schema Field: modelSystemName
+    Lookup: syn51730943 WHERE toolType='animal' AND toolName='{model_system_name}'
+
+    Example: GET /api/v1/tooltip/animal-model/B6.129(Cg)-Nf1tm1Par%2FJ
+
+    Returns model metadata: species, genotype, backgroundStrain, geneticModification, etc.
+    """
+    return await _get_tooltip_data('Animal Model', model_system_name)
+
+
+@app.get("/api/v1/tooltip/antibody/{antibody_id}", response_model=TooltipResponse)
+async def get_antibody_tooltip(antibody_id: str):
+    """
+    Get tooltip data for an antibody.
+
+    Schema Field: antibodyID
+    Lookup: syn51730943 WHERE toolType='antibody' AND toolName='{antibody_id}'
+
+    Example: GET /api/v1/tooltip/antibody/AB-12345
+
+    Returns antibody metadata: target, host, clonality, RRID, vendor, etc.
+    """
+    return await _get_tooltip_data('Antibody', antibody_id)
+
+
+@app.get("/api/v1/tooltip/genetic-reagent/{reagent_id}", response_model=TooltipResponse)
+async def get_genetic_reagent_tooltip(reagent_id: str):
+    """
+    Get tooltip data for a genetic reagent.
+
+    Schema Field: geneticReagentID
+    Lookup: syn51730943 WHERE toolType='genetic_reagent' AND toolName='{reagent_id}'
+
+    Example: GET /api/v1/tooltip/genetic-reagent/CRISPR-NF1-KO
+
+    Returns reagent metadata: reagentType, target, vector, sequence, etc.
+    """
+    return await _get_tooltip_data('Genetic Reagent', reagent_id)
+
+
+async def _get_tooltip_data(resource_type: str, resource_name: str) -> TooltipResponse:
+    """
+    Internal function to get tooltip data for any resource type.
+
+    Args:
+        resource_type: Type from RESOURCE_CONFIG keys
+        resource_name: Name/ID to lookup
 
     Returns:
-        Tooltip data with formatted metadata, detail URL, and edit URL
+        TooltipResponse with formatted metadata
     """
     logger.info(f"Tooltip request: {resource_type} / {resource_name}")
 

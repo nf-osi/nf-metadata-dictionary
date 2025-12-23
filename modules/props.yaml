@@ -677,14 +677,13 @@ slots:
     range: float
     required: false
   modelAgeUnit:
-    description: Time unit for modelAge (e.g., weeks for mice).
+    annotations:
+      requiresDependency: modelAge
+    description: Time unit for modelAge (e.g., weeks for mice). Required when modelAge is specified.
     range: TimeUnit
     required: false
-  biologicalResourceType:
-    description: 'Type of biological resource or research tool from syn51730943. Used with biologicalResourceName. Values: "Cell Line", "Animal Model", "Antibody", "Genetic Reagent".'
-    required: false
-  biologicalResourceName:
-    description: 'Name of the biological resource or research tool from syn51730943. For cell lines, this typically maps to individualID (the donor). For antibodies, maps to antibodyID. For animal models, references the model system. Examples: "JH-2-002" (cell line), "Anti-NF1-mAb" (antibody), "B6.129(Cg)-Nf1tm1Par/J" (animal model).'
+  geneticReagentID:
+    description: 'Identifier for genetic reagent used (e.g., CRISPR construct, shRNA, plasmid). References tool in syn51730943 where toolType="genetic_reagent". Example: "CRISPR-NF1-KO", "shRNA-TP53-001".'
     required: false
   modifiedBy:
     description: Refers to a user who last modified the resource on the platform.
