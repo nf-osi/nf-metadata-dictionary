@@ -40,9 +40,19 @@ RESOURCE_CONFIG = {
         'resource_type': 'Animal Model',
         'yaml_file': 'modules/Sample/AnimalModel.yaml',
         'enum_name': 'AnimalModel'
+    },
+    'Antibody': {
+        'table_id': 'syn51730943',
+        'resource_type': 'Antibody',
+        'yaml_file': 'modules/Experiment/Antibody.yaml',
+        'enum_name': 'AntibodyEnum'
+    },
+    'Genetic Reagent': {
+        'table_id': 'syn51730943',
+        'resource_type': 'Genetic Reagent',
+        'yaml_file': 'modules/Experiment/GeneticReagent.yaml',
+        'enum_name': 'GeneticReagentEnum'
     }
-    # Note: Antibody and other resource types don't have enums - they use free-text fields
-    # For these, consider creating a separate JSON mapping file
 }
 
 

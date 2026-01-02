@@ -77,7 +77,10 @@ slots:
     required: false
     title: External Repository URI
   antibodyID:
-    description: Antibody ID such as RRID if available, otherwise use vendor ID.
+    any_of:
+    - range: AntibodyEnum
+    - range: string
+    description: Antibody identifier. Select from the controlled vocabulary of antibodies in NF Research Tools Central (syn51730943) when available, or provide a custom identifier. Links to antibody details are available in the schema see_also field for enum values.
     required: false
   aqueductalStenosis:
     description: Characterization of the manifestation of aqueductal stenosis.
@@ -683,7 +686,10 @@ slots:
     range: TimeUnit
     required: false
   geneticReagentID:
-    description: 'Identifier for genetic reagent used (e.g., CRISPR construct, shRNA, plasmid). References tool in syn51730943 where toolType="genetic_reagent". Example: "CRISPR-NF1-KO", "shRNA-TP53-001".'
+    any_of:
+    - range: GeneticReagentEnum
+    - range: string
+    description: Identifier for genetic reagent used (e.g., CRISPR construct, shRNA, plasmid). Select from the controlled vocabulary of genetic reagents in NF Research Tools Central (syn51730943) when available, or provide a custom identifier. Links to reagent details are available in the schema see_also field for enum values.
     required: false
   modifiedBy:
     description: Refers to a user who last modified the resource on the platform.

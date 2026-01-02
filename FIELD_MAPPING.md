@@ -12,8 +12,8 @@ This document explains how biological resources are referenced in the NF metadat
 |--------------|------------|------------------------------|---------------|
 | `individualID` | Cell line (donor) | `resourceType='Cell Line'` | Schema `see_also` field |
 | `modelSystemName` | Animal model | `resourceType='Animal Model'` | Schema `see_also` field |
-| `antibodyID` | Antibody | `resourceType='Antibody'` | Free-text (no enum) |
-| `geneticReagentID` | Genetic reagent | `resourceType='Genetic Reagent'` | Free-text (no enum) |
+| `antibodyID` | Antibody | `resourceType='Antibody'` | Schema `see_also` field |
+| `geneticReagentID` | Genetic reagent | `resourceType='Genetic Reagent'` | Schema `see_also` field |
 
 **No new fields needed!** All references use existing schema fields.
 
@@ -101,10 +101,10 @@ Describe the **animal model host** (for xenografts or model-only experiments):
 
 | Field | Description | Example |
 |-------|-------------|---------|
-| `antibodyID` | Antibody identifier | "AB-12345", "Anti-NF1-mAb" |
-| `geneticReagentID` | Genetic reagent identifier | "CRISPR-NF1-KO", "shRNA-TP53-001" |
+| `antibodyID` | Antibody identifier (enum + custom values) | "Anti-NF1 monoclonal antibody", "Rabbit anti-NF1 Antibody, Affinity Purified" |
+| `geneticReagentID` | Genetic reagent identifier (enum + custom values) | "lentiCRISPRv2.sgNf1.4", "pLV-H1-SGIPZ_NF1 sh1miR" |
 
-**Note**: Antibodies and genetic reagents use free-text fields (no predefined enums), so their links are not stored in the schema. For these, consider building URLs dynamically or using an index file.
+**Resource details** come from syn51730943. The detail page link is in the schema's `see_also` field for values in the controlled vocabulary. Custom values outside the enum are also permitted.
 
 ## Conditional Requirements
 
@@ -193,7 +193,7 @@ specimenID: "JH-2-002-NSG-WB-001"
 **Resource Links**:
 - Cell line "JH-2-002": Link in schema `see_also`
 - Animal model "NSG": Link in schema `see_also`
-- Antibody "Anti-NF1-mAb": Free-text (no enum), build URL dynamically if needed
+- Antibody (if from controlled vocabulary): Link in schema `see_also`
 
 ### Example 5: CRISPR Knockout
 
@@ -208,7 +208,7 @@ assay: "western blot"
 
 **Resource Links**:
 - Cell line "HEK293": Link in schema `see_also`
-- Genetic reagent: Free-text (no enum), build URL dynamically if needed
+- Genetic reagent (if from controlled vocabulary): Link in schema `see_also`
 
 ## Schema Benefits
 
