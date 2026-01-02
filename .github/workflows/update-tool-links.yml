@@ -48,11 +48,11 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          if [[ $(git status --porcelain modules/Sample/CellLineModel.yaml modules/Sample/AnimalModel.yaml) ]]; then
+          if [[ $(git status --porcelain modules/Sample/CellLineModel.yaml modules/Sample/AnimalModel.yaml modules/Experiment/Antibody.yaml modules/Experiment/GeneticReagent.yaml) ]]; then
             echo "changes=true" >> $GITHUB_OUTPUT
             echo "Changes detected in schema files"
             echo "### Changed files:" >> $GITHUB_STEP_SUMMARY
-            git status --porcelain modules/Sample/CellLineModel.yaml modules/Sample/AnimalModel.yaml >> $GITHUB_STEP_SUMMARY
+            git status --porcelain modules/Sample/CellLineModel.yaml modules/Sample/AnimalModel.yaml modules/Experiment/Antibody.yaml modules/Experiment/GeneticReagent.yaml >> $GITHUB_STEP_SUMMARY
           else
             echo "changes=false" >> $GITHUB_OUTPUT
             echo "No changes detected"
@@ -64,7 +64,7 @@ jobs:
         run: |
           echo "### Summary of changes:" >> $GITHUB_STEP_SUMMARY
           echo '```diff' >> $GITHUB_STEP_SUMMARY
-          git diff --stat modules/Sample/CellLineModel.yaml modules/Sample/AnimalModel.yaml >> $GITHUB_STEP_SUMMARY
+          git diff --stat modules/Sample/CellLineModel.yaml modules/Sample/AnimalModel.yaml modules/Experiment/Antibody.yaml modules/Experiment/GeneticReagent.yaml >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Rebuild data model artifacts
@@ -108,11 +108,15 @@ jobs:
             ### Changes Made:
             - Updated cell line links in `modules/Sample/CellLineModel.yaml`
             - Updated animal model links in `modules/Sample/AnimalModel.yaml`
+            - Updated antibody links in `modules/Experiment/Antibody.yaml`
+            - Updated genetic reagent links in `modules/Experiment/GeneticReagent.yaml`
             - Rebuilt data model artifacts (`NF.jsonld`, `dist/NF.yaml`)
 
             ### Files Modified:
             - `modules/Sample/CellLineModel.yaml`
             - `modules/Sample/AnimalModel.yaml`
+            - `modules/Experiment/Antibody.yaml`
+            - `modules/Experiment/GeneticReagent.yaml`
             - `NF.jsonld`
             - `dist/NF.yaml`
             - Potentially `registered-json-schemas/*.json` (if regenerated)
