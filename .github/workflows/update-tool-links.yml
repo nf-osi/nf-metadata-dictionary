@@ -97,8 +97,9 @@ jobs:
 
             Synchronizes schema enums with NF Tools Central (syn51730943):
             - **Adds NEW tools/resources** as new enum values with `see_also` links
-            - **Updates existing** `see_also` links (if resourceId changed, though rare)
+            - **Adds missing** `see_also` links to existing enum values (initial setup only)
 
+            ResourceIds are UUIDs that don't change, so existing links are never updated.
             This ensures the schema stays current as new tools are added to NF Tools Central.
 
             **Example:**
@@ -130,7 +131,7 @@ jobs:
             - ✅ Webdev team can access resource links directly from schema
             - ✅ No REST API call needed for tooltips
             - ✅ Schema stays synchronized with NF Tools Central
-            - ✅ ResourceIds automatically updated if changed (rare)
+            - ✅ ResourceIds are stable UUIDs that never change
 
             ### Related:
             - PR #780 (tooltip/reference service implementation)

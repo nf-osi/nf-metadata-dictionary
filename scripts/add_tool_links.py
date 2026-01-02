@@ -202,11 +202,11 @@ def update_yaml_enum(file_path: str, enum_name: str, url_mapping: Dict[str, str]
         logger.warning(f"  No permissible_values found")
         return 0
 
-    # Update existing permissible values
-    updated_count = 0
+    # Add see_also links to EXISTING values that don't have them (initial setup)
+    links_added_count = 0
     for value_name, value_data in target_enum['permissible_values'].items():
         if value_name in url_mapping:
-            # Check if see_also already exists
+            # Ensure value_data is a dict
             if value_data is None:
                 target_enum['permissible_values'][value_name] = {}
                 value_data = target_enum['permissible_values'][value_name]
@@ -215,47 +215,42 @@ def update_yaml_enum(file_path: str, enum_name: str, url_mapping: Dict[str, str]
                 logger.warning(f"  Skipping {value_name} - value_data is not a dict")
                 continue
 
-            url = url_mapping[value_name]
-
-            # Add or update see_also
+            # Add see_also link if it doesn't exist
+            # ResourceIds don't change, so we never update existing links
             if 'see_also' not in value_data:
-                value_data['see_also'] = [url]
-                updated_count += 1
-                logger.info(f"  ✓ Added see_also to '{value_name}'")
-            elif url not in value_data['see_also']:
-                if not isinstance(value_data['see_also'], list):
-                    value_data['see_also'] = [value_data['see_also']]
-                value_data['see_also'].append(url)
-                updated_count += 1
-                logger.info(f"  ✓ Updated see_also for '{value_name}'")
-            else:
-                logger.debug(f"  - '{value_name}' already has this URL")
+                value_data['see_also'] = [url_mapping[value_name]]
+                links_added_count += 1
+                logger.info(f"  ✓ Added see_also to existing value '{value_name}'")
 
     # Add NEW values from syn51730943 that don't exist in enum yet
-    added_count = 0
+    new_values_count = 0
     for value_name, url in url_mapping.items():
         if value_name not in target_enum['permissible_values']:
             target_enum['permissible_values'][value_name] = {
                 'see_also': [url]
             }
-            added_count += 1
-            logger.info(f"  ✓ Added NEW enum value '{value_name}'")
+            new_values_count += 1
+            logger.info(f"  ✓ Added NEW enum value '{value_name}' with see_also link")
 
-    total_changes = updated_count + added_count
+    total_changes = links_added_count + new_values_count
 
     # Write back to file
     if total_changes > 0 and not dry_run:
         with open(file_path, 'w') as f:
             yaml.dump(data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
-        if added_count > 0:
-            logger.info(f"  → Added {added_count} new values and updated {updated_count} existing values in {file_path}")
+        if new_values_count > 0 and links_added_count > 0:
+            logger.info(f"  → Added {new_values_count} new enum values and {links_added_count} see_also links in {file_path}")
+        elif new_values_count > 0:
+            logger.info(f"  → Added {new_values_count} new enum values in {file_path}")
         else:
-            logger.info(f"  → Updated {updated_count} values in {file_path}")
+            logger.info(f"  → Added {links_added_count} see_also links in {file_path}")
     elif dry_run:
-        if added_count > 0:
-            logger.info(f"  → [DRY RUN] Would add {added_count} new values and update {updated_count} existing values")
+        if new_values_count > 0 and links_added_count > 0:
+            logger.info(f"  → [DRY RUN] Would add {new_values_count} new enum values and {links_added_count} see_also links")
+        elif new_values_count > 0:
+            logger.info(f"  → [DRY RUN] Would add {new_values_count} new enum values")
         else:
-            logger.info(f"  → [DRY RUN] Would update {updated_count} values")
+            logger.info(f"  → [DRY RUN] Would add {links_added_count} see_also links")
 
     return total_changes
 
