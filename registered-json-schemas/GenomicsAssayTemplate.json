@@ -1,6 +1,44 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-genomicsassaytemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "age": {}
+        },
+        "required": [
+          "age"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ageUnit": {}
+        },
+        "required": [
+          "ageUnit"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "dataType": {}
+        },
+        "required": [
+          "dataType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "dataSubtype": {}
+        },
+        "required": [
+          "dataSubtype"
+        ]
+      }
+    }
+  ],
   "description": "Alias to BulkSequencingAssayTemplate, use for sequence data on a large scale when there is no template available that is more specific.",
   "properties": {
     "age": {
@@ -1085,8 +1123,10 @@
           "NRG",
           "Nf1-C383X/Flox",
           "Nf1-C848R/Flox",
+          "Nf1-MET",
           "Nf1-OPG",
           "Nf1-OPG-Arg816",
+          "Nf1-P53",
           "Nf1-R681X/Flox",
           "Nf1flox/flox",
           "Prss56Cre/+;Tom/+",
