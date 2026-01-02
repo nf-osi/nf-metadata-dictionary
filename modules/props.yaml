@@ -79,6 +79,8 @@ slots:
     title: Age Group
     required: false
   aliquotID:
+    annotations:
+      requiresDependency: specimenID
     description: A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.
     title: Aliquot ID
     required: false
@@ -257,6 +259,7 @@ slots:
     required: true
   concentrationMaterial:
     annotations:
+      requiresDependency: concentrationMaterialUnit
       validationRules: num
     description: Numeric value for concentration of the material
     range: float
@@ -268,6 +271,8 @@ slots:
     title: Concentration Material Unit
     required: false
   concentrationNaCl:
+    annotations:
+      requiresDependency: concentrationNaClUnit
     description: Numeric value for NaCl concentration
     title: Concentration Na Cl
     required: false
@@ -533,11 +538,16 @@ slots:
     title: Gene Perturbation Type
     required: false
   genePerturbed:
+    annotations:
+      requiresDependency: genePerturbationType,genePerturbationTechnology
     description: The HUGO gene symbol for the gene that is perturbed.
     title: Gene Perturbed
     required: false
   genomicReference:
+    annotations:
+      requiresDependency: genomicReferenceLink
     description: Version of genome reference used for alignment in processing workflow
+    range: GenomicReferenceEnum
     notes:
     - Currently used with nextflow-processed data.
     title: Genomic Reference
@@ -879,6 +889,8 @@ slots:
     title: Parent ID
     required: false
   parentSpecimenID:
+    annotations:
+      requiresDependency: specimenID
     description: 'A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.
 
       '
@@ -1326,6 +1338,8 @@ slots:
     title: Transplantation Recipient Tissue
     required: false
   transplantationType:
+    annotations:
+      requiresDependency: transplantationRecipientSpecies,transplantationRecipientTissue
     description: Type of transplantation involved in the experiment, derived from MESH
     range: TransplantationType
     title: Transplantation Type
