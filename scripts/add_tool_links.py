@@ -29,20 +29,20 @@ RESOURCE_ID_COLUMN = 'resourceId'  # Change this if the column name is different
 
 # Resource type configuration
 RESOURCE_CONFIG = {
-    'cell_line': {
+    'Cell Line': {
         'table_id': 'syn51730943',
-        'tool_type': 'cell_line',
+        'resource_type': 'Cell Line',
         'yaml_file': 'modules/Sample/CellLineModel.yaml',
         'enum_name': 'CellLineEnum'
     },
-    'animal': {
+    'Animal Model': {
         'table_id': 'syn51730943',
-        'tool_type': 'animal',
+        'resource_type': 'Animal Model',
         'yaml_file': 'modules/Sample/AnimalModel.yaml',
-        'enum_name': 'AnimalModel'  # Fixed: should be 'AnimalModel' not 'AnimalModelEnum'
+        'enum_name': 'AnimalModel'
     }
-    # Note: antibody and genetic_reagent don't have enums - they use free-text fields
-    # For these, consider creating a separate JSON mapping file or using the REST API
+    # Note: Antibody and other resource types don't have enums - they use free-text fields
+    # For these, consider creating a separate JSON mapping file
 }
 
 
@@ -64,24 +64,24 @@ def get_synapse_client():
     return syn
 
 
-def query_tools_table(syn: synapseclient.Synapse, tool_type: str) -> pd.DataFrame:
+def query_tools_table(syn: synapseclient.Synapse, resource_type: str) -> pd.DataFrame:
     """
-    Query syn51730943 for all tools of a given type.
+    Query syn51730943 for all resources of a given type.
 
     Args:
         syn: Synapse client
-        tool_type: Tool type to query (cell_line, animal, antibody, genetic_reagent)
+        resource_type: Resource type to query (e.g., 'Cell Line', 'Animal Model')
 
     Returns:
-        DataFrame with tool data including ROW_ID and ROW_VERSION
+        DataFrame with resource data including resourceId
     """
     table_id = 'syn51730943'
-    query = f"SELECT * FROM {table_id} WHERE toolType = '{tool_type}'"
+    query = f"SELECT * FROM {table_id} WHERE resourceType = '{resource_type}'"
 
-    logger.info(f"Querying {tool_type} resources from {table_id}...")
+    logger.info(f"Querying '{resource_type}' resources from {table_id}...")
     results = syn.tableQuery(query)
     df = results.asDataFrame()
-    logger.info(f"  → Found {len(df)} {tool_type} resources")
+    logger.info(f"  → Found {len(df)} '{resource_type}' resources")
 
     return df
 
@@ -104,18 +104,18 @@ def get_resource_mappings(syn: synapseclient.Synapse) -> Dict[str, Dict[str, str
     Query all resource types and build name -> URL mappings.
 
     Returns:
-        Dict mapping tool_type to {toolName: url}
+        Dict mapping resource_type to {resourceName: url}
     """
     mappings = {}
 
     for resource_key, config in RESOURCE_CONFIG.items():
-        tool_type = config['tool_type']
-        df = query_tools_table(syn, tool_type)
+        resource_type = config['resource_type']
+        df = query_tools_table(syn, resource_type)
 
         # Build URL mapping
         resource_urls = {}
         for _, row in df.iterrows():
-            tool_name = row.get('toolName')
+            resource_name = row.get('resourceName')
 
             # Get resource ID from configured column
             resource_id = None
@@ -124,14 +124,14 @@ def get_resource_mappings(syn: synapseclient.Synapse) -> Dict[str, Dict[str, str
             # Fallback to ROW_ID if resourceId column not found
             elif 'ROW_ID' in row and pd.notna(row['ROW_ID']):
                 resource_id = str(row['ROW_ID'])
-                logger.warning(f"  Using ROW_ID for {tool_name} - check RESOURCE_ID_COLUMN setting")
+                logger.warning(f"  Using ROW_ID for {resource_name} - check RESOURCE_ID_COLUMN setting")
 
-            if tool_name and resource_id:
+            if resource_name and resource_id:
                 url = build_nf_portal_url(resource_id)
-                resource_urls[tool_name] = url
-                logger.debug(f"  {tool_name} -> {url}")
+                resource_urls[resource_name] = url
+                logger.debug(f"  {resource_name} -> {url}")
 
-        logger.info(f"  → Mapped {len(resource_urls)} {tool_type} resources to URLs")
+        logger.info(f"  → Mapped {len(resource_urls)} '{resource_type}' resources to URLs")
         mappings[resource_key] = resource_urls
 
     return mappings

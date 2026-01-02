@@ -53,7 +53,7 @@ def main():
     logger.info(f"{'=' * 70}\n")
 
     # Show first few rows with key columns
-    key_cols = ['toolName', 'toolType']
+    key_cols = ['resourceName', 'resourceType']
     # Add columns that might contain resource ID
     potential_id_cols = [c for c in df.columns if any(x in c.lower() for x in ['id', 'resource', 'uuid', 'row'])]
     display_cols = key_cols + potential_id_cols
@@ -81,20 +81,22 @@ def main():
     logger.info("Looking for JH-2-002 example...")
     logger.info(f"{'=' * 70}\n")
 
-    query = f"SELECT * FROM {table_id} WHERE toolName = 'JH-2-002'"
+    query = f"SELECT * FROM {table_id} WHERE resourceName = 'JH-2-002'"
     try:
         results = syn.tableQuery(query)
         df = results.asDataFrame()
 
         if not df.empty:
             logger.info("Found JH-2-002:")
-            logger.info(f"  toolType: {df.iloc[0]['toolType'] if 'toolType' in df.columns else 'N/A'}")
+            logger.info(f"  resourceType: {df.iloc[0]['resourceType'] if 'resourceType' in df.columns else 'N/A'}")
             for col in potential_id_cols:
                 if col in df.columns:
                     logger.info(f"  {col}: {df.iloc[0][col]}")
             logger.info("")
-            logger.info("Expected URL format:")
-            logger.info("  https://nf.synapse.org/Explore/Tools/DetailsPage/Details?resourceId=1bc84ef2-208f-4f0e-8045-6be47fd968de")
+            if 'resourceId' in df.columns:
+                res_id = df.iloc[0]['resourceId']
+                logger.info("Generated URL:")
+                logger.info(f"  https://nf.synapse.org/Explore/Tools/DetailsPage/Details?resourceId={res_id}")
         else:
             logger.info("JH-2-002 not found in table")
     except Exception as e:
