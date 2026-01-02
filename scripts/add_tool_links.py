@@ -202,7 +202,7 @@ def update_yaml_enum(file_path: str, enum_name: str, url_mapping: Dict[str, str]
         logger.warning(f"  No permissible_values found")
         return 0
 
-    # Update permissible values
+    # Update existing permissible values
     updated_count = 0
     for value_name, value_data in target_enum['permissible_values'].items():
         if value_name in url_mapping:
@@ -231,15 +231,33 @@ def update_yaml_enum(file_path: str, enum_name: str, url_mapping: Dict[str, str]
             else:
                 logger.debug(f"  - '{value_name}' already has this URL")
 
+    # Add NEW values from syn51730943 that don't exist in enum yet
+    added_count = 0
+    for value_name, url in url_mapping.items():
+        if value_name not in target_enum['permissible_values']:
+            target_enum['permissible_values'][value_name] = {
+                'see_also': [url]
+            }
+            added_count += 1
+            logger.info(f"  ✓ Added NEW enum value '{value_name}'")
+
+    total_changes = updated_count + added_count
+
     # Write back to file
-    if updated_count > 0 and not dry_run:
+    if total_changes > 0 and not dry_run:
         with open(file_path, 'w') as f:
             yaml.dump(data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
-        logger.info(f"  → Updated {updated_count} values in {file_path}")
+        if added_count > 0:
+            logger.info(f"  → Added {added_count} new values and updated {updated_count} existing values in {file_path}")
+        else:
+            logger.info(f"  → Updated {updated_count} values in {file_path}")
     elif dry_run:
-        logger.info(f"  → [DRY RUN] Would update {updated_count} values")
+        if added_count > 0:
+            logger.info(f"  → [DRY RUN] Would add {added_count} new values and update {updated_count} existing values")
+        else:
+            logger.info(f"  → [DRY RUN] Would update {updated_count} values")
 
-    return updated_count
+    return total_changes
 
 
 def main():

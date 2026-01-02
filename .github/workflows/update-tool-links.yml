@@ -86,16 +86,20 @@ jobs:
         with:
           token: ${{ secrets.NF_SERVICE_GIT_TOKEN }}
           commit-message: "chore: update NF Tools Central links from ${{ env.SYNAPSE_TABLE_ID }}"
-          title: "Update NF Tools Central Links - ${{ steps.date.outputs.date }}"
+          title: "Sync New Tools from NF Tools Central - ${{ steps.date.outputs.date }}"
           body: |
-            This PR updates the `see_also` links in schema enum values to point to NF Tools Central detail pages.
+            This PR synchronizes schema enums with NF Tools Central, adding new tools/resources and updating links as needed.
 
             **Source:** Synapse table `${{ env.SYNAPSE_TABLE_ID }}`
-            **Update Date:** ${{ steps.date.outputs.date }}
+            **Sync Date:** ${{ steps.date.outputs.date }}
 
             ### What This Does:
 
-            Adds or updates `see_also` links in schema enum values so the webdev team can access resource detail pages directly from the schema without calling the REST API.
+            Synchronizes schema enums with NF Tools Central (syn51730943):
+            - **Adds NEW tools/resources** as new enum values with `see_also` links
+            - **Updates existing** `see_also` links (if resourceId changed, though rare)
+
+            This ensures the schema stays current as new tools are added to NF Tools Central.
 
             **Example:**
             ```yaml
@@ -122,10 +126,11 @@ jobs:
             - Potentially `registered-json-schemas/*.json` (if regenerated)
 
             ### Benefits:
+            - ✅ New tools automatically available in schema dropdowns
             - ✅ Webdev team can access resource links directly from schema
             - ✅ No REST API call needed for tooltips
-            - ✅ Links stay synchronized with NF Tools Central
-            - ✅ Preview link available in tooltips
+            - ✅ Schema stays synchronized with NF Tools Central
+            - ✅ ResourceIds automatically updated if changed (rare)
 
             ### Related:
             - PR #780 (tooltip/reference service implementation)
