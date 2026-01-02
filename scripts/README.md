@@ -35,30 +35,9 @@ A GitHub workflow (`.github/workflows/update-tool-links.yml`) automatically runs
 
 The workflow will automatically create a PR like: `Update NF Tools Central Links - 2026-01-02`
 
-## Step 1: Explore the Table Structure
+## Manual Usage
 
-First, run the exploration script to identify the correct column name for resource IDs:
-
-```bash
-python scripts/explore_tools_table.py
-```
-
-This will:
-- Show all column names in syn51730943
-- Display sample data
-- Look for the JH-2-002 example
-- Help you identify which column contains the resource ID (the UUID in the URL)
-
-## Step 2: Update Configuration
-
-Based on the exploration output, update `scripts/add_tool_links.py` if needed:
-
-```python
-# Line 28: Update this if the column name is different
-RESOURCE_ID_COLUMN = 'resourceId'  # or 'id', 'uuid', 'ROW_ID', etc.
-```
-
-## Step 3: Test with Dry Run
+### Test with Dry Run
 
 Run the script in dry-run mode to see what changes would be made:
 
@@ -72,7 +51,7 @@ This will:
 - Show which enum values would be updated
 - NOT write any changes to files
 
-## Step 4: Add the Links
+### Add the Links
 
 If the dry-run looks good, run the script to add the links:
 
@@ -81,8 +60,10 @@ python scripts/add_tool_links.py
 ```
 
 This will update:
-- `modules/Sample/CellLineModel.yaml` - adds `see_also` links to cell line enum values
-- `modules/Sample/AnimalModel.yaml` - adds `see_also` links to animal model enum values
+- `modules/Sample/CellLineModel.yaml` - Cell line enum values
+- `modules/Sample/AnimalModel.yaml` - Animal model enum values
+- `modules/Experiment/Antibody.yaml` - Antibody enum values
+- `modules/Experiment/GeneticReagent.yaml` - Genetic reagent enum values
 
 ## Example Output
 
@@ -141,31 +122,22 @@ The `see_also` links will be included in the generated JSON schemas and accessib
 
 ## Troubleshooting
 
-### "Column 'resourceId' not found"
-
-Run `explore_tools_table.py` to find the correct column name, then update `RESOURCE_ID_COLUMN` in `add_tool_links.py`.
-
 ### "Enum not found in YAML file"
 
-Check that the `enum_name` in `RESOURCE_CONFIG` matches the actual enum name in the YAML file.
+Check that the `enum_name` in `RESOURCE_CONFIG` (in `add_tool_links.py`) matches the actual enum name in the YAML file.
 
 ### "Access denied to syn51730943"
 
-The syn51730943 table is open access and should work without authentication. If you encounter access issues:
+The syn51730943 table is open access. If you encounter access issues, try with authentication:
 
-1. Try with authentication:
-   ```bash
-   export SYNAPSE_AUTH_TOKEN=your_token_here
-   python scripts/add_tool_links.py
-   ```
+```bash
+export SYNAPSE_AUTH_TOKEN=your_token_here
+python scripts/add_tool_links.py
+```
 
-2. Verify the table is accessible: https://www.synapse.org/#!Synapse:syn51730943
+## Notes
 
-3. Check if your Synapse account has the necessary permissions
-
-## Future Enhancements
-
-- Support for antibody and genetic reagent enums (if they're added to the schema)
-- Automatic detection of resource ID column name
-- Validation that URLs are accessible
-- Integration with CI/CD to keep links up-to-date
+- The script only adds NEW resources or missing links
+- ResourceIds are stable UUIDs that never change
+- Existing see_also links are never updated
+- All 4 resource types are supported: Cell Line, Animal Model, Antibody, Genetic Reagent

@@ -269,8 +269,7 @@ modelAgeUnit: "weeks"
 ### Workflow Files
 
 - **`.github/workflows/update-tool-links.yml`**: Automated weekly sync
-- **`scripts/add_tool_links.py`**: Script to add/update links
-- **`scripts/explore_tools_table.py`**: Helper to explore syn51730943
+- **`scripts/add_tool_links.py`**: Script to add new tools and links
 
 ### How It Works
 
@@ -283,13 +282,10 @@ modelAgeUnit: "weeks"
 ### Manual Sync
 
 ```bash
-# Explore table structure
-python scripts/explore_tools_table.py
-
 # Dry run (preview changes)
 python scripts/add_tool_links.py --dry-run
 
-# Update schemas
+# Add new tools and links
 python scripts/add_tool_links.py
 ```
 
