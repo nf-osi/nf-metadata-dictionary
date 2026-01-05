@@ -24,7 +24,6 @@ logger = logging.getLogger(__name__)
 
 
 # Resource ID column name in syn51730943
-# Run scripts/explore_tools_table.py to find the correct column name
 RESOURCE_ID_COLUMN = 'resourceId'  # Change this if the column name is different
 
 # Resource type configuration

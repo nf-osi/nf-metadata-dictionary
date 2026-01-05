@@ -157,7 +157,6 @@ git diff modules/Sample/CellLineModel.yaml modules/Sample/AnimalModel.yaml
 ## Future Enhancements
 
 - [ ] Add validation to verify links are accessible
-- [ ] Support for antibody and genetic reagent enums (when added)
 - [ ] Automatic detection of resource ID column name
 - [ ] Integration tests for workflow
 - [ ] Slack/email notifications for PR creation
