@@ -9995,9 +9995,42 @@
       },
       "sms:displayName": "concentrationMaterial",
       "sms:required": "sms:false",
+      "sms:requiresDependency": [
+        {
+          "@id": "bts:ConcentrationMaterialUnit"
+        }
+      ],
       "sms:validationRules": [
         "num"
       ]
+    },
+    {
+      "@id": "bts:ConcentrationMaterialUnit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Unit used for the material concentration, e.g. mg/mL",
+      "rdfs:label": "ConcentrationMaterialUnit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "schema:rangeIncludes": [
+        {
+          "@id": "bts:MM"
+        },
+        {
+          "@id": "bts:Mg/mL"
+        },
+        {
+          "@id": "bts:Particles/mL"
+        }
+      ],
+      "sms:displayName": "concentrationMaterialUnit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
     },
     {
       "@id": "bts:FileCount",
@@ -13133,6 +13166,28 @@
       },
       "sms:displayName": "aliquotID",
       "sms:required": "sms:false",
+      "sms:requiresDependency": [
+        {
+          "@id": "bts:SpecimenID"
+        }
+      ],
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:SpecimenID",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
+      "rdfs:label": "SpecimenID",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "specimenID",
+      "sms:required": "sms:true",
       "sms:validationRules": []
     },
     {
@@ -13234,23 +13289,6 @@
       },
       "sms:displayName": "relatedResource",
       "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:SpecimenID",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
-      "rdfs:label": "SpecimenID",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:Thing"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "specimenID",
-      "sms:required": "sms:true",
       "sms:validationRules": []
     },
     {
@@ -16021,6 +16059,14 @@
       ],
       "sms:displayName": "TransplantationType",
       "sms:required": "sms:false",
+      "sms:requiresDependency": [
+        {
+          "@id": "bts:TransplantationRecipientSpecies"
+        },
+        {
+          "@id": "bts:TransplantationRecipientTissue"
+        }
+      ],
       "sms:validationRules": []
     },
     {
@@ -16088,6 +16134,122 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "xenograft",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:TransplantationRecipientSpecies",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Species into which donor  was grown",
+      "rdfs:label": "TransplantationRecipientSpecies",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "schema:rangeIncludes": [
+        {
+          "@id": "bts:Human"
+        },
+        {
+          "@id": "bts:Mouse"
+        }
+      ],
+      "sms:displayName": "transplantationRecipientSpecies",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:TransplantationRecipientTissue",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Tissue into which a xenograph sample is transplanted",
+      "rdfs:label": "TransplantationRecipientTissue",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "schema:rangeIncludes": [
+        {
+          "@id": "bts:BuccalMucosa"
+        },
+        {
+          "@id": "bts:BuffyCoat"
+        },
+        {
+          "@id": "bts:CDXtissue"
+        },
+        {
+          "@id": "bts:DorsalRootGanglion"
+        },
+        {
+          "@id": "bts:PDXtissue"
+        },
+        {
+          "@id": "bts:Blood"
+        },
+        {
+          "@id": "bts:Bonemarrow"
+        },
+        {
+          "@id": "bts:Cerebralcortex"
+        },
+        {
+          "@id": "bts:Connectivetissue"
+        },
+        {
+          "@id": "bts:Embryonictissue"
+        },
+        {
+          "@id": "bts:Meninges"
+        },
+        {
+          "@id": "bts:Microtissue"
+        },
+        {
+          "@id": "bts:Nervetissue"
+        },
+        {
+          "@id": "bts:Opticnerve"
+        },
+        {
+          "@id": "bts:Organoid"
+        },
+        {
+          "@id": "bts:Plasma"
+        },
+        {
+          "@id": "bts:Primarytumor"
+        },
+        {
+          "@id": "bts:Retina"
+        },
+        {
+          "@id": "bts:Sciaticnerve"
+        },
+        {
+          "@id": "bts:Serum"
+        },
+        {
+          "@id": "bts:Spheroid"
+        },
+        {
+          "@id": "bts:Splenocyte"
+        },
+        {
+          "@id": "bts:Tumor-adjacentnormal"
+        },
+        {
+          "@id": "bts:Wholebrain"
+        }
+      ],
+      "sms:displayName": "transplantationRecipientTissue",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -16464,6 +16626,14 @@
       },
       "sms:displayName": "genePerturbed",
       "sms:required": "sms:false",
+      "sms:requiresDependency": [
+        {
+          "@id": "bts:GenePerturbationType"
+        },
+        {
+          "@id": "bts:GenePerturbationTechnology"
+        }
+      ],
       "sms:validationRules": []
     },
     {
@@ -16621,6 +16791,39 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "concentrationNaCl",
+      "sms:required": "sms:false",
+      "sms:requiresDependency": [
+        {
+          "@id": "bts:ConcentrationNaClUnit"
+        }
+      ],
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:ConcentrationNaClUnit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Unit used for the NaCl concentration, e.g. mM",
+      "rdfs:label": "ConcentrationNaClUnit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "schema:rangeIncludes": [
+        {
+          "@id": "bts:MM"
+        },
+        {
+          "@id": "bts:Mg/mL"
+        },
+        {
+          "@id": "bts:Particles/mL"
+        }
+      ],
+      "sms:displayName": "concentrationNaClUnit",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -17516,34 +17719,6 @@
       "sms:validationRules": []
     },
     {
-      "@id": "bts:ConcentrationMaterialUnit",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "Unit used for the material concentration, e.g. mg/mL",
-      "rdfs:label": "ConcentrationMaterialUnit",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:Thing"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "schema:rangeIncludes": [
-        {
-          "@id": "bts:MM"
-        },
-        {
-          "@id": "bts:Mg/mL"
-        },
-        {
-          "@id": "bts:Particles/mL"
-        }
-      ],
-      "sms:displayName": "concentrationMaterialUnit",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
       "@id": "bts:MM",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
@@ -18291,6 +18466,25 @@
       ]
     },
     {
+      "@id": "bts:LibraryPCRCycles",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "The number of PCR cycles used during the construction of a sequencing library. Important for genomics data generated from cell-free DNA.",
+      "rdfs:label": "LibraryPCRCycles",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "libraryPCRCycles",
+      "sms:required": "sms:false",
+      "sms:validationRules": [
+        "int"
+      ]
+    },
+    {
       "@id": "bts:LibraryKitID",
       "@type": "rdfs:Class",
       "rdfs:comment": "Library kit ID.",
@@ -18325,125 +18519,6 @@
       "sms:validationRules": [
         "int"
       ]
-    },
-    {
-      "@id": "bts:ConcentrationNaClUnit",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "Unit used for the NaCl concentration, e.g. mM",
-      "rdfs:label": "ConcentrationNaClUnit",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:Thing"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "schema:rangeIncludes": [
-        {
-          "@id": "bts:MM"
-        },
-        {
-          "@id": "bts:Mg/mL"
-        },
-        {
-          "@id": "bts:Particles/mL"
-        }
-      ],
-      "sms:displayName": "concentrationNaClUnit",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:TransplantationRecipientTissue",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "Tissue into which a xenograph sample is transplanted",
-      "rdfs:label": "TransplantationRecipientTissue",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:Thing"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "schema:rangeIncludes": [
-        {
-          "@id": "bts:BuccalMucosa"
-        },
-        {
-          "@id": "bts:BuffyCoat"
-        },
-        {
-          "@id": "bts:CDXtissue"
-        },
-        {
-          "@id": "bts:DorsalRootGanglion"
-        },
-        {
-          "@id": "bts:PDXtissue"
-        },
-        {
-          "@id": "bts:Blood"
-        },
-        {
-          "@id": "bts:Bonemarrow"
-        },
-        {
-          "@id": "bts:Cerebralcortex"
-        },
-        {
-          "@id": "bts:Connectivetissue"
-        },
-        {
-          "@id": "bts:Embryonictissue"
-        },
-        {
-          "@id": "bts:Meninges"
-        },
-        {
-          "@id": "bts:Microtissue"
-        },
-        {
-          "@id": "bts:Nervetissue"
-        },
-        {
-          "@id": "bts:Opticnerve"
-        },
-        {
-          "@id": "bts:Organoid"
-        },
-        {
-          "@id": "bts:Plasma"
-        },
-        {
-          "@id": "bts:Primarytumor"
-        },
-        {
-          "@id": "bts:Retina"
-        },
-        {
-          "@id": "bts:Sciaticnerve"
-        },
-        {
-          "@id": "bts:Serum"
-        },
-        {
-          "@id": "bts:Spheroid"
-        },
-        {
-          "@id": "bts:Splenocyte"
-        },
-        {
-          "@id": "bts:Tumor-adjacentnormal"
-        },
-        {
-          "@id": "bts:Wholebrain"
-        }
-      ],
-      "sms:displayName": "transplantationRecipientTissue",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
     },
     {
       "@id": "bts:BuccalMucosa",
@@ -20305,6 +20380,12 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:DataType"
+        },
+        {
+          "@id": "bts:ProtocolAssay"
+        },
+        {
+          "@id": "bts:Assay"
         }
       ],
       "schema:isPartOf": {
@@ -20523,8 +20604,199 @@
       "schema:isPartOf": {
         "@id": "http://schema.biothings.io"
       },
+      "schema:rangeIncludes": [
+        {
+          "@id": "bts:GRCh37"
+        },
+        {
+          "@id": "bts:GRCh38"
+        },
+        {
+          "@id": "bts:GRCh38VerilyV1"
+        },
+        {
+          "@id": "bts:HRC"
+        },
+        {
+          "@id": "bts:MMUL1.0"
+        },
+        {
+          "@id": "bts:Mm10"
+        },
+        {
+          "@id": "bts:Mm39"
+        },
+        {
+          "@id": "bts:Rn6"
+        }
+      ],
       "sms:displayName": "genomicReference",
       "sms:required": "sms:true",
+      "sms:requiresDependency": [
+        {
+          "@id": "bts:GenomicReferenceLink"
+        }
+      ],
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:GRCh37",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "GRCh37",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GenomicReference"
+        },
+        {
+          "@id": "bts:ReferenceSet"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "GRCh37",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:GRCh38",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "GRCh38",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GenomicReference"
+        },
+        {
+          "@id": "bts:ReferenceSet"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "GRCh38",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:GRCh38VerilyV1",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "GRCh38VerilyV1",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GenomicReference"
+        },
+        {
+          "@id": "bts:ReferenceSet"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "GRCh38_Verily_v1",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:HRC",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "HRC",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GenomicReference"
+        },
+        {
+          "@id": "bts:ReferenceSet"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "HRC",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MMUL1.0",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MMUL1.0",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GenomicReference"
+        },
+        {
+          "@id": "bts:ReferenceSet"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "MMUL1.0",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Mm10",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Mm10",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GenomicReference"
+        },
+        {
+          "@id": "bts:ReferenceSet"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "mm10",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Mm39",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Mm39",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GenomicReference"
+        },
+        {
+          "@id": "bts:ReferenceSet"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "mm39",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Rn6",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Rn6",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GenomicReference"
+        },
+        {
+          "@id": "bts:ReferenceSet"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "rn6",
+      "sms:required": "sms:false",
       "sms:validationRules": []
     },
     {
@@ -23786,10 +24058,16 @@
           "@id": "bts:Nf1-C848R/Flox"
         },
         {
+          "@id": "bts:Nf1-MET"
+        },
+        {
           "@id": "bts:Nf1-OPG"
         },
         {
           "@id": "bts:Nf1-OPG-Arg816"
+        },
+        {
+          "@id": "bts:Nf1-P53"
         },
         {
           "@id": "bts:Nf1-R681X/Flox"
@@ -37380,6 +37658,23 @@
       "sms:validationRules": []
     },
     {
+      "@id": "bts:Nf1-MET",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Nf1-MET",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:ModelSystemName"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Nf1-MET",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
       "@id": "bts:Nf1-OPG",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
@@ -37410,6 +37705,23 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "Nf1-OPG-Arg816",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Nf1-P53",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Nf1-P53",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:ModelSystemName"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Nf1-P53",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -40231,94 +40543,18 @@
         },
         {
           "@id": "bts:MMUL1.0"
+        },
+        {
+          "@id": "bts:Mm10"
+        },
+        {
+          "@id": "bts:Mm39"
+        },
+        {
+          "@id": "bts:Rn6"
         }
       ],
       "sms:displayName": "referenceSet",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:GRCh37",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "GRCh37",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:ReferenceSet"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "GRCh37",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:GRCh38",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "GRCh38",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:ReferenceSet"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "GRCh38",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:GRCh38VerilyV1",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "GRCh38VerilyV1",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:ReferenceSet"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "GRCh38_Verily_v1",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:HRC",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "HRC",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:ReferenceSet"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "HRC",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:MMUL1.0",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "MMUL1.0",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:ReferenceSet"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "MMUL1.0",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -40381,31 +40617,6 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "diseaseFocus",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:TransplantationRecipientSpecies",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "Species into which donor  was grown",
-      "rdfs:label": "TransplantationRecipientSpecies",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:Thing"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "schema:rangeIncludes": [
-        {
-          "@id": "bts:Human"
-        },
-        {
-          "@id": "bts:Mouse"
-        }
-      ],
-      "sms:displayName": "transplantationRecipientSpecies",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -41179,6 +41390,11 @@
       },
       "sms:displayName": "parentSpecimenID",
       "sms:required": "sms:false",
+      "sms:requiresDependency": [
+        {
+          "@id": "bts:SpecimenID"
+        }
+      ],
       "sms:validationRules": []
     },
     {
@@ -41654,6 +41870,9 @@
           "@id": "bts:Six-minutewalktest"
         },
         {
+          "@id": "bts:Weight"
+        },
+        {
           "@id": "bts:Wordrecognitionscore"
         },
         {
@@ -41684,13 +41903,7 @@
           "@id": "bts:HPLC"
         },
         {
-          "@id": "bts:Matrigel-basedtumorigenesisassay"
-        },
-        {
           "@id": "bts:MigrationAssay"
-        },
-        {
-          "@id": "bts:NanoStringnCounterAnalysisSystem"
         },
         {
           "@id": "bts:STRprofile"
@@ -41802,9 +42015,6 @@
         },
         {
           "@id": "bts:Longtermpotentiationassay"
-        },
-        {
-          "@id": "bts:MRNAcounts"
         },
         {
           "@id": "bts:Massivelyparallelreporterassay"
@@ -44550,26 +44760,6 @@
       "sms:validationRules": []
     },
     {
-      "@id": "bts:Matrigel-basedtumorigenesisassay",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "Matrigel-basedtumorigenesisassay",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:ProtocolAssay"
-        },
-        {
-          "@id": "bts:Assay"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "Matrigel-based tumorigenesis assay",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
       "@id": "bts:MigrationAssay",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
@@ -44586,26 +44776,6 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "Migration Assay",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:NanoStringnCounterAnalysisSystem",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "NanoStringnCounterAnalysisSystem",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:ProtocolAssay"
-        },
-        {
-          "@id": "bts:Assay"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "NanoString nCounter Analysis System",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -45286,26 +45456,6 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "long term potentiation assay",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:MRNAcounts",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "MRNAcounts",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:ProtocolAssay"
-        },
-        {
-          "@id": "bts:Assay"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "mRNA counts",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -46190,6 +46340,9 @@
           "@id": "bts:Six-minutewalktest"
         },
         {
+          "@id": "bts:Weight"
+        },
+        {
           "@id": "bts:Wordrecognitionscore"
         },
         {
@@ -46220,13 +46373,7 @@
           "@id": "bts:HPLC"
         },
         {
-          "@id": "bts:Matrigel-basedtumorigenesisassay"
-        },
-        {
           "@id": "bts:MigrationAssay"
-        },
-        {
-          "@id": "bts:NanoStringnCounterAnalysisSystem"
         },
         {
           "@id": "bts:STRprofile"
@@ -46338,9 +46485,6 @@
         },
         {
           "@id": "bts:Longtermpotentiationassay"
-        },
-        {
-          "@id": "bts:MRNAcounts"
         },
         {
           "@id": "bts:Massivelyparallelreporterassay"
@@ -46654,7 +46798,7 @@
           "@id": "bts:NanoStringHumannCounterPanCancerIO360Panel"
         },
         {
-          "@id": "bts:NanostringCounter"
+          "@id": "bts:NanoStringnCounterAnalysisSystem"
         },
         {
           "@id": "bts:Perlegen300Karray"
@@ -47652,10 +47796,10 @@
       "sms:validationRules": []
     },
     {
-      "@id": "bts:NanostringCounter",
+      "@id": "bts:NanoStringnCounterAnalysisSystem",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
-      "rdfs:label": "NanostringCounter",
+      "rdfs:label": "NanoStringnCounterAnalysisSystem",
       "rdfs:subClassOf": [
         {
           "@id": "bts:Platform"
@@ -47664,7 +47808,7 @@
       "schema:isPartOf": {
         "@id": "http://schema.biothings.io"
       },
-      "sms:displayName": "Nanostring Counter",
+      "sms:displayName": "NanoString nCounter Analysis System",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },

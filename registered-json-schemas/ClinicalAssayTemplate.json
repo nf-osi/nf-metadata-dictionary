@@ -1,6 +1,62 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-clinicalassaytemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "compoundDose": {}
+        },
+        "required": [
+          "compoundDose"
+        ]
+      },
+      "then": {
+        "properties": {
+          "compoundDoseUnit": {}
+        },
+        "required": [
+          "compoundDoseUnit"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "age": {}
+        },
+        "required": [
+          "age"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ageUnit": {}
+        },
+        "required": [
+          "ageUnit"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "dataType": {}
+        },
+        "required": [
+          "dataType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "dataSubtype": {}
+        },
+        "required": [
+          "dataSubtype"
+        ]
+      }
+    }
+  ],
   "description": "General template for typically tabular **individual-level** data. This can include repeated measures and a drug treatment context.",
   "properties": {
     "experimentalFactor": {
@@ -124,6 +180,7 @@
         "rotarod performance test",
         "scale",
         "six-minute walk test",
+        "weight",
         "word recognition score"
       ],
       "title": "assay",
@@ -1063,8 +1120,10 @@
           "NRG",
           "Nf1-C383X/Flox",
           "Nf1-C848R/Flox",
+          "Nf1-MET",
           "Nf1-OPG",
           "Nf1-OPG-Arg816",
+          "Nf1-P53",
           "Nf1-R681X/Flox",
           "Nf1flox/flox",
           "Prss56Cre/+;Tom/+",
