@@ -7203,6 +7203,9 @@
           "@id": "bts:Sex"
         },
         {
+          "@id": "bts:ModelSex"
+        },
+        {
           "@id": "bts:DiffuseDermalNeurofibromas"
         },
         {
@@ -8840,6 +8843,9 @@
           "@id": "bts:LibraryStrand"
         },
         {
+          "@id": "bts:ModelSex"
+        },
+        {
           "@id": "bts:Diagnosis"
         },
         {
@@ -9684,6 +9690,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:Sex"
+        },
+        {
+          "@id": "bts:ModelSex"
         }
       ],
       "schema:isPartOf": {
@@ -9701,6 +9710,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:Sex"
+        },
+        {
+          "@id": "bts:ModelSex"
         }
       ],
       "schema:isPartOf": {
@@ -11366,6 +11378,9 @@
           "@id": "bts:AgeUnit"
         },
         {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:TimepointUnit"
         }
       ],
@@ -11384,6 +11399,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:AgeUnit"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:TimepointUnit"
@@ -11406,6 +11424,9 @@
           "@id": "bts:AgeUnit"
         },
         {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:TimepointUnit"
         }
       ],
@@ -11424,6 +11445,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:AgeUnit"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:TimepointUnit"
@@ -11446,6 +11470,9 @@
           "@id": "bts:AgeUnit"
         },
         {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:TimepointUnit"
         }
       ],
@@ -11466,6 +11493,9 @@
           "@id": "bts:AgeUnit"
         },
         {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:TimepointUnit"
         }
       ],
@@ -11484,6 +11514,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:AgeUnit"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:TimepointUnit"
@@ -12840,7 +12873,7 @@
     {
       "@id": "bts:AntibodyID",
       "@type": "rdfs:Class",
-      "rdfs:comment": "Antibody ID such as RRID if available, otherwise use vendor ID.",
+      "rdfs:comment": "Antibody identifier. Select from the controlled vocabulary of antibodies in NF Research Tools Central (syn51730943) when available, or provide a custom identifier. Links to antibody details are available in the schema see_also field for enum values.",
       "rdfs:label": "AntibodyID",
       "rdfs:subClassOf": [
         {
@@ -12850,7 +12883,3498 @@
       "schema:isPartOf": {
         "@id": "http://schema.biothings.io"
       },
+      "schema:rangeIncludes": [
+        {
+          "@id": "bts:Rabbitanti-NF1Antibody,AffinityPurified"
+        },
+        {
+          "@id": "bts:Anti-NF1monoclonalantibody,cloneTNJ-423"
+        },
+        {
+          "@id": "bts:AntiNeurofibrominantibody"
+        },
+        {
+          "@id": "bts:NF1(phospho-Ser2741)antibody"
+        },
+        {
+          "@id": "bts:Anti-NF1monoclonalantibody,cloneOG-16"
+        },
+        {
+          "@id": "bts:Anti-NF1(C-terminal)polyclonalantibody"
+        },
+        {
+          "@id": "bts:Anti-NF1monoclonalantibody"
+        },
+        {
+          "@id": "bts:Anti-NF1monoclonalantibody,cloneMC-072"
+        },
+        {
+          "@id": "bts:RabbitantiNeurofibromin(Non-Phospho)antibody"
+        },
+        {
+          "@id": "bts:Anti-NF1antibody"
+        },
+        {
+          "@id": "bts:MonoclonalAnti-NF1antibodyproducedinmouse"
+        },
+        {
+          "@id": "bts:MonoclonalAnti-Neurofibrominantibodyproducedinmouse"
+        },
+        {
+          "@id": "bts:Neurofibrominantibody"
+        },
+        {
+          "@id": "bts:RabbitantiNeurofibromin(Phospho-specific)antibody"
+        },
+        {
+          "@id": "bts:Neurofibromin1Antibody"
+        },
+        {
+          "@id": "bts:Anti-NF1(aa27-41)polyclonalantibody"
+        },
+        {
+          "@id": "bts:Anti-NF1(aa2719-2818)polyclonalantibody"
+        },
+        {
+          "@id": "bts:Neurofibromin(McNFn27a)antibody"
+        },
+        {
+          "@id": "bts:RabbitAnti-NeurofibrominPolyclonalAntibody,Unconjugated"
+        },
+        {
+          "@id": "bts:NF1PolyclonalAntibody"
+        },
+        {
+          "@id": "bts:NF1MonoclonalAntibody(McNFn27a)"
+        },
+        {
+          "@id": "bts:Anti-HumanNF1MonoclonalAntibody,Unconjugated,Clone3F3"
+        },
+        {
+          "@id": "bts:Anti-NF1(internalregion)polyclonalantibody"
+        },
+        {
+          "@id": "bts:RabbitAnti-NeurofibrominAntibody,Unconjugated"
+        },
+        {
+          "@id": "bts:RabbitAnti-NF1Polyclonal,Unconjugatedantibody"
+        },
+        {
+          "@id": "bts:MouseAnti-NF1MonoclonalAntibody,Unconjugated,CloneMcNFn27a"
+        },
+        {
+          "@id": "bts:NF1Antibody"
+        },
+        {
+          "@id": "bts:Anti-NF1antibodyproducedinrabbit"
+        },
+        {
+          "@id": "bts:NF1MonoclonalAntibody(McNFn27b)"
+        },
+        {
+          "@id": "bts:Type1NeurofibromatosisProtein(NF1)Mouseanti-HumanMonoclonal(aa27-41)(McNFn27)Antibody"
+        },
+        {
+          "@id": "bts:Anti-Neurofibrominantibody"
+        },
+        {
+          "@id": "bts:Neurofibromin1antibody"
+        },
+        {
+          "@id": "bts:Neurofibromin1(D7R7D)RabbitmAbantibody"
+        },
+        {
+          "@id": "bts:Type1NeurofibromatosisProtein(NF1)RabbitPolyclonal(N-Terminus)Antibody"
+        },
+        {
+          "@id": "bts:Anti-NF1polyclonalantibody"
+        },
+        {
+          "@id": "bts:Neurofibromin(McNFn27b)antibody"
+        },
+        {
+          "@id": "bts:NeurofibrominAntibody(E-8)"
+        },
+        {
+          "@id": "bts:MouseAnti-NF1MonoclonalAntibody,Unconjugated,CloneMcNFn27"
+        },
+        {
+          "@id": "bts:Type1NeurofibromatosisProtein(NF1)Mouseanti-HumanMonoclonal(aa27-41)(McNFn27a)Antibody"
+        },
+        {
+          "@id": "bts:RabbitantiNeurofibrominantibody"
+        },
+        {
+          "@id": "bts:Anti-NF1monoclonalantibody,cloneSOG517"
+        },
+        {
+          "@id": "bts:Anti-NF1monoclonalantibody,cloneNdOGo38c"
+        },
+        {
+          "@id": "bts:NF1antibody"
+        },
+        {
+          "@id": "bts:ImmunotagNF1Antibody"
+        },
+        {
+          "@id": "bts:ImmunotagNeurofibrominPolyclonalAntibody"
+        },
+        {
+          "@id": "bts:PolyclonalRabbitanti-HumanNeurofibromin/NF1Antibody(IF,WB)"
+        },
+        {
+          "@id": "bts:PolyclonalRabbitanti-HumanNeurofibromin/NF1Antibody(IHC)"
+        },
+        {
+          "@id": "bts:Anti-NeurofibrominNF-1Antibody,cloneNF1-A376G3"
+        },
+        {
+          "@id": "bts:NeurofibrominAntibody/NF1[clone4C6F10]"
+        },
+        {
+          "@id": "bts:NF1Antibody/Neurofibromin[clone4F8B7]"
+        },
+        {
+          "@id": "bts:NeurofibrominAntibody/NF1"
+        },
+        {
+          "@id": "bts:Neurofibromin(NF1)MouseMonoclonalAntibody"
+        },
+        {
+          "@id": "bts:Neurofibromin(NF1)RabbitPolyclonalAntibody"
+        },
+        {
+          "@id": "bts:Anti-NF1"
+        },
+        {
+          "@id": "bts:N2150-02B\u00a0RabbitAnti-NF1,ID"
+        },
+        {
+          "@id": "bts:Anti-Neurofibromin1antibody(NF1)AA1551-1600"
+        },
+        {
+          "@id": "bts:Anti-Neurofibromin1antibody(NF1)"
+        },
+        {
+          "@id": "bts:Anti-Neurofibromin1antibody(NF1)AA2719-2818"
+        },
+        {
+          "@id": "bts:Anti-Neurofibromin1antibody(NF1)Center"
+        },
+        {
+          "@id": "bts:Anti-Neurofibromin1antibody(NF1)InternalRegion"
+        },
+        {
+          "@id": "bts:Anti-Neurofibromin/NF1AntibodyPicoband"
+        },
+        {
+          "@id": "bts:Anti-Neurofibromin/NF1AntibodyPicoband(Monoclonal,4F8B7)"
+        },
+        {
+          "@id": "bts:Neurofibromin1Antibody(CL11773)"
+        },
+        {
+          "@id": "bts:NeurofibrominAntibody(H-12)"
+        },
+        {
+          "@id": "bts:NF1polyclonalantibody"
+        },
+        {
+          "@id": "bts:NF1(phosphoS2741)polyclonalantibody"
+        },
+        {
+          "@id": "bts:Anti-TFYY1(NF1),IgGfraction(monoclonal)"
+        },
+        {
+          "@id": "bts:Neurofibromin1antibody(N-Term)"
+        },
+        {
+          "@id": "bts:Anti-Neurofibromin1antibody(NF1)N-Term"
+        },
+        {
+          "@id": "bts:NF1(phospho-Ser2741)antibody(FITC)"
+        },
+        {
+          "@id": "bts:MonoclonalMouseanti-HumanNeurofibromin/NF1Antibody(cloneMcNFn27a,Biotin,N-Terminus,WB)"
+        },
+        {
+          "@id": "bts:MonoclonalMouseanti-HumanNeurofibromin/NF1Antibody(cloneMcNFn27a,DY650,N-Terminus,WB)"
+        },
+        {
+          "@id": "bts:MonoclonalMouseanti-HumanNeurofibromin/NF1Antibody(cloneMcNFn27a,DY488,N-Terminus,WB)"
+        },
+        {
+          "@id": "bts:MonoclonalMouseanti-HumanNeurofibromin/NF1Antibody(cloneMcNFn27a,DY550,N-Terminus,WB)"
+        },
+        {
+          "@id": "bts:Neurofibromin1Antibody(McNFn27a)-BSAFree"
+        },
+        {
+          "@id": "bts:Neurofibromin1Antibody(McNFn27a)[DyLight650]"
+        },
+        {
+          "@id": "bts:Neurofibromin1Antibody(McNFn27a)[DyLight488]"
+        },
+        {
+          "@id": "bts:Neurofibromin1Antibody(McNFn27a)[HRP]"
+        },
+        {
+          "@id": "bts:Neurofibromin1Antibody(McNFn27a)[DyLight550]"
+        },
+        {
+          "@id": "bts:Neurofibromin1Antibody(McNFn27b)[Biotin]"
+        },
+        {
+          "@id": "bts:Neurofibromin1Antibody(McNFn27b)[DyLight650]"
+        },
+        {
+          "@id": "bts:Neurofibromin1Antibody(McNFn27b)[DyLight488]"
+        },
+        {
+          "@id": "bts:Neurofibromin1Antibody(McNFn27b)[HRP]"
+        },
+        {
+          "@id": "bts:Neurofibromin1Antibody(McNFn27b)[DyLight550]"
+        },
+        {
+          "@id": "bts:Anti-Neurofibrominantibody[EPR22989-68]"
+        },
+        {
+          "@id": "bts:RecombinantAnti-Neurofibrominantibody[EPR22989-68]-BSAandAzidefree"
+        },
+        {
+          "@id": "bts:Anti-NF1Antibody"
+        },
+        {
+          "@id": "bts:Anti-Neurofibromin1Antibody"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2817)/Gold"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2515)/Gold"
+        },
+        {
+          "@id": "bts:Anti-NF1/Gold"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2817)/Cy5.5"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2515)/Cy5.5"
+        },
+        {
+          "@id": "bts:Anti-NF1/Cy5.5"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2817)/Cy7"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2515)/Cy7"
+        },
+        {
+          "@id": "bts:Anti-NF1/Cy7"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2817)/RBITC"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2515)/RBITC"
+        },
+        {
+          "@id": "bts:Anti-NF1/RBITC"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2817)/PE-Cy5"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2515)/PE-Cy5"
+        },
+        {
+          "@id": "bts:Anti-NF1/PE-Cy5"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2817)/PE-Cy3"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2515)/PE-Cy3"
+        },
+        {
+          "@id": "bts:Anti-NF1/PE-Cy3"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2817)/Cy5"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2515)/Cy5"
+        },
+        {
+          "@id": "bts:Anti-NF1/Cy5"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2817)/AP"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2515)/AP"
+        },
+        {
+          "@id": "bts:Anti-NF1/AP"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2817)/PE-Cy7"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2515)/PE-Cy7"
+        },
+        {
+          "@id": "bts:Anti-NF1/PE-Cy7"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2817)/PE-Cy5.5"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2515)/PE-Cy5.5"
+        },
+        {
+          "@id": "bts:Anti-NF1/PE-Cy5.5"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2817)/Cy3"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2515)/Cy3"
+        },
+        {
+          "@id": "bts:Anti-NF1/Cy3"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2817)/APC"
+        },
+        {
+          "@id": "bts:Anti-phospho-NF1(Ser2515)/APC"
+        },
+        {
+          "@id": "bts:Anti-NF1/APC"
+        },
+        {
+          "@id": "bts:Anti-NeurofibrominNF1Antibody"
+        },
+        {
+          "@id": "bts:Anti-Neurofibromin/NF1AntibodyPicoband(monoclonal,4C6F10)"
+        },
+        {
+          "@id": "bts:RabbitAnti-NF1RecombinantAntibody(D7R7D)"
+        },
+        {
+          "@id": "bts:MouseAnti-NF1RecombinantAntibody(CBWJN-0652)"
+        },
+        {
+          "@id": "bts:MouseAnti-NF1RecombinantAntibody(10H20)"
+        },
+        {
+          "@id": "bts:MouseAnti-NF1RecombinantAntibody(2D1)"
+        },
+        {
+          "@id": "bts:MouseAnti-NF1RecombinantAntibody(3C159)"
+        },
+        {
+          "@id": "bts:MouseAnti-NF1RecombinantAntibody(3C160)"
+        },
+        {
+          "@id": "bts:MouseAnti-NF1RecombinantAntibody(CBWJN-0441)"
+        },
+        {
+          "@id": "bts:MouseAnti-NF1RecombinantAntibody(A-12)"
+        },
+        {
+          "@id": "bts:MouseAnti-NF1RecombinantAntibody(D-2)"
+        },
+        {
+          "@id": "bts:MouseAnti-NF1RecombinantAntibody(F-2)"
+        },
+        {
+          "@id": "bts:MouseAnti-NF1RecombinantAntibody(clone36C6)"
+        },
+        {
+          "@id": "bts:RabbitAnti-HumanNeurofibromin(PhosphoS2741)PolyclonalAntibody"
+        },
+        {
+          "@id": "bts:Anti-Neurofibrominantibody[McNFn27a]"
+        },
+        {
+          "@id": "bts:Anti-Neurofibrominantibody[McNFn27b]"
+        },
+        {
+          "@id": "bts:Anti-Neurofibromin/NF1Antibody"
+        },
+        {
+          "@id": "bts:RabbitAnti-Neurofibromin/NF1Antibody"
+        },
+        {
+          "@id": "bts:RabbitAnti-phospho-NF1Antibody"
+        },
+        {
+          "@id": "bts:RabbitAnti-NF1Antibody"
+        },
+        {
+          "@id": "bts:MouseAnti-HumanNF1"
+        },
+        {
+          "@id": "bts:RabbitAnti-HumanNeurofibromin/NF1(Internal)"
+        },
+        {
+          "@id": "bts:RabbitAnti-NeurofibrominAntibody"
+        },
+        {
+          "@id": "bts:MouseAnti-Neurofibromin,aa27-41Antibody"
+        },
+        {
+          "@id": "bts:MouseAnti-NeurofibrominAntibody"
+        },
+        {
+          "@id": "bts:RabbitAnti-Neurofibromin,aa27-41Antibody"
+        },
+        {
+          "@id": "bts:RabbitAnti-NF1,IDAntibody"
+        },
+        {
+          "@id": "bts:Anti-NeurofibrominAntibody"
+        },
+        {
+          "@id": "bts:Neurofibromin\u00a0specific\u00a0antibody"
+        },
+        {
+          "@id": "bts:IHC-plusPolyclonalRabbitanti-HumanNeurofibromin/NF1Antibody"
+        },
+        {
+          "@id": "bts:NF-1Antibody(A-12)"
+        },
+        {
+          "@id": "bts:NF1typeIIisoform-specificantiserumNF1ab67"
+        },
+        {
+          "@id": "bts:NF1typeIIIisoform-specificantiserumNF1as159"
+        },
+        {
+          "@id": "bts:Anti-NF-1antibody"
+        },
+        {
+          "@id": "bts:Anti-NFI(CI)"
+        },
+        {
+          "@id": "bts:B3A.1"
+        },
+        {
+          "@id": "bts:B3A.1fusionproteinantibody"
+        },
+        {
+          "@id": "bts:WA15apolyclonalneurofibrominantibod"
+        },
+        {
+          "@id": "bts:B3Aantiserum"
+        },
+        {
+          "@id": "bts:PC(2435-2745)"
+        },
+        {
+          "@id": "bts:PC(772-1085)"
+        },
+        {
+          "@id": "bts:Dpeptideantiserum"
+        },
+        {
+          "@id": "bts:Hpeptideantiserum"
+        },
+        {
+          "@id": "bts:PMAL.HF3A.Xfusion-proteinantiserum"
+        },
+        {
+          "@id": "bts:PMAL.B3Afusion-proteinantiserum"
+        },
+        {
+          "@id": "bts:DrosophilaNF1antibody"
+        },
+        {
+          "@id": "bts:CPTC-NF1-1"
+        },
+        {
+          "@id": "bts:CPTC-NF1-2"
+        },
+        {
+          "@id": "bts:CPTC-NF1-3"
+        },
+        {
+          "@id": "bts:INF-07E"
+        }
+      ],
       "sms:displayName": "antibodyID",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Rabbitanti-NF1Antibody,AffinityPurified",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Rabbitanti-NF1Antibody,AffinityPurified",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit anti-NF1 Antibody, Affinity Purified",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1monoclonalantibody,cloneTNJ-423",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1monoclonalantibody,cloneTNJ-423",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1 monoclonal antibody, clone TNJ-423",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:AntiNeurofibrominantibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "AntiNeurofibrominantibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "anti Neurofibromin antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NF1(phospho-Ser2741)antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NF1(phospho-Ser2741)antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NF1 (phospho-Ser2741) antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1monoclonalantibody,cloneOG-16",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1monoclonalantibody,cloneOG-16",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1 monoclonal antibody, clone OG-16",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1(C-terminal)polyclonalantibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1(C-terminal)polyclonalantibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1 (C-terminal) polyclonal antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1monoclonalantibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1monoclonalantibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1 monoclonal antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1monoclonalantibody,cloneMC-072",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1monoclonalantibody,cloneMC-072",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1 monoclonal antibody, clone MC-072",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RabbitantiNeurofibromin(Non-Phospho)antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RabbitantiNeurofibromin(Non-Phospho)antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit anti Neurofibromin (Non-Phospho) antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1 antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MonoclonalAnti-NF1antibodyproducedinmouse",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MonoclonalAnti-NF1antibodyproducedinmouse",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Monoclonal Anti-NF1 antibody produced in mouse",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MonoclonalAnti-Neurofibrominantibodyproducedinmouse",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MonoclonalAnti-Neurofibrominantibodyproducedinmouse",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Monoclonal Anti-Neurofibromin antibody produced in mouse",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibrominantibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibrominantibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RabbitantiNeurofibromin(Phospho-specific)antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RabbitantiNeurofibromin(Phospho-specific)antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit anti Neurofibromin (Phospho-specific) antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin1Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin1Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin 1 Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1(aa27-41)polyclonalantibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1(aa27-41)polyclonalantibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1 (aa 27-41) polyclonal antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1(aa2719-2818)polyclonalantibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1(aa2719-2818)polyclonalantibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1 (aa 2719-2818) polyclonal antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin(McNFn27a)antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin(McNFn27a)antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin (McNFn27a) antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RabbitAnti-NeurofibrominPolyclonalAntibody,Unconjugated",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RabbitAnti-NeurofibrominPolyclonalAntibody,Unconjugated",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit Anti-Neurofibromin Polyclonal Antibody, Unconjugated",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NF1PolyclonalAntibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NF1PolyclonalAntibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NF1 Polyclonal Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NF1MonoclonalAntibody(McNFn27a)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NF1MonoclonalAntibody(McNFn27a)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NF1 Monoclonal Antibody (McNFn27a)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-HumanNF1MonoclonalAntibody,Unconjugated,Clone3F3",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-HumanNF1MonoclonalAntibody,Unconjugated,Clone3F3",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-Human NF1 Monoclonal Antibody, Unconjugated, Clone 3F3",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1(internalregion)polyclonalantibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1(internalregion)polyclonalantibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1 (internal region) polyclonal antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RabbitAnti-NeurofibrominAntibody,Unconjugated",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RabbitAnti-NeurofibrominAntibody,Unconjugated",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit Anti-Neurofibromin Antibody, Unconjugated",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RabbitAnti-NF1Polyclonal,Unconjugatedantibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RabbitAnti-NF1Polyclonal,Unconjugatedantibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit Anti-NF1 Polyclonal, Unconjugated antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAnti-NF1MonoclonalAntibody,Unconjugated,CloneMcNFn27a",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MouseAnti-NF1MonoclonalAntibody,Unconjugated,CloneMcNFn27a",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Mouse Anti-NF1 Monoclonal Antibody, Unconjugated, Clone McNFn27a",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NF1Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NF1Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NF1 Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1antibodyproducedinrabbit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1antibodyproducedinrabbit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1 antibody produced in rabbit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NF1MonoclonalAntibody(McNFn27b)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NF1MonoclonalAntibody(McNFn27b)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NF1 Monoclonal Antibody (McNFn27b)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Type1NeurofibromatosisProtein(NF1)Mouseanti-HumanMonoclonal(aa27-41)(McNFn27)Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Type1NeurofibromatosisProtein(NF1)Mouseanti-HumanMonoclonal(aa27-41)(McNFn27)Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Type 1 Neurofibromatosis Protein (NF1) Mouse anti-Human Monoclonal (aa27-41) (McNFn27) Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-Neurofibrominantibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-Neurofibrominantibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-Neurofibromin antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin1antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin1antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin 1 antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin1(D7R7D)RabbitmAbantibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin1(D7R7D)RabbitmAbantibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin 1 (D7R7D) Rabbit mAb antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Type1NeurofibromatosisProtein(NF1)RabbitPolyclonal(N-Terminus)Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Type1NeurofibromatosisProtein(NF1)RabbitPolyclonal(N-Terminus)Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Type 1 Neurofibromatosis Protein (NF1) Rabbit Polyclonal (N-Terminus) Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1polyclonalantibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1polyclonalantibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1 polyclonal antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin(McNFn27b)antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin(McNFn27b)antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin (McNFn27b) antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NeurofibrominAntibody(E-8)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NeurofibrominAntibody(E-8)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin Antibody (E-8)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAnti-NF1MonoclonalAntibody,Unconjugated,CloneMcNFn27",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MouseAnti-NF1MonoclonalAntibody,Unconjugated,CloneMcNFn27",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Mouse Anti-NF1 Monoclonal Antibody, Unconjugated, Clone McNFn27",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Type1NeurofibromatosisProtein(NF1)Mouseanti-HumanMonoclonal(aa27-41)(McNFn27a)Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Type1NeurofibromatosisProtein(NF1)Mouseanti-HumanMonoclonal(aa27-41)(McNFn27a)Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Type 1 Neurofibromatosis Protein (NF1) Mouse anti-Human Monoclonal (aa27-41) (McNFn27a) Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RabbitantiNeurofibrominantibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RabbitantiNeurofibrominantibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit anti Neurofibromin antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1monoclonalantibody,cloneSOG517",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1monoclonalantibody,cloneSOG517",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1 monoclonal antibody, clone SOG517",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1monoclonalantibody,cloneNdOGo38c",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1monoclonalantibody,cloneNdOGo38c",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1 monoclonal antibody, clone NdOGo38c",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NF1antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NF1antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NF1 antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:ImmunotagNF1Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "ImmunotagNF1Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Immunotag NF1 Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:ImmunotagNeurofibrominPolyclonalAntibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "ImmunotagNeurofibrominPolyclonalAntibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Immunotag Neurofibromin Polyclonal Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PolyclonalRabbitanti-HumanNeurofibromin/NF1Antibody(IF,WB)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PolyclonalRabbitanti-HumanNeurofibromin/NF1Antibody(IF,WB)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Polyclonal Rabbit anti-Human Neurofibromin / NF1 Antibody (IF, WB)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PolyclonalRabbitanti-HumanNeurofibromin/NF1Antibody(IHC)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PolyclonalRabbitanti-HumanNeurofibromin/NF1Antibody(IHC)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Polyclonal Rabbit anti-Human Neurofibromin / NF1 Antibody (IHC)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NeurofibrominNF-1Antibody,cloneNF1-A376G3",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NeurofibrominNF-1Antibody,cloneNF1-A376G3",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-Neurofibromin NF-1 Antibody, clone NF1-A 376G3",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NeurofibrominAntibody/NF1[clone4C6F10]",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NeurofibrominAntibody/NF1[clone4C6F10]",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin Antibody / NF1 [clone 4C6F10]",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NF1Antibody/Neurofibromin[clone4F8B7]",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NF1Antibody/Neurofibromin[clone4F8B7]",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NF1 Antibody / Neurofibromin [clone 4F8B7]",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NeurofibrominAntibody/NF1",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NeurofibrominAntibody/NF1",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin Antibody / NF1",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin(NF1)MouseMonoclonalAntibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin(NF1)MouseMonoclonalAntibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin (NF1) Mouse Monoclonal Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin(NF1)RabbitPolyclonalAntibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin(NF1)RabbitPolyclonalAntibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin (NF1) Rabbit Polyclonal Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:N2150-02B\u00a0RabbitAnti-NF1,ID",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "N2150-02B\u00a0RabbitAnti-NF1,ID",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "N2150-02B\u00a0Rabbit Anti-NF1, ID",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-Neurofibromin1antibody(NF1)AA1551-1600",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-Neurofibromin1antibody(NF1)AA1551-1600",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "anti-Neurofibromin 1 antibody (NF1) AA 1551-1600",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-Neurofibromin1antibody(NF1)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-Neurofibromin1antibody(NF1)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "anti-Neurofibromin 1 antibody (NF1)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-Neurofibromin1antibody(NF1)AA2719-2818",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-Neurofibromin1antibody(NF1)AA2719-2818",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "anti-Neurofibromin 1 antibody (NF1) AA 2719-2818",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-Neurofibromin1antibody(NF1)Center",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-Neurofibromin1antibody(NF1)Center",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "anti-Neurofibromin 1 antibody (NF1) Center",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-Neurofibromin1antibody(NF1)InternalRegion",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-Neurofibromin1antibody(NF1)InternalRegion",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "anti-Neurofibromin 1 antibody (NF1) Internal Region",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-Neurofibromin/NF1AntibodyPicoband",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-Neurofibromin/NF1AntibodyPicoband",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-Neurofibromin/NF1 Antibody Picoband",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-Neurofibromin/NF1AntibodyPicoband(Monoclonal,4F8B7)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-Neurofibromin/NF1AntibodyPicoband(Monoclonal,4F8B7)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-Neurofibromin/NF1 Antibody Picoband (Monoclonal, 4F8B7)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin1Antibody(CL11773)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin1Antibody(CL11773)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin 1 Antibody (CL11773)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NeurofibrominAntibody(H-12)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NeurofibrominAntibody(H-12)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin Antibody (H-12)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NF1polyclonalantibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NF1polyclonalantibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NF1 polyclonal antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NF1(phosphoS2741)polyclonalantibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NF1(phosphoS2741)polyclonalantibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NF1 (phospho S2741) polyclonal antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-TFYY1(NF1),IgGfraction(monoclonal)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-TFYY1(NF1),IgGfraction(monoclonal)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-TFYY1 (NF1), IgG fraction (monoclonal)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin1antibody(N-Term)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin1antibody(N-Term)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin 1 antibody (N-Term)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-Neurofibromin1antibody(NF1)N-Term",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-Neurofibromin1antibody(NF1)N-Term",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "anti-Neurofibromin 1 antibody (NF1) N-Term",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NF1(phospho-Ser2741)antibody(FITC)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NF1(phospho-Ser2741)antibody(FITC)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NF1 (phospho-Ser2741) antibody (FITC)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MonoclonalMouseanti-HumanNeurofibromin/NF1Antibody(cloneMcNFn27a,Biotin,N-Terminus,WB)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MonoclonalMouseanti-HumanNeurofibromin/NF1Antibody(cloneMcNFn27a,Biotin,N-Terminus,WB)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Monoclonal Mouse anti-Human Neurofibromin / NF1 Antibody (clone McNFn27a, Biotin, N-Terminus, WB)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MonoclonalMouseanti-HumanNeurofibromin/NF1Antibody(cloneMcNFn27a,DY650,N-Terminus,WB)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MonoclonalMouseanti-HumanNeurofibromin/NF1Antibody(cloneMcNFn27a,DY650,N-Terminus,WB)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Monoclonal Mouse anti-Human Neurofibromin / NF1 Antibody (clone McNFn27a, DY650, N-Terminus, WB)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MonoclonalMouseanti-HumanNeurofibromin/NF1Antibody(cloneMcNFn27a,DY488,N-Terminus,WB)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MonoclonalMouseanti-HumanNeurofibromin/NF1Antibody(cloneMcNFn27a,DY488,N-Terminus,WB)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Monoclonal Mouse anti-Human Neurofibromin / NF1 Antibody (clone McNFn27a, DY488, N-Terminus, WB)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MonoclonalMouseanti-HumanNeurofibromin/NF1Antibody(cloneMcNFn27a,DY550,N-Terminus,WB)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MonoclonalMouseanti-HumanNeurofibromin/NF1Antibody(cloneMcNFn27a,DY550,N-Terminus,WB)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Monoclonal Mouse anti-Human Neurofibromin / NF1 Antibody (clone McNFn27a, DY550, N-Terminus, WB)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin1Antibody(McNFn27a)-BSAFree",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin1Antibody(McNFn27a)-BSAFree",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin 1 Antibody (McNFn27a) - BSA Free",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin1Antibody(McNFn27a)[DyLight650]",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin1Antibody(McNFn27a)[DyLight650]",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin 1 Antibody (McNFn27a) [DyLight 650]",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin1Antibody(McNFn27a)[DyLight488]",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin1Antibody(McNFn27a)[DyLight488]",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin 1 Antibody (McNFn27a) [DyLight 488]",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin1Antibody(McNFn27a)[HRP]",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin1Antibody(McNFn27a)[HRP]",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin 1 Antibody (McNFn27a) [HRP]",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin1Antibody(McNFn27a)[DyLight550]",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin1Antibody(McNFn27a)[DyLight550]",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin 1 Antibody (McNFn27a) [DyLight 550]",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin1Antibody(McNFn27b)[Biotin]",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin1Antibody(McNFn27b)[Biotin]",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin 1 Antibody (McNFn27b) [Biotin]",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin1Antibody(McNFn27b)[DyLight650]",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin1Antibody(McNFn27b)[DyLight650]",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin 1 Antibody (McNFn27b) [DyLight 650]",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin1Antibody(McNFn27b)[DyLight488]",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin1Antibody(McNFn27b)[DyLight488]",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin 1 Antibody (McNFn27b) [DyLight 488]",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin1Antibody(McNFn27b)[HRP]",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin1Antibody(McNFn27b)[HRP]",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin 1 Antibody (McNFn27b) [HRP]",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin1Antibody(McNFn27b)[DyLight550]",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin1Antibody(McNFn27b)[DyLight550]",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin 1 Antibody (McNFn27b) [DyLight 550]",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-Neurofibrominantibody[EPR22989-68]",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-Neurofibrominantibody[EPR22989-68]",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-Neurofibromin antibody [EPR22989-68]",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RecombinantAnti-Neurofibrominantibody[EPR22989-68]-BSAandAzidefree",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RecombinantAnti-Neurofibrominantibody[EPR22989-68]-BSAandAzidefree",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Recombinant Anti-Neurofibromin antibody [EPR22989-68] - BSA and Azide free",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1 Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-Neurofibromin1Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-Neurofibromin1Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "anti-Neurofibromin 1 Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2817)/Gold",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2817)/Gold",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2817)/Gold",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2515)/Gold",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2515)/Gold",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2515)/Gold",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1/Gold",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1/Gold",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1/Gold",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2817)/Cy5.5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2817)/Cy5.5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2817)/Cy5.5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2515)/Cy5.5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2515)/Cy5.5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2515)/Cy5.5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1/Cy5.5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1/Cy5.5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1/Cy5.5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2817)/Cy7",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2817)/Cy7",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2817)/Cy7",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2515)/Cy7",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2515)/Cy7",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2515)/Cy7",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1/Cy7",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1/Cy7",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1/Cy7",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2817)/RBITC",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2817)/RBITC",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2817)/RBITC",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2515)/RBITC",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2515)/RBITC",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2515)/RBITC",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1/RBITC",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1/RBITC",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1/RBITC",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2817)/PE-Cy5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2817)/PE-Cy5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2817)/PE-Cy5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2515)/PE-Cy5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2515)/PE-Cy5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2515)/PE-Cy5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1/PE-Cy5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1/PE-Cy5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1/PE-Cy5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2817)/PE-Cy3",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2817)/PE-Cy3",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2817)/PE-Cy3",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2515)/PE-Cy3",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2515)/PE-Cy3",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2515)/PE-Cy3",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1/PE-Cy3",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1/PE-Cy3",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1/PE-Cy3",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2817)/Cy5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2817)/Cy5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2817)/Cy5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2515)/Cy5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2515)/Cy5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2515)/Cy5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1/Cy5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1/Cy5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1/Cy5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2817)/AP",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2817)/AP",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2817)/AP",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2515)/AP",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2515)/AP",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2515)/AP",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1/AP",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1/AP",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1/AP",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2817)/PE-Cy7",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2817)/PE-Cy7",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2817)/PE-Cy7",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2515)/PE-Cy7",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2515)/PE-Cy7",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2515)/PE-Cy7",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1/PE-Cy7",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1/PE-Cy7",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1/PE-Cy7",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2817)/PE-Cy5.5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2817)/PE-Cy5.5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2817)/PE-Cy5.5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2515)/PE-Cy5.5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2515)/PE-Cy5.5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2515)/PE-Cy5.5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1/PE-Cy5.5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1/PE-Cy5.5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1/PE-Cy5.5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2817)/Cy3",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2817)/Cy3",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2817)/Cy3",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2515)/Cy3",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2515)/Cy3",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2515)/Cy3",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1/Cy3",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1/Cy3",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1/Cy3",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2817)/APC",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2817)/APC",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2817)/APC",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-phospho-NF1(Ser2515)/APC",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-phospho-NF1(Ser2515)/APC",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-phospho-NF1(Ser2515)/APC",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF1/APC",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF1/APC",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-NF1/APC",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NeurofibrominNF1Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NeurofibrominNF1Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-Neurofibromin NF1 Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-Neurofibromin/NF1AntibodyPicoband(monoclonal,4C6F10)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-Neurofibromin/NF1AntibodyPicoband(monoclonal,4C6F10)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-Neurofibromin/NF1 Antibody Picoband (monoclonal, 4C6F10)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RabbitAnti-NF1RecombinantAntibody(D7R7D)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RabbitAnti-NF1RecombinantAntibody(D7R7D)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit Anti-NF1 Recombinant Antibody (D7R7D)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAnti-NF1RecombinantAntibody(CBWJN-0652)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MouseAnti-NF1RecombinantAntibody(CBWJN-0652)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Mouse Anti-NF1 Recombinant Antibody (CBWJN-0652)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAnti-NF1RecombinantAntibody(10H20)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MouseAnti-NF1RecombinantAntibody(10H20)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Mouse Anti-NF1 Recombinant Antibody (10H20)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAnti-NF1RecombinantAntibody(2D1)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MouseAnti-NF1RecombinantAntibody(2D1)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Mouse Anti-NF1 Recombinant Antibody (2D1)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAnti-NF1RecombinantAntibody(3C159)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MouseAnti-NF1RecombinantAntibody(3C159)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Mouse Anti-NF1 Recombinant Antibody (3C159)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAnti-NF1RecombinantAntibody(3C160)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MouseAnti-NF1RecombinantAntibody(3C160)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Mouse Anti-NF1 Recombinant Antibody (3C160)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAnti-NF1RecombinantAntibody(CBWJN-0441)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MouseAnti-NF1RecombinantAntibody(CBWJN-0441)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Mouse Anti-NF1 Recombinant Antibody (CBWJN-0441)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAnti-NF1RecombinantAntibody(A-12)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MouseAnti-NF1RecombinantAntibody(A-12)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Mouse Anti-NF1 Recombinant Antibody (A-12)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAnti-NF1RecombinantAntibody(D-2)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MouseAnti-NF1RecombinantAntibody(D-2)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Mouse Anti-NF1 Recombinant Antibody (D-2)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAnti-NF1RecombinantAntibody(F-2)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MouseAnti-NF1RecombinantAntibody(F-2)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Mouse Anti-NF1 Recombinant Antibody (F-2)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAnti-NF1RecombinantAntibody(clone36C6)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MouseAnti-NF1RecombinantAntibody(clone36C6)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Mouse Anti-NF1 Recombinant Antibody (clone 36C6)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RabbitAnti-HumanNeurofibromin(PhosphoS2741)PolyclonalAntibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RabbitAnti-HumanNeurofibromin(PhosphoS2741)PolyclonalAntibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit Anti-Human Neurofibromin (Phospho S2741) Polyclonal Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-Neurofibrominantibody[McNFn27a]",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-Neurofibrominantibody[McNFn27a]",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-Neurofibromin antibody [McNFn27a]",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-Neurofibrominantibody[McNFn27b]",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-Neurofibrominantibody[McNFn27b]",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-Neurofibromin antibody [McNFn27b]",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-Neurofibromin/NF1Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-Neurofibromin/NF1Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Anti-Neurofibromin/NF1 Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RabbitAnti-Neurofibromin/NF1Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RabbitAnti-Neurofibromin/NF1Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit Anti-Neurofibromin / NF1 Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RabbitAnti-phospho-NF1Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RabbitAnti-phospho-NF1Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit Anti-phospho-NF1 Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RabbitAnti-NF1Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RabbitAnti-NF1Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit Anti-NF1 Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NeurofibrominAntibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NeurofibrominAntibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "anti-Neurofibromin Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAnti-HumanNF1",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MouseAnti-HumanNF1",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Mouse Anti-Human NF1",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RabbitAnti-HumanNeurofibromin/NF1(Internal)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RabbitAnti-HumanNeurofibromin/NF1(Internal)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit Anti-Human Neurofibromin / NF1 (Internal)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RabbitAnti-NeurofibrominAntibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RabbitAnti-NeurofibrominAntibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit Anti-Neurofibromin Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAnti-Neurofibromin,aa27-41Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MouseAnti-Neurofibromin,aa27-41Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Mouse Anti-Neurofibromin, aa27-41 Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MouseAnti-NeurofibrominAntibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MouseAnti-NeurofibrominAntibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Mouse Anti-Neurofibromin Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RabbitAnti-Neurofibromin,aa27-41Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RabbitAnti-Neurofibromin,aa27-41Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit Anti-Neurofibromin, aa27-41 Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RabbitAnti-NF1,IDAntibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RabbitAnti-NF1,IDAntibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Rabbit Anti-NF1, ID Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin\u00a0specific\u00a0antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin\u00a0specific\u00a0antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin\u00a0specific\u00a0antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:IHC-plusPolyclonalRabbitanti-HumanNeurofibromin/NF1Antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "IHC-plusPolyclonalRabbitanti-HumanNeurofibromin/NF1Antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "IHC-plus Polyclonal Rabbit anti-Human Neurofibromin / NF1 Antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NF-1Antibody(A-12)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NF-1Antibody(A-12)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NF-1 Antibody (A-12)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NF1typeIIisoform-specificantiserumNF1ab67",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NF1typeIIisoform-specificantiserumNF1ab67",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NF1 type II isoform-specific antiserum NF1ab67",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NF1typeIIIisoform-specificantiserumNF1as159",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NF1typeIIIisoform-specificantiserumNF1as159",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NF1 type III isoform-specific antiserum NF1as159",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NF-1antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NF-1antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "anti-NF-1 antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Anti-NFI(CI)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Anti-NFI(CI)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "anti-NFI(CI)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:B3A.1",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "B3A.1",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "B3A.1",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:B3A.1fusionproteinantibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "B3A.1fusionproteinantibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "B3A.1 fusion protein antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:WA15apolyclonalneurofibrominantibod",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "WA15apolyclonalneurofibrominantibod",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "WA15a polyclonal neurofibromin antibod",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:B3Aantiserum",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "B3Aantiserum",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "B3A antiserum",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PC(2435-2745)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PC(2435-2745)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "PC (2435-2745)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PC(772-1085)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PC(772-1085)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "PC (772-1085)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Dpeptideantiserum",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Dpeptideantiserum",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "D peptide antiserum",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hpeptideantiserum",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hpeptideantiserum",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "H peptide antiserum",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PMAL.HF3A.Xfusion-proteinantiserum",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PMAL.HF3A.Xfusion-proteinantiserum",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pMAL.HF3A.X fusion-protein antiserum",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PMAL.B3Afusion-proteinantiserum",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PMAL.B3Afusion-proteinantiserum",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pMAL.B3A fusion-protein antiserum",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:DrosophilaNF1antibody",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "DrosophilaNF1antibody",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Drosophila NF1 antibody",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:CPTC-NF1-1",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "CPTC-NF1-1",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:ModelSystemName"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "CPTC-NF1-1",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:CPTC-NF1-2",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "CPTC-NF1-2",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:ModelSystemName"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "CPTC-NF1-2",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:CPTC-NF1-3",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "CPTC-NF1-3",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:ModelSystemName"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "CPTC-NF1-3",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:INF-07E",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "INF-07E",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:AntibodyID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "iNF-07E",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -12946,6 +16470,75 @@
       "sms:displayName": "plateName",
       "sms:required": "sms:false",
       "sms:validationRules": []
+    },
+    {
+      "@id": "bts:ModelAgeUnit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Time unit for modelAge (e.g., weeks for mice). Required when modelAge is specified.",
+      "rdfs:label": "ModelAgeUnit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "schema:rangeIncludes": [
+        {
+          "@id": "bts:Days"
+        },
+        {
+          "@id": "bts:Hours"
+        },
+        {
+          "@id": "bts:Minutes"
+        },
+        {
+          "@id": "bts:Months"
+        },
+        {
+          "@id": "bts:Seconds"
+        },
+        {
+          "@id": "bts:Weeks"
+        },
+        {
+          "@id": "bts:Years"
+        }
+      ],
+      "sms:displayName": "modelAgeUnit",
+      "sms:required": "sms:false",
+      "sms:requiresDependency": [
+        {
+          "@id": "bts:ModelAge"
+        }
+      ],
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:ModelAge",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.",
+      "rdfs:label": "ModelAge",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "modelAge",
+      "sms:required": "sms:false",
+      "sms:requiresDependency": [
+        {
+          "@id": "bts:ModelAgeUnit"
+        }
+      ],
+      "sms:validationRules": [
+        "num"
+      ]
     },
     {
       "@id": "bts:NumberOfSchwannomas",
@@ -15834,6 +19427,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:Species"
+        },
+        {
+          "@id": "bts:ModelSpecies"
         }
       ],
       "schema:isPartOf": {
@@ -15851,6 +19447,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:Species"
+        },
+        {
+          "@id": "bts:ModelSpecies"
         }
       ],
       "schema:isPartOf": {
@@ -15868,6 +19467,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:Species"
+        },
+        {
+          "@id": "bts:ModelSpecies"
         }
       ],
       "schema:isPartOf": {
@@ -15885,6 +19487,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:Species"
+        },
+        {
+          "@id": "bts:ModelSpecies"
         }
       ],
       "schema:isPartOf": {
@@ -15902,6 +19507,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:Species"
+        },
+        {
+          "@id": "bts:ModelSpecies"
         }
       ],
       "schema:isPartOf": {
@@ -15919,6 +19527,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:Species"
+        },
+        {
+          "@id": "bts:ModelSpecies"
         }
       ],
       "schema:isPartOf": {
@@ -15936,6 +19547,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:Species"
+        },
+        {
+          "@id": "bts:ModelSpecies"
         }
       ],
       "schema:isPartOf": {
@@ -15953,6 +19567,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:Species"
+        },
+        {
+          "@id": "bts:ModelSpecies"
         }
       ],
       "schema:isPartOf": {
@@ -15970,6 +19587,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:Species"
+        },
+        {
+          "@id": "bts:ModelSpecies"
         }
       ],
       "schema:isPartOf": {
@@ -15987,6 +19607,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:Species"
+        },
+        {
+          "@id": "bts:ModelSpecies"
         }
       ],
       "schema:isPartOf": {
@@ -16004,6 +19627,9 @@
       "rdfs:subClassOf": [
         {
           "@id": "bts:Species"
+        },
+        {
+          "@id": "bts:ModelSpecies"
         }
       ],
       "schema:isPartOf": {
@@ -24700,57 +28326,6 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "COR-L23",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:CPTC-NF1-1",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "CPTC-NF1-1",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:ModelSystemName"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "CPTC-NF1-1",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:CPTC-NF1-2",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "CPTC-NF1-2",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:ModelSystemName"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "CPTC-NF1-2",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:CPTC-NF1-3",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "CPTC-NF1-3",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:ModelSystemName"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "CPTC-NF1-3",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -37859,6 +41434,37 @@
       "sms:validationRules": []
     },
     {
+      "@id": "bts:ModelSex",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Sex of the individual animal model used in the experiment. Distinct from donor sex.",
+      "rdfs:label": "ModelSex",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "schema:rangeIncludes": [
+        {
+          "@id": "bts:Female"
+        },
+        {
+          "@id": "bts:Male"
+        },
+        {
+          "@id": "bts:Unknown"
+        },
+        {
+          "@id": "bts:NotApplicable"
+        }
+      ],
+      "sms:displayName": "modelSex",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
       "@id": "bts:ChipID",
       "@type": "rdfs:Class",
       "rdfs:comment": "User-specified identifier for the chip used to perform the methylation microarray.",
@@ -38415,6 +42021,58 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "thoracic spine",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:ModelSpecies",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Species of the animal model used (e.g., for xenograft experiments). Distinct from donor species. References species from model in syn51730943.",
+      "rdfs:label": "ModelSpecies",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "schema:rangeIncludes": [
+        {
+          "@id": "bts:Daniorerio"
+        },
+        {
+          "@id": "bts:Drosophilamelanogaster"
+        },
+        {
+          "@id": "bts:Gallusgallus"
+        },
+        {
+          "@id": "bts:Homosapiens"
+        },
+        {
+          "@id": "bts:Musmusculus"
+        },
+        {
+          "@id": "bts:Musmusculus(humanized)"
+        },
+        {
+          "@id": "bts:Oryctolaguscuniculus"
+        },
+        {
+          "@id": "bts:Pantroglodytes"
+        },
+        {
+          "@id": "bts:Rattusnorvegicus"
+        },
+        {
+          "@id": "bts:Rhesusmacaque"
+        },
+        {
+          "@id": "bts:Susscrofa"
+        }
+      ],
+      "sms:displayName": "modelSpecies",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -40417,6 +44075,2225 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "nf1GermlineMutation",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:GeneticReagentID",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Identifier for genetic reagent used (e.g., CRISPR construct, shRNA, plasmid). Select from the controlled vocabulary of genetic reagents in NF Research Tools Central (syn51730943) when available, or provide a custom identifier. Links to reagent details are available in the schema see_also field for enum values.",
+      "rdfs:label": "GeneticReagentID",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "schema:rangeIncludes": [
+        {
+          "@id": "bts:PAMP-CY1NF1T2(+minintr,KDR)"
+        },
+        {
+          "@id": "bts:PAMP-CY1NF1T1(+minintr)"
+        },
+        {
+          "@id": "bts:R777-E140Hs.NF1-nostop"
+        },
+        {
+          "@id": "bts:PLV-H1-SGIPZNF1sh1miR"
+        },
+        {
+          "@id": "bts:PAMP-CY1NF1T2(+minintr)"
+        },
+        {
+          "@id": "bts:PGBT9-NF1-GRD"
+        },
+        {
+          "@id": "bts:PAMP-CY1NF1T1(+minintr,KDR)"
+        },
+        {
+          "@id": "bts:R777-E139Hs.NF1"
+        },
+        {
+          "@id": "bts:PAMP-CY1NF1T2R1276P(+minintr,KDR)"
+        },
+        {
+          "@id": "bts:LentiCRISPRv2.sgNf1.4"
+        },
+        {
+          "@id": "bts:PAMP-CY1NF1T1R1276P(+minintr,KDR)"
+        },
+        {
+          "@id": "bts:NF1in\u00a0pET15NESG"
+        },
+        {
+          "@id": "bts:HRAS(H.sapiens)InpANT7CGST"
+        },
+        {
+          "@id": "bts:HRAS(Homosapiens)inpJP1520"
+        },
+        {
+          "@id": "bts:PENTER-CMV-NF1v1"
+        },
+        {
+          "@id": "bts:PENTER-CMV-NF1v2"
+        },
+        {
+          "@id": "bts:PENTER-CMV-NF1v3"
+        },
+        {
+          "@id": "bts:Lenti-CMV-NF1v3"
+        },
+        {
+          "@id": "bts:PAV-NF1v3-shRNA"
+        },
+        {
+          "@id": "bts:PENTER-CMV-HRASv2"
+        },
+        {
+          "@id": "bts:Nf1(NM012609)RatUntaggedClone"
+        },
+        {
+          "@id": "bts:Neurofibromin(NF1)(NM001042492)HumanUntaggedClone"
+        },
+        {
+          "@id": "bts:Neurofibromin(NF1)(NM001128147)HumanTaggedORFClone"
+        },
+        {
+          "@id": "bts:Neurofibromin(NF1)(NM001042492)HumanTaggedORFClone"
+        },
+        {
+          "@id": "bts:Nf1(NM012609)RatTaggedORFClone"
+        },
+        {
+          "@id": "bts:Neurofibromin(NF1)(NM001128147)HumanUntaggedClone"
+        },
+        {
+          "@id": "bts:Kras(NM021284)MouseTaggedORFClone"
+        },
+        {
+          "@id": "bts:Hras(NM001130443)MouseUntaggedClone"
+        },
+        {
+          "@id": "bts:Hras(NM001130444)MouseUntaggedClone"
+        },
+        {
+          "@id": "bts:Hras(NM008284)MouseTaggedORFClone"
+        },
+        {
+          "@id": "bts:KRAS(NM004985)HumanTaggedORFClone"
+        },
+        {
+          "@id": "bts:KRAS(NM033360)HumanTaggedORFClone"
+        },
+        {
+          "@id": "bts:NeurofibrominCRISPRPlasmids(h)"
+        },
+        {
+          "@id": "bts:NeurofibrominCRISPRPlasmids(m)"
+        },
+        {
+          "@id": "bts:NeurofibrominsiRNAandshRNAPlasmids"
+        },
+        {
+          "@id": "bts:KRAScDNAORFClone,Mouse,untagged"
+        },
+        {
+          "@id": "bts:KRAScDNAORFClone,Mouse,C-HAtag"
+        },
+        {
+          "@id": "bts:KRAScDNAORFClone,Human,C-DYKDDDDK(Flag)tag"
+        },
+        {
+          "@id": "bts:His6-MBP-tev-KRAS4b"
+        },
+        {
+          "@id": "bts:PADANS-NF1"
+        },
+        {
+          "@id": "bts:PADANS-NF1-5"
+        },
+        {
+          "@id": "bts:PADANS-NF1-6"
+        },
+        {
+          "@id": "bts:PADANS-NF1-12"
+        },
+        {
+          "@id": "bts:PADANS-NF1-19"
+        },
+        {
+          "@id": "bts:PtrcNF1\u2013333"
+        },
+        {
+          "@id": "bts:PETNF1\u2013333"
+        },
+        {
+          "@id": "bts:PTHN"
+        },
+        {
+          "@id": "bts:PX330-NF1E1"
+        },
+        {
+          "@id": "bts:PT2/shp53/shNf1/CMV\u2010PDGFA\u2010IRES\u2010DsRedvector"
+        },
+        {
+          "@id": "bts:Hs.HRASC186S"
+        },
+        {
+          "@id": "bts:Hs.HRASQ61R"
+        },
+        {
+          "@id": "bts:Hs.HRASQ61K"
+        },
+        {
+          "@id": "bts:Hs.HRASQ61L"
+        },
+        {
+          "@id": "bts:Hs.HRASG13D"
+        },
+        {
+          "@id": "bts:Hs.HRASG12V"
+        },
+        {
+          "@id": "bts:Hs.HRASG12D"
+        },
+        {
+          "@id": "bts:Hs.HRASG12C"
+        },
+        {
+          "@id": "bts:Hs.HRAS"
+        },
+        {
+          "@id": "bts:Hs.NRASQ61K"
+        },
+        {
+          "@id": "bts:Hs.NRASQ61R"
+        },
+        {
+          "@id": "bts:Hs.NRASQ61L"
+        },
+        {
+          "@id": "bts:Hs.NRASG13D"
+        },
+        {
+          "@id": "bts:Hs.NRASG12D"
+        },
+        {
+          "@id": "bts:Hs.NRASG12C"
+        },
+        {
+          "@id": "bts:Hs.NRASG12V"
+        },
+        {
+          "@id": "bts:Hs.NRAS"
+        },
+        {
+          "@id": "bts:Hs.KRAS4aQ61R"
+        },
+        {
+          "@id": "bts:Hs.KRAS4aQ61L"
+        },
+        {
+          "@id": "bts:Hs.KRAS4aG13D"
+        },
+        {
+          "@id": "bts:Hs.KRAS4aG12V"
+        },
+        {
+          "@id": "bts:Hs.KRAS4aG12D"
+        },
+        {
+          "@id": "bts:Hs.KRAS4aG12C"
+        },
+        {
+          "@id": "bts:Hs.KRAS4a"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bG12D/C185S"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bQ61K"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bR73K"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bR73E"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bY40F"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bM72C"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bY40C"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bE37G"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bT35S"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bS17N"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bK147Q"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bK147L"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bK104Q"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bK104A"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bY64A"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bA146T"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bG12F"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bR68S"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bA146V"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bK117N"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bG13C"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bG12S"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bG12R"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bG12A"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bM188L"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bQ61H"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bC185S"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bS181E"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bS181D"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bS181A"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bQ61R"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bQ61L"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bG13D"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bG12V"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bG12D"
+        },
+        {
+          "@id": "bts:Hs.KRAS4bG12C"
+        },
+        {
+          "@id": "bts:Hs.KRAS4b"
+        }
+      ],
+      "sms:displayName": "geneticReagentID",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PAMP-CY1NF1T2(+minintr,KDR)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PAMP-CY1NF1T2(+minintr,KDR)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pAMP-CY1_NF1 T2 (+minintr, KDR)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PAMP-CY1NF1T1(+minintr)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PAMP-CY1NF1T1(+minintr)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pAMP-CY1_NF1 T1 (+minintr)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:R777-E140Hs.NF1-nostop",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "R777-E140Hs.NF1-nostop",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "R777-E140 Hs.NF1-nostop",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PLV-H1-SGIPZNF1sh1miR",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PLV-H1-SGIPZNF1sh1miR",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pLV-H1-SGIPZ_NF1 sh1miR",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PAMP-CY1NF1T2(+minintr)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PAMP-CY1NF1T2(+minintr)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pAMP-CY1_NF1 T2 (+minintr)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PGBT9-NF1-GRD",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PGBT9-NF1-GRD",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pGBT9-NF1-GRD",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PAMP-CY1NF1T1(+minintr,KDR)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PAMP-CY1NF1T1(+minintr,KDR)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pAMP-CY1_NF1 T1 (+minintr, KDR)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:R777-E139Hs.NF1",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "R777-E139Hs.NF1",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "R777-E139 Hs.NF1",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PAMP-CY1NF1T2R1276P(+minintr,KDR)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PAMP-CY1NF1T2R1276P(+minintr,KDR)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pAMP-CY1_NF1 T2 R1276P (+minintr, KDR)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:LentiCRISPRv2.sgNf1.4",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "LentiCRISPRv2.sgNf1.4",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "lentiCRISPRv2.sgNf1.4",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PAMP-CY1NF1T1R1276P(+minintr,KDR)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PAMP-CY1NF1T1R1276P(+minintr,KDR)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pAMP-CY1_NF1 T1 R1276P (+minintr, KDR)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NF1in\u00a0pET15NESG",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NF1in\u00a0pET15NESG",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NF1 in\u00a0pET15_NESG",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:HRAS(H.sapiens)InpANT7CGST",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "HRAS(H.sapiens)InpANT7CGST",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "HRAS (H. sapiens) In pANT7_cGST",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:HRAS(Homosapiens)inpJP1520",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "HRAS(Homosapiens)inpJP1520",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "HRAS (Homo sapiens) in pJP1520",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PENTER-CMV-NF1v1",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PENTER-CMV-NF1v1",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pENTER-CMV-NF1v1",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PENTER-CMV-NF1v2",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PENTER-CMV-NF1v2",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pENTER-CMV-NF1v2",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PENTER-CMV-NF1v3",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PENTER-CMV-NF1v3",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pENTER-CMV-NF1v3",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Lenti-CMV-NF1v3",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Lenti-CMV-NF1v3",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Lenti-CMV-NF1v3",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PAV-NF1v3-shRNA",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PAV-NF1v3-shRNA",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pAV-NF1v3-shRNA",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PENTER-CMV-HRASv2",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PENTER-CMV-HRASv2",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pENTER-CMV-HRASv2",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Nf1(NM012609)RatUntaggedClone",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Nf1(NM012609)RatUntaggedClone",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Nf1 (NM_012609) Rat Untagged Clone",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin(NF1)(NM001042492)HumanUntaggedClone",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin(NF1)(NM001042492)HumanUntaggedClone",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin (NF1) (NM_001042492) Human Untagged Clone",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin(NF1)(NM001128147)HumanTaggedORFClone",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin(NF1)(NM001128147)HumanTaggedORFClone",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin (NF1) (NM_001128147) Human Tagged ORF Clone",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin(NF1)(NM001042492)HumanTaggedORFClone",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin(NF1)(NM001042492)HumanTaggedORFClone",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin (NF1) (NM_001042492) Human Tagged ORF Clone",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Nf1(NM012609)RatTaggedORFClone",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Nf1(NM012609)RatTaggedORFClone",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Nf1 (NM_012609) Rat Tagged ORF Clone",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Neurofibromin(NF1)(NM001128147)HumanUntaggedClone",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Neurofibromin(NF1)(NM001128147)HumanUntaggedClone",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin (NF1) (NM_001128147) Human Untagged Clone",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Kras(NM021284)MouseTaggedORFClone",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Kras(NM021284)MouseTaggedORFClone",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Kras (NM_021284) Mouse Tagged ORF Clone",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hras(NM001130443)MouseUntaggedClone",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hras(NM001130443)MouseUntaggedClone",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hras (NM_001130443) Mouse Untagged Clone",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hras(NM001130444)MouseUntaggedClone",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hras(NM001130444)MouseUntaggedClone",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hras (NM_001130444) Mouse Untagged Clone",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hras(NM008284)MouseTaggedORFClone",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hras(NM008284)MouseTaggedORFClone",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hras (NM_008284) Mouse Tagged ORF Clone",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:KRAS(NM004985)HumanTaggedORFClone",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "KRAS(NM004985)HumanTaggedORFClone",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "KRAS (NM_004985) Human Tagged ORF Clone",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:KRAS(NM033360)HumanTaggedORFClone",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "KRAS(NM033360)HumanTaggedORFClone",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "KRAS (NM_033360) Human Tagged ORF Clone",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NeurofibrominCRISPRPlasmids(h)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NeurofibrominCRISPRPlasmids(h)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin CRISPR Plasmids (h)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NeurofibrominCRISPRPlasmids(m)",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NeurofibrominCRISPRPlasmids(m)",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin CRISPR Plasmids (m)",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NeurofibrominsiRNAandshRNAPlasmids",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NeurofibrominsiRNAandshRNAPlasmids",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Neurofibromin siRNA and shRNA Plasmids",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:KRAScDNAORFClone,Mouse,untagged",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "KRAScDNAORFClone,Mouse,untagged",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "KRAS cDNA ORF Clone, Mouse, untagged",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:KRAScDNAORFClone,Mouse,C-HAtag",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "KRAScDNAORFClone,Mouse,C-HAtag",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "KRAS cDNA ORF Clone, Mouse, C-HA tag",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:KRAScDNAORFClone,Human,C-DYKDDDDK(Flag)tag",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "KRAScDNAORFClone,Human,C-DYKDDDDK(Flag)tag",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "KRAS cDNA ORF Clone, Human, C-DYKDDDDK (Flag) tag",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:His6-MBP-tev-KRAS4b",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "His6-MBP-tev-KRAS4b",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "His6-MBP-tev-KRAS4b",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PADANS-NF1",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PADANS-NF1",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pADANS-NF1",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PADANS-NF1-5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PADANS-NF1-5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pADANS-NF1-5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PADANS-NF1-6",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PADANS-NF1-6",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pADANS-NF1-6",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PADANS-NF1-12",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PADANS-NF1-12",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pADANS-NF1-12",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PADANS-NF1-19",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PADANS-NF1-19",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pADANS-NF1-19",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PtrcNF1\u2013333",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PtrcNF1\u2013333",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "ptrcNF1\u2013333",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PETNF1\u2013333",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PETNF1\u2013333",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pETNF1\u2013333",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PTHN",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PTHN",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pTHN",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PX330-NF1E1",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PX330-NF1E1",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pX330-NF1 E1",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:PT2/shp53/shNf1/CMV\u2010PDGFA\u2010IRES\u2010DsRedvector",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "PT2/shp53/shNf1/CMV\u2010PDGFA\u2010IRES\u2010DsRedvector",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "pT2/shp53/shNf1/CMV\u2010PDGFA\u2010IRES\u2010DsRed vector",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.HRASC186S",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.HRASC186S",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.HRAS C186S",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.HRASQ61R",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.HRASQ61R",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.HRAS Q61R",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.HRASQ61K",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.HRASQ61K",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.HRAS Q61K",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.HRASQ61L",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.HRASQ61L",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.HRAS Q61L",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.HRASG13D",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.HRASG13D",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.HRAS G13D",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.HRASG12V",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.HRASG12V",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.HRAS G12V",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.HRASG12D",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.HRASG12D",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.HRAS G12D",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.HRASG12C",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.HRASG12C",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.HRAS G12C",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.HRAS",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.HRAS",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.HRAS",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.NRASQ61K",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.NRASQ61K",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.NRAS Q61K",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.NRASQ61R",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.NRASQ61R",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.NRAS Q61R",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.NRASQ61L",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.NRASQ61L",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.NRAS Q61L",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.NRASG13D",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.NRASG13D",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.NRAS G13D",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.NRASG12D",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.NRASG12D",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.NRAS G12D",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.NRASG12C",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.NRASG12C",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.NRAS G12C",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.NRASG12V",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.NRASG12V",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.NRAS G12V",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.NRAS",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.NRAS",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.NRAS",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4aQ61R",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4aQ61R",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4a Q61R",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4aQ61L",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4aQ61L",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4a Q61L",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4aG13D",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4aG13D",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4a G13D",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4aG12V",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4aG12V",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4a G12V",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4aG12D",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4aG12D",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4a G12D",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4aG12C",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4aG12C",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4a G12C",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4a",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4a",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4a",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bG12D/C185S",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bG12D/C185S",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b G12D/C185S",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bQ61K",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bQ61K",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b Q61K",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bR73K",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bR73K",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b R73K",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bR73E",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bR73E",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b R73E",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bY40F",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bY40F",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b Y40F",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bM72C",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bM72C",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b M72C",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bY40C",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bY40C",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b Y40C",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bE37G",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bE37G",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b E37G",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bT35S",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bT35S",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b T35S",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bS17N",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bS17N",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b S17N",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bK147Q",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bK147Q",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b K147Q",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bK147L",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bK147L",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b K147L",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bK104Q",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bK104Q",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b K104Q",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bK104A",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bK104A",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b K104A",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bY64A",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bY64A",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b Y64A",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bA146T",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bA146T",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b A146T",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bG12F",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bG12F",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b G12F",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bR68S",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bR68S",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b R68S",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bA146V",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bA146V",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b A146V",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bK117N",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bK117N",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b K117N",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bG13C",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bG13C",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b G13C",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bG12S",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bG12S",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b G12S",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bG12R",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bG12R",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b G12R",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bG12A",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bG12A",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b G12A",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bM188L",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bM188L",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b M188L",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bQ61H",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bQ61H",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b Q61H",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bC185S",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bC185S",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b C185S",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bS181E",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bS181E",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b S181E",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bS181D",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bS181D",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b S181D",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bS181A",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bS181A",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b S181A",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bQ61R",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bQ61R",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b Q61R",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bQ61L",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bQ61L",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b Q61L",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bG13D",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bG13D",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b G13D",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bG12V",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bG12V",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b G12V",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bG12D",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bG12D",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b G12D",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4bG12C",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4bG12C",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b G12C",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Hs.KRAS4b",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Hs.KRAS4b",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:GeneticReagentID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Hs.KRAS4b",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -49530,6 +55407,23 @@
       "sms:validationRules": []
     },
     {
+      "@id": "bts:AntibodyEnum",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "AntibodyEnum",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "AntibodyEnum",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
       "@id": "bts:FlowCytometryPlatformEnum",
       "@type": "rdfs:Class",
       "rdfs:comment": "Flow cytometry platforms",
@@ -50482,6 +56376,23 @@
       "sms:validationRules": []
     },
     {
+      "@id": "bts:GeneticReagentEnum",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "GeneticReagentEnum",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "GeneticReagentEnum",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
       "@id": "bts:NotApplicableEnum",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
@@ -51037,7 +56948,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -51131,7 +57060,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -51222,7 +57169,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -51251,7 +57216,7 @@
     {
       "@id": "bts:BiologicalAssayDataTemplate",
       "@type": "rdfs:Class",
-      "rdfs:comment": "A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples.  This is an abstract template; \"real\" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing).\n",
+      "rdfs:comment": "A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. Donor/individual attributes (species, sex, age, diagnosis) describe the original donor (e.g., human patient tumor). For cell lines, individualID references syn51730943. Model attributes (modelSpecies, modelSex, modelAge) describe any animal model host used. antibodyID and geneticReagentID reference treatments/reagents.\n",
       "rdfs:label": "BiologicalAssayDataTemplate",
       "rdfs:subClassOf": [
         {
@@ -51316,7 +57281,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -51392,7 +57375,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -51543,7 +57544,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -51682,7 +57701,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -51898,7 +57935,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -52037,7 +58092,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -52113,7 +58186,7 @@
     {
       "@id": "bts:BiospecimenTemplate",
       "@type": "rdfs:Class",
-      "rdfs:comment": "Specimen-level data, whether from human or animal.",
+      "rdfs:comment": "Specimen-level data, whether from human or animal. For cell line specimens, individualID references the cell line. For xenografts, also specify modelSystemName and model attributes.",
       "rdfs:label": "BiospecimenTemplate",
       "rdfs:subClassOf": [
         {
@@ -52146,6 +58219,21 @@
         },
         {
           "@id": "bts:ExperimentalCondition"
+        },
+        {
+          "@id": "bts:ModelSystemName"
+        },
+        {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
         }
       ],
       "sms:validationRules": []
@@ -52468,7 +58556,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -52627,7 +58733,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -52769,7 +58893,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -52893,7 +59035,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -52912,9 +59072,6 @@
         },
         {
           "@id": "bts:ProteinExtractSource"
-        },
-        {
-          "@id": "bts:AntibodyID"
         }
       ],
       "sms:validationRules": []
@@ -52987,7 +59144,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -53129,7 +59304,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -53320,7 +59513,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -53447,7 +59658,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -53502,9 +59731,6 @@
         },
         {
           "@id": "bts:BisulfiteConversionKitID"
-        },
-        {
-          "@id": "bts:AntibodyID"
         },
         {
           "@id": "bts:PeakCallingAlgorithm"
@@ -54081,7 +60307,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -54172,7 +60416,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -54269,7 +60531,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -54363,7 +60643,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -54457,7 +60755,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -54658,7 +60974,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -54767,7 +61101,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -54873,7 +61225,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -54973,7 +61343,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -55085,7 +61473,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -55125,9 +61531,6 @@
         },
         {
           "@id": "bts:Immersion"
-        },
-        {
-          "@id": "bts:AntibodyID"
         }
       ],
       "sms:validationRules": []
@@ -55135,7 +61538,7 @@
     {
       "@id": "bts:AnimalIndividualTemplate",
       "@type": "rdfs:Class",
-      "rdfs:comment": "Template for non-human individual-level data.",
+      "rdfs:comment": "Template for non-human individual-level data. For xenografts, individualID references the cell line donor. Use sex/age/species for the individual animal. Use modelSystemName for the animal model genetic background, with modelSpecies/modelSex/modelAge for the model host animal.",
       "rdfs:label": "AnimalIndividualTemplate",
       "rdfs:subClassOf": [
         {
@@ -55186,6 +61589,18 @@
         },
         {
           "@id": "bts:ModelSystemName"
+        },
+        {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
         }
       ],
       "sms:validationRules": []
@@ -55258,7 +61673,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -55373,7 +61806,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -55490,7 +61941,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -55657,7 +62126,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -55763,7 +62250,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -55890,7 +62395,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"
@@ -56331,7 +62854,25 @@
           "@id": "bts:ModelSystemName"
         },
         {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
+        },
+        {
           "@id": "bts:Organ"
+        },
+        {
+          "@id": "bts:AntibodyID"
+        },
+        {
+          "@id": "bts:GeneticReagentID"
         },
         {
           "@id": "bts:Comments"

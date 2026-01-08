@@ -1,7 +1,7 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-animalindividualtemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Template for non-human individual-level data.",
+  "description": "Template for non-human individual-level data. For xenografts, individualID references the cell line donor. Use sex/age/species for the individual animal. Use modelSystemName for the animal model genetic background, with modelSpecies/modelSex/modelAge for the model host animal.",
   "properties": {
     "individualID": {
       "description": "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
@@ -38,7 +38,7 @@
         "weeks",
         "years"
       ],
-      "title": "ageUnit",
+      "title": "modelAgeUnit",
       "type": "string"
     },
     "diagnosis": {
@@ -960,6 +960,54 @@
       },
       "type": "array",
       "title": "modelSystemName"
+    },
+    "modelSpecies": {
+      "description": "",
+      "enum": [
+        "Danio rerio",
+        "Drosophila melanogaster",
+        "Gallus gallus",
+        "Homo sapiens",
+        "Mus musculus",
+        "Mus musculus (humanized)",
+        "Oryctolagus cuniculus",
+        "Pan troglodytes",
+        "Rattus norvegicus",
+        "Rhesus macaque",
+        "Sus scrofa"
+      ],
+      "title": "species",
+      "type": "string"
+    },
+    "modelSex": {
+      "description": "Sex of the individual animal model used in the experiment. Distinct from donor sex.",
+      "type": "string",
+      "enum": [
+        "Female",
+        "Male",
+        "Unknown",
+        "Not Applicable"
+      ],
+      "title": "modelSex"
+    },
+    "modelAge": {
+      "description": "Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.",
+      "type": "number",
+      "title": "modelAge"
+    },
+    "modelAgeUnit": {
+      "description": "",
+      "enum": [
+        "days",
+        "hours",
+        "minutes",
+        "months",
+        "seconds",
+        "weeks",
+        "years"
+      ],
+      "title": "modelAgeUnit",
+      "type": "string"
     }
   },
   "required": [
