@@ -92,8 +92,10 @@ slots:
     required: false
     title: External Repository URI
   antibodyID:
-    description: Antibody ID such as RRID if available, otherwise use vendor ID.
-    title: Antibody ID
+    any_of:
+    - range: AntibodyEnum
+    - range: string
+    description: Antibody identifier. Select from the controlled vocabulary of antibodies in NF Research Tools Central (syn51730943) when available, or provide a custom identifier. Links to antibody details are available in the schema see_also field for enum values.
     required: false
   aqueductalStenosis:
     description: Characterization of the manifestation of aqueductal stenosis.
@@ -777,6 +779,36 @@ slots:
     description: 'A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)'
     multivalued: true
     title: Model System Name
+    required: false
+  modelSpecies:
+    description: Species of the animal model used (e.g., for xenograft experiments). Distinct from donor species. References species from model in syn51730943.
+    range: SpeciesEnum
+    required: false
+  modelSex:
+    any_of:
+    - range: SexEnum
+    - range: UnknownEnum
+    - range: NotApplicableEnum
+    description: Sex of the individual animal model used in the experiment. Distinct from donor sex.
+    required: false
+  modelAge:
+    annotations:
+      requiresDependency: modelAgeUnit
+      validationRules: num
+    description: Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.
+    range: float
+    required: false
+  modelAgeUnit:
+    annotations:
+      requiresDependency: modelAge
+    description: Time unit for modelAge (e.g., weeks for mice). Required when modelAge is specified.
+    range: TimeUnit
+    required: false
+  geneticReagentID:
+    any_of:
+    - range: GeneticReagentEnum
+    - range: string
+    description: Identifier for genetic reagent used (e.g., CRISPR construct, shRNA, plasmid). Select from the controlled vocabulary of genetic reagents in NF Research Tools Central (syn51730943) when available, or provide a custom identifier. Links to reagent details are available in the schema see_also field for enum values.
     required: false
   modifiedBy:
     description: Refers to a user who last modified the resource on the platform.

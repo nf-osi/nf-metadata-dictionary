@@ -91,7 +91,7 @@ classes:
             value_presence: PRESENT
   BiologicalAssayDataTemplate:
     abstract: true
-    description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples.  This is an abstract template; "real" template subclasses define additional properties appropriate for the type of data file (e.g. imaging vs sequencing).
+    description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. Donor/individual attributes (species, sex, age, diagnosis) describe the original donor (e.g., human patient tumor). For cell lines, individualID references syn51730943. Model attributes (modelSpecies, modelSex, modelAge) describe any animal model host used. antibodyID and geneticReagentID reference treatments/reagents.
 
       '
     is_a: FileBasedTemplate
@@ -109,7 +109,13 @@ classes:
     - nf2Genotype
     - tumorType
     - modelSystemName
+    - modelSpecies
+    - modelSex
+    - modelAge
+    - modelAgeUnit
     - organ
+    - antibodyID
+    - geneticReagentID
     - comments
     rules:
     - description: If age is provided, ageUnit must be provided
