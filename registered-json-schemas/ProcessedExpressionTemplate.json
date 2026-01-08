@@ -1,6 +1,62 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-processedexpressiontemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "workflow": {}
+        },
+        "required": [
+          "workflow"
+        ]
+      },
+      "then": {
+        "properties": {
+          "workflowLink": {}
+        },
+        "required": [
+          "workflowLink"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "age": {}
+        },
+        "required": [
+          "age"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ageUnit": {}
+        },
+        "required": [
+          "ageUnit"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "dataType": {}
+        },
+        "required": [
+          "dataType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "dataSubtype": {}
+        },
+        "required": [
+          "dataSubtype"
+        ]
+      }
+    }
+  ],
   "description": "Template for quantified gene/protein expression data that are still represented as one file per sample.",
   "properties": {
     "expressionUnit": {
@@ -200,6 +256,7 @@
         "rotarod performance test",
         "scale",
         "six-minute walk test",
+        "weight",
         "word recognition score",
         "2D AlamarBlue absorbance",
         "2D AlamarBlue fluorescence",
@@ -210,9 +267,7 @@
         "EdU proliferation assay",
         "FLIPR high-throughput cellular screening",
         "HPLC",
-        "Matrigel-based tumorigenesis assay",
         "Migration Assay",
-        "NanoString nCounter Analysis System",
         "STR profile",
         "TIDE",
         "TriKinetics activity monitoring",
@@ -250,7 +305,6 @@
         "light scattering assay",
         "local field potential recording",
         "long term potentiation assay",
-        "mRNA counts",
         "massively parallel reporter assay",
         "microrheology",
         "multi-electrode array",
@@ -1326,8 +1380,10 @@
           "NRG",
           "Nf1-C383X/Flox",
           "Nf1-C848R/Flox",
+          "Nf1-MET",
           "Nf1-OPG",
           "Nf1-OPG-Arg816",
+          "Nf1-P53",
           "Nf1-R681X/Flox",
           "Nf1flox/flox",
           "Prss56Cre/+;Tom/+",

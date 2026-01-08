@@ -52,6 +52,43 @@ classes:
         range: ClinicalBehavioralAssayEnum
       fileFormat:
         range: TabularFileFormatEnum
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
+    - description: If compoundDose is provided, compoundDoseUnit must be provided
+      preconditions:
+        slot_conditions:
+          compoundDose:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          compoundDoseUnit:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
   BiologicalAssayDataTemplate:
     abstract: true
     description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. Donor/individual attributes (species, sex, age, diagnosis) describe the original donor (e.g., human patient tumor). For cell lines, individualID references syn51730943. Model attributes (modelSpecies, modelSex, modelAge) describe any animal model host used. antibodyID and geneticReagentID reference treatments/reagents.
@@ -80,6 +117,25 @@ classes:
     - antibodyID
     - geneticReagentID
     - comments
+    rules:
+    - description: If age is provided, ageUnit must be provided
+      preconditions:
+        slot_conditions:
+          age:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          ageUnit:
+            value_presence: PRESENT
+    - description: If dataType is provided, dataSubtype must be provided
+      preconditions:
+        slot_conditions:
+          dataType:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          dataSubtype:
+            value_presence: PRESENT
   BulkSequencingAssayTemplate:
     annotations:
       match:
@@ -174,6 +230,16 @@ classes:
         any_of:
         - range: TabularFileFormatEnum
         - range: DocumentFileFormatEnum
+    rules:
+    - description: If compoundDose is provided, compoundDoseUnit must be provided
+      preconditions:
+        slot_conditions:
+          compoundDose:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          compoundDoseUnit:
+            value_presence: PRESENT
   ElectrophysiologyAssayTemplate:
     annotations:
       match:
@@ -200,6 +266,16 @@ classes:
         range: CellBasedAssayEnum
       fileFormat:
         range: OtherFileFormatEnum
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
   EpidemiologyDataTemplate:
     description: For aggregated data from defined populations or cohorts, used in/derived from epidemiology studies.
     is_a: FileBasedTemplate
@@ -306,6 +382,61 @@ classes:
     - genePerturbationType
     - genePerturbationTechnology
     - comments
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
+    - description: If compoundDose is provided, compoundDoseUnit must be provided
+      preconditions:
+        slot_conditions:
+          compoundDose:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          compoundDoseUnit:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
+    - description: If aliquotID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          aliquotID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+    - description: If parentSpecimenID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          parentSpecimenID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
   GeneticsAssayTemplate:
     abstract: true
     annotations:
@@ -387,6 +518,34 @@ classes:
     - genePerturbationTechnology
     - genePerturbationType
     - comments
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
   ImagingAssayTemplate:
     annotations:
       match:
@@ -461,6 +620,16 @@ classes:
         range: OtherPlatformEnum
       fileFormat:
         range: TabularFileFormatEnum
+    rules:
+    - description: If concentrationNaCl is provided, concentrationNaClUnit must be provided
+      preconditions:
+        slot_conditions:
+          concentrationNaCl:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          concentrationNaClUnit:
+            value_presence: PRESENT
   MRIAssayTemplate:
     annotations:
       match:
@@ -484,6 +653,16 @@ classes:
         range: MRIPlatformEnum
       fileFormat:
         range: ImagingFileFormatEnum
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
   MassSpecAssayTemplate:
     annotations:
       match:
@@ -532,6 +711,25 @@ classes:
     - concentrationMaterialUnit
     - concentrationNaCl
     - concentrationNaClUnit
+    rules:
+    - description: If concentrationMaterial is provided, concentrationMaterialUnit must be provided
+      preconditions:
+        slot_conditions:
+          concentrationMaterial:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          concentrationMaterialUnit:
+            value_presence: PRESENT
+    - description: If concentrationNaCl is provided, concentrationNaClUnit must be provided
+      preconditions:
+        slot_conditions:
+          concentrationNaCl:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          concentrationNaClUnit:
+            value_presence: PRESENT
   MethylationArrayTemplate:
     annotations:
       match:
@@ -588,6 +786,34 @@ classes:
         range: MicroscopyImagingPlatformEnum
       fileFormat:
         range: ImagingFileFormatEnum
+    rules:
+    - description: If workingDistance is provided, workingDistanceUnit must be provided
+      preconditions:
+        slot_conditions:
+          workingDistance:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          workingDistanceUnit:
+            value_presence: PRESENT
+    - description: If aliquotID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          aliquotID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+    - description: If parentSpecimenID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          parentSpecimenID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
   NonBiologicalAssayDataTemplate:
     abstract: true
     description: 'Describes data artifacts (i.e. files) from an experimental/physical-sciences assay  where input specimens are more at the level of synthesized molecules or inorganic materials.
@@ -621,6 +847,34 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
+    - description: If transplantationType is provided, transplantationRecipientSpecies must be provided
+      preconditions:
+        slot_conditions:
+          transplantationType:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          transplantationRecipientSpecies:
+            value_presence: PRESENT
+    - description: If transplantationType is provided, transplantationRecipientTissue must be provided
+      preconditions:
+        slot_conditions:
+          transplantationType:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          transplantationRecipientTissue:
+            value_presence: PRESENT
   PharmacokineticsAssayTemplate:
     annotations:
       match:
@@ -645,6 +899,25 @@ classes:
     - experimentalCondition
     - experimentalTimepoint
     - timepointUnit
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
+    - description: If compoundDose is provided, compoundDoseUnit must be provided
+      preconditions:
+        slot_conditions:
+          compoundDose:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          compoundDoseUnit:
+            value_presence: PRESENT
   PlateBasedReporterAssayTemplate:
     annotations:
       match:
@@ -679,6 +952,25 @@ classes:
         range: PlateReaderPlatformEnum
       fileFormat:
         range: TabularFileFormatEnum
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
+    - description: If compoundDose is provided, compoundDoseUnit must be provided
+      preconditions:
+        slot_conditions:
+          compoundDose:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          compoundDoseUnit:
+            value_presence: PRESENT
   ProcessedAlignedReadsTemplate:
     annotations:
       match:
@@ -730,6 +1022,25 @@ classes:
     slot_usage:
       fileFormat:
         range: SequencingFileFormatEnum
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT
+    - description: If genomicReference is provided, genomicReferenceLink must be provided
+      preconditions:
+        slot_conditions:
+          genomicReference:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genomicReferenceLink:
+            value_presence: PRESENT
   ProcessedExpressionTemplate:
     annotations:
       match:
@@ -755,6 +1066,16 @@ classes:
     - workflowLink
     - auxiliaryAsset
     - specimenID
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT
   ProcessedMergedDataTemplate:
     annotations:
       match:
@@ -778,6 +1099,16 @@ classes:
     - workflowLink
     - auxiliaryAsset
     - assay
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT
   ProcessedVariantCallsTemplate:
     annotations:
       match:
@@ -808,6 +1139,16 @@ classes:
     slot_usage:
       fileFormat:
         range: SequencingFileFormatEnum
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT
   ProteinArrayTemplate:
     annotations:
       match:
@@ -889,6 +1230,25 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+    rules:
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
   ScRNASeqTemplate:
     annotations:
       match:
@@ -912,6 +1272,25 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+    rules:
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
   ScSequencingAssayTemplate:
     annotations:
       match:
@@ -1013,3 +1392,13 @@ classes:
     - relatedDataset
     - workflow
     - workflowLink
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT

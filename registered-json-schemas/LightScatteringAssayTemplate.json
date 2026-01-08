@@ -1,6 +1,62 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-lightscatteringassaytemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "concentrationNaCl": {}
+        },
+        "required": [
+          "concentrationNaCl"
+        ]
+      },
+      "then": {
+        "properties": {
+          "concentrationNaClUnit": {}
+        },
+        "required": [
+          "concentrationNaClUnit"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "concentrationMaterial": {}
+        },
+        "required": [
+          "concentrationMaterial"
+        ]
+      },
+      "then": {
+        "properties": {
+          "concentrationMaterialUnit": {}
+        },
+        "required": [
+          "concentrationMaterialUnit"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "concentrationNaCl": {}
+        },
+        "required": [
+          "concentrationNaCl"
+        ]
+      },
+      "then": {
+        "properties": {
+          "concentrationNaClUnit": {}
+        },
+        "required": [
+          "concentrationNaClUnit"
+        ]
+      }
+    }
+  ],
   "description": "Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.",
   "properties": {
     "pH": {
@@ -35,9 +91,7 @@
         "EdU proliferation assay",
         "FLIPR high-throughput cellular screening",
         "HPLC",
-        "Matrigel-based tumorigenesis assay",
         "Migration Assay",
-        "NanoString nCounter Analysis System",
         "STR profile",
         "TIDE",
         "TriKinetics activity monitoring",
@@ -75,7 +129,6 @@
         "light scattering assay",
         "local field potential recording",
         "long term potentiation assay",
-        "mRNA counts",
         "massively parallel reporter assay",
         "microrheology",
         "multi-electrode array",

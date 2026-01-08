@@ -1,6 +1,62 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-mriassaytemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "experimentalTimepoint": {}
+        },
+        "required": [
+          "experimentalTimepoint"
+        ]
+      },
+      "then": {
+        "properties": {
+          "timepointUnit": {}
+        },
+        "required": [
+          "timepointUnit"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "age": {}
+        },
+        "required": [
+          "age"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ageUnit": {}
+        },
+        "required": [
+          "ageUnit"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "dataType": {}
+        },
+        "required": [
+          "dataType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "dataSubtype": {}
+        },
+        "required": [
+          "dataSubtype"
+        ]
+      }
+    }
+  ],
   "description": "Template for describing MRI data.",
   "properties": {
     "bodySite": {
@@ -1080,8 +1136,10 @@
           "NRG",
           "Nf1-C383X/Flox",
           "Nf1-C848R/Flox",
+          "Nf1-MET",
           "Nf1-OPG",
           "Nf1-OPG-Arg816",
+          "Nf1-P53",
           "Nf1-R681X/Flox",
           "Nf1flox/flox",
           "Prss56Cre/+;Tom/+",

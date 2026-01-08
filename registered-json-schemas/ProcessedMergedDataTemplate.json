@@ -2,6 +2,14 @@
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-processedmergeddatatemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Further processed data with multiple samples aggregated into one file. This may be also be known as level-4 data. Unlike level-2 and level-3 data, individual-level attributes such as age and sex are no longer surfaced on the data file directly.",
+  "if": {
+    "properties": {
+      "workflow": {}
+    },
+    "required": [
+      "workflow"
+    ]
+  },
   "properties": {
     "dataType": {
       "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
@@ -240,6 +248,7 @@
         "rotarod performance test",
         "scale",
         "six-minute walk test",
+        "weight",
         "word recognition score",
         "2D AlamarBlue absorbance",
         "2D AlamarBlue fluorescence",
@@ -250,9 +259,7 @@
         "EdU proliferation assay",
         "FLIPR high-throughput cellular screening",
         "HPLC",
-        "Matrigel-based tumorigenesis assay",
         "Migration Assay",
-        "NanoString nCounter Analysis System",
         "STR profile",
         "TIDE",
         "TriKinetics activity monitoring",
@@ -290,7 +297,6 @@
         "light scattering assay",
         "local field potential recording",
         "long term potentiation assay",
-        "mRNA counts",
         "massively parallel reporter assay",
         "microrheology",
         "multi-electrode array",
@@ -470,6 +476,14 @@
     "fileFormat",
     "resourceType"
   ],
+  "then": {
+    "properties": {
+      "workflowLink": {}
+    },
+    "required": [
+      "workflowLink"
+    ]
+  },
   "title": "ProcessedMergedDataTemplate",
   "type": "object"
 }

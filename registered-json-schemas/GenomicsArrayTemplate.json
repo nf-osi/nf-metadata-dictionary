@@ -1,6 +1,44 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-genomicsarraytemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "age": {}
+        },
+        "required": [
+          "age"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ageUnit": {}
+        },
+        "required": [
+          "ageUnit"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "dataType": {}
+        },
+        "required": [
+          "dataType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "dataSubtype": {}
+        },
+        "required": [
+          "dataSubtype"
+        ]
+      }
+    }
+  ],
   "description": "A template for describing raw data from array-based genomics/epigenomics, e.g. CEL files.",
   "properties": {
     "platform": {
@@ -28,7 +66,7 @@
         "Illumina Omni5M",
         "Infinium HumanOmniExpressExome",
         "NanoString Human nCounter PanCancer IO360 Panel",
-        "Nanostring Counter",
+        "NanoString nCounter Analysis System",
         "Perlegen 300Karray",
         "10x Visium Spatial Gene Expression"
       ],
@@ -1040,8 +1078,10 @@
           "NRG",
           "Nf1-C383X/Flox",
           "Nf1-C848R/Flox",
+          "Nf1-MET",
           "Nf1-OPG",
           "Nf1-OPG-Arg816",
+          "Nf1-P53",
           "Nf1-R681X/Flox",
           "Nf1flox/flox",
           "Prss56Cre/+;Tom/+",

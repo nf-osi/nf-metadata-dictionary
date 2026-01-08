@@ -2,6 +2,14 @@
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-workflowreport",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Template used for miscellaneous workflow reports and accessory files",
+  "if": {
+    "properties": {
+      "workflow": {}
+    },
+    "required": [
+      "workflow"
+    ]
+  },
   "properties": {
     "assay": {
       "description": "The technology used to generate the data in this file.",
@@ -131,6 +139,7 @@
         "rotarod performance test",
         "scale",
         "six-minute walk test",
+        "weight",
         "word recognition score",
         "2D AlamarBlue absorbance",
         "2D AlamarBlue fluorescence",
@@ -141,9 +150,7 @@
         "EdU proliferation assay",
         "FLIPR high-throughput cellular screening",
         "HPLC",
-        "Matrigel-based tumorigenesis assay",
         "Migration Assay",
-        "NanoString nCounter Analysis System",
         "STR profile",
         "TIDE",
         "TriKinetics activity monitoring",
@@ -181,7 +188,6 @@
         "light scattering assay",
         "local field potential recording",
         "long term potentiation assay",
-        "mRNA counts",
         "massively parallel reporter assay",
         "microrheology",
         "multi-electrode array",
@@ -390,6 +396,14 @@
     "fileFormat",
     "resourceType"
   ],
+  "then": {
+    "properties": {
+      "workflowLink": {}
+    },
+    "required": [
+      "workflowLink"
+    ]
+  },
   "title": "WorkflowReport",
   "type": "object"
 }

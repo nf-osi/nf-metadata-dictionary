@@ -1,12 +1,96 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-processedalignedreadstemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "workflow": {}
+        },
+        "required": [
+          "workflow"
+        ]
+      },
+      "then": {
+        "properties": {
+          "workflowLink": {}
+        },
+        "required": [
+          "workflowLink"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "genomicReference": {}
+        },
+        "required": [
+          "genomicReference"
+        ]
+      },
+      "then": {
+        "properties": {
+          "genomicReferenceLink": {}
+        },
+        "required": [
+          "genomicReferenceLink"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "age": {}
+        },
+        "required": [
+          "age"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ageUnit": {}
+        },
+        "required": [
+          "ageUnit"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "dataType": {}
+        },
+        "required": [
+          "dataType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "dataSubtype": {}
+        },
+        "required": [
+          "dataSubtype"
+        ]
+      }
+    }
+  ],
   "description": "Template for describing aligned reads (e.g. BAM/CRAM files) from a sequencing assay. The QC meta are extracted from samtools stats when available and are the same metrics preferred by GDC.",
   "properties": {
     "genomicReference": {
-      "description": "Version of genome reference used for alignment in processing workflow",
-      "type": "string",
-      "title": "genomicReference"
+      "description": "",
+      "enum": [
+        "GRCh37",
+        "GRCh38",
+        "GRCh38_Verily_v1",
+        "HRC",
+        "MMUL1.0",
+        "mm10",
+        "mm39",
+        "rn6"
+      ],
+      "title": "genomicReference",
+      "type": "string"
     },
     "genomicReferenceLink": {
       "description": "Link to genome reference data file used for alignment in processing workflow",
@@ -251,6 +335,7 @@
         "rotarod performance test",
         "scale",
         "six-minute walk test",
+        "weight",
         "word recognition score",
         "2D AlamarBlue absorbance",
         "2D AlamarBlue fluorescence",
@@ -261,9 +346,7 @@
         "EdU proliferation assay",
         "FLIPR high-throughput cellular screening",
         "HPLC",
-        "Matrigel-based tumorigenesis assay",
         "Migration Assay",
-        "NanoString nCounter Analysis System",
         "STR profile",
         "TIDE",
         "TriKinetics activity monitoring",
@@ -301,7 +384,6 @@
         "light scattering assay",
         "local field potential recording",
         "long term potentiation assay",
-        "mRNA counts",
         "massively parallel reporter assay",
         "microrheology",
         "multi-electrode array",
@@ -1298,8 +1380,10 @@
           "NRG",
           "Nf1-C383X/Flox",
           "Nf1-C848R/Flox",
+          "Nf1-MET",
           "Nf1-OPG",
           "Nf1-OPG-Arg816",
+          "Nf1-P53",
           "Nf1-R681X/Flox",
           "Nf1flox/flox",
           "Prss56Cre/+;Tom/+",
