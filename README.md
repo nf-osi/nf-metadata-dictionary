@@ -10,12 +10,12 @@ We keep the main one, `NF.jsonld`, in the root of the repository, while others a
 | Artifact | Description | Generated During PRs | Committed to PRs | Updated on Main | Registered to Synapse |
 | -------- | ----------- | :------------------: | :--------------: | :-------------: | :-------------------: |
 | `NF.jsonld` | Main output in schematic-compatible JSON-LD format, for distribution and use with schematic and Data Curator. | ✅ (validated) | ❌ | ✅ (auto-committed) | N/A |
-| `registered-json-schemas/*.json` | JSON serializations for a subset of the data model, for native functionality with Synapse platform or wherever a JSON definition is preferred. | ✅ (validated) | ❌ | ✅ (auto-committed) | ✅ (only on [release](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/.github/workflows/release-versioned-artifacts.yml)) |
+| `registered-json-schemas/*.json` | JSON serializations for a subset of the data model, for native functionality with Synapse platform or wherever a JSON definition is preferred. | ✅ (validated) | ❌ | ✅ (auto-committed) | ✅ (only on [release](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/.github/workflows/release-new-version.yaml)) |
 | `dist/NF.yaml` | Data model as as a single LinkML-valid YAML file, useful for using LinkML tooling to create Excel spreadsheets. | ✅ (validated) | ❌ | ✅ (auto-committed) | N/A |
 | `dist/NF_linkml.jsonld` | JSON-LD from LinkML, best if you want to compare/combine our model with others maintained in LinkML, e.g. see here. There are differences with the `NF.jsonld`. | ✅ (validated) | ❌ | ✅ (auto-committed) | N/A |
 | `dist/NF.ttl` | Basically same as above but in Turtle format. | ✅ (validated) | ❌ | ✅ (auto-committed) | N/A |
 
-**Note:** All artifacts are built and validated during PRs but not committed to avoid merge conflicts. All artifacts are automatically rebuilt and committed to `main` after merge. **JSON schemas are only registered with Synapse during versioned releases** (see [release workflow](.github/workflows/release-versioned-artifacts.yml)).
+**Note:** All artifacts are built and validated during PRs but not committed to avoid merge conflicts. All artifacts are automatically rebuilt and committed to `main` after merge. **JSON schemas are only registered with Synapse during versioned releases** (see [release workflow](.github/workflows/release-new-version.yaml)).
 
 In general, .jsonld or .ttl artifacts facilate model querying and comparison if you know how to load them into compatible linked data tooling. 
 
@@ -59,21 +59,32 @@ style L fill:#aaf,stroke:#333,stroke-width:2px
 
 ### Maintenance and Contribution
 
-This data model, maintained by the NF-Open Science Initative, provides standard concepts and structure to help describe and manage data and other resources in the NF-OSI community. 
+This data model, maintained by the NF-Open Science Initative, provides standard concepts and structure to help describe and manage data and other resources on the [NF Data Portal](nf.synapse.org). 
 
 One can reference the data model to understand things such as:
 - What type of entities there are (e.g. RNA-seq files vs image files, files vs datasets)
 - What metadata properties exist for these different types, to help understand and use a data resource
 - What are the preferred/standard labels for something as defined by community input and our data managers (e.g. prefer "NF2-related schwannomatosis" vs the now-deprecated "Neurofibromatosis type 2")
 
-Terms in the metadata dictionary are used in the manifests within the [Data Curator App](https://dca.app.sagebionetworks.org/) and on the [NF Data Portal](nf.synapse.org). 
 We welcome contributions from community members, whether you are a professional data modeler, researcher, or student in the NF community.
 
-- For external contributors somewhat familiar with editing code source files directly:
-After learning about the data model framework below, you can edit the files in the GitHub UI or create a Codespace on main using our devcontainer setup.
-- Other ways to contribute:
-Create an [issue](https://github.com/nf-osi/nf-metadata-dictionary/issues) to add or revise new terms, templates, and relationships. 
+- For those familiar with editing code source files: Learn about the data model framework below, then edit the files directly in your preferred IDE.
+- Alternatively: Create an [issue](https://github.com/nf-osi/nf-metadata-dictionary/issues) regarding terms, templates, or relationships.
 
+#### Release Procedures
+
+Releases create versioned JSON schemas registered with Synapse. The [release workflow](.github/workflows/release-new-version.yaml) can be triggered two ways:
+
+1. **Push a tag**: `git tag v1.2.3 && git push --tags` — creates a GitHub release with versioned schemas
+2. **Manual dispatch**: Run workflow from GitHub Actions UI with version input (e.g., `v1.2.3`)
+
+The workflow:
+- Copies schemas from `registered-json-schemas/` to a temp directory
+- Appends the version to each schema's `$id` (e.g., `org.synapse.nf-template` → `org.synapse.nf-template-1.2.3`)
+- Registers versioned schemas with Synapse
+- Creates/updates the GitHub release with a tarball of versioned schemas
+
+Version format follows [semantic versioning](https://semver.org): `vMAJOR.MINOR.PATCH`
 
 ### Data Model Framework
 
