@@ -141,25 +141,22 @@ def _create_columns_from_json_schema(json_schema: dict[str, Any]) -> list[Column
     columns = []
     for name, prop_schema in properties.items():
         column_type = _get_column_type_from_js_property(prop_schema)
-        maximum_size = None
-        enum_values = None
 
-        # Extract enum values if present (limit to first 100)
-        if "enum" in prop_schema:
-            enum_values = [str(v) for v in prop_schema["enum"][:100]]
+        # Extract limits from JSON schema if they exist
+        maximum_size = _get_max_length_from_js_property(prop_schema)
+        maximum_list_length = _get_max_items_from_js_property(prop_schema)
 
-        if column_type == "STRING":
-            maximum_size = 100
-        if column_type in LIST_TYPE_DICT.values():
-            maximum_size = 5
+        # Build column kwargs, only including limits if they exist
+        column_kwargs = {
+            "name": name,
+            "column_type": column_type,
+        }
+        if maximum_size is not None:
+            column_kwargs["maximum_size"] = maximum_size
+        if maximum_list_length is not None:
+            column_kwargs["maximum_list_length"] = maximum_list_length
 
-        column = Column(
-            name=name,
-            column_type=column_type,
-            maximum_size=maximum_size,
-            enum_values=enum_values,
-            default_value=None,
-        )
+        column = Column(**column_kwargs)
         columns.append(column)
     return columns
 
@@ -235,6 +232,52 @@ def _get_list_column_type_from_js_property(js_property: dict[str, Any]) -> Colum
             )
 
     return ColumnType.STRING_LIST
+
+
+def _get_max_length_from_js_property(js_property: dict[str, Any]) -> Optional[int]:
+    """
+    Extracts maxLength from a JSON Schema property if it exists.
+
+    Args:
+        js_property: A JSON Schema property in dict form.
+
+    Returns:
+        The maxLength value if present, otherwise None.
+    """
+    # Direct maxLength on the property
+    if "maxLength" in js_property:
+        return js_property["maxLength"]
+
+    # Check in oneOf list (for nullable types)
+    if "oneOf" in js_property and isinstance(js_property["oneOf"], list):
+        for item in js_property["oneOf"]:
+            if isinstance(item, dict) and "maxLength" in item:
+                return item["maxLength"]
+
+    return None
+
+
+def _get_max_items_from_js_property(js_property: dict[str, Any]) -> Optional[int]:
+    """
+    Extracts maxItems from a JSON Schema property if it exists.
+
+    Args:
+        js_property: A JSON Schema property in dict form.
+
+    Returns:
+        The maxItems value if present, otherwise None.
+    """
+    # Direct maxItems on the property (for array types)
+    if "maxItems" in js_property:
+        return js_property["maxItems"]
+
+    # Check in oneOf list (for nullable array types)
+    if "oneOf" in js_property and isinstance(js_property["oneOf"], list):
+        for item in js_property["oneOf"]:
+            if isinstance(item, dict) and "maxItems" in item:
+                return item["maxItems"]
+
+    return None
 
 
 if __name__ == "__main__":
