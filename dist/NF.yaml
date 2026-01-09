@@ -366,6 +366,11 @@ slots:
 '
     title: Data Type
     required: true
+  dataCoordinatingCenter:
+    description: The Data Coordinating Center (DCC) that manages and coordinates the data.
+    ifabsent: string(NF-OSI)
+    range: string
+    required: false
   datasetItemCount:
     description: Count of files in dataset. Auto-calculated by Synapse.
     title: Dataset Item Count
@@ -3779,6 +3784,11 @@ enums:
           - JavaScript Object Notation
         description: JavaScript Object Notation format; a lightweight, text-based format to represent tree-structured data using key-value pairs.
         meaning: EDAM:format_3464
+      prism:
+        aliases:
+          - GraphPad Prism file
+        description: GraphPad Prism native file format (Prism 10+) for storing data tables, graphs, layouts, and analysis results. Uses an open access format leveraging industry standards.
+        source: https://www.graphpad.com/features
       rds:
         description: R binary data format similar to RData.
         source: https://www.datafiles.samhsa.gov/get-help/format-specific-issues/how-do-i-read-data-r
@@ -3906,7 +3916,7 @@ enums:
           - Not in EDAM as of April 2024.
         source: https://www.psychopy.org/general/dataOutputs.html
       pzfx:
-        description: A PZFX file is a Prism project created by GraphPad Prism, a scientific application used to analyze and graph data. It contains project data including graphs and layouts, notes, and tables.
+        description: Legacy GraphPad Prism XML file format (Prism 5-9) for storing project data including graphs, layouts, notes, and tables. Superseded by the .prism format in Prism 10+.
         source: https://fileinfo.com/extension/pzfx
       rmd:
         description: Markdown document specific to R analyses.
@@ -10195,6 +10205,9 @@ classes:
       - lenticularOpacity
       - nonvestibularSchwannomas
       - numberOfSchwannomas
+    slot_usage:
+      species:
+        ifabsent: string(Homo sapiens)
   FileBasedTemplate:
     abstract: true
     description: 'Abstract template for metadata on file-based resources, i.e. data artifacts stored as files.'
@@ -10348,14 +10361,13 @@ classes:
     slot_usage:
       assay:
         range: SequencingAssayEnum
+        ifabsent: string(ChIP-seq)
       platform:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
   ClinicalAssayTemplate:
-    description: 'General template for typically tabular **individual-level** data. This can include repeated measures and a drug treatment context.
-
-'
+    description: 'General template for typically tabular **individual-level** data. This can include repeated measures and a drug treatment context.'
     is_a: BiologicalAssayDataTemplate
     slots:
       - experimentalFactor
@@ -10365,6 +10377,7 @@ classes:
       - compoundDose
       - compoundDoseUnit
       - comments
+      - isCellLine
     slot_usage:
       assay:
         range: ClinicalBehavioralAssayEnum
@@ -10372,6 +10385,10 @@ classes:
         any_of:
           - range: TabularFileFormatEnum
           - range: DocumentFileFormatEnum
+      dataType:
+        ifabsent: string(clinical)
+      isCellLine:
+        ifabsent: string(No)
     rules:
       - description: If compoundDose is provided, compoundDoseUnit must be provided
         preconditions:
@@ -10417,6 +10434,9 @@ classes:
       - dataType
       - populationCoverage
       - epidemiologyMetric
+    slot_usage:
+      dataType:
+        ifabsent: string(epidemiology)
   EpigeneticsAssayTemplate:
     description: Alias for EpigenomicsAssayTemplate for backwards-compatibility.
     is_a: EpigenomicsAssayTemplate
@@ -10451,6 +10471,7 @@ classes:
     slot_usage:
       assay:
         range: CellBasedAssayEnum
+        ifabsent: string(flow cytometry)
       platform:
         range: FlowCytometryPlatformEnum
       fileFormat:
@@ -10572,7 +10593,8 @@ classes:
     is_a: BulkSequencingAssayTemplate
     notes:
       - It's possible that not all raw genomics data equates to sequencing output.
-    slots: null
+    slots:
+      - isXenograft
     slot_usage:
       assay:
         range: SequencingAssayEnum
@@ -10580,6 +10602,8 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      isXenograft:
+        ifabsent: string(No)
   GenomicsAssayTemplateExtended:
     description: Genomics assay template but with additional experiment data.
     is_a: GenomicsAssayTemplate
@@ -10632,6 +10656,8 @@ classes:
           - range: ImagingSystemPlatformEnum
       fileFormat:
         range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
     slots:
       - platform
       - assayTarget
@@ -10689,6 +10715,8 @@ classes:
         range: MRIPlatformEnum
       fileFormat:
         range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
     rules:
       - description: If experimentalTimepoint is provided, timepointUnit must be provided
         preconditions:
@@ -10757,6 +10785,7 @@ classes:
     slot_usage:
       assay:
         range: SequencingAssayEnum
+        ifabsent: string(methylation array)
       platform:
         range: ArrayPlatformEnum
       fileFormat:
@@ -10783,6 +10812,8 @@ classes:
         range: MicroscopyImagingPlatformEnum
       fileFormat:
         range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
     rules:
       - description: If workingDistance is provided, workingDistanceUnit must be provided
         preconditions:
@@ -10971,6 +11002,10 @@ classes:
       - auxiliaryAsset
       - specimenID
     slot_usage:
+      dataType:
+        ifabsent: string(aligned reads)
+      dataSubtype:
+        ifabsent: string(processed)
       fileFormat:
         range: SequencingFileFormatEnum
     rules:
@@ -11003,6 +11038,9 @@ classes:
       - workflowLink
       - auxiliaryAsset
       - specimenID
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
     rules:
       - description: If workflow is provided, workflowLink must be provided
         preconditions:
@@ -11028,6 +11066,9 @@ classes:
       - workflowLink
       - auxiliaryAsset
       - assay
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
     rules:
       - description: If workflow is provided, workflowLink must be provided
         preconditions:
@@ -11050,6 +11091,8 @@ classes:
       - auxiliaryAsset
       - specimenID
     slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
       fileFormat:
         range: SequencingFileFormatEnum
     rules:
@@ -11072,6 +11115,7 @@ classes:
     slot_usage:
       assay:
         range: MassSpectrometryAssayEnum
+        ifabsent: string(RPPA)
       platform:
         range: ArrayPlatformEnum
       fileFormat:
@@ -11115,6 +11159,7 @@ classes:
       - genePerturbationTechnology
       - experimentalCondition
       - isCellLine
+      - isPrimaryCell
     slot_usage:
       assay:
         range: SequencingAssayEnum
@@ -11122,6 +11167,10 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(sequence reads)
+      isPrimaryCell:
+        ifabsent: string(Yes)
     rules:
       - description: If genePerturbed is provided, genePerturbationType must be provided
         preconditions:
@@ -11156,6 +11205,8 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(gene expression)
     rules:
       - description: If genePerturbed is provided, genePerturbationType must be provided
         preconditions:
@@ -11222,6 +11273,8 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(sequence reads)
   WGSTemplate:
     description: Template for describing raw data from Whole Genome Sequencing (WGS)
     is_a: BulkSequencingAssayTemplate
@@ -11233,6 +11286,8 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(sequence reads)
   WorkflowReport:
     description: Template used for miscellaneous workflow reports and accessory files
     is_a: FileBasedTemplate
@@ -11244,6 +11299,9 @@ classes:
       - relatedDataset
       - workflow
       - workflowLink
+    slot_usage:
+      resourceType:
+        ifabsent: string(report)
     rules:
       - description: If workflow is provided, workflowLink must be provided
         preconditions:
@@ -11726,7 +11784,11 @@ classes:
       - protocolPurpose
       - sampleType
       - comments
+      - resourceType
     source: https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT
+    slot_usage:
+      resourceType:
+        ifabsent: string(protocol)
   SourceCodeTemplate:
     description: Template for describing scripts or software code.
     is_a: Template
@@ -11738,3 +11800,7 @@ classes:
       - programmingLanguage
       - runtimePlatform
       - documentation
+      - resourceType
+    slot_usage:
+      resourceType:
+        ifabsent: string(tool)

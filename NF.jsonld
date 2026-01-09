@@ -17165,6 +17165,9 @@
           "@id": "bts:Json"
         },
         {
+          "@id": "bts:Prism"
+        },
+        {
           "@id": "bts:Rds"
         },
         {
@@ -18682,6 +18685,23 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "json",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Prism",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Prism",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:FileFormat"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "prism",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -52478,6 +52498,23 @@
       "sms:validationRules": []
     },
     {
+      "@id": "bts:DataCoordinatingCenter",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "The Data Coordinating Center (DCC) that manages and coordinates the data.",
+      "rdfs:label": "DataCoordinatingCenter",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "dataCoordinatingCenter",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
       "@id": "bts:GliomaOrEpendymoma",
       "@type": "rdfs:Class",
       "rdfs:comment": "Characterization of the manifestation of Glioma or ependymoma.",
@@ -57124,7 +57161,7 @@
     {
       "@id": "bts:ClinicalAssayTemplate",
       "@type": "rdfs:Class",
-      "rdfs:comment": "General template for typically tabular **individual-level** data. This can include repeated measures and a drug treatment context.\n",
+      "rdfs:comment": "General template for typically tabular **individual-level** data. This can include repeated measures and a drug treatment context.",
       "rdfs:label": "ClinicalAssayTemplate",
       "rdfs:subClassOf": [
         {
@@ -57229,6 +57266,9 @@
         },
         {
           "@id": "bts:CompoundDoseUnit"
+        },
+        {
+          "@id": "bts:IsCellLine"
         }
       ],
       "sms:validationRules": []
@@ -58040,6 +58080,9 @@
         },
         {
           "@id": "bts:IsCellLine"
+        },
+        {
+          "@id": "bts:IsPrimaryCell"
         }
       ],
       "sms:validationRules": []
@@ -58370,23 +58413,6 @@
           "@id": "bts:Summary"
         }
       ],
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:DataCoordinatingCenter",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "DataCoordinatingCenter",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:Thing"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "dataCoordinatingCenter",
-      "sms:required": "sms:false",
       "sms:validationRules": []
     },
     {
@@ -58825,6 +58851,9 @@
           "@id": "bts:BatchID"
         },
         {
+          "@id": "bts:IsXenograft"
+        },
+        {
           "@id": "bts:ExperimentalCondition"
         },
         {
@@ -58983,6 +59012,9 @@
         },
         {
           "@id": "bts:BatchID"
+        },
+        {
+          "@id": "bts:IsXenograft"
         }
       ],
       "sms:validationRules": []
@@ -59234,6 +59266,9 @@
         },
         {
           "@id": "bts:BatchID"
+        },
+        {
+          "@id": "bts:IsXenograft"
         },
         {
           "@id": "bts:TransplantationType"
@@ -60255,6 +60290,9 @@
         },
         {
           "@id": "bts:Comments"
+        },
+        {
+          "@id": "bts:ResourceType"
         }
       ],
       "sms:validationRules": []
@@ -62074,6 +62112,9 @@
         },
         {
           "@id": "bts:Documentation"
+        },
+        {
+          "@id": "bts:ResourceType"
         }
       ],
       "sms:validationRules": []

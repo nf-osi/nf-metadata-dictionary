@@ -88,10 +88,26 @@
       "description": "URL to any documentation describing the resource and its use.",
       "type": "string",
       "title": "documentation"
+    },
+    "resourceType": {
+      "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
+      "enum": [
+        "experimentalData",
+        "metadata",
+        "protocol",
+        "report",
+        "result",
+        "tool",
+        "weblink",
+        "workflow report"
+      ],
+      "title": "resourceType",
+      "type": "string"
     }
   },
   "required": [
-    "title"
+    "title",
+    "resourceType"
   ],
   "title": "SourceCodeTemplate",
   "type": "object"

@@ -41,6 +41,15 @@
   ],
   "description": "Alias to BulkSequencingAssayTemplate, use for sequence data on a large scale when there is no template available that is more specific.",
   "properties": {
+    "isXenograft": {
+      "description": "Boolean data as Yes/No enums",
+      "enum": [
+        "No",
+        "Yes"
+      ],
+      "title": "isXenograft",
+      "type": "string"
+    },
     "age": {
       "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
       "type": "number",

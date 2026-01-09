@@ -90,6 +90,7 @@
         "SDAT",
         "SPAR",
         "json",
+        "prism",
         "rds",
         "sqlite",
         "xml",
@@ -421,11 +422,27 @@
       "description": "Brief free-text comments that may also be important to understanding the resource.",
       "type": "string",
       "title": "comments"
+    },
+    "resourceType": {
+      "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
+      "enum": [
+        "experimentalData",
+        "metadata",
+        "protocol",
+        "report",
+        "result",
+        "tool",
+        "weblink",
+        "workflow report"
+      ],
+      "title": "resourceType",
+      "type": "string"
     }
   },
   "required": [
     "fileFormat",
-    "title"
+    "title",
+    "resourceType"
   ],
   "title": "ProtocolTemplate",
   "type": "object"
