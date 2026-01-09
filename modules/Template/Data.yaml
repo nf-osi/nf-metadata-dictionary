@@ -186,6 +186,7 @@ classes:
     slot_usage:
       assay:
         range: SequencingAssayEnum
+        ifabsent: string(ChIP-seq)
       platform:
         range: SequencingPlatformEnum
       fileFormat:
@@ -211,9 +212,7 @@ classes:
         - clinical
       required: false
       requiresComponent: ''
-    description: 'General template for typically tabular **individual-level** data. This can include repeated measures and a drug treatment context.
-
-      '
+    description: 'General template for typically tabular **individual-level** data. This can include repeated measures and a drug treatment context.'
     is_a: BiologicalAssayDataTemplate
     slots:
     - experimentalFactor
@@ -223,6 +222,7 @@ classes:
     - compoundDose
     - compoundDoseUnit
     - comments
+    - isCellLine
     slot_usage:
       assay:
         range: ClinicalBehavioralAssayEnum
@@ -230,6 +230,10 @@ classes:
         any_of:
         - range: TabularFileFormatEnum
         - range: DocumentFileFormatEnum
+      dataType:
+        ifabsent: string(clinical)
+      isCellLine:
+        ifabsent: string(No)
     rules:
     - description: If compoundDose is provided, compoundDoseUnit must be provided
       preconditions:
@@ -283,6 +287,9 @@ classes:
     - dataType
     - populationCoverage
     - epidemiologyMetric
+    slot_usage:
+      dataType:
+        ifabsent: string(epidemiology)
   EpigeneticsAssayTemplate:
     annotations:
       required: false
@@ -339,6 +346,7 @@ classes:
     slot_usage:
       assay:
         range: CellBasedAssayEnum
+        ifabsent: string(flow cytometry)
       platform:
         range: FlowCytometryPlatformEnum
       fileFormat:
@@ -496,7 +504,8 @@ classes:
     is_a: BulkSequencingAssayTemplate
     notes:
     - It's possible that not all raw genomics data equates to sequencing output.
-    slots: null
+    slots:
+    - isXenograft
     slot_usage:
       assay:
         range: SequencingAssayEnum
@@ -504,6 +513,8 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      isXenograft:
+        ifabsent: string(No)
   GenomicsAssayTemplateExtended:
     annotations:
       required: false
@@ -573,6 +584,8 @@ classes:
         - range: ImagingSystemPlatformEnum
       fileFormat:
         range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
     slots:
     - platform
     - assayTarget
@@ -653,6 +666,8 @@ classes:
         range: MRIPlatformEnum
       fileFormat:
         range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
     rules:
     - description: If experimentalTimepoint is provided, timepointUnit must be provided
       preconditions:
@@ -748,6 +763,7 @@ classes:
     slot_usage:
       assay:
         range: SequencingAssayEnum
+        ifabsent: string(methylation array)
       platform:
         range: ArrayPlatformEnum
       fileFormat:
@@ -786,6 +802,8 @@ classes:
         range: MicroscopyImagingPlatformEnum
       fileFormat:
         range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
     rules:
     - description: If workingDistance is provided, workingDistanceUnit must be provided
       preconditions:
@@ -1020,6 +1038,10 @@ classes:
     - auxiliaryAsset
     - specimenID
     slot_usage:
+      dataType:
+        ifabsent: string(aligned reads)
+      dataSubtype:
+        ifabsent: string(processed)
       fileFormat:
         range: SequencingFileFormatEnum
     rules:
@@ -1066,6 +1088,9 @@ classes:
     - workflowLink
     - auxiliaryAsset
     - specimenID
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
     rules:
     - description: If workflow is provided, workflowLink must be provided
       preconditions:
@@ -1099,6 +1124,9 @@ classes:
     - workflowLink
     - auxiliaryAsset
     - assay
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
     rules:
     - description: If workflow is provided, workflowLink must be provided
       preconditions:
@@ -1137,6 +1165,8 @@ classes:
     - auxiliaryAsset
     - specimenID
     slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
       fileFormat:
         range: SequencingFileFormatEnum
     rules:
@@ -1165,6 +1195,7 @@ classes:
     slot_usage:
       assay:
         range: MassSpectrometryAssayEnum
+        ifabsent: string(RPPA)
       platform:
         range: ArrayPlatformEnum
       fileFormat:
@@ -1223,6 +1254,7 @@ classes:
     - genePerturbationTechnology
     - experimentalCondition
     - isCellLine
+    - isPrimaryCell
     slot_usage:
       assay:
         range: SequencingAssayEnum
@@ -1230,6 +1262,10 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(sequence reads)
+      isPrimaryCell:
+        ifabsent: string(Yes)
     rules:
     - description: If genePerturbed is provided, genePerturbationType must be provided
       preconditions:
@@ -1272,6 +1308,8 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(gene expression)
     rules:
     - description: If genePerturbed is provided, genePerturbationType must be provided
       preconditions:
@@ -1362,6 +1400,8 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(sequence reads)
   WGSTemplate:
     annotations:
       match:
@@ -1381,6 +1421,8 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(sequence reads)
   WorkflowReport:
     description: Template used for miscellaneous workflow reports and accessory files
     is_a: FileBasedTemplate
@@ -1392,6 +1434,9 @@ classes:
     - relatedDataset
     - workflow
     - workflowLink
+    slot_usage:
+      resourceType:
+        ifabsent: string(report)
     rules:
     - description: If workflow is provided, workflowLink must be provided
       preconditions:
