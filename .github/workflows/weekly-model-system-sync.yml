@@ -9,6 +9,7 @@ on:
 
 env:
   SYNAPSE_TABLE_ID: syn26450069
+  SYNAPSE_TOOLS_TABLE_ID: syn51730943
 
 jobs:
   sync-model-systems:
@@ -70,27 +71,39 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: weekly sync of model system names from Synapse table ${{ env.SYNAPSE_TABLE_ID }}"
-          title: "Weekly Model System Sync - ${{ steps.date.outputs.date }}"
+          commit-message: "chore: weekly sync of model system names and tool links from Synapse"
+          title: "Weekly Model System Sync with Tool Links - ${{ steps.date.outputs.date }}"
           body: |
-            This PR contains the weekly sync of model system names from the NFTC truth table.
-            
-            **Source:** Synapse table `${{ env.SYNAPSE_TABLE_ID }}`
+            This PR contains the weekly sync of model system names and tool links from the NFTC truth tables.
+
+            **Sources:**
+            - Model systems: `${{ env.SYNAPSE_TABLE_ID }}`
+            - Tool links: `${{ env.SYNAPSE_TOOLS_TABLE_ID }}`
+
             **Sync Date:** ${{ steps.date.outputs.date }}
-            
+
             ### Changes Made:
             - Updated cell line models in `modules/Sample/CellLineModel.yaml`
-            - Updated animal models in `modules/Sample/AnimalModel.yaml`  
+            - Updated animal models in `modules/Sample/AnimalModel.yaml`
+            - Added/updated `source` links to NF Tools Central detail pages
             - Rebuilt data model artifacts (`NF.jsonld`, `dist/NF.yaml`)
-            
+
             ### Files Modified:
             - `modules/Sample/CellLineModel.yaml`
             - `modules/Sample/AnimalModel.yaml`
             - `NF.jsonld`
             - `dist/NF.yaml`
-            
-            This sync ensures that the metadata dictionary stays current with the latest cell lines and animal models available in the NFTC research tools database.
-            
+
+            ### What This Includes:
+            - ✅ Model system names from NFTC database
+            - ✅ Source links to NF Tools Central detail pages (using `source` field)
+            - ✅ RRID identifiers where available
+            - ✅ Descriptions from database
+
+            This sync ensures that the metadata dictionary stays current with the latest cell lines and animal models available in the NFTC research tools database, including proper attribution links.
+
+            **Related:** Fixes #789 (integrated tool links into model system sync)
+
             **Automated sync via:** `.github/workflows/weekly-model-system-sync.yml`
           branch: sync/model-systems-${{ steps.date.outputs.date-short }}
           labels: |

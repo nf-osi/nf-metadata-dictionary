@@ -1,11 +1,15 @@
 name: Update NF Tools Central Links
 
+# DEPRECATED: This workflow has been integrated into weekly-model-system-sync.yml
+# as of issue #789. The functionality now runs as part of the unified sync workflow.
+# This workflow is kept for manual triggering only.
+
 on:
-  schedule:
-    # Run every Monday at 10:00 AM UTC (1 hour after model system sync)
-    - cron: '0 10 * * 1'
+  # schedule:
+  #   # DISABLED: Functionality integrated into weekly-model-system-sync.yml
+  #   - cron: '0 10 * * 1'
   workflow_dispatch:
-    # Allow manual triggering
+    # Allow manual triggering (for backwards compatibility and testing)
 
 env:
   SYNAPSE_TABLE_ID: syn51730943

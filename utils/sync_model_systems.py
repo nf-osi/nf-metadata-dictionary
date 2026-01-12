@@ -4,7 +4,8 @@ Sync modelSystemName values from NFTC truth table.
 
 This script fetches data from Synapse table syn26450069 and updates
 the CellLineModel.yaml and AnimalModel.yaml enum files based on the
-resourceType column.
+resourceType column. It also fetches resource links from syn51730943
+and adds them as 'source' fields.
 """
 
 import os
@@ -119,6 +120,89 @@ def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
         return []
 
 
+def fetch_tool_links(synapse_id: str = 'syn51730943') -> Dict[str, Dict[str, str]]:
+    """
+    Fetch tool links from NF Tools Central table.
+
+    Args:
+        synapse_id: Synapse table ID for NF Tools Central (default: syn51730943)
+
+    Returns:
+        Dict mapping resource_type to {resourceName: url}
+    """
+    try:
+        import synapseclient
+        from synapseclient import Synapse
+
+        syn = Synapse()
+
+        # Try to login - first with token, then silent, then anonymous
+        try:
+            if os.getenv('SYNAPSE_AUTH_TOKEN'):
+                syn.login(authToken=os.getenv('SYNAPSE_AUTH_TOKEN'), silent=True)
+            else:
+                try:
+                    syn.login(silent=True)
+                except:
+                    pass
+        except Exception:
+            pass
+
+        # Query for all resources with resourceId
+        query = f"SELECT resourceName, resourceId, resourceType FROM {synapse_id}"
+        print(f"Fetching tool links from {synapse_id}...")
+
+        try:
+            results = syn.tableQuery(query)
+        except Exception as query_error:
+            print(f"Warning: Could not fetch tool links: {query_error}")
+            return {'Cell Line': {}, 'Animal Model': {}}
+
+        # Build URL mappings by resource type
+        cell_line_urls = {}
+        animal_model_urls = {}
+
+        for row in results:
+            # Handle different row formats
+            if hasattr(row, '_asdict'):
+                row_dict = row._asdict()
+            elif isinstance(row, dict):
+                row_dict = row
+            elif isinstance(row, (list, tuple)) and len(row) >= 5:
+                # Typical format: [ROW_ID, ROW_VERSION, resourceName, resourceId, resourceType]
+                row_dict = {
+                    'resourceName': row[2],
+                    'resourceId': row[3],
+                    'resourceType': row[4]
+                }
+            else:
+                continue
+
+            resource_name = row_dict.get('resourceName')
+            resource_id = row_dict.get('resourceId')
+            resource_type = row_dict.get('resourceType', '').lower() if row_dict.get('resourceType') else ''
+
+            if resource_name and resource_id:
+                url = f"https://nf.synapse.org/Explore/Tools/DetailsPage/Details?resourceId={resource_id}"
+
+                if 'cell line' in resource_type:
+                    cell_line_urls[resource_name] = url
+                elif 'animal model' in resource_type or 'mouse' in resource_type:
+                    animal_model_urls[resource_name] = url
+
+        print(f"  → Found {len(cell_line_urls)} cell line links")
+        print(f"  → Found {len(animal_model_urls)} animal model links")
+
+        return {
+            'Cell Line': cell_line_urls,
+            'Animal Model': animal_model_urls
+        }
+
+    except Exception as e:
+        print(f"Warning: Could not fetch tool links: {e}")
+        return {'Cell Line': {}, 'Animal Model': {}}
+
+
 def needs_yaml_quoting(name: str) -> bool:
     """
     Check if a string needs to be quoted as a YAML key.
@@ -151,35 +235,36 @@ def needs_yaml_quoting(name: str) -> bool:
     return False
 
 
-def format_enum_entry(resource: Dict[str, Any]) -> Dict[str, Any]:
+def format_enum_entry(resource: Dict[str, Any], source_url: str = None) -> Dict[str, Any]:
     """
     Format a resource entry for YAML enum.
-    
+
     Args:
         resource: Dictionary containing resource data
-        
+        source_url: Optional URL to add as source link
+
     Returns:
         Dictionary formatted for YAML enum entry
     """
     entry = {}
-    
+
     # Use resourceName as the key
     original_name = resource.get('resourceName', '') or ''
     original_name = original_name.strip() if original_name else ''
     if not original_name:
         return None
-        
+
     # Build the entry
     entry_data = {}
-    
+
     # Use description from database if available and different from resource name
     description = resource.get('description', '') or ''
     description = description.strip() if description else ''
-    
+
     # Only include description if it exists and is different from the resource name
     if description and description != original_name:
         entry_data['description'] = description
-        
+
     # Add meaning from RRID if available
     rrid = resource.get('rrid', '') or ''
     rrid = rrid.strip() if rrid else ''
@@ -193,7 +278,11 @@ def format_enum_entry(resource: Dict[str, Any]) -> Dict[str, Any]:
         else:
             # Add rrid: prefix for bare RRID values
             entry_data['meaning'] = f"rrid:{rrid}"
-    
+
+    # Add source link if available (changed from see_also to source per issue #789)
+    if source_url:
+        entry_data['source'] = [source_url]
+
     return {original_name: entry_data}
 
 
@@ -318,15 +407,21 @@ def main():
     animal_model_manual_path = os.path.join(repo_root, 'modules', 'Sample', 'AnimalModelManual.yaml')
     
     print(f"Fetching data from Synapse table {args.synapse_id}...")
-    
+
     # Fetch data from Synapse
     data = fetch_synapse_data(args.synapse_id)
-    
+
     if not data:
         print("No data fetched. Exiting.")
         return 1
-    
+
     print(f"Fetched {len(data)} records from Synapse")
+
+    # Fetch tool links from NF Tools Central (syn51730943)
+    print("\nFetching tool links from NF Tools Central...")
+    tool_links = fetch_tool_links('syn51730943')
+    cell_line_links = tool_links.get('Cell Line', {})
+    animal_model_links = tool_links.get('Animal Model', {})
     
     # Load manual entries to avoid duplicates
     cell_line_manual_entries = load_manual_entries(cell_line_manual_path)
@@ -334,20 +429,25 @@ def main():
     print(f"Found {len(cell_line_manual_entries)} manual cell line entries")
     print(f"Found {len(animal_model_manual_entries)} manual animal model entries")
     
-    # Separate data by resource type
+    # Separate data by resource type and add source links
     cell_lines = []
     animal_models = []
-    
+
     for resource in data:
         resource_type = resource.get('resourceType', '') or ''
         resource_type = resource_type.lower().strip() if resource_type else ''
-        
+        resource_name = resource.get('resourceName', '').strip() if resource.get('resourceName') else ''
+
         if 'cell line' in resource_type:
-            formatted = format_enum_entry(resource)
+            # Get source link for this resource if available
+            source_url = cell_line_links.get(resource_name)
+            formatted = format_enum_entry(resource, source_url)
             if formatted:
                 cell_lines.append(formatted)
         elif 'animal model' in resource_type or 'mouse' in resource_type:
-            formatted = format_enum_entry(resource)
+            # Get source link for this resource if available
+            source_url = animal_model_links.get(resource_name)
+            formatted = format_enum_entry(resource, source_url)
             if formatted:
                 animal_models.append(formatted)
     
