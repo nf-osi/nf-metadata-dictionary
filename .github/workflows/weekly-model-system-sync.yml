@@ -45,9 +45,9 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          if [[ $(git status --porcelain modules/Sample/CellLineModel.yaml modules/Sample/AnimalModel.yaml) ]]; then
+          if [[ $(git status --porcelain modules/Sample/CellLineModel.yaml modules/Sample/AnimalModel.yaml modules/Experiment/Antibody.yaml modules/Experiment/GeneticReagent.yaml) ]]; then
             echo "changes=true" >> $GITHUB_OUTPUT
-            echo "Changes detected in model system files"
+            echo "Changes detected in model system and tool files"
           else
             echo "changes=false" >> $GITHUB_OUTPUT
             echo "No changes detected"
@@ -85,17 +85,22 @@ jobs:
             ### Changes Made:
             - Updated cell line models in `modules/Sample/CellLineModel.yaml`
             - Updated animal models in `modules/Sample/AnimalModel.yaml`
+            - Updated antibodies in `modules/Experiment/Antibody.yaml`
+            - Updated genetic reagents in `modules/Experiment/GeneticReagent.yaml`
             - Added/updated `source` links to NF Tools Central detail pages
             - Rebuilt data model artifacts (`NF.jsonld`, `dist/NF.yaml`)
 
             ### Files Modified:
             - `modules/Sample/CellLineModel.yaml`
             - `modules/Sample/AnimalModel.yaml`
+            - `modules/Experiment/Antibody.yaml`
+            - `modules/Experiment/GeneticReagent.yaml`
             - `NF.jsonld`
             - `dist/NF.yaml`
 
             ### What This Includes:
-            - ✅ Model system names from NFTC database
+            - ✅ Cell line and animal model names from NFTC database (syn26450069)
+            - ✅ Antibody and genetic reagent resources from NF Tools Central (syn51730943)
             - ✅ Source links to NF Tools Central detail pages (using `source` field)
             - ✅ RRID identifiers where available
             - ✅ Descriptions from database
