@@ -76,7 +76,7 @@ We welcome contributions from community members, whether you are a professional 
 Releases create versioned JSON schemas registered with Synapse. The [release workflow](.github/workflows/release-new-version.yaml) can be triggered two ways:
 
 1. **Push a tag**: `git tag v1.2.3 && git push --tags` — creates a GitHub release with versioned schemas
-2. **Manual dispatch**: Run workflow from GitHub Actions UI with version input (e.g., `v1.2.3`)
+2. **Manual dispatch**: Run workflow from GitHub Actions UI with required `version` (e.g., `v1.2.3`) and optional `release_notes` input; when notes are omitted the workflow uses GitHub's auto-generated release notes
 
 The workflow:
 - Copies schemas from `registered-json-schemas/` to a temp directory

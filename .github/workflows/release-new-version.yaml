@@ -12,6 +12,10 @@ on:
         description: 'Version to use (e.g., v9.9.0 - with v prefix)'
         required: true
         type: string
+      release_notes:
+        description: 'Optional release notes; when empty, GitHub auto-generated notes are used'
+        required: false
+        type: string
 
 env:
   SCHEMATIC_VERSION: 24.7.2
@@ -54,6 +58,26 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10.12'
+
+      - name: Ensure git tag exists for manual releases
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          VERSION: ${{ steps.get_version.outputs.version }}
+        run: |
+          TAG="v${VERSION}"
+
+          echo "Ensuring tag ${TAG} exists for commit ${GITHUB_SHA}"
+
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag ${TAG} already exists locally"
+          elif git ls-remote --exit-code origin "refs/tags/${TAG}" >/dev/null 2>&1; then
+            echo "Tag ${TAG} exists on origin, fetching"
+            git fetch origin "refs/tags/${TAG}:refs/tags/${TAG}"
+          else
+            echo "Creating and pushing tag ${TAG}"
+            git tag "$TAG" "$GITHUB_SHA"
+            git push origin "$TAG"
+          fi
 
       - name: Install dependencies
         run: pip install synapseclient
@@ -104,24 +128,34 @@ jobs:
             schema-registration-log-${{ steps.get_version.outputs.version }}.md
 
       - name: Create release with schemas
-        if: github.event_name == 'push'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NOTES_INPUT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_notes || '' }}
         run: |
           VERSION="${{ steps.get_version.outputs.version }}"
+          TARGET_COMMIT="${GITHUB_SHA}"
 
           # Create a tarball of the versioned schemas
           tar -czf "json-schemas-${VERSION}.tar.gz" "versioned-schemas"
 
-          # Get the release notes if they exist
-          RELEASE_NOTES="Versioned JSON schemas for ${VERSION}"
           if gh release view "v${VERSION}" > /dev/null 2>&1; then
             echo "Release v${VERSION} already exists, adding schemas as asset"
             gh release upload "v${VERSION}" "json-schemas-${VERSION}.tar.gz" --clobber
           else
             echo "Creating new release v${VERSION} with schemas"
-            gh release create "v${VERSION}" \
-              "json-schemas-${VERSION}.tar.gz" \
-              --title "Release v${VERSION}" \
-              --notes "${RELEASE_NOTES}"
+            if [ -n "$NOTES_INPUT" ]; then
+              echo "Using custom release notes from workflow input"
+              gh release create "v${VERSION}" \
+                "json-schemas-${VERSION}.tar.gz" \
+                --title "Release v${VERSION}" \
+                --notes "$NOTES_INPUT" \
+                --target "${TARGET_COMMIT}"
+            else
+              echo "Using GitHub auto-generated release notes"
+              gh release create "v${VERSION}" \
+                "json-schemas-${VERSION}.tar.gz" \
+                --title "Release v${VERSION}" \
+                --generate-notes \
+                --target "${TARGET_COMMIT}"
+            fi
           fi

@@ -1,16 +1,16 @@
 # Create reminder issue at beginning of the month
-name: Data model release issue
+name: Monthly release reminder
 
 on:
   schedule:
-    # Run at 08:00 on the first Monday of each month
+    # Run at 08:00 UTC on the first calendar day of each month
     - cron: '00 08 1 * *'
 
   workflow_dispatch:
 
 jobs:
   create_issue:
-    name: Create data model release issue
+    name: Create monthly release reminder
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -25,25 +25,25 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           TITLE: Monthly Data Model Release
-          # ASSIGNEE: # varies, assigned at standup
           LABELS: release
           BODY: |
             ### Summary
-            
-            This issue helps ensure that at least one data model release is created monthly.
+
+            This issue serves as a reminder to create a version for reference purposes. 
+            Synapse uses stable "latest" from `main` branch, which is continuously tested via CI/CD. 
+            This is so we don't have to recreate a curation task each time the data model changes to add a new term, etc -- curation grid instantiates with the latest JSON schema.
+            However, at one or more times during each month it is helpful to create a curated snapshot to provide a semantic landmark and digestible changelog.
 
             ### Checklist
 
-            - [ ] Review last schematic tests or test current state of data model on DCA staging 
-            - [ ] Check if any other updates should be put into this release so they don't have to wait until the next
-            - [ ] Create new release at https://github.com/nf-osi/nf-metadata-dictionary/releases
-            - [ ] If new version affects user-facing templates*, update DCA production config downstream at https://github.com/Sage-Bionetworks/data_curator_config/tree/prod/NF-OSI
+            - [ ] Review recent CI/CD results on `main` to confirm model is in good state and whether a release is warranted
+            - [ ] (Optional) Do additional UI/UX testing within Synapse. Note: CI/CD guarantees that JSON schemas are accepted by Synapse but does not guarantee that all features/interactions render as expected.  
+            - [ ] Create new release by pushing a version tag `git tag vX.Y.Z && git push origin vX.Y.Z` or using the release workflow in the Actions UI 
+            - [ ] Verify release workflow completed successfully at https://github.com/nf-osi/nf-metadata-dictionary/actions
 
-            * Occasionally, releases only include changes in draft templates or other non user-facing data model changes like mappings and comments.
-            
             ### Working rotation
 
-            - Jan, May, Sep: @anngvu 
-            - Feb, June, Oct: @aditya-nath-sage 
-            - Mar, Jul, Nov: @changtotheintothemoon 
-            - Apr, Aug, Dec: @cconrad8 
+            - Jan, May, Sep: @anngvu
+            - Feb, June, Oct: @aditya-nath-sage
+            - Mar, Jul, Nov: @changtotheintothemoon
+            - Apr, Aug, Dec: @BelindaBGarana
