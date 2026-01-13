@@ -55,6 +55,22 @@
           "dataSubtype"
         ]
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "concreteType": {
+            "const": "org.sagebionetworks.repo.model.Folder"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "contentType": {
+            "const": "dataset"
+          }
+        }
+      }
     }
   ],
   "description": "Template for raw electrophysiology data (electrical recordings).",
@@ -373,7 +389,7 @@
             "Neurofibromin (NF1) Mouse Monoclonal Antibody",
             "Neurofibromin (NF1) Rabbit Polyclonal Antibody",
             "Anti-NF1",
-            "N2150-02B\u00a0Rabbit Anti-NF1, ID",
+            "N2150-02B Rabbit Anti-NF1, ID",
             "anti-Neurofibromin 1 antibody (NF1) AA 1551-1600",
             "anti-Neurofibromin 1 antibody (NF1)",
             "anti-Neurofibromin 1 antibody (NF1) AA 2719-2818",
@@ -383,7 +399,7 @@
             "Anti-Neurofibromin/NF1 Antibody Picoband (Monoclonal, 4F8B7)",
             "Neurofibromin 1 Antibody (CL11773)",
             "Neurofibromin Antibody (H-12)",
-            "NF1 polyclonal antibody\u00a0",
+            "NF1 polyclonal antibody ",
             "NF1 (phospho S2741) polyclonal antibody",
             "Anti-TFYY1 (NF1), IgG fraction (monoclonal)",
             "Neurofibromin 1 antibody (N-Term)",
@@ -472,7 +488,7 @@
             "Rabbit Anti-Neurofibromin, aa27-41 Antibody",
             "Rabbit Anti-NF1, ID Antibody",
             "anti-Neurofibromin Antibody",
-            "Neurofibromin\u00a0specific\u00a0antibody",
+            "Neurofibromin specific antibody",
             "IHC-plus Polyclonal Rabbit anti-Human Neurofibromin / NF1 Antibody",
             "NF-1 Antibody (A-12)",
             "NF1 type II isoform-specific antiserum NF1ab67",
@@ -731,7 +747,7 @@
             "pAMP-CY1_NF1 T2 R1276P (+minintr, KDR)",
             "lentiCRISPRv2.sgNf1.4",
             "pAMP-CY1_NF1 T1 R1276P (+minintr, KDR)",
-            "NF1 in\u00a0pET15_NESG",
+            "NF1 in pET15_NESG",
             "HRAS (H. sapiens) In pANT7_cGST",
             "HRAS (Homo sapiens) in pJP1520",
             "pENTER-CMV-NF1v1",
@@ -764,11 +780,11 @@
             "pADANS-NF1-6",
             "pADANS-NF1-12",
             "pADANS-NF1-19",
-            "ptrcNF1\u2013333",
-            "pETNF1\u2013333",
+            "ptrcNF1–333",
+            "pETNF1–333",
             "pTHN",
             "pX330-NF1 E1",
-            "pT2/shp53/shNf1/CMV\u2010PDGFA\u2010IRES\u2010DsRed vector",
+            "pT2/shp53/shNf1/CMV‐PDGFA‐IRES‐DsRed vector",
             "Hs.HRAS C186S",
             "Hs.HRAS Q61R",
             "Hs.HRAS Q61K",
@@ -1073,7 +1089,7 @@
           "HS-PSS",
           "HS-Sch-2",
           "HS53T",
-          "HSC1\u03bb",
+          "HSC1λ",
           "HTh74",
           "HTh74 clone 7",
           "HeLa SilenciX NF1",
@@ -1145,7 +1161,7 @@
           "NF10.1",
           "NF11.1",
           "NF1C-FiPS-SV4F7",
-          "NF1\u2010iN",
+          "NF1‐iN",
           "NFS-1",
           "NGP",
           "NMB",
@@ -1384,7 +1400,7 @@
           "SMBCi003-C",
           "SNU-407",
           "SNU-C2A",
-          "SOX10+\u00a0SLC",
+          "SOX10+ SLC",
           "ST88-14",
           "ST88-3",
           "STR-I-437-NF1",
@@ -1496,11 +1512,11 @@
           "YUZEAL",
           "YUZEST",
           "ZX2021H",
-          "c.1149C > A\u00a0NF1-mutant hiPSCs",
-          "c.1185+1G > A\u00a0NF1-mutant hiPSCs",
-          "c.3431-32_dupGT\u00a0NF1-mutant hiPSCs",
-          "c.5425C > T\u00a0NF1-mutant hiPSCs",
-          "c.6619C > T\u00a0NF1-mutant hiPSCs",
+          "c.1149C > A NF1-mutant hiPSCs",
+          "c.1185+1G > A NF1-mutant hiPSCs",
+          "c.3431-32_dupGT NF1-mutant hiPSCs",
+          "c.5425C > T NF1-mutant hiPSCs",
+          "c.6619C > T NF1-mutant hiPSCs",
           "cNF00.10a",
           "cNF04.9a",
           "cNF97.2a",
@@ -1520,7 +1536,7 @@
           "hTERT NF1 ipnNF95.11c",
           "hTERT NF1 sipnNF95.12B",
           "hTERT SC ipn97.4",
-          "hTERT ipn02.3 2\u03bb",
+          "hTERT ipn02.3 2λ",
           "hTERT ipn02.8",
           "i28cNF",
           "iPSC NF1 +/- BJFF.6 bkgd",
@@ -1563,7 +1579,7 @@
           "cNF18.1a",
           "cNF97.5",
           "cNF99.1",
-          "hTERT NF1 ipn02.3 2\u03bb",
+          "hTERT NF1 ipn02.3 2λ",
           "hTERT SC ipn02.8",
           "hiPSC",
           "hiPSC-SCP",
@@ -1616,13 +1632,13 @@
           "NF1SynIKO",
           "NF1fl/fl;Dhh-Cre",
           "NF1flox4/Arg681*;Dhh-Cre",
-          "Nf1 +/\u03944",
+          "Nf1 +/Δ4",
           "Nf1 Arg681*/Arg681*",
           "Nf1 GEM",
           "Nf1 Ocl-/-",
           "Nf1 flox/+; DhhCre/+",
           "Nf1 heterozygous mutant minipig",
-          "Nf1 \u03944/\u03944",
+          "Nf1 Δ4/Δ4",
           "Nf1(31)",
           "Nf1+/-",
           "Nf1+/- P53+/-",
@@ -1631,7 +1647,7 @@
           "Nf1+/Arg681",
           "Nf1+/R681X",
           "Nf1+/ex42del pig",
-          "Nf1+/\u03944",
+          "Nf1+/Δ4",
           "Nf1-/+;Trp53-/+cis",
           "Nf1-/-",
           "Nf1-/- Drosophila",

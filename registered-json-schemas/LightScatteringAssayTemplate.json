@@ -55,6 +55,22 @@
           "concentrationNaClUnit"
         ]
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "concreteType": {
+            "const": "org.sagebionetworks.repo.model.Folder"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "contentType": {
+            "const": "dataset"
+          }
+        }
+      }
     }
   ],
   "description": "Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.",
