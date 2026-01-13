@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """
-Add see_also links to schema enum values for NF Tools Central resources.
+Add source links to schema enum values for NF Tools Central resources.
 
 This script queries syn51730943 to get resource IDs and updates the schema YAML files
-to include see_also links pointing to the NF Tools Central detail pages.
+to include source links pointing to the NF Tools Central detail pages.
+
+NOTE: As of issue #789, this functionality is integrated into the weekly-model-system-sync
+workflow. This script is kept for manual runs and testing.
 
 Usage:
     export SYNAPSE_AUTH_TOKEN=your_token
@@ -162,7 +165,7 @@ def load_yaml_safe(file_path: str) -> Tuple[dict, str]:
 
 def update_yaml_enum(file_path: str, enum_name: str, url_mapping: Dict[str, str], dry_run: bool = False) -> int:
     """
-    Update YAML file to add see_also links to enum values.
+    Update YAML file to add source links to enum values.
 
     Args:
         file_path: Path to YAML file
@@ -201,7 +204,7 @@ def update_yaml_enum(file_path: str, enum_name: str, url_mapping: Dict[str, str]
         logger.warning(f"  No permissible_values found")
         return 0
 
-    # Add see_also links to EXISTING values that don't have them (initial setup)
+    # Add source links to EXISTING values that don't have them (initial setup)
     links_added_count = 0
     for value_name, value_data in target_enum['permissible_values'].items():
         if value_name in url_mapping:
@@ -214,22 +217,22 @@ def update_yaml_enum(file_path: str, enum_name: str, url_mapping: Dict[str, str]
                 logger.warning(f"  Skipping {value_name} - value_data is not a dict")
                 continue
 
-            # Add see_also link if it doesn't exist
+            # Add source link if it doesn't exist
             # ResourceIds don't change, so we never update existing links
-            if 'see_also' not in value_data:
-                value_data['see_also'] = [url_mapping[value_name]]
+            if 'source' not in value_data:
+                value_data['source'] = [url_mapping[value_name]]
                 links_added_count += 1
-                logger.info(f"  ✓ Added see_also to existing value '{value_name}'")
+                logger.info(f"  ✓ Added source to existing value '{value_name}'")
 
     # Add NEW values from syn51730943 that don't exist in enum yet
     new_values_count = 0
     for value_name, url in url_mapping.items():
         if value_name not in target_enum['permissible_values']:
             target_enum['permissible_values'][value_name] = {
-                'see_also': [url]
+                'source': [url]
             }
             new_values_count += 1
-            logger.info(f"  ✓ Added NEW enum value '{value_name}' with see_also link")
+            logger.info(f"  ✓ Added NEW enum value '{value_name}' with source link")
 
     total_changes = links_added_count + new_values_count
 
@@ -238,24 +241,24 @@ def update_yaml_enum(file_path: str, enum_name: str, url_mapping: Dict[str, str]
         with open(file_path, 'w') as f:
             yaml.dump(data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
         if new_values_count > 0 and links_added_count > 0:
-            logger.info(f"  → Added {new_values_count} new enum values and {links_added_count} see_also links in {file_path}")
+            logger.info(f"  → Added {new_values_count} new enum values and {links_added_count} source links in {file_path}")
         elif new_values_count > 0:
             logger.info(f"  → Added {new_values_count} new enum values in {file_path}")
         else:
-            logger.info(f"  → Added {links_added_count} see_also links in {file_path}")
+            logger.info(f"  → Added {links_added_count} source links in {file_path}")
     elif dry_run:
         if new_values_count > 0 and links_added_count > 0:
-            logger.info(f"  → [DRY RUN] Would add {new_values_count} new enum values and {links_added_count} see_also links")
+            logger.info(f"  → [DRY RUN] Would add {new_values_count} new enum values and {links_added_count} source links")
         elif new_values_count > 0:
             logger.info(f"  → [DRY RUN] Would add {new_values_count} new enum values")
         else:
-            logger.info(f"  → [DRY RUN] Would add {links_added_count} see_also links")
+            logger.info(f"  → [DRY RUN] Would add {links_added_count} source links")
 
     return total_changes
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Add see_also links to schema enums')
+    parser = argparse.ArgumentParser(description='Add source links to schema enums')
     parser.add_argument('--dry-run', action='store_true', help='Show what would be changed without writing')
     args = parser.parse_args()
 
