@@ -368,7 +368,7 @@ def format_enum_entry(resource: Dict[str, Any], source_url: str = None) -> Dict[
 
     # Add source link if available (changed from see_also to source per issue #789)
     if source_url:
-        entry_data['source'] = [source_url]
+        entry_data['source'] = source_url
 
     return {original_name: entry_data}
 
