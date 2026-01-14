@@ -1,0 +1,161 @@
+name: Release New Version
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Trigger on push of semantic version tags (e.g., v9.9.0)
+
+  # Alternatively, trigger 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to use (e.g., v9.9.0 - with v prefix)'
+        required: true
+        type: string
+      release_notes:
+        description: 'Optional release notes; when empty, GitHub auto-generated notes are used'
+        required: false
+        type: string
+
+env:
+  SCHEMATIC_VERSION: 24.7.2
+
+jobs:
+  release-json-schemas:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from tag or input
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            # Remove 'v' prefix from input (v9.9.0 -> 9.9.0)
+            VERSION="${{ inputs.version }}"
+            VERSION="${VERSION#v}"
+          else
+            # Remove 'v' prefix from tag (v9.9.0 -> 9.9.0)
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          fi
+
+          # Validate semantic version format
+          # Valid: 1.0.0, 10.5.2, 0.1.0
+          # Invalid: 01.0.0, 1.05.0, 1.0.01, 10.08.1
+          if ! echo "$VERSION" | grep -E '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$' > /dev/null; then
+            echo "❌ ERROR: Invalid version format: $VERSION"
+            echo "Version must follow semantic versioning (MAJOR.MINOR.PATCH) with no leading zeros."
+            echo "Valid examples: 1.0.0, 10.5.2, 0.1.0"
+            echo "Invalid examples: 01.0.0, 1.05.0, 1.0.01, 10.08.1"
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "✅ Building schemas for version: $VERSION"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12'
+
+      - name: Ensure git tag exists for manual releases
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          VERSION: ${{ steps.get_version.outputs.version }}
+        run: |
+          TAG="v${VERSION}"
+
+          echo "Ensuring tag ${TAG} exists for commit ${GITHUB_SHA}"
+
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag ${TAG} already exists locally"
+          elif git ls-remote --exit-code origin "refs/tags/${TAG}" >/dev/null 2>&1; then
+            echo "Tag ${TAG} exists on origin, fetching"
+            git fetch origin "refs/tags/${TAG}:refs/tags/${TAG}"
+          else
+            echo "Creating and pushing tag ${TAG}"
+            git tag "$TAG" "$GITHUB_SHA"
+            git push origin "$TAG"
+          fi
+
+      - name: Install dependencies
+        run: pip install synapseclient
+
+      - name: Create versioned schemas
+        env:
+          SCHEMA_VERSION: ${{ steps.get_version.outputs.version }}
+        run: |
+          echo "Creating versioned schemas for version $SCHEMA_VERSION"
+          mkdir -p versioned-schemas
+
+          # Copy and version each schema
+          for schema in registered-json-schemas/*.json; do
+            filename=$(basename "$schema")
+            # Append version to the $id (before the closing quote)
+            # e.g., org.synapse.nf-animalindividualtemplate -> org.synapse.nf-animalindividualtemplate-0.9.9
+            sed "s|\(\"\$id\": \".*\)\(\".*\)|\1-$SCHEMA_VERSION\2|" "$schema" > "versioned-schemas/$filename"
+          done
+
+          echo "✅ Created versioned schemas in versioned-schemas/"
+          # Show an example of the versioned $id
+          head -3 versioned-schemas/*.json | grep '\$id' | head -1
+
+      - name: Register versioned JSON schemas with Synapse
+        env:
+          SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
+          SCHEMA_VERSION: ${{ steps.get_version.outputs.version }}
+        run: |
+          echo "Registering versioned JSON schemas with Synapse for version $SCHEMA_VERSION"
+          python utils/register-schemas.py \
+            --schema-dir "versioned-schemas" \
+            --log-file "schema-registration-log-$SCHEMA_VERSION.md" \
+            --exclude Superdataset.json
+
+      - name: Setup schematic
+        run: |
+          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}
+          pip show schematicpy
+          schematic schema convert NF.jsonld
+          python utils/fix_display_names.py retold_NF.jsonld NF.jsonld
+
+      - name: Upload versioned schemas as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: json-schemas-${{ steps.get_version.outputs.version }}
+          path: |
+            versioned-schemas
+            schema-registration-log-${{ steps.get_version.outputs.version }}.md
+
+      - name: Create release with schemas
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NOTES_INPUT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_notes || '' }}
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+          TARGET_COMMIT="${GITHUB_SHA}"
+
+          # Create a tarball of the versioned schemas
+          tar -czf "json-schemas-${VERSION}.tar.gz" "versioned-schemas"
+
+          if gh release view "v${VERSION}" > /dev/null 2>&1; then
+            echo "Release v${VERSION} already exists, adding schemas as asset"
+            gh release upload "v${VERSION}" "json-schemas-${VERSION}.tar.gz" --clobber
+          else
+            echo "Creating new release v${VERSION} with schemas"
+            if [ -n "$NOTES_INPUT" ]; then
+              echo "Using custom release notes from workflow input"
+              gh release create "v${VERSION}" \
+                "json-schemas-${VERSION}.tar.gz" \
+                --title "Release v${VERSION}" \
+                --notes "$NOTES_INPUT" \
+                --target "${TARGET_COMMIT}"
+            else
+              echo "Using GitHub auto-generated release notes"
+              gh release create "v${VERSION}" \
+                "json-schemas-${VERSION}.tar.gz" \
+                --title "Release v${VERSION}" \
+                --generate-notes \
+                --target "${TARGET_COMMIT}"
+            fi
+          fi
