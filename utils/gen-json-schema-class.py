@@ -66,6 +66,161 @@ def reorder_properties(properties, property_order):
 
     return dict(ordered)
 
+def load_enum_metadata(schema_yaml_path, cls_name):
+    """Load enum metadata (source, description, meaning) from the YAML schema and build property-to-enum mappings."""
+    try:
+        from yaml import load
+        try:
+            from yaml import CLoader as Loader
+        except ImportError:
+            from yaml import Loader
+
+        with open(schema_yaml_path, 'r') as f:
+            schema_data = load(f, Loader=Loader)
+
+        # First, load all enum metadata
+        enums_data = schema_data.get('enums', {})
+        enum_metadata = {}
+
+        for enum_name, enum_def in enums_data.items():
+            permissible_values = enum_def.get('permissible_values', {})
+            enum_values_metadata = {}
+
+            for value, value_def in permissible_values.items():
+                if isinstance(value_def, dict):
+                    # Extract metadata fields
+                    value_meta = {}
+                    if 'source' in value_def:
+                        value_meta['source'] = value_def['source']
+                    if 'description' in value_def:
+                        value_meta['description'] = value_def['description']
+                    if 'meaning' in value_def:
+                        value_meta['meaning'] = value_def['meaning']
+
+                    if value_meta:  # Only add if there's metadata
+                        enum_values_metadata[value] = value_meta
+
+            if enum_values_metadata:
+                enum_metadata[enum_name] = enum_values_metadata
+
+        # Now build property-to-enum mapping for this class
+        property_enum_map = {}
+        classes_data = schema_data.get('classes', {})
+        cls_def = classes_data.get(cls_name, {})
+
+        # Collect all slots including inherited ones
+        def collect_all_slots(class_name, visited=None):
+            """Recursively collect all slots from this class and its parents."""
+            if visited is None:
+                visited = set()
+            if class_name in visited:
+                return []
+            visited.add(class_name)
+
+            cls = classes_data.get(class_name, {})
+            all_slots = []
+
+            # Get parent class slots first
+            if 'is_a' in cls:
+                parent_name = cls['is_a']
+                all_slots.extend(collect_all_slots(parent_name, visited))
+
+            # Get mixin slots
+            for mixin in cls.get('mixins', []):
+                all_slots.extend(collect_all_slots(mixin, visited))
+
+            # Add this class's slots
+            if 'slots' in cls and cls['slots'] is not None:
+                all_slots.extend(cls['slots'])
+            elif 'attributes' in cls and cls['attributes'] is not None:
+                all_slots.extend(cls['attributes'].keys())
+
+            return all_slots
+
+        slots = collect_all_slots(cls_name)
+
+        # For each slot, find its range (which enum it uses)
+        slots_data = schema_data.get('slots', {})
+        for slot_name in slots:
+            slot_def = slots_data.get(slot_name, {})
+
+            # Check for range (single enum)
+            if 'range' in slot_def:
+                range_name = slot_def['range']
+                if range_name in enum_metadata:
+                    property_enum_map[slot_name] = [range_name]
+
+            # Check for any_of (multiple possible enums)
+            elif 'any_of' in slot_def:
+                ranges = []
+                for option in slot_def['any_of']:
+                    if isinstance(option, dict) and 'range' in option:
+                        range_name = option['range']
+                        if range_name in enum_metadata:
+                            ranges.append(range_name)
+                if ranges:
+                    property_enum_map[slot_name] = ranges
+
+        return enum_metadata, property_enum_map
+
+    except Exception as e:
+        print(f"Warning: Could not load enum metadata: {e}")
+        import traceback
+        traceback.print_exc()
+        return {}, {}
+
+def add_enum_metadata(schema, enum_metadata, property_enum_map):
+    """Add x-enum-metadata to properties that have enum values."""
+    if 'properties' not in schema:
+        return schema
+
+    for prop_name, prop_def in schema['properties'].items():
+        if prop_name not in property_enum_map:
+            continue
+
+        # Get the enum ranges for this property
+        enum_ranges = property_enum_map[prop_name]
+
+        # Collect all enum values and their metadata from all applicable ranges
+        combined_metadata = {}
+        for enum_range in enum_ranges:
+            if enum_range in enum_metadata:
+                range_metadata = enum_metadata[enum_range]
+                # Merge metadata for this range
+                for value, value_meta in range_metadata.items():
+                    combined_metadata[value] = value_meta
+
+        if not combined_metadata:
+            continue
+
+        # Find where the enum is defined in the property
+        # Could be directly in the property or nested in items (for arrays)
+        def add_metadata_to_enum(obj):
+            if isinstance(obj, dict):
+                if 'enum' in obj:
+                    # Found an enum - add metadata for its values
+                    enum_values = obj['enum']
+                    metadata = {}
+                    for value in enum_values:
+                        if value in combined_metadata:
+                            metadata[value] = combined_metadata[value]
+
+                    if metadata:
+                        obj['x-enum-metadata'] = metadata
+                    return True
+
+                # Recurse into nested structures
+                for key, value in obj.items():
+                    if key != 'x-enum-metadata':  # Don't recurse into our own metadata
+                        add_metadata_to_enum(value)
+            elif isinstance(obj, list):
+                for item in obj:
+                    add_metadata_to_enum(item)
+
+        add_metadata_to_enum(prop_def)
+
+    return schema
+
 def process_schema(raw_schema, cls_name, version=None, schema_yaml_path=None):
     """Process and clean the JSON schema."""
     # Set metadata with optional version
@@ -77,6 +232,12 @@ def process_schema(raw_schema, cls_name, version=None, schema_yaml_path=None):
 
     # Force JSON Schema Draft 7
     raw_schema["$schema"] = "http://json-schema.org/draft-07/schema#"
+
+    # Load enum metadata from YAML if available
+    enum_metadata = {}
+    property_enum_map = {}
+    if schema_yaml_path:
+        enum_metadata, property_enum_map = load_enum_metadata(schema_yaml_path, cls_name)
 
     # Dereference and inline enums
     deref = jsonref.replace_refs(raw_schema, merge_props=False, proxies=False)
@@ -165,6 +326,10 @@ def process_schema(raw_schema, cls_name, version=None, schema_yaml_path=None):
     if schema_yaml_path and "properties" in deref:
         property_order = get_class_property_order(schema_yaml_path, cls_name)
         deref["properties"] = reorder_properties(deref["properties"], property_order)
+
+    # Add enum metadata as x-enum-metadata
+    if enum_metadata and property_enum_map:
+        deref = add_enum_metadata(deref, enum_metadata, property_enum_map)
 
     return deref
 

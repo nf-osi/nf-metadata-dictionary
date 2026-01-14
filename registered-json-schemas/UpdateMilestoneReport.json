@@ -16,11 +16,46 @@
         "workflow report"
       ],
       "title": "resourceType",
-      "type": "string"
+      "type": "string",
+      "x-enum-metadata": {
+        "experimentalData": {
+          "description": "Any file derived from or pertaining to a scientific experiment. Experimental data annotations should be applied, possibly disease-related."
+        },
+        "metadata": {
+          "description": "Data about data, information that describes another set of data.",
+          "meaning": "NCIT:C52095"
+        },
+        "protocol": {
+          "description": "A plan specification which has sufficient level of detail and quantitative information to communicate it between investigation agents, so that different investigation agents will reliably be able to independently reproduce the process.",
+          "meaning": "OBI:0000272"
+        },
+        "report": {
+          "description": "A document assembled by an author for the purpose of providing information for the audience.  A report is the output of a documenting process and has the objective to be consumed by a specific audience.  Topic of the report is on something that has completed. A report is not a single figure.  Examples of reports are journal article, patent application, grant progress report, case report (not patient record).\n",
+          "meaning": "IAO:0000088"
+        },
+        "result": {
+          "source": "https://synapse.org",
+          "description": "Any file that reports data results. Examples include figures, presentations, analysis, etc."
+        },
+        "tool": {
+          "source": "https://synapse.org",
+          "description": "Any file or link that represents a tool, model, or algorithm; the tool annotations could be applied"
+        },
+        "weblink": {
+          "description": "An address to another document or other resource on the World Wide Web.",
+          "meaning": "NCIT:C42743"
+        },
+        "workflow report": {
+          "description": "Workflow-generated reports of analysis of primary data, usually created programmatically at completion of workflow step."
+        }
+      }
     },
     "progressReportNumber": {
       "description": "Indicates milestone the  data is associated with. Currently only required for projects funded by NTAP, GFF, and NFRI. For GFF studies, this is the \u2018progress report\u2019 timeline. Example: if submitting data for the 6-month milestone report for NTAP, progressReportNumber=1.  Also if submitting data associated with first milestone, progressReportNumber =1",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "progressReportNumber"
     }
   },

@@ -12,7 +12,21 @@
         "Public Access"
       ],
       "title": "accessType",
-      "type": "string"
+      "type": "string",
+      "x-enum-metadata": {
+        "Controlled Access": {
+          "description": "Access is restricted and only available after fulfilling specific requirements, such as submitting a research statement or getting approval directly from the data owner through Synapse. Note that for datasets, if any component file is under controlled access, the entire dataset is considered to be under controlled access."
+        },
+        "Open Access": {
+          "description": "Access without any additional steps/requirements without even needing to be logged in to Synapse account."
+        },
+        "Private Access": {
+          "description": "Not accessible outside the project admins and study team -- check whether you are on an access team or contact the PI/admin of access team to request access."
+        },
+        "Public Access": {
+          "description": "Access without any additional steps/requirements as long as you are logged in to Synapse."
+        }
+      }
     },
     "ageGroup": {
       "description": "Age demographic groups represented in the dataset. Use to indicate which age groups are included in the data.",
@@ -25,24 +39,54 @@
           "Adult"
         ],
         "title": "HumanAgeGroupEnum",
-        "type": "string"
+        "type": "string",
+        "x-enum-metadata": {
+          "Infant": {
+            "description": "A child between 1 and 23 months of age.",
+            "meaning": "MESH:D007223"
+          },
+          "Child": {
+            "description": "A person 2 to 12 years of age.",
+            "meaning": "MESH:D002648"
+          },
+          "Adolescent": {
+            "description": "A person 13 to 18 years of age.",
+            "meaning": "MESH:D000293"
+          },
+          "Adult": {
+            "description": "A person having attained full growth or maturity. Adults are of 19 to 120 years of age.",
+            "meaning": "MESH:D000328"
+          }
+        }
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "ageGroup"
     },
     "alternateName": {
       "description": "An altername name that can be used for search and discovery improvement.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "alternateName"
     },
     "citation": {
       "description": "Academic articles that are recommended by the data provider to be cited in addition to the dataset doi itself.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "citation"
     },
     "conditionsOfAccess": {
       "description": "Additional requirements a user may need outside of Data Use Modifiers. This could include additional registration, updating profile information, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "conditionsOfAccess"
     },
     "contributor": {
@@ -50,7 +94,10 @@
       "items": {
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "contributor"
     },
     "countryOfOrigin": {
@@ -58,7 +105,10 @@
       "items": {
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "countryOfOrigin"
     },
     "creator": {
@@ -71,7 +121,10 @@
     },
     "croissant_file_s3_object": {
       "description": "Link to croissant file for dataset.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "croissant_file_s3_object"
     },
     "dataType": {
@@ -135,7 +188,223 @@
           "weight"
         ],
         "title": "Data",
-        "type": "string"
+        "type": "string",
+        "x-enum-metadata": {
+          "aggregated data": {
+            "description": "Summary or group-level data."
+          },
+          "aligned reads": {
+            "source": "https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads",
+            "description": "Aligned reads output from alignment workflows"
+          },
+          "annotated germline variants": {
+            "source": "https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_germline_variation",
+            "description": "Germline variants annotated with some annotation workflow"
+          },
+          "annotated somatic mutation": {
+            "source": "https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation",
+            "description": "Somatic variants annotated with some annotation workflow"
+          },
+          "audio transcript": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/audioTranscript",
+            "description": "Text transcript of an audio recording."
+          },
+          "behavioral data": {
+            "description": "Qualitative or quantitative behavioral measurements / observations about the action, reaction, or performance of an organism in response to external or internal stimuli. \nExamples: avoidance behavior, choice-making.\n"
+          },
+          "capsid sequence": {
+            "description": "Sequence of capsid protein regions (AAV9, AAVsc, etc.)",
+            "meaning": "EDAM:data_3494"
+          },
+          "cellular physiology": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/cellularPhysiology",
+            "description": "Data on the physiological parameter of a cell."
+          },
+          "characteristic": {
+            "description": "Broad data type for data that can encompass volume, weight, brightness, color, capacity, etc.",
+            "meaning": "NCIT:C25447"
+          },
+          "chromatin activity": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/chromatinActivity",
+            "description": "Data of chromatin activity, which allows access to condensed genomic DNA and potentially controls gene expression."
+          },
+          "clinical": {
+            "description": "Data containing clinical information, e.g. patient diagnosis, personal demographics, exposures, laboratory tests, family relationships.",
+            "meaning": "EFO:0030083"
+          },
+          "copy number variants": {
+            "source": "https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=copy_number_variation",
+            "description": "Copy number variants"
+          },
+          "count matrix": {
+            "description": "A table of unnormalized values representing summarised read counts per genomic region (e.g. gene, transcript, peak).",
+            "meaning": "EDAM:data_3917"
+          },
+          "data index": {
+            "description": "A data index is information used to help with retrieval of some other data, especially large-scale data that would benefit from such an index. Very common formats are .bai and .tbi.",
+            "meaning": "EDAM:data_0955"
+          },
+          "data sharing plan": {
+            "description": "A document containing the plan and documentation for data sharing, one component of overall data management.",
+            "meaning": "EDAM:data_4040"
+          },
+          "demographics": {
+            "description": "The statistical characterization of human populations or segments of human populations (e.g., characterization by age, sex, race, or income).",
+            "meaning": "NCIT:C16495"
+          },
+          "drug combination screen": {
+            "source": "https://www.ncbi.nlm.nih.gov/pubmed/29344898",
+            "description": "Information on drug sensitivity of more than one compound"
+          },
+          "drug screen": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/drugScreen",
+            "description": "Information on drug sensitivity and molecular markers of drug response"
+          },
+          "electrophysiology": {
+            "source": "https://bioportal.bioontology.org/ontologies/ERO/?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FERO_0000564&jump_to_nav=true",
+            "description": "Data generated from an electrophysiology assay, e.g: \n- Cell: Resting membrane potential, ion channel currents (patch clamp data)\n- Neurons: Action potentials, resting potential, synaptic potentials. \n- Heart: Electrocardiogram (ECG/EKG) waveforms, cardiac action potentials.\n- Muscle: Electromyogram (EMG) signals\n- Whole brain: Electroencephalogram (EEG)\n- Retina: Electroretinogram (ERG)\n"
+          },
+          "epidemiological data": {
+            "description": "Data that is used to describe the distribution of a disease or health-related characteristic within a population and to identify factors that affect that distribution."
+          },
+          "gene expression": {
+            "description": "Data of the levels and patterns of synthesis of gene products (proteins and functional RNA), including interpretation in functional terms of gene expression data.",
+            "meaning": "EDAM:data_2603"
+          },
+          "genomic features": {
+            "description": "Data of sequence feature (continuous extent of biological sequence) that is of genomic origin.",
+            "meaning": "GENO:0000481"
+          },
+          "genomic variants": {
+            "description": "Genomic alterations, including single nucleotide polymorphisms, short indels and structural variants. Use more specific term if possible, esp. if data is only of one specific subset.\n",
+            "meaning": "EDAM:data_3498"
+          },
+          "germline variants": {
+            "source": "https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation",
+            "description": "Called germline variants"
+          },
+          "image": {
+            "description": "Biological or biomedical data that has been rendered into an image.",
+            "meaning": "EDAM:data_2968"
+          },
+          "immunoassay": {
+            "description": "Laboratory test involving interaction of antigens with specific antibodies.",
+            "meaning": "NCIT:C16723"
+          },
+          "isoform expression": {
+            "source": "https://en.wikipedia.org/wiki/Protein_isoform",
+            "description": "Expression of protein isoforms formed from alternative splicings or other post-translational modifications of a single gene through RNA splicing mechanisms.",
+            "meaning": "NCIT:C184767"
+          },
+          "kinomics": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/kinomics",
+            "description": "Data studying protein kinase signaling/activity."
+          },
+          "mask image": {
+            "description": "Image used as the mask for an image processing operation, such as subtraction.",
+            "meaning": "DCM:121321"
+          },
+          "mass spectrometry data": {
+            "description": "Data from mass spectrometry measurement.",
+            "meaning": "EDAM:data_2536"
+          },
+          "metabolomics": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/metabolomics",
+            "description": "Data of metabolites, the chemical processes they are involved, and the chemical fingerprints of specific cellular processes in a whole cell, tissue, organ or organism."
+          },
+          "molecular property": {
+            "description": "Data on the physical (e.g. structural) or chemical properties of molecules, or parts of a molecule.",
+            "meaning": "EDAM:data_2087"
+          },
+          "morphology parameter": {
+            "description": "Experimentally determined parameter of the morphology of an organism, e.g. size & shape. General term representing data about **structure** and **form** of an organism or organism part.",
+            "meaning": "EDAM:data_3723"
+          },
+          "network": {
+            "description": "Network data represents connections between entities and are often in graphical format.",
+            "meaning": "EDAM:data_2600"
+          },
+          "normalized intensities": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/NormalizedIntensities",
+            "description": "Normalized intensity values from the instrument."
+          },
+          "nucleic acid sequence record": {
+            "description": "A nucleic acid sequence and associated metadata.",
+            "meaning": "EDAM:data_2887"
+          },
+          "over-representation data": {
+            "description": "A ranked list of categories (usually ontology concepts), each associated with a statistical metric of over-/under-representation within the studied data.",
+            "meaning": "EDAM:data_3753"
+          },
+          "particle characterization": {
+            "description": "Data providing information about entities such as composition, structure and defects.",
+            "meaning": "NCIT:C62317"
+          },
+          "pharmacokinetics": {
+            "description": "Data characterizing the process by which a drug is absorbed, distributed, metabolized, and eliminated by the body.",
+            "meaning": "NCIT:C49663"
+          },
+          "physiology parameter": {
+            "description": "Experimentally determined parameter of the physiology of an organism, e.g. metabolic rate. General term representing data about **function** and **process** of an organism or organism part.",
+            "meaning": "EDAM:data_3722"
+          },
+          "plot": {
+            "description": "Data that has been plotted as a graph of some type, or data representing such a graph.",
+            "meaning": "EDAM:data_2884"
+          },
+          "promoter sequence": {
+            "description": "Sequence data of promoter region (P0, flCAG, etc.)",
+            "meaning": "EDAM:data_3494"
+          },
+          "protein interaction data": {
+            "description": "Data concerning the interactions (predicted or known) within or between a protein, structural domain or part of a protein.  This includes intra- and inter-residue contacts and distances, as well as interactions with other proteins and non-protein entities such as nucleic acid, metal atoms, water, ions etc.\n",
+            "meaning": "EDAM:data_0906"
+          },
+          "protein interaction raw data": {
+            "description": "Protein-protein interaction data from for example yeast two-hybrid analysis, protein microarrays, immunoaffinity chromatography followed by mass spectrometry, phage display etc.",
+            "meaning": "EDAM:data_0905"
+          },
+          "proteomics": {
+            "description": "Protein and peptide identification, especially in the study of whole proteomes of organisms.",
+            "meaning": "EDAM:topic_0121"
+          },
+          "raw counts": {
+            "description": "The number or amount of something.",
+            "meaning": "NCIT:C25463"
+          },
+          "raw intensities": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/RawIntensities",
+            "description": "Raw intensity values from the instrument (including microarrays, plate reader assays, raw pixel intensities from imaging assay, mass spectrometry, etc.)."
+          },
+          "report": {
+            "description": "A human-readable collection of information including annotation on a biological entity or phenomena, computer-generated reports of analysis of primary data... as distinct from the primary data itself.",
+            "meaning": "EDAM:data_2048"
+          },
+          "somatic variants": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/SomaticVariants",
+            "description": "Called somatic variants"
+          },
+          "structural variants": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/StructuralVariantss",
+            "description": "Genomic variants data that covers deletions, duplications, CNVs, insertions, inversions, and translocations, which may be derived from specialized variant calling workflows."
+          },
+          "survey data": {
+            "description": "A data set that contains the outcome of a survey.",
+            "meaning": "OMIABIS:0000060"
+          },
+          "text data": {
+            "description": "Data that is represented as text, usually referring to \"unstructured data\".",
+            "meaning": "EDAM:data_2526"
+          },
+          "volume": {
+            "description": "Data of the three dimensional space occupied by an entity or the capacity of a space or container.",
+            "meaning": "NCIT:C25335"
+          },
+          "weight": {
+            "description": "The vertical force exerted by a mass as a result of gravity.",
+            "meaning": "NCIT:C25208"
+          }
+        }
       },
       "type": "array",
       "title": "dataType"
@@ -172,17 +441,26 @@
         "title": "DuoEnum",
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "dataUseModifiers"
     },
     "datePublished": {
       "description": "Date data were published/available on Synapse. This can be set automatically from other dates tracked in Synapse system so does not need to be manually added.",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "datePublished"
     },
     "description": {
       "description": "Blurb for the dataset; should be no more than 500 characters.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "description"
     },
     "diseaseFocus": {
@@ -207,12 +485,18 @@
     "doi": {
       "description": "The Digital Object Identifier (DOI) of the dataset (if one has been created), used for citation and persistent identification.",
       "pattern": "^10\\\\.\\\\d{4,9}/[-._;()/:A-Z0-9]+$",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "doi"
     },
     "externalRepositoryUri": {
       "description": "Reference to dataset in an external repository using CURIE-style format, e.g. zenodo:12345678.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "externalRepositoryUri"
     },
     "funder": {
@@ -243,12 +527,18 @@
         "title": "DataCatalogEnum",
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "includedInDataCatalog"
     },
     "individualCount": {
       "description": "Number of unique individuals included in the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown.",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "individualCount"
     },
     "keywords": {
@@ -256,7 +546,10 @@
       "items": {
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "keywords"
     },
     "license": {
@@ -310,7 +603,158 @@
         "UNKNOWN"
       ],
       "title": "license",
-      "type": "string"
+      "type": "string",
+      "x-enum-metadata": {
+        "CC BY-NC": {
+          "source": "https://creativecommons.org/licenses/by-nc/4.0/",
+          "description": "This license is one of the Creative Commons licenses and allows users to share and adapt the dataset if they give credit to the copyright holder and do not use the dataset for any commercial purposes."
+        },
+        "CC BY-NC 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc/4.0/"
+        },
+        "CC BY-NC 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc/3.0/"
+        },
+        "CC BY-NC 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by-nc/2.5/"
+        },
+        "CC BY-NC 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc/2.0/"
+        },
+        "CC BY-NC 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc/1.0/"
+        },
+        "CC BY-NC-ND": {
+          "source": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+          "description": "This license is one of the Creative Commons licenses and allows users to use only your unmodified dataset if they give credit to the copyright holder and do not share it for commercial purposes. Users cannot make any additions, transformations or changes to the dataset under this license."
+        },
+        "CC BY-NC-ND 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+        },
+        "CC BY-NC-ND 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-nd/3.0/"
+        },
+        "CC BY-NC-ND 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-nd/2.5/"
+        },
+        "CC BY-NC-ND 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-nd/2.0/"
+        },
+        "CC BY-NC-ND 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-nd/1.0/"
+        },
+        "CC BY-NC-SA": {
+          "source": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "description": "This license is one of the Creative Commons licenses and allows users to share the dataset only if they (1) give credit to the copyright holder, (2) do not use the dataset for any commercial purposes, and (3) distribute any additions, transformations or changes to the dataset under this same license."
+        },
+        "CC BY-NC-SA 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+        },
+        "CC BY-NC-SA 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-sa/3.0/"
+        },
+        "CC BY-NC-SA 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-sa/2.5/"
+        },
+        "CC BY-NC-SA 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-sa/2.0/"
+        },
+        "CC BY-NC-SA 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-sa/1.0/"
+        },
+        "CC BY-ND": {
+          "source": "https://creativecommons.org/licenses/by-nd/4.0/",
+          "description": "This license is one of the Creative Commons licenses and allows users to share the dataset if they give credit to copyright holder, but they cannot make any additions, transformations or changes to the dataset under this license."
+        },
+        "CC BY-ND 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nd/4.0/"
+        },
+        "CC BY-ND 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nd/3.0/"
+        },
+        "CC BY-ND 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by-nd/2.5/"
+        },
+        "CC BY-ND 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nd/2.0/"
+        },
+        "CC BY-ND 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nd/1.0/"
+        },
+        "CC BY-SA": {
+          "source": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "description": "This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformations or changes to the dataset under this same https://creativecommons.org/licenses/by/4.0/"
+        },
+        "CC BY-SA 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by-sa/4.0/"
+        },
+        "CC BY-SA 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by-sa/3.0/"
+        },
+        "CC BY-SA 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by-sa/2.5/"
+        },
+        "CC BY-SA 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by-sa/2.0/"
+        },
+        "CC BY-SA 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by-sa/1.0/"
+        },
+        "CC-0": {
+          "source": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "description": "A Creative Commons license and is like a public domain dedication. The copyright holder surrenders rights in a dataset using this license."
+        },
+        "CC0 1.0": {
+          "meaning": "https://creativecommons.org/publicdomain/zero/1.0/"
+        },
+        "CC-BY": {
+          "source": "https://creativecommons.org/licenses/by/4.0/",
+          "description": "This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset so long as they give credit to the copyright holder."
+        },
+        "CC-BY 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by/4.0/"
+        },
+        "CC-BY 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by/3.0/"
+        },
+        "CC-BY 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by/2.5/"
+        },
+        "CC-BY 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by/2.0/"
+        },
+        "CC-BY 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by/1.0/"
+        },
+        "ODC-BY": {
+          "source": "https://opendatacommons.org/licenses/by/",
+          "description": "This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder."
+        },
+        "ODC-BY 1.0": {
+          "meaning": "https://opendatacommons.org/licenses/by/1-0/"
+        },
+        "ODC-ODbL": {
+          "source": "https://opendatacommons.org/licenses/odbl/",
+          "description": "This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformation or changes to the dataset."
+        },
+        "ODC-ODbL 1.0": {
+          "meaning": "https://opendatacommons.org/licenses/odbl/1-0/"
+        },
+        "ODC-PDDL": {
+          "source": "https://opendatacommons.org/licenses/pddl/",
+          "description": "This license is one of the Open Data Commons licenses and is like a public domain dedication. The copyright holder surrenders rights in a dataset using this license."
+        },
+        "ODC-PDDL 1.0": {
+          "meaning": "https://opendatacommons.org/licenses/pddl/1-0/"
+        },
+        "Public Domain": {
+          "source": "https://creativecommons.org/public-domain/pdm/",
+          "description": "Technically not a license, the public domain mark relinquishes all rights to a dataset and dedicates the dataset to the public domain."
+        },
+        "UNKNOWN": {
+          "description": "The license for the dataset is not known."
+        }
+      }
     },
     "manifestation": {
       "description": "Refers to the phenotype(s) studied in the dataset. Omit if not applicable.",
@@ -340,7 +784,10 @@
         "title": "ManifestationEnum",
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "manifestation"
     },
     "measurementTechnique": {
@@ -553,7 +1000,10 @@
         ],
         "description": "Sequencing-based assays including RNA-seq, DNA-seq, and related methods"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "measurementTechnique"
     },
     "series": {
@@ -583,14 +1033,66 @@
           "Sus scrofa"
         ],
         "title": "SpeciesEnum",
-        "type": "string"
+        "type": "string",
+        "x-enum-metadata": {
+          "Danio rerio": {
+            "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=7955&lvl=3&lin=f&keep=1&srchmode=1&unlock",
+            "description": "Danio rerio with taxonomy ID: 7955 and Genbank common name: zebrafish"
+          },
+          "Drosophila melanogaster": {
+            "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=7227&lvl=3&p=has_linkout&p=blast_url&p=genome_blast&p=mapview&lin=f&keep=1&srchmode=1&unlock",
+            "description": "Drosophila melanogaster with taxonomy ID: 7227 and Genbank common name: fruit fly"
+          },
+          "Gallus gallus": {
+            "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9031",
+            "description": "The common domestic fowl, Chicken."
+          },
+          "Homo sapiens": {
+            "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9606&lvl=3&lin=f&keep=1&srchmode=1&unlock",
+            "description": "Homo sapiens with taxonomy ID: 9606 and Genbank common name: human"
+          },
+          "Mus musculus": {
+            "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=10090&lvl=3&lin=f&keep=1&srchmode=1&unlock",
+            "description": "Mus musculus with taxonomy ID: 10090 and Genbank common name: house mouse"
+          },
+          "Mus musculus (humanized)": {
+            "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=10090&lvl=3&lin=f&keep=1&srchmode=1&unlock",
+            "description": "Mus musculus with taxonomy ID: 10090 and Genbank common name: house mouse"
+          },
+          "Oryctolagus cuniculus": {
+            "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9986&lvl=3&lin=f&keep=1&srchmode=1&unlock",
+            "description": "Oryctolagus cuniculus with taxonomy ID: 9986 and Genbank common name: rabbit"
+          },
+          "Pan troglodytes": {
+            "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9598&lvl=3&lin=f&keep=1&srchmode=1&unlock",
+            "description": "Pan troglodytes with taxonomy ID: 9598 and Genbank common name: chimpanzee"
+          },
+          "Rattus norvegicus": {
+            "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=10116&lvl=3&lin=f&keep=1&srchmode=1&unlock",
+            "description": "Rattus with taxonomy ID:10116 and Genbank common name: Norway rat"
+          },
+          "Rhesus macaque": {
+            "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9544&lvl=3&p=has_linkout&p=blast_url&p=genome_blast&p=mapview&lin=f&keep=1&srchmode=1&unlock",
+            "description": "Macaca mulatta with taxonomy ID: 9544 and Genbank common name: Rhesus monkey"
+          },
+          "Sus scrofa": {
+            "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9823",
+            "description": "Sus scrofa with taxonomy ID: 9823 and Genbank common name: pig"
+          }
+        }
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "species"
     },
     "specimenCount": {
       "description": "Number of unique specimens included in the dataset. Omit if not applicable/unknown.",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "specimenCount"
     },
     "studyId": {
@@ -603,7 +1105,10 @@
       "items": {
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "subject"
     },
     "title": {
@@ -615,12 +1120,18 @@
       "items": {
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "visualizeDataOn"
     },
     "yearProcessed": {
       "description": "Year data were processed. Only for processed data types and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "yearProcessed"
     }
   },

@@ -12,19 +12,67 @@
       "title": "individualID"
     },
     "sex": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "Female",
+            "Male"
+          ],
+          "title": "SexEnum",
+          "type": "string",
+          "x-enum-metadata": {
+            "Female": {
+              "description": "A person who belongs to the sex that normally produces ova. The term is used to indicate biological sex distinctions, or cultural gender role distinctions, or both.",
+              "meaning": "NCIT:C16576"
+            },
+            "Male": {
+              "description": "A person who belongs to the sex that normally produces sperm. The term is used to indicate biological sex distinctions, cultural gender role distinctions, or both.",
+              "meaning": "NCIT:C20197"
+            }
+          }
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string",
+          "x-enum-metadata": {
+            "Unknown": {
+              "description": "Not known, observed, recorded; or reported as unknown by the data contributor.",
+              "meaning": "NCIT:C17998"
+            }
+          }
+        },
+        {
+          "description": "",
+          "enum": [
+            "Not Applicable"
+          ],
+          "title": "NotApplicableEnum",
+          "type": "string",
+          "x-enum-metadata": {
+            "Not Applicable": {
+              "description": "Not applicable in this context"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other.",
       "type": "string",
-      "enum": [
-        "Female",
-        "Male",
-        "Unknown",
-        "Not Applicable"
-      ],
       "title": "sex"
     },
     "age": {
       "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
-      "type": "number",
+      "type": [
+        "number",
+        "null"
+      ],
       "title": "age"
     },
     "ageUnit": {
@@ -39,7 +87,30 @@
         "years"
       ],
       "title": "ageUnit",
-      "type": "string"
+      "type": "string",
+      "x-enum-metadata": {
+        "days": {
+          "meaning": "UO:0000033"
+        },
+        "hours": {
+          "meaning": "UO:0000032"
+        },
+        "minutes": {
+          "meaning": "UO:0000031"
+        },
+        "months": {
+          "meaning": "UO:0000035"
+        },
+        "seconds": {
+          "meaning": "UO:0000010"
+        },
+        "weeks": {
+          "meaning": "UO:0000034"
+        },
+        "years": {
+          "meaning": "UO:0000036"
+        }
+      }
     },
     "diagnosis": {
       "description": "",
@@ -62,7 +133,57 @@
         "Juvenile myelomonocytic leukemia"
       ],
       "title": "diagnosis",
-      "type": "string"
+      "type": "string",
+      "x-enum-metadata": {
+        "22q-related schwannomatosis": {
+          "description": "A schwannomatosis that causes a predisposition to develop multiple schwannoma. It is diagnosed when an individual does not meet criteria for NF2-related schwannomatosis, SMARCB1-related schwannomatosis, or LTZR1-related schwannomatosis and both of the following molecular features exist: a loss of heterozygosity (LOH) of the same chromosome 22q markers in two anatomically distinct tumors or hybrid nerve sheath tumors and a different NF2 pathogenic variant in each tumor which cannot be detected in unaffected tissue.\n",
+          "meaning": "http://purl.obolibrary.org/obo/MONDO_1030016"
+        },
+        "LZTR1-related schwannomatosis": {
+          "meaning": "http://purl.obolibrary.org/obo/MONDO_0014299"
+        },
+        "NF2-related schwannomatosis": {
+          "description": "A tumor-prone disorder characterized by the development of multiple schwannomas and meningiomas.",
+          "meaning": "http://purl.obolibrary.org/obo/MONDO_0007039"
+        },
+        "Neurofibromatosis type 1": {
+          "description": "(NF1) - A disease characterized by patches of skin pigmentation (cafe-au-lait spots), Lisch nodules of the iris, tumors in the peripheral nervous system and fibromatous skin tumors.  Individuals with the disorder have increased susceptibility to the development of benign and malignant tumors.\n"
+        },
+        "Noonan Syndrome": {
+          "source": "http://www.orpha.net/ORDO/Orphanet_648",
+          "description": "A rare, highly variable, multisystemic disorder mainly characterized by short stature, distinctive facial features, congenital heart defects, cardiomyopathy and an increased risk to develop tumors in childhood."
+        },
+        "SMARCB1-related schwannomatosis": {
+          "meaning": "http://purl.obolibrary.org/obo/MONDO_0024517"
+        },
+        "Schwannomatosis": {
+          "description": "A rare genetic disorder characterized by the presence of multiple schwannomas.",
+          "meaning": "NCIT:C6557"
+        },
+        "Schwannomatosis-NEC": {
+          "description": "Schwannomatosis, not elsewhere classified. Used for cases that do not fit into other established diagnostic categories."
+        },
+        "Schwannomatosis-NOS": {
+          "description": "Schwannomatosis, not otherwise specified. Used when the specific genetic cause or subtype cannot be determined or is not available."
+        },
+        "Sporadic Schwannoma": {
+          "description": "Sporadic schwannomas and neurofibromas are tumors that arise from the nerve sheaths of cranial nerves, nerve roots, spinal nerves, and peripheral nerves.  Most schwannomas originate from the eighth cranial nerve, whereas neurofibromas more commonly arise along the spinal nerve roots.\n"
+        },
+        "Vestibular Schwannoma": {
+          "meaning": "NCIT:C3276"
+        },
+        "atypical neurofibroma": {
+          "meaning": "MONDO:0003306"
+        },
+        "High Grade Malignant Peripheral Nerve Sheath Tumor": {
+          "description": "A malignant peripheral nerve sheath tumor that is high-grade.",
+          "meaning": "NCIT:C9030"
+        },
+        "Juvenile myelomonocytic leukemia": {
+          "description": "A rare myeloproliferative/myelodysplastic neoplasm of early childhood characterized by overproduction of myelomonocytic cells.",
+          "meaning": "OMIM:607785"
+        }
+      }
     },
     "diagnosisAgeGroup": {
       "description": "Human age demographic groups based on Age Ontology, which is a refinement of MeSH age classifications for classification and harmonization purposes.",
@@ -73,7 +194,25 @@
         "Adult"
       ],
       "title": "diagnosisAgeGroup",
-      "type": "string"
+      "type": "string",
+      "x-enum-metadata": {
+        "Infant": {
+          "description": "A child between 1 and 23 months of age.",
+          "meaning": "MESH:D007223"
+        },
+        "Child": {
+          "description": "A person 2 to 12 years of age.",
+          "meaning": "MESH:D002648"
+        },
+        "Adolescent": {
+          "description": "A person 13 to 18 years of age.",
+          "meaning": "MESH:D000293"
+        },
+        "Adult": {
+          "description": "A person having attained full growth or maturity. Adults are of 19 to 120 years of age.",
+          "meaning": "MESH:D000328"
+        }
+      }
     },
     "inheritance": {
       "description": "",
@@ -96,27 +235,103 @@
       "type": "string"
     },
     "nf1Genotype": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "+/+",
+            "+/-",
+            "-/-",
+            "Unknown"
+          ],
+          "title": "Genotype",
+          "type": "string",
+          "x-enum-metadata": {
+            "+/+": {
+              "description": "Homozygous wildtype"
+            },
+            "+/-": {
+              "description": "Heterozygous deletion or mutation"
+            },
+            "-/-": {
+              "description": "Homozygous deletion or mutation."
+            },
+            "Unknown": {
+              "description": "Not known, observed, recorded; or reported as unknown by the data contributor.",
+              "meaning": "NCIT:C17998"
+            }
+          }
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string",
+          "x-enum-metadata": {
+            "Unknown": {
+              "description": "Not known, observed, recorded; or reported as unknown by the data contributor.",
+              "meaning": "NCIT:C17998"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Genotype of NF1 gene in the biospecimen from which the data were derived, if known.",
       "type": "string",
-      "enum": [
-        "+/+",
-        "+/-",
-        "-/-",
-        "Unknown",
-        "Unknown"
-      ],
       "title": "nf1Genotype"
     },
     "nf2Genotype": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "+/+",
+            "+/-",
+            "-/-",
+            "Unknown"
+          ],
+          "title": "Genotype",
+          "type": "string",
+          "x-enum-metadata": {
+            "+/+": {
+              "description": "Homozygous wildtype"
+            },
+            "+/-": {
+              "description": "Heterozygous deletion or mutation"
+            },
+            "-/-": {
+              "description": "Homozygous deletion or mutation."
+            },
+            "Unknown": {
+              "description": "Not known, observed, recorded; or reported as unknown by the data contributor.",
+              "meaning": "NCIT:C17998"
+            }
+          }
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string",
+          "x-enum-metadata": {
+            "Unknown": {
+              "description": "Not known, observed, recorded; or reported as unknown by the data contributor.",
+              "meaning": "NCIT:C17998"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Genotype of NF2 gene in the biospecimen from which the data were derived, if known",
       "type": "string",
-      "enum": [
-        "+/+",
-        "+/-",
-        "-/-",
-        "Unknown",
-        "Unknown"
-      ],
       "title": "nf2Genotype"
     },
     "germlineMutationIndicator": {
@@ -144,7 +359,53 @@
         "Sus scrofa"
       ],
       "title": "species",
-      "type": "string"
+      "type": "string",
+      "x-enum-metadata": {
+        "Danio rerio": {
+          "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=7955&lvl=3&lin=f&keep=1&srchmode=1&unlock",
+          "description": "Danio rerio with taxonomy ID: 7955 and Genbank common name: zebrafish"
+        },
+        "Drosophila melanogaster": {
+          "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=7227&lvl=3&p=has_linkout&p=blast_url&p=genome_blast&p=mapview&lin=f&keep=1&srchmode=1&unlock",
+          "description": "Drosophila melanogaster with taxonomy ID: 7227 and Genbank common name: fruit fly"
+        },
+        "Gallus gallus": {
+          "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9031",
+          "description": "The common domestic fowl, Chicken."
+        },
+        "Homo sapiens": {
+          "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9606&lvl=3&lin=f&keep=1&srchmode=1&unlock",
+          "description": "Homo sapiens with taxonomy ID: 9606 and Genbank common name: human"
+        },
+        "Mus musculus": {
+          "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=10090&lvl=3&lin=f&keep=1&srchmode=1&unlock",
+          "description": "Mus musculus with taxonomy ID: 10090 and Genbank common name: house mouse"
+        },
+        "Mus musculus (humanized)": {
+          "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=10090&lvl=3&lin=f&keep=1&srchmode=1&unlock",
+          "description": "Mus musculus with taxonomy ID: 10090 and Genbank common name: house mouse"
+        },
+        "Oryctolagus cuniculus": {
+          "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9986&lvl=3&lin=f&keep=1&srchmode=1&unlock",
+          "description": "Oryctolagus cuniculus with taxonomy ID: 9986 and Genbank common name: rabbit"
+        },
+        "Pan troglodytes": {
+          "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9598&lvl=3&lin=f&keep=1&srchmode=1&unlock",
+          "description": "Pan troglodytes with taxonomy ID: 9598 and Genbank common name: chimpanzee"
+        },
+        "Rattus norvegicus": {
+          "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=10116&lvl=3&lin=f&keep=1&srchmode=1&unlock",
+          "description": "Rattus with taxonomy ID:10116 and Genbank common name: Norway rat"
+        },
+        "Rhesus macaque": {
+          "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9544&lvl=3&p=has_linkout&p=blast_url&p=genome_blast&p=mapview&lin=f&keep=1&srchmode=1&unlock",
+          "description": "Macaca mulatta with taxonomy ID: 9544 and Genbank common name: Rhesus monkey"
+        },
+        "Sus scrofa": {
+          "source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=9823",
+          "description": "Sus scrofa with taxonomy ID: 9823 and Genbank common name: pig"
+        }
+      }
     },
     "vitalStatus": {
       "description": "",
