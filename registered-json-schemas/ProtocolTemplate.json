@@ -445,23 +445,5 @@
     "resourceType"
   ],
   "title": "ProtocolTemplate",
-  "type": "object",
-  "allOf": [
-    {
-      "if": {
-        "properties": {
-          "concreteType": {
-            "const": "org.sagebionetworks.repo.model.Folder"
-          }
-        }
-      },
-      "then": {
-        "properties": {
-          "contentType": {
-            "const": "dataset"
-          }
-        }
-      }
-    }
-  ]
+  "type": "object"
 }
