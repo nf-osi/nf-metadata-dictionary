@@ -216,6 +216,11 @@ enums:
         meaning: EDAM:data_3494
         notes:
         - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
+      protocol:
+        description: A human-readable collection of information about how a scientific experiment or analysis was carried out that results in a specific set of data or results used for further analysis or to test a specific hypothesis.
+        meaning: EDAM:data_2531
+        notes:
+        - Equivalent to a scientific protocol document describing methodology.
       protein interaction data:
         aliases:
         - Protein interaction record
@@ -323,8 +328,10 @@ enums:
   DataGranularityEnum:
     permissible_values:
       individual-level:
-        description: Data captured at individual-level scope of observation.
+        description: Data captured at individual-level scope of observation (one row per individual).
       specimen-level:
         description: Data captured at specimen or sample-level scope of observation.
       aggregate-level:
-        description: Data captured at an aggregated scope (across multiple individuals or specimens).
+        description: Data captured at an aggregated scope (summary across multiple specimens or samples within a study).
+      population-level:
+        description: Data captured at population or cohort scope, summarizing multiple individuals across a defined population.
