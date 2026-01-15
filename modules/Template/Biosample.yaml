@@ -3,7 +3,13 @@ classes:
     annotations:
       required: false
       requiresComponent: ''
-    description: 'Template for non-human individual-level data. For xenografts, individualID references the cell line donor. Use sex/age/species for the individual animal. Use modelSystemName for the animal model genetic background, with modelSpecies/modelSex/modelAge for the model host animal.'
+      templateFor:
+        dataType:
+        - clinical
+    description: 'Template for non-human individual-level data. For xenografts, individualID
+      references the cell line donor. Use sex/age/species for the individual animal.
+      Use modelSystemName for the animal model genetic background, with modelSpecies/modelSex/modelAge
+      for the model host animal.'
     slots:
     - individualID
     - sex
@@ -26,7 +32,12 @@ classes:
     annotations:
       required: false
       requiresComponent: ''
-    description: 'Specimen-level data, whether from human or animal. For cell line specimens, individualID references the cell line. For xenografts, also specify modelSystemName and model attributes.'
+      templateFor:
+        dataType:
+        - characteristic
+    description: 'Specimen-level data, whether from human or animal. For cell line
+      specimens, individualID references the cell line. For xenografts, also specify
+      modelSystemName and model attributes.'
     slots:
     - individualID
     - parentSpecimenID
@@ -44,13 +55,22 @@ classes:
     annotations:
       required: false
       requiresComponent: ''
-    description: 'Data of biosamples from human patients. Adapted from Table 2 of http://nrs.harvard.edu/urn-3:HUL.InstRepos:32725809. This template should be used when biosamples are from NF patients to provides a more valuable characterization and make additional gene-phenotype insights possible.
+      templateFor:
+        dataType:
+        - clinical
+        - demographics
+    description: 'Data of biosamples from human patients. Adapted from Table 2 of
+      http://nrs.harvard.edu/urn-3:HUL.InstRepos:32725809. This template should be
+      used when biosamples are from NF patients to provides a more valuable characterization
+      and make additional gene-phenotype insights possible.
 
       '
     notes:
     - Instead of collecting birth month/year, age is collected.
-    - What has been required is still required, while all new recommendations are optional.
-    - Include attributes used for the portal but not in recommendations (nf1Genotype, nf1Genotype, species).
+    - What has been required is still required, while all new recommendations are
+      optional.
+    - Include attributes used for the portal but not in recommendations (nf1Genotype,
+      nf1Genotype, species).
     slots:
     - individualID
     - sex

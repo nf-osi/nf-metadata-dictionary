@@ -1,10 +1,12 @@
 classes:
   FileBasedTemplate:
     abstract: true
-    description: 'Abstract template for metadata on file-based resources, i.e. data artifacts stored as files.'
+    description: 'Abstract template for metadata on file-based resources, i.e. data
+      artifacts stored as files.'
     is_a: Template
     notes:
-    - FileBasedTemplate and RecordBasedTemplate are not technically mutually exclusive; some resources may have both file and record representations.
+    - FileBasedTemplate and RecordBasedTemplate are not technically mutually exclusive;
+      some resources may have both file and record representations.
     slots:
     - Component
     - Filename
@@ -13,10 +15,12 @@ classes:
 
   RecordBasedTemplate:
     abstract: true
-    description: 'Abstract template for metadata on record-based resources, i.e. structured records in a database or registry rather than file artifacts.'
+    description: 'Abstract template for metadata on record-based resources, i.e. structured
+      records in a database or registry rather than file artifacts.'
     is_a: Template
     notes:
-    - FileBasedTemplate and RecordBasedTemplate are not technically mutually exclusive; some resources may have both file and record representations.
+    - FileBasedTemplate and RecordBasedTemplate are not technically mutually exclusive;
+      some resources may have both file and record representations.
 
   BehavioralAssayTemplate:
     annotations:
@@ -32,7 +36,12 @@ classes:
         - actigraphy
       required: false
       requiresComponent: ''
-    description: Template for behavioral assay data from model organisms measuring behaviors such as feeding, learning, memory, motor coordination, and activity patterns.
+      templateFor:
+        dataType:
+        - behavioral data
+    description: Template for behavioral assay data from model organisms measuring
+      behaviors such as feeding, learning, memory, motor coordination, and activity
+      patterns.
     is_a: BiologicalAssayDataTemplate
     slots:
     - modelSystemName
@@ -80,7 +89,8 @@ classes:
         slot_conditions:
           genePerturbationType:
             value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+    - description: If genePerturbed is provided, genePerturbationTechnology must be
+        provided
       preconditions:
         slot_conditions:
           genePerturbed:
@@ -91,7 +101,12 @@ classes:
             value_presence: PRESENT
   BiologicalAssayDataTemplate:
     abstract: true
-    description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. Donor/individual attributes (species, sex, age, diagnosis) describe the original donor (e.g., human patient tumor). For cell lines, individualID references syn51730943. Model attributes (modelSpecies, modelSex, modelAge) describe any animal model host used. antibodyID and geneticReagentID reference treatments/reagents.
+    description: 'A template defining basic metadata on deposited data artifacts (i.e.
+      files) from experimental assays involving biosamples. Donor/individual attributes
+      (species, sex, age, diagnosis) describe the original donor (e.g., human patient
+      tumor). For cell lines, individualID references syn51730943. Model attributes
+      (modelSpecies, modelSex, modelAge) describe any animal model host used. antibodyID
+      and geneticReagentID reference treatments/reagents.
 
       '
     is_a: FileBasedTemplate
@@ -150,7 +165,11 @@ classes:
         - T cell receptor repertoire sequencing
       required: false
       requiresComponent: ''
-    description: General template for raw (level 1) RNA/DNA data, i.e. sequence data from a sequencing assay.
+      templateFor:
+        dataType:
+        - nucleic acid sequence record
+    description: General template for raw (level 1) RNA/DNA data, i.e. sequence data
+      from a sequencing assay.
     is_a: GeneticsAssayTemplate
     slot_usage:
       assay:
@@ -177,7 +196,11 @@ classes:
         - ChIP-seq
       required: false
       requiresComponent: ''
-    description: Template for describing raw data from ChIP-Seq assays, typically used to identify DNA-protein interactions.
+      templateFor:
+        dataType:
+        - chromatin activity
+    description: Template for describing raw data from ChIP-Seq assays, typically
+      used to identify DNA-protein interactions.
     is_a: EpigenomicsAssayTemplate
     slots:
     - antibodyID
@@ -208,11 +231,13 @@ classes:
         - Von Frey test
         - Child Behavior Checklist for Ages 1.5-5
         - Child Behavior Checklist for Ages 6-18
-        dataType:
-        - clinical
       required: false
       requiresComponent: ''
-    description: 'General template for typically tabular **individual-level** data. This can include repeated measures and a drug treatment context.'
+      templateFor:
+        dataType:
+        - clinical
+    description: 'General template for typically tabular **individual-level** data.
+      This can include repeated measures and a drug treatment context.'
     is_a: BiologicalAssayDataTemplate
     slots:
     - experimentalFactor
@@ -253,6 +278,9 @@ classes:
         - multi-electrode array
         - pattern electroretinogram
         - whole-cell patch clamp
+      templateFor:
+        dataType:
+        - electrophysiology
     description: Template for raw electrophysiology data (electrical recordings).
     is_a: BiologicalAssayDataTemplate
     slots:
@@ -281,7 +309,8 @@ classes:
           timepointUnit:
             value_presence: PRESENT
   EpidemiologyDataTemplate:
-    description: For aggregated data from defined populations or cohorts, used in/derived from epidemiology studies.
+    description: For aggregated data from defined populations or cohorts, used in/derived
+      from epidemiology studies.
     is_a: FileBasedTemplate
     slots:
     - dataType
@@ -289,14 +318,21 @@ classes:
     - epidemiologyMetric
     slot_usage:
       dataType:
-        ifabsent: string(epidemiology)
+        ifabsent: string(epidemiological data)
+    annotations:
+      templateFor:
+        dataType:
+        - epidemiological data
   EpigeneticsAssayTemplate:
     annotations:
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - chromatin activity
     description: Alias for EpigenomicsAssayTemplate for backwards-compatibility.
     is_a: EpigenomicsAssayTemplate
-    slots: null
+    slots:
   EpigenomicsAssayTemplate:
     annotations:
       match:
@@ -311,9 +347,13 @@ classes:
         - oxBS-seq
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - chromatin activity
     close_mappings:
     - htan:BulkMethylation-seqLevel1
-    description: Template for describing raw data from epigenetics sequencing assays such as bisulfite sequencing.
+    description: Template for describing raw data from epigenetics sequencing assays
+      such as bisulfite sequencing.
     is_a: BulkSequencingAssayTemplate
     slots:
     - bisulfiteConversionKitID
@@ -335,6 +375,9 @@ classes:
         - flow cytometry
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - immunoassay
     close_mappings:
     - https://www.immport.org/shared/dataModelDocumentation?table=fcs_analyzed_result
     description: Template for flow cytometry assay
@@ -370,7 +413,11 @@ classes:
         - Matrigel-based tumorigenesis assay
       required: false
       requiresComponent: ''
-    description: 'General template for data in tabular form that aggregates tissue-level or cellular-level data.
+      templateFor:
+        dataType:
+        - physiology parameter
+    description: 'General template for data in tabular form that aggregates tissue-level
+      or cellular-level data.
 
       '
     is_a: BiologicalAssayDataTemplate
@@ -418,7 +465,8 @@ classes:
         slot_conditions:
           genePerturbationType:
             value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+    - description: If genePerturbed is provided, genePerturbationTechnology must be
+        provided
       preconditions:
         slot_conditions:
           genePerturbed:
@@ -450,7 +498,11 @@ classes:
     annotations:
       required: false
       requiresComponent: ''
-    description: 'Template for relatively raw data of RNA/DNA structure and expression.  This is an abstract template encapsulating data from low-throughput to high-throughput assays,  sequencing-based or non-sequencing based (e.g. microarrays, optical genome mapping).  In practice, data are more specifically typed and matched to one of the templates below.
+    description: 'Template for relatively raw data of RNA/DNA structure and expression.  This
+      is an abstract template encapsulating data from low-throughput to high-throughput
+      assays,  sequencing-based or non-sequencing based (e.g. microarrays, optical
+      genome mapping).  In practice, data are more specifically typed and matched
+      to one of the templates below.
 
       '
     is_a: BiologicalAssayDataTemplate
@@ -484,7 +536,11 @@ classes:
         - NanoString nCounter Analysis System
       required: false
       requiresComponent: ''
-    description: A template for describing raw data from array-based genomics/epigenomics, e.g. CEL files.
+      templateFor:
+        dataType:
+        - genomic features
+    description: A template for describing raw data from array-based genomics/epigenomics,
+      e.g. CEL files.
     is_a: GeneticsAssayTemplate
     slots:
     - platform
@@ -500,7 +556,11 @@ classes:
     annotations:
       required: false
       requiresComponent: ''
-    description: Alias to BulkSequencingAssayTemplate, use for sequence data on a large scale when there is no template available that is more specific.
+      templateFor:
+        dataType:
+        - nucleic acid sequence record
+    description: Alias to BulkSequencingAssayTemplate, use for sequence data on a
+      large scale when there is no template available that is more specific.
     is_a: BulkSequencingAssayTemplate
     notes:
     - It's possible that not all raw genomics data equates to sequencing output.
@@ -519,6 +579,9 @@ classes:
     annotations:
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - nucleic acid sequence record
     description: Genomics assay template but with additional experiment data.
     is_a: GenomicsAssayTemplate
     slots:
@@ -548,7 +611,8 @@ classes:
         slot_conditions:
           genePerturbationType:
             value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+    - description: If genePerturbed is provided, genePerturbationTechnology must be
+        provided
       preconditions:
         slot_conditions:
           genePerturbed:
@@ -560,18 +624,22 @@ classes:
   ImagingAssayTemplate:
     annotations:
       match:
-      - 3D imaging
-      - high content screen
-      - high frequency ultrasound
-      - in vivo bioluminescence
-      - gel filtration chromatography
-      - laser speckle imaging
-      - photograph
-      - positron emission tomography
-      - spatial frequency domain imaging
-      - western blot
+        assay:
+        - 3D imaging
+        - high content screen
+        - high frequency ultrasound
+        - in vivo bioluminescence
+        - gel filtration chromatography
+        - laser speckle imaging
+        - photograph
+        - positron emission tomography
+        - spatial frequency domain imaging
+        - western blot
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - image
     description: General template for describing imaging data.
     is_a: BiologicalAssayDataTemplate
     slot_usage:
@@ -598,7 +666,11 @@ classes:
         - immunohistochemistry
       required: false
       requiresComponent: ''
-    description: Template for describing immunofluorescence or immunohistochemistry images.
+      templateFor:
+        dataType:
+        - image
+    description: Template for describing immunofluorescence or immunohistochemistry
+      images.
     is_a: MicroscopyAssayTemplate
     slots:
     - antibodyID
@@ -619,7 +691,11 @@ classes:
         - static light scattering
       required: false
       requiresComponent: ''
-    description: Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.
+      templateFor:
+        dataType:
+        - particle characterization
+    description: Template for dynamic or static light scattering data adapted from
+      ISA-TAB-Nano specs.
     is_a: MaterialScienceAssayTemplate
     slots:
     - pH
@@ -634,7 +710,8 @@ classes:
       fileFormat:
         range: TabularFileFormatEnum
     rules:
-    - description: If concentrationNaCl is provided, concentrationNaClUnit must be provided
+    - description: If concentrationNaCl is provided, concentrationNaClUnit must be
+        provided
       preconditions:
         slot_conditions:
           concentrationNaCl:
@@ -651,6 +728,9 @@ classes:
         - functional MRI
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - image
     description: Template for describing MRI data.
     is_a: ImagingAssayTemplate
     slots:
@@ -692,12 +772,17 @@ classes:
         - ultra high-performance liquid chromatography/tandem mass spectrometry
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - mass spectrometry data
+        - proteomics
     close_mappings:
     - htan:MassSpectrometryLevel1
     description: Template for raw mass spec-based proteomics data.
     is_a: ProteinAssayTemplate
     notes:
-    - Technically, mass spec does not have to be considered a biological assay, but we'll classify it as such when used with a biological sample.
+    - Technically, mass spec does not have to be considered a biological assay, but
+      we'll classify it as such when used with a biological sample.
     slots:
     - dataCollectionMode
     slot_usage:
@@ -716,6 +801,10 @@ classes:
         - differential scanning calorimetry
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - molecular property
+        - particle characterization
     description: General template for describing data for a materials science assay.
     is_a: NonBiologicalAssayDataTemplate
     slots:
@@ -727,7 +816,8 @@ classes:
     - concentrationNaCl
     - concentrationNaClUnit
     rules:
-    - description: If concentrationMaterial is provided, concentrationMaterialUnit must be provided
+    - description: If concentrationMaterial is provided, concentrationMaterialUnit
+        must be provided
       preconditions:
         slot_conditions:
           concentrationMaterial:
@@ -736,7 +826,8 @@ classes:
         slot_conditions:
           concentrationMaterialUnit:
             value_presence: PRESENT
-    - description: If concentrationNaCl is provided, concentrationNaClUnit must be provided
+    - description: If concentrationNaCl is provided, concentrationNaClUnit must be
+        provided
       preconditions:
         slot_conditions:
           concentrationNaCl:
@@ -752,6 +843,9 @@ classes:
         - methylation array
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - chromatin activity
     description: Template for raw data files (idat) from DNA methylation arrays.
     is_a: GenomicsArrayTemplate
     slots:
@@ -759,7 +853,8 @@ classes:
     - chipPosition
     - plateName
     - plateWell
-    source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=raw_methylation_array
+    source: 
+      https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=raw_methylation_array
     slot_usage:
       assay:
         range: SequencingAssayEnum
@@ -781,6 +876,9 @@ classes:
         - traction force microscopy
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - image
     close_mappings:
     - htan:ImagingLevel2
     description: Template for data from a microscopy data.
@@ -834,7 +932,9 @@ classes:
             value_presence: PRESENT
   NonBiologicalAssayDataTemplate:
     abstract: true
-    description: 'Describes data artifacts (i.e. files) from an experimental/physical-sciences assay  where input specimens are more at the level of synthesized molecules or inorganic materials.
+    description: 'Describes data artifacts (i.e. files) from an experimental/physical-sciences
+      assay  where input specimens are more at the level of synthesized molecules
+      or inorganic materials.
 
       '
     is_a: FileBasedTemplate
@@ -848,7 +948,11 @@ classes:
     annotations:
       required: false
       requiresComponent: ''
-    description: Raw genomics data from patient-derived xenograft (PDX) experiment, with additional PDX-relevant metadata.
+      templateFor:
+        dataType:
+        - nucleic acid sequence record
+    description: Raw genomics data from patient-derived xenograft (PDX) experiment,
+      with additional PDX-relevant metadata.
     is_a: GenomicsAssayTemplate
     slots:
     - transplantationType
@@ -875,7 +979,8 @@ classes:
         slot_conditions:
           timepointUnit:
             value_presence: PRESENT
-    - description: If transplantationType is provided, transplantationRecipientSpecies must be provided
+    - description: If transplantationType is provided, transplantationRecipientSpecies
+        must be provided
       preconditions:
         slot_conditions:
           transplantationType:
@@ -884,7 +989,8 @@ classes:
         slot_conditions:
           transplantationRecipientSpecies:
             value_presence: PRESENT
-    - description: If transplantationType is provided, transplantationRecipientTissue must be provided
+    - description: If transplantationType is provided, transplantationRecipientTissue
+        must be provided
       preconditions:
         slot_conditions:
           transplantationType:
@@ -904,6 +1010,9 @@ classes:
         - sandwich ELISA
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - pharmacokinetics
     description: Generic template for describing data from a pharmacokinetics assay.
     is_a: BiologicalAssayDataTemplate
     slots:
@@ -947,7 +1056,12 @@ classes:
         - sandwich ELISA
       required: false
       requiresComponent: ''
-    description: Generic template for describing data from a plate-based reporter assay.
+      templateFor:
+        dataType:
+        - drug screen
+        - drug combination screen
+    description: Generic template for describing data from a plate-based reporter
+      assay.
     is_a: BiologicalAssayDataTemplate
     slots:
     - parentSpecimenID
@@ -1009,15 +1123,18 @@ classes:
         - targeted exome sequencing
         - whole exome sequencing
         - whole genome sequencing
-        dataType:
-        - AlignedReads
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - aligned reads
     close_mappings:
     - htan:ScRNA-seqLevel2
     - htan:BulkRNA-seqLevel2
     - htan:BulkWESLevel2
-    description: "Template for describing aligned reads (e.g. BAM/CRAM files) from a sequencing assay. The QC meta are extracted from samtools stats when available and are the same metrics preferred by GDC. \n"
+    description: "Template for describing aligned reads (e.g. BAM/CRAM files) from
+      a sequencing assay. The QC meta are extracted from samtools stats when available
+      and are the same metrics preferred by GDC. \n"
     is_a: BiologicalAssayDataTemplate
     slots:
     - genomicReference
@@ -1073,14 +1190,16 @@ classes:
         - RNA array
         - RNA-seq
         - single-cell RNA-seq
-        dataType:
-        - geneExpression
-        - proteinExpression
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - gene expression
+        - proteomics
     close_mappings:
     - htan:BulkRNA-seqLevel3
-    description: Template for quantified gene/protein expression data that are still represented as one file per sample.
+    description: Template for quantified gene/protein expression data that are still
+      represented as one file per sample.
     is_a: BiologicalAssayDataTemplate
     slots:
     - expressionUnit
@@ -1103,17 +1222,20 @@ classes:
             value_presence: PRESENT
   ProcessedMergedDataTemplate:
     annotations:
-      match:
-        dataType:
-        - AnnotatedSomaticVariants
-        - AnnotatedGermlineVariants
-        - geneExpresssion
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - aggregated data
+        - gene expression
+        - genomic variants
     close_mappings:
     - https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aggregated_somatic_mutation
     - https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=gene_expression
-    description: 'Further processed data with multiple samples aggregated into one file. This may be also be known as level-4 data. Unlike level-2 and level-3 data, individual-level attributes such as age and sex are no longer surfaced on the data file directly.
+    description: 'Further processed data with multiple samples aggregated into one
+      file. This may be also be known as level-4 data. Unlike level-2 and level-3
+      data, individual-level attributes such as age and sex are no longer surfaced
+      on the data file directly.
 
       '
     is_a: FileBasedTemplate
@@ -1146,17 +1268,20 @@ classes:
         - whole exome sequencing
         - whole genome sequencing
         - TIDE
-        dataType:
-        - GermlineVariants
-        - AnnotatedGermlineVariants
-        - SomaticVariants
-        - AnnotatedSomaticVariants
-        - CopyNumberVariants
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - germline variants
+        - annotated germline variants
+        - somatic variants
+        - annotated somatic mutation
+        - copy number variants
+        - structural variants
     close_mappings:
     - htan:BulkWESLevel3
-    description: Template for describing either simple germline/somatic variant calls output data (VCF/MAF) as well as structural variants (e.g. CNVs).
+    description: Template for describing either simple germline/somatic variant calls
+      output data (VCF/MAF) as well as structural variants (e.g. CNVs).
     is_a: BiologicalAssayDataTemplate
     slots:
     - isFilteredReads
@@ -1186,6 +1311,10 @@ classes:
         - RPPA
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - proteomics
+        - immunoassay
     close_mappings:
     - htan:RPPALevel2
     description: Template for array- and immuno-based proteomics data.
@@ -1205,7 +1334,8 @@ classes:
     annotations:
       required: false
       requiresComponent: ''
-    description: Abstract template for data from some assay of protein structure and function. Data should be instantiated with more specific template.
+    description: Abstract template for data from some assay of protein structure and
+      function. Data should be instantiated with more specific template.
     is_a: BiologicalAssayDataTemplate
     slots:
     - parentSpecimenID
@@ -1224,9 +1354,13 @@ classes:
     annotations:
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - mass spectrometry data
+        - proteomics
     description: Alias to MassSpecAssayTemplate for backwards-compatibility.
     is_a: MassSpecAssayTemplate
-    slots: null
+    slots:
     slot_usage:
       assay:
         range: MassSpectrometryAssayEnum
@@ -1240,10 +1374,11 @@ classes:
         assay:
         - RNA-seq
         - lncRNA-seq
-        dataType:
-        - SequenceReads
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - gene expression
     close_mappings:
     - htan:BulkRNA-seqLevel1
     description: Template for describing raw data from (bulk) RNA-sequencing
@@ -1263,7 +1398,7 @@ classes:
       fileFormat:
         range: SequencingFileFormatEnum
       dataType:
-        ifabsent: string(sequence reads)
+        ifabsent: string(gene expression)
       isPrimaryCell:
         ifabsent: string(Yes)
     rules:
@@ -1276,7 +1411,8 @@ classes:
         slot_conditions:
           genePerturbationType:
             value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+    - description: If genePerturbed is provided, genePerturbationTechnology must be
+        provided
       preconditions:
         slot_conditions:
           genePerturbed:
@@ -1290,10 +1426,11 @@ classes:
       match:
         assay:
         - single-cell RNA-seq
-        dataType:
-        - geneExpression
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - gene expression
     description: Template for describing raw data from single-cell RNA-seq.
     is_a: ScSequencingAssayTemplate
     slots:
@@ -1320,7 +1457,8 @@ classes:
         slot_conditions:
           genePerturbationType:
             value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+    - description: If genePerturbed is provided, genePerturbationTechnology must be
+        provided
       preconditions:
         slot_conditions:
           genePerturbed:
@@ -1343,7 +1481,11 @@ classes:
         - T cell receptor repertoire sequencing
       required: false
       requiresComponent: ''
-    description: General template for raw RNA/DNA data, i.e. sequence data from a sequencing assay.
+      templateFor:
+        dataType:
+        - nucleic acid sequence record
+    description: General template for raw RNA/DNA data, i.e. sequence data from a
+      sequencing assay.
     is_a: GeneticsAssayTemplate
     slots:
     - cellType
@@ -1372,7 +1514,11 @@ classes:
     annotations:
       required: false
       requiresComponent: ''
-    description: Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF.
+      templateFor:
+        dataType:
+        - report
+    description: Metadata template for updating milestone report values in NF studies
+      -- currently a supported feature for NTAP and GFF.
     is_a: PartialTemplate
     slots:
     - Filename
@@ -1383,10 +1529,11 @@ classes:
       match:
         assay:
         - whole exome sequencing
-        dataType:
-        - SequenceReads
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - nucleic acid sequence record
     close_mappings:
     - htan:BulkWESLevel1
     description: Template for describing raw data from Whole Exome Sequencing (WES/WXS)
@@ -1401,19 +1548,20 @@ classes:
       fileFormat:
         range: SequencingFileFormatEnum
       dataType:
-        ifabsent: string(sequence reads)
+        ifabsent: string(nucleic acid sequence record)
   WGSTemplate:
     annotations:
       match:
         assay:
         - whole genome sequencing
-        dataType:
-        - SequenceReads
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - nucleic acid sequence record
     description: Template for describing raw data from Whole Genome Sequencing (WGS)
     is_a: BulkSequencingAssayTemplate
-    slots: null
+    slots:
     slot_usage:
       assay:
         range: SequencingAssayEnum
@@ -1422,7 +1570,7 @@ classes:
       fileFormat:
         range: SequencingFileFormatEnum
       dataType:
-        ifabsent: string(sequence reads)
+        ifabsent: string(nucleic acid sequence record)
   WorkflowReport:
     description: Template used for miscellaneous workflow reports and accessory files
     is_a: FileBasedTemplate
@@ -1447,3 +1595,7 @@ classes:
         slot_conditions:
           workflowLink:
             value_presence: PRESENT
+    annotations:
+      templateFor:
+        dataType:
+        - workflow metadata

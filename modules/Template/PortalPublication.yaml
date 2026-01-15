@@ -21,7 +21,10 @@ classes:
         required: false
         title: Manifestation
       publicationType:
-        description: 'Type of publication in relation to the linked study on the NF Portal. A primary publication is the main publication for the study and may describe data or resources generated from the study. A secondary publication references or describes reuse of resources for the linked study.
+        description: 'Type of publication in relation to the linked study on the NF
+          Portal. A primary publication is the main publication for the study and
+          may describe data or resources generated from the study. A secondary publication
+          references or describes reuse of resources for the linked study.
 
           '
         range: PublicationTypeEnum
@@ -35,8 +38,13 @@ classes:
         range: string
         required: true
         title: Linked Study Name
-    description: A slightly more specialized publication concept intended for the specific scope of the NF Portal.
+    description: A slightly more specialized publication concept intended for the
+      specific scope of the NF Portal.
     is_a: PublicationTemplate
+    annotations:
+      templateFor:
+        dataType:
+        - report
   PublicationTemplate:
     attributes:
       abstract:
@@ -76,6 +84,12 @@ classes:
         range: integer
         required: true
         title: Year
-    description: A generalized data model template for Publications to be hopefully used across dccs
+    description: A generalized data model template for Publications to be hopefully
+      used across dccs
     notes:
-    - This structure is based on a CSV file from MC2 annotations with customized fields as attributes.
+    - This structure is based on a CSV file from MC2 annotations with customized fields
+      as attributes.
+    annotations:
+      templateFor:
+        dataType:
+        - report
