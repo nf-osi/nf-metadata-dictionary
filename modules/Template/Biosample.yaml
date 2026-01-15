@@ -6,6 +6,7 @@ classes:
       templateFor:
         dataType:
         - clinical
+      dataGranularity: individual-level
     description: 'Template for non-human individual-level data. For xenografts, individualID
       references the cell line donor. Use sex/age/species for the individual animal.
       Use modelSystemName for the animal model genetic background, with modelSpecies/modelSex/modelAge
@@ -35,6 +36,7 @@ classes:
       templateFor:
         dataType:
         - characteristic
+      dataGranularity: specimen-level
     description: 'Specimen-level data, whether from human or animal. For cell line
       specimens, individualID references the cell line. For xenografts, also specify
       modelSystemName and model attributes.'
@@ -59,6 +61,7 @@ classes:
         dataType:
         - clinical
         - demographics
+      dataGranularity: individual-level
     description: 'Data of biosamples from human patients. Adapted from Table 2 of
       http://nrs.harvard.edu/urn-3:HUL.InstRepos:32725809. This template should be
       used when biosamples are from NF patients to provides a more valuable characterization
