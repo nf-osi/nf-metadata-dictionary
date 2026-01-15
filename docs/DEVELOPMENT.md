@@ -49,6 +49,8 @@ Validation is now handled directly by the **Synapse platform** using standard JS
 
 ## JSON Schema Integration with Synapse
 
+This section describes how JSON schema integrates with Synapse and what features are supported within Synapse.
+
 ### Schema Registration and Binding
 
 **Registration:** Schemas must be registered with Synapse before use.
@@ -117,6 +119,12 @@ Complex conditional rules are stored in `rules/` directory.
 </details>
 
 ---
+
+### Disabling editing of an attribute in JSON schema-based Grid
+
+Within the Synapse Grid, properties annotated in the JSON Schema with `"readOnly": true` will be disabled for editing by a user.
+
+Reference: [SWC-7491](https://sagebionetworks.jira.com/browse/SWC-7491?focusedCommentId=276013)
 
 ## Schema Generation & Management
 
