@@ -126,7 +126,482 @@
         "sif",
         "svg"
       ],
-      "title": "fileFormat"
+      "title": "fileFormat",
+      "x-enum-metadata": {
+        "bai": {
+          "description": "BAM indexing format",
+          "meaning": "EDAM:format_3327"
+        },
+        "bam": {
+          "description": "BAM format, the binary, BGZF-formatted compressed version of SAM format for alignment of nucleotide sequences (e.g. sequencing reads) to (a) reference sequence(s)",
+          "meaning": "EDAM:format_2572"
+        },
+        "bcf": {
+          "description": "BCF, the binary version of Variant Call Format (VCF) for sequence variation (indels, polymorphisms, structural variation)",
+          "meaning": "EDAM:format_3016"
+        },
+        "bed": {
+          "description": "Browser Extensible Data (BED) format of sequence annotation track, typically to be displayed in a genome browser",
+          "meaning": "EDAM:format_3003"
+        },
+        "bed broadPeak": {
+          "source": "http://genome.ucsc.edu/FAQ/FAQformat.html#format13",
+          "description": "This format is used to provide called regions of signal enrichment based on pooled, normalized (interpreted) data. It is a BED 6+3 format."
+        },
+        "bed gappedPeak": {
+          "source": "http://genome.ucsc.edu/FAQ/FAQformat.html#format14",
+          "description": "This format is used to provide called regions of signal enrichment based on pooled, normalized (interpreted) data where the regions may be spliced or incorporate gaps in the genomic sequence. It is a BED12+3 format."
+        },
+        "bed narrowPeak": {
+          "source": "http://genome.ucsc.edu/FAQ/FAQformat.html#format12",
+          "description": "This format is used to provide called peaks of signal enrichment based on pooled, normalized (interpreted) data. It is a BED6+4 format."
+        },
+        "bedgraph": {
+          "description": "Holds a tab-delimited chromosome /start /end / datavalue dataset. The bedGraph format allows display of continuous-valued data in track format. This display type is useful for probability scores and transcriptome data",
+          "meaning": "EDAM:format_3583"
+        },
+        "bgzip": {
+          "description": "Blocked GNU Zip format",
+          "meaning": "EDAM:format_3615"
+        },
+        "bigwig": {
+          "description": "bigWig format for large sequence annotation tracks that consist of a value for each sequence position",
+          "meaning": "EDAM:format_3006"
+        },
+        "cnn": {
+          "source": "https://cnvkit.readthedocs.io/en/stable/fileformats.html",
+          "description": "Copy number reference profile from CNVKit pipeline."
+        },
+        "cnr": {
+          "source": "https://cnvkit.readthedocs.io/en/stable/fileformats.html",
+          "description": "Copy number ratios from CNVKit pipeline, storing each bin's proportional weight or reliability."
+        },
+        "cns": {
+          "source": "https://cnvkit.readthedocs.io/en/stable/fileformats.html",
+          "description": "Segmented log2 ratios from CNVKit pipeline, these represent the most relevant output describing copy number variation."
+        },
+        "crai": {
+          "description": "A CRAI file is an index for a CRAM file, facilitating fast data retrieval."
+        },
+        "cram": {
+          "description": "A CRAM file is a compressed format for storing genomic sequence data.",
+          "meaning": "EDAM:format_3462"
+        },
+        "csi": {
+          "description": "A CSI file is a compressed sequence index used for efficiently accessing genomic data in large datasets."
+        },
+        "ctab": {
+          "source": "https://github.com/alyssafrazee/ballgown#ballgown-readable-expression-output",
+          "description": "Gene expression counts file and a specific format of .tsv commonly part of bioinformatics workflows (Stringtie and Ballgown)."
+        },
+        "dup": {
+          "source": "https://software.broadinstitute.org/gatk/documentation/tooldocs/4.0.4.0/picard_sam_markduplicates_MarkDuplicates.php",
+          "description": "output of the Picard MarkDuplicates tool."
+        },
+        "fasta": {
+          "description": "FASTA format is a text-based format for representing either nucleotide sequences or peptide sequences, in which nucleotides or amino acids are represented using single-letter codes",
+          "meaning": "EDAM:format_1929"
+        },
+        "fastq": {
+          "description": "FASTQ format is a text-based format for storing both a biological sequence (usually nucleotide sequence) and its corresponding quality scores. Both the sequence letter and quality score are each encoded with a single ASCII character for brevity",
+          "meaning": "EDAM:format_1930"
+        },
+        "flagstat": {
+          "description": "Output of samtools flagstat tool"
+        },
+        "gct": {
+          "description": "Tab-delimited text files of GenePattern that contain a column for each sample, a row for each gene, and an expression value for each gene in each sample",
+          "meaning": "EDAM:format_3709"
+        },
+        "gff3": {
+          "description": "Generic Feature Format version 3 (GFF3) of sequence features.",
+          "meaning": "EDAM:format_1975"
+        },
+        "gtf": {
+          "source": "https://en.wikipedia.org/wiki/Gene_transfer_format",
+          "description": "Gene transfer format (GTF) is a file format used to hold information about gene structure",
+          "meaning": "EDAM:format_2306"
+        },
+        "hic": {
+          "source": "https://github.com/theaidenlab/juicer/wiki/Data",
+          "description": "Hi-C contact matrix file"
+        },
+        "maf": {
+          "source": "https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format",
+          "description": "Mutation annotation format as outputted from GenomeNexus."
+        },
+        "mtx": {
+          "source": "https://math.nist.gov/MatrixMarket/formats.html#MMformat",
+          "description": "Matrix Market Exchange Format",
+          "meaning": "EDAM:format_3916"
+        },
+        "plink": {
+          "source": "https://www.cog-genomics.org/plink2/formats",
+          "description": "Any Plink file format (MAP/PED/BED/BIM/FAM)"
+        },
+        "recal": {
+          "source": "https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_variantrecalibration_VariantRecalibrator.php#--recal_file",
+          "description": ".recal file from GATK VQSR"
+        },
+        "sam": {
+          "description": "Sequence Alignment/Map (SAM) format for alignment of nucleotide sequences (e.g. sequencing reads) to (a) reference sequence(s)",
+          "meaning": "EDAM:format_2573"
+        },
+        "seg": {
+          "source": "https://software.broadinstitute.org/software/igv/SEG",
+          "description": "SEG file (segmented data; .seg or .cbs) is a tab-delimited text file that lists loci and associated numeric values"
+        },
+        "sf": {
+          "source": "https://salmon.readthedocs.io/en/latest/file_formats.html",
+          "description": "Salmon's main output is its quantification file. This file is a plain-text, tab-separated file with a single header line (which names all of the columns)."
+        },
+        "sra": {
+          "description": "SRA archive format (SRA) is the archive format used for input to the NCBI Sequence Read Archive.",
+          "meaning": "EDAM:format_3698"
+        },
+        "tagAlign": {
+          "source": "https://genome.ucsc.edu/FAQ/FAQformat.html#format15",
+          "description": "Tag Alignment provides genomic mapping of short sequence tags."
+        },
+        "tbi": {
+          "description": "A TBI file is an index for a TABIX-compressed genomic data file, enabling rapid region-based retrieval.",
+          "meaning": "NCIT:C184806"
+        },
+        "tranches": {
+          "source": "https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_variantrecalibration_VariantRecalibrator.php#--tranches_file",
+          "description": ".tranches file from GATK VQSR"
+        },
+        "vcf": {
+          "description": "Variant Call Format (VCF) for sequence variation (indels, polymorphisms, structural variation)",
+          "meaning": "EDAM:format_3016"
+        },
+        "wiggle": {
+          "description": "Wiggle format (WIG) of a sequence annotation track that consists of a value for each sequence position",
+          "meaning": "EDAM:format_3005"
+        },
+        "DICOM": {
+          "description": "A comprehensive set of standards for communications between medical imaging devices, including handling, storing and transmitting information in medical imaging. It includes a file format definition and a network communication protocol.",
+          "meaning": "EDAM:format_3548"
+        },
+        "NWB": {
+          "source": "https://www.nwb.org/",
+          "description": "Neurodata Without Borders (NWB) is a data standard for neurophysiology data, designed to store data including from intracellular and extracellular electrophysiology experiments, data from optical physiology experiments, and tracking and stimulus data."
+        },
+        "PAR": {
+          "source": "https://nipy.org/nibabel/reference/nibabel.parrec.html",
+          "description": "This is yet another MRI image format generated by Philips scanners. It is an ASCII header (PAR) plus a binary blob (REC)."
+        },
+        "REC": {
+          "source": "https://nipy.org/nibabel/reference/nibabel.parrec.html",
+          "description": "This is yet another MRI image format generated by Philips scanners. It is an ASCII header (PAR) plus a binary blob (REC)."
+        },
+        "aci": {
+          "source": "https://filext.com/file-extension/ACI",
+          "description": "Leica image archive format - UTF-8 encoded microscopy data format used by Leica Confocal Software systems."
+        },
+        "avi": {
+          "source": "https://en.wikipedia.org/wiki/Audio_Video_Interleave",
+          "description": "AVI files can contain both audio and video data in a file container that allows synchronous audio-with-video playback.",
+          "meaning": "EDAM:format_3990"
+        },
+        "bmp": {
+          "description": "Bitmap image format.",
+          "meaning": "EDAM:format_3592"
+        },
+        "czi": {
+          "source": "https://www.zeiss.com/microscopy/int/products/microscope-software/zen/czi.html",
+          "description": "Microscopy imaging file format that saves multidimensional images such as time lapse, Z-stacks, multiposition experiments and virtual slides, combined with relevant meta information"
+        },
+        "hdr": {
+          "source": "https://nifti.nimh.nih.gov/pub/dist/src/niftilib/nifti1.h",
+          "description": "MRI Header file, as in the NIFTI-1 Analyze 7.5 format"
+        },
+        "img": {
+          "source": "https://nifti.nimh.nih.gov/pub/dist/src/niftilib/nifti1.h",
+          "description": "MRI Data file, as in the NIFTI-1 Analyze 7.5 format"
+        },
+        "jpg": {
+          "description": "Joint Picture Group file format for lossy graphics file.",
+          "meaning": "EDAM:format_3579"
+        },
+        "lif": {
+          "source": "https://docs.openmicroscopy.org/bio-formats/5.8.2/formats/leica-lif.html",
+          "description": "Leica Image Format (LIF) images are JPEG images with metadata that may contain depth, bokeh data, and one or more images (e.g. stereo images) known as \"views\"."
+        },
+        "mov": {
+          "source": "https://synapse.org",
+          "description": "A video file format with the .mov extension"
+        },
+        "nii": {
+          "source": "https://nifti.nimh.nih.gov/nifti-1/documentation/faq",
+          "description": "NIfTI-1 can store image data from any modality such as PET, MRI, CT, EEG that produces regularly sampled 1-5D rasters.",
+          "meaning": "EDAM:format_3549"
+        },
+        "ome-tiff": {
+          "description": "OME-TIFF is a preferred open image format",
+          "meaning": "EDAM:format_3727"
+        },
+        "png": {
+          "description": "PNG is a file format for image compression",
+          "meaning": "EDAM:format_3603"
+        },
+        "svs": {
+          "source": "https://openslide.org/formats/aperio/",
+          "description": "A single-file pyramidal tiled TIFF, with non-standard metadata and compression."
+        },
+        "sws": {
+          "source": "https://objectiveimaging.freshdesk.com/support/solutions/articles/9000076120-surveyor-image-formats",
+          "description": "Surveyor Workspace format - a tiled microscopy image format from Objective Imaging systems comprising folders with high-resolution image tiles, thumbnails, metadata files, and a .sws file."
+        },
+        "tif": {
+          "description": "Tagged Image File Format, abbreviated TIFF or TIF, is a computer file format for storing raster graphics images",
+          "meaning": "EDAM:format_3591"
+        },
+        "tom": {
+          "source": "http://canfieldupgrade.com/assets/media/VECTRA-M3-User-Guide.pdf",
+          "description": "The .tom format is a specialized 3D image export format from the Vectra medical imaging systems that can optionally preserve trimmings and/or landmarks."
+        },
+        "Sentrix descriptor file": {
+          "source": "https://support.illumina.com/content/dam/illumina-support/documents/myillumina/dd0aff11-2664-481b-a8ce-26831a907cae/beadscan_3.0_software_addendum.pdf",
+          "description": "A BeadScan specific file needed to perform scan setting checks for different array formats and assay type."
+        },
+        "bpm": {
+          "source": "https://support.illumina.com/datafiles.html",
+          "description": "A beaded pool manifest. Describe the SNP or probe content on a BeadChip or in an assay pool."
+        },
+        "cel": {
+          "description": "Format of Affymetrix data file of information about (raw) expression levels of the individual probes",
+          "meaning": "EDAM:format_1638"
+        },
+        "chp": {
+          "description": "CHP file contains probe set analysis results generated from Affymetrix software",
+          "meaning": "EDAM:format_1644"
+        },
+        "dat": {
+          "description": "Format of Affymetrix data file of raw image data.",
+          "meaning": "EDAM:format_1637"
+        },
+        "idat": {
+          "description": "Proprietary file format for (raw) BeadArray data used by genomewide profiling platforms from Illumina Inc. This format is output directly from the scanner and stores summary intensities for each probe-type on an array.",
+          "meaning": "EDAM:format_3578"
+        },
+        "locs": {
+          "source": "https://support.illumina.com/content/dam/illumina-support/documents/documentation/system_documentation/iscan/iscan-system-guide-11313539-01.pdf",
+          "description": "Illumina iScan bead location file."
+        },
+        "msf": {
+          "description": "Proprietary mass-spectrometry format of Thermo Scientific's ProteomeDiscoverer software",
+          "meaning": "EDAM:format_3702"
+        },
+        "mzML": {
+          "description": "mzML format for raw spectrometer output data, standardised by HUPO PSI MSS.",
+          "meaning": "EDAM:format_3244"
+        },
+        "raw": {
+          "description": "Proprietary file format for mass spectrometry data from Thermo Scientific",
+          "meaning": "EDAM:format_3712"
+        },
+        "RCC": {
+          "description": "Reporter Code Count-A data file (.csv) output by the Nanostring nCounter Digital Analyzer, which contains gene sample information, probe information and probe counts.",
+          "meaning": "EDAM:format_3580"
+        },
+        "csv": {
+          "description": "Tabular data represented as comma-separated values in a text file",
+          "meaning": "EDAM:format_3752"
+        },
+        "excel": {
+          "description": "Microsoft Excel spreadsheet format with extension .xlsx or .xls",
+          "meaning": "EDAM:format_3620"
+        },
+        "parquet": {
+          "description": "An open, columnar table format that stores data by column with built-in compression and schema metadata for fast analytics.",
+          "meaning": "https://parquet.apache.org/"
+        },
+        "tsv": {
+          "description": "Tabular data represented as tab-separated values in a text file",
+          "meaning": "EDAM:format_3475"
+        },
+        "MATLAB script": {
+          "description": "A MATLAB script file with expected extension \u201c.m\u201d. Note that files with a \u201c.mat\u201d extension contains MATLAB formatted data.",
+          "meaning": "EDAM:format_4007"
+        },
+        "Python script": {
+          "description": "Python script with expected extension \u201c.py\u201d.",
+          "meaning": "EDAM:format_3996"
+        },
+        "R script": {
+          "description": "R script with expected extension \u201c.R\u201d.",
+          "meaning": "EDAM:format_3999"
+        },
+        "bash script": {
+          "source": "https://en.wikipedia.org/wiki/Shell_script",
+          "description": "Bash shell script with .sh extension."
+        },
+        "js": {
+          "description": "File with Javascript code."
+        },
+        "MATLAB data": {
+          "description": "A MATLAB formatted data file with expected extension \u201c.mat\u201d.",
+          "meaning": "EDAM:format_3626"
+        },
+        "RData": {
+          "source": "https://www.loc.gov/preservation/digital/formats/fdd/fdd000470.shtml",
+          "description": "The RData format (usually with extension .rdata or .rda) is a format designed for use with R, a system for statistical computation and related graphics, for storing a complete R workspace or selected 'objects' from a workspace in a form that can be loaded back by R."
+        },
+        "SDAT": {
+          "source": "https://github.com/chenkonturek/MRS_MRI_libs",
+          "description": "Phillips MRS Data File"
+        },
+        "SPAR": {
+          "source": "https://github.com/chenkonturek/MRS_MRI_libs",
+          "description": "Phillips MRS Header File"
+        },
+        "json": {
+          "description": "JavaScript Object Notation format; a lightweight, text-based format to represent tree-structured data using key-value pairs.",
+          "meaning": "EDAM:format_3464"
+        },
+        "prism": {
+          "source": "https://www.graphpad.com/features",
+          "description": "GraphPad Prism native file format (Prism 10+) for storing data tables, graphs, layouts, and analysis results. Uses an open access format leveraging industry standards."
+        },
+        "rds": {
+          "source": "https://www.datafiles.samhsa.gov/get-help/format-specific-issues/how-do-i-read-data-r",
+          "description": "R binary data format similar to RData."
+        },
+        "sqlite": {
+          "description": "Data format used by the SQLite database.",
+          "meaning": "EDAM:format_3621"
+        },
+        "xml": {
+          "description": "eXtensible Markup Language (XML) format.",
+          "meaning": "EDAM:format_2332"
+        },
+        "yaml": {
+          "description": "YAML (YAML Ain't Markup Language) is a human-readable tree-structured data serialisation that is a superset of JSON (as of v1.2).",
+          "meaning": "EDAM:format_3750"
+        },
+        "7z": {
+          "description": "A compressed archive file format that supports several different data compression, encryption and pre-processing filters.",
+          "meaning": "NCIT:C80224"
+        },
+        "docker image": {
+          "description": "A Docker image is a file, comprised of multiple layers, that is used to execute code in a Docker container.  An image is essentially built from the instructions for a complete and executable version of an application, which relies on the host OS kernel\n",
+          "meaning": "EDAM:format_3973"
+        },
+        "gzip": {
+          "description": "GZipped format",
+          "meaning": "EDAM:format_3989"
+        },
+        "tar": {
+          "description": "TAR archive file format generated by the Unix-based utility tar.",
+          "meaning": "EDAM:format_3981"
+        },
+        "zip": {
+          "description": "zip is a format standard of a digital entity that is conformant with the PKWARE .ZIP file format specification",
+          "meaning": "EDAM:format_3987"
+        },
+        "ai": {
+          "description": "Adobe Illustrator format",
+          "meaning": "SWO:3000023"
+        },
+        "doc": {
+          "description": "Microsoft Word document format",
+          "meaning": "EDAM:format_3506"
+        },
+        "html": {
+          "description": "HTML format",
+          "meaning": "EDAM:format_2331"
+        },
+        "hyperlink": {
+          "description": "A reference (link) from some point in one hypertext document to another document, another place in the same document, or a website.",
+          "meaning": "NCIT:C47919"
+        },
+        "md": {
+          "source": "https://en.wikipedia.org/wiki/Markdown",
+          "description": "Markdown (MD) is a lightweight markup language with plain text formatting syntax"
+        },
+        "pdf": {
+          "description": "Portable Document Format",
+          "meaning": "EDAM:format_3508"
+        },
+        "powerpoint": {
+          "description": "Microsoft Powerpoint slide format",
+          "meaning": "EDAM:format_3838"
+        },
+        "txt": {
+          "description": "Textual format",
+          "meaning": "EDAM:format_2330"
+        },
+        "MPEG-4": {
+          "description": "A digital multimedia container format most commonly used to store video and audio.",
+          "meaning": "EDAM:format_3997"
+        },
+        "ab1": {
+          "description": "TAB1 binary format of raw DNA sequence reads (output of Applied Biosystems' sequencing analysis software). Contains an electropherogram and the DNA base sequence.",
+          "meaning": "EDAM:format_3000"
+        },
+        "abf": {
+          "source": "https://mdc.custhelp.com/euf/assets/content/ABFHelp.pdf",
+          "description": "The Axon Binary File format (ABF) was created for the storage of binary experimental data."
+        },
+        "dna": {
+          "source": "https://www.snapgene.com/guides/convert-genbank-files",
+          "description": "Propietary SnapGene file format."
+        },
+        "edat3": {
+          "source": "https://support.pstnet.com/hc/en-us/articles/229354727-INFO-E-Prime-file-extensions-18091",
+          "description": "The .edat3 proprietary format is used to store experiment data that can be analyzed in E-DataAid."
+        },
+        "fcs": {
+          "description": "Format standard of a digital entity that is conformant with the Flow Cytometry Data File Standard",
+          "meaning": "OBI:0000327"
+        },
+        "fig": {
+          "source": "https://fileinfo.com/extension/fig",
+          "description": "Line drawing saved in the Xfig format; stored as a vector image that may include lines, shapes, arcs, splines, arrows, and text objects; may also include images, colors, and patterns."
+        },
+        "gb": {
+          "source": "https://fairsharing.org/833",
+          "description": "GenBank Sequence Format (GenBank Flat File Format) consists of an annotation section and a sequence section. The start of the annotation section is marked by a line beginning with the word \"LOCUS\". The start of sequence section is marked by a line beginning with the word \"ORIGIN\" and the end of the section is marked by a line with only \"//\".",
+          "meaning": "EDAM:format_1936"
+        },
+        "hdf5": {
+          "description": "HDF5 is the new version, according to the HDF group, a completely different technology (https://support.hdfgroup.org/products/hdf4/ compared to HDF.   An HDF5 file appears to the user as a directed graph. The nodes of this graph are the higher-level HDF5 objects that are exposed by the HDF5 APIs:  Groups, Datasets, Named datatypes.  Currently supported by the Python MDTraj package. HDF5 is a data model, library, and file format for storing and managing data, based on Hierarchical Data Format (HDF).\n",
+          "meaning": "EDAM:format_3590"
+        },
+        "idx": {
+          "description": ""
+        },
+        "psydat": {
+          "source": "https://www.psychopy.org/general/dataOutputs.html",
+          "description": "TrialHandler or StairHandler object that has been saved to disk with the python cPickle module, ideal for batch analysis and plotting with Python."
+        },
+        "pzfx": {
+          "source": "https://fileinfo.com/extension/pzfx",
+          "description": "Legacy GraphPad Prism XML file format (Prism 5-9) for storing project data including graphs, layouts, notes, and tables. Superseded by the .prism format in Prism 10+."
+        },
+        "rmd": {
+          "source": "http://rmarkdown.rstudio.com/developer_document_templates.html",
+          "description": "Markdown document specific to R analyses.",
+          "meaning": "EDAM:format_4000"
+        },
+        "sav": {
+          "source": "https://www.loc.gov/preservation/digital/formats/fdd/fdd000469.shtml",
+          "description": "The SPSS Statistics File Format is a proprietary binary format, developed and maintained as the native format for the SPSS statistical software application."
+        },
+        "sdf": {
+          "description": "SDF is one of a family of chemical-data file formats developed by MDL Information Systems; it is intended especially for structural information.",
+          "meaning": "EDAM:format_3814"
+        },
+        "sif": {
+          "description": "SIF (simple interaction file) Format - a network/pathway format used for instance in cytoscape",
+          "meaning": "EDAM:format_3619"
+        },
+        "svg": {
+          "description": "Scalable Vector Graphics (SVG) is an XML-based vector image format for two-dimensional graphics with support for interactivity and animation.",
+          "meaning": "EDAM:format_3604"
+        }
+      }
     },
     "title": {
       "description": "Title of a resource.",
@@ -138,12 +613,18 @@
       "items": {
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "author"
     },
     "citation": {
       "description": "Citation (e.g. doi) that usage of data or resource should be cited with.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "citation"
     },
     "license": {
@@ -197,230 +678,1227 @@
         "UNKNOWN"
       ],
       "title": "license",
-      "type": "string"
+      "type": "string",
+      "x-enum-metadata": {
+        "CC BY-NC": {
+          "source": "https://creativecommons.org/licenses/by-nc/4.0/",
+          "description": "This license is one of the Creative Commons licenses and allows users to share and adapt the dataset if they give credit to the copyright holder and do not use the dataset for any commercial purposes."
+        },
+        "CC BY-NC 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc/4.0/"
+        },
+        "CC BY-NC 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc/3.0/"
+        },
+        "CC BY-NC 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by-nc/2.5/"
+        },
+        "CC BY-NC 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc/2.0/"
+        },
+        "CC BY-NC 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc/1.0/"
+        },
+        "CC BY-NC-ND": {
+          "source": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+          "description": "This license is one of the Creative Commons licenses and allows users to use only your unmodified dataset if they give credit to the copyright holder and do not share it for commercial purposes. Users cannot make any additions, transformations or changes to the dataset under this license."
+        },
+        "CC BY-NC-ND 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+        },
+        "CC BY-NC-ND 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-nd/3.0/"
+        },
+        "CC BY-NC-ND 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-nd/2.5/"
+        },
+        "CC BY-NC-ND 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-nd/2.0/"
+        },
+        "CC BY-NC-ND 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-nd/1.0/"
+        },
+        "CC BY-NC-SA": {
+          "source": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "description": "This license is one of the Creative Commons licenses and allows users to share the dataset only if they (1) give credit to the copyright holder, (2) do not use the dataset for any commercial purposes, and (3) distribute any additions, transformations or changes to the dataset under this same license."
+        },
+        "CC BY-NC-SA 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+        },
+        "CC BY-NC-SA 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-sa/3.0/"
+        },
+        "CC BY-NC-SA 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-sa/2.5/"
+        },
+        "CC BY-NC-SA 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-sa/2.0/"
+        },
+        "CC BY-NC-SA 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-sa/1.0/"
+        },
+        "CC BY-ND": {
+          "source": "https://creativecommons.org/licenses/by-nd/4.0/",
+          "description": "This license is one of the Creative Commons licenses and allows users to share the dataset if they give credit to copyright holder, but they cannot make any additions, transformations or changes to the dataset under this license."
+        },
+        "CC BY-ND 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nd/4.0/"
+        },
+        "CC BY-ND 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nd/3.0/"
+        },
+        "CC BY-ND 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by-nd/2.5/"
+        },
+        "CC BY-ND 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nd/2.0/"
+        },
+        "CC BY-ND 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nd/1.0/"
+        },
+        "CC BY-SA": {
+          "source": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "description": "This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformations or changes to the dataset under this same https://creativecommons.org/licenses/by/4.0/"
+        },
+        "CC BY-SA 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by-sa/4.0/"
+        },
+        "CC BY-SA 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by-sa/3.0/"
+        },
+        "CC BY-SA 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by-sa/2.5/"
+        },
+        "CC BY-SA 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by-sa/2.0/"
+        },
+        "CC BY-SA 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by-sa/1.0/"
+        },
+        "CC-0": {
+          "source": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "description": "A Creative Commons license and is like a public domain dedication. The copyright holder surrenders rights in a dataset using this license."
+        },
+        "CC0 1.0": {
+          "meaning": "https://creativecommons.org/publicdomain/zero/1.0/"
+        },
+        "CC-BY": {
+          "source": "https://creativecommons.org/licenses/by/4.0/",
+          "description": "This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset so long as they give credit to the copyright holder."
+        },
+        "CC-BY 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by/4.0/"
+        },
+        "CC-BY 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by/3.0/"
+        },
+        "CC-BY 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by/2.5/"
+        },
+        "CC-BY 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by/2.0/"
+        },
+        "CC-BY 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by/1.0/"
+        },
+        "ODC-BY": {
+          "source": "https://opendatacommons.org/licenses/by/",
+          "description": "This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder."
+        },
+        "ODC-BY 1.0": {
+          "meaning": "https://opendatacommons.org/licenses/by/1-0/"
+        },
+        "ODC-ODbL": {
+          "source": "https://opendatacommons.org/licenses/odbl/",
+          "description": "This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformation or changes to the dataset."
+        },
+        "ODC-ODbL 1.0": {
+          "meaning": "https://opendatacommons.org/licenses/odbl/1-0/"
+        },
+        "ODC-PDDL": {
+          "source": "https://opendatacommons.org/licenses/pddl/",
+          "description": "This license is one of the Open Data Commons licenses and is like a public domain dedication. The copyright holder surrenders rights in a dataset using this license."
+        },
+        "ODC-PDDL 1.0": {
+          "meaning": "https://opendatacommons.org/licenses/pddl/1-0/"
+        },
+        "Public Domain": {
+          "source": "https://creativecommons.org/public-domain/pdm/",
+          "description": "Technically not a license, the public domain mark relinquishes all rights to a dataset and dedicates the dataset to the public domain."
+        },
+        "UNKNOWN": {
+          "description": "The license for the dataset is not known."
+        }
+      }
     },
     "protocolAssay": {
+      "anyOf": [
+        {
+          "description": "Sequencing-based assays including RNA-seq, DNA-seq, and related methods",
+          "enum": [
+            "ATAC-seq",
+            "CAPP-seq",
+            "CUT&RUN",
+            "ChIP-seq",
+            "ERR bisulfite sequencing",
+            "HI-C",
+            "ISO-seq",
+            "NOMe-seq",
+            "RNA array",
+            "RNA-seq",
+            "SNP array",
+            "SaferSeqS",
+            "Sanger sequencing",
+            "T cell receptor repertoire sequencing",
+            "bisulfite sequencing",
+            "jumping library",
+            "lncRNA-seq",
+            "methylation array",
+            "miRNA array",
+            "miRNA-seq",
+            "next generation targeted sequencing",
+            "oxBS-seq",
+            "ribo-seq",
+            "scCGI-seq",
+            "single cell ATAC-seq",
+            "single-cell RNA-seq",
+            "single-nucleus RNA-seq",
+            "spatial transcriptomics",
+            "targeted exome sequencing",
+            "whole exome sequencing",
+            "whole genome sequencing"
+          ],
+          "title": "SequencingAssayEnum",
+          "type": "string",
+          "x-enum-metadata": {
+            "ATAC-seq": {
+              "description": "Open chromatin regions measured by sequencing DNA after assay for transposase-accessible chromatin (ATAC) treatment",
+              "meaning": "OBI:0002039"
+            },
+            "CAPP-seq": {
+              "source": "https://www.redjournal.org/article/S0360-3016(16)30438-2/fulltext",
+              "description": "Cancer Personalized Profiling by deep sequencing (CAPP-seq) is a novel blood-based assay that uses next-generating sequencing to quantitate circulating tumor DNA (ctDNA)",
+              "meaning": "EFO:0008672"
+            },
+            "CUT&RUN": {
+              "description": "Cleavage Under Targets and Release Using Nuclease (CUT&RUN) is a chromatin profiling strategy in which antibody-targeted controlled cleavage by micrococcal nuclease releases specific protein-DNA complexes into the supernatant for paired-end DNA sequencing. (doi:10.7554/eLife.21856)"
+            },
+            "ChIP-seq": {
+              "description": "Chromatin immuno-precipitation followed by sequencing",
+              "meaning": "OBI:0000716"
+            },
+            "ERR bisulfite sequencing": {
+              "description": "Enhanced reduced representation bisulfite sequencing (ERRBS) "
+            },
+            "HI-C": {
+              "description": "Chromatin interactions detected by HI-C protocol",
+              "meaning": "EFO:0007693"
+            },
+            "ISO-seq": {
+              "description": "Full isoform sequencing"
+            },
+            "NOMe-seq": {
+              "description": "Nucleosome Occupancy and Methylome Sequencing",
+              "meaning": "NCIT:C106053"
+            },
+            "RNA array": {
+              "description": "RNA measurements captured by array technology",
+              "meaning": "OBI:0001463"
+            },
+            "RNA-seq": {
+              "description": "Bulk RNA sequencing",
+              "meaning": "OBI:0001271"
+            },
+            "SNP array": {
+              "description": "SNP measurements captured by array technology",
+              "meaning": "OBI:0001204"
+            },
+            "SaferSeqS": {
+              "source": "https://doi.org/10.1038/s41587-021-00900-z",
+              "description": "A blood-based assay that evaluates mutations in circulating tumor DNA and chromosomal copy number changes to detect minimal residual disease (MRD) with high specificity towards tumor type."
+            },
+            "Sanger sequencing": {
+              "description": "A DNA sequencing technique in which a mixture of deoxynucleosidetriphosphates (dNTPs) and chain-terminating dNTPs, which are radioactively or fluorescently labeled, are combined within the reaction mixture. Once the reaction is complete, the DNA strands are separated by size, and the labeled chain terminating dNTPs can be read in sequence by the investigator or by a machine.",
+              "meaning": "NCIT:C19641"
+            },
+            "T cell receptor repertoire sequencing": {
+              "description": "A sequencing assay that determines the sequences of DNA or RNA molecules that encode the repertoire of T cell receptors within an input sample.",
+              "meaning": "OBI:0002990"
+            },
+            "bisulfite sequencing": {
+              "description": "Methylation data captured by sequencing of DNA treated by a bisulfite-based chemical process",
+              "meaning": "OBI:0000748"
+            },
+            "jumping library": {
+              "source": "https://gatk.broadinstitute.org/hc/en-us/articles/360035890751-Jumping-libraries",
+              "description": "Jumping libraries are created to bypass difficult to align/map regions, such as those containing repetitive DNA sequences. Briefly, the DNA of interest is identified, cut into fragments either with restriction enzymes or by shearing.  The size-selected fragments are ligated to adapters for bead-capture and circularized. After bead-capture, the DNA is linearized via restriction enzymes, and can be sequenced using adapter primers facing in outward [reverse/forward (RF)] directions.  These library inserts are considered jumping because the ends originate from distal genomic DNA sequences and are ligated adjacent to one another during circularization.\n"
+            },
+            "lncRNA-seq": {
+              "description": "Long non-coding RNA measurements collected from RNA-Seq experiments"
+            },
+            "methylation array": {
+              "description": "Methylation data captured by array technology",
+              "meaning": "OBI:0001332"
+            },
+            "miRNA array": {
+              "description": "microRNA measurements captured by array technology",
+              "meaning": "OBI:0001335"
+            },
+            "miRNA-seq": {
+              "description": "Small RNA measurements collected from RNA sequencing experiments",
+              "meaning": "OBI:0002112"
+            },
+            "next generation targeted sequencing": {
+              "description": "A type of next generation sequencing in which specific genes or portions of genes are targeted for sequencing using amplicon-based workflow.",
+              "meaning": "NCIT:C130177"
+            },
+            "oxBS-seq": {
+              "description": "Oxidative bisulfite sequencing (oxBS-Seq) to map 5-methylcytosine and 5-hydroxymethylcytosine",
+              "meaning": "EFO:0008840"
+            },
+            "ribo-seq": {
+              "description": "Ribosome profiling (Ribo-Seq).",
+              "meaning": "EFO:0008891"
+            },
+            "scCGI-seq": {
+              "source": "https://www.ncbi.nlm.nih.gov/pubmed/28126923",
+              "description": "A method for genome-wide CpG island (CGI) methylation sequencing for single cells (scCGI-seq), combining methylation-sensitive restriction enzyme digestion and multiple displacement amplification for selective detection of methylated CGIs"
+            },
+            "single cell ATAC-seq": {
+              "description": "A molecular genetic technique where DNA is isolated from single cell (sc) samples and amplified to create a genomic library. Then the library is subjected to ATAC-seq, which isolates and sequences regions rich in open chromatin.",
+              "meaning": "NCIT:C179458"
+            },
+            "single-cell RNA-seq": {
+              "description": "A procedure that can determine the nucleotide sequence for all of the RNA transcripts in an amplified nucleotide sample that was derived from a single cell.",
+              "meaning": "NCIT:C171152"
+            },
+            "single-nucleus RNA-seq": {
+              "description": "A method for quantifying the transcriptome of individual cells, in which transcripts isolated from single nuclei are subjected to high-throughput sequencing and mapping to a reference genome.",
+              "meaning": "FBcv:0009001"
+            },
+            "spatial transcriptomics": {
+              "description": "assay that allows visualization and quantitative analysis of the transcriptome with spatial resolution in individual tissue sections",
+              "meaning": "EFO:0008994"
+            },
+            "targeted exome sequencing": {
+              "source": "https://labassure.com/whole-exome-sequencing-vs-clinical-exome-sequencing/",
+              "description": "Also known as Clinical Exome Sequencing, Targeted Exome Sequencing is a subset of WES as it covers a limited number of genes, typically 3000 to 6000 genes."
+            },
+            "whole exome sequencing": {
+              "description": "A procedure that can determine the DNA sequence for all of the exons in an individual.",
+              "meaning": "NCIT:C101295"
+            },
+            "whole genome sequencing": {
+              "description": "Laboratory technique to sequence the complete DNA sequence of an organism's genome at a single time",
+              "meaning": "EDAM:topic_3673"
+            }
+          }
+        },
+        {
+          "description": "Imaging-based assays including microscopy, MRI, and related methods",
+          "enum": [
+            "3D confocal imaging",
+            "3D electron microscopy",
+            "3D imaging",
+            "CODEX",
+            "DNA optical mapping",
+            "Fluorescence In Situ Hybridization",
+            "Magnetization-Prepared Rapid Gradient Echo MRI",
+            "SUSHI",
+            "atomic force microscopy",
+            "autoradiography",
+            "brightfield microscopy",
+            "live imaging",
+            "histology",
+            "confocal microscopy",
+            "conventional MRI",
+            "diffusion MRI",
+            "fluorescence microscopy assay",
+            "functional MRI",
+            "high frequency ultrasound",
+            "immunocytochemistry",
+            "immunofluorescence",
+            "immunohistochemistry",
+            "in vivo bioluminescence",
+            "laser speckle imaging",
+            "magnetic resonance angiography",
+            "magnetic resonance spectroscopy",
+            "optical coherence tomography",
+            "optical tomography",
+            "phase-contrast microscopy",
+            "photograph",
+            "positron emission tomography",
+            "spatial frequency domain imaging",
+            "traction force microscopy",
+            "transcranial doppler ultrasonography"
+          ],
+          "title": "ImagingAssayEnum",
+          "type": "string",
+          "x-enum-metadata": {
+            "3D confocal imaging": {
+              "source": "https://pubmed.ncbi.nlm.nih.gov/34331281",
+              "description": "Confocal microscopy with 3D reconstruction of the sample tissue."
+            },
+            "3D electron microscopy": {
+              "description": "Three-dimensional (3D) reconstruction of single, transparent objects from a collection of projection images recorded with a transmission electron microscope. It offers the opportunity to obtain 3D information on structural cellular arrangements with a high resolution.",
+              "meaning": "MI:0410"
+            },
+            "3D imaging": {
+              "description": "Technique to produce 3D images to visualize important structures in great detail. To produce 3D images, many scans are made, and then combined by computers to produce a 3D model, which can then be manipulated. 3D ultrasounds are produced using a somewhat similar technique.",
+              "meaning": "NCIT:C18485"
+            },
+            "CODEX": {
+              "description": "CODEX imaging."
+            },
+            "DNA optical mapping": {
+              "source": "https://doi.org/10.1016/j.copbio.2013.01.009",
+              "description": "Fluorescent imaging of linearly extended DNA molecules to probe information patterns along the molecules"
+            },
+            "Fluorescence In Situ Hybridization": {
+              "description": "A physical mapping approach that uses fluorescent tags to detect hybridization of probes within metaphase chromosomes or less condensed somatic interphase chromatin.  This technique can be used for identification of chromosomal abnormalities and for gene mapping.\n",
+              "meaning": "NCIT:C17563"
+            },
+            "Magnetization-Prepared Rapid Gradient Echo MRI": {
+              "description": "A magnetic resonance imaging modality that offers rapid imaging time, easy reconstruction of any plane, and three-dimensional surface contour rendering with cut away postprocessing.  Especially useful for imaging brain, MP-RAGE captures high tissue contrast and provides high spatial resolution with whole brain coverage in a short scan time.\n",
+              "meaning": "NCIT:C118462"
+            },
+            "SUSHI": {
+              "source": "https://pubmed.ncbi.nlm.nih.gov/30295619/",
+              "description": "Fast super-resolution method that exploits sparsity in the underlying vasculature and statistical independence within the measured signals to detect slow-flowing blood, facilitating noninvasive perfusion measurements."
+            },
+            "atomic force microscopy": {
+              "description": "Microscopy which uses a sharp spike (known as a 'tip') mounted on the end of a cantilever to scan the surface of the specimen",
+              "meaning": "CHMO:0000113"
+            },
+            "autoradiography": {
+              "description": "A radioactivity detection technique using X-ray film to visualize molecules or fragments of molecules that have been radioactively labeled.",
+              "meaning": "ERO:0000716"
+            },
+            "brightfield microscopy": {
+              "description": "Microscopy where the specimen is illuminated with light transmitted from a source on the opposite side of the specimen from the objective",
+              "meaning": "CHMO:0000104"
+            },
+            "live imaging": {
+              "description": "Imaging of live cells, tissues, or organisms over time to observe dynamic biological processes and behavior.",
+              "meaning": "OBI:0001815"
+            },
+            "histology": {
+              "description": "Microscopic examination of stained tissue sections to evaluate tissue architecture and cellular morphology.",
+              "meaning": "NCIT:C16681"
+            },
+            "confocal microscopy": {
+              "description": "Confocal microscopy has advantages over widefield optical microscopy, including the ability to eliminate or reduce background information away from the focal plane and collect serial optical sections from thick specimens.  It uses point illumination and a spatial pinhole to eliminate out-of-focus light in specimens that are thicker than the focal plane.\n",
+              "meaning": "BAO:0000453"
+            },
+            "conventional MRI": {
+              "description": "Magnetic resonance imaging using standard protocols for high resolution structural and anatomic characterization, including T1 weighted, T2 weighted, fluid attenuated inversion recovery (FLAIR), and gadolinium-enhanced sequences. [  NCI  ]",
+              "meaning": "NCIT:C175525"
+            },
+            "diffusion MRI": {
+              "description": "MRI method that measure the diffusion of water in the tissue, rather than the content of water as measured in conventional MRI.",
+              "meaning": "NCIT:C20117"
+            },
+            "fluorescence microscopy assay": {
+              "description": "Uses fluorescent labels to visualize and quantify specific cellular components, proteins, or biological processes under a fluorescence microscope by detecting the emitted light when the fluorophores are excited by specific wavelengths.",
+              "meaning": "CHMO:0000087"
+            },
+            "functional MRI": {
+              "description": "The principle of functional MRI imaging is to take a series of images of an organ in quick succession and to statistically analyze the images for differences among them. Most commonly used in studies of brain function. [  NCI  ]",
+              "meaning": "NCIT:C17958"
+            },
+            "high frequency ultrasound": {
+              "description": "High frequency ultrasound (HFUS) is an imaging modality that can give greater resolution of surface changes in skin (review in PMID:24583666)"
+            },
+            "immunocytochemistry": {
+              "description": "The branch of immunochemistry dealing with cells and cellular activity; the application of immunochemical techniques to cytochemistry.",
+              "meaning": "NCIT:C17731"
+            },
+            "immunofluorescence": {
+              "description": "An immunological procedure in which the antibodies are coupled with molecules which fluoresce under ultra violet (UV) light. This makes them particularly suitable for detection of specific antigens in tissues or on cells.",
+              "meaning": "NCIT:C17370"
+            },
+            "immunohistochemistry": {
+              "description": "An immunostaining assay to detect and potentially localize antigens within the cells of a tissue section",
+              "meaning": "OBI:0001986"
+            },
+            "in vivo bioluminescence": {
+              "description": "An imaging assay that allows detection of bioluminescence from a living organism or organisms.",
+              "meaning": "ERO:0000651"
+            },
+            "laser speckle imaging": {
+              "description": "A noninvasive, non-scanning optical imaging technique that provides full-field visualization of blood flow to the tissue being imaged, which provides information about tissue perfusion and the efficiency of disease treatment.",
+              "meaning": "NCIT:C116492"
+            },
+            "magnetic resonance angiography": {
+              "description": "Angiography using magnetic resonance imaging.",
+              "meaning": "NCIT:C190557"
+            },
+            "magnetic resonance spectroscopy": {
+              "description": "Detection and measurement of the resonant spectra of molecular species in a tissue or sample.",
+              "meaning": "NCIT:C16810"
+            },
+            "optical coherence tomography": {
+              "source": "https://en.wikipedia.org/wiki/Optical_coherence_tomography",
+              "description": "Optical Coherence Tomography (OCT) combines the principles of ultrasound with the imaging performance of a microscope.  OCT uses infrared light waves that reflect off the internal microstructure within the biological tissues.  The frequencies and bandwidths of infrared light are orders of magnitude higher than medical ultrasound signals, resulting in greatly increased image resolution, 8-25 times greater than any existing modality.  In addition to providing high-level resolutions for the evaluation of microanatomic structures OCT is also able to provide information regarding tissue composition. OCT is most widely used in ophthalmology.\n",
+              "meaning": "NCIT:C20828"
+            },
+            "optical tomography": {
+              "source": "https://en.wikipedia.org/wiki/Optical_tomography",
+              "description": "Optical tomography is a form of computed tomography that creates a digital volumetric model of an object by reconstructing images made from light transmitted and scattered through an object. Subtypes are diffuse optical tomography, time-of-flight diffuse optical tomography, fluorescence molecular tomography, confocal diffuse tomography, optical coherence tomography.\n"
+            },
+            "phase-contrast microscopy": {
+              "description": "A simple non-quantitative form of interference microscopy of great utility in visualising live cells. Small differences in optical path length due to differences in refractive index and thickness of structures are visualised as differences in light intensity.",
+              "meaning": "NCIT:C16857"
+            },
+            "photograph": {
+              "description": "An image recorded by a camera.",
+              "meaning": "NCIT:C86035"
+            },
+            "positron emission tomography": {
+              "description": "A technique for measuring the gamma radiation produced by collisions of electrons and positrons (anti-electrons) within living tissue.",
+              "meaning": "NCIT:C17007"
+            },
+            "spatial frequency domain imaging": {
+              "source": "https://doi.org/10.3390/photonics8050162",
+              "description": "Spatial Frequency Domain Imaging (SFDI) is a non-contact, depth-varying and wide-field optical imaging technique for measuring optical properties in a wide field-of-view on a pixel-by-pixel basis. Relevant applications include including burn assessment, skin tissue evaluation, tumor tissue detection, brain tissue monitoring."
+            },
+            "traction force microscopy": {
+              "source": "https://en.wikipedia.org/wiki/Traction_force_microscopy",
+              "description": "An experimental method for determining the tractions on the surface of a biological cell by obtaining measurements of the surrounding displacement field within an in vitro extracellular matrix (ECM)"
+            },
+            "transcranial doppler ultrasonography": {
+              "description": "A diagnostic technique that uses pulsed Doppler ultrasound to measure the velocity of blood flow through the major blood vessels of the brain.",
+              "meaning": "NCIT:C122930"
+            }
+          }
+        },
+        {
+          "description": "Mass spectrometry-based assays",
+          "enum": [
+            "FIA-MSMS",
+            "FTIR spectroscopy",
+            "MIB/MS",
+            "MudPIT",
+            "RPPA",
+            "TMT quantitation",
+            "high-performance liquid chromatography/tandem mass spectrometry",
+            "label free mass spectrometry",
+            "liquid chromatography-electrochemical detection",
+            "liquid chromatography/mass spectrometry",
+            "liquid chromatography/tandem mass spectrometry",
+            "mass spectrometry",
+            "proximity extension assay",
+            "ultra high-performance liquid chromatography/tandem mass spectrometry"
+          ],
+          "title": "MassSpectrometryAssayEnum",
+          "type": "string",
+          "x-enum-metadata": {
+            "FIA-MSMS": {
+              "source": "https://www.ncbi.nlm.nih.gov/pubmed/28667829",
+              "description": "Flow injection analysis - tandem mass spectrometer"
+            },
+            "FTIR spectroscopy": {
+              "description": "Fourier transform infrared (FTIR) spectroscopy is a technique used to obtain an infrared spectrum of absorption or emission of a solid, liquid or gas.  An FTIR spectrometer simultaneously collects high-resolution spectral data over a wide spectral range.\n",
+              "meaning": "CHMO:0000636"
+            },
+            "MIB/MS": {
+              "source": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3328787/",
+              "description": "Kinomics assay using multiplexed kinase inhibitor beads and mass spectrometry (MIB/MS)"
+            },
+            "MudPIT": {
+              "description": "MudPIT is a method for rapid and large-scale protein identification by multidimensional liquid chromatography associated with tandem mass spectrometry",
+              "meaning": "MI:0658"
+            },
+            "RPPA": {
+              "description": "Reverse phase protein array (RPPA) is a an assay that measures multiple protein expression levels in a large number of biological samples simultaneously using high quality antibodies",
+              "meaning": "BAO:0010030"
+            },
+            "TMT quantitation": {
+              "description": "An isobaric labeling technique that uses tags containing four regions with the same total molecular weights and structure, so that during chromatographic or electrophoretic separation and in single MS mode, molecules labelled with different tags are indistinguishable.",
+              "meaning": "ERO:0002175"
+            },
+            "high-performance liquid chromatography/tandem mass spectrometry": {
+              "description": "HPLC-MSMS is an analytical technique wherein high performance liquid chromatography is coupled to tandem mass spectrometry in order to separate, identify, and quantify substances in a sample.",
+              "meaning": "NCIT:C120691"
+            },
+            "label free mass spectrometry": {
+              "description": "A mass spectrometry assay that allows for measurement for endogenous targets in live cell assays, and eliminates the need for tags, dyes, or specialized reagents or engineered cells.",
+              "meaning": "ERO:0000708"
+            },
+            "liquid chromatography-electrochemical detection": {
+              "description": "A liquid chromatography method that is sensitive to compounds which can be either reduced or oxidised. The mobile phase passes directly over the working electrode, which is set to the specific potential required for oxidation or reduction. The current produced is then measured.",
+              "meaning": "CHMO:0001746"
+            },
+            "liquid chromatography/mass spectrometry": {
+              "description": "LC-MS is a hyphenated technique, combining the separation power of liquid chromatography (LC), an analytical chromatographic technique for separating ions or molecules dissolved in a solvent, with the detection power of mass spectrometry(MS), a technique to separate gas phase ions according their m/z (mass to charge ratio) value. Used for drug screening, pharmacology studies, environmental analyses and forensics.",
+              "meaning": "NCIT:C18475"
+            },
+            "liquid chromatography/tandem mass spectrometry": {
+              "description": "LC-MSMS is an analytical technique wherein liquid chromatography is coupled to tandem mass spectrometry in order to separate, identify, and quantify substances in a sample.",
+              "meaning": "NCIT:C122168"
+            },
+            "mass spectrometry": {
+              "description": "A generic mass spectrometry assay that allows identification and amount of peptide or protein materials.",
+              "meaning": "ERO:0000708"
+            },
+            "proximity extension assay": {
+              "source": "https://olink.com/technology/what-is-pea",
+              "description": "Olink's Proximity Extension Assay (PEA) combines specificity and scalability to enable high-throughput, multiplex protein biomarker analysis."
+            },
+            "ultra high-performance liquid chromatography/tandem mass spectrometry": {
+              "description": "UPLC-MSMS is an analytical technique wherein ultra-high performance liquid chromatography is coupled to tandem mass spectrometry in order to separate, identify, and quantify substances in a sample.",
+              "meaning": "NCIT:C122176"
+            }
+          }
+        },
+        {
+          "description": "Clinical assessments and behavioral assays",
+          "enum": [
+            "AlgometRx Nociometer",
+            "quantitative sensory testing",
+            "Child Behavior Checklist for Ages 1.5-5",
+            "Child Behavior Checklist for Ages 6-18",
+            "Children's Dermatology Life Quality Index Questionnaire",
+            "Corsi blocks",
+            "FACE-Q Appearance-related Distress",
+            "Focus group",
+            "Interview",
+            "NIH Toolbox",
+            "PROMIS Cognitive Function",
+            "Riccardi and Ablon scales",
+            "Skindex-16",
+            "Social Responsiveness Scale",
+            "Social Responsiveness Scale, Second Edition",
+            "Von Frey test",
+            "actigraphy",
+            "active avoidance learning behavior assay",
+            "auditory brainstem response",
+            "blood chemistry measurement",
+            "body size trait measurement",
+            "cNF-Skindex",
+            "clinical data",
+            "cognitive assessment",
+            "contextual conditioning behavior assay",
+            "distortion product otoacoustic emissions",
+            "elevated plus maze test",
+            "feeding assay",
+            "gait measurement",
+            "genotyping",
+            "grip strength",
+            "hand-held dynamometry",
+            "metabolic screening",
+            "n-back task",
+            "neuropsychological assessment",
+            "novelty response behavior assay",
+            "open field test",
+            "optokinetic reflex assay",
+            "pattern electroretinogram",
+            "polysomnography",
+            "pure tone average",
+            "questionnaire",
+            "rotarod performance test",
+            "scale",
+            "six-minute walk test",
+            "weight",
+            "word recognition score"
+          ],
+          "title": "ClinicalBehavioralAssayEnum",
+          "type": "string",
+          "x-enum-metadata": {
+            "AlgometRx Nociometer": {
+              "description": "Assay that can selectively measure the sensitivity of three different nerve fiber types. An overall score can be derived to indicate the type of pain a person is experiencing and can be used to monitor how well a patient responds to treatment of pain."
+            },
+            "quantitative sensory testing": {
+              "description": "A battery of psychophysical tests to assess sensory nerve function and pain perception across modalities (e.g., thermal, mechanical, vibration) and quantify sensory thresholds.",
+              "meaning": "NCIT:C155860"
+            },
+            "Child Behavior Checklist for Ages 1.5-5": {
+              "description": "\"A standardized measure designed to detect behavioral and emotional problems in children 1.5-5 years old.  The forms obtain parents', daycare providers', and teachers' ratings of 99 problem items plus descriptions of problems, disabilities,  what concerns respondents most about the child, and the best things about the child. [ NCI ]\".\n",
+              "meaning": "NCIT:C165712"
+            },
+            "Child Behavior Checklist for Ages 6-18": {
+              "description": "\"A standardized measure designed to detect behavioral and emotional problems in children and adolescents.  It is completed by the parent/caretaker who spends the most time with the child and provides ratings for 20 competence and 120 problem items. [ NCI ]\"\n",
+              "meaning": "NCIT:C165711"
+            },
+            "Children's Dermatology Life Quality Index Questionnaire": {
+              "description": "A standardized rating scale originally developed by Lewis-Jones and Finlay in 1995. This instrument is used to make quality of life assessment in children with skin conditions. [ NCI ]",
+              "meaning": "NCIT:C119092"
+            },
+            "Corsi blocks": {
+              "source": "https://www.cognitiveatlas.org/task/id/trm_4da881dace79c/",
+              "description": "A visuospatial counterpart to the verbal-memory span task (Milner, 1971). Over the years, it has frequently been used to assess visuospatial short-term memory performance in adults  (e.g. Smyth & Scholey, 1992), children (e.g. Orsini, Schiappa, & Grossi, 1981), and patients with neuropsychological deficits. \n"
+            },
+            "FACE-Q Appearance-related Distress": {
+              "source": "https://qportfolio.org/wp-content/uploads/2021/11/FACE-Q-AESTHETICS-USERS-GUIDE.pdf",
+              "description": "This 8-item scale measures appearance-related distress in people seeking cosmetic treatments for the body or the face.  Item ask someone to agree/disagree with statements about feelings (e.g., unhappy, stressed, down) and behaviors, such as avoiding being around people.\n"
+            },
+            "Focus group": {
+              "description": "A small, usually diverse group of people whose response to something is studied to determine the response that can be expected from a larger population.  It is used especially in market research and political analysis.\n",
+              "meaning": "NCIT:C154589"
+            },
+            "Interview": {
+              "description": "A conversation with an individual regarding his or her background and other personal and professional details, opinions on specific subjects posed by the interviewer, etc.",
+              "meaning": "NCIT:C16751"
+            },
+            "NIH Toolbox": {
+              "description": "A comprehensive set of neuro-behavioral measures that assess cognitive, emotional, sensory, and motor functions\"",
+              "meaning": "NCIT:C154482"
+            },
+            "PROMIS Cognitive Function": {
+              "source": "http://www.healthmeasures.net/images/PROMIS/manuals/PROMIS_Cognitive_Function_Scoring_Manual.pdf",
+              "description": "The PROMIS Cognitive Function and Cognitive Function Abilities Subset item banks assess patient-perceived cognitive deficits."
+            },
+            "Riccardi and Ablon scales": {
+              "source": "https://doi.org/10.1001/archderm.137.11.1421",
+              "description": "The Riccardi and Ablon scales score severity and visibility of disease, respectively, and are commonly used as a combined assessment for NF1 patients in clinical settings. See https://doi.org/10.1001/archderm.137.11.1421 for example usage."
+            },
+            "Skindex-16": {
+              "source": "https://pubmed.ncbi.nlm.nih.gov/22284137/",
+              "description": "A validated measure of the effects of skin diseases on quality of life that [is] suitable for use in research about patients' experiences of illness and its treatment"
+            },
+            "Social Responsiveness Scale": {
+              "source": "https://doi.org/10.1037/t17260-000",
+              "description": "The Social Responsiveness Scale (SRS; Constantino et al., 2003) is a brief assessment tool for measuring autism traits."
+            },
+            "Social Responsiveness Scale, Second Edition": {
+              "source": "https://www.wpspublish.com/srs-2-social-responsiveness-scale-second-edition",
+              "description": "Identifies the presence and severity of social impairment within the autism spectrum and differentiates it from that which occurs in other disorders."
+            },
+            "Von Frey test": {
+              "source": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5592204/",
+              "description": "Assay applying electrical stimulus to assess pain in rodents."
+            },
+            "actigraphy": {
+              "description": "Use of a portable device (actigraph) to study sleep-wake patterns and circadian rhythms by assessing movement.",
+              "meaning": "MAXO:0000914"
+            },
+            "active avoidance learning behavior assay": {
+              "description": "A behavioral assay devised to measure active avoidance learning behavior"
+            },
+            "auditory brainstem response": {
+              "description": "ABR is a gold standard for evaluating hearing in mice. A non-invasive method that measures the electrical activity generated by the auditory nerve and brainstem in response to sound stimuli. Electrodes are placed on the scalp of the mouse, and sound is delivered through a speaker or earphone."
+            },
+            "blood chemistry measurement": {
+              "description": "The determination of the measured concentrations of chemical constituents of the blood by assay in a clinical laboratory.",
+              "meaning": "NCIT:C47868"
+            },
+            "body size trait measurement": {
+              "description": "Any measurable or observable characteristic related to the overall physical magnitude of an organism.",
+              "meaning": "VT:0100005"
+            },
+            "cNF-Skindex": {
+              "source": "https://pubmed.ncbi.nlm.nih.gov/37149083/",
+              "description": "The cNF-Skindex, validated in a French population, specifically assesses the cNF-related QOL."
+            },
+            "clinical data": {
+              "description": "Data pertaining to the medical well-being or status of a patient. Category also includes clinical reports and individual patient data.",
+              "meaning": "NCIT:C15783"
+            },
+            "cognitive assessment": {
+              "description": "A set of tests or assessments to determine congnitive abilities of a patient.",
+              "meaning": "MAXO:0009017"
+            },
+            "contextual conditioning behavior assay": {
+              "description": "A behavioral assay devised to measure contextual conditioning behavior"
+            },
+            "distortion product otoacoustic emissions": {
+              "description": "DPOAE evaluates cochlear (outer hair cell) function and helps identify hearing loss due to cochlear dysfunction.Measures the sound waves generated by the inner ear (cochlea) in response to two simultaneous tones of different frequencies.  A probe with a microphone and speaker is placed in the ear canal to deliver sounds and capture the cochlear response.\n"
+            },
+            "elevated plus maze test": {
+              "description": "A method which utilizes an experimental apparatus consisting of four arms, usually two enclosed and two open, in the shape of a plus (+) upon which the test animal can walk. The maze is elevated a set distance, for example 40 to 60 centimeters, above the floor or platform upon which the apparatus sits.",
+              "meaning": "MMO:0000262"
+            },
+            "feeding assay": {
+              "description": "A behavioral assay that measures feeding-related behaviors or responses in experimental organisms. This encompasses various specific feeding assay types including membrane feeding assays, food intake measurements, and feeding preference assays."
+            },
+            "gait measurement": {
+              "description": "Quantification of some aspect of a person's gait such as rhythm, variability or step length\n",
+              "meaning": "EFO:0007680"
+            },
+            "genotyping": {
+              "description": "The determination of the DNA sequence of an individual.",
+              "meaning": "NCIT:C45447"
+            },
+            "grip strength": {
+              "description": "Assessment of muscle strength that measures that force with which one holds or grasps.",
+              "meaning": "NCIT:C139210"
+            },
+            "hand-held dynamometry": {
+              "description": "A technique to assess isometric muscle strength using a hand-held dynamometer.",
+              "meaning": "NCIT:C186193"
+            },
+            "metabolic screening": {
+              "source": "https://bioportal.bioontology.org/ontologies/SNOMEDCT?p=classes&conceptid=395118002",
+              "description": "Metabolic screening is a medical assessment that involves analyzing specific markers in bodily fluids to detect and evaluate metabolic disorders or imbalances."
+            },
+            "n-back task": {
+              "source": "https://www.cognitiveatlas.org/task/id/tsk_4a57abb949bcd/",
+              "description": "A task in which items (e.g., letters) are presented one at a time and participants must identify each item that repeats relative to the item that occurred \"n\" items before its onset."
+            },
+            "neuropsychological assessment": {
+              "description": "Evaluation for cognitive impairment by assessing the neuropsychological domains.",
+              "meaning": "MAXO:0009018"
+            },
+            "novelty response behavior assay": {
+              "description": "A behavioral assay devised to measure novelty response behavior"
+            },
+            "open field test": {
+              "description": "A test utilizing an enclosure consisting of a single area bordered by clear or opaque walls, used to measure movement, exploratory behavior, etc of an experimental subject.",
+              "meaning": "MMO:0000258"
+            },
+            "optokinetic reflex assay": {
+              "source": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0002055",
+              "description": "The optokinetic reflex (OKR), which serves to stabilize a moving image on the retina, is a behavioral response that has many favorable attributes as a test of CNS function. The OKR requires no training, assesses the function of diverse CNS circuits, can be induced repeatedly with minimal fatigue or adaptation, and produces an electronic record that is readily and objectively quantifiable."
+            },
+            "pattern electroretinogram": {
+              "source": "https://www.ncbi.nlm.nih.gov/books/NBK560641",
+              "description": "Pattern electroretinogram (PERG) is an electrophysiologic ophthalmologic test that provides non-invasive objective, quantitative measurement of central retinal function. PERG is the retinal response to a pattern-reversing, black-and-white checkerboard or stripped stimulus. The PERG assesses both macular and retinal ganglion cell electrical activity and can help differentiate between diseases of macular versus optic nerve dysfunction."
+            },
+            "polysomnography": {
+              "description": "A group of tests (usually central electroencephalogram (EEG) (C3 or C4), reference occipital EEG (O1 or O2), right and left electro-oculogram (EOG), mental or submental electromylogram (EMG), thoracic effort, abdominal effort, nasal and oral airflow, a microphone to record snoring, pulse oxygen saturation, EKG, and video recording to document body positions during sleep) taken during sleep.",
+              "meaning": "MAXO:0000915"
+            },
+            "pure tone average": {
+              "description": "Metric used to summarize hearing sensitivity at specific frequencies to assess hearing impairment. As PTA increases, hearing ability decreases."
+            },
+            "questionnaire": {
+              "description": "A document with a set of printed or written questions with a choice of answers, devised for the purposes of a survey or statistical study.",
+              "meaning": "OBI:0001000"
+            },
+            "rotarod performance test": {
+              "description": "A method that utilizes a device consisting of a rotating rod the speed of which is mechanically driven and precisely controlled, for instance held constant or accelerated. The rotarod test is often used to measure riding time or endurance in order to evaluate balance, motor coordination or grip strength.",
+              "meaning": "MMO:0000567"
+            },
+            "scale": {
+              "description": "An instrument or machine for weighing.",
+              "meaning": "MMO:0000217"
+            },
+            "six-minute walk test": {
+              "source": "https://www.ncbi.nlm.nih.gov/books/NBK576420/",
+              "description": "The six-minute walk test (6MWT) is a simple, standardized functional assay of exercise capacity that measures how far the human subject can walk within a 6-minute duration; used to to evaluate lung and heart conditions."
+            },
+            "weight": {
+              "description": "An assay or measurement that quantifies the mass or weight of a subject, specimen, or sample. Commonly used in clinical assessments, biosample characterization, and longitudinal health monitoring.",
+              "meaning": "EFO:0004338"
+            },
+            "word recognition score": {
+              "description": "Assays how well a person can understand speech by repeating a list of words. The WRS is a percentage of words correctly repeated. It's a more functional measure because it predicts whether hearing loss can be improved with amplification."
+            }
+          }
+        },
+        {
+          "description": "Cell-based assays including viability, proliferation, and functional assays",
+          "enum": [
+            "2D AlamarBlue absorbance",
+            "2D AlamarBlue fluorescence",
+            "3D microtissue viability",
+            "ATPase activity assay",
+            "BrdU proliferation assay",
+            "ELISA",
+            "EdU proliferation assay",
+            "FLIPR high-throughput cellular screening",
+            "HPLC",
+            "Migration Assay",
+            "STR profile",
+            "TIDE",
+            "TriKinetics activity monitoring",
+            "array",
+            "blue native PAGE",
+            "SDS-PAGE",
+            "bone histomorphometry",
+            "cAMP-Glo Max Assay",
+            "calcium retention capacity assay",
+            "cell competition",
+            "cell count",
+            "cell painting",
+            "cell permeability assay",
+            "cell proliferation",
+            "cell viability assay",
+            "combination library screen",
+            "combination screen",
+            "complex II enzyme activity assay",
+            "compound screen",
+            "current clamp assay",
+            "differential scanning calorimetry",
+            "dynamic light scattering",
+            "electrochemiluminescence",
+            "electrophoretic light scattering",
+            "flow cytometry",
+            "focus forming assay",
+            "gel filtration chromatography",
+            "gel permeation chromatography",
+            "high content screen",
+            "immunoassay",
+            "in silico synthesis",
+            "in vitro tumorigenesis",
+            "in vivo PDX viability",
+            "in vivo tumor growth",
+            "light scattering assay",
+            "local field potential recording",
+            "long term potentiation assay",
+            "massively parallel reporter assay",
+            "microrheology",
+            "multi-electrode array",
+            "nanoparticle tracking analysis",
+            "oscillatory rheology",
+            "oxygen consumption assay",
+            "perineurial cell thickness",
+            "pharmocokinetic ADME assay",
+            "polymerase chain reaction",
+            "quantitative PCR",
+            "reactive oxygen species assay",
+            "reporter gene assay",
+            "split-GFP assay",
+            "rheometry",
+            "sandwich ELISA",
+            "single molecule drug screen assay",
+            "small molecule library screen",
+            "sorbitol dehydrogenase activity level assay",
+            "static histomorphometry",
+            "static light scattering",
+            "survival",
+            "trans-endothelial electrical resistance",
+            "twin spot assay",
+            "western blot",
+            "whole-cell patch clamp"
+          ],
+          "title": "CellBasedAssayEnum",
+          "type": "string",
+          "x-enum-metadata": {
+            "2D AlamarBlue absorbance": {
+              "source": "https://www.thermofisher.com/us/en/home/life-science/cell-analysis/fluorescence-microplate-assays/microplate-assays-cell-viability/alamarblue-assay-cell-viability.html",
+              "description": "Cell viability assay based on detection of AlamarBlue (resazurin). Living cells reduce blue, non-fluorescent resazurin to the red, fluorescent molecule resorufin.  The amount of fluorescence or absorbance is proportional to the number of living cells and corresponds to the cell\u2019s metabolic activity. For the absorbance-based assay, absorbance can be read at 570 nm."
+            },
+            "2D AlamarBlue fluorescence": {
+              "source": "https://www.thermofisher.com/us/en/home/life-science/cell-analysis/fluorescence-microplate-assays/microplate-assays-cell-viability/alamarblue-assay-cell-viability.html",
+              "description": "Cell viability assay based on detection of AlamarBlue (resazurin). Living cells reduce blue, non-fluorescent resazurin to the red, fluorescent molecule resorufin. The amount of fluorescence or absorbance is proportional to the number of living cells and corresponds to the cell\u2019s metabolic activity. For the fluorescence-based assay, color change and fluorescence can be detected using 560/590 nm (excitation/emission)."
+            },
+            "3D microtissue viability": {
+              "source": "https://www.ncbi.nlm.nih.gov/books/NBK343426/",
+              "description": "Cell viability assay on a 3D microtissue model."
+            },
+            "ATPase activity assay": {
+              "description": "As an assay used for drug discovery, measures enzymatic ATP hydrolysis to help assess levels of enzymatic activity induced by a candidate drug molecule.",
+              "meaning": "MI:0880"
+            },
+            "BrdU proliferation assay": {
+              "description": "A cell proliferation assay in which cells are cultured in the presence of BrdU which is incorporated into newly synthesized DNA of replicating cells (during the S phase of the cell cycle).",
+              "meaning": "OBI:0000664"
+            },
+            "ELISA": {
+              "description": "A highly sensitive technique for detecting and measuring antigens or antibodies in a solution; the solution is run over a surface to which immobilized antibodies specific to the substance have been attached, and if the substance is present, it will bind to the antibody layer, and its presence is verified and visualized with an application of antibodies that have been tagged in some way.",
+              "meaning": "NCIT:C16553"
+            },
+            "EdU proliferation assay": {
+              "source": "https://www.sigmaaldrich.com/deepweb/assets/sigmaaldrich/product/documents/100/843/17-1052x.pdf",
+              "description": "Proliferation assay using EdU as a thymidine nucleoside analog is an alternative to the classical BrdU assay.",
+              "meaning": "OBI:0000891"
+            },
+            "FLIPR high-throughput cellular screening": {
+              "source": "https://www.moleculardevices.com/products/flipr-penta-high-throughput-cellular-screening-system",
+              "description": "An imaging-based system that allows measurement and analysis of peaks of human-derived induced pluripotent stem cells (hiPSCs),  differentiated into cardiomyocytes and neurons,  up to 100 times per second and quickly cherry pick events such as Early-After-Depolarization-like events (EAD-like events), fibrillation, and irregular beating.\n"
+            },
+            "HPLC": {
+              "description": "Frequently referred to simply as HPLC, this form of column chromatography is used frequently in biochemistry.  The analyte is forced through a column by liquid at high pressure, which decreases the time the separated components remain on the stationary phase.\n",
+              "meaning": "NCIT:C16434"
+            },
+            "Migration Assay": {
+              "source": "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C19425",
+              "description": "An in vitro assay in which cultured cells are monitored and analyzed for their ability to move into an acellular area of a culture material."
+            },
+            "STR profile": {
+              "description": "The analysis of all of the short tandem repeats in the genome of a biological sample.",
+              "meaning": "NCIT:C129889"
+            },
+            "TIDE": {
+              "source": "https://tide.nki.nl/",
+              "description": "Tracking of Indels by Decomposition (TIDE) is a simple and accurate assay to precisely determine the spectrum and frequency of targeted mutations generated  in a pool of cells by genome editing tools such as CRISPR/Cas9, TALENs and ZFNs.\n"
+            },
+            "TriKinetics activity monitoring": {
+              "source": "https://trikinetics.com/",
+              "description": "TriKinetics systems quantify animal movement over time, and can be used to measure circadian rhythm, sleep, longevity, social interaction, geotaxis, learning, phototaxis, and drug response in various species of flies, mosquitoes, bees, spiders, ants, cockroaches, beetles, moths, zooplankton, and fish, among others."
+            },
+            "array": {
+              "description": ""
+            },
+            "blue native PAGE": {
+              "description": "Blue native PAGE (BN-PAGE) permits a high-resolution separation of multi-protein complexes under native conditions.",
+              "meaning": "MI:0276"
+            },
+            "SDS-PAGE": {
+              "description": "Denaturing polyacrylamide gel electrophoresis using SDS to separate proteins primarily by molecular weight.",
+              "meaning": "EFO:0010936"
+            },
+            "bone histomorphometry": {
+              "description": "Asasy providing quantitative information on metabolic bone diseases and fracture healing. This is the broader assay concept containing both static and dynamic histomorphometry."
+            },
+            "cAMP-Glo Max Assay": {
+              "source": "https://www.promega.com/products/cell-signaling/gpcr-signaling/camp_glo-max-assay/?catNum=V1681",
+              "description": "The cAMP-Glo Max Assay from Promega is a bioluminescent assay used for the quantification of cyclic AMP (cAMP) in cell-based assays. It utilizes a luminescent luciferase-based detection system to detect the levels of cAMP in cell lysates, which can be used to study G protein-coupled receptor (GPCR) signaling and other intracellular signaling pathways."
+            },
+            "calcium retention capacity assay": {
+              "description": "The CRC assay assesses Ca2+-related mitochondrial functions"
+            },
+            "cell competition": {
+              "source": "https://pubmed.ncbi.nlm.nih.gov/22113311/",
+              "description": "An assay in which two or more labeled populations of cells or organoids are mixed, allowed to grow, possibly in the presence of a drug or other perturbagen. The relative quantity of the cell populations is measured at the end of the experiment."
+            },
+            "cell count": {
+              "description": "A procedure to determine the number of cells in a sample. Also used to mean the result of such a procedure.",
+              "meaning": "NCIT:C48938"
+            },
+            "cell painting": {
+              "source": "https://www.nature.com/articles/nprot.2016.105"
+            },
+            "cell permeability assay": {
+              "description": "An assay measuring cell permeability.",
+              "meaning": "BAO:0002778"
+            },
+            "cell proliferation": {
+              "description": "A cellular assay that allows for the measurement of the multiplication or reproduction of cells, resulting in the expansion of a cell population.",
+              "meaning": "ERO:0000636"
+            },
+            "cell viability assay": {
+              "description": "This assay type measures the cellular state of living or dying by measuring an indicator of life or death",
+              "meaning": "BAO:0003009"
+            },
+            "combination library screen": {
+              "description": "High throughput sample analysis of collections of compounds that provide a variety of chemically diverse structures that can be used to identify structure types that have affinity with pharmacological targets.",
+              "meaning": "ERO:0001686"
+            },
+            "combination screen": {
+              "description": ""
+            },
+            "complex II enzyme activity assay": {
+              "source": "https://www.caymanchem.com/product/700940/mitocheck%C2%AE-complex-ii-activity-assay-kit",
+              "description": "Assay measuring activity of the Complex II enzyme for e.g. high-throughput screening."
+            },
+            "compound screen": {
+              "description": ""
+            },
+            "current clamp assay": {
+              "description": "The current clamp technique records the membrane potential by injecting current into a cell through the recording electrode.  Unlike in the voltage clamp mode, where the membrane potential is held at a level determined by the experimenter, in \"current clamp\" mode the membrane potential is free to vary,  and the amplifier records whatever voltage the cell generates on its own or as a result of stimulation.  This technique is used to study how a cell responds when electric current enters a cell; this is important for instance for understanding how neurons respond to neurotransmitters that act by opening membrane ion channels.\n",
+              "meaning": "OBI:0002185"
+            },
+            "differential scanning calorimetry": {
+              "description": "Differential scanning calorimetry (DSC) is the measurement of thermodynamic parameters (e.g. enthalpy) during a chemical or biochemical reaction of both a sample and a reference, by the known variation (step-wise or linear) of one variable, whilst a second is kept constant.",
+              "meaning": "CHMO:0000684"
+            },
+            "dynamic light scattering": {
+              "description": "Dynamic Light Scattering (DLS), also known as photocorrelation spectroscopy, is a method for determining the size distribution of a sample of small particles in solution by illuminating the sample with a light source (usually a laser) and measuring the time-dependent fluctuations in the intensity of the scattered light caused by Brownian motion.",
+              "meaning": "CHMO:0000167"
+            },
+            "electrochemiluminescence": {
+              "source": "https://www.mesoscale.com/en/technical_resources/our_technology/ecl",
+              "description": "A method in which electromagnetic radiation, in the form of light emission, is generated from an electrochemical reaction in a solution.",
+              "meaning": "NCIT:C111193"
+            },
+            "electrophoretic light scattering": {
+              "source": "https://en.wikipedia.org/wiki/Electrophoretic_light_scattering",
+              "description": "Subtype of dynamic light scattering, used to measure electrophoretic mobility."
+            },
+            "flow cytometry": {
+              "description": "A cytometry assay in which an input cell population is put in solution, is passed by a laser, and optical sensors are used to detect scattering of the laser light and/or fluorescence of specific markers to count and characterize the particles in solution",
+              "meaning": "OBI:0000916"
+            },
+            "focus forming assay": {
+              "description": "The focus forming assay (FFA) is an immunostaining technique and a variation of the viral plaque assay. Instead of detecting the plaque formation after virus-induced cell lysis these assays detect infected host cells and infectious virus particles before a plaque is formed."
+            },
+            "gel filtration chromatography": {
+              "description": "'Gel filtration chromatography (synonym: gel permeation chromatography - GPC) is a type of size-exclusion chromatography (SEC), that separates analytes on the basis of size, typically in organic solvents.  The technique is often used for the analysis of polymers.'\n",
+              "meaning": "CHMO:0001011"
+            },
+            "gel permeation chromatography": {
+              "source": "https://www.agilent.com/cs/library/primers/Public/5990-6969EN%20GPC%20SEC%20Chrom%20Guide.pdf",
+              "description": "AKA size exclusion chromatography (GPC/SEC), this assay is a type of high performance liquid chromatography used to determine the molecular weight distributions of polymers."
+            },
+            "high content screen": {
+              "description": "An image analysis technique combining automated fluorescence microscopy with multi-parameter quantitative image analysis for the large scale study of cells (cellomics).",
+              "meaning": "EFO:0007550"
+            },
+            "immunoassay": {
+              "description": "Generic immunology assay"
+            },
+            "in silico synthesis": {
+              "description": "Synthesis of molecules and compounds (e.g. drug candidates) via simulation or other system outside of a live biological system."
+            },
+            "in vitro tumorigenesis": {
+              "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6121836/",
+              "description": "An in vitro assay devised to measure tumor formation, including sphere formation assays where cells form three-dimensional spherical structures (spheroids) to assess tumor-initiating capacity, stem cell properties, and self-renewal capability. Includes Matrigel-based and other matrix-based approaches."
+            },
+            "in vivo PDX viability": {
+              "description": "Assay to assess viability using PDX model."
+            },
+            "in vivo tumor growth": {
+              "description": "The growth of a tumor measured using calipers, ruler, or another similar measurement device. See also \"in vivo bioluminescence\"."
+            },
+            "light scattering assay": {
+              "description": "A method for determining structure by measuring the change in direction or energy of scattered visible light. Light is scattered by the electrons surrounding the atomic nuclei in the sample.",
+              "meaning": "CHMO:0000166"
+            },
+            "local field potential recording": {
+              "description": "An extracellular electrophysiology assay where a microelectrode is placed in the extracellular space of brain tissue to measure action potential and compared to an electrode either outside or inside that tissue.",
+              "meaning": "OBI:0002189"
+            },
+            "long term potentiation assay": {
+              "description": "A measure of the persistent robust synaptic response induced by synchronous stimulation of pre- and postsynaptic cells.",
+              "meaning": "VT:0002207"
+            },
+            "massively parallel reporter assay": {
+              "description": "An assay in which multiplexing the construction and interrogation of larger libraries of reporter constructs allows measurement of the transcriptional regulatory activities of thousands to hundreds of thousands of DNA sequences.",
+              "meaning": "OBI:0002675"
+            },
+            "microrheology": {
+              "source": "https://www.elveflow.com/microfluidic-reviews/general-microfluidics/microrheology-a-review/",
+              "description": "A technique used to measure the rheological properties of a medium, such as microviscosity and microviscoelasticity."
+            },
+            "multi-electrode array": {
+              "source": "https://www.axionbiosystems.com/multielectrode-array",
+              "description": "A multi-electrode array is a grid of tightly spaced microscopic electrodes embedded in the bottom of each well in a multi-well MEA plate.  Cells, such as cardiomyocytes or neurons, which are electrically active, can be cultured over the electrodes creating a cohesive network.  The functional behavior or electrical activity of this network can be recorded.\n"
+            },
+            "nanoparticle tracking analysis": {
+              "description": "Particle sizing technique based on Brownian motion and scattered light.",
+              "meaning": "ENM:0000065"
+            },
+            "oscillatory rheology": {
+              "source": "https://www.semanticscholar.org/paper/Oscillatory-Rheology-Measuring-the-Viscoelastic-of-Weitz-Wyss/b0e44c88a9c0bd691eea6f3fb87393c975403d5f",
+              "description": "Oscillatory rheology is a standard experimental tool for studying viscosity."
+            },
+            "oxygen consumption assay": {
+              "source": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8275291/",
+              "description": "Assay measuring oxygen consumption rate (OCR) to assess changes in metabolism in e.g. cancer cells"
+            },
+            "perineurial cell thickness": {
+              "description": "Measuring the thickness of the cells in the perineurium, e.g. in developing Drosophila melanogaster.",
+              "meaning": "MI:0410"
+            },
+            "pharmocokinetic ADME assay": {
+              "description": "Any one or more ADME assays used to assess absorption, distribution, metabolism, and excretion, for evaluation of drug candidates and other pharmaceuticals.\n"
+            },
+            "polymerase chain reaction": {
+              "description": "A rapid technique for in vitro amplification of specific DNA or RNA sequences, allowing small quantities of short sequences to be analyzed without cloning",
+              "meaning": "MMO:0000459"
+            },
+            "quantitative PCR": {
+              "description": "Quantitative PCR (Q-PCR) is used to measure the quantity of a PCR product (commonly in real-time). It quantitatively measures starting amounts of DNA, cDNA, or RNA.",
+              "meaning": "MI:1195"
+            },
+            "reactive oxygen species assay": {
+              "source": "https://www.nature.com/articles/s42255-022-00591-z",
+              "description": "Reactive oxygen species (ROS) are measured to assess oxidative events and to investigate their biological importance using antioxidants or inhibitors to modulate the phenomena observed."
+            },
+            "reporter gene assay": {
+              "description": "Reporter gene assay measures the gene expression from a reporter gene. The reporter gene is inserted under the control of a foreign promoter or an artificial regulatory element of interest.  Reporters include luciferase, beta galactosidase, beta lactamase, chloramphenicol acetyl transferase, or a fluorescent protein.\n",
+              "meaning": "OBI:0002082"
+            },
+            "split-GFP assay": {
+              "description": "An assay where complementary non-fluorescent fragments of GFP are fused to interacting proteins or brought into proximity; reconstitution of fluorescence indicates interaction or proximity."
+            },
+            "rheometry": {
+              "description": "The study of the flow of fluids which cannot be defined by a single value of viscosity. Rheometry (synonym: rheology) is the measurement of the relationship between deformation and stress for these liquids. [ https://orcid.org/0000-0002-0640-0422 ]",
+              "meaning": "CHMO:0000915"
+            },
+            "sandwich ELISA": {
+              "description": "The sandwich ELISA measures the amount of antigen between two layers of antibodies. The antigens to be measured must contain at least two antigenic sites, capable of binding to antibody, since at least two antibodies act in the sandwich. So sandwich assays are restricted to the quantitation of multivalent antigens such as proteins or polysaccharides. Sandwich ELISAs for quantitation of antigens are especially valuable when the concentration of antigens is low and/or they are contained in high concentrations of contaminating protein.",
+              "meaning": "BAO:0002421"
+            },
+            "single molecule drug screen assay": {
+              "description": "An experiment in which a single molecule was used in an assay"
+            },
+            "small molecule library screen": {
+              "description": "High throughput sample analysis of small molecules for purpose such as drug discovery, or biochemical, genetic or pharmacological tests.",
+              "meaning": "ERO:0001726"
+            },
+            "sorbitol dehydrogenase activity level assay": {
+              "description": "An enzymatic activity level assay that measures the activity of sorbitol dehydrogenase in a sample.",
+              "meaning": "OBI:0003434"
+            },
+            "static histomorphometry": {
+              "description": "Static histomorphometry involves evaluation of bone parameters at a particular time point."
+            },
+            "static light scattering": {
+              "description": "Static Light Scattering is a method for determining structure by measuring the total or time-averaged scattering intensity of scattered visible light as a function of angle.",
+              "meaning": "CHMO:0000180"
+            },
+            "survival": {
+              "description": "Any quantitative measurement of survival of or in an individual or study population.",
+              "meaning": "MI:0410"
+            },
+            "trans-endothelial electrical resistance": {
+              "description": "Trans-endothelial electrical resistance (TEER), aka epithelial voltohmmeter (EVOM) assay, is used to assess the integrity and barrier function of epithelial cell monolayers in cell culture experiments.",
+              "meaning": "ENM:8000301"
+            },
+            "twin spot assay": {
+              "source": "https://pubmed.ncbi.nlm.nih.gov/29378809/",
+              "description": "Two individual and genetically different populations of cells that originate from the same mitotic recombination event; twin spots allow a direct and reliable comparison between mutant and wild-type clones, and the size of the wild-type twin can serve as a reference for comparison with the homozygous mutant clones."
+            },
+            "western blot": {
+              "description": "A multistep process in which a mixture of proteins is separated by gel electrophoresis",
+              "meaning": "MMO:0000338"
+            },
+            "whole-cell patch clamp": {
+              "description": "A patch-clamp assay where the electrode is left in place on the cell, as in cell-attached recordings, but the membrane patch has been perforated, providing access from the interior of the pipette to the intracellular space of the cell. Measurements made with this technique involve recording currents through multiple channels simultaneously, over the membrane of the entire cell.",
+              "meaning": "OBI:0002178"
+            }
+          }
+        },
+        {
+          "description": "Drug screening assays - subset of cell-based assays focused on drug discovery",
+          "enum": [
+            "combination library screen",
+            "combination screen",
+            "single molecule drug screen assay",
+            "small molecule library screen"
+          ],
+          "title": "DrugScreenAssayEnum",
+          "type": "string",
+          "x-enum-metadata": {
+            "combination library screen": {
+              "description": "High throughput sample analysis of collections of compounds that provide a variety of chemically diverse structures that can be used to identify structure types that have affinity with pharmacological targets.",
+              "meaning": "ERO:0001686"
+            },
+            "combination screen": {
+              "description": ""
+            },
+            "single molecule drug screen assay": {
+              "description": "An experiment in which a single molecule was used in an assay"
+            },
+            "small molecule library screen": {
+              "description": "High throughput sample analysis of small molecules for purpose such as drug discovery, or biochemical, genetic or pharmacological tests.",
+              "meaning": "ERO:0001726"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Main assay type that this protocol is related to, e.g. this is a prep protocol for single-cell RNA-seq assay. This is especially helpful for newly-developed or in-house assays.\n",
       "type": "string",
-      "enum": [
-        "ATAC-seq",
-        "CAPP-seq",
-        "CUT&RUN",
-        "ChIP-seq",
-        "ERR bisulfite sequencing",
-        "HI-C",
-        "ISO-seq",
-        "NOMe-seq",
-        "RNA array",
-        "RNA-seq",
-        "SNP array",
-        "SaferSeqS",
-        "Sanger sequencing",
-        "T cell receptor repertoire sequencing",
-        "bisulfite sequencing",
-        "jumping library",
-        "lncRNA-seq",
-        "methylation array",
-        "miRNA array",
-        "miRNA-seq",
-        "next generation targeted sequencing",
-        "oxBS-seq",
-        "ribo-seq",
-        "scCGI-seq",
-        "single cell ATAC-seq",
-        "single-cell RNA-seq",
-        "single-nucleus RNA-seq",
-        "spatial transcriptomics",
-        "targeted exome sequencing",
-        "whole exome sequencing",
-        "whole genome sequencing",
-        "3D confocal imaging",
-        "3D electron microscopy",
-        "3D imaging",
-        "CODEX",
-        "DNA optical mapping",
-        "Fluorescence In Situ Hybridization",
-        "Magnetization-Prepared Rapid Gradient Echo MRI",
-        "SUSHI",
-        "atomic force microscopy",
-        "autoradiography",
-        "brightfield microscopy",
-        "live imaging",
-        "histology",
-        "confocal microscopy",
-        "conventional MRI",
-        "diffusion MRI",
-        "fluorescence microscopy assay",
-        "functional MRI",
-        "high frequency ultrasound",
-        "immunocytochemistry",
-        "immunofluorescence",
-        "immunohistochemistry",
-        "in vivo bioluminescence",
-        "laser speckle imaging",
-        "magnetic resonance angiography",
-        "magnetic resonance spectroscopy",
-        "optical coherence tomography",
-        "optical tomography",
-        "phase-contrast microscopy",
-        "photograph",
-        "positron emission tomography",
-        "spatial frequency domain imaging",
-        "traction force microscopy",
-        "transcranial doppler ultrasonography",
-        "FIA-MSMS",
-        "FTIR spectroscopy",
-        "MIB/MS",
-        "MudPIT",
-        "RPPA",
-        "TMT quantitation",
-        "high-performance liquid chromatography/tandem mass spectrometry",
-        "label free mass spectrometry",
-        "liquid chromatography-electrochemical detection",
-        "liquid chromatography/mass spectrometry",
-        "liquid chromatography/tandem mass spectrometry",
-        "mass spectrometry",
-        "proximity extension assay",
-        "ultra high-performance liquid chromatography/tandem mass spectrometry",
-        "AlgometRx Nociometer",
-        "quantitative sensory testing",
-        "Child Behavior Checklist for Ages 1.5-5",
-        "Child Behavior Checklist for Ages 6-18",
-        "Children's Dermatology Life Quality Index Questionnaire",
-        "Corsi blocks",
-        "FACE-Q Appearance-related Distress",
-        "Focus group",
-        "Interview",
-        "NIH Toolbox",
-        "PROMIS Cognitive Function",
-        "Riccardi and Ablon scales",
-        "Skindex-16",
-        "Social Responsiveness Scale",
-        "Social Responsiveness Scale, Second Edition",
-        "Von Frey test",
-        "actigraphy",
-        "active avoidance learning behavior assay",
-        "auditory brainstem response",
-        "blood chemistry measurement",
-        "body size trait measurement",
-        "cNF-Skindex",
-        "clinical data",
-        "cognitive assessment",
-        "contextual conditioning behavior assay",
-        "distortion product otoacoustic emissions",
-        "elevated plus maze test",
-        "feeding assay",
-        "gait measurement",
-        "genotyping",
-        "grip strength",
-        "hand-held dynamometry",
-        "metabolic screening",
-        "n-back task",
-        "neuropsychological assessment",
-        "novelty response behavior assay",
-        "open field test",
-        "optokinetic reflex assay",
-        "pattern electroretinogram",
-        "polysomnography",
-        "pure tone average",
-        "questionnaire",
-        "rotarod performance test",
-        "scale",
-        "six-minute walk test",
-        "weight",
-        "word recognition score",
-        "2D AlamarBlue absorbance",
-        "2D AlamarBlue fluorescence",
-        "3D microtissue viability",
-        "ATPase activity assay",
-        "BrdU proliferation assay",
-        "ELISA",
-        "EdU proliferation assay",
-        "FLIPR high-throughput cellular screening",
-        "HPLC",
-        "Migration Assay",
-        "STR profile",
-        "TIDE",
-        "TriKinetics activity monitoring",
-        "array",
-        "blue native PAGE",
-        "SDS-PAGE",
-        "bone histomorphometry",
-        "cAMP-Glo Max Assay",
-        "calcium retention capacity assay",
-        "cell competition",
-        "cell count",
-        "cell painting",
-        "cell permeability assay",
-        "cell proliferation",
-        "cell viability assay",
-        "combination library screen",
-        "combination screen",
-        "complex II enzyme activity assay",
-        "compound screen",
-        "current clamp assay",
-        "differential scanning calorimetry",
-        "dynamic light scattering",
-        "electrochemiluminescence",
-        "electrophoretic light scattering",
-        "flow cytometry",
-        "focus forming assay",
-        "gel filtration chromatography",
-        "gel permeation chromatography",
-        "high content screen",
-        "immunoassay",
-        "in silico synthesis",
-        "in vitro tumorigenesis",
-        "in vivo PDX viability",
-        "in vivo tumor growth",
-        "light scattering assay",
-        "local field potential recording",
-        "long term potentiation assay",
-        "massively parallel reporter assay",
-        "microrheology",
-        "multi-electrode array",
-        "nanoparticle tracking analysis",
-        "oscillatory rheology",
-        "oxygen consumption assay",
-        "perineurial cell thickness",
-        "pharmocokinetic ADME assay",
-        "polymerase chain reaction",
-        "quantitative PCR",
-        "reactive oxygen species assay",
-        "reporter gene assay",
-        "split-GFP assay",
-        "rheometry",
-        "sandwich ELISA",
-        "single molecule drug screen assay",
-        "small molecule library screen",
-        "sorbitol dehydrogenase activity level assay",
-        "static histomorphometry",
-        "static light scattering",
-        "survival",
-        "trans-endothelial electrical resistance",
-        "twin spot assay",
-        "western blot",
-        "whole-cell patch clamp",
-        "combination library screen",
-        "combination screen",
-        "single molecule drug screen assay",
-        "small molecule library screen"
-      ],
       "title": "protocolAssay"
     },
     "protocolPurpose": {
       "description": "Brief description of the protocol purpose.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "protocolPurpose"
     },
     "sampleType": {
       "description": "Type of sample used",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "sampleType"
     },
     "comments": {
       "description": "Brief free-text comments that may also be important to understanding the resource.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "comments"
     },
     "resourceType": {
@@ -436,7 +1914,39 @@
         "workflow report"
       ],
       "title": "resourceType",
-      "type": "string"
+      "type": "string",
+      "x-enum-metadata": {
+        "experimentalData": {
+          "description": "Any file derived from or pertaining to a scientific experiment. Experimental data annotations should be applied, possibly disease-related."
+        },
+        "metadata": {
+          "description": "Data about data, information that describes another set of data.",
+          "meaning": "NCIT:C52095"
+        },
+        "protocol": {
+          "description": "A plan specification which has sufficient level of detail and quantitative information to communicate it between investigation agents, so that different investigation agents will reliably be able to independently reproduce the process.",
+          "meaning": "OBI:0000272"
+        },
+        "report": {
+          "description": "A document assembled by an author for the purpose of providing information for the audience.  A report is the output of a documenting process and has the objective to be consumed by a specific audience.  Topic of the report is on something that has completed. A report is not a single figure.  Examples of reports are journal article, patent application, grant progress report, case report (not patient record).\n",
+          "meaning": "IAO:0000088"
+        },
+        "result": {
+          "source": "https://synapse.org",
+          "description": "Any file that reports data results. Examples include figures, presentations, analysis, etc."
+        },
+        "tool": {
+          "source": "https://synapse.org",
+          "description": "Any file or link that represents a tool, model, or algorithm; the tool annotations could be applied"
+        },
+        "weblink": {
+          "description": "An address to another document or other resource on the World Wide Web.",
+          "meaning": "NCIT:C42743"
+        },
+        "workflow report": {
+          "description": "Workflow-generated reports of analysis of primary data, usually created programmatically at completion of workflow step."
+        }
+      }
     }
   },
   "required": [

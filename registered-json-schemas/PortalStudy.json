@@ -4,24 +4,39 @@
   "description": "A scientific project of some planned duration with PIs and key contributors, specific research topics, and potential publication/data/other outputs.  A study is often represented as a Synapse project and so is also referred to as \"project\". The study schema here is specifically for studies listed on the NF Portal at https://nf.synapse.org/Explore/Studies.",
   "properties": {
     "accessRequirements": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "accessRequirements"
     },
     "acknowledgementStatements": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "acknowledgementStatements"
     },
     "externalRepositoryUri": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "externalRepositoryUri"
     },
     "clinicalTrialID": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "clinicalTrialID"
     },
     "dataCoordinatingCenter": {
       "description": "The organization or center responsible for coordinating data management and sharing for this study. Defaults to \"NF-OSI\".",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "dataCoordinatingCenter"
     },
     "dataStatus": {
@@ -35,7 +50,27 @@
         "Under Embargo"
       ],
       "title": "dataStatus",
-      "type": "string"
+      "type": "string",
+      "x-enum-metadata": {
+        "Available": {
+          "description": "Data is fully available for download for the project (with fulfillment of any governance requirements)."
+        },
+        "Data Not Expected": {
+          "description": "Data is not expected for the project."
+        },
+        "Data Pending": {
+          "description": "There is no data yet in the project because it is still being generated or has not yet been uploaded yet."
+        },
+        "Partially Available": {
+          "description": "Some data is available for download for the project."
+        },
+        "Rolling Release": {
+          "description": "This project has an ongoing cycle of incoming data that is released in batches."
+        },
+        "Under Embargo": {
+          "description": "Data is present in the project but not accessible to anyone outside the project admins and study team."
+        }
+      }
     },
     "dataType": {
       "items": {
@@ -97,9 +132,228 @@
           "weight"
         ],
         "title": "Data",
-        "type": "string"
+        "type": "string",
+        "x-enum-metadata": {
+          "aggregated data": {
+            "description": "Summary or group-level data."
+          },
+          "aligned reads": {
+            "source": "https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads",
+            "description": "Aligned reads output from alignment workflows"
+          },
+          "annotated germline variants": {
+            "source": "https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_germline_variation",
+            "description": "Germline variants annotated with some annotation workflow"
+          },
+          "annotated somatic mutation": {
+            "source": "https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation",
+            "description": "Somatic variants annotated with some annotation workflow"
+          },
+          "audio transcript": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/audioTranscript",
+            "description": "Text transcript of an audio recording."
+          },
+          "behavioral data": {
+            "description": "Qualitative or quantitative behavioral measurements / observations about the action, reaction, or performance of an organism in response to external or internal stimuli. \nExamples: avoidance behavior, choice-making.\n"
+          },
+          "capsid sequence": {
+            "description": "Sequence of capsid protein regions (AAV9, AAVsc, etc.)",
+            "meaning": "EDAM:data_3494"
+          },
+          "cellular physiology": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/cellularPhysiology",
+            "description": "Data on the physiological parameter of a cell."
+          },
+          "characteristic": {
+            "description": "Broad data type for data that can encompass volume, weight, brightness, color, capacity, etc.",
+            "meaning": "NCIT:C25447"
+          },
+          "chromatin activity": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/chromatinActivity",
+            "description": "Data of chromatin activity, which allows access to condensed genomic DNA and potentially controls gene expression."
+          },
+          "clinical": {
+            "description": "Data containing clinical information, e.g. patient diagnosis, personal demographics, exposures, laboratory tests, family relationships.",
+            "meaning": "EFO:0030083"
+          },
+          "copy number variants": {
+            "source": "https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=copy_number_variation",
+            "description": "Copy number variants"
+          },
+          "count matrix": {
+            "description": "A table of unnormalized values representing summarised read counts per genomic region (e.g. gene, transcript, peak).",
+            "meaning": "EDAM:data_3917"
+          },
+          "data index": {
+            "description": "A data index is information used to help with retrieval of some other data, especially large-scale data that would benefit from such an index. Very common formats are .bai and .tbi.",
+            "meaning": "EDAM:data_0955"
+          },
+          "data sharing plan": {
+            "description": "A document containing the plan and documentation for data sharing, one component of overall data management.",
+            "meaning": "EDAM:data_4040"
+          },
+          "demographics": {
+            "description": "The statistical characterization of human populations or segments of human populations (e.g., characterization by age, sex, race, or income).",
+            "meaning": "NCIT:C16495"
+          },
+          "drug combination screen": {
+            "source": "https://www.ncbi.nlm.nih.gov/pubmed/29344898",
+            "description": "Information on drug sensitivity of more than one compound"
+          },
+          "drug screen": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/drugScreen",
+            "description": "Information on drug sensitivity and molecular markers of drug response"
+          },
+          "electrophysiology": {
+            "source": "https://bioportal.bioontology.org/ontologies/ERO/?p=classes&conceptid=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FERO_0000564&jump_to_nav=true",
+            "description": "Data generated from an electrophysiology assay, e.g: \n- Cell: Resting membrane potential, ion channel currents (patch clamp data)\n- Neurons: Action potentials, resting potential, synaptic potentials. \n- Heart: Electrocardiogram (ECG/EKG) waveforms, cardiac action potentials.\n- Muscle: Electromyogram (EMG) signals\n- Whole brain: Electroencephalogram (EEG)\n- Retina: Electroretinogram (ERG)\n"
+          },
+          "epidemiological data": {
+            "description": "Data that is used to describe the distribution of a disease or health-related characteristic within a population and to identify factors that affect that distribution."
+          },
+          "gene expression": {
+            "description": "Data of the levels and patterns of synthesis of gene products (proteins and functional RNA), including interpretation in functional terms of gene expression data.",
+            "meaning": "EDAM:data_2603"
+          },
+          "genomic features": {
+            "description": "Data of sequence feature (continuous extent of biological sequence) that is of genomic origin.",
+            "meaning": "GENO:0000481"
+          },
+          "genomic variants": {
+            "description": "Genomic alterations, including single nucleotide polymorphisms, short indels and structural variants. Use more specific term if possible, esp. if data is only of one specific subset.\n",
+            "meaning": "EDAM:data_3498"
+          },
+          "germline variants": {
+            "source": "https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation",
+            "description": "Called germline variants"
+          },
+          "image": {
+            "description": "Biological or biomedical data that has been rendered into an image.",
+            "meaning": "EDAM:data_2968"
+          },
+          "immunoassay": {
+            "description": "Laboratory test involving interaction of antigens with specific antibodies.",
+            "meaning": "NCIT:C16723"
+          },
+          "isoform expression": {
+            "source": "https://en.wikipedia.org/wiki/Protein_isoform",
+            "description": "Expression of protein isoforms formed from alternative splicings or other post-translational modifications of a single gene through RNA splicing mechanisms.",
+            "meaning": "NCIT:C184767"
+          },
+          "kinomics": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/kinomics",
+            "description": "Data studying protein kinase signaling/activity."
+          },
+          "mask image": {
+            "description": "Image used as the mask for an image processing operation, such as subtraction.",
+            "meaning": "DCM:121321"
+          },
+          "mass spectrometry data": {
+            "description": "Data from mass spectrometry measurement.",
+            "meaning": "EDAM:data_2536"
+          },
+          "metabolomics": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/metabolomics",
+            "description": "Data of metabolites, the chemical processes they are involved, and the chemical fingerprints of specific cellular processes in a whole cell, tissue, organ or organism."
+          },
+          "molecular property": {
+            "description": "Data on the physical (e.g. structural) or chemical properties of molecules, or parts of a molecule.",
+            "meaning": "EDAM:data_2087"
+          },
+          "morphology parameter": {
+            "description": "Experimentally determined parameter of the morphology of an organism, e.g. size & shape. General term representing data about **structure** and **form** of an organism or organism part.",
+            "meaning": "EDAM:data_3723"
+          },
+          "network": {
+            "description": "Network data represents connections between entities and are often in graphical format.",
+            "meaning": "EDAM:data_2600"
+          },
+          "normalized intensities": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/NormalizedIntensities",
+            "description": "Normalized intensity values from the instrument."
+          },
+          "nucleic acid sequence record": {
+            "description": "A nucleic acid sequence and associated metadata.",
+            "meaning": "EDAM:data_2887"
+          },
+          "over-representation data": {
+            "description": "A ranked list of categories (usually ontology concepts), each associated with a statistical metric of over-/under-representation within the studied data.",
+            "meaning": "EDAM:data_3753"
+          },
+          "particle characterization": {
+            "description": "Data providing information about entities such as composition, structure and defects.",
+            "meaning": "NCIT:C62317"
+          },
+          "pharmacokinetics": {
+            "description": "Data characterizing the process by which a drug is absorbed, distributed, metabolized, and eliminated by the body.",
+            "meaning": "NCIT:C49663"
+          },
+          "physiology parameter": {
+            "description": "Experimentally determined parameter of the physiology of an organism, e.g. metabolic rate. General term representing data about **function** and **process** of an organism or organism part.",
+            "meaning": "EDAM:data_3722"
+          },
+          "plot": {
+            "description": "Data that has been plotted as a graph of some type, or data representing such a graph.",
+            "meaning": "EDAM:data_2884"
+          },
+          "promoter sequence": {
+            "description": "Sequence data of promoter region (P0, flCAG, etc.)",
+            "meaning": "EDAM:data_3494"
+          },
+          "protein interaction data": {
+            "description": "Data concerning the interactions (predicted or known) within or between a protein, structural domain or part of a protein.  This includes intra- and inter-residue contacts and distances, as well as interactions with other proteins and non-protein entities such as nucleic acid, metal atoms, water, ions etc.\n",
+            "meaning": "EDAM:data_0906"
+          },
+          "protein interaction raw data": {
+            "description": "Protein-protein interaction data from for example yeast two-hybrid analysis, protein microarrays, immunoaffinity chromatography followed by mass spectrometry, phage display etc.",
+            "meaning": "EDAM:data_0905"
+          },
+          "proteomics": {
+            "description": "Protein and peptide identification, especially in the study of whole proteomes of organisms.",
+            "meaning": "EDAM:topic_0121"
+          },
+          "raw counts": {
+            "description": "The number or amount of something.",
+            "meaning": "NCIT:C25463"
+          },
+          "raw intensities": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/RawIntensities",
+            "description": "Raw intensity values from the instrument (including microarrays, plate reader assays, raw pixel intensities from imaging assay, mass spectrometry, etc.)."
+          },
+          "report": {
+            "description": "A human-readable collection of information including annotation on a biological entity or phenomena, computer-generated reports of analysis of primary data... as distinct from the primary data itself.",
+            "meaning": "EDAM:data_2048"
+          },
+          "somatic variants": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/SomaticVariants",
+            "description": "Called somatic variants"
+          },
+          "structural variants": {
+            "source": "https://w3id.org/synapse/nfosi/vocab/StructuralVariantss",
+            "description": "Genomic variants data that covers deletions, duplications, CNVs, insertions, inversions, and translocations, which may be derived from specialized variant calling workflows."
+          },
+          "survey data": {
+            "description": "A data set that contains the outcome of a survey.",
+            "meaning": "OMIABIS:0000060"
+          },
+          "text data": {
+            "description": "Data that is represented as text, usually referring to \"unstructured data\".",
+            "meaning": "EDAM:data_2526"
+          },
+          "volume": {
+            "description": "Data of the three dimensional space occupied by an entity or the capacity of a space or container.",
+            "meaning": "NCIT:C25335"
+          },
+          "weight": {
+            "description": "The vertical force exerted by a mass as a result of gravity.",
+            "meaning": "NCIT:C25208"
+          }
+        }
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "dataType"
     },
     "diseaseFocus": {
@@ -118,11 +372,17 @@
         "title": "DiseaseFocusEnum",
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "diseaseFocus"
     },
     "embargoEndDate": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "embargoEndDate"
     },
     "fundingAgency": {
@@ -133,15 +393,24 @@
       "items": {
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "grantDOI"
     },
     "grantEndDate": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "grantEndDate"
     },
     "grantStartDate": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "grantStartDate"
     },
     "initiative": {
@@ -494,28 +763,43 @@
       "items": {
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "manifestation"
     },
     "nextPhaseProject": {
       "description": "Synapse project ID of a follow-up project that represents a subsequent funding phase, extension, or continuation of this study's research effort.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "nextPhaseProject"
     },
     "previousPhaseProject": {
       "description": "Synapse project ID of the previous project that this study continues or extends, typically representing an earlier funding phase of the same research effort.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "previousPhaseProject"
     },
     "relatedStudies": {
       "items": {
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "relatedStudies"
     },
     "releasedDate": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "releasedDate"
     },
     "studyFileviewId": {
@@ -545,7 +829,18 @@
         "Withdrawn"
       ],
       "title": "studyStatus",
-      "type": "string"
+      "type": "string",
+      "x-enum-metadata": {
+        "Active": {
+          "description": "The project is in the performance period between grant start and grant end dates."
+        },
+        "Completed": {
+          "description": "The project has reached the grant end date and all intended data has been generated and uploaded."
+        },
+        "Withdrawn": {
+          "description": "The project was planned/started but not completed (withdrawn for various reasons)."
+        }
+      }
     },
     "summary": {
       "type": "string",

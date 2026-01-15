@@ -13,12 +13,18 @@
       "items": {
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "author"
     },
     "citation": {
       "description": "Citation (e.g. doi) that usage of data or resource should be cited with.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "citation"
     },
     "license": {
@@ -72,21 +78,181 @@
         "UNKNOWN"
       ],
       "title": "license",
-      "type": "string"
+      "type": "string",
+      "x-enum-metadata": {
+        "CC BY-NC": {
+          "source": "https://creativecommons.org/licenses/by-nc/4.0/",
+          "description": "This license is one of the Creative Commons licenses and allows users to share and adapt the dataset if they give credit to the copyright holder and do not use the dataset for any commercial purposes."
+        },
+        "CC BY-NC 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc/4.0/"
+        },
+        "CC BY-NC 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc/3.0/"
+        },
+        "CC BY-NC 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by-nc/2.5/"
+        },
+        "CC BY-NC 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc/2.0/"
+        },
+        "CC BY-NC 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc/1.0/"
+        },
+        "CC BY-NC-ND": {
+          "source": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+          "description": "This license is one of the Creative Commons licenses and allows users to use only your unmodified dataset if they give credit to the copyright holder and do not share it for commercial purposes. Users cannot make any additions, transformations or changes to the dataset under this license."
+        },
+        "CC BY-NC-ND 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+        },
+        "CC BY-NC-ND 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-nd/3.0/"
+        },
+        "CC BY-NC-ND 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-nd/2.5/"
+        },
+        "CC BY-NC-ND 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-nd/2.0/"
+        },
+        "CC BY-NC-ND 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-nd/1.0/"
+        },
+        "CC BY-NC-SA": {
+          "source": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "description": "This license is one of the Creative Commons licenses and allows users to share the dataset only if they (1) give credit to the copyright holder, (2) do not use the dataset for any commercial purposes, and (3) distribute any additions, transformations or changes to the dataset under this same license."
+        },
+        "CC BY-NC-SA 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+        },
+        "CC BY-NC-SA 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-sa/3.0/"
+        },
+        "CC BY-NC-SA 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-sa/2.5/"
+        },
+        "CC BY-NC-SA 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-sa/2.0/"
+        },
+        "CC BY-NC-SA 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nc-sa/1.0/"
+        },
+        "CC BY-ND": {
+          "source": "https://creativecommons.org/licenses/by-nd/4.0/",
+          "description": "This license is one of the Creative Commons licenses and allows users to share the dataset if they give credit to copyright holder, but they cannot make any additions, transformations or changes to the dataset under this license."
+        },
+        "CC BY-ND 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nd/4.0/"
+        },
+        "CC BY-ND 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nd/3.0/"
+        },
+        "CC BY-ND 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by-nd/2.5/"
+        },
+        "CC BY-ND 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nd/2.0/"
+        },
+        "CC BY-ND 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by-nd/1.0/"
+        },
+        "CC BY-SA": {
+          "source": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "description": "This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformations or changes to the dataset under this same https://creativecommons.org/licenses/by/4.0/"
+        },
+        "CC BY-SA 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by-sa/4.0/"
+        },
+        "CC BY-SA 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by-sa/3.0/"
+        },
+        "CC BY-SA 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by-sa/2.5/"
+        },
+        "CC BY-SA 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by-sa/2.0/"
+        },
+        "CC BY-SA 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by-sa/1.0/"
+        },
+        "CC-0": {
+          "source": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "description": "A Creative Commons license and is like a public domain dedication. The copyright holder surrenders rights in a dataset using this license."
+        },
+        "CC0 1.0": {
+          "meaning": "https://creativecommons.org/publicdomain/zero/1.0/"
+        },
+        "CC-BY": {
+          "source": "https://creativecommons.org/licenses/by/4.0/",
+          "description": "This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset so long as they give credit to the copyright holder."
+        },
+        "CC-BY 4.0": {
+          "meaning": "https://creativecommons.org/licenses/by/4.0/"
+        },
+        "CC-BY 3.0": {
+          "meaning": "https://creativecommons.org/licenses/by/3.0/"
+        },
+        "CC-BY 2.5": {
+          "meaning": "https://creativecommons.org/licenses/by/2.5/"
+        },
+        "CC-BY 2.0": {
+          "meaning": "https://creativecommons.org/licenses/by/2.0/"
+        },
+        "CC-BY 1.0": {
+          "meaning": "https://creativecommons.org/licenses/by/1.0/"
+        },
+        "ODC-BY": {
+          "source": "https://opendatacommons.org/licenses/by/",
+          "description": "This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder."
+        },
+        "ODC-BY 1.0": {
+          "meaning": "https://opendatacommons.org/licenses/by/1-0/"
+        },
+        "ODC-ODbL": {
+          "source": "https://opendatacommons.org/licenses/odbl/",
+          "description": "This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformation or changes to the dataset."
+        },
+        "ODC-ODbL 1.0": {
+          "meaning": "https://opendatacommons.org/licenses/odbl/1-0/"
+        },
+        "ODC-PDDL": {
+          "source": "https://opendatacommons.org/licenses/pddl/",
+          "description": "This license is one of the Open Data Commons licenses and is like a public domain dedication. The copyright holder surrenders rights in a dataset using this license."
+        },
+        "ODC-PDDL 1.0": {
+          "meaning": "https://opendatacommons.org/licenses/pddl/1-0/"
+        },
+        "Public Domain": {
+          "source": "https://creativecommons.org/public-domain/pdm/",
+          "description": "Technically not a license, the public domain mark relinquishes all rights to a dataset and dedicates the dataset to the public domain."
+        },
+        "UNKNOWN": {
+          "description": "The license for the dataset is not known."
+        }
+      }
     },
     "programmingLanguage": {
       "description": "A computer programming language",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "programmingLanguage"
     },
     "runtimePlatform": {
       "description": "Runtime platform or script interpreter dependencies (e.g. Java v1, Python 2.3).",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "runtimePlatform"
     },
     "documentation": {
       "description": "URL to any documentation describing the resource and its use.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "documentation"
     },
     "resourceType": {
@@ -102,7 +268,39 @@
         "workflow report"
       ],
       "title": "resourceType",
-      "type": "string"
+      "type": "string",
+      "x-enum-metadata": {
+        "experimentalData": {
+          "description": "Any file derived from or pertaining to a scientific experiment. Experimental data annotations should be applied, possibly disease-related."
+        },
+        "metadata": {
+          "description": "Data about data, information that describes another set of data.",
+          "meaning": "NCIT:C52095"
+        },
+        "protocol": {
+          "description": "A plan specification which has sufficient level of detail and quantitative information to communicate it between investigation agents, so that different investigation agents will reliably be able to independently reproduce the process.",
+          "meaning": "OBI:0000272"
+        },
+        "report": {
+          "description": "A document assembled by an author for the purpose of providing information for the audience.  A report is the output of a documenting process and has the objective to be consumed by a specific audience.  Topic of the report is on something that has completed. A report is not a single figure.  Examples of reports are journal article, patent application, grant progress report, case report (not patient record).\n",
+          "meaning": "IAO:0000088"
+        },
+        "result": {
+          "source": "https://synapse.org",
+          "description": "Any file that reports data results. Examples include figures, presentations, analysis, etc."
+        },
+        "tool": {
+          "source": "https://synapse.org",
+          "description": "Any file or link that represents a tool, model, or algorithm; the tool annotations could be applied"
+        },
+        "weblink": {
+          "description": "An address to another document or other resource on the World Wide Web.",
+          "meaning": "NCIT:C42743"
+        },
+        "workflow report": {
+          "description": "Workflow-generated reports of analysis of primary data, usually created programmatically at completion of workflow step."
+        }
+      }
     }
   },
   "required": [
