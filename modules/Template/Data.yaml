@@ -323,6 +323,53 @@ classes:
       templateFor:
         dataType:
         - epidemiological data
+  CapsidSequenceTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - capsid sequence
+    description: Template for viral capsid protein sequences or engineered variants shared as reference files.
+    is_a: FileBasedTemplate
+    slots:
+    - dataType
+    - sequenceName
+    - sequenceLength
+    - vectorBackbone
+    - species
+    - comments
+    slot_usage:
+      dataType:
+        ifabsent: string(capsid sequence)
+      resourceType:
+        ifabsent: string(experimentalData)
+      species:
+        required: false
+  PromoterSequenceTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - promoter sequence
+    description: Template for promoter or enhancer sequence files used in construct design.
+    is_a: FileBasedTemplate
+    slots:
+    - dataType
+    - sequenceName
+    - sequenceLength
+    - promoterType
+    - vectorBackbone
+    - species
+    - comments
+    slot_usage:
+      dataType:
+        ifabsent: string(promoter sequence)
+      resourceType:
+        ifabsent: string(experimentalData)
+      species:
+        required: false
   EpigeneticsAssayTemplate:
     annotations:
       required: false
@@ -394,7 +441,7 @@ classes:
         range: FlowCytometryPlatformEnum
       fileFormat:
         range: OtherFileFormatEnum
-  GeneralMeasureDataTemplate:
+  PhenotypeMeasurementTemplate:
     annotations:
       match:
         assay:
@@ -416,6 +463,9 @@ classes:
       templateFor:
         dataType:
         - physiology parameter
+        - morphology parameter
+        - volume
+        - weight
     description: 'General template for data in tabular form that aggregates tissue-level
       or cellular-level data.
 
@@ -788,6 +838,27 @@ classes:
     slot_usage:
       assay:
         range: MassSpectrometryAssayEnum
+      platform:
+        range: MassSpectrometryPlatformEnum
+      fileFormat:
+        range: MassSpecFileFormatEnum
+  KinomicsAssayTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - kinomics
+    description: Template for kinase activity profiling experiments such as LINCS or DiscoverX KINOMEscan panels that report percent control/inhibition across large kinase panels.
+    is_a: MassSpecAssayTemplate
+    source: https://lincsproject.org/
+    slots:
+    - kinasePanel
+    - kinaseReadoutType
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+        ifabsent: string(MIB/MS)
       platform:
         range: MassSpectrometryPlatformEnum
       fileFormat:
@@ -1194,7 +1265,7 @@ classes:
       requiresComponent: ''
       templateFor:
         dataType:
-        - gene expression
+        - quantified gene expression
         - proteomics
     close_mappings:
     - htan:BulkRNA-seqLevel3
@@ -1226,8 +1297,8 @@ classes:
       requiresComponent: ''
       templateFor:
         dataType:
-        - aggregated data
-        - gene expression
+        - gene expression matrix
+        - quantified gene expression
         - genomic variants
     close_mappings:
     - https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aggregated_somatic_mutation
@@ -1361,6 +1432,29 @@ classes:
     description: Alias to MassSpecAssayTemplate for backwards-compatibility.
     is_a: MassSpecAssayTemplate
     slots:
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+      platform:
+        range: MassSpectrometryPlatformEnum
+      fileFormat:
+        range: MassSpecFileFormatEnum
+  ProteinInteractionAssayTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - protein interaction data
+    description: Template for datasets reporting protein-protein interaction measurements such as affinity purification mass spectrometry, BioID proximity labeling, or yeast two-hybrid screens.
+    is_a: ProteinAssayTemplate
+    source: https://www.imexconsortium.org/
+    slots:
+    - baitProtein
+    - baitGene
+    - interactionDetectionMethod
+    - interactionScore
+    - interactionScoreType
     slot_usage:
       assay:
         range: MassSpectrometryAssayEnum

@@ -684,6 +684,61 @@ slots:
     range: BooleanEnum
     title: Is Xenograft
     required: false
+  kinasePanel:
+    description: Name or identifier for the kinase assay panel, bead set, or profiling version used (e.g., DiscoverX scanMAX 468 kinases).
+    range: string
+    title: Kinase Panel
+    required: false
+  kinaseReadoutType:
+    description: Metric reported for kinase activity measurements (e.g., percent control, percent inhibition, log2 fold change).
+    range: string
+    title: Kinase Readout Type
+    required: false
+  baitProtein:
+    description: Protein identifier or name of the bait used for interaction detection experiments.
+    range: string
+    title: Bait Protein
+    required: false
+  baitGene:
+    description: Gene symbol associated with the bait protein.
+    range: string
+    title: Bait Gene
+    required: false
+  interactionDetectionMethod:
+    description: Method or platform used to detect protein interactions (e.g., AP-MS, BioID, yeast two-hybrid).
+    range: string
+    title: Interaction Detection Method
+    required: false
+  interactionScore:
+    description: Quantitative confidence or interaction score reported for the protein interaction (e.g., SAINT score, % control).
+    range: float
+    title: Interaction Score
+    required: false
+  interactionScoreType:
+    description: Label describing the scoring metric used for the interaction measurement.
+    range: string
+    title: Interaction Score Type
+    required: false
+  sequenceName:
+    description: Descriptive name or identifier for the nucleotide or amino acid sequence.
+    range: string
+    title: Sequence Name
+    required: false
+  sequenceLength:
+    description: Length of the sequence in nucleotides or amino acids.
+    range: integer
+    title: Sequence Length
+    required: false
+  vectorBackbone:
+    description: Name of the vector or backbone construct carrying the sequence (e.g., AAV, plasmid).
+    range: string
+    title: Vector Backbone
+    required: false
+  promoterType:
+    description: Type or class of promoter represented in the sequence (e.g., CMV, UbC, CAG).
+    range: string
+    title: Promoter Type
+    required: false
   learningDisability:
     description: Characterization of the manifestation of Learning disability.
     range: PresenceEnum
