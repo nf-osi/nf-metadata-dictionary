@@ -1,11 +1,6 @@
 classes:
   PortalPublication:
     attributes:
-      dataset:
-        multivalued: true
-        range: string
-        required: false
-        title: Linked Datasets
       diseaseFocus:
         multivalued: true
         range: DiseaseFocusEnum
@@ -24,9 +19,7 @@ classes:
         description: 'Type of publication in relation to the linked study on the NF
           Portal. A primary publication is the main publication for the study and
           may describe data or resources generated from the study. A secondary publication
-          references or describes reuse of resources for the linked study.
-
-          '
+          references or describes reuse of resources for the linked study.'
         range: PublicationTypeEnum
         required: true
         title: Publication Type
@@ -38,11 +31,8 @@ classes:
         range: string
         required: true
         title: Linked Study Name
-    description: A slightly more specialized publication concept intended for the
-      specific scope of the NF Portal.
-    is_a: PublicationTemplate
-    annotations:
-      dataGranularity: aggregate-level
+    description: Publication entity defined within the specific scope of the NF Portal (WIP).
+
   PublicationTemplate:
     attributes:
       abstract:
@@ -82,8 +72,4 @@ classes:
         range: integer
         required: true
         title: Year
-    description: A generalized data model template for Publications to be hopefully
-      used across dccs
-    notes:
-    - This structure is based on a CSV file from MC2 annotations with customized fields
-      as attributes.
+    description: Publication based on MC2 model
