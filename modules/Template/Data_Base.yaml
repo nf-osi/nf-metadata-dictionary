@@ -1,0 +1,93 @@
+classes:
+  FileBasedTemplate:
+    abstract: true
+    description: 'Abstract template for metadata on file-based resources, i.e. data
+      artifacts stored as files.'
+    is_a: Template
+    notes:
+    - FileBasedTemplate and RecordBasedTemplate are not technically mutually exclusive;
+      some resources may have both file and record representations.
+    slots:
+    - Component
+    - Filename
+    - fileFormat
+    - resourceType
+
+  RecordBasedTemplate:
+    abstract: true
+    description: 'Abstract template for metadata on record-based resources, i.e. structured
+      records in a database or registry rather than file artifacts.'
+    is_a: Template
+    notes:
+    - FileBasedTemplate and RecordBasedTemplate are not technically mutually exclusive;
+      some resources may have both file and record representations.
+
+  BiologicalAssayDataTemplate:
+    abstract: true
+    description: 'A template defining basic metadata on deposited data artifacts (i.e.
+      files) from experimental assays involving biosamples. Donor/individual attributes
+      (species, sex, age, diagnosis) describe the original donor (e.g., human patient
+      tumor). For cell lines, individualID references syn51730943. Model attributes
+      (modelSpecies, modelSex, modelAge) describe any animal model host used. antibodyID
+      and geneticReagentID reference treatments/reagents.'
+    is_a: FileBasedTemplate
+    slots:
+    - dataType
+    - dataSubtype
+    - assay
+    - individualID
+    - species
+    - sex
+    - age
+    - ageUnit
+    - diagnosis
+    - nf1Genotype
+    - nf2Genotype
+    - tumorType
+    - modelSystemName
+    - modelSpecies
+    - modelSex
+    - modelAge
+    - modelAgeUnit
+    - organ
+    - antibodyID
+    - geneticReagentID
+    - comments
+    rules:
+    - description: If age is provided, ageUnit must be provided
+      preconditions:
+        slot_conditions:
+          age:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          ageUnit:
+            value_presence: PRESENT
+    - description: If dataType is provided, dataSubtype must be provided
+      preconditions:
+        slot_conditions:
+          dataType:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          dataSubtype:
+            value_presence: PRESENT
+    annotations:
+      dataGranularity: specimen-level
+
+  NonBiologicalAssayDataTemplate:
+    abstract: true
+    description: 'Describes data artifacts (i.e. files) from an experimental/physical-sciences
+      assay  where input specimens are more at the level of synthesized molecules
+      or inorganic materials.
+
+      '
+    is_a: FileBasedTemplate
+    notes:
+    - Name of this base abstraction is not great, may need to revise.
+    slots:
+    - dataType
+    - dataSubtype
+    - assay
+    annotations:
+      dataGranularity: specimen-level

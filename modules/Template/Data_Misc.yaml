@@ -1,0 +1,123 @@
+classes:
+  GenericDataResourceTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - characteristic
+      dataGranularity: aggregate-level
+    description: Stand-in template for deposited data resources when a more specific
+      template is not yet available. Use temporarily while a domain-specific template
+      is being developed.
+    is_a: FileBasedTemplate
+    slots:
+    - dataType
+    - dataSubtype
+    - assay
+    - species
+    - comments
+    slot_usage:
+      species:
+        required: false
+      resourceType:
+        ifabsent: string(experimentalData)
+
+  CapsidSequenceTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - capsid sequence
+      dataGranularity: specimen-level
+    description: Template for viral capsid protein sequences or engineered variants
+      shared as reference files.
+    is_a: FileBasedTemplate
+    slots:
+    - dataType
+    - sequenceName
+    - sequenceLength
+    - vectorBackbone
+    - species
+    - comments
+    slot_usage:
+      dataType:
+        ifabsent: string(capsid sequence)
+      resourceType:
+        ifabsent: string(experimentalData)
+      species:
+        required: false
+
+  ConstructSequenceTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - promoter sequence
+      dataGranularity: specimen-level
+    description: Template for promoter (default) or enhancer sequence files used in construct
+      design.
+    is_a: FileBasedTemplate
+    slots:
+    - dataType
+    - sequenceName
+    - sequenceLength
+    - promoterType
+    - vectorBackbone
+    - species
+    - comments
+    slot_usage:
+      dataType:
+        ifabsent: string(promoter sequence)
+      resourceType:
+        ifabsent: string(experimentalData)
+      species:
+        required: false
+
+  UpdateMilestoneReport:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - report
+      dataGranularity: specimen-level
+    description: Metadata template for updating milestone report values in NF studies
+      -- currently a supported feature for NTAP and GFF.
+    is_a: PartialTemplate
+    slots:
+    - Filename
+    - resourceType
+    - progressReportNumber
+
+  WorkflowReport:
+    description: Template used for miscellaneous workflow reports and accessory files
+    is_a: FileBasedTemplate
+    notes:
+    - resourceType should default to "workflow report"
+    - note that `dataType` and `dataSubtype` don't apply
+    slots:
+    - assay
+    - relatedDataset
+    - workflow
+    - workflowLink
+    slot_usage:
+      resourceType:
+        ifabsent: string(report)
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT
+    annotations:
+      templateFor:
+        dataType:
+        - workflow metadata
+      dataGranularity: aggregate-level
