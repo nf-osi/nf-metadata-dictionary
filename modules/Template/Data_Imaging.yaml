@@ -1,0 +1,149 @@
+classes:
+  ImagingAssayTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - image
+        assay:
+        - 3D imaging
+        - high content screen
+        - high frequency ultrasound
+        - in vivo bioluminescence
+        - gel filtration chromatography
+        - laser speckle imaging
+        - photograph
+        - positron emission tomography
+        - spatial frequency domain imaging
+        - western blot
+      dataGranularity: specimen-level
+    description: General template for describing imaging data.
+    is_a: BiologicalAssayDataTemplate
+    slot_usage:
+      assay:
+        range: ImagingAssayEnum
+      platform:
+        any_of:
+        - range: MicroscopyImagingPlatformEnum
+        - range: MRIPlatformEnum
+        - range: ImagingSystemPlatformEnum
+      fileFormat:
+        range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
+    slots:
+    - platform
+    - assayTarget
+    - auxiliaryAsset
+
+  MicroscopyAssayTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - image
+        assay:
+        - 3D confocal imaging
+        - 3D electron microscopy
+        - atomic force microscopy
+        - brightfield microscopy
+        - high content screen
+        - immunofluorescence
+        - immunohistochemistry
+        - phase-contrast microscopy
+        - traction force microscopy
+      dataGranularity: specimen-level
+    close_mappings:
+    - htan:ImagingLevel2
+    description: Template for microscopy imaging data. For immunofluorescence or
+      immunohistochemistry assays, provide antibodyID.
+    is_a: ImagingAssayTemplate
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - objective
+    - nominalMagnification
+    - lensAperture
+    - workingDistance
+    - workingDistanceUnit
+    - immersion
+    - antibodyID
+    slot_usage:
+      assay:
+        range: ImagingAssayEnum
+      platform:
+        range: MicroscopyImagingPlatformEnum
+      fileFormat:
+        range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
+    rules:
+    - description: If workingDistance is provided, workingDistanceUnit must be provided
+      preconditions:
+        slot_conditions:
+          workingDistance:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          workingDistanceUnit:
+            value_presence: PRESENT
+    - description: If aliquotID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          aliquotID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+    - description: If parentSpecimenID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          parentSpecimenID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+
+  MRIAssayTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - image
+        assay:
+        - conventional MRI
+        - functional MRI
+      dataGranularity: specimen-level
+    description: Template for describing MRI data.
+    is_a: ImagingAssayTemplate
+    slots:
+    - bodySite
+    - MRISequence
+    - experimentalCondition
+    - experimentalTimepoint
+    - timepointUnit
+    slot_usage:
+      assay:
+        range: ImagingAssayEnum
+      platform:
+        range: MRIPlatformEnum
+      fileFormat:
+        range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT

@@ -1,0 +1,46 @@
+# Data Template Mapping
+
+This maps FileBasedTemplate subclasses to their most supported dataTypes and assays.
+
+
+| Template | Parent | Data Types | Assays |
+|----------|--------|------------|--------|
+| AffinityProteomicsTemplate | ProteinAssayTemplate | immunoassay, proteomics | RPPA, SomaScan |
+| BehavioralAssayTemplate | BiologicalAssayDataTemplate | behavioral data | actigraphy, active avoidance learning behavior assay, contextual conditioning behavior assay, elevated plus maze test, feeding assay, novelty response behavior assay, open field test, rotarod performance test |
+| BulkSequencingAssayTemplate | GeneticsAssayTemplate | gene expression | ISO-seq, NOMe-seq, Sanger sequencing, T cell receptor repertoire sequencing, miRNA-seq, next-generation sequencing, ribo-seq, scCGI-seq |
+| CellTissuePhenotypingTemplate | BiologicalAssayDataTemplate | morphology parameter, physiology parameter, volume, weight | BrdU proliferation assay, Matrigel-based tumorigenesis assay, cell competition, cell count, cell proliferation, cell viability assay, complex II enzyme activity assay, electrochemiluminescence, focus forming assay, in vivo tumor growth |
+| ChIPSeqTemplate | EpigenomicsAssayTemplate | chromatin activity | ChIP-seq |
+| ClinicalAssayTemplate | BiologicalAssayDataTemplate | clinical | Child Behavior Checklist for Ages 1.5-5, Child Behavior Checklist for Ages 6-18, Corsi blocks, NIH Toolbox, Riccardi and Ablon scales, Social Responsiveness Scale, Social Responsiveness Scale, Second Edition, Von Frey test, blood chemistry measurement, body size trait measurement, gait measurement, questionnaire, survival |
+| ElectrophysiologyAssayTemplate | BiologicalAssayDataTemplate | electrophysiology | local field potential recording, long term potentiation assay, multi-electrode array, pattern electroretinogram, whole-cell patch clamp |
+| EpidemiologyDataTemplate | FileBasedTemplate | epidemiological data |  |
+| EpigenomicsAssayTemplate | BulkSequencingAssayTemplate | chromatin activity | ATAC-seq, CAPP-seq, CUT&RUN, ERR bisulfite sequencing, HI-C, NOMe-seq, bisulfite sequencing, oxBS-seq |
+| FlowCytometryTemplate | BiologicalAssayDataTemplate | immunoassay | flow cytometry |
+| GenericDataResourceTemplate | FileBasedTemplate | characteristic |  |
+| GenomicsArrayTemplate | GeneticsAssayTemplate | genomic features | NanoString nCounter Analysis System, RNA array, SNP array, array, methylation array, miRNA array, microarray |
+| GenomicsAssayTemplate | BulkSequencingAssayTemplate | gene expression |  |
+| GenomicsAssayTemplateExtended | GenomicsAssayTemplate | gene expression |  |
+| ImagingAssayTemplate | BiologicalAssayDataTemplate | image | 3D imaging, gel filtration chromatography, high content screen, high frequency ultrasound, in vivo bioluminescence, laser speckle imaging, photograph, positron emission tomography, spatial frequency domain imaging, western blot |
+| KinomicsAssayTemplate | MassSpecAssayTemplate | kinomics |  |
+| LightScatteringAssayTemplate | MaterialScienceAssayTemplate | particle characterization | dynamic light scattering, microrheology, oscillatory rheology, static light scattering |
+| MRIAssayTemplate | ImagingAssayTemplate | image | conventional MRI, functional MRI |
+| MassSpecAssayTemplate | ProteinAssayTemplate | mass spectrometry data, proteomics | FIA-MSMS, MudPIT, TMT quantitation, label free mass spectrometry, liquid chromatography/mass spectrometry, liquid chromatography/tandem mass spectrometry, mass spectrometry, ultra high-performance liquid chromatography/tandem mass spectrometry |
+| MaterialScienceAssayTemplate | NonBiologicalAssayDataTemplate | molecular property, particle characterization | differential scanning calorimetry, oscillatory rheology, rheometry |
+| MethylationArrayTemplate | GenomicsArrayTemplate | chromatin activity | methylation array |
+| MicroscopyAssayTemplate | ImagingAssayTemplate | image | 3D confocal imaging, 3D electron microscopy, atomic force microscopy, brightfield microscopy, high content screen, immunofluorescence, immunohistochemistry, phase-contrast microscopy, traction force microscopy |
+| PdxGenomicsAssayTemplate | GenomicsAssayTemplate | gene expression |  |
+| PlateBasedReporterAssayTemplate | BiologicalAssayDataTemplate | drug combination screen, drug screen, pharmacokinetics | 2D AlamarBlue absorbance, 2D AlamarBlue fluorescence, 2D Incucyte, ELISA, cell viability assay, combination library screen, combination screen, compound screen, sandwich ELISA |
+| ProcessedAlignedReadsTemplate | BiologicalAssayDataTemplate | aligned reads | ATAC-seq, CAPP-seq, CUT&RUN, ChIP-seq, ERR bisulfite sequencing, ISO-seq, NOMe-seq, RNA-seq, T cell receptor repertoire sequencing, bisulfite sequencing, miRNA-seq, next-generation sequencing, scCGI-seq, targeted exome sequencing, whole exome sequencing, whole genome sequencing |
+| ProcessedGeneExpressionTemplate | BiologicalAssayDataTemplate | count matrix, isoform expression, quantified gene expression | RNA array, RNA-seq, miRNA array, microarray, quantitative PCR, single-cell RNA-seq |
+| ProcessedMergedDataTemplate | FileBasedTemplate | gene expression matrix, genomic variants, quantified gene expression |  |
+| ProcessedVariantCallsTemplate | BiologicalAssayDataTemplate | annotated germline variants, annotated somatic mutation, copy number variants, germline variants, somatic variants, structural variants | TIDE, next-generation sequencing, targeted exome sequencing, whole exome sequencing, whole genome sequencing |
+| ProteinInteractionAssayTemplate | ProteinAssayTemplate | protein interaction data |  |
+| ProteomicsAssayTemplate | MassSpecAssayTemplate | mass spectrometry data, proteomics |  |
+| ProtocolTemplate | FileBasedTemplate | protocol |  |
+| RNASeqTemplate | BulkSequencingAssayTemplate | gene expression | RNA-seq, lncRNA-seq |
+| ReferenceSequenceTemplate | FileBasedTemplate | guide RNA sequence, plasmid sequence, primer sequence, probe sequence, reference sequence |  |
+| ScRNASeqTemplate | ScSequencingAssayTemplate | gene expression | single-cell RNA-seq |
+| ScSequencingAssayTemplate | GeneticsAssayTemplate | gene expression | ISO-seq, NOMe-seq, Sanger sequencing, T cell receptor repertoire sequencing, miRNA-seq, next-generation sequencing, ribo-seq, scCGI-seq |
+| SourceCodeTemplate | FileBasedTemplate | text data |  |
+| WESTemplate | BulkSequencingAssayTemplate | genomic variants | whole exome sequencing |
+| WGSTemplate | BulkSequencingAssayTemplate | genomic variants | whole genome sequencing |
+| WorkflowReport | FileBasedTemplate | workflow metadata |  |

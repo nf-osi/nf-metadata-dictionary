@@ -1,8 +1,12 @@
 classes:
   ProtocolTemplate:
+    is_a: FileBasedTemplate
     annotations:
       required: false
       requiresComponent: ''
+      templateFor:
+        dataType:
+        - protocol
     description: Describes protocol document based on https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT.
     slots:
     - Component

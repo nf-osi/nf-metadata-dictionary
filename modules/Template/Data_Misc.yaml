@@ -1,0 +1,93 @@
+classes:
+  GenericDataResourceTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - characteristic
+    description: Stand-in template for deposited data resources when a more specific
+      template is not yet available. Use temporarily while a domain-specific template
+      is being developed.
+    is_a: FileBasedTemplate
+    slots:
+    - dataType
+    - dataSubtype
+    - assay
+    - species
+    - comments
+    slot_usage:
+      species:
+        required: false
+      resourceType:
+        ifabsent: string(experimentalData)
+
+  ReferenceSequenceTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - reference sequence
+        - guide RNA sequence
+        - plasmid sequence
+        - primer sequence
+        - probe sequence
+    description: Template for reference sequence files used in experimental design,
+      such as guide RNAs, plasmids, primers, probes, or other construct elements.
+    is_a: FileBasedTemplate
+    slots:
+    - dataType
+    - sequenceName
+    - sequenceLength
+    - species
+    - comments
+    slot_usage:
+      resourceType:
+        ifabsent: string(experimentalData)
+      species:
+        required: false
+
+  UpdateMilestoneReport:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - report
+    description: Metadata template for updating milestone report values in NF studies
+      -- currently a supported feature for NTAP and GFF.
+    is_a: PartialTemplate
+    slots:
+    - Filename
+    - resourceType
+    - progressReportNumber
+
+  WorkflowReport:
+    description: Template used for miscellaneous workflow reports and accessory files
+    is_a: FileBasedTemplate
+    notes:
+    - resourceType should default to "workflow report"
+    - note that `dataType` and `dataSubtype` don't apply
+    slots:
+    - assay
+    - relatedDataset
+    - workflow
+    - workflowLink
+    slot_usage:
+      resourceType:
+        ifabsent: string(report)
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT
+    annotations:
+      templateFor:
+        dataType:
+        - workflow metadata

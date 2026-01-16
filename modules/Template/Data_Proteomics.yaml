@@ -1,0 +1,162 @@
+classes:
+  ProteinAssayTemplate:
+    abstract: true
+    annotations:
+      required: false
+      requiresComponent: ''
+      dataGranularity: specimen-level
+    description: Abstract template for data from some assay of protein structure and
+      function. Data should be instantiated with more specific template.
+    is_a: BiologicalAssayDataTemplate
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - platform
+    - proteinExtractSource
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+      platform:
+        range: MassSpectrometryPlatformEnum
+      fileFormat:
+        range: MassSpecFileFormatEnum
+
+  MassSpecAssayTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - mass spectrometry data
+        - proteomics
+        assay:
+        - mass spectrometry
+        - FIA-MSMS
+        - label free mass spectrometry
+        - MudPIT
+        - TMT quantitation
+        - liquid chromatography/mass spectrometry
+        - liquid chromatography/tandem mass spectrometry
+        - ultra high-performance liquid chromatography/tandem mass spectrometry
+      dataGranularity: specimen-level
+    close_mappings:
+    - htan:MassSpectrometryLevel1
+    description: Template for raw mass spec-based proteomics data.
+    is_a: ProteinAssayTemplate
+    notes:
+    - Technically, mass spec does not have to be considered a biological assay, but
+      we'll classify it as such when used with a biological sample.
+    slots:
+    - dataCollectionMode
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+      platform:
+        range: MassSpectrometryPlatformEnum
+      fileFormat:
+        range: MassSpecFileFormatEnum
+
+  ProteomicsAssayTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - mass spectrometry data
+        - proteomics
+      dataGranularity: specimen-level
+    description: Alias to MassSpecAssayTemplate for backwards-compatibility.
+    is_a: MassSpecAssayTemplate
+    slots:
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+      platform:
+        range: MassSpectrometryPlatformEnum
+      fileFormat:
+        range: MassSpecFileFormatEnum
+
+  KinomicsAssayTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - kinomics
+      dataGranularity: specimen-level
+    description: Template for kinase activity profiling experiments such as LINCS
+      or DiscoverX KINOMEscan panels that report percent control/inhibition across
+      large kinase panels.
+    is_a: MassSpecAssayTemplate
+    source: https://lincsproject.org/
+    slots:
+    - kinasePanel
+    - kinaseReadoutType
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+        ifabsent: string(MIB/MS)
+      platform:
+        range: MassSpectrometryPlatformEnum
+      fileFormat:
+        range: MassSpecFileFormatEnum
+
+  AffinityProteomicsTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - proteomics
+        - immunoassay
+        assay:
+        - RPPA
+        - SomaScan
+      dataGranularity: specimen-level
+    close_mappings:
+    - htan:RPPALevel2
+    description: Template for affinity-based proteomics data including antibody arrays
+      (RPPA) and aptamer-based platforms (SomaScan). For antibody-based assays (RPPA),
+      provide antibodyID. For aptamer-based assays (SomaScan), provide proteomicsPanel,
+      panelVersion, and normalizationMethod.
+    is_a: ProteinAssayTemplate
+    slots:
+    - antibodyID
+    - proteomicsPanel
+    - panelVersion
+    - normalizationMethod
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+      platform:
+        range: ArrayPlatformEnum
+      fileFormat:
+        range: ArrayFileFormatEnum
+
+  ProteinInteractionAssayTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - protein interaction data
+      dataGranularity: specimen-level
+    description: Template for datasets reporting protein-protein interaction measurements
+      such as affinity purification mass spectrometry, BioID proximity labeling, or
+      yeast two-hybrid screens.
+    is_a: ProteinAssayTemplate
+    source: https://www.imexconsortium.org/
+    slots:
+    - baitProtein
+    - baitGene
+    - interactionDetectionMethod
+    - interactionScore
+    - interactionScoreType
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+      platform:
+        range: MassSpectrometryPlatformEnum
+      fileFormat:
+        range: MassSpecFileFormatEnum

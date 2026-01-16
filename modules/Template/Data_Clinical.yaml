@@ -1,0 +1,148 @@
+classes:
+  ClinicalAssayTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - clinical
+        assay:
+        - blood chemistry measurement
+        - body size trait measurement
+        - survival
+        - Corsi blocks
+        - gait measurement
+        - NIH Toolbox
+        - questionnaire
+        - Riccardi and Ablon scales
+        - Social Responsiveness Scale
+        - Social Responsiveness Scale, Second Edition
+        - Von Frey test
+        - Child Behavior Checklist for Ages 1.5-5
+        - Child Behavior Checklist for Ages 6-18
+      dataGranularity: individual-level
+    description: 'General template for typically tabular **individual-level** data.
+      This can include repeated measures and a drug treatment context.'
+    is_a: BiologicalAssayDataTemplate
+    slots:
+    - experimentalFactor
+    - experimentalCondition
+    - timepointUnit
+    - compoundName
+    - compoundDose
+    - compoundDoseUnit
+    - comments
+    slot_usage:
+      assay:
+        range: ClinicalBehavioralAssayEnum
+      fileFormat:
+        any_of:
+        - range: TabularFileFormatEnum
+        - range: DocumentFileFormatEnum
+      dataType:
+        ifabsent: string(clinical)
+    rules:
+    - description: If compoundDose is provided, compoundDoseUnit must be provided
+      preconditions:
+        slot_conditions:
+          compoundDose:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          compoundDoseUnit:
+            value_presence: PRESENT
+
+  BehavioralAssayTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - behavioral data
+        assay:
+        - feeding assay
+        - contextual conditioning behavior assay
+        - elevated plus maze test
+        - active avoidance learning behavior assay
+        - novelty response behavior assay
+        - open field test
+        - rotarod performance test
+        - actigraphy
+      dataGranularity: specimen-level
+    description: Template for behavioral assay data from model organisms measuring
+      behaviors such as feeding, learning, memory, motor coordination, and activity
+      patterns.
+    is_a: BiologicalAssayDataTemplate
+    slots:
+    - modelSystemName
+    - experimentalFactor
+    - experimentalCondition
+    - experimentalTimepoint
+    - timepointUnit
+    - compoundName
+    - compoundDose
+    - compoundDoseUnit
+    - genePerturbed
+    - genePerturbationType
+    - genePerturbationTechnology
+    - comments
+    slot_usage:
+      assay:
+        range: ClinicalBehavioralAssayEnum
+      fileFormat:
+        range: TabularFileFormatEnum
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
+    - description: If compoundDose is provided, compoundDoseUnit must be provided
+      preconditions:
+        slot_conditions:
+          compoundDose:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          compoundDoseUnit:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be
+        provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
+
+  EpidemiologyDataTemplate:
+    description: For aggregated data from defined populations or cohorts, used in/derived
+      from epidemiology studies.
+    is_a: FileBasedTemplate
+    slots:
+    - dataType
+    - populationCoverage
+    - epidemiologyMetric
+    slot_usage:
+      dataType:
+        ifabsent: string(epidemiological data)
+    annotations:
+      templateFor:
+        dataType:
+        - epidemiological data
+      dataGranularity: population-level

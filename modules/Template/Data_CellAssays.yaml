@@ -1,0 +1,228 @@
+classes:
+  CellTissuePhenotypingTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - physiology parameter
+        - morphology parameter
+        - volume
+        - weight
+        assay:
+        - cell competition
+        - cell count
+        - cell proliferation
+        - cell viability assay # viability measured by non-plate-based method
+        - complex II enzyme activity assay
+        - BrdU proliferation assay
+        - electrochemiluminescence
+        - focus forming assay
+        - in vivo tumor growth
+        - Matrigel-based tumorigenesis assay
+      dataGranularity: specimen-level
+    description: 'Data that characterizes cell/tissue morphology or physiology often in the context of different experimental conditions'
+    is_a: BiologicalAssayDataTemplate
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - modelSystemName
+    - experimentalFactor
+    - experimentalCondition
+    - experimentalTimepoint
+    - timepointUnit
+    - compoundName
+    - compoundDose
+    - compoundDoseUnit
+    - genePerturbed
+    - genePerturbationType
+    - genePerturbationTechnology
+    - comments
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
+    - description: If compoundDose is provided, compoundDoseUnit must be provided
+      preconditions:
+        slot_conditions:
+          compoundDose:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          compoundDoseUnit:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be
+        provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
+    - description: If aliquotID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          aliquotID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+    - description: If parentSpecimenID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          parentSpecimenID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+
+  FlowCytometryTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - immunoassay
+        assay:
+        - flow cytometry
+      dataGranularity: specimen-level
+    close_mappings:
+    - https://www.immport.org/shared/dataModelDocumentation?table=fcs_analyzed_result
+    description: Template for flow cytometry assay
+    is_a: BiologicalAssayDataTemplate
+    slots:
+    - platform
+    - cellType
+    - auxiliaryAsset
+    slot_usage:
+      assay:
+        range: CellBasedAssayEnum
+        ifabsent: string(flow cytometry)
+      platform:
+        range: FlowCytometryPlatformEnum
+      fileFormat:
+        range: OtherFileFormatEnum
+
+  ElectrophysiologyAssayTemplate:
+    annotations:
+      templateFor:
+        dataType:
+        - electrophysiology
+        assay:
+        - local field potential recording
+        - long term potentiation assay
+        - multi-electrode array
+        - pattern electroretinogram
+        - whole-cell patch clamp
+      dataGranularity: specimen-level
+    description: Template for raw electrophysiology data (electrical recordings).
+    is_a: BiologicalAssayDataTemplate
+    slots:
+    - platform
+    - bodySite
+    - cellType
+    - recordingSource
+    - experimentalTimepoint
+    - timepointUnit
+    - experimentalCondition
+    - auxiliaryAsset
+    source: https://arxiv.org/pdf/1605.07673.pdf
+    slot_usage:
+      assay:
+        range: CellBasedAssayEnum
+      fileFormat:
+        range: OtherFileFormatEnum
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
+
+  PlateBasedReporterAssayTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - drug screen
+        - drug combination screen
+        - pharmacokinetics
+        assay:
+        - 2D AlamarBlue absorbance
+        - 2D AlamarBlue fluorescence
+        - 2D Incucyte
+        - cell viability assay
+        - combination library screen
+        - combination screen
+        - compound screen
+        - ELISA
+        - sandwich ELISA
+      dataGranularity: specimen-level
+    description: Generic template for describing data from a plate-based reporter
+      assay.
+    is_a: BiologicalAssayDataTemplate
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - platform
+    - assayTarget
+    - compoundName
+    - compoundDose
+    - compoundDoseUnit
+    - experimentalCondition
+    - experimentalTimepoint
+    - timepointUnit
+    - reporterGene
+    - reporterSubstance
+    slot_usage:
+      assay:
+        range: CellBasedAssayEnum
+      platform:
+        range: PlateReaderPlatformEnum
+      fileFormat:
+        range: TabularFileFormatEnum
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
+    - description: If compoundDose is provided, compoundDoseUnit must be provided
+      preconditions:
+        slot_conditions:
+          compoundDose:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          compoundDoseUnit:
+            value_presence: PRESENT

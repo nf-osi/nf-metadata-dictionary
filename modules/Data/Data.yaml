@@ -5,10 +5,6 @@ enums:
     - http://edamontology.org/data_0006
     - Broad term/abstract class; should not be used for annotation
     permissible_values:
-      aggregated data:
-        description: Summary or group-level data.
-        notes:
-        - Not preferred for annotation.
       aligned reads:
         description: Aligned reads output from alignment workflows
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads
@@ -68,6 +64,8 @@ enums:
       data sharing plan:
         aliases:
         - DMP
+        - Data Management Plan
+        - Data Landscape Survey
         description: A document containing the plan and documentation for data sharing, one component of overall data management.
         meaning: EDAM:data_4040
         notes:
@@ -100,6 +98,14 @@ enums:
         - EDAM does have a broader mapping, [expression data](http://edamontology.org/data_2603)
         - The mapping used maps to [gene expression profile](http://edamontology.org/data_0928)
         - Covers both raw (e.g. fastqs, microarray intensities) and processed gene expression data (e.g. normalized gene expression matrix).
+      gene expression matrix:
+        aliases:
+        - Gene expression data matrix
+        - Normalised microarray data
+        description: The final processed (normalised) data for a set of hybridisations in a microarray experiment. This combines data from all hybridisations.
+        meaning: EDAM:data_3112
+      quantified gene expression:
+        description: Expression measurements that have been summarized or normalized, typically representing quantified abundance metrics rather than raw instrument output.
       genomic features:
         description: Data of sequence feature (continuous extent of biological sequence) that is of genomic origin.
         meaning: GENO:0000481
@@ -118,6 +124,14 @@ enums:
       germline variants:
         description: Called germline variants
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation
+      guide RNA sequence:
+        aliases:
+        - sgRNA sequence
+        - gRNA sequence
+        description: Sequence data for guide RNAs used in CRISPR or other gene editing experiments.
+        meaning: EDAM:data_3494
+        notes:
+        - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
       image:
         aliases:
         - Image data
@@ -170,12 +184,6 @@ enums:
         meaning: EDAM:data_2600
         notes:
         - EDAM preferred label is 'Pathway or network'
-      normalized intensities:
-        description: Normalized intensity values from the instrument.
-        notes:
-        - Not preferred for annotation.
-        - See RawIntensities
-        source: https://w3id.org/synapse/nfosi/vocab/NormalizedIntensities
       nucleic acid sequence record:
         aliases:
         - Nucleotide sequence record
@@ -206,11 +214,26 @@ enums:
         meaning: EDAM:data_3722
         notes:
         - Relation to pharmacokinetic data -- certain physiology parameteres inherent to the organism influences its pharmokinetics of a drug.
+      plasmid sequence:
+        description: Sequence data for plasmid vectors used in cloning or gene expression experiments.
+        meaning: EDAM:data_3494
+        notes:
+        - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
       plot:
         aliases:
         - Graph data
         description: Data that has been plotted as a graph of some type, or data representing such a graph.
         meaning: EDAM:data_2884
+      primer sequence:
+        description: Sequence data for oligonucleotide primers used in PCR or sequencing experiments.
+        meaning: EDAM:data_3494
+        notes:
+        - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
+      probe sequence:
+        description: Sequence data for nucleic acid probes used in hybridization experiments.
+        meaning: EDAM:data_3494
+        notes:
+        - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
       promoter sequence:
         description: Sequence data of promoter region (P0, flCAG, etc.)
         meaning: EDAM:data_3494
@@ -239,11 +262,11 @@ enums:
         - Number Count
         description: The number or amount of something.
         meaning: NCIT:C25463
-      raw intensities:
-        description: Raw intensity values from the instrument (including microarrays, plate reader assays, raw pixel intensities from imaging assay, mass spectrometry, etc.).
+      reference sequence:
+        description: Generic sequence data used as a reference in experimental design or analysis.
+        meaning: EDAM:data_3494
         notes:
-        - Not preferred for annotation.
-        source: https://w3id.org/synapse/nfosi/vocab/RawIntensities
+        - Use more specific sequence type if applicable (e.g., primer sequence, plasmid sequence).
       report:
         aliases:
         - Document
