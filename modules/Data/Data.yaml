@@ -124,6 +124,14 @@ enums:
       germline variants:
         description: Called germline variants
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation
+      guide RNA sequence:
+        aliases:
+        - sgRNA sequence
+        - gRNA sequence
+        description: Sequence data for guide RNAs used in CRISPR or other gene editing experiments.
+        meaning: EDAM:data_3494
+        notes:
+        - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
       image:
         aliases:
         - Image data
@@ -206,11 +214,26 @@ enums:
         meaning: EDAM:data_3722
         notes:
         - Relation to pharmacokinetic data -- certain physiology parameteres inherent to the organism influences its pharmokinetics of a drug.
+      plasmid sequence:
+        description: Sequence data for plasmid vectors used in cloning or gene expression experiments.
+        meaning: EDAM:data_3494
+        notes:
+        - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
       plot:
         aliases:
         - Graph data
         description: Data that has been plotted as a graph of some type, or data representing such a graph.
         meaning: EDAM:data_2884
+      primer sequence:
+        description: Sequence data for oligonucleotide primers used in PCR or sequencing experiments.
+        meaning: EDAM:data_3494
+        notes:
+        - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
+      probe sequence:
+        description: Sequence data for nucleic acid probes used in hybridization experiments.
+        meaning: EDAM:data_3494
+        notes:
+        - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
       promoter sequence:
         description: Sequence data of promoter region (P0, flCAG, etc.)
         meaning: EDAM:data_3494
@@ -239,6 +262,11 @@ enums:
         - Number Count
         description: The number or amount of something.
         meaning: NCIT:C25463
+      reference sequence:
+        description: Generic sequence data used as a reference in experimental design or analysis.
+        meaning: EDAM:data_3494
+        notes:
+        - Use more specific sequence type if applicable (e.g., primer sequence, plasmid sequence).
       report:
         aliases:
         - Document

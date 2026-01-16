@@ -50,12 +50,15 @@ classes:
         - atomic force microscopy
         - brightfield microscopy
         - high content screen
+        - immunofluorescence
+        - immunohistochemistry
         - phase-contrast microscopy
         - traction force microscopy
       dataGranularity: specimen-level
     close_mappings:
     - htan:ImagingLevel2
-    description: Template for data from a microscopy data.
+    description: Template for microscopy imaging data. For immunofluorescence or
+      immunohistochemistry assays, provide antibodyID.
     is_a: ImagingAssayTemplate
     slots:
     - parentSpecimenID
@@ -67,6 +70,7 @@ classes:
     - workingDistance
     - workingDistanceUnit
     - immersion
+    - antibodyID
     slot_usage:
       assay:
         range: ImagingAssayEnum
@@ -104,30 +108,6 @@ classes:
         slot_conditions:
           specimenID:
             value_presence: PRESENT
-
-  ImmunoMicroscopyTemplate:
-    annotations:
-      required: false
-      requiresComponent: ''
-      templateFor:
-        dataType:
-        - image
-        assay:
-        - immunofluorescence
-        - immunohistochemistry
-      dataGranularity: specimen-level
-    description: Template for describing immunofluorescence or immunohistochemistry
-      images.
-    is_a: MicroscopyAssayTemplate
-    slots:
-    - antibodyID
-    slot_usage:
-      assay:
-        range: ImagingAssayEnum
-      platform:
-        range: MicroscopyImagingPlatformEnum
-      fileFormat:
-        range: ImagingFileFormatEnum
 
   MRIAssayTemplate:
     annotations:

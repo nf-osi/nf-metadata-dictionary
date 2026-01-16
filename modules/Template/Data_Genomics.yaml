@@ -38,7 +38,7 @@ classes:
       requiresComponent: ''
       templateFor:
         dataType:
-        - nucleic acid sequence record
+        - gene expression
         assay:
         - ISO-seq
         - miRNA-seq
@@ -107,7 +107,7 @@ classes:
       requiresComponent: ''
       templateFor:
         dataType:
-        - nucleic acid sequence record
+        - gene expression
       dataGranularity: specimen-level
     description: Alias to BulkSequencingAssayTemplate, use for sequence data on a
       large scale when there is no template available that is more specific.
@@ -132,7 +132,7 @@ classes:
       requiresComponent: ''
       templateFor:
         dataType:
-        - nucleic acid sequence record
+        - gene expression
       dataGranularity: specimen-level
     description: Genomics assay template but with additional experiment data.
     is_a: GenomicsAssayTemplate
@@ -180,7 +180,7 @@ classes:
       requiresComponent: ''
       templateFor:
         dataType:
-        - nucleic acid sequence record
+        - gene expression
       dataGranularity: specimen-level
     description: Raw genomics data from patient-derived xenograft (PDX) experiment,
       with additional PDX-relevant metadata.
@@ -291,7 +291,7 @@ classes:
       requiresComponent: ''
       templateFor:
         dataType:
-        - nucleic acid sequence record
+        - gene expression
         assay:
         - ISO-seq
         - miRNA-seq
@@ -382,7 +382,7 @@ classes:
       requiresComponent: ''
       templateFor:
         dataType:
-        - nucleic acid sequence record
+        - genomic variants
         assay:
         - whole exome sequencing
       dataGranularity: specimen-level
@@ -400,7 +400,7 @@ classes:
       fileFormat:
         range: SequencingFileFormatEnum
       dataType:
-        ifabsent: string(nucleic acid sequence record)
+        ifabsent: string(genomic variants)
 
   WGSTemplate:
     annotations:
@@ -408,7 +408,7 @@ classes:
       requiresComponent: ''
       templateFor:
         dataType:
-        - nucleic acid sequence record
+        - genomic variants
         assay:
         - whole genome sequencing
       dataGranularity: specimen-level
@@ -423,7 +423,7 @@ classes:
       fileFormat:
         range: SequencingFileFormatEnum
       dataType:
-        ifabsent: string(nucleic acid sequence record)
+        ifabsent: string(genomic variants)
 
   # Epigenomics Templates
   EpigenomicsAssayTemplate:
