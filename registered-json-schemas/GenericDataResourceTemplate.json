@@ -1,15 +1,7 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-processedmergeddatatemplate",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-genericdataresourcetemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Further processed data with multiple samples aggregated into one file. This may be also be known as level-4 data. Unlike level-2 and level-3 data, individual-level attributes such as age and sex are no longer surfaced on the data file directly.",
-  "if": {
-    "properties": {
-      "workflow": {}
-    },
-    "required": [
-      "workflow"
-    ]
-  },
+  "description": "Stand-in template for deposited data resources when a more specific template is not yet available. Use temporarily while a domain-specific template is being developed.",
   "properties": {
     "dataType": {
       "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
@@ -92,37 +84,6 @@
       ],
       "title": "dataSubtype",
       "type": "string"
-    },
-    "workflow": {
-      "description": "",
-      "enum": [
-        "CNVkit",
-        "DESeq2",
-        "DeepVariant",
-        "FastQC",
-        "FreeBayes",
-        "GATK BaseRecalibration",
-        "GATK MarkDuplicates",
-        "MultiQC",
-        "Mutect2",
-        "STAR and Salmon",
-        "Sarek",
-        "Strelka2",
-        "StringTie",
-        "TrimGalore"
-      ],
-      "title": "workflow",
-      "type": "string"
-    },
-    "workflowLink": {
-      "description": "Workflow URL reference",
-      "type": "string",
-      "title": "workflowLink"
-    },
-    "auxiliaryAsset": {
-      "description": "URI to supplemental asset(s), e.g. QC reports or other auxiliary files to support the processing, analysis, or interpretation of the current entity.\n",
-      "type": "string",
-      "title": "auxiliaryAsset"
     },
     "assay": {
       "description": "The technology used to generate the data in this file.",
@@ -333,6 +294,29 @@
       ],
       "title": "assay"
     },
+    "species": {
+      "description": "",
+      "enum": [
+        "Danio rerio",
+        "Drosophila melanogaster",
+        "Gallus gallus",
+        "Homo sapiens",
+        "Mus musculus",
+        "Mus musculus (humanized)",
+        "Oryctolagus cuniculus",
+        "Pan troglodytes",
+        "Rattus norvegicus",
+        "Rhesus macaque",
+        "Sus scrofa"
+      ],
+      "title": "species",
+      "type": "string"
+    },
+    "comments": {
+      "description": "Brief free-text comments that may also be important to understanding the resource.",
+      "type": "string",
+      "title": "comments"
+    },
     "fileFormat": {
       "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
       "type": "string",
@@ -481,14 +465,6 @@
     "fileFormat",
     "resourceType"
   ],
-  "then": {
-    "properties": {
-      "workflowLink": {}
-    },
-    "required": [
-      "workflowLink"
-    ]
-  },
-  "title": "ProcessedMergedDataTemplate",
+  "title": "GenericDataResourceTemplate",
   "type": "object"
 }

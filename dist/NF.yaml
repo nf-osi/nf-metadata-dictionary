@@ -636,6 +636,76 @@ slots:
     range: BooleanEnum
     title: Is Xenograft
     required: false
+  kinasePanel:
+    description: Name or identifier for the kinase assay panel, bead set, or profiling version used (e.g., DiscoverX scanMAX 468 kinases).
+    range: string
+    title: Kinase Panel
+    required: false
+  kinaseReadoutType:
+    description: Metric reported for kinase activity measurements (e.g., percent control, percent inhibition, log2 fold change).
+    range: string
+    title: Kinase Readout Type
+    required: false
+  proteomicsPanel:
+    description: Name or identifier for the proteomics assay panel used (e.g., SomaScan 7K, Olink Explore 3072).
+    range: string
+    title: Proteomics Panel
+    required: false
+  panelVersion:
+    description: Version of the assay panel used.
+    range: string
+    title: Panel Version
+    required: false
+  normalizationMethod:
+    description: Method used to normalize the data (e.g., plate calibration, median normalization, log2 transformation).
+    range: string
+    title: Normalization Method
+    required: false
+  baitProtein:
+    description: Protein identifier or name of the bait used for interaction detection experiments.
+    range: string
+    title: Bait Protein
+    required: false
+  baitGene:
+    description: Gene symbol associated with the bait protein.
+    range: string
+    title: Bait Gene
+    required: false
+  interactionDetectionMethod:
+    description: Method or platform used to detect protein interactions (e.g., AP-MS, BioID, yeast two-hybrid).
+    range: string
+    title: Interaction Detection Method
+    required: false
+  interactionScore:
+    description: Quantitative confidence or interaction score reported for the protein interaction (e.g., SAINT score, % control).
+    range: float
+    title: Interaction Score
+    required: false
+  interactionScoreType:
+    description: Label describing the scoring metric used for the interaction measurement.
+    range: string
+    title: Interaction Score Type
+    required: false
+  sequenceName:
+    description: Descriptive name or identifier for the nucleotide or amino acid sequence.
+    range: string
+    title: Sequence Name
+    required: false
+  sequenceLength:
+    description: Length of the sequence in nucleotides or amino acids.
+    range: integer
+    title: Sequence Length
+    required: false
+  vectorBackbone:
+    description: Name of the vector or backbone construct carrying the sequence (e.g., AAV, plasmid).
+    range: string
+    title: Vector Backbone
+    required: false
+  promoterType:
+    description: Type or class of promoter represented in the sequence (e.g., CMV, UbC, CAG).
+    range: string
+    title: Promoter Type
+    required: false
   learningDisability:
     description: Characterization of the manifestation of Learning disability.
     range: PresenceEnum
@@ -2528,6 +2598,9 @@ enums:
         meaning: NCIT:C198498
       Perlegen 300Karray:
         description: ''
+      SomaLogic SomaScan:
+        description: Aptamer-based proteomics platform using SOMAmer reagents (modified DNA aptamers) to quantify thousands of proteins from small serum/plasma samples with high throughput and broad dynamic range.
+        source: https://somalogic.com/somascan-platform/
       10x Visium Spatial Gene Expression:
         description: '10x Genomics product that includes special slides, reagents and technology to allow whole transcriptome profiling with morphological (spatial) context in FFPE or fresh-frozen tissues. Vendor ref: https://www.10xgenomics.com/products/spatial-gene-expression'
         meaning: EFO:0010961
@@ -3131,10 +3204,6 @@ enums:
       - http://edamontology.org/data_0006
       - Broad term/abstract class; should not be used for annotation
     permissible_values:
-      aggregated data:
-        description: Summary or group-level data.
-        notes:
-          - Not preferred for annotation.
       aligned reads:
         description: Aligned reads output from alignment workflows
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads
@@ -3194,6 +3263,8 @@ enums:
       data sharing plan:
         aliases:
           - DMP
+          - Data Management Plan
+          - Data Landscape Survey
         description: A document containing the plan and documentation for data sharing, one component of overall data management.
         meaning: EDAM:data_4040
         notes:
@@ -3226,6 +3297,14 @@ enums:
           - EDAM does have a broader mapping, [expression data](http://edamontology.org/data_2603)
           - The mapping used maps to [gene expression profile](http://edamontology.org/data_0928)
           - Covers both raw (e.g. fastqs, microarray intensities) and processed gene expression data (e.g. normalized gene expression matrix).
+      gene expression matrix:
+        aliases:
+          - Gene expression data matrix
+          - Normalised microarray data
+        description: The final processed (normalised) data for a set of hybridisations in a microarray experiment. This combines data from all hybridisations.
+        meaning: EDAM:data_3112
+      quantified gene expression:
+        description: Expression measurements that have been summarized or normalized, typically representing quantified abundance metrics rather than raw instrument output.
       genomic features:
         description: Data of sequence feature (continuous extent of biological sequence) that is of genomic origin.
         meaning: GENO:0000481
@@ -3244,6 +3323,14 @@ enums:
       germline variants:
         description: Called germline variants
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation
+      guide RNA sequence:
+        aliases:
+          - sgRNA sequence
+          - gRNA sequence
+        description: Sequence data for guide RNAs used in CRISPR or other gene editing experiments.
+        meaning: EDAM:data_3494
+        notes:
+          - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
       image:
         aliases:
           - Image data
@@ -3296,12 +3383,6 @@ enums:
         meaning: EDAM:data_2600
         notes:
           - EDAM preferred label is 'Pathway or network'
-      normalized intensities:
-        description: Normalized intensity values from the instrument.
-        notes:
-          - Not preferred for annotation.
-          - See RawIntensities
-        source: https://w3id.org/synapse/nfosi/vocab/NormalizedIntensities
       nucleic acid sequence record:
         aliases:
           - Nucleotide sequence record
@@ -3332,11 +3413,26 @@ enums:
         meaning: EDAM:data_3722
         notes:
           - Relation to pharmacokinetic data -- certain physiology parameteres inherent to the organism influences its pharmokinetics of a drug.
+      plasmid sequence:
+        description: Sequence data for plasmid vectors used in cloning or gene expression experiments.
+        meaning: EDAM:data_3494
+        notes:
+          - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
       plot:
         aliases:
           - Graph data
         description: Data that has been plotted as a graph of some type, or data representing such a graph.
         meaning: EDAM:data_2884
+      primer sequence:
+        description: Sequence data for oligonucleotide primers used in PCR or sequencing experiments.
+        meaning: EDAM:data_3494
+        notes:
+          - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
+      probe sequence:
+        description: Sequence data for nucleic acid probes used in hybridization experiments.
+        meaning: EDAM:data_3494
+        notes:
+          - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
       promoter sequence:
         description: Sequence data of promoter region (P0, flCAG, etc.)
         meaning: EDAM:data_3494
@@ -3365,11 +3461,11 @@ enums:
           - Number Count
         description: The number or amount of something.
         meaning: NCIT:C25463
-      raw intensities:
-        description: Raw intensity values from the instrument (including microarrays, plate reader assays, raw pixel intensities from imaging assay, mass spectrometry, etc.).
+      reference sequence:
+        description: Generic sequence data used as a reference in experimental design or analysis.
+        meaning: EDAM:data_3494
         notes:
-          - Not preferred for annotation.
-        source: https://w3id.org/synapse/nfosi/vocab/RawIntensities
+          - Use more specific sequence type if applicable (e.g., primer sequence, plasmid sequence).
       report:
         aliases:
           - Document
@@ -9166,1110 +9262,6 @@ classes:
     slot_usage:
       species:
         ifabsent: string(Homo sapiens)
-  FileBasedTemplate:
-    abstract: true
-    description: 'Abstract template for metadata on file-based resources, i.e. data artifacts stored as files.'
-    is_a: Template
-    notes:
-      - FileBasedTemplate and RecordBasedTemplate are not technically mutually exclusive; some resources may have both file and record representations.
-    slots:
-      - Component
-      - Filename
-      - fileFormat
-      - resourceType
-  RecordBasedTemplate:
-    abstract: true
-    description: 'Abstract template for metadata on record-based resources, i.e. structured records in a database or registry rather than file artifacts.'
-    is_a: Template
-    notes:
-      - FileBasedTemplate and RecordBasedTemplate are not technically mutually exclusive; some resources may have both file and record representations.
-  BehavioralAssayTemplate:
-    description: Template for behavioral assay data from model organisms measuring behaviors such as feeding, learning, memory, motor coordination, and activity patterns.
-    is_a: BiologicalAssayDataTemplate
-    slots:
-      - modelSystemName
-      - experimentalFactor
-      - experimentalCondition
-      - experimentalTimepoint
-      - timepointUnit
-      - compoundName
-      - compoundDose
-      - compoundDoseUnit
-      - genePerturbed
-      - genePerturbationType
-      - genePerturbationTechnology
-      - comments
-    slot_usage:
-      assay:
-        range: ClinicalBehavioralAssayEnum
-      fileFormat:
-        range: TabularFileFormatEnum
-    rules:
-      - description: If experimentalTimepoint is provided, timepointUnit must be provided
-        preconditions:
-          slot_conditions:
-            experimentalTimepoint:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            timepointUnit:
-              value_presence: PRESENT
-      - description: If compoundDose is provided, compoundDoseUnit must be provided
-        preconditions:
-          slot_conditions:
-            compoundDose:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            compoundDoseUnit:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationType must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationType:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationTechnology:
-              value_presence: PRESENT
-  BiologicalAssayDataTemplate:
-    abstract: true
-    description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. Donor/individual attributes (species, sex, age, diagnosis) describe the original donor (e.g., human patient tumor). For cell lines, individualID references syn51730943. Model attributes (modelSpecies, modelSex, modelAge) describe any animal model host used. antibodyID and geneticReagentID reference treatments/reagents.
-
-'
-    is_a: FileBasedTemplate
-    slots:
-      - dataType
-      - dataSubtype
-      - assay
-      - individualID
-      - species
-      - sex
-      - age
-      - ageUnit
-      - diagnosis
-      - nf1Genotype
-      - nf2Genotype
-      - tumorType
-      - modelSystemName
-      - modelSpecies
-      - modelSex
-      - modelAge
-      - modelAgeUnit
-      - organ
-      - antibodyID
-      - geneticReagentID
-      - comments
-    rules:
-      - description: If age is provided, ageUnit must be provided
-        preconditions:
-          slot_conditions:
-            age:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            ageUnit:
-              value_presence: PRESENT
-      - description: If dataType is provided, dataSubtype must be provided
-        preconditions:
-          slot_conditions:
-            dataType:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            dataSubtype:
-              value_presence: PRESENT
-  BulkSequencingAssayTemplate:
-    description: General template for raw (level 1) RNA/DNA data, i.e. sequence data from a sequencing assay.
-    is_a: GeneticsAssayTemplate
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-    slots:
-      - specimenType
-      - runType
-      - libraryStrand
-      - libraryPrep
-      - libraryPreparationMethod
-      - readPair
-      - readLength
-      - readDepth
-      - targetDepth
-      - batchID
-  ChIPSeqTemplate:
-    description: Template for describing raw data from ChIP-Seq assays, typically used to identify DNA-protein interactions.
-    is_a: EpigenomicsAssayTemplate
-    slots:
-      - antibodyID
-      - platform
-      - peakCallingAlgorithm
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-        ifabsent: string(ChIP-seq)
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-  ClinicalAssayTemplate:
-    description: 'General template for typically tabular **individual-level** data. This can include repeated measures and a drug treatment context.'
-    is_a: BiologicalAssayDataTemplate
-    slots:
-      - experimentalFactor
-      - experimentalCondition
-      - timepointUnit
-      - compoundName
-      - compoundDose
-      - compoundDoseUnit
-      - comments
-      - isCellLine
-    slot_usage:
-      assay:
-        range: ClinicalBehavioralAssayEnum
-      fileFormat:
-        any_of:
-          - range: TabularFileFormatEnum
-          - range: DocumentFileFormatEnum
-      dataType:
-        ifabsent: string(clinical)
-      isCellLine:
-        ifabsent: string(No)
-    rules:
-      - description: If compoundDose is provided, compoundDoseUnit must be provided
-        preconditions:
-          slot_conditions:
-            compoundDose:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            compoundDoseUnit:
-              value_presence: PRESENT
-  ElectrophysiologyAssayTemplate:
-    description: Template for raw electrophysiology data (electrical recordings).
-    is_a: BiologicalAssayDataTemplate
-    slots:
-      - platform
-      - bodySite
-      - cellType
-      - recordingSource
-      - experimentalTimepoint
-      - timepointUnit
-      - experimentalCondition
-      - auxiliaryAsset
-    source: https://arxiv.org/pdf/1605.07673.pdf
-    slot_usage:
-      assay:
-        range: CellBasedAssayEnum
-      fileFormat:
-        range: OtherFileFormatEnum
-    rules:
-      - description: If experimentalTimepoint is provided, timepointUnit must be provided
-        preconditions:
-          slot_conditions:
-            experimentalTimepoint:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            timepointUnit:
-              value_presence: PRESENT
-  EpidemiologyDataTemplate:
-    description: For aggregated data from defined populations or cohorts, used in/derived from epidemiology studies.
-    is_a: FileBasedTemplate
-    slots:
-      - dataType
-      - populationCoverage
-      - epidemiologyMetric
-    slot_usage:
-      dataType:
-        ifabsent: string(epidemiology)
-  EpigeneticsAssayTemplate:
-    description: Alias for EpigenomicsAssayTemplate for backwards-compatibility.
-    is_a: EpigenomicsAssayTemplate
-    slots: null
-  EpigenomicsAssayTemplate:
-    close_mappings:
-      - htan:BulkMethylation-seqLevel1
-    description: Template for describing raw data from epigenetics sequencing assays such as bisulfite sequencing.
-    is_a: BulkSequencingAssayTemplate
-    slots:
-      - bisulfiteConversionKitID
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        any_of:
-          - range: SequencingPlatformEnum
-          - range: ArrayPlatformEnum
-      fileFormat:
-        any_of:
-          - range: SequencingFileFormatEnum
-          - range: ArrayFileFormatEnum
-  FlowCytometryTemplate:
-    close_mappings:
-      - https://www.immport.org/shared/dataModelDocumentation?table=fcs_analyzed_result
-    description: Template for flow cytometry assay
-    is_a: BiologicalAssayDataTemplate
-    slots:
-      - platform
-      - cellType
-      - auxiliaryAsset
-    slot_usage:
-      assay:
-        range: CellBasedAssayEnum
-        ifabsent: string(flow cytometry)
-      platform:
-        range: FlowCytometryPlatformEnum
-      fileFormat:
-        range: OtherFileFormatEnum
-  GeneralMeasureDataTemplate:
-    description: 'General template for data in tabular form that aggregates tissue-level or cellular-level data.
-
-'
-    is_a: BiologicalAssayDataTemplate
-    slots:
-      - parentSpecimenID
-      - specimenID
-      - aliquotID
-      - modelSystemName
-      - experimentalFactor
-      - experimentalCondition
-      - experimentalTimepoint
-      - timepointUnit
-      - compoundName
-      - compoundDose
-      - compoundDoseUnit
-      - genePerturbed
-      - genePerturbationType
-      - genePerturbationTechnology
-      - comments
-    rules:
-      - description: If experimentalTimepoint is provided, timepointUnit must be provided
-        preconditions:
-          slot_conditions:
-            experimentalTimepoint:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            timepointUnit:
-              value_presence: PRESENT
-      - description: If compoundDose is provided, compoundDoseUnit must be provided
-        preconditions:
-          slot_conditions:
-            compoundDose:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            compoundDoseUnit:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationType must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationType:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationTechnology:
-              value_presence: PRESENT
-      - description: If aliquotID is provided, specimenID must be provided
-        preconditions:
-          slot_conditions:
-            aliquotID:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            specimenID:
-              value_presence: PRESENT
-      - description: If parentSpecimenID is provided, specimenID must be provided
-        preconditions:
-          slot_conditions:
-            parentSpecimenID:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            specimenID:
-              value_presence: PRESENT
-  GeneticsAssayTemplate:
-    abstract: true
-    description: 'Template for relatively raw data of RNA/DNA structure and expression.  This is an abstract template encapsulating data from low-throughput to high-throughput assays,  sequencing-based or non-sequencing based (e.g. microarrays, optical genome mapping).  In practice, data are more specifically typed and matched to one of the templates below.
-
-'
-    is_a: BiologicalAssayDataTemplate
-    notes:
-      - http://purl.obolibrary.org/obo/GECKO_0000032
-    slots:
-      - parentSpecimenID
-      - specimenID
-      - aliquotID
-      - tumorType
-      - platform
-      - nucleicAcidSource
-      - specimenPreparationMethod
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-  GenomicsArrayTemplate:
-    description: A template for describing raw data from array-based genomics/epigenomics, e.g. CEL files.
-    is_a: GeneticsAssayTemplate
-    slots:
-      - platform
-      - channel
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: ArrayPlatformEnum
-      fileFormat:
-        range: ArrayFileFormatEnum
-  GenomicsAssayTemplate:
-    description: Alias to BulkSequencingAssayTemplate, use for sequence data on a large scale when there is no template available that is more specific.
-    is_a: BulkSequencingAssayTemplate
-    notes:
-      - It's possible that not all raw genomics data equates to sequencing output.
-    slots:
-      - isXenograft
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-      isXenograft:
-        ifabsent: string(No)
-  GenomicsAssayTemplateExtended:
-    description: Genomics assay template but with additional experiment data.
-    is_a: GenomicsAssayTemplate
-    slots:
-      - experimentalCondition
-      - experimentalTimepoint
-      - timepointUnit
-      - genePerturbed
-      - genePerturbationTechnology
-      - genePerturbationType
-      - comments
-    rules:
-      - description: If experimentalTimepoint is provided, timepointUnit must be provided
-        preconditions:
-          slot_conditions:
-            experimentalTimepoint:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            timepointUnit:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationType must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationType:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationTechnology:
-              value_presence: PRESENT
-  ImagingAssayTemplate:
-    description: General template for describing imaging data.
-    is_a: BiologicalAssayDataTemplate
-    slot_usage:
-      assay:
-        range: ImagingAssayEnum
-      platform:
-        any_of:
-          - range: MicroscopyImagingPlatformEnum
-          - range: MRIPlatformEnum
-          - range: ImagingSystemPlatformEnum
-      fileFormat:
-        range: ImagingFileFormatEnum
-      dataType:
-        ifabsent: string(image)
-    slots:
-      - platform
-      - assayTarget
-      - auxiliaryAsset
-  ImmunoMicroscopyTemplate:
-    description: Template for describing immunofluorescence or immunohistochemistry images.
-    is_a: MicroscopyAssayTemplate
-    slots:
-      - antibodyID
-    slot_usage:
-      assay:
-        range: ImagingAssayEnum
-      platform:
-        range: MicroscopyImagingPlatformEnum
-      fileFormat:
-        range: ImagingFileFormatEnum
-  LightScatteringAssayTemplate:
-    description: Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.
-    is_a: MaterialScienceAssayTemplate
-    slots:
-      - pH
-      - concentrationNaCl
-      - concentrationNaClUnit
-    source: https://wiki.nci.nih.gov/display/icr/isa-tab-nano
-    slot_usage:
-      assay:
-        range: CellBasedAssayEnum
-      platform:
-        range: OtherPlatformEnum
-      fileFormat:
-        range: TabularFileFormatEnum
-    rules:
-      - description: If concentrationNaCl is provided, concentrationNaClUnit must be provided
-        preconditions:
-          slot_conditions:
-            concentrationNaCl:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            concentrationNaClUnit:
-              value_presence: PRESENT
-  MRIAssayTemplate:
-    description: Template for describing MRI data.
-    is_a: ImagingAssayTemplate
-    slots:
-      - bodySite
-      - MRISequence
-      - experimentalCondition
-      - experimentalTimepoint
-      - timepointUnit
-    slot_usage:
-      assay:
-        range: ImagingAssayEnum
-      platform:
-        range: MRIPlatformEnum
-      fileFormat:
-        range: ImagingFileFormatEnum
-      dataType:
-        ifabsent: string(image)
-    rules:
-      - description: If experimentalTimepoint is provided, timepointUnit must be provided
-        preconditions:
-          slot_conditions:
-            experimentalTimepoint:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            timepointUnit:
-              value_presence: PRESENT
-  MassSpecAssayTemplate:
-    close_mappings:
-      - htan:MassSpectrometryLevel1
-    description: Template for raw mass spec-based proteomics data.
-    is_a: ProteinAssayTemplate
-    notes:
-      - Technically, mass spec does not have to be considered a biological assay, but we'll classify it as such when used with a biological sample.
-    slots:
-      - dataCollectionMode
-    slot_usage:
-      assay:
-        range: MassSpectrometryAssayEnum
-      platform:
-        range: MassSpectrometryPlatformEnum
-      fileFormat:
-        range: MassSpecFileFormatEnum
-  MaterialScienceAssayTemplate:
-    description: General template for describing data for a materials science assay.
-    is_a: NonBiologicalAssayDataTemplate
-    slots:
-      - platform
-      - specimenID
-      - materialType
-      - concentrationMaterial
-      - concentrationMaterialUnit
-      - concentrationNaCl
-      - concentrationNaClUnit
-    rules:
-      - description: If concentrationMaterial is provided, concentrationMaterialUnit must be provided
-        preconditions:
-          slot_conditions:
-            concentrationMaterial:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            concentrationMaterialUnit:
-              value_presence: PRESENT
-      - description: If concentrationNaCl is provided, concentrationNaClUnit must be provided
-        preconditions:
-          slot_conditions:
-            concentrationNaCl:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            concentrationNaClUnit:
-              value_presence: PRESENT
-  MethylationArrayTemplate:
-    description: Template for raw data files (idat) from DNA methylation arrays.
-    is_a: GenomicsArrayTemplate
-    slots:
-      - chipID
-      - chipPosition
-      - plateName
-      - plateWell
-    source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=raw_methylation_array
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-        ifabsent: string(methylation array)
-      platform:
-        range: ArrayPlatformEnum
-      fileFormat:
-        range: ArrayFileFormatEnum
-  MicroscopyAssayTemplate:
-    close_mappings:
-      - htan:ImagingLevel2
-    description: Template for data from a microscopy data.
-    is_a: ImagingAssayTemplate
-    slots:
-      - parentSpecimenID
-      - specimenID
-      - aliquotID
-      - objective
-      - nominalMagnification
-      - lensAperture
-      - workingDistance
-      - workingDistanceUnit
-      - immersion
-    slot_usage:
-      assay:
-        range: ImagingAssayEnum
-      platform:
-        range: MicroscopyImagingPlatformEnum
-      fileFormat:
-        range: ImagingFileFormatEnum
-      dataType:
-        ifabsent: string(image)
-    rules:
-      - description: If workingDistance is provided, workingDistanceUnit must be provided
-        preconditions:
-          slot_conditions:
-            workingDistance:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            workingDistanceUnit:
-              value_presence: PRESENT
-      - description: If aliquotID is provided, specimenID must be provided
-        preconditions:
-          slot_conditions:
-            aliquotID:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            specimenID:
-              value_presence: PRESENT
-      - description: If parentSpecimenID is provided, specimenID must be provided
-        preconditions:
-          slot_conditions:
-            parentSpecimenID:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            specimenID:
-              value_presence: PRESENT
-  NonBiologicalAssayDataTemplate:
-    abstract: true
-    description: 'Describes data artifacts (i.e. files) from an experimental/physical-sciences assay  where input specimens are more at the level of synthesized molecules or inorganic materials.
-
-'
-    is_a: FileBasedTemplate
-    notes:
-      - Name of this base abstraction is not great, may need to revise.
-    slots:
-      - dataType
-      - dataSubtype
-      - assay
-  PdxGenomicsAssayTemplate:
-    description: Raw genomics data from patient-derived xenograft (PDX) experiment, with additional PDX-relevant metadata.
-    is_a: GenomicsAssayTemplate
-    slots:
-      - transplantationType
-      - transplantationRecipientSpecies
-      - transplantationRecipientTissue
-      - modelSystemName
-      - experimentalCondition
-      - experimentalTimepoint
-      - timepointUnit
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-    rules:
-      - description: If experimentalTimepoint is provided, timepointUnit must be provided
-        preconditions:
-          slot_conditions:
-            experimentalTimepoint:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            timepointUnit:
-              value_presence: PRESENT
-      - description: If transplantationType is provided, transplantationRecipientSpecies must be provided
-        preconditions:
-          slot_conditions:
-            transplantationType:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            transplantationRecipientSpecies:
-              value_presence: PRESENT
-      - description: If transplantationType is provided, transplantationRecipientTissue must be provided
-        preconditions:
-          slot_conditions:
-            transplantationType:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            transplantationRecipientTissue:
-              value_presence: PRESENT
-  PharmacokineticsAssayTemplate:
-    description: Generic template for describing data from a pharmacokinetics assay.
-    is_a: BiologicalAssayDataTemplate
-    slots:
-      - parentSpecimenID
-      - specimenID
-      - aliquotID
-      - platform
-      - compoundName
-      - compoundDose
-      - compoundDoseUnit
-      - experimentalCondition
-      - experimentalTimepoint
-      - timepointUnit
-    rules:
-      - description: If experimentalTimepoint is provided, timepointUnit must be provided
-        preconditions:
-          slot_conditions:
-            experimentalTimepoint:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            timepointUnit:
-              value_presence: PRESENT
-      - description: If compoundDose is provided, compoundDoseUnit must be provided
-        preconditions:
-          slot_conditions:
-            compoundDose:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            compoundDoseUnit:
-              value_presence: PRESENT
-  PlateBasedReporterAssayTemplate:
-    description: Generic template for describing data from a plate-based reporter assay.
-    is_a: BiologicalAssayDataTemplate
-    slots:
-      - parentSpecimenID
-      - specimenID
-      - aliquotID
-      - platform
-      - assayTarget
-      - compoundName
-      - compoundDose
-      - compoundDoseUnit
-      - experimentalCondition
-      - experimentalTimepoint
-      - timepointUnit
-      - reporterGene
-      - reporterSubstance
-    slot_usage:
-      assay:
-        range: CellBasedAssayEnum
-      platform:
-        range: PlateReaderPlatformEnum
-      fileFormat:
-        range: TabularFileFormatEnum
-    rules:
-      - description: If experimentalTimepoint is provided, timepointUnit must be provided
-        preconditions:
-          slot_conditions:
-            experimentalTimepoint:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            timepointUnit:
-              value_presence: PRESENT
-      - description: If compoundDose is provided, compoundDoseUnit must be provided
-        preconditions:
-          slot_conditions:
-            compoundDose:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            compoundDoseUnit:
-              value_presence: PRESENT
-  ProcessedAlignedReadsTemplate:
-    close_mappings:
-      - htan:ScRNA-seqLevel2
-      - htan:BulkRNA-seqLevel2
-      - htan:BulkWESLevel2
-    description: "Template for describing aligned reads (e.g. BAM/CRAM files) from a sequencing assay. The QC meta are extracted from samtools stats when available and are the same metrics preferred by GDC. \n"
-    is_a: BiologicalAssayDataTemplate
-    slots:
-      - genomicReference
-      - genomicReferenceLink
-      - averageInsertSize
-      - averageReadLength
-      - averageBaseQuality
-      - pairsOnDifferentChr
-      - readsDuplicatedPercent
-      - readsMappedPercent
-      - meanCoverage
-      - proportionCoverage10x
-      - proportionCoverage30x
-      - readDepth
-      - totalReads
-      - workflow
-      - workflowLink
-      - auxiliaryAsset
-      - specimenID
-    slot_usage:
-      dataType:
-        ifabsent: string(aligned reads)
-      dataSubtype:
-        ifabsent: string(processed)
-      fileFormat:
-        range: SequencingFileFormatEnum
-    rules:
-      - description: If workflow is provided, workflowLink must be provided
-        preconditions:
-          slot_conditions:
-            workflow:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            workflowLink:
-              value_presence: PRESENT
-      - description: If genomicReference is provided, genomicReferenceLink must be provided
-        preconditions:
-          slot_conditions:
-            genomicReference:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genomicReferenceLink:
-              value_presence: PRESENT
-  ProcessedExpressionTemplate:
-    close_mappings:
-      - htan:BulkRNA-seqLevel3
-    description: Template for quantified gene/protein expression data that are still represented as one file per sample.
-    is_a: BiologicalAssayDataTemplate
-    slots:
-      - expressionUnit
-      - workflow
-      - workflowLink
-      - auxiliaryAsset
-      - specimenID
-    slot_usage:
-      dataSubtype:
-        ifabsent: string(processed)
-    rules:
-      - description: If workflow is provided, workflowLink must be provided
-        preconditions:
-          slot_conditions:
-            workflow:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            workflowLink:
-              value_presence: PRESENT
-  ProcessedMergedDataTemplate:
-    close_mappings:
-      - https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aggregated_somatic_mutation
-      - https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=gene_expression
-    description: 'Further processed data with multiple samples aggregated into one file. This may be also be known as level-4 data. Unlike level-2 and level-3 data, individual-level attributes such as age and sex are no longer surfaced on the data file directly.
-
-'
-    is_a: FileBasedTemplate
-    slots:
-      - dataType
-      - dataSubtype
-      - workflow
-      - workflowLink
-      - auxiliaryAsset
-      - assay
-    slot_usage:
-      dataSubtype:
-        ifabsent: string(processed)
-    rules:
-      - description: If workflow is provided, workflowLink must be provided
-        preconditions:
-          slot_conditions:
-            workflow:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            workflowLink:
-              value_presence: PRESENT
-  ProcessedVariantCallsTemplate:
-    close_mappings:
-      - htan:BulkWESLevel3
-    description: Template for describing either simple germline/somatic variant calls output data (VCF/MAF) as well as structural variants (e.g. CNVs).
-    is_a: BiologicalAssayDataTemplate
-    slots:
-      - isFilteredReads
-      - workflow
-      - workflowLink
-      - auxiliaryAsset
-      - specimenID
-    slot_usage:
-      dataSubtype:
-        ifabsent: string(processed)
-      fileFormat:
-        range: SequencingFileFormatEnum
-    rules:
-      - description: If workflow is provided, workflowLink must be provided
-        preconditions:
-          slot_conditions:
-            workflow:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            workflowLink:
-              value_presence: PRESENT
-  ProteinArrayTemplate:
-    close_mappings:
-      - htan:RPPALevel2
-    description: Template for array- and immuno-based proteomics data.
-    is_a: ProteinAssayTemplate
-    slots:
-      - antibodyID
-    slot_usage:
-      assay:
-        range: MassSpectrometryAssayEnum
-        ifabsent: string(RPPA)
-      platform:
-        range: ArrayPlatformEnum
-      fileFormat:
-        range: ArrayFileFormatEnum
-  ProteinAssayTemplate:
-    abstract: true
-    description: Abstract template for data from some assay of protein structure and function. Data should be instantiated with more specific template.
-    is_a: BiologicalAssayDataTemplate
-    slots:
-      - parentSpecimenID
-      - specimenID
-      - aliquotID
-      - platform
-      - proteinExtractSource
-    slot_usage:
-      assay:
-        range: MassSpectrometryAssayEnum
-      platform:
-        range: MassSpectrometryPlatformEnum
-      fileFormat:
-        range: MassSpecFileFormatEnum
-  ProteomicsAssayTemplate:
-    description: Alias to MassSpecAssayTemplate for backwards-compatibility.
-    is_a: MassSpecAssayTemplate
-    slots: null
-    slot_usage:
-      assay:
-        range: MassSpectrometryAssayEnum
-      platform:
-        range: MassSpectrometryPlatformEnum
-      fileFormat:
-        range: MassSpecFileFormatEnum
-  RNASeqTemplate:
-    close_mappings:
-      - htan:BulkRNA-seqLevel1
-    description: Template for describing raw data from (bulk) RNA-sequencing
-    is_a: BulkSequencingAssayTemplate
-    slots:
-      - genePerturbed
-      - genePerturbationType
-      - genePerturbationTechnology
-      - experimentalCondition
-      - isCellLine
-      - isPrimaryCell
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-      dataType:
-        ifabsent: string(sequence reads)
-      isPrimaryCell:
-        ifabsent: string(Yes)
-    rules:
-      - description: If genePerturbed is provided, genePerturbationType must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationType:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationTechnology:
-              value_presence: PRESENT
-  ScRNASeqTemplate:
-    description: Template for describing raw data from single-cell RNA-seq.
-    is_a: ScSequencingAssayTemplate
-    slots:
-      - genePerturbed
-      - genePerturbationType
-      - genePerturbationTechnology
-      - experimentalCondition
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-      dataType:
-        ifabsent: string(gene expression)
-    rules:
-      - description: If genePerturbed is provided, genePerturbationType must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationType:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationTechnology:
-              value_presence: PRESENT
-  ScSequencingAssayTemplate:
-    description: General template for raw RNA/DNA data, i.e. sequence data from a sequencing assay.
-    is_a: GeneticsAssayTemplate
-    slots:
-      - cellType
-      - isCellLine
-      - cellID
-      - dissociationMethod
-      - runType
-      - libraryStrand
-      - libraryKitID
-      - libraryPrep
-      - libraryPreparationMethod
-      - readPair
-      - readLength
-      - readDepth
-      - targetDepth
-      - batchID
-      - auxiliaryAsset
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-  UpdateMilestoneReport:
-    description: Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF.
-    is_a: PartialTemplate
-    slots:
-      - Filename
-      - resourceType
-      - progressReportNumber
-  WESTemplate:
-    close_mappings:
-      - htan:BulkWESLevel1
-    description: Template for describing raw data from Whole Exome Sequencing (WES/WXS)
-    is_a: BulkSequencingAssayTemplate
-    slots:
-      - targetCaptureKitID
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-      dataType:
-        ifabsent: string(sequence reads)
-  WGSTemplate:
-    description: Template for describing raw data from Whole Genome Sequencing (WGS)
-    is_a: BulkSequencingAssayTemplate
-    slots: null
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-      dataType:
-        ifabsent: string(sequence reads)
-  WorkflowReport:
-    description: Template used for miscellaneous workflow reports and accessory files
-    is_a: FileBasedTemplate
-    notes:
-      - resourceType should default to "workflow report"
-      - note that `dataType` and `dataSubtype` don't apply
-    slots:
-      - assay
-      - relatedDataset
-      - workflow
-      - workflowLink
-    slot_usage:
-      resourceType:
-        ifabsent: string(report)
-    rules:
-      - description: If workflow is provided, workflowLink must be provided
-        preconditions:
-          slot_conditions:
-            workflow:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            workflowLink:
-              value_presence: PRESENT
   DataLandscape:
     attributes:
       study:
@@ -10373,6 +9365,1119 @@ classes:
       - All numeric fields and dates can be estimates
       - If appropriate terms are not found, contact nf-osi@sagebase.org
     title: Datasets Expected
+  FileBasedTemplate:
+    abstract: true
+    description: 'Abstract template for metadata on file-based resources, i.e. data artifacts stored as files.'
+    is_a: Template
+    notes:
+      - FileBasedTemplate and RecordBasedTemplate are not technically mutually exclusive; some resources may have both file and record representations.
+    slots:
+      - Component
+      - Filename
+      - fileFormat
+      - resourceType
+  RecordBasedTemplate:
+    abstract: true
+    description: 'Abstract template for metadata on record-based resources, i.e. structured records in a database or registry rather than file artifacts.'
+    is_a: Template
+    notes:
+      - FileBasedTemplate and RecordBasedTemplate are not technically mutually exclusive; some resources may have both file and record representations.
+  BiologicalAssayDataTemplate:
+    abstract: true
+    description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. Donor/individual attributes (species, sex, age, diagnosis) describe the original donor (e.g., human patient tumor). For cell lines, individualID references syn51730943. Model attributes (modelSpecies, modelSex, modelAge) describe any animal model host used. antibodyID and geneticReagentID reference treatments/reagents.'
+    is_a: FileBasedTemplate
+    slots:
+      - dataType
+      - dataSubtype
+      - assay
+      - individualID
+      - species
+      - sex
+      - age
+      - ageUnit
+      - diagnosis
+      - nf1Genotype
+      - nf2Genotype
+      - tumorType
+      - modelSystemName
+      - modelSpecies
+      - modelSex
+      - modelAge
+      - modelAgeUnit
+      - organ
+      - antibodyID
+      - geneticReagentID
+      - comments
+    rules:
+      - description: If age is provided, ageUnit must be provided
+        preconditions:
+          slot_conditions:
+            age:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            ageUnit:
+              value_presence: PRESENT
+      - description: If dataType is provided, dataSubtype must be provided
+        preconditions:
+          slot_conditions:
+            dataType:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            dataSubtype:
+              value_presence: PRESENT
+  NonBiologicalAssayDataTemplate:
+    abstract: true
+    description: 'Describes data artifacts (i.e. files) from an experimental/physical-sciences assay  where input specimens are more at the level of synthesized molecules or inorganic materials.
+
+'
+    is_a: FileBasedTemplate
+    notes:
+      - Name of this base abstraction is not great, may need to revise.
+    slots:
+      - dataType
+      - dataSubtype
+      - assay
+  CellTissuePhenotypingTemplate:
+    description: 'Data that characterizes cell/tissue morphology or physiology often in the context of different experimental conditions'
+    is_a: BiologicalAssayDataTemplate
+    slots:
+      - parentSpecimenID
+      - specimenID
+      - aliquotID
+      - modelSystemName
+      - experimentalFactor
+      - experimentalCondition
+      - experimentalTimepoint
+      - timepointUnit
+      - compoundName
+      - compoundDose
+      - compoundDoseUnit
+      - genePerturbed
+      - genePerturbationType
+      - genePerturbationTechnology
+      - comments
+    rules:
+      - description: If experimentalTimepoint is provided, timepointUnit must be provided
+        preconditions:
+          slot_conditions:
+            experimentalTimepoint:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            timepointUnit:
+              value_presence: PRESENT
+      - description: If compoundDose is provided, compoundDoseUnit must be provided
+        preconditions:
+          slot_conditions:
+            compoundDose:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            compoundDoseUnit:
+              value_presence: PRESENT
+      - description: If genePerturbed is provided, genePerturbationType must be provided
+        preconditions:
+          slot_conditions:
+            genePerturbed:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            genePerturbationType:
+              value_presence: PRESENT
+      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+        preconditions:
+          slot_conditions:
+            genePerturbed:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            genePerturbationTechnology:
+              value_presence: PRESENT
+      - description: If aliquotID is provided, specimenID must be provided
+        preconditions:
+          slot_conditions:
+            aliquotID:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            specimenID:
+              value_presence: PRESENT
+      - description: If parentSpecimenID is provided, specimenID must be provided
+        preconditions:
+          slot_conditions:
+            parentSpecimenID:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            specimenID:
+              value_presence: PRESENT
+  FlowCytometryTemplate:
+    close_mappings:
+      - https://www.immport.org/shared/dataModelDocumentation?table=fcs_analyzed_result
+    description: Template for flow cytometry assay
+    is_a: BiologicalAssayDataTemplate
+    slots:
+      - platform
+      - cellType
+      - auxiliaryAsset
+    slot_usage:
+      assay:
+        range: CellBasedAssayEnum
+        ifabsent: string(flow cytometry)
+      platform:
+        range: FlowCytometryPlatformEnum
+      fileFormat:
+        range: OtherFileFormatEnum
+  ElectrophysiologyAssayTemplate:
+    description: Template for raw electrophysiology data (electrical recordings).
+    is_a: BiologicalAssayDataTemplate
+    slots:
+      - platform
+      - bodySite
+      - cellType
+      - recordingSource
+      - experimentalTimepoint
+      - timepointUnit
+      - experimentalCondition
+      - auxiliaryAsset
+    source: https://arxiv.org/pdf/1605.07673.pdf
+    slot_usage:
+      assay:
+        range: CellBasedAssayEnum
+      fileFormat:
+        range: OtherFileFormatEnum
+    rules:
+      - description: If experimentalTimepoint is provided, timepointUnit must be provided
+        preconditions:
+          slot_conditions:
+            experimentalTimepoint:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            timepointUnit:
+              value_presence: PRESENT
+  PlateBasedReporterAssayTemplate:
+    description: Generic template for describing data from a plate-based reporter assay.
+    is_a: BiologicalAssayDataTemplate
+    slots:
+      - parentSpecimenID
+      - specimenID
+      - aliquotID
+      - platform
+      - assayTarget
+      - compoundName
+      - compoundDose
+      - compoundDoseUnit
+      - experimentalCondition
+      - experimentalTimepoint
+      - timepointUnit
+      - reporterGene
+      - reporterSubstance
+    slot_usage:
+      assay:
+        range: CellBasedAssayEnum
+      platform:
+        range: PlateReaderPlatformEnum
+      fileFormat:
+        range: TabularFileFormatEnum
+    rules:
+      - description: If experimentalTimepoint is provided, timepointUnit must be provided
+        preconditions:
+          slot_conditions:
+            experimentalTimepoint:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            timepointUnit:
+              value_presence: PRESENT
+      - description: If compoundDose is provided, compoundDoseUnit must be provided
+        preconditions:
+          slot_conditions:
+            compoundDose:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            compoundDoseUnit:
+              value_presence: PRESENT
+  ClinicalAssayTemplate:
+    description: 'General template for typically tabular **individual-level** data. This can include repeated measures and a drug treatment context.'
+    is_a: BiologicalAssayDataTemplate
+    slots:
+      - experimentalFactor
+      - experimentalCondition
+      - timepointUnit
+      - compoundName
+      - compoundDose
+      - compoundDoseUnit
+      - comments
+    slot_usage:
+      assay:
+        range: ClinicalBehavioralAssayEnum
+      fileFormat:
+        any_of:
+          - range: TabularFileFormatEnum
+          - range: DocumentFileFormatEnum
+      dataType:
+        ifabsent: string(clinical)
+    rules:
+      - description: If compoundDose is provided, compoundDoseUnit must be provided
+        preconditions:
+          slot_conditions:
+            compoundDose:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            compoundDoseUnit:
+              value_presence: PRESENT
+  BehavioralAssayTemplate:
+    description: Template for behavioral assay data from model organisms measuring behaviors such as feeding, learning, memory, motor coordination, and activity patterns.
+    is_a: BiologicalAssayDataTemplate
+    slots:
+      - modelSystemName
+      - experimentalFactor
+      - experimentalCondition
+      - experimentalTimepoint
+      - timepointUnit
+      - compoundName
+      - compoundDose
+      - compoundDoseUnit
+      - genePerturbed
+      - genePerturbationType
+      - genePerturbationTechnology
+      - comments
+    slot_usage:
+      assay:
+        range: ClinicalBehavioralAssayEnum
+      fileFormat:
+        range: TabularFileFormatEnum
+    rules:
+      - description: If experimentalTimepoint is provided, timepointUnit must be provided
+        preconditions:
+          slot_conditions:
+            experimentalTimepoint:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            timepointUnit:
+              value_presence: PRESENT
+      - description: If compoundDose is provided, compoundDoseUnit must be provided
+        preconditions:
+          slot_conditions:
+            compoundDose:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            compoundDoseUnit:
+              value_presence: PRESENT
+      - description: If genePerturbed is provided, genePerturbationType must be provided
+        preconditions:
+          slot_conditions:
+            genePerturbed:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            genePerturbationType:
+              value_presence: PRESENT
+      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+        preconditions:
+          slot_conditions:
+            genePerturbed:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            genePerturbationTechnology:
+              value_presence: PRESENT
+  EpidemiologyDataTemplate:
+    description: For aggregated data from defined populations or cohorts, used in/derived from epidemiology studies.
+    is_a: FileBasedTemplate
+    slots:
+      - dataType
+      - populationCoverage
+      - epidemiologyMetric
+    slot_usage:
+      dataType:
+        ifabsent: string(epidemiological data)
+  GeneticsAssayTemplate:
+    abstract: true
+    description: 'Template for relatively raw data of RNA/DNA structure and expression.  This is an abstract template encapsulating data from low-throughput to high-throughput assays,  sequencing-based or non-sequencing based (e.g. microarrays, optical genome mapping).  In practice, data are more specifically typed and matched to one of the templates below.
+
+'
+    is_a: BiologicalAssayDataTemplate
+    notes:
+      - http://purl.obolibrary.org/obo/GECKO_0000032
+    slots:
+      - parentSpecimenID
+      - specimenID
+      - aliquotID
+      - tumorType
+      - platform
+      - nucleicAcidSource
+      - specimenPreparationMethod
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+  BulkSequencingAssayTemplate:
+    description: General template for raw (level 1) RNA/DNA data, i.e. sequence data from a sequencing assay.
+    is_a: GeneticsAssayTemplate
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+    slots:
+      - specimenType
+      - runType
+      - libraryStrand
+      - libraryPrep
+      - libraryPreparationMethod
+      - readPair
+      - readLength
+      - readDepth
+      - targetDepth
+      - batchID
+  GenomicsArrayTemplate:
+    description: A template for describing raw data from array-based genomics/epigenomics, e.g. CEL files.
+    is_a: GeneticsAssayTemplate
+    slots:
+      - platform
+      - channel
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: ArrayPlatformEnum
+      fileFormat:
+        range: ArrayFileFormatEnum
+  GenomicsAssayTemplate:
+    description: Alias to BulkSequencingAssayTemplate, use for sequence data on a large scale when there is no template available that is more specific.
+    is_a: BulkSequencingAssayTemplate
+    notes:
+      - It's possible that not all raw genomics data equates to sequencing output.
+    slots:
+      - isXenograft
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+      isXenograft:
+        ifabsent: string(No)
+  GenomicsAssayTemplateExtended:
+    description: Genomics assay template but with additional experiment data.
+    is_a: GenomicsAssayTemplate
+    slots:
+      - experimentalCondition
+      - experimentalTimepoint
+      - timepointUnit
+      - genePerturbed
+      - genePerturbationTechnology
+      - genePerturbationType
+      - comments
+    rules:
+      - description: If experimentalTimepoint is provided, timepointUnit must be provided
+        preconditions:
+          slot_conditions:
+            experimentalTimepoint:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            timepointUnit:
+              value_presence: PRESENT
+      - description: If genePerturbed is provided, genePerturbationType must be provided
+        preconditions:
+          slot_conditions:
+            genePerturbed:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            genePerturbationType:
+              value_presence: PRESENT
+      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+        preconditions:
+          slot_conditions:
+            genePerturbed:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            genePerturbationTechnology:
+              value_presence: PRESENT
+  PdxGenomicsAssayTemplate:
+    description: Raw genomics data from patient-derived xenograft (PDX) experiment, with additional PDX-relevant metadata.
+    is_a: GenomicsAssayTemplate
+    slots:
+      - transplantationType
+      - transplantationRecipientSpecies
+      - transplantationRecipientTissue
+      - modelSystemName
+      - experimentalCondition
+      - experimentalTimepoint
+      - timepointUnit
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+    rules:
+      - description: If experimentalTimepoint is provided, timepointUnit must be provided
+        preconditions:
+          slot_conditions:
+            experimentalTimepoint:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            timepointUnit:
+              value_presence: PRESENT
+      - description: If transplantationType is provided, transplantationRecipientSpecies must be provided
+        preconditions:
+          slot_conditions:
+            transplantationType:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            transplantationRecipientSpecies:
+              value_presence: PRESENT
+      - description: If transplantationType is provided, transplantationRecipientTissue must be provided
+        preconditions:
+          slot_conditions:
+            transplantationType:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            transplantationRecipientTissue:
+              value_presence: PRESENT
+  RNASeqTemplate:
+    close_mappings:
+      - htan:BulkRNA-seqLevel1
+    description: Template for describing raw data from (bulk) RNA-sequencing
+    is_a: BulkSequencingAssayTemplate
+    slots:
+      - genePerturbed
+      - genePerturbationType
+      - genePerturbationTechnology
+      - experimentalCondition
+      - isCellLine
+      - isPrimaryCell
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(gene expression)
+      isPrimaryCell:
+        ifabsent: string(Yes)
+    rules:
+      - description: If genePerturbed is provided, genePerturbationType must be provided
+        preconditions:
+          slot_conditions:
+            genePerturbed:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            genePerturbationType:
+              value_presence: PRESENT
+      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+        preconditions:
+          slot_conditions:
+            genePerturbed:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            genePerturbationTechnology:
+              value_presence: PRESENT
+  ScSequencingAssayTemplate:
+    description: General template for raw RNA/DNA data, i.e. sequence data from a sequencing assay.
+    is_a: GeneticsAssayTemplate
+    slots:
+      - cellType
+      - isCellLine
+      - cellID
+      - dissociationMethod
+      - runType
+      - libraryStrand
+      - libraryKitID
+      - libraryPrep
+      - libraryPreparationMethod
+      - readPair
+      - readLength
+      - readDepth
+      - targetDepth
+      - batchID
+      - auxiliaryAsset
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+  ScRNASeqTemplate:
+    description: Template for describing raw data from single-cell RNA-seq.
+    is_a: ScSequencingAssayTemplate
+    slots:
+      - genePerturbed
+      - genePerturbationType
+      - genePerturbationTechnology
+      - experimentalCondition
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(gene expression)
+    rules:
+      - description: If genePerturbed is provided, genePerturbationType must be provided
+        preconditions:
+          slot_conditions:
+            genePerturbed:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            genePerturbationType:
+              value_presence: PRESENT
+      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+        preconditions:
+          slot_conditions:
+            genePerturbed:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            genePerturbationTechnology:
+              value_presence: PRESENT
+  WESTemplate:
+    close_mappings:
+      - htan:BulkWESLevel1
+    description: Template for describing raw data from Whole Exome Sequencing (WES/WXS)
+    is_a: BulkSequencingAssayTemplate
+    slots:
+      - targetCaptureKitID
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(genomic variants)
+  WGSTemplate:
+    description: Template for describing raw data from Whole Genome Sequencing (WGS)
+    is_a: BulkSequencingAssayTemplate
+    slots:
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(genomic variants)
+  # Epigenomics Templates
+  EpigenomicsAssayTemplate:
+    close_mappings:
+      - htan:BulkMethylation-seqLevel1
+    description: Template for describing raw data from epigenetics sequencing assays such as bisulfite sequencing.
+    is_a: BulkSequencingAssayTemplate
+    slots:
+      - bisulfiteConversionKitID
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        any_of:
+          - range: SequencingPlatformEnum
+          - range: ArrayPlatformEnum
+      fileFormat:
+        any_of:
+          - range: SequencingFileFormatEnum
+          - range: ArrayFileFormatEnum
+  ChIPSeqTemplate:
+    description: Template for describing raw data from ChIP-Seq assays, typically used to identify DNA-protein interactions.
+    is_a: EpigenomicsAssayTemplate
+    slots:
+      - antibodyID
+      - platform
+      - peakCallingAlgorithm
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+        ifabsent: string(ChIP-seq)
+      platform:
+        range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+  MethylationArrayTemplate:
+    description: Template for raw data files (idat) from DNA methylation arrays.
+    is_a: GenomicsArrayTemplate
+    slots:
+      - chipID
+      - chipPosition
+      - plateName
+      - plateWell
+    source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=raw_methylation_array
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+        ifabsent: string(methylation array)
+      platform:
+        range: ArrayPlatformEnum
+      fileFormat:
+        range: ArrayFileFormatEnum
+  # Processed Genomics/Epigenomics Templates
+  ProcessedAlignedReadsTemplate:
+    close_mappings:
+      - htan:ScRNA-seqLevel2
+      - htan:BulkRNA-seqLevel2
+      - htan:BulkWESLevel2
+    description: "Template for describing aligned reads (e.g. BAM/CRAM files) from a sequencing assay. The QC meta are extracted from samtools stats when available and are the same metrics preferred by GDC."
+    is_a: BiologicalAssayDataTemplate
+    slots:
+      - genomicReference
+      - genomicReferenceLink
+      - averageInsertSize
+      - averageReadLength
+      - averageBaseQuality
+      - pairsOnDifferentChr
+      - readsDuplicatedPercent
+      - readsMappedPercent
+      - meanCoverage
+      - proportionCoverage10x
+      - proportionCoverage30x
+      - readDepth
+      - totalReads
+      - workflow
+      - workflowLink
+      - auxiliaryAsset
+      - specimenID
+    slot_usage:
+      dataType:
+        ifabsent: string(aligned reads)
+      dataSubtype:
+        ifabsent: string(processed)
+      fileFormat:
+        range: SequencingFileFormatEnum
+    rules:
+      - description: If workflow is provided, workflowLink must be provided
+        preconditions:
+          slot_conditions:
+            workflow:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            workflowLink:
+              value_presence: PRESENT
+      - description: If genomicReference is provided, genomicReferenceLink must be provided
+        preconditions:
+          slot_conditions:
+            genomicReference:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            genomicReferenceLink:
+              value_presence: PRESENT
+  ProcessedGeneExpressionTemplate:
+    close_mappings:
+      - htan:BulkRNA-seqLevel3
+    description: Template for quantified gene/protein expression data that are still represented as one file per sample.
+    is_a: BiologicalAssayDataTemplate
+    slots:
+      - expressionUnit
+      - workflow
+      - workflowLink
+      - auxiliaryAsset
+      - specimenID
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
+    rules:
+      - description: If workflow is provided, workflowLink must be provided
+        preconditions:
+          slot_conditions:
+            workflow:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            workflowLink:
+              value_presence: PRESENT
+  ProcessedMergedDataTemplate:
+    close_mappings:
+      - https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aggregated_somatic_mutation
+      - https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=gene_expression
+    description: 'Further processed data with multiple samples aggregated into one file. This may be also be known as level-4 data. Unlike level-2 and level-3 data, individual-level attributes such as age and sex are no longer surfaced on the data file directly.
+
+'
+    is_a: FileBasedTemplate
+    slots:
+      - dataType
+      - dataSubtype
+      - workflow
+      - workflowLink
+      - auxiliaryAsset
+      - assay
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
+    rules:
+      - description: If workflow is provided, workflowLink must be provided
+        preconditions:
+          slot_conditions:
+            workflow:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            workflowLink:
+              value_presence: PRESENT
+  ProcessedVariantCallsTemplate:
+    close_mappings:
+      - htan:BulkWESLevel3
+    description: Template for describing either simple germline/somatic variant calls output data (VCF/MAF) as well as structural variants (e.g. CNVs).
+    is_a: BiologicalAssayDataTemplate
+    slots:
+      - isFilteredReads
+      - workflow
+      - workflowLink
+      - auxiliaryAsset
+      - specimenID
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
+      fileFormat:
+        range: SequencingFileFormatEnum
+    rules:
+      - description: If workflow is provided, workflowLink must be provided
+        preconditions:
+          slot_conditions:
+            workflow:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            workflowLink:
+              value_presence: PRESENT
+  ImagingAssayTemplate:
+    description: General template for describing imaging data.
+    is_a: BiologicalAssayDataTemplate
+    slot_usage:
+      assay:
+        range: ImagingAssayEnum
+      platform:
+        any_of:
+          - range: MicroscopyImagingPlatformEnum
+          - range: MRIPlatformEnum
+          - range: ImagingSystemPlatformEnum
+      fileFormat:
+        range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
+    slots:
+      - platform
+      - assayTarget
+      - auxiliaryAsset
+  MicroscopyAssayTemplate:
+    close_mappings:
+      - htan:ImagingLevel2
+    description: Template for microscopy imaging data. For immunofluorescence or immunohistochemistry assays, provide antibodyID.
+    is_a: ImagingAssayTemplate
+    slots:
+      - parentSpecimenID
+      - specimenID
+      - aliquotID
+      - objective
+      - nominalMagnification
+      - lensAperture
+      - workingDistance
+      - workingDistanceUnit
+      - immersion
+      - antibodyID
+    slot_usage:
+      assay:
+        range: ImagingAssayEnum
+      platform:
+        range: MicroscopyImagingPlatformEnum
+      fileFormat:
+        range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
+    rules:
+      - description: If workingDistance is provided, workingDistanceUnit must be provided
+        preconditions:
+          slot_conditions:
+            workingDistance:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            workingDistanceUnit:
+              value_presence: PRESENT
+      - description: If aliquotID is provided, specimenID must be provided
+        preconditions:
+          slot_conditions:
+            aliquotID:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            specimenID:
+              value_presence: PRESENT
+      - description: If parentSpecimenID is provided, specimenID must be provided
+        preconditions:
+          slot_conditions:
+            parentSpecimenID:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            specimenID:
+              value_presence: PRESENT
+  MRIAssayTemplate:
+    description: Template for describing MRI data.
+    is_a: ImagingAssayTemplate
+    slots:
+      - bodySite
+      - MRISequence
+      - experimentalCondition
+      - experimentalTimepoint
+      - timepointUnit
+    slot_usage:
+      assay:
+        range: ImagingAssayEnum
+      platform:
+        range: MRIPlatformEnum
+      fileFormat:
+        range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
+    rules:
+      - description: If experimentalTimepoint is provided, timepointUnit must be provided
+        preconditions:
+          slot_conditions:
+            experimentalTimepoint:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            timepointUnit:
+              value_presence: PRESENT
+  MaterialScienceAssayTemplate:
+    description: General template for describing data for a materials science assay.
+    is_a: NonBiologicalAssayDataTemplate
+    slots:
+      - platform
+      - specimenID
+      - materialType
+      - concentrationMaterial
+      - concentrationMaterialUnit
+      - concentrationNaCl
+      - concentrationNaClUnit
+    rules:
+      - description: If concentrationMaterial is provided, concentrationMaterialUnit must be provided
+        preconditions:
+          slot_conditions:
+            concentrationMaterial:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            concentrationMaterialUnit:
+              value_presence: PRESENT
+      - description: If concentrationNaCl is provided, concentrationNaClUnit must be provided
+        preconditions:
+          slot_conditions:
+            concentrationNaCl:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            concentrationNaClUnit:
+              value_presence: PRESENT
+  LightScatteringAssayTemplate:
+    description: Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.
+    is_a: MaterialScienceAssayTemplate
+    slots:
+      - pH
+      - concentrationNaCl
+      - concentrationNaClUnit
+    source: https://wiki.nci.nih.gov/display/icr/isa-tab-nano
+    slot_usage:
+      assay:
+        range: CellBasedAssayEnum
+      platform:
+        range: OtherPlatformEnum
+      fileFormat:
+        range: TabularFileFormatEnum
+    rules:
+      - description: If concentrationNaCl is provided, concentrationNaClUnit must be provided
+        preconditions:
+          slot_conditions:
+            concentrationNaCl:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            concentrationNaClUnit:
+              value_presence: PRESENT
+  GenericDataResourceTemplate:
+    description: Stand-in template for deposited data resources when a more specific template is not yet available. Use temporarily while a domain-specific template is being developed.
+    is_a: FileBasedTemplate
+    slots:
+      - dataType
+      - dataSubtype
+      - assay
+      - species
+      - comments
+    slot_usage:
+      species:
+        required: false
+      resourceType:
+        ifabsent: string(experimentalData)
+  ReferenceSequenceTemplate:
+    description: Template for reference sequence files used in experimental design, such as guide RNAs, plasmids, primers, probes, or other construct elements.
+    is_a: FileBasedTemplate
+    slots:
+      - dataType
+      - sequenceName
+      - sequenceLength
+      - species
+      - comments
+    slot_usage:
+      resourceType:
+        ifabsent: string(experimentalData)
+      species:
+        required: false
+  UpdateMilestoneReport:
+    description: Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF.
+    is_a: PartialTemplate
+    slots:
+      - Filename
+      - resourceType
+      - progressReportNumber
+  WorkflowReport:
+    description: Template used for miscellaneous workflow reports and accessory files
+    is_a: FileBasedTemplate
+    notes:
+      - resourceType should default to "workflow report"
+      - note that `dataType` and `dataSubtype` don't apply
+    slots:
+      - assay
+      - relatedDataset
+      - workflow
+      - workflowLink
+    slot_usage:
+      resourceType:
+        ifabsent: string(report)
+    rules:
+      - description: If workflow is provided, workflowLink must be provided
+        preconditions:
+          slot_conditions:
+            workflow:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            workflowLink:
+              value_presence: PRESENT
+  ProteinAssayTemplate:
+    abstract: true
+    description: Abstract template for data from some assay of protein structure and function. Data should be instantiated with more specific template.
+    is_a: BiologicalAssayDataTemplate
+    slots:
+      - parentSpecimenID
+      - specimenID
+      - aliquotID
+      - platform
+      - proteinExtractSource
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+      platform:
+        range: MassSpectrometryPlatformEnum
+      fileFormat:
+        range: MassSpecFileFormatEnum
+  MassSpecAssayTemplate:
+    close_mappings:
+      - htan:MassSpectrometryLevel1
+    description: Template for raw mass spec-based proteomics data.
+    is_a: ProteinAssayTemplate
+    notes:
+      - Technically, mass spec does not have to be considered a biological assay, but we'll classify it as such when used with a biological sample.
+    slots:
+      - dataCollectionMode
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+      platform:
+        range: MassSpectrometryPlatformEnum
+      fileFormat:
+        range: MassSpecFileFormatEnum
+  ProteomicsAssayTemplate:
+    description: Alias to MassSpecAssayTemplate for backwards-compatibility.
+    is_a: MassSpecAssayTemplate
+    slots:
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+      platform:
+        range: MassSpectrometryPlatformEnum
+      fileFormat:
+        range: MassSpecFileFormatEnum
+  KinomicsAssayTemplate:
+    description: Template for kinase activity profiling experiments such as LINCS or DiscoverX KINOMEscan panels that report percent control/inhibition across large kinase panels.
+    is_a: MassSpecAssayTemplate
+    source: https://lincsproject.org/
+    slots:
+      - kinasePanel
+      - kinaseReadoutType
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+        ifabsent: string(MIB/MS)
+      platform:
+        range: MassSpectrometryPlatformEnum
+      fileFormat:
+        range: MassSpecFileFormatEnum
+  AffinityProteomicsTemplate:
+    close_mappings:
+      - htan:RPPALevel2
+    description: Template for affinity-based proteomics data including antibody arrays (RPPA) and aptamer-based platforms (SomaScan). For antibody-based assays (RPPA), provide antibodyID. For aptamer-based assays (SomaScan), provide proteomicsPanel, panelVersion, and normalizationMethod.
+    is_a: ProteinAssayTemplate
+    slots:
+      - antibodyID
+      - proteomicsPanel
+      - panelVersion
+      - normalizationMethod
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+      platform:
+        range: ArrayPlatformEnum
+      fileFormat:
+        range: ArrayFileFormatEnum
+  ProteinInteractionAssayTemplate:
+    description: Template for datasets reporting protein-protein interaction measurements such as affinity purification mass spectrometry, BioID proximity labeling, or yeast two-hybrid screens.
+    is_a: ProteinAssayTemplate
+    source: https://www.imexconsortium.org/
+    slots:
+      - baitProtein
+      - baitGene
+      - interactionDetectionMethod
+      - interactionScore
+      - interactionScoreType
+    slot_usage:
+      assay:
+        range: MassSpectrometryAssayEnum
+      platform:
+        range: MassSpectrometryPlatformEnum
+      fileFormat:
+        range: MassSpecFileFormatEnum
   PortalDataset:
     attributes:
       accessType:
@@ -10554,11 +10659,6 @@ classes:
       - While "publisher" (repository) may seem redundant given that all Datasets are obviously on Synapse, it's for explicit compatibility with DataCite, and eventually may want to have "symbolic" datasets like Cancer Complexity Portal that list datasets hosted somewhere else.
   PortalPublication:
     attributes:
-      dataset:
-        multivalued: true
-        range: string
-        required: false
-        title: Linked Datasets
       diseaseFocus:
         multivalued: true
         range: DiseaseFocusEnum
@@ -10574,9 +10674,7 @@ classes:
         required: false
         title: Manifestation
       publicationType:
-        description: 'Type of publication in relation to the linked study on the NF Portal. A primary publication is the main publication for the study and may describe data or resources generated from the study. A secondary publication references or describes reuse of resources for the linked study.
-
-'
+        description: 'Type of publication in relation to the linked study on the NF Portal. A primary publication is the main publication for the study and may describe data or resources generated from the study. A secondary publication references or describes reuse of resources for the linked study.'
         range: PublicationTypeEnum
         required: true
         title: Publication Type
@@ -10588,8 +10686,7 @@ classes:
         range: string
         required: true
         title: Linked Study Name
-    description: A slightly more specialized publication concept intended for the specific scope of the NF Portal.
-    is_a: PublicationTemplate
+    description: Publication entity defined within the specific scope of the NF Portal (WIP).
   PublicationTemplate:
     attributes:
       abstract:
@@ -10629,9 +10726,7 @@ classes:
         range: integer
         required: true
         title: Year
-    description: A generalized data model template for Publications to be hopefully used across dccs
-    notes:
-      - This structure is based on a CSV file from MC2 annotations with customized fields as attributes.
+    description: Publication based on MC2 model
   PortalStudy:
     attributes:
       accessRequirements:
@@ -10723,12 +10818,11 @@ classes:
       summary:
         range: string
         required: true
-    description: 'A scientific project of some planned duration with PIs and key contributors, specific research topics, and potential publication/data/other outputs.  A study is often represented as a Synapse project and so is also referred to as "project". The study schema here is specifically for studies listed on the NF Portal at https://nf.synapse.org/Explore/Studies.
-
-'
+    description: 'A scientific project of some planned duration with PIs and key contributors, specific research topics, and potential publication/data/other outputs.  A study is often represented as a Synapse project and so is also referred to as "project". The study schema here is specifically for studies listed on the NF Portal at https://nf.synapse.org/Explore/Studies.'
     notes:
       - There are small differences for the public portal representation of study vs. elsewhere such as in the less-public data sharing plan, but it should always be possible to translate DSP rep to the portal study rep.
   ProtocolTemplate:
+    is_a: FileBasedTemplate
     description: Describes protocol document based on https://bioschemas.org/profiles/LabProtocol/0.7-DRAFT.
     slots:
       - Component
@@ -10749,7 +10843,7 @@ classes:
         ifabsent: string(protocol)
   SourceCodeTemplate:
     description: Template for describing scripts or software code.
-    is_a: Template
+    is_a: FileBasedTemplate
     slots:
       - title
       - author

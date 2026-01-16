@@ -93,7 +93,7 @@
       }
     }
   ],
-  "description": "Template for data from a microscopy data.",
+  "description": "Template for microscopy imaging data. For immunofluorescence or immunohistochemistry assays, provide antibodyID.",
   "properties": {
     "parentSpecimenID": {
       "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
@@ -146,25 +146,6 @@
       "description": "Immersion medium",
       "type": "string",
       "title": "immersion"
-    },
-    "age": {
-      "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
-      "type": "number",
-      "title": "age"
-    },
-    "ageUnit": {
-      "description": "",
-      "enum": [
-        "days",
-        "hours",
-        "minutes",
-        "months",
-        "seconds",
-        "weeks",
-        "years"
-      ],
-      "title": "modelAgeUnit",
-      "type": "string"
     },
     "antibodyID": {
       "anyOf": [
@@ -357,6 +338,25 @@
       "description": "Antibody identifier. Select from the controlled vocabulary of antibodies in NF Research Tools Central (syn51730943) when available, or provide a custom identifier. Links to antibody details are available in the schema see_also field for enum values.",
       "type": "string",
       "title": "antibodyID"
+    },
+    "age": {
+      "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
+      "type": "number",
+      "title": "age"
+    },
+    "ageUnit": {
+      "description": "",
+      "enum": [
+        "days",
+        "hours",
+        "minutes",
+        "months",
+        "seconds",
+        "weeks",
+        "years"
+      ],
+      "title": "modelAgeUnit",
+      "type": "string"
     },
     "assay": {
       "description": "Imaging-based assays including microscopy, MRI, and related methods",

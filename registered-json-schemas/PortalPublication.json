@@ -1,15 +1,8 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalpublication",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A slightly more specialized publication concept intended for the specific scope of the NF Portal.",
+  "description": "Publication entity defined within the specific scope of the NF Portal (WIP).",
   "properties": {
-    "dataset": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "title": "dataset"
-    },
     "diseaseFocus": {
       "items": {
         "description": "",
@@ -56,64 +49,13 @@
     "studyName": {
       "type": "string",
       "title": "studyName"
-    },
-    "abstract": {
-      "type": "string",
-      "title": "abstract"
-    },
-    "accessibility": {
-      "description": "",
-      "enum": [
-        "Open Access",
-        "Restricted Access"
-      ],
-      "title": "accessibility",
-      "type": "string"
-    },
-    "author": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "title": "author"
-    },
-    "doi": {
-      "type": "string",
-      "title": "doi"
-    },
-    "grantNumber": {
-      "type": "string",
-      "title": "grantNumber"
-    },
-    "journal": {
-      "type": "string",
-      "title": "journal"
-    },
-    "pmid": {
-      "type": "string",
-      "title": "pmid"
-    },
-    "title": {
-      "type": "string",
-      "title": "title"
-    },
-    "year": {
-      "type": "integer",
-      "title": "year"
     }
   },
   "required": [
     "fundingAgency",
     "publicationType",
     "studyId",
-    "studyName",
-    "abstract",
-    "author",
-    "doi",
-    "journal",
-    "pmid",
-    "title",
-    "year"
+    "studyName"
   ],
   "title": "PortalPublication",
   "type": "object"

@@ -1,7 +1,25 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-chipseqtemplate",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-processedgeneexpressiontemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "allOf": [
+    {
+      "if": {
+        "properties": {
+          "workflow": {}
+        },
+        "required": [
+          "workflow"
+        ]
+      },
+      "then": {
+        "properties": {
+          "workflowLink": {}
+        },
+        "required": [
+          "workflowLink"
+        ]
+      }
+    },
     {
       "if": {
         "properties": {
@@ -39,8 +57,77 @@
       }
     }
   ],
-  "description": "Template for describing raw data from ChIP-Seq assays, typically used to identify DNA-protein interactions.",
+  "description": "Template for quantified gene/protein expression data that are still represented as one file per sample.",
   "properties": {
+    "expressionUnit": {
+      "description": "Quantification units for gene expression.",
+      "enum": [
+        "Counts",
+        "FPKM",
+        "Normalized Counts",
+        "Other",
+        "RPKM",
+        "Raw Counts",
+        "TPM"
+      ],
+      "title": "expressionUnit",
+      "type": "string"
+    },
+    "workflow": {
+      "description": "",
+      "enum": [
+        "CNVkit",
+        "DESeq2",
+        "DeepVariant",
+        "FastQC",
+        "FreeBayes",
+        "GATK BaseRecalibration",
+        "GATK MarkDuplicates",
+        "MultiQC",
+        "Mutect2",
+        "STAR and Salmon",
+        "Sarek",
+        "Strelka2",
+        "StringTie",
+        "TrimGalore"
+      ],
+      "title": "workflow",
+      "type": "string"
+    },
+    "workflowLink": {
+      "description": "Workflow URL reference",
+      "type": "string",
+      "title": "workflowLink"
+    },
+    "auxiliaryAsset": {
+      "description": "URI to supplemental asset(s), e.g. QC reports or other auxiliary files to support the processing, analysis, or interpretation of the current entity.\n",
+      "type": "string",
+      "title": "auxiliaryAsset"
+    },
+    "specimenID": {
+      "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
+      "type": "string",
+      "title": "specimenID"
+    },
+    "age": {
+      "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
+      "type": "number",
+      "title": "age"
+    },
+    "ageUnit": {
+      "description": "",
+      "enum": [
+        "days",
+        "hours",
+        "minutes",
+        "months",
+        "seconds",
+        "weeks",
+        "years"
+      ],
+      "title": "modelAgeUnit",
+      "type": "string"
+    },
     "antibodyID": {
       "anyOf": [
         {
@@ -233,67 +320,9 @@
       "type": "string",
       "title": "antibodyID"
     },
-    "platform": {
-      "description": "Sequencing platforms for DNA/RNA sequencing",
-      "enum": [
-        "Applied Biosystems 3730xl DNA Analyzer",
-        "BGISEQ-500",
-        "Illumina Genome Analyzer IIx",
-        "Illumina HiSeq 2000",
-        "Illumina HiSeq 2500",
-        "Illumina HiSeq 3000",
-        "Illumina HiSeq 4000",
-        "Illumina HiSeq X",
-        "Illumina MiSeq",
-        "Illumina NextSeq 1000",
-        "Illumina NextSeq 2000",
-        "Illumina NextSeq 500",
-        "Illumina NextSeq 550",
-        "Illumina NovaSeq 6000",
-        "Illumina NovaSeq X",
-        "Illumina NovaSeq X Plus",
-        "MGI T-series",
-        "Oxford Nanopore",
-        "PacBio RS II",
-        "PacBio Sequel II System",
-        "PacBio Sequel IIe System",
-        "Bionano Irys",
-        "Chromium X"
-      ],
-      "title": "platform",
-      "type": "string"
-    },
-    "peakCallingAlgorithm": {
-      "description": "A list of commonly used peak-calling algorithms for ChIP-Seq data analysis.",
-      "type": "string",
-      "title": "peakCallingAlgorithm"
-    },
-    "age": {
-      "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
-      "type": "number",
-      "title": "age"
-    },
-    "ageUnit": {
-      "description": "",
-      "enum": [
-        "days",
-        "hours",
-        "minutes",
-        "months",
-        "seconds",
-        "weeks",
-        "years"
-      ],
-      "title": "modelAgeUnit",
-      "type": "string"
-    },
-    "aliquotID": {
-      "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
-      "type": "string",
-      "title": "aliquotID"
-    },
     "assay": {
-      "description": "Sequencing-based assays including RNA-seq, DNA-seq, and related methods",
+      "description": "The technology used to generate the data in this file.",
+      "type": "string",
       "enum": [
         "ATAC-seq",
         "CAPP-seq",
@@ -325,20 +354,180 @@
         "spatial transcriptomics",
         "targeted exome sequencing",
         "whole exome sequencing",
-        "whole genome sequencing"
+        "whole genome sequencing",
+        "3D confocal imaging",
+        "3D electron microscopy",
+        "3D imaging",
+        "CODEX",
+        "DNA optical mapping",
+        "Fluorescence In Situ Hybridization",
+        "Magnetization-Prepared Rapid Gradient Echo MRI",
+        "SUSHI",
+        "atomic force microscopy",
+        "autoradiography",
+        "brightfield microscopy",
+        "live imaging",
+        "histology",
+        "confocal microscopy",
+        "conventional MRI",
+        "diffusion MRI",
+        "fluorescence microscopy assay",
+        "functional MRI",
+        "high frequency ultrasound",
+        "immunocytochemistry",
+        "immunofluorescence",
+        "immunohistochemistry",
+        "in vivo bioluminescence",
+        "laser speckle imaging",
+        "magnetic resonance angiography",
+        "magnetic resonance spectroscopy",
+        "optical coherence tomography",
+        "optical tomography",
+        "phase-contrast microscopy",
+        "photograph",
+        "positron emission tomography",
+        "spatial frequency domain imaging",
+        "traction force microscopy",
+        "transcranial doppler ultrasonography",
+        "FIA-MSMS",
+        "FTIR spectroscopy",
+        "MIB/MS",
+        "MudPIT",
+        "RPPA",
+        "TMT quantitation",
+        "high-performance liquid chromatography/tandem mass spectrometry",
+        "label free mass spectrometry",
+        "liquid chromatography-electrochemical detection",
+        "liquid chromatography/mass spectrometry",
+        "liquid chromatography/tandem mass spectrometry",
+        "mass spectrometry",
+        "proximity extension assay",
+        "ultra high-performance liquid chromatography/tandem mass spectrometry",
+        "AlgometRx Nociometer",
+        "quantitative sensory testing",
+        "Child Behavior Checklist for Ages 1.5-5",
+        "Child Behavior Checklist for Ages 6-18",
+        "Children's Dermatology Life Quality Index Questionnaire",
+        "Corsi blocks",
+        "FACE-Q Appearance-related Distress",
+        "Focus group",
+        "Interview",
+        "NIH Toolbox",
+        "PROMIS Cognitive Function",
+        "Riccardi and Ablon scales",
+        "Skindex-16",
+        "Social Responsiveness Scale",
+        "Social Responsiveness Scale, Second Edition",
+        "Von Frey test",
+        "actigraphy",
+        "active avoidance learning behavior assay",
+        "auditory brainstem response",
+        "blood chemistry measurement",
+        "body size trait measurement",
+        "cNF-Skindex",
+        "clinical data",
+        "cognitive assessment",
+        "contextual conditioning behavior assay",
+        "distortion product otoacoustic emissions",
+        "elevated plus maze test",
+        "feeding assay",
+        "gait measurement",
+        "genotyping",
+        "grip strength",
+        "hand-held dynamometry",
+        "metabolic screening",
+        "n-back task",
+        "neuropsychological assessment",
+        "novelty response behavior assay",
+        "open field test",
+        "optokinetic reflex assay",
+        "pattern electroretinogram",
+        "polysomnography",
+        "pure tone average",
+        "questionnaire",
+        "rotarod performance test",
+        "scale",
+        "six-minute walk test",
+        "weight",
+        "word recognition score",
+        "2D AlamarBlue absorbance",
+        "2D AlamarBlue fluorescence",
+        "3D microtissue viability",
+        "ATPase activity assay",
+        "BrdU proliferation assay",
+        "ELISA",
+        "EdU proliferation assay",
+        "FLIPR high-throughput cellular screening",
+        "HPLC",
+        "Migration Assay",
+        "STR profile",
+        "TIDE",
+        "TriKinetics activity monitoring",
+        "array",
+        "blue native PAGE",
+        "SDS-PAGE",
+        "bone histomorphometry",
+        "cAMP-Glo Max Assay",
+        "calcium retention capacity assay",
+        "cell competition",
+        "cell count",
+        "cell painting",
+        "cell permeability assay",
+        "cell proliferation",
+        "cell viability assay",
+        "combination library screen",
+        "combination screen",
+        "complex II enzyme activity assay",
+        "compound screen",
+        "current clamp assay",
+        "differential scanning calorimetry",
+        "dynamic light scattering",
+        "electrochemiluminescence",
+        "electrophoretic light scattering",
+        "flow cytometry",
+        "focus forming assay",
+        "gel filtration chromatography",
+        "gel permeation chromatography",
+        "high content screen",
+        "immunoassay",
+        "in silico synthesis",
+        "in vitro tumorigenesis",
+        "in vivo PDX viability",
+        "in vivo tumor growth",
+        "light scattering assay",
+        "local field potential recording",
+        "long term potentiation assay",
+        "massively parallel reporter assay",
+        "microrheology",
+        "multi-electrode array",
+        "nanoparticle tracking analysis",
+        "oscillatory rheology",
+        "oxygen consumption assay",
+        "perineurial cell thickness",
+        "pharmocokinetic ADME assay",
+        "polymerase chain reaction",
+        "quantitative PCR",
+        "reactive oxygen species assay",
+        "reporter gene assay",
+        "split-GFP assay",
+        "rheometry",
+        "sandwich ELISA",
+        "single molecule drug screen assay",
+        "small molecule library screen",
+        "sorbitol dehydrogenase activity level assay",
+        "static histomorphometry",
+        "static light scattering",
+        "survival",
+        "trans-endothelial electrical resistance",
+        "twin spot assay",
+        "western blot",
+        "whole-cell patch clamp",
+        "combination library screen",
+        "combination screen",
+        "single molecule drug screen assay",
+        "small molecule library screen"
       ],
-      "title": "assay",
-      "type": "string"
-    },
-    "batchID": {
-      "description": "Batch identifier, can be used in any context where added batch information is helpful, such as different sequencing runs or collection times.",
-      "type": "string",
-      "title": "batchID"
-    },
-    "bisulfiteConversionKitID": {
-      "description": "Name of kit used in bisulfite conversion.",
-      "type": "string",
-      "title": "bisulfiteConversionKitID"
+      "title": "assay"
     },
     "comments": {
       "description": "Brief free-text comments that may also be important to understanding the resource.",
@@ -451,7 +640,8 @@
       "type": "string"
     },
     "fileFormat": {
-      "description": "File formats for sequencing data including alignments, variants, and genomic annotations",
+      "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
+      "type": "string",
       "enum": [
         "bai",
         "bam",
@@ -490,10 +680,89 @@
         "tbi",
         "tranches",
         "vcf",
-        "wiggle"
+        "wiggle",
+        "DICOM",
+        "NWB",
+        "PAR",
+        "REC",
+        "aci",
+        "avi",
+        "bmp",
+        "czi",
+        "hdr",
+        "img",
+        "jpg",
+        "lif",
+        "mov",
+        "nii",
+        "ome-tiff",
+        "png",
+        "svs",
+        "sws",
+        "tif",
+        "tom",
+        "Sentrix descriptor file",
+        "bpm",
+        "cel",
+        "chp",
+        "dat",
+        "idat",
+        "locs",
+        "msf",
+        "mzML",
+        "raw",
+        "RCC",
+        "csv",
+        "excel",
+        "parquet",
+        "tsv",
+        "MATLAB script",
+        "Python script",
+        "R script",
+        "bash script",
+        "js",
+        "MATLAB data",
+        "RData",
+        "SDAT",
+        "SPAR",
+        "json",
+        "prism",
+        "rds",
+        "sqlite",
+        "xml",
+        "yaml",
+        "7z",
+        "docker image",
+        "gzip",
+        "tar",
+        "zip",
+        "ai",
+        "doc",
+        "html",
+        "hyperlink",
+        "md",
+        "pdf",
+        "powerpoint",
+        "txt",
+        "MPEG-4",
+        "ab1",
+        "abf",
+        "dna",
+        "edat3",
+        "fcs",
+        "fig",
+        "gb",
+        "hdf5",
+        "idx",
+        "psydat",
+        "pzfx",
+        "rmd",
+        "sav",
+        "sdf",
+        "sif",
+        "svg"
       ],
-      "title": "fileFormat",
-      "type": "string"
+      "title": "fileFormat"
     },
     "geneticReagentID": {
       "anyOf": [
@@ -629,57 +898,6 @@
       },
       "type": "array",
       "title": "individualID"
-    },
-    "libraryPrep": {
-      "description": "",
-      "enum": [
-        "lncRNAenrichment",
-        "miRNAenrichment",
-        "polyAselection",
-        "rRNAdepletion"
-      ],
-      "title": "libraryPrep",
-      "type": "string"
-    },
-    "libraryPreparationMethod": {
-      "description": "",
-      "enum": [
-        "10x",
-        "CEL-seq",
-        "Drop-Seq",
-        "GTAC@WUSTL in-house prep",
-        "IDT xGen Exome Research Panel",
-        "Illumina Ribo-Zero Plus",
-        "Illumina Tn5 Transposase",
-        "Illumina TruSeq DNA Nano",
-        "KAPA HyperExome V2 Probes",
-        "KAPA HyperPrep Kit PCR-free",
-        "KAPA RNA HyperPrep Kit with RiboErase (HMR)",
-        "KAPA mRNA HyperPrep Kit",
-        "NEBNext mRNA Library Prep Reagent Set for Illumina",
-        "Omni-ATAC",
-        "Oxford Nanopore Direct RNA Sequencing Kit",
-        "QIAseq FX DNA Library Kit",
-        "QuantSeq FWD V2 with UDI",
-        "Smart-seq2",
-        "Smart-seq4",
-        "TruSeq",
-        "TruSeq standard total RNA library kit",
-        "unknown"
-      ],
-      "title": "libraryPreparationMethod",
-      "type": "string"
-    },
-    "libraryStrand": {
-      "description": "Strandedness of paired-end RNA-Sequencing data. This is an important parameter for RNA-seq analysis.",
-      "type": "string",
-      "enum": [
-        "FirstStranded",
-        "SecondStranded",
-        "Unstranded",
-        "Not Applicable"
-      ],
-      "title": "libraryStrand"
     },
     "modelAge": {
       "description": "Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.",
@@ -1572,18 +1790,6 @@
       ],
       "title": "nf2Genotype"
     },
-    "nucleicAcidSource": {
-      "description": "",
-      "enum": [
-        "bulk cell",
-        "bulk nuclei",
-        "mitochondria",
-        "single cell",
-        "single nucleus"
-      ],
-      "title": "nucleicAcidSource",
-      "type": "string"
-    },
     "organ": {
       "description": "",
       "enum": [
@@ -1615,28 +1821,6 @@
       "title": "organ",
       "type": "string"
     },
-    "parentSpecimenID": {
-      "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
-      "type": "string",
-      "title": "parentSpecimenID"
-    },
-    "readDepth": {
-      "description": "If available, the coverage statistic as output from bedtools coverage or samtools stats.",
-      "type": "integer",
-      "title": "readDepth"
-    },
-    "readLength": {
-      "description": "Number of base pairs (bp) sequenced for a read",
-      "type": "integer",
-      "title": "readLength"
-    },
-    "readPair": {
-      "description": "The read of origin, Read 1 or Read 2",
-      "maximum": 2,
-      "minimum": 1,
-      "type": "integer",
-      "title": "readPair"
-    },
     "resourceType": {
       "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
       "enum": [
@@ -1650,15 +1834,6 @@
         "workflow report"
       ],
       "title": "resourceType",
-      "type": "string"
-    },
-    "runType": {
-      "description": "",
-      "enum": [
-        "pairedEnd",
-        "singleEnd"
-      ],
-      "title": "runType",
       "type": "string"
     },
     "sex": {
@@ -1689,68 +1864,6 @@
       ],
       "title": "species",
       "type": "string"
-    },
-    "specimenID": {
-      "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
-      "type": "string",
-      "title": "specimenID"
-    },
-    "specimenPreparationMethod": {
-      "description": "",
-      "enum": [
-        "Cryopreserved",
-        "FFPE",
-        "Flash frozen",
-        "Fresh collected",
-        "OCT",
-        "RNAlater",
-        "Viably frozen",
-        "ethanol",
-        "formalin-fixed"
-      ],
-      "title": "specimenPreparationMethod",
-      "type": "string"
-    },
-    "specimenType": {
-      "description": "The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory substances.\n",
-      "type": "string",
-      "enum": [
-        "Buccal Mucosa",
-        "Buffy Coat",
-        "CDX tissue",
-        "Dorsal Root Ganglion",
-        "PDX tissue",
-        "blood",
-        "bone marrow",
-        "cerebral cortex",
-        "connective tissue",
-        "embryonic tissue",
-        "meninges",
-        "microtissue",
-        "nerve tissue",
-        "optic nerve",
-        "organoid",
-        "plasma",
-        "primary tumor",
-        "retina",
-        "sciatic nerve",
-        "serum",
-        "spheroid",
-        "splenocyte",
-        "tumor-adjacent normal",
-        "whole brain",
-        "mucus",
-        "saliva",
-        "stool",
-        "sweat",
-        "urine"
-      ],
-      "title": "specimenType"
-    },
-    "targetDepth": {
-      "description": "The targeted read depth prior to sequencing.",
-      "type": "string",
-      "title": "targetDepth"
     },
     "tumorType": {
       "description": "",
@@ -1812,21 +1925,17 @@
     }
   },
   "required": [
-    "platform",
-    "libraryStrand",
-    "libraryPreparationMethod",
     "specimenID",
-    "tumorType",
-    "specimenPreparationMethod",
     "dataType",
     "dataSubtype",
     "assay",
     "individualID",
     "species",
     "diagnosis",
+    "tumorType",
     "fileFormat",
     "resourceType"
   ],
-  "title": "ChIPSeqTemplate",
+  "title": "ProcessedGeneExpressionTemplate",
   "type": "object"
 }

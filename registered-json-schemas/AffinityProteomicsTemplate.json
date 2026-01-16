@@ -1,5 +1,5 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-chipseqtemplate",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-affinityproteomicstemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "allOf": [
     {
@@ -39,7 +39,7 @@
       }
     }
   ],
-  "description": "Template for describing raw data from ChIP-Seq assays, typically used to identify DNA-protein interactions.",
+  "description": "Template for affinity-based proteomics data including antibody arrays (RPPA) and aptamer-based platforms (SomaScan). For antibody-based assays (RPPA), provide antibodyID. For aptamer-based assays (SomaScan), provide proteomicsPanel, panelVersion, and normalizationMethod.",
   "properties": {
     "antibodyID": {
       "anyOf": [
@@ -233,40 +233,20 @@
       "type": "string",
       "title": "antibodyID"
     },
-    "platform": {
-      "description": "Sequencing platforms for DNA/RNA sequencing",
-      "enum": [
-        "Applied Biosystems 3730xl DNA Analyzer",
-        "BGISEQ-500",
-        "Illumina Genome Analyzer IIx",
-        "Illumina HiSeq 2000",
-        "Illumina HiSeq 2500",
-        "Illumina HiSeq 3000",
-        "Illumina HiSeq 4000",
-        "Illumina HiSeq X",
-        "Illumina MiSeq",
-        "Illumina NextSeq 1000",
-        "Illumina NextSeq 2000",
-        "Illumina NextSeq 500",
-        "Illumina NextSeq 550",
-        "Illumina NovaSeq 6000",
-        "Illumina NovaSeq X",
-        "Illumina NovaSeq X Plus",
-        "MGI T-series",
-        "Oxford Nanopore",
-        "PacBio RS II",
-        "PacBio Sequel II System",
-        "PacBio Sequel IIe System",
-        "Bionano Irys",
-        "Chromium X"
-      ],
-      "title": "platform",
-      "type": "string"
-    },
-    "peakCallingAlgorithm": {
-      "description": "A list of commonly used peak-calling algorithms for ChIP-Seq data analysis.",
+    "proteomicsPanel": {
+      "description": "Name or identifier for the proteomics assay panel used (e.g., SomaScan 7K, Olink Explore 3072).",
       "type": "string",
-      "title": "peakCallingAlgorithm"
+      "title": "proteomicsPanel"
+    },
+    "panelVersion": {
+      "description": "Version of the assay panel used.",
+      "type": "string",
+      "title": "panelVersion"
+    },
+    "normalizationMethod": {
+      "description": "Method used to normalize the data (e.g., plate calibration, median normalization, log2 transformation).",
+      "type": "string",
+      "title": "normalizationMethod"
     },
     "age": {
       "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
@@ -293,52 +273,25 @@
       "title": "aliquotID"
     },
     "assay": {
-      "description": "Sequencing-based assays including RNA-seq, DNA-seq, and related methods",
+      "description": "Mass spectrometry-based assays",
       "enum": [
-        "ATAC-seq",
-        "CAPP-seq",
-        "CUT&RUN",
-        "ChIP-seq",
-        "ERR bisulfite sequencing",
-        "HI-C",
-        "ISO-seq",
-        "NOMe-seq",
-        "RNA array",
-        "RNA-seq",
-        "SNP array",
-        "SaferSeqS",
-        "Sanger sequencing",
-        "T cell receptor repertoire sequencing",
-        "bisulfite sequencing",
-        "jumping library",
-        "lncRNA-seq",
-        "methylation array",
-        "miRNA array",
-        "miRNA-seq",
-        "next generation targeted sequencing",
-        "oxBS-seq",
-        "ribo-seq",
-        "scCGI-seq",
-        "single cell ATAC-seq",
-        "single-cell RNA-seq",
-        "single-nucleus RNA-seq",
-        "spatial transcriptomics",
-        "targeted exome sequencing",
-        "whole exome sequencing",
-        "whole genome sequencing"
+        "FIA-MSMS",
+        "FTIR spectroscopy",
+        "MIB/MS",
+        "MudPIT",
+        "RPPA",
+        "TMT quantitation",
+        "high-performance liquid chromatography/tandem mass spectrometry",
+        "label free mass spectrometry",
+        "liquid chromatography-electrochemical detection",
+        "liquid chromatography/mass spectrometry",
+        "liquid chromatography/tandem mass spectrometry",
+        "mass spectrometry",
+        "proximity extension assay",
+        "ultra high-performance liquid chromatography/tandem mass spectrometry"
       ],
       "title": "assay",
       "type": "string"
-    },
-    "batchID": {
-      "description": "Batch identifier, can be used in any context where added batch information is helpful, such as different sequencing runs or collection times.",
-      "type": "string",
-      "title": "batchID"
-    },
-    "bisulfiteConversionKitID": {
-      "description": "Name of kit used in bisulfite conversion.",
-      "type": "string",
-      "title": "bisulfiteConversionKitID"
     },
     "comments": {
       "description": "Brief free-text comments that may also be important to understanding the resource.",
@@ -451,46 +404,15 @@
       "type": "string"
     },
     "fileFormat": {
-      "description": "File formats for sequencing data including alignments, variants, and genomic annotations",
+      "description": "File formats for array-based data",
       "enum": [
-        "bai",
-        "bam",
-        "bcf",
-        "bed",
-        "bed broadPeak",
-        "bed gappedPeak",
-        "bed narrowPeak",
-        "bedgraph",
-        "bgzip",
-        "bigwig",
-        "cnn",
-        "cnr",
-        "cns",
-        "crai",
-        "cram",
-        "csi",
-        "ctab",
-        "dup",
-        "fasta",
-        "fastq",
-        "flagstat",
-        "gct",
-        "gff3",
-        "gtf",
-        "hic",
-        "maf",
-        "mtx",
-        "plink",
-        "recal",
-        "sam",
-        "seg",
-        "sf",
-        "sra",
-        "tagAlign",
-        "tbi",
-        "tranches",
-        "vcf",
-        "wiggle"
+        "Sentrix descriptor file",
+        "bpm",
+        "cel",
+        "chp",
+        "dat",
+        "idat",
+        "locs"
       ],
       "title": "fileFormat",
       "type": "string"
@@ -629,57 +551,6 @@
       },
       "type": "array",
       "title": "individualID"
-    },
-    "libraryPrep": {
-      "description": "",
-      "enum": [
-        "lncRNAenrichment",
-        "miRNAenrichment",
-        "polyAselection",
-        "rRNAdepletion"
-      ],
-      "title": "libraryPrep",
-      "type": "string"
-    },
-    "libraryPreparationMethod": {
-      "description": "",
-      "enum": [
-        "10x",
-        "CEL-seq",
-        "Drop-Seq",
-        "GTAC@WUSTL in-house prep",
-        "IDT xGen Exome Research Panel",
-        "Illumina Ribo-Zero Plus",
-        "Illumina Tn5 Transposase",
-        "Illumina TruSeq DNA Nano",
-        "KAPA HyperExome V2 Probes",
-        "KAPA HyperPrep Kit PCR-free",
-        "KAPA RNA HyperPrep Kit with RiboErase (HMR)",
-        "KAPA mRNA HyperPrep Kit",
-        "NEBNext mRNA Library Prep Reagent Set for Illumina",
-        "Omni-ATAC",
-        "Oxford Nanopore Direct RNA Sequencing Kit",
-        "QIAseq FX DNA Library Kit",
-        "QuantSeq FWD V2 with UDI",
-        "Smart-seq2",
-        "Smart-seq4",
-        "TruSeq",
-        "TruSeq standard total RNA library kit",
-        "unknown"
-      ],
-      "title": "libraryPreparationMethod",
-      "type": "string"
-    },
-    "libraryStrand": {
-      "description": "Strandedness of paired-end RNA-Sequencing data. This is an important parameter for RNA-seq analysis.",
-      "type": "string",
-      "enum": [
-        "FirstStranded",
-        "SecondStranded",
-        "Unstranded",
-        "Not Applicable"
-      ],
-      "title": "libraryStrand"
     },
     "modelAge": {
       "description": "Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.",
@@ -1572,18 +1443,6 @@
       ],
       "title": "nf2Genotype"
     },
-    "nucleicAcidSource": {
-      "description": "",
-      "enum": [
-        "bulk cell",
-        "bulk nuclei",
-        "mitochondria",
-        "single cell",
-        "single nucleus"
-      ],
-      "title": "nucleicAcidSource",
-      "type": "string"
-    },
     "organ": {
       "description": "",
       "enum": [
@@ -1620,22 +1479,49 @@
       "type": "string",
       "title": "parentSpecimenID"
     },
-    "readDepth": {
-      "description": "If available, the coverage statistic as output from bedtools coverage or samtools stats.",
-      "type": "integer",
-      "title": "readDepth"
+    "platform": {
+      "description": "Array-based platforms for genomic and transcriptomic measurements",
+      "enum": [
+        "Affymetrix Genome-Wide Human SNP 5.0 Array",
+        "Affymetrix Genome-Wide Human SNP 6.0 Array",
+        "Affymetrix Human Gene 1.0 ST Array",
+        "Affymetrix Human Genome U133 Plus 2.0 Array",
+        "Affymetrix U133AB",
+        "Agilent 44Karray",
+        "Illumina 1M",
+        "Illumina h650",
+        "Illumina Human660W-Quad v1.0 BeadChip",
+        "Illumina HumanHap300",
+        "Illumina HumanMethylation450",
+        "Illumina HumanOmni1-Quadv1.0",
+        "Illumina HumanOmniExpress-24 v1.0 BeadChip",
+        "Illumina HumanOmniExpress-24 v1.2 BeadChip",
+        "Illumina Infinium MethylationEPIC BeadChip v1.0 (850k)",
+        "Illumina Infinium MethylationEPIC BeadChip v2.0 (935k)",
+        "Illumina MouseWG-6 v2.0 expression beadchip",
+        "Illumina WholeGenome DASL",
+        "Illumina Omni2pt5M",
+        "Illumina Omni5M",
+        "Infinium HumanOmniExpressExome",
+        "NanoString Human nCounter PanCancer IO360 Panel",
+        "NanoString nCounter Analysis System",
+        "Perlegen 300Karray",
+        "SomaLogic SomaScan",
+        "10x Visium Spatial Gene Expression"
+      ],
+      "title": "platform",
+      "type": "string"
     },
-    "readLength": {
-      "description": "Number of base pairs (bp) sequenced for a read",
-      "type": "integer",
-      "title": "readLength"
-    },
-    "readPair": {
-      "description": "The read of origin, Read 1 or Read 2",
-      "maximum": 2,
-      "minimum": 1,
-      "type": "integer",
-      "title": "readPair"
+    "proteinExtractSource": {
+      "description": "",
+      "enum": [
+        "cell lysate",
+        "cytoplasm",
+        "mitochondria",
+        "nuclear extract"
+      ],
+      "title": "proteinExtractSource",
+      "type": "string"
     },
     "resourceType": {
       "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
@@ -1650,15 +1536,6 @@
         "workflow report"
       ],
       "title": "resourceType",
-      "type": "string"
-    },
-    "runType": {
-      "description": "",
-      "enum": [
-        "pairedEnd",
-        "singleEnd"
-      ],
-      "title": "runType",
       "type": "string"
     },
     "sex": {
@@ -1694,63 +1571,6 @@
       "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
       "type": "string",
       "title": "specimenID"
-    },
-    "specimenPreparationMethod": {
-      "description": "",
-      "enum": [
-        "Cryopreserved",
-        "FFPE",
-        "Flash frozen",
-        "Fresh collected",
-        "OCT",
-        "RNAlater",
-        "Viably frozen",
-        "ethanol",
-        "formalin-fixed"
-      ],
-      "title": "specimenPreparationMethod",
-      "type": "string"
-    },
-    "specimenType": {
-      "description": "The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory substances.\n",
-      "type": "string",
-      "enum": [
-        "Buccal Mucosa",
-        "Buffy Coat",
-        "CDX tissue",
-        "Dorsal Root Ganglion",
-        "PDX tissue",
-        "blood",
-        "bone marrow",
-        "cerebral cortex",
-        "connective tissue",
-        "embryonic tissue",
-        "meninges",
-        "microtissue",
-        "nerve tissue",
-        "optic nerve",
-        "organoid",
-        "plasma",
-        "primary tumor",
-        "retina",
-        "sciatic nerve",
-        "serum",
-        "spheroid",
-        "splenocyte",
-        "tumor-adjacent normal",
-        "whole brain",
-        "mucus",
-        "saliva",
-        "stool",
-        "sweat",
-        "urine"
-      ],
-      "title": "specimenType"
-    },
-    "targetDepth": {
-      "description": "The targeted read depth prior to sequencing.",
-      "type": "string",
-      "title": "targetDepth"
     },
     "tumorType": {
       "description": "",
@@ -1812,21 +1632,18 @@
     }
   },
   "required": [
-    "platform",
-    "libraryStrand",
-    "libraryPreparationMethod",
     "specimenID",
-    "tumorType",
-    "specimenPreparationMethod",
+    "platform",
     "dataType",
     "dataSubtype",
     "assay",
     "individualID",
     "species",
     "diagnosis",
+    "tumorType",
     "fileFormat",
     "resourceType"
   ],
-  "title": "ChIPSeqTemplate",
+  "title": "AffinityProteomicsTemplate",
   "type": "object"
 }
