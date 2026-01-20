@@ -144,14 +144,14 @@ def _create_columns_from_json_schema(json_schema: dict[str, Any]) -> list[Column
         maximum_size = None
         enum_values = None
 
-        # Extract enum values if present (limit to first 1000)
+        # Extract enum values if present (limit to first 100, Synapse's maximum)
         if "enum" in prop_schema:
-            enum_values = [str(v) for v in prop_schema["enum"][:1000]]
+            enum_values = [str(v) for v in prop_schema["enum"][:100]]
 
         # For list types, check if enum is nested in items
         if column_type in LIST_TYPE_DICT.values() and "items" in prop_schema:
             if isinstance(prop_schema["items"], dict) and "enum" in prop_schema["items"]:
-                enum_values = [str(v) for v in prop_schema["items"]["enum"][:1000]]
+                enum_values = [str(v) for v in prop_schema["items"]["enum"][:100]]
 
         if column_type == "STRING":
             maximum_size = 250
