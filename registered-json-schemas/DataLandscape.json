@@ -10,7 +10,10 @@
     },
     "aim": {
       "description": "Study context: The research aim within the study and associated with the expected dataset (e.g., 1 for Aim 1, 2 for Aim 2)",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "aim"
     },
     "name": {
@@ -20,12 +23,18 @@
     },
     "description": {
       "description": "Dataset identification: Short description of the dataset and experimental details.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "description"
     },
     "dataLead": {
       "description": "Dataset identification: The person or team responsible for generating and curating this dataset",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "dataLead"
     },
     "dataType": {
@@ -95,7 +104,10 @@
         ],
         "description": "Type of data represented by the entity (File, Dataset, etc.)."
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "dataType"
     },
     "assay": {
@@ -470,17 +482,26 @@
     "deadline": {
       "description": "Project management: Target date for data to be uploaded for this dataset. This can be an estimate.",
       "format": "date",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "deadline"
     },
     "milestone": {
       "description": "Project management: Reference to a milestone (aka \"progress report number\") associated with this dataset, e.g. '1' or '2.2'",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "milestone"
     },
     "comments": {
       "description": "Project management: Additional comments or notes about this dataset",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "comments"
     }
   },

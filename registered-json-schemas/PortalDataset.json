@@ -27,22 +27,34 @@
         "title": "HumanAgeGroupEnum",
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "ageGroup"
     },
     "alternateName": {
       "description": "An altername name that can be used for search and discovery improvement.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "alternateName"
     },
     "citation": {
       "description": "Academic articles that are recommended by the data provider to be cited in addition to the dataset doi itself.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "citation"
     },
     "conditionsOfAccess": {
       "description": "Additional requirements a user may need outside of Data Use Modifiers. This could include additional registration, updating profile information, joining a Synapse Team, or using specific authentication methods like 2FA or RAS. Omit property if not applicable/unknown.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "conditionsOfAccess"
     },
     "contributor": {
@@ -50,7 +62,10 @@
       "items": {
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "contributor"
     },
     "countryOfOrigin": {
@@ -58,7 +73,10 @@
       "items": {
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "countryOfOrigin"
     },
     "creator": {
@@ -71,7 +89,10 @@
     },
     "croissant_file_s3_object": {
       "description": "Link to croissant file for dataset.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "croissant_file_s3_object"
     },
     "dataType": {
@@ -176,17 +197,26 @@
         "title": "DuoEnum",
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "dataUseModifiers"
     },
     "datePublished": {
       "description": "Date data were published/available on Synapse. This can be set automatically from other dates tracked in Synapse system so does not need to be manually added.",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "datePublished"
     },
     "description": {
       "description": "Blurb for the dataset; should be no more than 500 characters.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "description"
     },
     "diseaseFocus": {
@@ -211,12 +241,18 @@
     "doi": {
       "description": "The Digital Object Identifier (DOI) of the dataset (if one has been created), used for citation and persistent identification.",
       "pattern": "^10\\\\.\\\\d{4,9}/[-._;()/:A-Z0-9]+$",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "doi"
     },
     "externalRepositoryUri": {
       "description": "Reference to dataset in an external repository using CURIE-style format, e.g. zenodo:12345678.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "externalRepositoryUri"
     },
     "funder": {
@@ -247,12 +283,18 @@
         "title": "DataCatalogEnum",
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "includedInDataCatalog"
     },
     "individualCount": {
       "description": "Number of unique individuals included in the dataset (whether as individual-level or as aggregate data). Omit if not applicable/unknown.",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "individualCount"
     },
     "keywords": {
@@ -260,7 +302,10 @@
       "items": {
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "keywords"
     },
     "license": {
@@ -344,7 +389,10 @@
         "title": "ManifestationEnum",
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "manifestation"
     },
     "measurementTechnique": {
@@ -557,7 +605,10 @@
         ],
         "description": "Sequencing-based assays including RNA-seq, DNA-seq, and related methods"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "measurementTechnique"
     },
     "series": {
@@ -589,12 +640,18 @@
         "title": "SpeciesEnum",
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "species"
     },
     "specimenCount": {
       "description": "Number of unique specimens included in the dataset. Omit if not applicable/unknown.",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "specimenCount"
     },
     "studyId": {
@@ -607,7 +664,10 @@
       "items": {
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "subject"
     },
     "title": {
@@ -619,12 +679,18 @@
       "items": {
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "visualizeDataOn"
     },
     "yearProcessed": {
       "description": "Year data were processed. Only for processed data types and when data series is \"NF-OSI Processed Data\"; omit if not applicable/unknown.",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "yearProcessed"
     }
   },
