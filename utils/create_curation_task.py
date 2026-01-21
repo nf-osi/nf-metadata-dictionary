@@ -281,8 +281,8 @@ def create_curation_task(
     # This prevents conflicts with tasks in trash or existing tasks
     print(f"  Checking for existing curation tasks with data_type: {data_type}")
     try:
-        # Try to get all curation tasks for this project
-        existing_tasks = CurationTask.get_all(project_id=project_id)
+        # Try to list all curation tasks for this project
+        existing_tasks = CurationTask.list(project_id=project_id)
 
         for existing_task in existing_tasks:
             if existing_task.data_type == data_type:
