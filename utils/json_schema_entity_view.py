@@ -219,9 +219,19 @@ def _get_column_type_from_js_property(js_property: dict[str, Any]) -> ColumnType
     if "enum" in js_property:
         return ColumnType.STRING
     if "type" in js_property:
-        if js_property["type"] == "array":
+        prop_type = js_property["type"]
+        # Handle nullable types (e.g., ['array', 'null'], ['string', 'null'])
+        if isinstance(prop_type, list):
+            # Filter out 'null' and get the actual type
+            non_null_types = [t for t in prop_type if t != "null"]
+            if non_null_types:
+                prop_type = non_null_types[0]  # Use the first non-null type
+            else:
+                return ColumnType.STRING  # Default if only null
+
+        if prop_type == "array":
             return _get_list_column_type_from_js_property(js_property)
-        return TYPE_DICT.get(js_property["type"], ColumnType.STRING)
+        return TYPE_DICT.get(prop_type, ColumnType.STRING)
     # A oneOf list usually indicates that the type could be one or more different things
     if "oneOf" in js_property and isinstance(js_property["oneOf"], list):
         return _get_column_type_from_js_one_of_list(js_property["oneOf"])
@@ -248,9 +258,18 @@ def _get_column_type_from_js_one_of_list(js_one_of_list: list[Any]) -> ColumnTyp
     type_items = [item for item in items if "type" in item if item["type"] != "null"]
     if len(type_items) == 1:
         type_item = type_items[0]
-        if type_item["type"] == "array":
+        prop_type = type_item["type"]
+        # Handle nullable types in oneOf items
+        if isinstance(prop_type, list):
+            non_null_types = [t for t in prop_type if t != "null"]
+            if non_null_types:
+                prop_type = non_null_types[0]
+            else:
+                return ColumnType.STRING
+
+        if prop_type == "array":
             return _get_list_column_type_from_js_property(type_item)
-        return TYPE_DICT.get(type_item["type"], ColumnType.STRING)
+        return TYPE_DICT.get(prop_type, ColumnType.STRING)
     return ColumnType.STRING
 
 
