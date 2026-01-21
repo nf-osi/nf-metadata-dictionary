@@ -281,8 +281,6 @@ def create_curation_task(
     # This prevents conflicts with tasks in trash or existing tasks
     print(f"  Checking for existing curation tasks with data_type: {data_type}")
     try:
-        from synapseclient.models.curation import CurationTaskStatus
-
         # Try to get all curation tasks for this project
         existing_tasks = CurationTask.get_all(project_id=project_id)
 
