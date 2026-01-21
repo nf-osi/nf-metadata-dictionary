@@ -240,8 +240,42 @@ def create_curation_task(
         Column(name="name", column_type=ColumnType.STRING, maximum_size=80),
     ]
 
-    # Combine essential columns with schema columns
-    all_columns = essential_columns + columns
+    # Reorder schema columns to put important fields first
+    # Filter fields must come first for conditional filtering to work
+    priority_order = [
+        # Filter fields for conditional enum filtering (MUST be first)
+        'modelSystemType', 'modelSpecies', 'cellLineCategory', 'cellLineGeneticDisorder',
+        # Then the conditional fields
+        'modelSystemName', 'individualID',
+        # Then other key metadata
+        'species', 'sex', 'age', 'ageUnit', 'diagnosis', 'tumorType', 'organ',
+        'modelSex', 'modelAge', 'modelAgeUnit',
+        'assay', 'platform', 'fileFormat',
+        'dataType', 'dataSubtype', 'resourceType',
+        # Then IDs and references
+        'specimenID', 'parentSpecimenID', 'aliquotID',
+        'antibodyID', 'geneticReagentID', 'assayTarget', 'auxiliaryAsset',
+        # Then genotypes
+        'nf1Genotype', 'nf2Genotype',
+        # Finally comments
+        'comments'
+    ]
+
+    # Create a dict for fast lookup
+    column_dict = {col.name: col for col in columns}
+
+    # Build ordered list: priority fields first, then remaining fields
+    ordered_columns = []
+    for field_name in priority_order:
+        if field_name in column_dict:
+            ordered_columns.append(column_dict[field_name])
+            del column_dict[field_name]
+
+    # Add any remaining columns not in priority list
+    ordered_columns.extend(column_dict.values())
+
+    # Combine essential columns with ordered schema columns
+    all_columns = essential_columns + ordered_columns
 
     # Check if a file view with this name already exists and delete it
     # This ensures we always create a fresh view with the latest column definitions
