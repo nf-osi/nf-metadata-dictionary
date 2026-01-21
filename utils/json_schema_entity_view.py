@@ -171,6 +171,7 @@ def _create_columns_from_json_schema(json_schema: dict[str, Any]) -> list[Column
     for name, prop_schema in properties.items():
         column_type = _get_column_type_from_js_property(prop_schema)
         maximum_size = None
+        maximum_list_length = None
 
         # NOTE: We intentionally do NOT set enum_values on columns when creating
         # entity views from JSON Schemas. Reasons:
@@ -185,12 +186,14 @@ def _create_columns_from_json_schema(json_schema: dict[str, Any]) -> list[Column
         if column_type == ColumnType.STRING:
             maximum_size = 80   # Most metadata values fit in 80 chars
         if column_type in LIST_TYPE_DICT.values():
-            maximum_size = 40   # List item size (total row size = size × list length)
+            maximum_size = 40   # List item size
+            maximum_list_length = 100  # Limit list length to prevent row size explosion
 
         column = Column(
             name=name,
             column_type=column_type,
             maximum_size=maximum_size,
+            maximum_list_length=maximum_list_length,
             enum_values=enum_values,
             default_value=None,
         )
