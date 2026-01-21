@@ -180,10 +180,12 @@ def _create_columns_from_json_schema(json_schema: dict[str, Any]) -> list[Column
         # 4. The curator grid uses the bound JSON Schema for filtering/validation
         enum_values = None
 
-        if column_type == "STRING":
-            maximum_size = 250
+        # Use conservative maximum_size values to stay under Synapse's 64KB row limit
+        # With ~50 total columns (schema + system), we need to keep sizes small
+        if column_type == ColumnType.STRING:
+            maximum_size = 100  # Most metadata values fit in 100 chars
         if column_type in LIST_TYPE_DICT.values():
-            maximum_size = 100
+            maximum_size = 50   # List item size (total row size = size × list length)
 
         column = Column(
             name=name,
