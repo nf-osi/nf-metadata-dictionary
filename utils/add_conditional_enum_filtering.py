@@ -3,8 +3,12 @@
 Add conditional enum filtering to generated JSON schemas.
 
 This script post-processes LinkML-generated JSON schemas to add if/then/else
-conditionals that filter modelSystemName enum values based on user selections
-in modelSystemType, modelSpecies, cellLineCategory, and cellLineGeneticDisorder.
+conditionals that filter modelSystemName and individualID enum values based on
+user selections in modelSystemType, modelSpecies, cellLineCategory, and
+cellLineGeneticDisorder.
+
+For cell lines, both modelSystemName and individualID reference syn51730943
+(the NF tools database), so they share the same conditional enum filtering logic.
 
 This enables the Synapse curator grid to show contextually relevant options
 without hitting the 100-value enum limit.
@@ -253,8 +257,15 @@ def create_conditional_rule(mapping: Dict[str, str]) -> Dict[str, Any]:
         required_fields.append("cellLineGeneticDisorder")
 
     # Build the then condition - reference the filtered enum
+    # Both modelSystemName and individualID use the same enum values
+    # (for cell lines, individualID references syn51730943, same as modelSystemName)
     then_properties = {
         "modelSystemName": {
+            "items": {
+                "$ref": f"#/$defs/{mapping['enum']}"
+            }
+        },
+        "individualID": {
             "items": {
                 "$ref": f"#/$defs/{mapping['enum']}"
             }
@@ -282,9 +293,13 @@ def add_conditionals_to_schema(schema: Dict[str, Any]) -> Dict[str, Any]:
     Returns:
         Modified schema with conditionals added
     """
-    # Check if this schema has modelSystemName field
-    if "properties" not in schema or "modelSystemName" not in schema.get("properties", {}):
-        return schema  # No modelSystemName, skip
+    # Check if this schema has modelSystemName or individualID field
+    properties = schema.get("properties", {})
+    has_model_system_name = "modelSystemName" in properties
+    has_individual_id = "individualID" in properties
+
+    if not has_model_system_name and not has_individual_id:
+        return schema  # Neither field present, skip
 
     print(f"  Adding {len(CONDITIONAL_MAPPINGS)} conditional rules...")
 
@@ -398,7 +413,8 @@ def main():
             # Dry run - just check
             with open(schema_file) as f:
                 schema = json.load(f)
-            if "properties" in schema and "modelSystemName" in schema.get("properties", {}):
+            properties = schema.get("properties", {})
+            if properties and ("modelSystemName" in properties or "individualID" in properties):
                 print(f"Would add conditionals to: {schema_file.name}")
                 modified_count += 1
 
