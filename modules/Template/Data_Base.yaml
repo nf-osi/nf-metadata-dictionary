@@ -28,8 +28,11 @@ classes:
       files) from experimental assays involving biosamples. Donor/individual attributes
       (species, sex, age, diagnosis) describe the original donor (e.g., human patient
       tumor). For cell lines, individualID references syn51730943. Model attributes
-      (modelSpecies, modelSex, modelAge) describe any animal model host used. antibodyID
-      and geneticReagentID reference treatments/reagents.'
+      (modelSystemType, modelSpecies, cellLineCategory, cellLineGeneticDisorder, modelSystemName,
+      modelSex, modelAge) describe model system used. Filter fields (modelSystemType,
+      modelSpecies, cellLineCategory, cellLineGeneticDisorder) must appear before modelSystemName
+      to enable conditional filtering in Synapse curator grid. antibodyID and geneticReagentID
+      reference treatments/reagents.'
     is_a: FileBasedTemplate
     slots:
     - dataType
@@ -44,8 +47,11 @@ classes:
     - nf1Genotype
     - nf2Genotype
     - tumorType
-    - modelSystemName
+    - modelSystemType
     - modelSpecies
+    - cellLineCategory
+    - cellLineGeneticDisorder
+    - modelSystemName
     - modelSex
     - modelAge
     - modelAgeUnit

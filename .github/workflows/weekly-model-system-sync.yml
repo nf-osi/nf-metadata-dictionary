@@ -36,16 +36,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install synapseclient pyyaml
+          pip install synapseclient pyyaml pandas
 
-      - name: Sync model system data
+      - name: Sync model system data with conditional filtering
         run: |
-          python utils/sync_model_systems.py --synapse-id ${{ env.SYNAPSE_TABLE_ID }}
+          python utils/sync_model_systems_enhanced.py --synapse-id ${{ env.SYNAPSE_TOOLS_TABLE_ID }}
       
       - name: Check for changes
         id: changes
         run: |
-          if [[ $(git status --porcelain modules/Sample/CellLineModel.yaml modules/Sample/AnimalModel.yaml modules/Experiment/Antibody.yaml modules/Experiment/GeneticReagent.yaml) ]]; then
+          if [[ $(git status --porcelain modules/Sample/CellLineModel.yaml modules/Sample/AnimalModel.yaml modules/Sample/generated/*.yaml modules/Experiment/Antibody.yaml modules/Experiment/GeneticReagent.yaml) ]]; then
             echo "changes=true" >> $GITHUB_OUTPUT
             echo "Changes detected in model system and tool files"
           else
@@ -74,38 +74,41 @@ jobs:
           commit-message: "chore: weekly sync of model system names and tool links from Synapse"
           title: "Weekly Model System Sync with Tool Links - ${{ steps.date.outputs.date }}"
           body: |
-            This PR contains the weekly sync of model system names and tool links from the NFTC truth tables.
+            This PR contains the weekly sync of model system names and tool links from the NFTC truth tables with conditional enum filtering.
 
             **Sources:**
-            - Model systems: `${{ env.SYNAPSE_TABLE_ID }}`
-            - Tool links: `${{ env.SYNAPSE_TOOLS_TABLE_ID }}`
+            - Model systems and tools: `${{ env.SYNAPSE_TOOLS_TABLE_ID }}`
 
             **Sync Date:** ${{ steps.date.outputs.date }}
 
             ### Changes Made:
             - Updated cell line models in `modules/Sample/CellLineModel.yaml`
             - Updated animal models in `modules/Sample/AnimalModel.yaml`
+            - Generated filtered enum subsets in `modules/Sample/generated/*.yaml`
             - Updated antibodies in `modules/Experiment/Antibody.yaml`
             - Updated genetic reagents in `modules/Experiment/GeneticReagent.yaml`
             - Added/updated `source` links to NF Tools Central detail pages
             - Rebuilt data model artifacts (`NF.jsonld`, `dist/NF.yaml`)
 
             ### Files Modified:
-            - `modules/Sample/CellLineModel.yaml`
-            - `modules/Sample/AnimalModel.yaml`
+            - `modules/Sample/CellLineModel.yaml` (638 cell lines)
+            - `modules/Sample/AnimalModel.yaml` (123 animal models)
+            - `modules/Sample/generated/*.yaml` (29 filtered enum subsets)
             - `modules/Experiment/Antibody.yaml`
             - `modules/Experiment/GeneticReagent.yaml`
             - `NF.jsonld`
             - `dist/NF.yaml`
 
             ### What This Includes:
-            - ✅ Cell line and animal model names from NFTC database (syn26450069)
-            - ✅ Antibody and genetic reagent resources from NF Tools Central (syn51730943)
+            - ✅ Cell line and animal model names from NF Tools Central (syn51730943)
+            - ✅ Filtered enum subsets based on species, category, and genetic disorder (all <100 entries)
+            - ✅ Antibody and genetic reagent resources from NF Tools Central
             - ✅ Source links to NF Tools Central detail pages (using `source` field)
             - ✅ RRID identifiers where available
+            - ✅ Rich metadata including cellLineCategory and cellLineGeneticDisorder
             - ✅ Descriptions from database
 
-            This sync ensures that the metadata dictionary stays current with the latest cell lines and animal models available in the NFTC research tools database, including proper attribution links.
+            This sync ensures that the metadata dictionary stays current with the latest cell lines and animal models available in the NFTC research tools database, including proper attribution links and conditional filtering support for the Synapse curator grid.
 
             **Automated sync via:** `.github/workflows/weekly-model-system-sync.yml`
           branch: sync/model-systems-${{ steps.date.outputs.date-short }}

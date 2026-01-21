@@ -118,6 +118,35 @@ def create_entity_view_from_schema_uri(
     return view.id
 
 
+def _has_conditional_enum(json_schema: dict[str, Any], field_name: str) -> bool:
+    """Check if a field has conditional enum filtering via allOf rules.
+
+    Arguments:
+        json_schema: The JSON Schema in dict form
+        field_name: The field name to check
+
+    Returns:
+        True if the field has conditional filtering, False otherwise
+    """
+    all_of = json_schema.get("allOf", [])
+    for rule in all_of:
+        # Check if this rule has a 'then' clause that references this field
+        then_clause = rule.get("then", {})
+        then_properties = then_clause.get("properties", {})
+        if field_name in then_properties:
+            # Check if the field uses $ref (indicating conditional enum)
+            field_spec = then_properties[field_name]
+            if isinstance(field_spec, dict):
+                # Check for $ref in items (for list fields like modelSystemName)
+                if "items" in field_spec and isinstance(field_spec["items"], dict):
+                    if "$ref" in field_spec["items"]:
+                        return True
+                # Check for direct $ref
+                if "$ref" in field_spec:
+                    return True
+    return False
+
+
 def _create_columns_from_json_schema(json_schema: dict[str, Any]) -> list[Column]:
     """Creates a list of Synapse Columns based on the JSON Schema type
 
@@ -144,12 +173,17 @@ def _create_columns_from_json_schema(json_schema: dict[str, Any]) -> list[Column
         maximum_size = None
         enum_values = None
 
+        # Check if this field has conditional enum filtering
+        # If so, skip setting enum values - let the curator grid handle it
+        has_conditional = _has_conditional_enum(json_schema, name)
+
         # Extract enum values if present (limit to first 100, Synapse's maximum)
-        if "enum" in prop_schema:
+        # Skip if field has conditional filtering
+        if not has_conditional and "enum" in prop_schema:
             enum_values = [str(v) for v in prop_schema["enum"][:100]]
 
         # For list types, check if enum is nested in items
-        if column_type in LIST_TYPE_DICT.values() and "items" in prop_schema:
+        if not has_conditional and column_type in LIST_TYPE_DICT.values() and "items" in prop_schema:
             if isinstance(prop_schema["items"], dict) and "enum" in prop_schema["items"]:
                 enum_values = [str(v) for v in prop_schema["items"]["enum"][:100]]
 
