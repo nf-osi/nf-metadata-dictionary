@@ -277,6 +277,26 @@ def create_curation_task(
     print(f"  Folder: {upload_folder_id}")
     print(f"  Data type: {data_type}")
 
+    # Check for existing curation tasks with this data_type and delete them
+    # This prevents conflicts with tasks in trash or existing tasks
+    print(f"  Checking for existing curation tasks with data_type: {data_type}")
+    try:
+        from synapseclient.models.curation import CurationTaskStatus
+
+        # Try to get all curation tasks for this project
+        existing_tasks = CurationTask.get_all(project_id=project_id)
+
+        for existing_task in existing_tasks:
+            if existing_task.data_type == data_type:
+                print(f"  Found existing task {existing_task.task_id}, deleting...")
+                try:
+                    existing_task.delete()
+                    print(f"  Deleted task {existing_task.task_id}")
+                except Exception as delete_error:
+                    print(f"  Warning: Could not delete task {existing_task.task_id}: {delete_error}")
+    except Exception as e:
+        print(f"  Could not check for existing tasks (may not exist): {e}")
+
     task = CurationTask(
         project_id=project_id,
         data_type=data_type,
@@ -288,6 +308,7 @@ def create_curation_task(
     )
 
     # Store the task (use store() method, not create())
+    print(f"  Creating new curation task...")
     task = task.store()
 
     print(f"\n✓ Curation task created successfully!")
