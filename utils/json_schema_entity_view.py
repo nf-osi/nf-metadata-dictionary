@@ -171,14 +171,22 @@ def _create_columns_from_json_schema(json_schema: dict[str, Any]) -> list[Column
     for name, prop_schema in properties.items():
         column_type = _get_column_type_from_js_property(prop_schema)
         maximum_size = None
-
-        # NOTE: We intentionally do NOT set enum_values on columns when creating
-        # entity views from JSON Schemas. Reasons:
-        # 1. The JSON Schema binding provides all validation and UI dropdowns
-        # 2. Setting enum_values is redundant and increases row size
-        # 3. Many schemas exceed Synapse's 64KB row size limit when enums are set
-        # 4. The curator grid uses the bound JSON Schema for filtering/validation
         enum_values = None
+
+        # Check if this field has conditional enum filtering
+        # Fields with conditional filtering should NOT have enum_values set
+        has_conditional = _has_conditional_enum(json_schema, name)
+
+        # For fields with SMALL enum lists (< 20 values) and NO conditional filtering,
+        # set enum_values to provide dropdown UI in curator grid
+        # JSON Schema binding provides validation but NOT dropdown UI
+        if not has_conditional:
+            if "enum" in prop_schema and len(prop_schema["enum"]) < 20:
+                enum_values = [str(v) for v in prop_schema["enum"]]
+            elif column_type in LIST_TYPE_DICT.values() and "items" in prop_schema:
+                if isinstance(prop_schema["items"], dict) and "enum" in prop_schema["items"]:
+                    if len(prop_schema["items"]["enum"]) < 20:
+                        enum_values = [str(v) for v in prop_schema["items"]["enum"]]
 
         # Use conservative maximum_size values to stay under Synapse's 64KB row limit
         # With ~50 total columns (schema + system), we need to keep sizes small
