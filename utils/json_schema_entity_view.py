@@ -182,12 +182,13 @@ def _create_columns_from_json_schema(json_schema: dict[str, Any]) -> list[Column
         enum_values = None
 
         # Use conservative maximum_size values to stay under Synapse's 64KB row limit
-        # With ~50 total columns (schema + system), we need to keep sizes small
+        # System columns add ~3500 bytes (name:256, description:1000, path:1000, etc.)
+        # With ~50 schema + ~20 system columns, we need very small sizes
         if column_type == ColumnType.STRING:
-            maximum_size = 80   # Most metadata values fit in 80 chars
+            maximum_size = 50   # Minimal size for most metadata values
         if column_type in LIST_TYPE_DICT.values():
-            maximum_size = 40   # List item size
-            maximum_list_length = 100  # Limit list length to prevent row size explosion
+            maximum_size = 25   # Minimal list item size
+            maximum_list_length = 50  # Conservative limit for large templates
 
         column = Column(
             name=name,

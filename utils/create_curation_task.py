@@ -235,9 +235,10 @@ def create_curation_task(
         columns = []
 
     # Add essential columns first: id and name only
+    # Note: Synapse may override these with system defaults
     essential_columns = [
         Column(name="id", column_type=ColumnType.ENTITYID),
-        Column(name="name", column_type=ColumnType.STRING, maximum_size=80),
+        Column(name="name", column_type=ColumnType.STRING, maximum_size=50),
     ]
 
     # Combine essential columns with schema columns
