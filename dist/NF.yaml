@@ -785,20 +785,20 @@ slots:
     required: false
     title: Meningioma
   modelSystemType:
-    description: Type of model system used in the study (e.g., cell line, animal model, organoid, or patient-derived xenograft). This field helps filter available model system names.
+    description: Type of model system used in the study (e.g., cell line, animal model, organoid, or patient-derived xenograft). This field helps filter available model system names and is REQUIRED for conditional dropdown filtering.
     range: ModelSystemTypeEnum
     title: Model System Type
-    required: false
+    required: true
   cellLineCategory:
-    description: Category of cell line based on origin, disease type, or characteristics. Used to filter cell line options when modelSystemType is 'cell line'.
+    description: Category of cell line based on origin, disease type, or characteristics. Used to filter cell line options when modelSystemType is 'cell line'. REQUIRED for conditional dropdown filtering when using cell lines.
     range: CellLineCategoryEnum
     title: Cell Line Category
-    required: false
+    required: true
   cellLineGeneticDisorder:
-    description: Genetic disorder associated with the cell line (e.g., Neurofibromatosis type 1, NF2, Schwannomatosis). Used as an additional filter for cell lines.
+    description: Genetic disorder associated with the cell line (e.g., Neurofibromatosis type 1, NF2, Schwannomatosis). Used as an additional filter for cell lines. REQUIRED for conditional dropdown filtering when using cell lines.
     range: CellLineGeneticDisorderEnum
     title: Cell Line Genetic Disorder
-    required: false
+    required: true
   modelSystemName:
     any_of:
       - range: CellLineModel
@@ -810,9 +810,9 @@ slots:
     title: Model System Name
     required: false
   modelSpecies:
-    description: Species of the animal model used (e.g., for xenograft experiments). Distinct from donor species. References species from model in syn51730943.
+    description: Species of the animal model used (e.g., for xenograft experiments). Distinct from donor species. References species from model in syn51730943. REQUIRED for conditional dropdown filtering.
     range: SpeciesEnum
-    required: false
+    required: true
   modelSex:
     any_of:
       - range: SexEnum
