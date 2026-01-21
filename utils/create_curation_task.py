@@ -200,13 +200,7 @@ def create_curation_task(
     print(f"  Generated dataType: {data_type}")
 
     # Optionally bind schema to folder
-    # For local testing: We'll bind the schema URI even though it points to the
-    # registered schema on main. The file view columns with enum values should
-    # provide the dropdowns we need for testing.
     if bind_schema:
-        print(f"\n⚠️  TESTING MODE: Schema binding will use registered URI from main branch")
-        print(f"   Local schema changes won't appear in bound schema")
-        print(f"   But column enum values should provide filter field dropdowns")
         bind_schema_to_folder(upload_folder_id, schema_uri, syn)
 
     # Create EntityView (file view) using the better implementation from json_schema_entity_view
