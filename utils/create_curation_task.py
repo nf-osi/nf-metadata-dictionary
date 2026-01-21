@@ -243,9 +243,27 @@ def create_curation_task(
     # Combine essential columns with schema columns
     all_columns = essential_columns + columns
 
+    # Check if a file view with this name already exists and delete it
+    # This ensures we always create a fresh view with the latest column definitions
+    view_name = f"{data_type}_FileView"
+    print(f"  Checking for existing file view: {view_name}")
+
+    try:
+        # Try to find an existing entity with this name in the project
+        existing_view_id = syn.findEntityId(view_name, parent=project_id)
+
+        if existing_view_id:
+            print(f"  Found existing file view {existing_view_id}, deleting...")
+            syn.delete(existing_view_id)
+            print(f"  Deleted {existing_view_id}")
+    except Exception as e:
+        # If findEntityId raises an exception, it means no entity with that name exists
+        print(f"  No existing file view found")
+
     # Create the entity view using the new models API
+    print(f"  Creating new file view...")
     file_view = EntityView(
-        name=f"{data_type}_FileView",
+        name=view_name,
         parent_id=project_id,
         scope_ids=[upload_folder_id],
         view_type_mask=ViewTypeMask.FILE,
