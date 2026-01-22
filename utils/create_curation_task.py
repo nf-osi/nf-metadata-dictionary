@@ -235,17 +235,50 @@ def create_curation_task(
         columns = []
 
     # Add essential columns first: id and name only
+    # Note: Synapse may override these with system defaults
     essential_columns = [
         Column(name="id", column_type=ColumnType.ENTITYID),
-        Column(name="name", column_type=ColumnType.STRING, maximum_size=256),
+        Column(name="name", column_type=ColumnType.STRING, maximum_size=50),
     ]
 
     # Combine essential columns with schema columns
     all_columns = essential_columns + columns
 
+    # Check for and delete any existing curation task with this data_type
+    # This prevents conflicts with old tasks referencing trashed entities
+    print(f"  Checking for existing curation task with data_type: {data_type}")
+    try:
+        from synapseclient.models.curation import CurationTask as CurationTaskModel
+        existing_tasks = CurationTaskModel.list(synapse_client=syn, project_id=project_id)
+        for task in existing_tasks:
+            if task.data_type == data_type:
+                print(f"  Found existing task {task.task_id}, deleting...")
+                task.delete()
+                print(f"  Deleted task {task.task_id}")
+    except Exception as e:
+        print(f"  No existing curation task found or couldn't check: {e}")
+
+    # Check if a file view with this name already exists and delete it
+    # This ensures we always create a fresh view with the latest column definitions
+    view_name = f"{data_type}_FileView"
+    print(f"  Checking for existing file view: {view_name}")
+
+    try:
+        # Try to find an existing entity with this name in the project
+        existing_view_id = syn.findEntityId(view_name, parent=project_id)
+
+        if existing_view_id:
+            print(f"  Found existing file view {existing_view_id}, deleting...")
+            syn.delete(existing_view_id)
+            print(f"  Deleted {existing_view_id}")
+    except Exception as e:
+        # If findEntityId raises an exception, it means no entity with that name exists
+        print(f"  No existing file view found")
+
     # Create the entity view using the new models API
+    print(f"  Creating new file view...")
     file_view = EntityView(
-        name=f"{data_type}_FileView",
+        name=view_name,
         parent_id=project_id,
         scope_ids=[upload_folder_id],
         view_type_mask=ViewTypeMask.FILE,

@@ -845,8 +845,24 @@ slots:
     range: MultipleImagingDiagnosisEnum
     required: false
     title: Meningioma
+  modelSystemType:
+    description: Type of model system used in the study (e.g., cell line, animal model, organoid, or patient-derived xenograft). This field helps filter available model system names.
+    range: ModelSystemTypeEnum
+    title: Model System Type
+    required: false
+  cellLineCategory:
+    description: Category of cell line based on origin, disease type, or characteristics. Used to filter cell line options when modelSystemType is 'cell line'.
+    range: CellLineCategoryEnum
+    title: Cell Line Category
+    required: false
+  cellLineGeneticDisorder:
+    description: Genetic disorder associated with the cell line (e.g., Neurofibromatosis type 1, NF2, Schwannomatosis). Used as an additional filter for cell lines.
+    range: CellLineGeneticDisorderEnum
+    title: Cell Line Genetic Disorder
+    required: false
   modelSystemName:
     annotations:
+      requiresDependency: modelSystemType modelSpecies cellLineCategory cellLineGeneticDisorder
       validationRules: list like
     any_of:
     - range: CellLineModel

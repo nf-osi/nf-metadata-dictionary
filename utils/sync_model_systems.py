@@ -1,601 +1,469 @@
 #!/usr/bin/env python3
 """
-Sync modelSystemName values from NFTC truth table.
+Sync model systems, antibodies, and genetic reagents from NF Tools Database.
 
-This script fetches data from Synapse table syn26450069 and updates
-the CellLineModel.yaml and AnimalModel.yaml enum files based on the
-resourceType column. It also fetches resource links from syn51730943
-and adds them as 'source' fields.
+This script queries syn51730943 (NF Tools Central) and generates:
+1. Base enum files (CellLineModel.yaml, AnimalModel.yaml, Antibody.yaml, GeneticReagent.yaml)
+2. Filtered enum subsets for conditional dependencies (species + category + disorder combinations)
+
+The filtered subsets enable JSON schemas to provide <100 enum values per dropdown
+based on user's selections in modelSystemType, modelSpecies, cellLineCategory, etc.
+
+This prevents Synapse's 100-value enum limit errors while maintaining full data coverage.
 """
 
 import os
 import sys
 import yaml
-from typing import Dict, List, Any, Set
+from typing import Dict, List, Any, Tuple
 import argparse
 
 
-def fetch_tools_data(synapse_id: str = 'syn51730943', resource_types: List[str] = None) -> Dict[str, List[Dict[str, Any]]]:
+def fetch_model_system_data_with_metadata(synapse_id: str = 'syn51730943') -> Tuple[List[Dict], List[Dict], List[Dict], List[Dict]]:
     """
-    Fetch resource data from NF Tools Central table for Antibody and Genetic Reagent.
+    Fetch cell lines, animal models, antibodies, and genetic reagents with full metadata from NF Tools Database.
 
     Args:
         synapse_id: Synapse table ID for NF Tools Central (default: syn51730943)
-        resource_types: List of resource types to fetch (default: ['Antibody', 'Genetic Reagent'])
 
     Returns:
-        Dict mapping resource_type to list of resources with full data
+        Tuple of (cell_lines_list, animal_models_list, antibodies_list, genetic_reagents_list) with full metadata
     """
-    if resource_types is None:
-        resource_types = ['Antibody', 'Genetic Reagent']
-
     try:
         import synapseclient
         from synapseclient import Synapse
 
         syn = Synapse()
 
-        # Try to login
+        # Try to login - anonymous access should work for public tables
         try:
             if os.getenv('SYNAPSE_AUTH_TOKEN'):
                 syn.login(authToken=os.getenv('SYNAPSE_AUTH_TOKEN'), silent=True)
-            else:
-                try:
-                    syn.login(silent=True)
-                except:
-                    pass
-        except Exception:
+        except:
             pass
 
-        results_by_type = {}
+        print(f"Fetching resource data from {synapse_id}...")
 
-        for resource_type in resource_types:
-            query = f"SELECT resourceName, resourceId, description, resourceType FROM {synapse_id} WHERE resourceType = '{resource_type}'"
-            print(f"Fetching {resource_type} data from {synapse_id}...")
+        # Query for cell lines with all relevant metadata
+        cell_query = """
+            SELECT resourceName, rrid, description, resourceType, species,
+                   cellLineCategory, cellLineGeneticDisorder, resourceId
+            FROM {table}
+            WHERE resourceType = 'Cell Line'
+        """.format(table=synapse_id)
 
-            try:
-                results = syn.tableQuery(query)
-                data = []
+        cell_result = syn.tableQuery(cell_query)
+        cell_df = cell_result.asDataFrame()
 
-                for row in results:
-                    # Handle different row formats
-                    if hasattr(row, '_asdict'):
-                        row_dict = row._asdict()
-                    elif isinstance(row, dict):
-                        row_dict = row
-                    elif isinstance(row, (list, tuple)) and len(row) >= 6:
-                        # Typical format: [ROW_ID, ROW_VERSION, resourceName, resourceId, description, resourceType]
-                        row_dict = {
-                            'resourceName': row[2],
-                            'resourceId': row[3],
-                            'description': row[4],
-                            'resourceType': row[5]
-                        }
-                    else:
-                        continue
+        print(f"  → Retrieved {len(cell_df)} cell lines")
 
-                    # Only include rows with resourceName
-                    if row_dict.get('resourceName'):
-                        data.append(row_dict)
+        # Query for animal models
+        animal_query = """
+            SELECT resourceName, rrid, description, resourceType, species,
+                   animalModelGeneticDisorder, resourceId
+            FROM {table}
+            WHERE resourceType = 'Animal Model'
+        """.format(table=synapse_id)
 
-                results_by_type[resource_type] = data
-                print(f"  → Found {len(data)} {resource_type} resources")
+        animal_result = syn.tableQuery(animal_query)
+        animal_df = animal_result.asDataFrame()
 
-            except Exception as query_error:
-                print(f"Warning: Could not fetch {resource_type}: {query_error}")
-                results_by_type[resource_type] = []
+        print(f"  → Retrieved {len(animal_df)} animal models")
 
-        return results_by_type
+        # Query for antibodies
+        antibody_query = """
+            SELECT resourceName, rrid, description, resourceType, resourceId
+            FROM {table}
+            WHERE resourceType = 'Antibody'
+        """.format(table=synapse_id)
 
-    except Exception as e:
-        print(f"Error fetching tools data from Synapse: {e}")
-        return {rt: [] for rt in resource_types}
+        antibody_result = syn.tableQuery(antibody_query)
+        antibody_df = antibody_result.asDataFrame()
 
+        print(f"  → Retrieved {len(antibody_df)} antibodies")
 
-def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
-    """
-    Fetch data from Synapse table.
-    
-    Args:
-        synapse_id: Synapse table ID (e.g., syn26450069)
-        
-    Returns:
-        List of dictionaries containing table data
-    """
-    try:
-        import synapseclient
-        from synapseclient import Synapse
-        
-        # Initialize Synapse client
-        syn = Synapse()
-        
-        # Try to login - first with token, then silent, then anonymous
-        try:
-            if os.getenv('SYNAPSE_AUTH_TOKEN'):
-                syn.login(authToken=os.getenv('SYNAPSE_AUTH_TOKEN'), silent=True)
-            else:
-                # Try silent login first
-                try:
-                    syn.login(silent=True)
-                except:
-                    # If silent login fails, try anonymous access
-                    print("Attempting anonymous access to Synapse...")
-                    # For anonymous access, we don't need to login
-                    pass
-        except Exception as login_error:
-            print(f"Warning: Could not login to Synapse: {login_error}")
-            print("Attempting anonymous access...")
-            # Continue without authentication for anonymous access
-        
-        # Query the table for resourceName, rrid, resourceType, and description columns
-        query = f"SELECT resourceName, rrid, resourceType, description FROM {synapse_id}"
-        print(f"Executing query: {query}")
-        
-        try:
-            results = syn.tableQuery(query)
-        except Exception as query_error:
-            print(f"Error executing query: {query_error}")
-            print("Falling back to mock data for testing.")
-            raise ImportError("Synapse query failed")
-        
-        # Convert to list of dictionaries
-        data = []
-        for row in results:
-            # Handle different row formats
-            if hasattr(row, '_asdict'):
-                # Named tuple format
-                row_dict = row._asdict()
-            elif isinstance(row, dict):
-                # Already a dictionary
-                row_dict = row
-            elif isinstance(row, (list, tuple)):
-                # List/tuple format - map to column names based on actual query result
-                # From debugging: the query returns [id, ?, resourceName, rrid, resourceType, description]
-                if len(row) >= 6:
-                    row_dict = {
-                        'resourceName': row[2],  # 3rd element
-                        'rrid': row[3],          # 4th element  
-                        'resourceType': row[4],  # 5th element
-                        'description': row[5]    # 6th element
-                    }
-                else:
-                    print(f"Warning: Row has unexpected length {len(row)}: {row}")
-                    continue
-            else:
-                # Try to convert to dict
-                try:
-                    row_dict = dict(row)
-                except:
-                    print(f"Warning: Could not convert row to dict: {row}")
-                    continue
-            
-            # Only include rows with required fields
-            if row_dict.get('resourceName') and row_dict.get('resourceType'):
-                data.append(row_dict)
-            
-        return data
-        
+        # Query for genetic reagents
+        reagent_query = """
+            SELECT resourceName, rrid, description, resourceType, resourceId
+            FROM {table}
+            WHERE resourceType = 'Genetic Reagent'
+        """.format(table=synapse_id)
+
+        reagent_result = syn.tableQuery(reagent_query)
+        reagent_df = reagent_result.asDataFrame()
+
+        print(f"  → Retrieved {len(reagent_df)} genetic reagents")
+
+        # Convert DataFrames to list of dicts
+        cell_lines = cell_df.to_dict('records')
+        animal_models = animal_df.to_dict('records')
+        antibodies = antibody_df.to_dict('records')
+        genetic_reagents = reagent_df.to_dict('records')
+
+        return cell_lines, animal_models, antibodies, genetic_reagents
+
     except ImportError:
-        print("Warning: synapseclient not available. Using mock data for testing.")
-        # Return mock data for testing when synapseclient is not available
-        return [
-            {
-                'resourceName': 'Test Cell Line 1',
-                'rrid': 'CVCL_0001',
-                'resourceType': 'cell line',
-                'description': 'Test cell line description'
-            },
-            {
-                'resourceName': 'Test Mouse Model 1', 
-                'rrid': 'MGI:0001',
-                'resourceType': 'animal model',
-                'description': 'Test mouse model description'
-            }
-        ]
+        print("Error: synapseclient not available")
+        sys.exit(1)
     except Exception as e:
-        print(f"Error fetching data from Synapse: {e}")
-        return []
+        print(f"Error fetching data: {e}")
+        sys.exit(1)
 
 
-def fetch_tool_links(synapse_id: str = 'syn51730943') -> Dict[str, Dict[str, str]]:
+def format_enum_entry_enhanced(resource: Dict[str, Any]) -> Dict:
     """
-    Fetch tool links from NF Tools Central table.
+    Format a model system entry for YAML enum with full metadata.
 
     Args:
-        synapse_id: Synapse table ID for NF Tools Central (default: syn51730943)
+        resource: Dict with resource metadata from syn51730943
 
     Returns:
-        Dict mapping resource_type to {resourceName: url}
+        Dict with formatted enum entry
     """
-    try:
-        import synapseclient
-        from synapseclient import Synapse
+    import pandas as pd
 
-        syn = Synapse()
+    name = resource.get('resourceName', '')
+    if not name or pd.isna(name):
+        return {}
 
-        # Try to login - first with token, then silent, then anonymous
-        try:
-            if os.getenv('SYNAPSE_AUTH_TOKEN'):
-                syn.login(authToken=os.getenv('SYNAPSE_AUTH_TOKEN'), silent=True)
-            else:
-                try:
-                    syn.login(silent=True)
-                except:
-                    pass
-        except Exception:
-            pass
-
-        # Query for all resources with resourceId
-        query = f"SELECT resourceName, resourceId, resourceType FROM {synapse_id}"
-        print(f"Fetching tool links from {synapse_id}...")
-
-        try:
-            results = syn.tableQuery(query)
-        except Exception as query_error:
-            print(f"Warning: Could not fetch tool links: {query_error}")
-            return {'Cell Line': {}, 'Animal Model': {}, 'Antibody': {}, 'Genetic Reagent': {}}
-
-        # Build URL mappings by resource type
-        cell_line_urls = {}
-        animal_model_urls = {}
-        antibody_urls = {}
-        genetic_reagent_urls = {}
-
-        for row in results:
-            # Handle different row formats
-            if hasattr(row, '_asdict'):
-                row_dict = row._asdict()
-            elif isinstance(row, dict):
-                row_dict = row
-            elif isinstance(row, (list, tuple)) and len(row) >= 5:
-                # Typical format: [ROW_ID, ROW_VERSION, resourceName, resourceId, resourceType]
-                row_dict = {
-                    'resourceName': row[2],
-                    'resourceId': row[3],
-                    'resourceType': row[4]
-                }
-            else:
-                continue
-
-            resource_name = row_dict.get('resourceName')
-            resource_id = row_dict.get('resourceId')
-            resource_type = row_dict.get('resourceType', '').lower() if row_dict.get('resourceType') else ''
-
-            if resource_name and resource_id:
-                url = f"https://nf.synapse.org/Explore/Tools/DetailsPage/Details?resourceId={resource_id}"
-
-                if 'cell line' in resource_type:
-                    cell_line_urls[resource_name] = url
-                elif 'animal model' in resource_type or 'mouse' in resource_type:
-                    animal_model_urls[resource_name] = url
-                elif 'antibody' in resource_type:
-                    antibody_urls[resource_name] = url
-                elif 'genetic reagent' in resource_type:
-                    genetic_reagent_urls[resource_name] = url
-
-        print(f"  → Found {len(cell_line_urls)} cell line links")
-        print(f"  → Found {len(animal_model_urls)} animal model links")
-        print(f"  → Found {len(antibody_urls)} antibody links")
-        print(f"  → Found {len(genetic_reagent_urls)} genetic reagent links")
-
-        return {
-            'Cell Line': cell_line_urls,
-            'Animal Model': animal_model_urls,
-            'Antibody': antibody_urls,
-            'Genetic Reagent': genetic_reagent_urls
-        }
-
-    except Exception as e:
-        print(f"Warning: Could not fetch tool links: {e}")
-        return {'Cell Line': {}, 'Animal Model': {}, 'Antibody': {}, 'Genetic Reagent': {}}
-
-
-def needs_yaml_quoting(name: str) -> bool:
-    """
-    Check if a string needs to be quoted as a YAML key.
-    
-    Args:
-        name: String to check
-        
-    Returns:
-        True if the string contains characters that require quoting in YAML
-    """
-    if not name:
-        return False
-    
-    # Characters that typically require quoting in YAML keys
-    special_chars = [':', '/', '+', '-', '[', ']', '{', '}', '"', "'", '\\', '*', '&', '!', '|', '>', '%', '@', '`']
-    
-    # Check if name starts with special characters or contains problematic ones
-    if name[0] in ['-', '?', ':', '@', '`', '|', '>', '*', '&', '!', '%', '[', ']', '{', '}']:
-        return True
-    
-    # Check for double colons specifically
-    if '::' in name:
-        return True
-        
-    # Check for other special characters that might cause issues
-    for char in special_chars:
-        if char in name:
-            return True
-            
-    return False
-
-
-def format_enum_entry(resource: Dict[str, Any], source_url: str = None) -> Dict[str, Any]:
-    """
-    Format a resource entry for YAML enum.
-
-    Args:
-        resource: Dictionary containing resource data
-        source_url: Optional URL to add as source link
-
-    Returns:
-        Dictionary formatted for YAML enum entry
-    """
     entry = {}
 
-    # Use resourceName as the key
-    original_name = resource.get('resourceName', '') or ''
-    original_name = original_name.strip() if original_name else ''
-    if not original_name:
-        return None
+    # Add description if different from name
+    description = resource.get('description', '')
+    if description and not pd.isna(description) and description != name:
+        entry['description'] = str(description)
 
-    # Build the entry
-    entry_data = {}
+    # Add RRID as 'meaning' field
+    rrid = resource.get('rrid', '')
+    if rrid and not pd.isna(rrid):
+        entry['meaning'] = str(rrid)
 
-    # Use description from database if available and different from resource name
-    description = resource.get('description', '') or ''
-    description = description.strip() if description else ''
+    # Add source link to NF Tools Central
+    resource_id = resource.get('resourceId', '')
+    if resource_id and not pd.isna(resource_id):
+        entry['source'] = f"https://nf.synapse.org/Explore/Tools/DetailsPage/Details?resourceId={resource_id}"
 
-    # Only include description if it exists and is different from the resource name
-    if description and description != original_name:
-        entry_data['description'] = description
-
-    # Add meaning from RRID if available
-    rrid = resource.get('rrid', '') or ''
-    rrid = rrid.strip() if rrid else ''
-    if rrid:
-        if rrid.startswith('RRID:'):
-            # Handle full RRID format - keep as is
-            entry_data['meaning'] = rrid
-        elif rrid.startswith('rrid:'):
-            # Already has rrid: prefix
-            entry_data['meaning'] = rrid
-        else:
-            # Add rrid: prefix for bare RRID values
-            entry_data['meaning'] = f"rrid:{rrid}"
-
-    # Add source link if available (changed from see_also to source per issue #789)
-    if source_url:
-        entry_data['source'] = source_url
-
-    return {original_name: entry_data}
+    return {name: entry} if entry else {name: {}}
 
 
-def load_manual_entries(file_path: str) -> Set[str]:
+def generate_filtered_enum_subsets(cell_lines: List[Dict], animal_models: List[Dict]) -> Dict[str, Dict]:
     """
-    Load entries from a manual YAML file.
-    
-    Args:
-        file_path: Path to the manual YAML file
-        
+    Generate filtered enum subsets based on species, category, and genetic disorder.
+
     Returns:
-        Set of entry names from the manual file
+        Dict mapping enum_name to {permissible_values: {...}}
     """
-    if not os.path.exists(file_path):
-        return set()
-    
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            data = yaml.safe_load(f)
-        
-        if data and 'enums' in data:
-            # Get the first enum (should be the only one)
-            enum_data = next(iter(data['enums'].values()))
-            if 'permissible_values' in enum_data:
-                return set(enum_data['permissible_values'].keys())
-    except Exception as e:
-        print(f"Warning: Could not load manual entries from {file_path}: {e}")
-    
-    return set()
+    from collections import defaultdict
+    import pandas as pd
+
+    print("\n" + "="*60)
+    print("GENERATING FILTERED ENUM SUBSETS")
+    print("="*60)
+
+    # Helper to check if species list contains target
+    def has_species(species_list, target):
+        if not isinstance(species_list, list):
+            return False
+        return any(target in str(s) for s in species_list)
+
+    # Group cell lines by species + category + disorder
+    cell_grouped = defaultdict(list)
+
+    for cell in cell_lines:
+        species_list = cell.get('species', [])
+        category = cell.get('cellLineCategory', 'Unknown')
+        disorder_list = cell.get('cellLineGeneticDisorder', [])
+
+        # Normalize empty/null values
+        if not isinstance(species_list, list) or not species_list:
+            species_list = ['Unknown']
+        # Handle NaN/None/float values for category
+        if pd.isna(category) or not category or category == '' or not isinstance(category, str):
+            category = 'Unknown'
+        if not isinstance(disorder_list, list) or not disorder_list:
+            disorder_list = ['Unknown']
+
+        # Create entries for each species
+        for species in species_list:
+            # Normalize species name for file naming
+            species_short = species.replace(' ', '').replace('.', '')
+
+            # For each disorder combination
+            for disorder in disorder_list:
+                disorder_short = disorder.replace(' ', '').replace('[', '').replace(']', '').replace("'", '')
+
+                # Create key for this combination
+                key = (species_short, category, disorder_short)
+                cell_grouped[key].append(cell)
+
+    # Group animal models by species + disorder
+    animal_grouped = defaultdict(list)
+
+    for animal in animal_models:
+        species_list = animal.get('species', [])
+        disorder_list = animal.get('animalModelGeneticDisorder', [])
+
+        if not isinstance(species_list, list) or not species_list:
+            species_list = ['Unknown']
+        if not isinstance(disorder_list, list) or not disorder_list:
+            disorder_list = ['Unknown']
+
+        for species in species_list:
+            species_short = species.replace(' ', '').replace('.', '')
+            for disorder in disorder_list:
+                disorder_short = disorder.replace(' ', '').replace('[', '').replace(']', '').replace("'", '')
+                key = (species_short, disorder_short)
+                animal_grouped[key].append(animal)
+
+    # Generate enum files for combinations with reasonable counts
+    enums = {}
+
+    # Cell line enums
+    for (species, category, disorder), cells in cell_grouped.items():
+        count = len(cells)
+
+        # Only generate if <100 entries or if it's a major category
+        if count > 100 and count < 400:
+            # Skip - would need further filtering
+            continue
+
+        # Create enum name
+        category_safe = category.replace(' ', '').replace('-', '')
+        enum_name = f"CellLine{species}{category_safe}{disorder}Enum"
+
+        # Format entries
+        entries = {}
+        for cell in cells:
+            formatted = format_enum_entry_enhanced(cell)
+            entries.update(formatted)
+
+        if entries:
+            enums[enum_name] = {
+                'description': f"Cell lines: {species} + {category} + {disorder} ({count} entries)",
+                'permissible_values': entries,
+                '_metadata': {
+                    'species': species,
+                    'category': category,
+                    'disorder': disorder,
+                    'count': count,
+                    'type': 'cell_line'
+                }
+            }
+
+    # Animal model enums
+    for (species, disorder), animals in animal_grouped.items():
+        count = len(animals)
+
+        if count > 100:
+            continue  # Skip if still too large
+
+        enum_name = f"AnimalModel{species}{disorder}Enum"
+
+        entries = {}
+        for animal in animals:
+            formatted = format_enum_entry_enhanced(animal)
+            entries.update(formatted)
+
+        if entries:
+            enums[enum_name] = {
+                'description': f"Animal models: {species} + {disorder} ({count} entries)",
+                'permissible_values': entries,
+                '_metadata': {
+                    'species': species,
+                    'disorder': disorder,
+                    'count': count,
+                    'type': 'animal_model'
+                }
+            }
+
+    # Print summary
+    print(f"\nGenerated {len(enums)} filtered enum subsets:")
+    for enum_name, data in sorted(enums.items(), key=lambda x: -x[1]['_metadata']['count']):
+        meta = data['_metadata']
+        count = meta['count']
+        status = '✓' if count <= 100 else f'({count} >100)'
+        print(f"  {enum_name}: {count} entries {status}")
+
+    return enums
 
 
-def filter_duplicates(entries: List[Dict[str, Any]], manual_entries: Set[str]) -> List[Dict[str, Any]]:
+def save_filtered_enum_files(enums: Dict[str, Dict], output_dir: str = 'modules/Sample/generated'):
     """
-    Filter out entries that already exist in manual files.
-    
+    Save filtered enum files to disk.
+
     Args:
-        entries: List of formatted enum entries
-        manual_entries: Set of entry names from manual file
-        
-    Returns:
-        Filtered list of entries without duplicates
+        enums: Dict of enum_name -> enum_data
+        output_dir: Directory to save files
     """
-    filtered = []
-    for entry in entries:
-        if entry:
-            entry_name = next(iter(entry.keys()))
-            if entry_name not in manual_entries:
-                filtered.append(entry)
-            else:
-                print(f"Skipping duplicate entry: {entry_name} (exists in manual file)")
-    return filtered
+    os.makedirs(output_dir, exist_ok=True)
 
+    print(f"\nSaving filtered enum files to {output_dir}/...")
 
-def update_enum_file(file_path: str, enum_name: str, entries: List[Dict[str, Any]]) -> None:
-    """
-    Update an enum YAML file with new entries.
-    
-    Args:
-        file_path: Path to the YAML file
-        enum_name: Name of the enum (e.g., 'CellLineModel', 'AnimalModel')  
-        entries: List of formatted enum entries
-    """
-    # Combine all entries into one dictionary
-    combined_entries = {}
-    for entry in entries:
-        if entry:
-            combined_entries.update(entry)
-    
-    # Sort entries by key name
-    sorted_entries = dict(sorted(combined_entries.items()))
-    
-    # Create the YAML structure
-    enum_data = {
-        'enums': {
-            enum_name: {
-                'permissible_values': sorted_entries
+    for enum_name, enum_data in enums.items():
+        # Remove metadata before saving
+        meta = enum_data.pop('_metadata')
+
+        # Create filename from enum name
+        filename = f"{enum_name}.yaml"
+        filepath = os.path.join(output_dir, filename)
+
+        # Write file
+        content = {
+            'enums': {
+                enum_name: {
+                    'description': enum_data['description'],
+                    'permissible_values': enum_data['permissible_values']
+                }
             }
         }
+
+        with open(filepath, 'w') as f:
+            f.write(f"# Auto-generated filtered enum subset\n")
+            f.write(f"# Type: {meta['type']}\n")
+            f.write(f"# Count: {meta['count']} entries\n")
+            if meta['type'] == 'cell_line':
+                f.write(f"# Filters: species={meta['species']}, category={meta['category']}, disorder={meta['disorder']}\n")
+            else:
+                f.write(f"# Filters: species={meta['species']}, disorder={meta['disorder']}\n")
+            f.write(f"\n")
+            yaml.dump(content, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+
+        print(f"  ✓ {filename}")
+
+
+def generate_base_enums(cell_lines: List[Dict], animal_models: List[Dict]) -> Tuple[Dict, Dict]:
+    """
+    Generate base CellLineModel and AnimalModel enums for backward compatibility.
+
+    Returns:
+        Tuple of (cell_line_enum, animal_model_enum)
+    """
+    print("\nGenerating base enum files for backward compatibility...")
+
+    # Cell lines
+    cell_entries = {}
+    for cell in cell_lines:
+        formatted = format_enum_entry_enhanced(cell)
+        cell_entries.update(formatted)
+
+    cell_enum = {
+        'CellLineModel': {
+            'permissible_values': cell_entries
+        }
     }
-    
-    # Custom YAML representer to quote keys with spaces or special characters
-    def quoted_string_representer(dumper, data):
-        if ' ' in data or '::' in data or '+' in data or '/' in data or '-' in data:
-            return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='"')
-        return dumper.represent_scalar('tag:yaml.org,2002:str', data)
-    
-    # Write to file with warning comment and proper quoting
-    with open(file_path, 'w', encoding='utf-8') as f:
-        # Add warning comment at the top
-        f.write("# WARNING: This file is auto-generated from Synapse table syn26450069\n")
-        f.write("# DO NOT EDIT DIRECTLY - changes will be overwritten\n") 
-        f.write("# For manual entries, use the corresponding *Manual.yaml file\n")
-        f.write("# Generated by utils/sync_model_systems.py\n\n")
-        
-        # Add custom representer for strings to ensure proper quoting
-        yaml.add_representer(str, quoted_string_representer)
-        
-        # Custom YAML dumping to handle special characters in keys
-        yaml.dump(enum_data, f, default_flow_style=False, sort_keys=False, allow_unicode=True, width=float('inf'))
-    
-    print(f"Updated {file_path} with {len(sorted_entries)} entries")
+
+    # Animal models
+    animal_entries = {}
+    for animal in animal_models:
+        formatted = format_enum_entry_enhanced(animal)
+        animal_entries.update(formatted)
+
+    animal_enum = {
+        'AnimalModel': {
+            'permissible_values': animal_entries
+        }
+    }
+
+    print(f"  → CellLineModel: {len(cell_entries)} entries")
+    print(f"  → AnimalModel: {len(animal_entries)} entries")
+
+    return cell_enum, animal_enum
+
+
+def save_base_enum_file(enum_data: Dict, filepath: str, enum_type: str):
+    """Save base enum file with header."""
+    with open(filepath, 'w') as f:
+        f.write(f"# WARNING: This file is auto-generated from Synapse table syn51730943\n")
+        f.write(f"# DO NOT EDIT DIRECTLY - changes will be overwritten\n")
+        f.write(f"# For manual entries, use the corresponding *Manual.yaml file\n")
+        f.write(f"# Generated by utils/sync_model_systems_enhanced.py\n")
+        f.write(f"\n")
+        # Wrap enum_data in proper structure with correct indentation
+        content = {'enums': enum_data}
+        yaml.dump(content, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+
+    print(f"  ✓ Saved {filepath}")
 
 
 def main():
-    """Main function to sync model system data."""
-    parser = argparse.ArgumentParser(description='Sync model system names from Synapse table')
-    parser.add_argument('--synapse-id', default='syn26450069', 
-                       help='Synapse table ID (default: syn26450069)')
+    parser = argparse.ArgumentParser(description='Sync model systems with conditional filtering')
+    parser.add_argument('--synapse-id', default='syn51730943',
+                       help='Synapse table ID (default: syn51730943 - NF Tools Database)')
     parser.add_argument('--dry-run', action='store_true',
-                       help='Print what would be done without making changes')
-    
+                       help='Show what would be done without making changes')
+
     args = parser.parse_args()
-    
-    # Get the repository root directory
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    repo_root = os.path.dirname(script_dir)
-    
-    # Define file paths
-    cell_line_path = os.path.join(repo_root, 'modules', 'Sample', 'CellLineModel.yaml')
-    animal_model_path = os.path.join(repo_root, 'modules', 'Sample', 'AnimalModel.yaml')
-    cell_line_manual_path = os.path.join(repo_root, 'modules', 'Sample', 'CellLineModelManual.yaml')
-    animal_model_manual_path = os.path.join(repo_root, 'modules', 'Sample', 'AnimalModelManual.yaml')
-    antibody_path = os.path.join(repo_root, 'modules', 'Experiment', 'Antibody.yaml')
-    genetic_reagent_path = os.path.join(repo_root, 'modules', 'Experiment', 'GeneticReagent.yaml')
-    
-    print(f"Fetching data from Synapse table {args.synapse_id}...")
 
-    # Fetch data from Synapse
-    data = fetch_synapse_data(args.synapse_id)
+    print("="*60)
+    print("ENHANCED MODEL SYSTEM SYNC WITH CONDITIONAL FILTERING")
+    print("="*60)
+    print(f"Source: {args.synapse_id}")
+    print(f"Dry run: {args.dry_run}")
+    print()
 
-    if not data:
-        print("No data fetched. Exiting.")
-        return 1
+    # Fetch data
+    cell_lines, animal_models, antibodies, genetic_reagents = fetch_model_system_data_with_metadata(args.synapse_id)
 
-    print(f"Fetched {len(data)} records from Synapse")
+    # Generate filtered enum subsets
+    filtered_enums = generate_filtered_enum_subsets(cell_lines, animal_models)
 
-    # Fetch tool links from NF Tools Central (syn51730943)
-    print("\nFetching tool links from NF Tools Central...")
-    tool_links = fetch_tool_links('syn51730943')
-    cell_line_links = tool_links.get('Cell Line', {})
-    animal_model_links = tool_links.get('Animal Model', {})
-    antibody_links = tool_links.get('Antibody', {})
-    genetic_reagent_links = tool_links.get('Genetic Reagent', {})
-    
-    # Load manual entries to avoid duplicates
-    cell_line_manual_entries = load_manual_entries(cell_line_manual_path)
-    animal_model_manual_entries = load_manual_entries(animal_model_manual_path)
-    print(f"Found {len(cell_line_manual_entries)} manual cell line entries")
-    print(f"Found {len(animal_model_manual_entries)} manual animal model entries")
-    
-    # Separate data by resource type and add source links
-    cell_lines = []
-    animal_models = []
+    # Generate base enums for backward compatibility
+    cell_enum, animal_enum = generate_base_enums(cell_lines, animal_models)
 
-    for resource in data:
-        resource_type = resource.get('resourceType', '') or ''
-        resource_type = resource_type.lower().strip() if resource_type else ''
-        resource_name = resource.get('resourceName', '').strip() if resource.get('resourceName') else ''
+    # Generate antibody and genetic reagent enums
+    antibody_entries = {}
+    for antibody in antibodies:
+        formatted = format_enum_entry_enhanced(antibody)
+        antibody_entries.update(formatted)
 
-        if 'cell line' in resource_type:
-            # Get source link for this resource if available
-            source_url = cell_line_links.get(resource_name)
-            formatted = format_enum_entry(resource, source_url)
-            if formatted:
-                cell_lines.append(formatted)
-        elif 'animal model' in resource_type or 'mouse' in resource_type:
-            # Get source link for this resource if available
-            source_url = animal_model_links.get(resource_name)
-            formatted = format_enum_entry(resource, source_url)
-            if formatted:
-                animal_models.append(formatted)
-    
-    # Filter out duplicates with manual entries
-    cell_lines = filter_duplicates(cell_lines, cell_line_manual_entries)
-    animal_models = filter_duplicates(animal_models, animal_model_manual_entries)
+    antibody_enum = {
+        'AntibodyEnum': {
+            'permissible_values': antibody_entries
+        }
+    }
 
-    print(f"Found {len(cell_lines)} cell lines and {len(animal_models)} animal models")
+    reagent_entries = {}
+    for reagent in genetic_reagents:
+        formatted = format_enum_entry_enhanced(reagent)
+        reagent_entries.update(formatted)
 
-    # Fetch Antibody and Genetic Reagent data from NF Tools Central (syn51730943)
-    print("\nFetching Antibody and Genetic Reagent data from NF Tools Central...")
-    tools_data = fetch_tools_data('syn51730943', ['Antibody', 'Genetic Reagent'])
+    reagent_enum = {
+        'GeneticReagentEnum': {
+            'permissible_values': reagent_entries
+        }
+    }
 
-    # Format Antibody entries with source links
-    antibodies = []
-    for resource in tools_data.get('Antibody', []):
-        resource_name = resource.get('resourceName', '').strip() if resource.get('resourceName') else ''
-        source_url = antibody_links.get(resource_name)
-        formatted = format_enum_entry(resource, source_url)
-        if formatted:
-            antibodies.append(formatted)
+    if not args.dry_run:
+        # Save filtered enums
+        save_filtered_enum_files(filtered_enums)
 
-    # Format Genetic Reagent entries with source links
-    genetic_reagents = []
-    for resource in tools_data.get('Genetic Reagent', []):
-        resource_name = resource.get('resourceName', '').strip() if resource.get('resourceName') else ''
-        source_url = genetic_reagent_links.get(resource_name)
-        formatted = format_enum_entry(resource, source_url)
-        if formatted:
-            genetic_reagents.append(formatted)
+        # Save base enums
+        save_base_enum_file(cell_enum, 'modules/Sample/CellLineModel.yaml', 'cell_line')
+        save_base_enum_file(animal_enum, 'modules/Sample/AnimalModel.yaml', 'animal_model')
 
-    print(f"Found {len(antibodies)} antibodies and {len(genetic_reagents)} genetic reagents")
+        # Save antibody and genetic reagent enums
+        save_base_enum_file(antibody_enum, 'modules/Experiment/Antibody.yaml', 'antibody')
+        save_base_enum_file(reagent_enum, 'modules/Experiment/GeneticReagent.yaml', 'genetic_reagent')
 
-    if args.dry_run:
-        print("DRY RUN - would update:")
-        print(f"  {cell_line_path} with {len(cell_lines)} cell line entries")
-        print(f"  {animal_model_path} with {len(animal_models)} animal model entries")
-        print(f"  {antibody_path} with {len(antibodies)} antibody entries")
-        print(f"  {genetic_reagent_path} with {len(genetic_reagents)} genetic reagent entries")
-        return 0
-
-    # Update the enum files
-    if cell_lines:
-        update_enum_file(cell_line_path, 'CellLineModel', cell_lines)
-
-    if animal_models:
-        update_enum_file(animal_model_path, 'AnimalModel', animal_models)
-
-    if antibodies:
-        update_enum_file(antibody_path, 'AntibodyEnum', antibodies)
-
-    if genetic_reagents:
-        update_enum_file(genetic_reagent_path, 'GeneticReagentEnum', genetic_reagents)
-
-    print("Sync completed successfully!")
-    return 0
+        print("\n" + "="*60)
+        print("SYNC COMPLETED SUCCESSFULLY")
+        print("="*60)
+        print(f"✓ Generated {len(filtered_enums)} filtered enum subsets")
+        print(f"✓ Updated base enum files (CellLineModel.yaml, AnimalModel.yaml)")
+        print(f"✓ Updated Antibody.yaml ({len(antibody_entries)} entries)")
+        print(f"✓ Updated GeneticReagent.yaml ({len(reagent_entries)} entries)")
+        print("\nNext steps:")
+        print("  1. Rebuild data model: make NF.yaml")
+        print("  2. Regenerate JSON schemas: python utils/gen-json-schema-class.py")
+    else:
+        print("\n" + "="*60)
+        print("DRY RUN - NO FILES MODIFIED")
+        print("="*60)
+        print(f"Would generate {len(filtered_enums)} filtered enum subsets")
+        print(f"Would update base enum files")
+        print(f"Would update Antibody.yaml ({len(antibody_entries)} entries)")
+        print(f"Would update GeneticReagent.yaml ({len(reagent_entries)} entries)")
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    main()
