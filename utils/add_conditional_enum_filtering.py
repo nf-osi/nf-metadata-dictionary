@@ -221,12 +221,13 @@ CONDITIONAL_MAPPINGS = [
 ]
 
 
-def create_conditional_rule(mapping: Dict[str, str]) -> Dict[str, Any]:
+def create_conditional_rule(mapping: Dict[str, str], enum_values: List[str]) -> Dict[str, Any]:
     """
     Create an if/then conditional rule for a filter combination.
 
     Args:
         mapping: Dict with filter field values and enum name
+        enum_values: List of enum values to inline directly (no $refs)
 
     Returns:
         Dict with if/then structure for allOf
@@ -252,11 +253,12 @@ def create_conditional_rule(mapping: Dict[str, str]) -> Dict[str, Any]:
         if_properties["cellLineGeneticDisorder"] = {"const": mapping["cellLineGeneticDisorder"]}
         required_fields.append("cellLineGeneticDisorder")
 
-    # Build the then condition - reference the filtered enum
+    # Build the then condition - inline enum values directly (Synapse doesn't support $refs/$defs)
     then_properties = {
         "modelSystemName": {
             "items": {
-                "$ref": f"#/$defs/{mapping['enum']}"
+                "enum": enum_values,
+                "type": "string"
             }
         }
     }
@@ -280,7 +282,7 @@ def add_conditionals_to_schema(schema: Dict[str, Any]) -> Dict[str, Any]:
         schema: The JSON schema dict
 
     Returns:
-        Modified schema with conditionals added
+        Modified schema with conditionals added (enum values inlined, no $defs)
     """
     # Check if this schema has modelSystemName field
     if "properties" not in schema or "modelSystemName" not in schema.get("properties", {}):
@@ -288,23 +290,10 @@ def add_conditionals_to_schema(schema: Dict[str, Any]) -> Dict[str, Any]:
 
     print(f"  Adding {len(CONDITIONAL_MAPPINGS)} conditional rules...")
 
-    # Create allOf rules
-    conditional_rules = [create_conditional_rule(mapping) for mapping in CONDITIONAL_MAPPINGS]
-
-    # Add to schema
-    if "allOf" in schema:
-        # Append to existing allOf
-        schema["allOf"].extend(conditional_rules)
-    else:
-        # Create new allOf
-        schema["allOf"] = conditional_rules
-
-    # Add the filtered enum definitions to $defs
-    if "$defs" not in schema:
-        schema["$defs"] = {}
-
-    # Load enum definitions from generated files
+    # Load enum values from generated files
     generated_dir = Path("modules/Sample/generated")
+    conditional_rules = []
+
     for mapping in CONDITIONAL_MAPPINGS:
         enum_name = mapping["enum"]
         enum_file = generated_dir / f"{enum_name}.yaml"
@@ -318,11 +307,23 @@ def add_conditionals_to_schema(schema: Dict[str, Any]) -> Dict[str, Any]:
             if "enums" in enum_data and enum_name in enum_data["enums"]:
                 enum_values = list(enum_data["enums"][enum_name]["permissible_values"].keys())
 
-                # Add to $defs
-                schema["$defs"][enum_name] = {
-                    "enum": enum_values,
-                    "type": "string"
-                }
+                # Create conditional rule with inlined enum values
+                rule = create_conditional_rule(mapping, enum_values)
+                conditional_rules.append(rule)
+            else:
+                print(f"    Warning: Could not find enum '{enum_name}' in {enum_file}")
+        else:
+            print(f"    Warning: Enum file not found: {enum_file}")
+
+    # Add to schema
+    if "allOf" in schema:
+        # Append to existing allOf
+        schema["allOf"].extend(conditional_rules)
+    else:
+        # Create new allOf
+        schema["allOf"] = conditional_rules
+
+    print(f"    ✓ Added {len(conditional_rules)} conditional rules with inlined enum values")
 
     return schema
 

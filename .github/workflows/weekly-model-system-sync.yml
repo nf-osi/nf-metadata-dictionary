@@ -40,7 +40,7 @@ jobs:
 
       - name: Sync model system data with conditional filtering
         run: |
-          python utils/sync_model_systems_enhanced.py --synapse-id ${{ env.SYNAPSE_TOOLS_TABLE_ID }}
+          python utils/sync_model_systems.py --synapse-id ${{ env.SYNAPSE_TOOLS_TABLE_ID }}
       
       - name: Check for changes
         id: changes
@@ -61,10 +61,20 @@ jobs:
           git clone --depth 1 https://github.com/anngvu/retold.git
           pip install linkml==v1.8.1
           npm install -g json-dereference-cli
-          
+          pip install jsonref  # Required for schema generation
+
           # Rebuild the data model
           make NF.yaml
-          bb ./retold/retold as-jsonld --dir modules --out NF.jsonld 
+          bb ./retold/retold as-jsonld --dir modules --out NF.jsonld
+
+      - name: Regenerate JSON schemas
+        if: steps.changes.outputs.changes == 'true'
+        run: |
+          # Add conditional filtering (inlines enum values into schemas)
+          python utils/add_conditional_enum_filtering.py
+
+          # Regenerate all JSON schemas (this will inline everything properly)
+          python utils/gen-json-schema-class.py --skip-validation 
       
       - name: Create Pull Request
         if: steps.changes.outputs.changes == 'true'
@@ -89,15 +99,17 @@ jobs:
             - Updated genetic reagents in `modules/Experiment/GeneticReagent.yaml`
             - Added/updated `source` links to NF Tools Central detail pages
             - Rebuilt data model artifacts (`NF.jsonld`, `dist/NF.yaml`)
+            - Regenerated JSON schemas with updated enum values
 
             ### Files Modified:
-            - `modules/Sample/CellLineModel.yaml` (638 cell lines)
-            - `modules/Sample/AnimalModel.yaml` (123 animal models)
+            - `modules/Sample/CellLineModel.yaml` (cell lines)
+            - `modules/Sample/AnimalModel.yaml` (animal models)
             - `modules/Sample/generated/*.yaml` (29 filtered enum subsets)
             - `modules/Experiment/Antibody.yaml`
             - `modules/Experiment/GeneticReagent.yaml`
             - `NF.jsonld`
             - `dist/NF.yaml`
+            - `registered-json-schemas/*.json` (63 schemas)
 
             ### What This Includes:
             - ✅ Cell line and animal model names from NF Tools Central (syn51730943)
