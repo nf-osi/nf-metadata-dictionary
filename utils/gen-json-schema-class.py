@@ -78,28 +78,11 @@ def process_schema(raw_schema, cls_name, version=None, schema_yaml_path=None):
     # Force JSON Schema Draft 7
     raw_schema["$schema"] = "http://json-schema.org/draft-07/schema#"
 
-    # Dereference and inline enums
+    # Dereference all $refs - convert to plain dict to avoid proxy issues
+    import json as json_module
     deref = jsonref.replace_refs(raw_schema, merge_props=False, proxies=False)
-    defs = deref.pop("$defs", {})
-
-    def inline_enums(obj):
-        if isinstance(obj, dict):
-            if "$ref" in obj:
-                ref = obj.pop("$ref")
-                enum_name = ref.rsplit("/", 1)[-1]
-                enum_def = defs.get(enum_name, {})
-                if "enum" in enum_def:
-                    obj["enum"] = enum_def["enum"]
-                    if "title" in enum_def:
-                        obj["title"] = enum_def["title"]
-                return
-            for value in obj.values():
-                inline_enums(value)
-        elif isinstance(obj, list):
-            for item in obj:
-                inline_enums(item)
-
-    inline_enums(deref.get("properties", {}))
+    # Convert from jsonref proxy to plain dict (this fully resolves all $refs)
+    deref = json_module.loads(json_module.dumps(deref))
 
     # Combine anyOf enums into single enum for efficiency
     def combine_anyof_enums(obj):
@@ -165,6 +148,9 @@ def process_schema(raw_schema, cls_name, version=None, schema_yaml_path=None):
     if schema_yaml_path and "properties" in deref:
         property_order = get_class_property_order(schema_yaml_path, cls_name)
         deref["properties"] = reorder_properties(deref["properties"], property_order)
+
+    # Ensure $defs is removed (Synapse doesn't support it)
+    deref.pop("$defs", None)
 
     return deref
 
