@@ -1,0 +1,600 @@
+{
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-humancohorttemplate",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Data of biosamples from human patients. Adapted from Table 2 of http://nrs.harvard.edu/urn-3:HUL.InstRepos:32725809. This template should be used when biosamples are from NF patients to provides a more valuable characterization and make additional gene-phenotype insights possible.",
+  "properties": {
+    "individualID": {
+      "description": "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "individualID"
+    },
+    "sex": {
+      "description": "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other.",
+      "type": "string",
+      "enum": [
+        "Female",
+        "Male",
+        "Unknown",
+        "Not Applicable"
+      ],
+      "title": "sex"
+    },
+    "age": {
+      "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
+      "type": "number",
+      "title": "age"
+    },
+    "ageUnit": {
+      "description": "",
+      "enum": [
+        "days",
+        "hours",
+        "minutes",
+        "months",
+        "seconds",
+        "weeks",
+        "years"
+      ],
+      "title": "ageUnit",
+      "type": "string"
+    },
+    "diagnosis": {
+      "description": "",
+      "enum": [
+        "22q-related schwannomatosis",
+        "LZTR1-related schwannomatosis",
+        "NF2-related schwannomatosis",
+        "Neurofibromatosis type 1",
+        "Noonan Syndrome",
+        "Not Applicable",
+        "SMARCB1-related schwannomatosis",
+        "Schwannomatosis",
+        "Schwannomatosis-NEC",
+        "Schwannomatosis-NOS",
+        "Sporadic Schwannoma",
+        "Unknown",
+        "Vestibular Schwannoma",
+        "atypical neurofibroma",
+        "High Grade Malignant Peripheral Nerve Sheath Tumor",
+        "Juvenile myelomonocytic leukemia"
+      ],
+      "title": "diagnosis",
+      "type": "string"
+    },
+    "diagnosisAgeGroup": {
+      "description": "Human age demographic groups based on Age Ontology, which is a refinement of MeSH age classifications for classification and harmonization purposes.",
+      "enum": [
+        "Infant",
+        "Child",
+        "Adolescent",
+        "Adult"
+      ],
+      "title": "diagnosisAgeGroup",
+      "type": "string"
+    },
+    "inheritance": {
+      "description": "",
+      "enum": [
+        "parent affected",
+        "parent not affected",
+        "unknown"
+      ],
+      "title": "inheritance",
+      "type": "string"
+    },
+    "mosaicism": {
+      "description": "",
+      "enum": [
+        "mosaic",
+        "not mosaic",
+        "unknown"
+      ],
+      "title": "mosaicism",
+      "type": "string"
+    },
+    "nf1Genotype": {
+      "description": "Genotype of NF1 gene in the biospecimen from which the data were derived, if known.",
+      "type": "string",
+      "enum": [
+        "+/+",
+        "+/-",
+        "-/-",
+        "Unknown",
+        "Unknown"
+      ],
+      "title": "nf1Genotype"
+    },
+    "nf2Genotype": {
+      "description": "Genotype of NF2 gene in the biospecimen from which the data were derived, if known",
+      "type": "string",
+      "enum": [
+        "+/+",
+        "+/-",
+        "-/-",
+        "Unknown",
+        "Unknown"
+      ],
+      "title": "nf2Genotype"
+    },
+    "germlineMutationIndicator": {
+      "description": "",
+      "enum": [
+        "not tested",
+        "tested but unknown"
+      ],
+      "title": "germlineMutationIndicator",
+      "type": "string"
+    },
+    "species": {
+      "description": "",
+      "enum": [
+        "Danio rerio",
+        "Drosophila melanogaster",
+        "Gallus gallus",
+        "Homo sapiens",
+        "Mus musculus",
+        "Mus musculus (humanized)",
+        "Oryctolagus cuniculus",
+        "Pan troglodytes",
+        "Rattus norvegicus",
+        "Rhesus macaque",
+        "Sus scrofa"
+      ],
+      "title": "species",
+      "type": "string"
+    },
+    "vitalStatus": {
+      "description": "",
+      "enum": [
+        "alive",
+        "deceased",
+        "unknown"
+      ],
+      "title": "vitalStatus",
+      "type": "string"
+    },
+    "WHOPerformanceStatus": {
+      "description": "https://www.ncbi.nlm.nih.gov/books/NBK97482/",
+      "enum": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "title": "WHOPerformanceStatus",
+      "type": "string"
+    },
+    "painStatus": {
+      "description": "",
+      "enum": [
+        "disabling",
+        "not a problem",
+        "occasional"
+      ],
+      "title": "painStatus",
+      "type": "string"
+    },
+    "tumorTreatmentStatus": {
+      "description": "",
+      "enum": [
+        "chemotherapy",
+        "clinical trial",
+        "no specific therapy",
+        "radiation",
+        "surgery",
+        "targeted therapy"
+      ],
+      "title": "tumorTreatmentStatus",
+      "type": "string"
+    },
+    "cafeaulaitMacules": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "skinFoldFreckling": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "IrisLischNodules": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "dermalNeurofibromas": {
+      "description": "Enumerations describing how neurofibromas can manifest more generally.",
+      "enum": [
+        "absent",
+        "dense",
+        "scattered",
+        "unknown"
+      ],
+      "title": "subcutaneousNodularNeurofibromas",
+      "type": "string"
+    },
+    "subcutaneousNodularNeurofibromas": {
+      "description": "Enumerations describing how neurofibromas can manifest more generally.",
+      "enum": [
+        "absent",
+        "dense",
+        "scattered",
+        "unknown"
+      ],
+      "title": "subcutaneousNodularNeurofibromas",
+      "type": "string"
+    },
+    "diffuseDermalNeurofibromas": {
+      "description": "Enumerations describing how neurofibromas can manifest more generally.",
+      "enum": [
+        "absent",
+        "dense",
+        "scattered",
+        "unknown"
+      ],
+      "title": "subcutaneousNodularNeurofibromas",
+      "type": "string"
+    },
+    "spinalNeurofibromas": {
+      "description": "Enumerations describing the manifestation of spinal neurofibromas, combining information on presence and the cervical locations.",
+      "enum": [
+        "absent",
+        "all levels",
+        "levels 1-3",
+        "not imaged"
+      ],
+      "title": "spinalNeurofibromas",
+      "type": "string"
+    },
+    "plexiformNeurofibromas": {
+      "description": "Enumerations describing the manifestation of plexiform neurofibromas, combining information on presence and the certainty via MRI imaging technique.",
+      "enum": [
+        "absent by MRI",
+        "absent clinically - no MRI",
+        "present",
+        "unknown"
+      ],
+      "title": "plexiformNeurofibromas",
+      "type": "string"
+    },
+    "opticGlioma": {
+      "description": "Enumerations describing the manifestation of optic gliomas, combining information on presence, symptoms, and treatment.",
+      "enum": [
+        "absent",
+        "present - asymptomatic",
+        "present - symptomatic - not treated",
+        "present - symptomatic - treated",
+        "unknown"
+      ],
+      "title": "opticGlioma",
+      "type": "string"
+    },
+    "heartDefect": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "vascularDisease": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "pubertyOnset": {
+      "description": "",
+      "enum": [
+        "late",
+        "normal",
+        "prebubertal",
+        "precocious"
+      ],
+      "title": "pubertyOnset",
+      "type": "string"
+    },
+    "stature": {
+      "description": "Enumerations corresponding to 3 bins using 2 standard deviations as a cutoff.",
+      "enum": [
+        "5th-95th centile",
+        "< 5th centile",
+        "> 95th centile"
+      ],
+      "title": "stature",
+      "type": "string"
+    },
+    "peripheralNeuropathy": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "aqueductalStenosis": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "longBoneDysplasia": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "sphenoidDysplasia": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "scoliosis": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "intellectualDisability": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "learningDisability": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "attentionDeficitDisorder": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "pheochromocytoma": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "glomusTumor": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "MPNSTCharacterization": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "nonopticGlioma": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "GIST": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "leukemia": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "breastCancer": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "otherTumors": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "vestibularSchwannoma": {
+      "description": "Enumerations describing the manifestation of tumors confirmed via imaging (MRI or other), where lateral information is most relevant.",
+      "enum": [
+        "absent by imaging",
+        "bilateral",
+        "not imaged",
+        "unilateral",
+        "unknown"
+      ],
+      "title": "vestibularSchwannoma",
+      "type": "string"
+    },
+    "meningioma": {
+      "description": "Enumerations describing the manifestation of tumors confirmed via imaging with one or multiple sites being the most relevant result.",
+      "enum": [
+        "absent by imaging",
+        "multiple",
+        "not imaged",
+        "single",
+        "unknown"
+      ],
+      "title": "spinalSchwannoma",
+      "type": "string"
+    },
+    "gliomaOrEpendymoma": {
+      "description": "Enumerations describing the manifestation of tumors confirmed via imaging with mainly absent or present being the most relevant result.",
+      "enum": [
+        "absent by imaging",
+        "not imaged",
+        "present",
+        "unknown"
+      ],
+      "title": "nonvestibularCranialSchwannoma",
+      "type": "string"
+    },
+    "spinalSchwannoma": {
+      "description": "Enumerations describing the manifestation of tumors confirmed via imaging with one or multiple sites being the most relevant result.",
+      "enum": [
+        "absent by imaging",
+        "multiple",
+        "not imaged",
+        "single",
+        "unknown"
+      ],
+      "title": "spinalSchwannoma",
+      "type": "string"
+    },
+    "dermalSchwannoma": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "nonvestibularCranialSchwannoma": {
+      "description": "Enumerations describing the manifestation of tumors confirmed via imaging with mainly absent or present being the most relevant result.",
+      "enum": [
+        "absent by imaging",
+        "not imaged",
+        "present",
+        "unknown"
+      ],
+      "title": "nonvestibularCranialSchwannoma",
+      "type": "string"
+    },
+    "lenticularOpacity": {
+      "description": "Enumeration for binary + unknown for very basic classification of a manifestation in clinical context.",
+      "enum": [
+        "absent",
+        "present",
+        "unknown"
+      ],
+      "title": "vascularDisease",
+      "type": "string"
+    },
+    "nonvestibularSchwannomas": {
+      "description": "",
+      "enum": [
+        "1 pathogically confirmed",
+        "2 or more, at least 1 pathogically confirmed",
+        "only by imaging evidence",
+        "unknown"
+      ],
+      "title": "nonvestibularSchwannomas",
+      "type": "string"
+    },
+    "numberOfSchwannomas": {
+      "description": "Enumerations describing the manifestation of schwannomas.",
+      "enum": [
+        "dense",
+        "scattered",
+        "single",
+        "unknown"
+      ],
+      "title": "numberOfSchwannomas",
+      "type": "string"
+    }
+  },
+  "required": [
+    "individualID",
+    "diagnosis",
+    "species"
+  ],
+  "title": "HumanCohortTemplate",
+  "type": "object"
+}

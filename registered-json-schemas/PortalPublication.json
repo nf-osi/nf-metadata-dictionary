@@ -1,0 +1,62 @@
+{
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-portalpublication",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Publication entity defined within the specific scope of the NF Portal (WIP).",
+  "properties": {
+    "diseaseFocus": {
+      "items": {
+        "description": "",
+        "enum": [
+          "22q-related schwannomatosis",
+          "LZTR1-related schwannomatosis",
+          "Multiple",
+          "NF2-related schwannomatosis",
+          "Neurofibromatosis type 1",
+          "SMARCB1-related schwannomatosis",
+          "Schwannomatosis-NEC",
+          "Schwannomatosis-NOS"
+        ],
+        "title": "DiseaseFocusEnum",
+        "type": "string"
+      },
+      "type": "array",
+      "title": "diseaseFocus"
+    },
+    "fundingAgency": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "fundingAgency"
+    },
+    "manifestation": {
+      "type": "string",
+      "title": "manifestation"
+    },
+    "publicationType": {
+      "description": "",
+      "enum": [
+        "Primary",
+        "Secondary"
+      ],
+      "title": "publicationType",
+      "type": "string"
+    },
+    "studyId": {
+      "type": "string",
+      "title": "studyId"
+    },
+    "studyName": {
+      "type": "string",
+      "title": "studyName"
+    }
+  },
+  "required": [
+    "fundingAgency",
+    "publicationType",
+    "studyId",
+    "studyName"
+  ],
+  "title": "PortalPublication",
+  "type": "object"
+}

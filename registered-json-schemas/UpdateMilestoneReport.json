@@ -1,0 +1,32 @@
+{
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-updatemilestonereport",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF.",
+  "properties": {
+    "resourceType": {
+      "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
+      "enum": [
+        "experimentalData",
+        "metadata",
+        "protocol",
+        "report",
+        "result",
+        "tool",
+        "weblink",
+        "workflow report"
+      ],
+      "title": "resourceType",
+      "type": "string"
+    },
+    "progressReportNumber": {
+      "description": "Indicates milestone the  data is associated with. Currently only required for projects funded by NTAP, GFF, and NFRI. For GFF studies, this is the \u2018progress report\u2019 timeline. Example: if submitting data for the 6-month milestone report for NTAP, progressReportNumber=1.  Also if submitting data associated with first milestone, progressReportNumber =1",
+      "type": "string",
+      "title": "progressReportNumber"
+    }
+  },
+  "required": [
+    "resourceType"
+  ],
+  "title": "UpdateMilestoneReport",
+  "type": "object"
+}
