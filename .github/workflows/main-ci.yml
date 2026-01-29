@@ -39,11 +39,6 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           make -B
   
-      - name: Apply conditional enum filtering
-        run: |
-          echo "Applying conditional enum filtering to inline enum values"
-          python utils/add_conditional_enum_filtering.py
-
       - name: Generate and validate JSON schemas for all templates (classes)
         env:
           SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
@@ -51,6 +46,11 @@ jobs:
           echo "Generating JSON schemas and validating them!"
           python utils/gen-json-schema-class.py
           make Superdataset
+
+      - name: Apply conditional enum filtering
+        run: |
+          echo "Applying conditional enum filtering to inline enum values"
+          python utils/add_conditional_enum_filtering.py
 
       - name: Report schema validation results as PR comment
         uses: mshick/add-pr-comment@v2
