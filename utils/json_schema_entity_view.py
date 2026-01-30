@@ -118,6 +118,35 @@ def create_entity_view_from_schema_uri(
     return view.id
 
 
+def _has_conditional_enum(json_schema: dict[str, Any], field_name: str) -> bool:
+    """Check if a field has conditional enum filtering via allOf rules.
+
+    Arguments:
+        json_schema: The JSON Schema in dict form
+        field_name: The field name to check
+
+    Returns:
+        True if the field has conditional filtering, False otherwise
+    """
+    all_of = json_schema.get("allOf", [])
+    for rule in all_of:
+        # Check if this rule has a 'then' clause that references this field
+        then_clause = rule.get("then", {})
+        then_properties = then_clause.get("properties", {})
+        if field_name in then_properties:
+            # Check if the field uses $ref (indicating conditional enum)
+            field_spec = then_properties[field_name]
+            if isinstance(field_spec, dict):
+                # Check for $ref in items (for list fields like modelSystemName)
+                if "items" in field_spec and isinstance(field_spec["items"], dict):
+                    if "$ref" in field_spec["items"]:
+                        return True
+                # Check for direct $ref
+                if "$ref" in field_spec:
+                    return True
+    return False
+
+
 def _create_columns_from_json_schema(json_schema: dict[str, Any]) -> list[Column]:
     """Creates a list of Synapse Columns based on the JSON Schema type
 
@@ -142,26 +171,30 @@ def _create_columns_from_json_schema(json_schema: dict[str, Any]) -> list[Column
     for name, prop_schema in properties.items():
         column_type = _get_column_type_from_js_property(prop_schema)
         maximum_size = None
+        maximum_list_length = None
+
+        # NOTE: We intentionally do NOT set enum_values on columns when creating
+        # entity views from JSON Schemas. Reasons:
+        # 1. The JSON Schema binding provides all validation and UI dropdowns
+        # 2. Setting enum_values is redundant and increases row size
+        # 3. Many schemas exceed Synapse's 64KB row size limit when enums are set
+        # 4. The curator grid uses the bound JSON Schema for filtering/validation
         enum_values = None
 
-        # Extract enum values if present (limit to first 1000)
-        if "enum" in prop_schema:
-            enum_values = [str(v) for v in prop_schema["enum"][:1000]]
-
-        # For list types, check if enum is nested in items
-        if column_type in LIST_TYPE_DICT.values() and "items" in prop_schema:
-            if isinstance(prop_schema["items"], dict) and "enum" in prop_schema["items"]:
-                enum_values = [str(v) for v in prop_schema["items"]["enum"][:1000]]
-
-        if column_type == "STRING":
-            maximum_size = 250
+        # Use conservative maximum_size values to stay under Synapse's 64KB row limit
+        # System columns add ~3500 bytes (name:256, description:1000, path:1000, etc.)
+        # With ~50 schema + ~20 system columns, we need very small sizes
+        if column_type == ColumnType.STRING:
+            maximum_size = 50   # Minimal size for most metadata values
         if column_type in LIST_TYPE_DICT.values():
-            maximum_size = 100
+            maximum_size = 25   # Minimal list item size
+            maximum_list_length = 50  # Conservative limit for large templates
 
         column = Column(
             name=name,
             column_type=column_type,
             maximum_size=maximum_size,
+            maximum_list_length=maximum_list_length,
             enum_values=enum_values,
             default_value=None,
         )
@@ -185,9 +218,19 @@ def _get_column_type_from_js_property(js_property: dict[str, Any]) -> ColumnType
     if "enum" in js_property:
         return ColumnType.STRING
     if "type" in js_property:
-        if js_property["type"] == "array":
+        prop_type = js_property["type"]
+        # Handle nullable types (e.g., ['array', 'null'], ['string', 'null'])
+        if isinstance(prop_type, list):
+            # Filter out 'null' and get the actual type
+            non_null_types = [t for t in prop_type if t != "null"]
+            if non_null_types:
+                prop_type = non_null_types[0]  # Use the first non-null type
+            else:
+                return ColumnType.STRING  # Default if only null
+
+        if prop_type == "array":
             return _get_list_column_type_from_js_property(js_property)
-        return TYPE_DICT.get(js_property["type"], ColumnType.STRING)
+        return TYPE_DICT.get(prop_type, ColumnType.STRING)
     # A oneOf list usually indicates that the type could be one or more different things
     if "oneOf" in js_property and isinstance(js_property["oneOf"], list):
         return _get_column_type_from_js_one_of_list(js_property["oneOf"])
@@ -214,9 +257,18 @@ def _get_column_type_from_js_one_of_list(js_one_of_list: list[Any]) -> ColumnTyp
     type_items = [item for item in items if "type" in item if item["type"] != "null"]
     if len(type_items) == 1:
         type_item = type_items[0]
-        if type_item["type"] == "array":
+        prop_type = type_item["type"]
+        # Handle nullable types in oneOf items
+        if isinstance(prop_type, list):
+            non_null_types = [t for t in prop_type if t != "null"]
+            if non_null_types:
+                prop_type = non_null_types[0]
+            else:
+                return ColumnType.STRING
+
+        if prop_type == "array":
             return _get_list_column_type_from_js_property(type_item)
-        return TYPE_DICT.get(type_item["type"], ColumnType.STRING)
+        return TYPE_DICT.get(prop_type, ColumnType.STRING)
     return ColumnType.STRING
 
 

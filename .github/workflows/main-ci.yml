@@ -47,6 +47,11 @@ jobs:
           python utils/gen-json-schema-class.py
           make Superdataset
 
+      - name: Apply conditional enum filtering
+        run: |
+          echo "Applying conditional enum filtering to inline enum values"
+          python utils/add_conditional_enum_filtering.py
+
       - name: Report schema validation results as PR comment
         uses: mshick/add-pr-comment@v2
         if: always()
