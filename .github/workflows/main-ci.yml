@@ -217,3 +217,56 @@ jobs:
           name: test-logs-${{ env.SCHEMATIC_VERSION }}
           path: tests/**/logs
 
+  check-enum-sizes:
+    name: Check enum sizes (Synapse API limits)
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install pyyaml
+
+      - name: Check enum sizes
+        id: enum_check
+        run: |
+          # Run check with strict exit codes for CI
+          # Exit codes: 0=pass, 1=exceed limit, 2=approaching limit
+          set +e  # Don't exit on error, we'll handle it
+          python utils/check_enum_sizes.py --output enum_size_report.md --strict
+          EXIT_CODE=$?
+          set -e
+
+          echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
+
+          if [ $EXIT_CODE -eq 1 ]; then
+            echo "status=❌ FAILED - Enums exceed 100-value limit" >> $GITHUB_OUTPUT
+          elif [ $EXIT_CODE -eq 2 ]; then
+            echo "status=⚠️  WARNING - Enums approaching limit" >> $GITHUB_OUTPUT
+          else
+            echo "status=✅ PASSED - All enum sizes within limits" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Post enum size report as PR comment
+        uses: mshick/add-pr-comment@v2
+        if: always()
+        with:
+          message-id: enum-size-check
+          message-path: enum_size_report.md
+
+      - name: Fail if enums exceed limit
+        if: steps.enum_check.outputs.exit_code == '1'
+        run: |
+          echo "::error::One or more enums exceed the Synapse API limit of 100 values"
+          echo "Please refactor large enums - see enum_size_report.md for details"
+          exit 1
+
