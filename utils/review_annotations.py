@@ -479,10 +479,10 @@ def format_suggestions_as_markdown(
     md = ["# Annotation Review - Schema Updates from Synapse Annotations\n"]
     md.append("This PR contains automatic updates to the metadata dictionary based on ")
     md.append(f"analysis of file annotations in Synapse view {MATERIALIZED_VIEW_ID}.\n\n")
-    md.append("**Note:** Tool-related annotation fields (animalModelID, cellLineID, antibodyID, ")
-    md.append("geneticReagentID, tumorType, tissue, organ, species, etc.) are reviewed separately ")
-    md.append("in the [nf-research-tools-schema](https://github.com/nf-osi/nf-research-tools-schema) ")
-    md.append("repository for efficiency.\n")
+    md.append("**Note:** The `individualID` annotation field is reviewed separately in the ")
+    md.append("[nf-research-tools-schema](https://github.com/nf-osi/nf-research-tools-schema) ")
+    md.append("repository, where individualID values are analyzed and suggested as new cell lines ")
+    md.append("or synonyms in the NF Research Tools Central database.\n")
 
     if files_modified:
         md.append("\n## Files Modified\n")
