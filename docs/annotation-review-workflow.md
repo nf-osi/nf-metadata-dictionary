@@ -6,6 +6,8 @@ The annotation review workflow automatically analyzes file annotations from Syna
 
 **Integration:** As of 2026-02-03, the annotation review functionality is integrated into the weekly model system sync workflow (`.github/workflows/weekly-model-system-sync.yml`) rather than running as a separate workflow. Both operations run sequentially every Monday at 9:00 AM UTC.
 
+**Tool Field Separation:** As of 2026-02-05, tool-related annotation fields (e.g., animalModelID, cellLineID, antibodyID, tumorType, tissue, organ, species) are reviewed in a separate workflow in the [nf-research-tools-schema](https://github.com/nf-osi/nf-research-tools-schema) repository. This improves efficiency by co-locating tool annotation review with the existing tool database sync workflows. See [Tool-Related Fields](#tool-related-fields) section below for details.
+
 ## Related Issues
 
 - **Issue #804:** Enable custom values for platform and other fields
@@ -47,8 +49,8 @@ platform:
 
 This script:
 1. Queries Synapse materialized view (syn52702673)
-2. Extracts all file annotations
-3. Compares annotation values against schema enum definitions
+2. Extracts all file annotations (excluding tool-related fields - see below)
+3. Compares annotation values against schema enum definitions (including synonyms/aliases)
 4. Identifies free-text values that don't match any enum
 5. **Automatically adds new values to the appropriate YAML enum files** (frequency ≥ 2)
 6. Generates summary files documenting the additions
@@ -302,6 +304,32 @@ The annotation review functionality is now part of the weekly model system sync 
 - Ontology-driven standardization (synonyms)
 - User-driven vocabulary expansion (annotation review)
 
+## Tool-Related Fields
+
+### Separation of Concerns
+
+As of 2026-02-05, tool-related annotation fields are reviewed in a **separate workflow** in the [nf-research-tools-schema](https://github.com/nf-osi/nf-research-tools-schema) repository.
+
+**Fields reviewed in nf-research-tools-schema:**
+- Tool identifiers: `animalModelID`, `cellLineID`, `antibodyID`, `geneticReagentID`
+- Specimen fields: `tumorType`, `tissue`, `organ`, `species`
+- Manifestation fields: `cellLineManifestation`, `animalModelOfManifestation`, `animalModelManifestation`
+- Disease fields: `cellLineGeneticDisorder`, `animalModelGeneticDisorder`, `animalModelDisease`
+- Donor fields: `sex`, `race` (in tool context)
+- Other: `cellLineCategory`, `backgroundStrain`, `backgroundSubstrain`
+
+**Why separate?**
+1. **Efficiency**: Tool annotations are reviewed alongside tool database syncs
+2. **Organization**: Tool schema updates are managed in the tools repository
+3. **No duplication**: Avoids reviewing the same fields in two places
+4. **Clear separation**: Metadata dictionary focuses on file/dataset annotations
+
+**Workflow Schedule:**
+- **Metadata Dictionary**: Monday 9:00 AM UTC - Reviews non-tool annotation fields
+- **Tools Schema**: Monday 10:00 AM UTC - Reviews tool-related annotation fields
+
+See [nf-research-tools-schema documentation](https://github.com/nf-osi/nf-research-tools-schema/blob/main/docs/TOOL_ANNOTATION_REVIEW.md) for details on the tool annotation review workflow.
+
 ## Configuration
 
 ### Script Configuration
@@ -314,6 +342,14 @@ MATERIALIZED_VIEW_ID = "syn52702673"
 
 # Fields that allow custom values
 CUSTOM_VALUE_FIELDS = ['platform']
+
+# Tool-related fields (excluded from this review)
+TOOL_RELATED_FIELDS = {
+    'animalModelID', 'cellLineID', 'antibodyID', 'geneticReagentID',
+    'tumorType', 'tissue', 'organ', 'species',
+    'cellLineManifestation', 'animalModelOfManifestation',
+    # ... see script for complete list
+}
 
 # Minimum frequency for suggestions
 MIN_FREQUENCY = 2
@@ -384,12 +420,24 @@ print(mapping)
 3. Improve data quality at source
 4. Filter specific fields in script
 
+## Synapse Enum Limits
+
+⚠️ **Important:** Synapse has a limit of **100 values per annotation field enum**.
+
+The weekly workflow automatically checks enum sizes and includes warnings in PRs when enums exceed or approach this limit. See [synapse-enum-limits.md](./synapse-enum-limits.md) for details.
+
+**When reviewing annotation suggestions:**
+- Check if adding values would exceed 100-value limit
+- Consider alternative approaches for large vocabularies (resource IDs, external tables)
+- Monitor enums approaching 80+ values
+
 ## Best Practices
 
 ### 1. Regular Review Cadence
 - Review PRs weekly when they're generated
 - Don't let suggestions accumulate
 - Merge or close PRs promptly with notes
+- Monitor enum sizes to stay within Synapse limits
 
 ### 2. Documentation
 - Document rationale for accepting/rejecting suggestions

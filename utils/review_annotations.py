@@ -44,8 +44,45 @@ MATERIALIZED_VIEW_ID = "syn52702673"
 SCHEMA_DIR = Path(__file__).parent.parent / "modules"
 DIST_SCHEMA = Path(__file__).parent.parent / "dist" / "NF.yaml"
 
-# Fields that should allow custom values (from issue #804)
-CUSTOM_VALUE_FIELDS = ['platform']
+# Fields that allow BOTH enum values AND custom strings will be dynamically detected
+# from the schema using detect_custom_value_fields() function
+
+# Tool-related fields that are reviewed separately in nf-research-tools-schema
+# These fields are excluded from this review to avoid duplication
+TOOL_RELATED_FIELDS = {
+    # Tool identifiers
+    'animalModelID',
+    'cellLineID',
+    'antibodyID',
+    'geneticReagentID',
+
+    # Specimen/biobank fields
+    'tumorType',
+    'tissue',
+    'organ',
+    'species',
+
+    # Manifestation fields
+    'cellLineManifestation',
+    'animalModelOfManifestation',
+    'animalModelManifestation',
+
+    # Disease fields
+    'cellLineGeneticDisorder',
+    'animalModelGeneticDisorder',
+    'animalModelDisease',
+
+    # Donor fields (when used in tool context)
+    'sex',
+    'race',
+
+    # Cell line specific
+    'cellLineCategory',
+
+    # Other tool-related
+    'backgroundStrain',
+    'backgroundSubstrain',
+}
 
 # Minimum frequency threshold for suggesting new enum values
 MIN_FREQUENCY = 2
@@ -136,6 +173,68 @@ def load_slot_to_enum_mapping() -> Dict[str, List[str]]:
     return dict(slot_enum_map)
 
 
+def detect_custom_value_fields() -> Set[str]:
+    """
+    Dynamically detect fields that allow BOTH enum values AND custom strings.
+
+    These fields have the pattern: any_of: [range: SomeEnum, range: string]
+
+    Only these fields should be reviewed for enum additions because:
+    - They legitimately allow custom string values
+    - Frequently used custom values (2+ occurrences) are candidates for standardization
+    - Adding them to the enum helps maintain data consistency while preserving flexibility
+
+    Fields that only allow enum values (no custom strings) are excluded because
+    values not in their enums represent data quality issues, not curation opportunities.
+
+    Returns:
+        Set of field names that allow both enum and custom string values
+    """
+    custom_value_fields = set()
+
+    # Load props.yaml which defines slots
+    props_file = SCHEMA_DIR / "props.yaml"
+    if not props_file.exists():
+        logger.warning(f"Props file not found: {props_file}")
+        return custom_value_fields
+
+    with open(props_file, 'r') as f:
+        data = yaml.safe_load(f)
+
+    if not data or 'slots' not in data:
+        logger.warning("No slots found in props.yaml")
+        return custom_value_fields
+
+    for slot_name, slot_data in data['slots'].items():
+        if not slot_data or 'any_of' not in slot_data:
+            continue
+
+        any_of = slot_data.get('any_of', [])
+        if not isinstance(any_of, list):
+            continue
+
+        # Check if any_of contains both enum(s) and string
+        has_enum = False
+        has_string = False
+
+        for option in any_of:
+            if not isinstance(option, dict) or 'range' not in option:
+                continue
+
+            range_value = option['range']
+            if range_value == 'string':
+                has_string = True
+            elif isinstance(range_value, str) and range_value.endswith('Enum'):
+                has_enum = True
+
+        # If field has both enum and string options, it allows custom values
+        if has_enum and has_string:
+            custom_value_fields.add(slot_name)
+
+    logger.info(f"Detected {len(custom_value_fields)} fields that allow both enum and custom values: {sorted(custom_value_fields)}")
+    return custom_value_fields
+
+
 def query_synapse_annotations(syn: Synapse, limit: int = None) -> List[Dict]:
     """
     Query Synapse materialized view for file annotations.
@@ -172,21 +271,29 @@ def query_synapse_annotations(syn: Synapse, limit: int = None) -> List[Dict]:
 def analyze_annotations(
     records: List[Dict],
     enums: Dict[str, Dict[str, Set[str]]],
-    slot_enum_map: Dict[str, List[str]]
+    slot_enum_map: Dict[str, List[str]],
+    custom_value_fields: Set[str] = None
 ) -> Tuple[Dict[str, Dict[str, int]], Dict[str, int]]:
     """
-    Analyze annotations to find free-text values not in schema.
+    Analyze annotations to find free-text values not in schema enums.
+
+    For any field that has enums defined, we suggest adding values that appear
+    in the data but aren't in the enum - these become candidates for curation.
 
     Args:
         records: List of annotation records from Synapse
         enums: Schema enum definitions
         slot_enum_map: Mapping of slots to enum types
+        custom_value_fields: Fields that allow both enum and custom string values (for logging)
 
     Returns:
         Tuple of (suggestions_by_field, filter_suggestions)
         - suggestions_by_field: {field_name: {value: count}}
         - filter_suggestions: {field_name: count of unique values}
     """
+    if custom_value_fields is None:
+        custom_value_fields = set()
+
     suggestions = defaultdict(lambda: defaultdict(int))
     filter_candidates = defaultdict(set)
 
@@ -199,6 +306,10 @@ def analyze_annotations(
 
     for record in records:
         for field, value in record.items():
+            # Skip tool-related fields (reviewed separately in nf-research-tools-schema)
+            if field in TOOL_RELATED_FIELDS:
+                continue
+
             # Skip null/empty values
             if value is None or value == '':
                 continue
@@ -211,8 +322,8 @@ def analyze_annotations(
             # Track for potential filters
             filter_candidates[field].add(value_str)
 
-            # Check if this field maps to an enum
-            if field in slot_enum_map:
+            # Only review fields that have enums AND allow custom strings
+            if field in slot_enum_map and field in custom_value_fields:
                 enum_names = slot_enum_map[field]
 
                 # Check if value is in any of the mapped enums
@@ -223,7 +334,7 @@ def analyze_annotations(
                             value_in_enum = True
                             break
 
-                # If not in enum, add as suggestion
+                # If not in enum, it's a custom string value - suggest for curation
                 if not value_in_enum:
                     suggestions[field][value_str] += 1
 
@@ -314,7 +425,7 @@ def add_values_to_yaml(
         if not target_enum:
             target_enum = enum_types[0]
 
-        logger.info(f"Adding values for field '{field}' to enum '{target_enum}'")
+        logger.info(f"Adding custom values for field '{field}' to enum '{target_enum}'")
 
         try:
             # Find the YAML file
@@ -392,7 +503,11 @@ def format_suggestions_as_markdown(
     """
     md = ["# Annotation Review - Schema Updates from Synapse Annotations\n"]
     md.append("This PR contains automatic updates to the metadata dictionary based on ")
-    md.append(f"analysis of file annotations in Synapse view {MATERIALIZED_VIEW_ID}.\n")
+    md.append(f"analysis of file annotations in Synapse view {MATERIALIZED_VIEW_ID}.\n\n")
+    md.append("**Note:** Tool-related annotation fields (animalModelID, cellLineID, antibodyID, ")
+    md.append("geneticReagentID, tumorType, tissue, organ, species, etc.) are reviewed separately ")
+    md.append("in the [nf-research-tools-schema](https://github.com/nf-osi/nf-research-tools-schema) ")
+    md.append("repository for efficiency.\n")
 
     if files_modified:
         md.append("\n## Files Modified\n")
@@ -409,6 +524,7 @@ def format_suggestions_as_markdown(
         for field in sorted(suggestions.keys()):
             values = suggestions[field]
             md.append(f"\n### Field: `{field}`\n")
+            md.append("*This field allows both enum values and custom strings*\n\n")
 
             # Sort by frequency (descending)
             sorted_values = sorted(values.items(), key=lambda x: x[1], reverse=True)
@@ -514,13 +630,17 @@ def main():
         logger.info("Loading schema enums...")
         enums = load_schema_enums()
         slot_enum_map = load_slot_to_enum_mapping()
+        custom_value_fields = detect_custom_value_fields()
+
+        logger.info(f"Will review {len(custom_value_fields)} fields that allow both enum and custom values")
+        logger.info(f"Fields to review: {', '.join(sorted(custom_value_fields))}")
 
         # Query annotations
         records = query_synapse_annotations(syn, limit=args.limit)
 
         # Analyze annotations
         logger.info("Analyzing annotations...")
-        suggestions, filters = analyze_annotations(records, enums, slot_enum_map)
+        suggestions, filters = analyze_annotations(records, enums, slot_enum_map, custom_value_fields)
 
         # Add values to YAML files (unless --no-edit or --dry-run)
         files_modified = {}

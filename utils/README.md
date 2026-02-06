@@ -1,16 +1,38 @@
-# Model System Sync Documentation
+# Utilities Documentation
 
-This directory contains utilities for syncing model system names (cell lines and animal models) from the NFTC truth table in Synapse.
+This directory contains utilities for maintaining the NF metadata dictionary, including syncing model systems from Synapse and reviewing annotations for schema improvements.
 
 ## Overview
 
 The modelSystemName field in the NF metadata dictionary is automatically synchronized with the authoritative data source: Synapse table `syn26450069`. This ensures that the dictionary always reflects the current set of available cell lines and animal models used in NF research.
 
-## Files
+## Scripts
 
-- `sync_model_systems.py` - Main sync script that fetches data from Synapse and updates enum files
+### sync_model_systems.py
+
+Main sync script that fetches model system data from Synapse and updates enum files.
+
+**Related files:**
 - `../tests/test_model_system_sync.py` - Test suite for the sync functionality
 - `../.github/workflows/weekly-model-system-sync.yml` - GitHub Actions workflow for automated weekly syncing
+
+### review_annotations.py
+
+Analyzes file annotations from Synapse to identify free-text values that should be standardized as enum values.
+
+**Features:**
+- Queries Synapse materialized view for file annotations
+- Excludes tool-related fields (reviewed separately in nf-research-tools-schema)
+- Checks against schema enums including synonyms/aliases
+- Automatically adds frequent values to YAML enum files
+- Generates suggestions for portal search filters
+
+**Related files:**
+- `../docs/annotation-review-workflow.md` - Comprehensive documentation
+- `../.github/workflows/weekly-model-system-sync.yml` - Integrated in weekly workflow
+- See [nf-research-tools-schema](https://github.com/nf-osi/nf-research-tools-schema) for tool annotation review
+
+**Tool Field Exclusion:** As of 2026-02-05, tool-related annotation fields (animalModelID, cellLineID, antibodyID, geneticReagentID, tumorType, tissue, organ, species, etc.) are excluded from this review and handled separately in the nf-research-tools-schema repository for better organization and efficiency.
 
 ## How It Works
 
