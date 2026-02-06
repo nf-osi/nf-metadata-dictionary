@@ -22,7 +22,7 @@ Analyzes file annotations from Synapse to identify free-text values that should 
 
 **Features:**
 - Queries Synapse materialized view for file annotations
-- Excludes tool-related fields (reviewed separately in nf-research-tools-schema)
+- Excludes individualID field (reviewed separately in nf-research-tools-schema)
 - Checks against schema enums including synonyms/aliases
 - Automatically adds frequent values to YAML enum files
 - Generates suggestions for portal search filters
@@ -32,7 +32,9 @@ Analyzes file annotations from Synapse to identify free-text values that should 
 - `../.github/workflows/weekly-model-system-sync.yml` - Integrated in weekly workflow
 - See [nf-research-tools-schema](https://github.com/nf-osi/nf-research-tools-schema) for tool annotation review
 
-**Tool Field Exclusion:** As of 2026-02-05, tool-related annotation fields (animalModelID, cellLineID, antibodyID, geneticReagentID, tumorType, tissue, organ, species, etc.) are excluded from this review and handled separately in the nf-research-tools-schema repository for better organization and efficiency.
+**individualID Exclusion:** As of 2026-02-06, only the `individualID` annotation field is excluded from this review. It is reviewed separately in the nf-research-tools-schema repository, where individualID values from file annotations (syn52702673) are analyzed and suggested as new cell lines or synonyms in the NF Research Tools Central database (syn51730943).
+
+**All other annotation fields** (including tool-related fields like animalModelID, cellLineID, antibodyID, geneticReagentID, tumorType, tissue, organ, species, etc.) are reviewed here, provided they have enums that allow custom values.
 
 ## How It Works
 

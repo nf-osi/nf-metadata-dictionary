@@ -308,27 +308,24 @@ The annotation review functionality is now part of the weekly model system sync 
 
 ### Separation of Concerns
 
-As of 2026-02-05, tool-related annotation fields are reviewed in a **separate workflow** in the [nf-research-tools-schema](https://github.com/nf-osi/nf-research-tools-schema) repository.
+As of 2026-02-06, the `individualID` annotation field is reviewed in a **separate workflow** in the [nf-research-tools-schema](https://github.com/nf-osi/nf-research-tools-schema) repository.
 
-**Fields reviewed in nf-research-tools-schema:**
-- Tool identifiers: `animalModelID`, `cellLineID`, `antibodyID`, `geneticReagentID`
-- Specimen fields: `tumorType`, `tissue`, `organ`, `species`
-- Manifestation fields: `cellLineManifestation`, `animalModelOfManifestation`, `animalModelManifestation`
-- Disease fields: `cellLineGeneticDisorder`, `animalModelGeneticDisorder`, `animalModelDisease`
-- Donor fields: `sex`, `race` (in tool context)
-- Other: `cellLineCategory`, `backgroundStrain`, `backgroundSubstrain`
+**Field reviewed in nf-research-tools-schema:**
+- `individualID` - Individual/specimen identifiers are analyzed from file annotations (syn52702673) and compared against tools in the NF Research Tools Central database (syn51730943). New individualID values are suggested as cell lines (resourceName) or synonyms based on fuzzy matching.
 
 **Why separate?**
-1. **Efficiency**: Tool annotations are reviewed alongside tool database syncs
-2. **Organization**: Tool schema updates are managed in the tools repository
-3. **No duplication**: Avoids reviewing the same fields in two places
-4. **Clear separation**: Metadata dictionary focuses on file/dataset annotations
+1. **Efficiency**: Individual ID annotations are reviewed alongside tool database syncs
+2. **Organization**: Tool schema updates (including cell lines identified via individualID) are managed in the tools repository
+3. **No duplication**: Avoids reviewing the same field in two places
+4. **Clear separation**: Metadata dictionary focuses on file/dataset metadata fields, while tools schema handles resource identifiers
 
-**Workflow Schedule:**
-- **Metadata Dictionary**: Monday 9:00 AM UTC - Reviews non-tool annotation fields
-- **Tools Schema**: Monday 10:00 AM UTC - Reviews tool-related annotation fields
+**All other annotation fields** (including tool-related fields like `animalModelID`, `cellLineID`, `antibodyID`, `geneticReagentID`, `tumorType`, `tissue`, `organ`, `species`, etc.) are reviewed in this metadata dictionary workflow, provided they have enums that allow custom values.
 
-See [nf-research-tools-schema documentation](https://github.com/nf-osi/nf-research-tools-schema/blob/main/docs/TOOL_ANNOTATION_REVIEW.md) for details on the tool annotation review workflow.
+**Workflow Coordination:**
+- **Metadata Dictionary** (Monday 9:00 AM UTC): Reviews non-individualID annotation fields
+- **NF Research Tools Schema** (PR-triggered chain starting Sunday 9:00 AM UTC): Reviews individualID annotations as part of the PubMed mining → tool annotation review → coverage check workflow sequence
+
+See [nf-research-tools-schema workflows](https://github.com/nf-osi/nf-research-tools-schema/blob/main/.github/workflows/README.md) for details on the tool annotation review workflow.
 
 ## Configuration
 

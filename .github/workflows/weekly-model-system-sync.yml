@@ -187,7 +187,7 @@ jobs:
 
             **Source:** Synapse materialized view `${{ env.SYNAPSE_MATERIALIZED_VIEW }}`
 
-            **Note:** Tool-related annotation fields (animalModelID, cellLineID, antibodyID, geneticReagentID, tumorType, tissue, organ, species, etc.) are reviewed separately in the [nf-research-tools-schema](https://github.com/nf-osi/nf-research-tools-schema) repository for efficiency.
+            **Note:** The `individualID` annotation field is reviewed separately in the [nf-research-tools-schema](https://github.com/nf-osi/nf-research-tools-schema) repository, where individualID values are analyzed and suggested as new cell lines or synonyms in the NF Research Tools Central database.
 
             ${{ steps.annotation_review.outputs.has_suggestions == 'true' && '
             **Changes:** New enum values have been automatically added based on annotation frequency (minimum 2 occurrences). Review the changes to ensure they are appropriate before merging.

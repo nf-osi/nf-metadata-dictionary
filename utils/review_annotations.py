@@ -47,41 +47,16 @@ DIST_SCHEMA = Path(__file__).parent.parent / "dist" / "NF.yaml"
 # Fields that allow BOTH enum values AND custom strings will be dynamically detected
 # from the schema using detect_custom_value_fields() function
 
-# Tool-related fields that are reviewed separately in nf-research-tools-schema
-# These fields are excluded from this review to avoid duplication
+# Fields excluded from this review
+# NOTE: As of 2026-02-06, 'individualID' is actively reviewed in nf-research-tools-schema.
+# The tool annotation review workflow analyzes individualID values from syn52702673 and suggests
+# them as new cell lines (resourceName) or synonyms in the NF Research Tools Central database.
+#
+# All other fields (including tool-related fields like animalModelID, cellLineID, tumorType,
+# tissue, organ, species, etc.) are reviewed here if they have enums that allow custom values.
 TOOL_RELATED_FIELDS = {
-    # Tool identifiers
-    'animalModelID',
-    'cellLineID',
-    'antibodyID',
-    'geneticReagentID',
-
-    # Specimen/biobank fields
-    'tumorType',
-    'tissue',
-    'organ',
-    'species',
-
-    # Manifestation fields
-    'cellLineManifestation',
-    'animalModelOfManifestation',
-    'animalModelManifestation',
-
-    # Disease fields
-    'cellLineGeneticDisorder',
-    'animalModelGeneticDisorder',
-    'animalModelDisease',
-
-    # Donor fields (when used in tool context)
-    'sex',
-    'race',
-
-    # Cell line specific
-    'cellLineCategory',
-
-    # Other tool-related
-    'backgroundStrain',
-    'backgroundSubstrain',
+    # Individual identifiers (actively reviewed in nf-research-tools-schema)
+    'individualID',
 }
 
 # Minimum frequency threshold for suggesting new enum values
