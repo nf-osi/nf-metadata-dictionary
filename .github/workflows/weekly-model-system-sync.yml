@@ -1,4 +1,4 @@
-name: Weekly Model System Sync
+name: Weekly Model System Sync and Annotation Review
 
 on:
   schedule:
@@ -6,10 +6,27 @@ on:
     - cron: '0 9 * * 1'
   workflow_dispatch:
     # Allow manual triggering
+    inputs:
+      annotation_limit:
+        description: 'Limit annotation records (for testing)'
+        required: false
+        type: string
+        default: ''
+      skip_model_sync:
+        description: 'Skip model system sync (annotations only)'
+        required: false
+        type: boolean
+        default: false
+      skip_annotation_review:
+        description: 'Skip annotation review (model sync only)'
+        required: false
+        type: boolean
+        default: false
 
 env:
   SYNAPSE_TABLE_ID: syn26450069
   SYNAPSE_TOOLS_TABLE_ID: syn51730943
+  SYNAPSE_MATERIALIZED_VIEW: syn52702673
 
 jobs:
   sync-model-systems:
@@ -36,23 +53,93 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install synapseclient pyyaml
+          pip install synapseclient pyyaml pandas
 
       - name: Sync model system data
+        if: github.event.inputs.skip_model_sync != 'true'
+        env:
+          SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
         run: |
           python utils/sync_model_systems.py --synapse-id ${{ env.SYNAPSE_TABLE_ID }}
-      
-      - name: Check for changes
+
+      # ============================================================
+      # ANNOTATION REVIEW - Review Synapse file annotations
+      # ============================================================
+
+      - name: Review Synapse annotations
+        if: github.event.inputs.skip_annotation_review != 'true'
+        id: annotation_review
+        env:
+          SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
+        run: |
+          echo "🔍 Reviewing Synapse annotations from view ${{ env.SYNAPSE_MATERIALIZED_VIEW }}..."
+
+          # Build command
+          CMD="python utils/review_annotations.py"
+
+          # Add limit if specified (for manual testing)
+          if [ -n "${{ github.event.inputs.annotation_limit }}" ]; then
+            CMD="$CMD --limit ${{ github.event.inputs.annotation_limit }}"
+            echo "📊 Limiting to ${{ github.event.inputs.annotation_limit }} records for testing"
+          fi
+
+          echo "Running: $CMD"
+          $CMD
+
+          # Check if suggestions were generated
+          if [ -f annotation_suggestions.json ]; then
+            SUGGESTION_COUNT=$(python3 -c "import json; data = json.load(open('annotation_suggestions.json')); print(len(data.get('suggestions', {})))")
+            echo "suggestion_count=$SUGGESTION_COUNT" >> $GITHUB_OUTPUT
+
+            if [ "$SUGGESTION_COUNT" -gt 0 ]; then
+              # Check if any YAML files were modified
+              if git diff --quiet modules/; then
+                echo "has_suggestions=false" >> $GITHUB_OUTPUT
+                echo "ℹ️  All suggested values already exist in schema"
+              else
+                echo "has_suggestions=true" >> $GITHUB_OUTPUT
+                echo "✅ Found $SUGGESTION_COUNT fields with annotation suggestions"
+                echo "✅ Modified YAML enum files with new values"
+
+                # Show what was modified
+                echo ""
+                echo "📝 Modified files:"
+                git diff --name-only modules/
+
+                # Show preview
+                if [ -f annotation_suggestions.md ]; then
+                  echo ""
+                  echo "📝 Summary:"
+                  head -n 40 annotation_suggestions.md
+                fi
+              fi
+            else
+              echo "has_suggestions=false" >> $GITHUB_OUTPUT
+              echo "ℹ️  No new annotation suggestions - all values match schema"
+            fi
+          else
+            echo "has_suggestions=false" >> $GITHUB_OUTPUT
+            echo "⚠️  No suggestion file generated"
+          fi
+
+      # ============================================================
+      # CHECK FOR CHANGES AND REBUILD ARTIFACTS
+      # ============================================================
+
+      - name: Check for changes from both sources
         id: changes
         run: |
-          if [[ $(git status --porcelain modules/Sample/CellLineModel.yaml modules/Sample/AnimalModel.yaml modules/Experiment/Antibody.yaml modules/Experiment/GeneticReagent.yaml) ]]; then
+          if [[ $(git status --porcelain modules/) ]]; then
             echo "changes=true" >> $GITHUB_OUTPUT
-            echo "Changes detected in model system and tool files"
+            echo "Changes detected in modules/ from model sync and/or annotation review"
+            echo ""
+            echo "Modified files:"
+            git status --porcelain modules/
           else
             echo "changes=false" >> $GITHUB_OUTPUT
             echo "No changes detected"
           fi
-      
+
       - name: Rebuild data model artifacts
         if: steps.changes.outputs.changes == 'true'
         run: |
@@ -61,66 +148,99 @@ jobs:
           git clone --depth 1 https://github.com/anngvu/retold.git
           pip install linkml==v1.8.1
           npm install -g json-dereference-cli
-          
+
           # Rebuild the data model
           make NF.yaml
-          bb ./retold/retold as-jsonld --dir modules --out NF.jsonld 
-      
+          bb ./retold/retold as-jsonld --dir modules --out NF.jsonld
+
+      # ============================================================
+      # CREATE COMBINED PULL REQUEST
+      # ============================================================
+
       - name: Create Pull Request
         if: steps.changes.outputs.changes == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: weekly sync of model system names and tool links from Synapse"
-          title: "Weekly Model System Sync with Tool Links - ${{ steps.date.outputs.date }}"
+          commit-message: "chore: weekly Synapse sync and annotation review"
+          title: "Weekly Sync: Model Systems and Annotation Review - ${{ steps.date.outputs.date }}"
           body: |
-            This PR contains the weekly sync of model system names and tool links from the NFTC truth tables.
+            This PR contains the weekly sync of model systems and annotation review suggestions.
+
+            **Sync Date:** ${{ steps.date.outputs.date }}
+
+            ---
+
+            ## Model System Sync
+
+            ${{ github.event.inputs.skip_model_sync != 'true' && '✅ **Updated model systems and tools from Synapse tables**' || '⏭️ Skipped' }}
 
             **Sources:**
             - Model systems: `${{ env.SYNAPSE_TABLE_ID }}`
             - Tool links: `${{ env.SYNAPSE_TOOLS_TABLE_ID }}`
 
-            **Sync Date:** ${{ steps.date.outputs.date }}
+            ---
 
-            ### Changes Made:
-            - Updated cell line models in `modules/Sample/CellLineModel.yaml`
-            - Updated animal models in `modules/Sample/AnimalModel.yaml`
-            - Updated antibodies in `modules/Experiment/Antibody.yaml`
-            - Updated genetic reagents in `modules/Experiment/GeneticReagent.yaml`
-            - Added/updated `source` links to NF Tools Central detail pages
-            - Rebuilt data model artifacts (`NF.jsonld`, `dist/NF.yaml`)
+            ## Annotation Review
 
-            ### Files Modified:
-            - `modules/Sample/CellLineModel.yaml`
-            - `modules/Sample/AnimalModel.yaml`
-            - `modules/Experiment/Antibody.yaml`
-            - `modules/Experiment/GeneticReagent.yaml`
-            - `NF.jsonld`
-            - `dist/NF.yaml`
+            ${{ steps.annotation_review.outputs.has_suggestions == 'true' && format('✅ **Found {0} fields with suggested additions**', steps.annotation_review.outputs.suggestion_count) || (github.event.inputs.skip_annotation_review != 'true' && '✓ No new annotation suggestions - all values match schema' || '⏭️ Skipped') }}
 
-            ### What This Includes:
-            - ✅ Cell line and animal model names from NFTC database (syn26450069)
-            - ✅ Antibody and genetic reagent resources from NF Tools Central (syn51730943)
-            - ✅ Source links to NF Tools Central detail pages (using `source` field)
-            - ✅ RRID identifiers where available
-            - ✅ Descriptions from database
+            **Source:** Synapse materialized view `${{ env.SYNAPSE_MATERIALIZED_VIEW }}`
 
-            This sync ensures that the metadata dictionary stays current with the latest cell lines and animal models available in the NFTC research tools database, including proper attribution links.
+            **Note:** The `individualID` annotation field is reviewed separately in the [nf-research-tools-schema](https://github.com/nf-osi/nf-research-tools-schema) repository, where individualID values are analyzed and suggested as new cell lines or synonyms in the NF Research Tools Central database.
 
-            **Automated sync via:** `.github/workflows/weekly-model-system-sync.yml`
-          branch: sync/model-systems-${{ steps.date.outputs.date-short }}
+            ${{ steps.annotation_review.outputs.has_suggestions == 'true' && '
+            **Changes:** New enum values have been automatically added based on annotation frequency (minimum 2 occurrences). Review the changes to ensure they are appropriate before merging.
+
+            See `annotation_suggestions.json` and `annotation_suggestions.md` for details and frequency counts.' || '' }}
+
+            ---
+
+            ## Artifacts Rebuilt
+
+            ✅ **Data model artifacts have been rebuilt** to reflect all changes from both sources:
+            - `dist/NF.yaml` - Complete merged schema
+            - `NF.jsonld` - JSON-LD representation
+
+            ---
+
+            **Automated via:** `.github/workflows/weekly-model-system-sync.yml`
+          branch: sync/weekly-maintenance-${{ steps.date.outputs.date-short }}
           labels: |
             automated
-            model-systems
-            sync
+            weekly-sync
           draft: false
       
-      - name: Comment on success
-        if: steps.changes.outputs.changes == 'true'
+      - name: Workflow summary
+        if: always()
         run: |
-          echo "✅ Model system sync completed successfully. A pull request has been created with the updates."
-      
-      - name: Comment on no changes  
-        if: steps.changes.outputs.changes == 'false'
-        run: |
-          echo "ℹ️  Model system sync completed. No changes were needed - the dictionary is up to date."
+          echo "### Weekly Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "#### Model System Sync" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event.inputs.skip_model_sync }}" = "true" ]; then
+            echo "⏭️ Skipped (manual override)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ Ran model system sync from Synapse tables" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "#### Annotation Review" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event.inputs.skip_annotation_review }}" = "true" ]; then
+            echo "⏭️ Skipped (manual override)" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.annotation_review.outputs.has_suggestions }}" = "true" ]; then
+            echo "✅ Found ${{ steps.annotation_review.outputs.suggestion_count }} fields with suggestions" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✓ No new annotation suggestions" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "#### Changes and Artifacts" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.changes.outputs.changes }}" = "true" ]; then
+            echo "✅ Changes detected from sync operations" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Data model artifacts rebuilt" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "📝 **A pull request has been created with the updates**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✓ No changes needed - dictionary is up to date" >> $GITHUB_STEP_SUMMARY
+          fi

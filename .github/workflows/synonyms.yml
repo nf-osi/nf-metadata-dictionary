@@ -37,6 +37,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: main  # Always checkout main branch, even when triggered by release
 
       - name: Print workflow info
         run: |
@@ -168,6 +170,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          base: main  # Explicitly set base branch for PRs (required when triggered by release)
           commit-message: |
             Update synonyms: ${{ github.event.inputs.action }}
             
