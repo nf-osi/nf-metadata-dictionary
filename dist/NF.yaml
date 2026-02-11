@@ -952,7 +952,7 @@ slots:
     required: false
     source: https://github.com/NCI-GDC/gdcdictionary/tree/develop/src/gdcdictionary/schemas
   platform:
-    description: A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data.
+    description: A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data. Select from the recommended list when available or enter a custom name.
     any_of:
       - range: SequencingPlatformEnum
       - range: ArrayPlatformEnum
@@ -963,6 +963,7 @@ slots:
       - range: FlowCytometryPlatformEnum
       - range: ImagingSystemPlatformEnum
       - range: OtherPlatformEnum
+      - range: string
     title: Platform
     required: true
   plexiformNeurofibromas:
