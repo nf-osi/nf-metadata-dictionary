@@ -144,14 +144,17 @@ def _create_columns_from_json_schema(json_schema: dict[str, Any]) -> list[Column
         maximum_size = None
         enum_values = None
 
+        # Don't set enums for created fileview; this is not well-handled bc of large enums
+
         # Extract enum values if present (limit to first 1000)
-        if "enum" in prop_schema:
-            enum_values = [str(v) for v in prop_schema["enum"][:1000]]
+        # Commented out due to Synapse API limits on enum values (1000)
+        # if "enum" in prop_schema:
+        #    enum_values = [str(v) for v in prop_schema["enum"][:1000]]
 
         # For list types, check if enum is nested in items
-        if column_type in LIST_TYPE_DICT.values() and "items" in prop_schema:
-            if isinstance(prop_schema["items"], dict) and "enum" in prop_schema["items"]:
-                enum_values = [str(v) for v in prop_schema["items"]["enum"][:1000]]
+        # if column_type in LIST_TYPE_DICT.values() and "items" in prop_schema:
+        #    if isinstance(prop_schema["items"], dict) and "enum" in prop_schema["items"]:
+        #        enum_values = [str(v) for v in prop_schema["items"]["enum"][:1000]]
 
         if column_type == "STRING":
             maximum_size = 250
