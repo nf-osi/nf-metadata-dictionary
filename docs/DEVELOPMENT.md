@@ -21,6 +21,7 @@ Developer-oriented documentation for the NF Metadata Dictionary. For general ove
 2. [JSON Schema Integration with Synapse](#json-schema-integration-with-synapse)
 3. [Schema Generation & Management](#schema-generation--management)
 4. [Curation Tasks](#curation-tasks)
+5. [Synapse Enum Value Limits](#synapse-enum-value-limits)
 
 ---
 
@@ -291,6 +292,19 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_recordset_task.py \
 **Notes:**
 - **Project ID** is automatically derived from the folder
 - **Upsert keys:** Specify field names that uniquely identify each record. This enables updates to existing records rather than creating duplicates. Common choices: `study`, `name`, `individualID`, etc.
+
+---
+
+## Synapse Enum Value Limits
+
+Synapse has a **hard API limit of 100 values for annotation keys**. 
+
+Some reference catalogs in this model (e.g., `CellLineModel`, `Institution`) intentionally exceed this limit. 
+While they work for documentation and schema validation, there are limitations in the context of Synapse web UI or when creating annotations via API.
+
+**Best Practices:**
+- **Monitor enum growth:** Run `python utils/check_enum_sizes.py` to check current sizes.
+- **Large vocabularies:** For lists >100 values, use string instead of enum list.
 
 ---
 
