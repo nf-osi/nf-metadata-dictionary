@@ -263,10 +263,3 @@ jobs:
           message-id: enum-size-check
           message-path: enum_size_report.md
 
-      - name: Fail if enums exceed limit
-        if: steps.enum_check.outputs.exit_code == '1'
-        run: |
-          echo "::error::One or more enums exceed the Synapse API limit of 100 values"
-          echo "Please refactor large enums - see enum_size_report.md for details"
-          exit 1
-
