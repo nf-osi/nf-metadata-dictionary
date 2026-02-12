@@ -21,7 +21,7 @@ Developer-oriented documentation for the NF Metadata Dictionary. For general ove
 2. [JSON Schema Integration with Synapse](#json-schema-integration-with-synapse)
 3. [Schema Generation & Management](#schema-generation--management)
 4. [Curation Tasks](#curation-tasks)
-5. [Synapse Enum Value Limits](#synapse-enum-value-limits)
+5. [Schema Limits & Validation](#schema-limits--validation)
 
 ---
 
@@ -295,16 +295,51 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_recordset_task.py \
 
 ---
 
-## Synapse Enum Value Limits
+## Schema Limits & Validation
 
-Synapse has a **hard API limit of 100 values for annotation keys**. 
+The NF Metadata Dictionary must comply with **Synapse platform limits**:
 
-Some reference catalogs in this model (e.g., `CellLineModel`, `Institution`) intentionally exceed this limit. 
-While they work for documentation and schema validation, there are limitations in the context of Synapse web UI or when creating annotations via API.
+### Platform Limits
+- **Enum values:** 100 values per annotation field (API limit for annotations)
+- **Row size:** 64KB per row (file view table limit)
+- **String lengths:** Vary by context (JSON schema vs file views)
 
-**Best Practices:**
-- **Monitor enum growth:** Run `python utils/check_enum_sizes.py` to check current sizes.
-- **Large vocabularies:** For lists >100 values, use string instead of enum list.
+### File View Configuration (Stricter)
+
+File views have a **64KB row limit**, requiring conservative column sizes:
+
+```
+STRING: 80 chars (covers 100% of enum values, max: 77 chars)
+LIST: 80 chars × 40 items max
+name column: 256 chars
+Largest schema: ~52.7KB (PortalDataset, Superdataset)
+```
+
+**Applied in:** `utils/json_schema_entity_view.py`, `utils/create_curation_task.py`
+
+### JSON Schema Validation (More Permissive)
+
+JSON schemas support longer strings and larger enums without the 64KB constraint:
+- Enum sizes: Some exceed 100 values (e.g., `CellLineModel`: 638, `Institution`: 335)
+- String lengths: No strict character limits beyond what's semantically meaningful
+- Used for: Data validation, dropdown generation, documentation
+
+**Applied in:** `registered-json-schemas/*.json`
+
+### Validation Tool
+
+Run comprehensive validation with:
+```bash
+python utils/check_schema_limits.py
+```
+
+This checks:
+- **Enum sizes** against 100-value annotation limit
+- **Enum string lengths** against file view column limits (80 chars)
+- **Row sizes** against 64KB file view limit
+- Documents current bytes used per schema
+
+**Key Distinction:** JSON schemas can have large enums (>100 values) and long strings (>80 chars) for validation purposes. File views must use stricter limits to stay under the 64KB row constraint.
 
 ---
 

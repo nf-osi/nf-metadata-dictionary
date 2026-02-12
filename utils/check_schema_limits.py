@@ -2,9 +2,12 @@
 """
 Validate schema against Synapse platform limits.
 
-Checks enum sizes, string lengths, and row sizes with current configuration:
+Checks against FILE VIEW configuration limits (stricter than JSON schema):
 - STRING: 80 chars, LIST: 80 chars × 40 items, name: 256 chars
-- Row limit: 64KB, Enum limit: 100 values
+- Row limit: 64KB, Enum limit: 100 values (for annotations)
+
+Note: JSON schemas can have larger enums and longer strings for validation.
+File views require stricter limits due to 64KB row size constraint.
 """
 
 import json
@@ -144,9 +147,11 @@ def format_markdown(enum_data, string_data, row_data) -> str:
 
     # Config
     lines.extend([
-        "## Configuration",
+        "## File View Configuration (Synapse Platform Limits)",
         f"- STRING: {CONFIG['STRING_MAX_SIZE']} chars, LIST: {CONFIG['LIST_MAX_SIZE']} chars × {CONFIG['LIST_MAX_LENGTH']} items, name: {CONFIG['NAME_MAX_SIZE']} chars",
-        f"- Limits: {CONFIG['ROW_LIMIT']:,} bytes/row, {CONFIG['ENUM_LIMIT']} values/enum",
+        f"- Limits: {CONFIG['ROW_LIMIT']:,} bytes/row, {CONFIG['ENUM_LIMIT']} values/enum (annotations)",
+        "",
+        "_Note: These are stricter than JSON schema limits due to 64KB row size constraint._",
         ""
     ])
 

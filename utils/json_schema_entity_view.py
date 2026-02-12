@@ -152,10 +152,10 @@ def _create_columns_from_json_schema(json_schema: dict[str, Any]) -> list[Column
         # 3. Many schemas exceed Synapse's 64KB row size limit when enums are set
         # 4. The curator grid uses the bound JSON Schema for filtering/validation
 
-        # Use 80-char limit to stay under Synapse's 64KB row limit
-        # This provides 100% coverage of all actual enum values
-        # Analysis: mean=12-15 chars, 99th percentile=41-46 chars, max=77 chars
-        # Max row size with 80-char limit: 52,460 bytes (82% of 64KB limit)
+        # File view limits (STRICTER than JSON schema to fit 64KB row constraint)
+        # JSON schemas support larger enums (e.g., 638 values) and longer strings
+        # File views need conservative limits: mean=12-15 chars, max=77 chars
+        # 80-char limit provides 100% coverage while keeping row size at ~52.7KB
         if column_type == ColumnType.STRING:
             maximum_size = 80  # Covers 100% of values (max is 77 chars)
         if column_type in LIST_TYPE_DICT.values():
