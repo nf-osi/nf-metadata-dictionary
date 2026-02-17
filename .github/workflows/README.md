@@ -2,6 +2,31 @@
 
 This directory contains automated workflows for maintaining the NF metadata dictionary.
 
+## Overview
+
+The NF metadata dictionary supports two main automation systems:
+
+1. **Schema Maintenance** - Automatic updates to enum values and tool links
+2. **Synapse Materialized Views** - Context-specific views with enriched clinical metadata (HPO phenotypes, MONDO codes)
+
+### Synapse Materialized Views
+
+The repository includes scripts to create context-specific Synapse materialized views from the main entity view (syn16858331):
+
+- **Clinical Data View** - Human patient data with HPO phenotype enrichment from tumorType column
+- **Animal Model View** - Model organism experiments
+- **Cell Line View** - In vitro cell systems
+- **Organoid View** - Advanced 3D culture models
+- **PDX View** - Patient-derived xenografts
+
+**Key Feature:** HPO phenotypes are automatically mapped from the `tumorType` column in syn16858331, providing both:
+- HPO codes (e.g., `HP:0009732`) for technical queries
+- Human-readable labels (e.g., "Plexiform neurofibroma") for clinical searches
+
+**Documentation:** See `docs/MODEL_FILTERS_GUIDE.md` for implementation details and `scripts/create_model_materialized_views.py` for the enrichment logic.
+
+---
+
 ## Update NF Tools Central Links
 
 **File:** `update-tool-links.yml`
