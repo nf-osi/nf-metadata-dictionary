@@ -55,10 +55,14 @@ Each context-specific view includes these additional computed columns:
 | Column Name | Type | Description | Example Values |
 |-------------|------|-------------|----------------|
 | `Data Context` | STRING | Data source category | "clinical", "animal_model", "cell_line", "organoid", "pdx" |
-| `Phenotypes` | STRING (JSON) | List of phenotype names (human-readable) | `["Cafe-au-lait spot", "Plexiform neurofibroma"]` |
-| `Phenotype HPO Codes` | STRING (JSON) | List of HPO terms for present phenotypes | `["HP:0000957", "HP:0009732"]` |
-| `Phenotype Count` | INTEGER | Number of documented phenotypes | 5 |
-| `Diagnosis MONDO Code` | STRING | MONDO ontology term for diagnosis | "MONDO:0007617" |
+| `Phenotypes` | STRING (JSON) | List of phenotype names (human-readable), determined from `tumorType` column in syn16858331 | `["Cafe-au-lait spot", "Plexiform neurofibroma"]` |
+| `Phenotype HPO Codes` | STRING (JSON) | List of HPO terms for present phenotypes, mapped from `tumorType` column in syn16858331 | `["HP:0000957", "HP:0009732"]` |
+| `Phenotype Count` | INTEGER | Number of documented phenotypes from `tumorType` | 5 |
+| `Tumor Type NCIT Codes` | STRING (JSON) | List of NCIT codes for tumor manifestations from `tumorType` column | `["NCIT:C3798", "NCIT:C9030"]` |
+| `Tumor Type MONDO Codes` | STRING (JSON) | List of MONDO codes for tumor manifestations from `tumorType` column | `["MONDO:0003306"]` |
+| `Tumor Type OMIM Codes` | STRING (JSON) | List of OMIM codes for tumor manifestations from `tumorType` column | `["OMIM:607785"]` |
+| `Diagnosis MONDO Code` | STRING | MONDO ontology term for underlying disease | "MONDO:0007617" |
+| `Diagnosis NCIT Code` | STRING | NCIT ontology term for underlying disease | "NCIT:C6557" |
 | `Diagnosis` | STRING | Human-readable diagnosis name | "Neurofibromatosis type 1" |
 | `Has Treatment` | BOOLEAN | Whether treatment information exists | true/false |
 | `Age Group` | STRING | Age group classification | "infant", "child", "adolescent", "adult" |
@@ -66,8 +70,8 @@ Each context-specific view includes these additional computed columns:
 
 ### Benefits of Enriched Columns
 
-1. **Clinician-Friendly Phenotypes**: Search using clinical terms like "Plexiform neurofibroma" instead of HPO codes
-2. **Dual Phenotype Search**: Filter by readable names (`Phenotypes`) or technical codes (`Phenotype HPO Codes`)
+1. **Clinician-Friendly Phenotypes**: Search using clinical terms like "Plexiform neurofibroma" instead of HPO codes (derived from `tumorType` column in syn16858331)
+2. **Dual Phenotype Search**: Filter by readable names (`Phenotypes`) or technical codes (`Phenotype HPO Codes`), both mapped from `tumorType`
 3. **MONDO Codes**: Standardized diagnosis filtering across international databases
 4. **Dual Diagnosis Search**: Filter by ontology codes (`Diagnosis MONDO Code`) or readable names (`Diagnosis`)
 5. **User-Friendly Names**: All enriched columns have friendly display names with proper capitalization
@@ -281,9 +285,7 @@ test_record = {
     "species": "Homo sapiens",
     "diagnosis": "Neurofibromatosis type 1",
     "age": 14,
-    "cafeaulaitMacules": "present",
-    "plexiformNeurofibromas": "few",
-    "learningDisability": "present",
+    "tumorType": "Plexiform Neurofibroma",  # HPO phenotypes determined from this column
     "tumorTreatmentStatus": "targeted therapy"
 }
 
@@ -298,10 +300,12 @@ print(f"Age group: {enriched['Age Group']}")
 
 # Expected output:
 # Data context: clinical
-# HPO phenotypes: ["HP:0000957", "HP:0009732", "HP:0001328"]
-# Phenotype count: 3
-# MONDO code: MONDO:0007617
-# Age category: adolescent
+# Phenotypes: ["Plexiform neurofibroma"]
+# Phenotype HPO codes: ["HP:0009732"]
+# Phenotype count: 1
+# Diagnosis MONDO code: MONDO:0007617
+# Diagnosis: Neurofibromatosis type 1
+# Age group: adolescent
 ```
 
 ---
@@ -505,9 +509,11 @@ When HPO/MONDO terms are updated in the metadata dictionary:
 2. Re-run enrichment script
 3. Refresh materialized views
 
+**Note**: HPO phenotypes are determined from the `tumorType` column in source view syn16858331.
+
 ```python
-# Add new HPO term
-self.phenotype_hpo_map["newManifestation"] = "HP:XXXXXXX"
+# Add new HPO term for tumorType values
+self.phenotype_hpo_map["New Tumor Type"] = "HP:XXXXXXX"
 
 # Add new MONDO term
 self.diagnosis_mondo_map["New NF Subtype"] = "MONDO:XXXXXXX"
@@ -614,7 +620,7 @@ Solution: Ensure you have EDIT permissions on parent folder syn26451327
 
 **Issue**: HPO phenotypes not populating
 ```
-Solution: Check source field names match metadata dictionary exactly
+Solution: Ensure the tumorType column in syn16858331 contains valid values that match the phenotype_hpo_map in ClinicalMetadataEnricher
 ```
 
 **Issue**: Query performance still slow
@@ -630,9 +636,184 @@ Solution: Add indexes on frequently filtered columns ("Diagnosis MONDO Code", "D
 
 ---
 
+## Tumor Type to HPO Phenotype Mappings
+
+The following tumor types from the `tumorType` column in syn16858331 are automatically mapped to HPO codes:
+
+| Tumor Type | HPO Code | Friendly Label |
+|------------|----------|----------------|
+| Plexiform Neurofibroma | HP:0009732 | Plexiform neurofibroma |
+| plexiform neurofibroma | HP:0009732 | Plexiform neurofibroma |
+| Cutaneous Neurofibroma | HP:0001067 | Cutaneous neurofibroma |
+| cutaneous neurofibroma | HP:0001067 | Cutaneous neurofibroma |
+| Dermal Neurofibroma | HP:0001067 | Cutaneous neurofibroma |
+| dermal neurofibroma | HP:0001067 | Cutaneous neurofibroma |
+| Neurofibroma | HP:0001067 | Cutaneous neurofibroma |
+| neurofibroma | HP:0001067 | Cutaneous neurofibroma |
+| Nodular Neurofibroma | HP:0009729 | Nodular neurofibroma |
+| Optic Nerve Glioma | HP:0009734 | Optic nerve glioma |
+| optic glioma | HP:0009734 | Optic nerve glioma |
+| Optic Pathway Glioma | HP:0009734 | Optic nerve glioma |
+| optic pathway glioma | HP:0009734 | Optic nerve glioma |
+| Low Grade Glioma | HP:0009734 | Optic nerve glioma |
+| Vestibular Schwannoma | HP:0009589 | Vestibular schwannoma |
+| vestibular schwannoma | HP:0009589 | Vestibular schwannoma |
+| Meningioma | HP:0002858 | Meningioma |
+| meningioma | HP:0002858 | Meningioma |
+| Spinal Neurofibroma | HP:0009735 | Spinal neurofibroma |
+| spinal neurofibroma | HP:0009735 | Spinal neurofibroma |
+| MPNST | HP:0009733 | Malignant peripheral nerve sheath tumor |
+| Malignant Peripheral Nerve Sheath Tumor | HP:0009733 | Malignant peripheral nerve sheath tumor |
+| High Grade MPNST | HP:0009733 | Malignant peripheral nerve sheath tumor |
+| Schwannoma | HP:0100008 | Schwannoma |
+| schwannoma | HP:0100008 | Schwannoma |
+
+**Tumor types needing verification:**
+- Low-Grade Glioma NOS (198 samples) - currently mapped to NCIT:C4936
+- High-Grade Glioma NOS (117 samples) - currently mapped to NCIT:C4051
+- Pilocytic Astrocytoma (109 samples) - currently mapped to NCIT:C3798
+- Juvenile Myelomonocytic Leukemia (8 samples) - mapped to OMIM:607785
+
+---
+
+## Tumor Type to NCIT Code Mappings
+
+In addition to HPO codes, tumor manifestations are also mapped to NCIT (NCI Thesaurus) codes:
+
+| Tumor Type | NCIT Code | Description |
+|------------|----------|-------------|
+| Plexiform Neurofibroma | NCIT:C3798 | Plexiform Neurofibroma |
+| Cutaneous Neurofibroma | NCIT:C3797 | Cutaneous Neurofibroma |
+| Neurofibroma (generic) | NCIT:C3272 | Neurofibroma |
+| MPNST | NCIT:C9030 | Malignant Peripheral Nerve Sheath Tumor |
+| Malignant Peripheral Nerve Sheath Tumor | NCIT:C9030 | Malignant Peripheral Nerve Sheath Tumor |
+| Schwannoma | NCIT:C3269 | Schwannoma |
+| Vestibular Schwannoma | NCIT:C3276 | Vestibular Schwannoma |
+| Meningioma | NCIT:C3230 | Meningioma |
+| Optic Nerve Glioma | NCIT:C4688 | Optic Nerve Glioma |
+| Optic Pathway Glioma | NCIT:C4537 | Optic Pathway Glioma (verified) |
+| Low-Grade Glioma | NCIT:C4936 | Low-Grade Glioma |
+| High-Grade Glioma | NCIT:C4051 | High-Grade Glioma |
+| Pilocytic Astrocytoma | NCIT:C3798 | Pilocytic Astrocytoma |
+| Sarcoma | NCIT:C9118 | Sarcoma (verified) |
+
+## Tumor Type to OMIM Code Mappings
+
+Some tumor manifestations use OMIM codes:
+
+| Tumor Type | OMIM Code | Description |
+|------------|----------|-------------|
+| Juvenile Myelomonocytic Leukemia | OMIM:607785 | Juvenile Myelomonocytic Leukemia |
+| JMML | OMIM:607785 | Juvenile Myelomonocytic Leukemia |
+
+---
+
+## Multiple Ontology Support
+
+Each tumor type may have multiple ontology codes across different systems:
+
+**Example: Plexiform Neurofibroma**
+- HPO: `HP:0009732` (phenotype description)
+- NCIT: `NCIT:C3798` (tumor classification)
+
+**Example: Juvenile Myelomonocytic Leukemia**
+- OMIM: `OMIM:607785` (genetic disorder)
+- NCIT: (add if available)
+
+This multi-ontology approach provides:
+- **HPO**: Clinical phenotype descriptions for symptom-based queries
+- **NCIT**: Standardized cancer/tumor terminology for oncology systems
+- **OMIM**: Genetic disorder classifications for hereditary conditions
+- **MONDO**: Disease ontology for rare diseases (primarily used for diagnoses)
+
+**Notes:**
+- Matching is case-insensitive
+- Multiple tumor types per record are supported (JSON arrays)
+- Additional mappings can be added to `phenotype_hpo_map` in the enrichment script
+
+### Adding New Tumor Type Mappings
+
+To add a new tumor type mapping:
+
+1. **Verify HPO code** at https://hpo.jax.org/
+2. **Add to `phenotype_hpo_map`** in `scripts/create_model_materialized_views.py`:
+   ```python
+   "New Tumor Type": "HP:XXXXXXX",
+   ```
+3. **Add friendly label to `hpo_label_map`**:
+   ```python
+   "HP:XXXXXXX": "Friendly tumor name",
+   ```
+4. **Test with validation script**:
+   ```bash
+   python test_views/test_tumor_type_enrichment.py
+   ```
+5. **Re-run enrichment** and refresh materialized views
+
+---
+
+## Testing and Validation
+
+### Local Testing (No Synapse Connection Required)
+
+#### Dry-Run Test
+Test view definitions without creating them:
+
+```bash
+python scripts/create_model_materialized_views.py --parent syn26451327 --dry-run
+```
+
+This validates:
+- All 5 view definitions
+- SQL filter queries
+- Enriched column specifications
+- Facet configurations
+
+#### Enrichment Logic Test
+Test the tumorType → HPO mapping logic:
+
+```bash
+python test_views/test_tumor_type_enrichment.py
+```
+
+This validates:
+- Single tumor type extraction
+- Multiple tumor types (arrays)
+- JSON string array parsing
+- Case-insensitive matching
+- Null/empty value handling
+- All enriched column population
+
+### Expected Test Results
+
+All tests should pass with output similar to:
+
+```
+✓ All test cases executed successfully
+✓ tumorType column is now the source for HPO phenotypes
+✓ Handles single values, arrays, and JSON strings
+✓ Case-insensitive matching works
+✓ Enrichment columns populated correctly
+```
+
+### Validation Checklist
+
+Before production deployment:
+
+- [ ] Dry-run test passes
+- [ ] Enrichment logic test passes (7/7 test cases)
+- [ ] All 5 views defined correctly
+- [ ] Tumor type mappings cover common values in syn16858331
+- [ ] Documentation updated
+- [ ] Synapse credentials configured
+- [ ] Write permissions verified for syn26451327
+
+---
+
 ## References
 
 - [Synapse Entity Views Documentation](https://help.synapse.org/docs/Views.2011070739.html)
 - [GA4GH Phenopacket Mapping](./PHENOPACKET_MAPPING.md)
 - [HPO Browser](https://hpo.jax.org/)
 - [MONDO Disease Ontology](https://mondo.monarchinitiative.org/)
+- [GitHub Workflows README](../.github/workflows/README.md)

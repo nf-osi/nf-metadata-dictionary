@@ -8,11 +8,13 @@ This script:
 3. Creates context-specific materialized views under parent syn26451327
 
 Context-specific views:
-- Clinical data (human patient data with HPO phenotypes)
+- Clinical data (human patient data with HPO phenotypes from tumorType column)
 - Animal model data (model organism experiments)
 - Cell line data (in vitro cell systems)
 - Advanced cellular models (organoids, spheroids)
 - Patient-derived systems (PDX, patient-derived organoids)
+
+Note: HPO phenotypes are determined from the tumorType column in syn16858331.
 
 Usage:
     python scripts/create_model_materialized_views.py --parent syn26451327 --dry-run
@@ -42,44 +44,69 @@ logger = logging.getLogger(__name__)
 
 
 class ModelMetadataEnricher:
-    """Enriches metadata with Phenopacket-inspired structured fields for all model types."""
+    """
+    Enriches metadata with Phenopacket-inspired structured fields for all model types.
+
+    HPO phenotypes are determined from the tumorType column in source view syn16858331.
+    """
 
     def __init__(self):
-        """Initialize with VERIFIED ontology mappings from schema files ONLY."""
+        """
+        Initialize with ontology mappings.
 
-        # HPO mappings - ONLY codes explicitly defined in phenopacket-mapping.yaml
+        HPO mappings are based on tumorType values from syn16858331.
+        """
+
+        # HPO mappings - Maps tumorType values to HPO codes
+        # Source: tumorType column in syn16858331
         # DO NOT add codes without verification against actual HPO ontology
         self.phenotype_hpo_map = {
-            # Verified from phenopacket-mapping.yaml
-            "cafeaulaitMacules": "HP:0000957",  # Cafe-au-lait spot
-            "skinFoldFreckling": "HP:0001250",  # Axillary freckling
-            "IrisLischNodules": "HP:0009737",  # Lisch nodules
-            "plexiformNeurofibromas": "HP:0009732",  # Plexiform neurofibroma
-            "opticGlioma": "HP:0009734",  # Optic nerve glioma
-            "learningDisability": "HP:0001328",  # Specific learning disability
-            "intellectualDisability": "HP:0001249",  # Intellectual disability
-            "attentionDeficitDisorder": "HP:0007018",  # ADHD
-            "scoliosis": "HP:0002650",  # Scoliosis
-            "vestibularSchwannoma": "HP:0009589",  # Vestibular schwannoma
-            "meningioma": "HP:0002858",  # Meningioma
+            # Common tumor types from syn16858331 mapped to HPO codes
+            "Plexiform Neurofibroma": "HP:0009732",
+            "plexiform neurofibroma": "HP:0009732",
+            "Cutaneous Neurofibroma": "HP:0001067",
+            "cutaneous neurofibroma": "HP:0001067",
+            "Dermal Neurofibroma": "HP:0001067",
+            "dermal neurofibroma": "HP:0001067",
+            "Neurofibroma": "HP:0001067",  # Generic neurofibroma
+            "neurofibroma": "HP:0001067",
+            "Nodular Neurofibroma": "HP:0009729",  # Nodular neurofibroma (HPO verified)
+            "Optic Nerve Glioma": "HP:0009734",
+            "optic glioma": "HP:0009734",
+            "Optic Pathway Glioma": "HP:0009734",  # Verified HP:0009734
+            "optic pathway glioma": "HP:0009734",
+            "Vestibular Schwannoma": "HP:0009589",
+            "vestibular schwannoma": "HP:0009589",
+            "Meningioma": "HP:0002858",
+            "meningioma": "HP:0002858",
+            "Low Grade Glioma": "HP:0009734",  # Map to optic nerve glioma for now
+            "Spinal Neurofibroma": "HP:0009735",
+            "spinal neurofibroma": "HP:0009735",
+            "MPNST": "HP:0009733",
+            "Malignant Peripheral Nerve Sheath Tumor": "HP:0009733",
+            "High Grade MPNST": "HP:0009733",
+            "Schwannoma": "HP:0100008",
+            "schwannoma": "HP:0100008",
         }
-        # TODO: Need to verify HPO codes for remaining phenotype fields:
-        # - dermalNeurofibromas, subcutaneousNodularNeurofibromas, diffuseDermalNeurofibromas
-        # - spinalNeurofibromas, nonopticGlioma, pheochromocytoma, GIST, leukemia, etc.
 
-        # HPO code to friendly label mapping (verified only)
+        # TODO: The following tumor types from syn16858331 need HPO code verification:
+        # - "Low-Grade Glioma NOS" (198 samples) - may not have specific HPO code
+        # - "High-Grade Glioma NOS" (117 samples) - may not have specific HPO code
+        # - "Pilocytic Astrocytoma" (109 samples) - verify at https://hpo.jax.org/
+        # - "Juvenile Myelomonocytic Leukemia" (8 samples) - may use OMIM:607785 instead
+        # Note: Many tumor diagnoses use NCIT codes (see manifestation_ncit_map) rather than HPO
+
+        # HPO code to friendly label mapping
         self.hpo_label_map = {
-            "HP:0000957": "Cafe-au-lait spot",
-            "HP:0001250": "Axillary freckling",
-            "HP:0009737": "Lisch nodules",
             "HP:0009732": "Plexiform neurofibroma",
+            "HP:0001067": "Cutaneous neurofibroma",
+            "HP:0009729": "Nodular neurofibroma",
             "HP:0009734": "Optic nerve glioma",
-            "HP:0001328": "Specific learning disability",
-            "HP:0001249": "Intellectual disability",
-            "HP:0007018": "Attention deficit hyperactivity disorder",
-            "HP:0002650": "Scoliosis",
             "HP:0009589": "Vestibular schwannoma",
             "HP:0002858": "Meningioma",
+            "HP:0009735": "Spinal neurofibroma",
+            "HP:0009733": "Malignant peripheral nerve sheath tumor",
+            "HP:0100008": "Schwannoma",
         }
 
         # MONDO mappings for DISEASES (underlying genetic conditions)
@@ -124,6 +151,7 @@ class ModelMetadataEnricher:
         }
 
         # Separate manifestation/tumor mappings (should go in tumorType, not diagnosis)
+        # These are for tumor manifestations extracted from tumorType column
         self.manifestation_mondo_map = {
             "atypical neurofibroma": "MONDO:0003306",
             "Atypical Neurofibroma": "MONDO:0003306",
@@ -137,10 +165,44 @@ class ModelMetadataEnricher:
             "high grade MPNST": "NCIT:C9030",
             "high grade metastatic MPNST": "NCIT:C9030",
             "high grade MPNST with divergent differentiation": "NCIT:C9030",
+            "Malignant Peripheral Nerve Sheath Tumor": "NCIT:C9030",
+            "MPNST": "NCIT:C9030",
             # Schwannomas
             "Vestibular Schwannoma": "NCIT:C3276",
+            "vestibular schwannoma": "NCIT:C3276",
             "Acoustic Neuroma": "NCIT:C3276",
-            "Sporadic Schwannoma": "NCIT:C129278",  # From NCIT
+            "Sporadic Schwannoma": "NCIT:C129278",
+            "Schwannoma": "NCIT:C3269",  # Generic schwannoma
+            "schwannoma": "NCIT:C3269",
+            # Neurofibromas
+            "Plexiform Neurofibroma": "NCIT:C3798",
+            "plexiform neurofibroma": "NCIT:C3798",
+            "Cutaneous Neurofibroma": "NCIT:C3797",
+            "cutaneous neurofibroma": "NCIT:C3797",
+            "Neurofibroma": "NCIT:C3272",  # Generic
+            "neurofibroma": "NCIT:C3272",
+            # Meningioma
+            "Meningioma": "NCIT:C3230",
+            "meningioma": "NCIT:C3230",
+            # Gliomas
+            "Optic Nerve Glioma": "NCIT:C4688",
+            "optic glioma": "NCIT:C4688",
+            "Optic Pathway Glioma": "NCIT:C4537",  # Verified NCIT:C4537
+            "optic pathway glioma": "NCIT:C4537",
+            "Low-Grade Glioma": "NCIT:C4936",
+            "Low Grade Glioma": "NCIT:C4936",
+            "High-Grade Glioma": "NCIT:C4051",
+            "High Grade Glioma": "NCIT:C4051",
+            "Pilocytic Astrocytoma": "NCIT:C3798",
+            # Other tumors
+            "Sarcoma": "NCIT:C9118",  # Verified NCIT:C9118
+            "sarcoma": "NCIT:C9118",
+        }
+
+        self.manifestation_omim_map = {
+            # OMIM codes for tumor manifestations (if applicable)
+            "Juvenile Myelomonocytic Leukemia": "OMIM:607785",
+            "JMML": "OMIM:607785",
         }
 
         # Build case-insensitive lookup for diseases
@@ -150,24 +212,47 @@ class ModelMetadataEnricher:
 
     def extract_present_phenotypes(self, row: Dict) -> List[str]:
         """
-        Extract list of HPO terms for present phenotypes.
+        Extract list of HPO terms for present phenotypes from tumorType column.
 
         Args:
-            row: Data row with phenotype fields
+            row: Data row with tumorType field
 
         Returns:
             List of HPO codes for present phenotypes
         """
         present_hpo = []
-        absent_values = {"absent", "unknown", "not applicable", "none", ""}
 
-        for field, hpo_term in self.phenotype_hpo_map.items():
-            value = row.get(field)
-            if value:
-                # Case-insensitive check for absent values
-                value_normalized = str(value).lower().strip()
-                if value_normalized and value_normalized not in absent_values:
-                    present_hpo.append(hpo_term)
+        # Get tumorType value from row
+        tumor_type = row.get("tumorType")
+        if not tumor_type:
+            return present_hpo
+
+        # Handle JSON arrays or lists (tumorType may contain multiple values)
+        tumor_types = []
+        if isinstance(tumor_type, list):
+            tumor_types = tumor_type
+        elif isinstance(tumor_type, str):
+            # Try parsing as JSON array if it looks like one
+            if tumor_type.startswith('['):
+                try:
+                    tumor_types = json.loads(tumor_type)
+                except json.JSONDecodeError:
+                    tumor_types = [tumor_type]
+            else:
+                tumor_types = [tumor_type]
+
+        # Map each tumor type to HPO code
+        for tt in tumor_types:
+            if not tt:
+                continue
+            tt_str = str(tt).strip()
+            if not tt_str:
+                continue
+
+            # Look up HPO code for this tumor type
+            hpo_code = self.phenotype_hpo_map.get(tt_str)
+            if hpo_code and hpo_code not in present_hpo:
+                present_hpo.append(hpo_code)
 
         return present_hpo
 
@@ -178,6 +263,141 @@ class ModelMetadataEnricher:
             label = self.hpo_label_map.get(code, code)  # Fallback to code if no label
             labels.append(label)
         return labels
+
+    def extract_tumor_ncit_codes(self, row: Dict) -> List[str]:
+        """
+        Extract NCIT codes for tumor manifestations from tumorType column.
+
+        Args:
+            row: Data row with tumorType field
+
+        Returns:
+            List of NCIT codes for tumor manifestations
+        """
+        ncit_codes = []
+
+        # Get tumorType value from row
+        tumor_type = row.get("tumorType")
+        if not tumor_type:
+            return ncit_codes
+
+        # Handle JSON arrays or lists
+        tumor_types = []
+        if isinstance(tumor_type, list):
+            tumor_types = tumor_type
+        elif isinstance(tumor_type, str):
+            if tumor_type.startswith('['):
+                try:
+                    tumor_types = json.loads(tumor_type)
+                except json.JSONDecodeError:
+                    tumor_types = [tumor_type]
+            else:
+                tumor_types = [tumor_type]
+
+        # Map each tumor type to NCIT code
+        for tt in tumor_types:
+            if not tt:
+                continue
+            tt_str = str(tt).strip()
+            if not tt_str:
+                continue
+
+            # Look up NCIT code for this tumor type
+            ncit_code = self.manifestation_ncit_map.get(tt_str)
+            if ncit_code and ncit_code not in ncit_codes:
+                ncit_codes.append(ncit_code)
+
+        return ncit_codes
+
+    def extract_tumor_mondo_codes(self, row: Dict) -> List[str]:
+        """
+        Extract MONDO codes for tumor manifestations from tumorType column.
+
+        Args:
+            row: Data row with tumorType field
+
+        Returns:
+            List of MONDO codes for tumor manifestations
+        """
+        mondo_codes = []
+
+        # Get tumorType value from row
+        tumor_type = row.get("tumorType")
+        if not tumor_type:
+            return mondo_codes
+
+        # Handle JSON arrays or lists
+        tumor_types = []
+        if isinstance(tumor_type, list):
+            tumor_types = tumor_type
+        elif isinstance(tumor_type, str):
+            if tumor_type.startswith('['):
+                try:
+                    tumor_types = json.loads(tumor_type)
+                except json.JSONDecodeError:
+                    tumor_types = [tumor_type]
+            else:
+                tumor_types = [tumor_type]
+
+        # Map each tumor type to MONDO code
+        for tt in tumor_types:
+            if not tt:
+                continue
+            tt_str = str(tt).strip()
+            if not tt_str:
+                continue
+
+            # Look up MONDO code for this tumor type
+            mondo_code = self.manifestation_mondo_map.get(tt_str)
+            if mondo_code and mondo_code not in mondo_codes:
+                mondo_codes.append(mondo_code)
+
+        return mondo_codes
+
+    def extract_tumor_omim_codes(self, row: Dict) -> List[str]:
+        """
+        Extract OMIM codes for tumor manifestations from tumorType column.
+
+        Args:
+            row: Data row with tumorType field
+
+        Returns:
+            List of OMIM codes for tumor manifestations
+        """
+        omim_codes = []
+
+        # Get tumorType value from row
+        tumor_type = row.get("tumorType")
+        if not tumor_type:
+            return omim_codes
+
+        # Handle JSON arrays or lists
+        tumor_types = []
+        if isinstance(tumor_type, list):
+            tumor_types = tumor_type
+        elif isinstance(tumor_type, str):
+            if tumor_type.startswith('['):
+                try:
+                    tumor_types = json.loads(tumor_type)
+                except json.JSONDecodeError:
+                    tumor_types = [tumor_type]
+            else:
+                tumor_types = [tumor_type]
+
+        # Map each tumor type to OMIM code
+        for tt in tumor_types:
+            if not tt:
+                continue
+            tt_str = str(tt).strip()
+            if not tt_str:
+                continue
+
+            # Look up OMIM code for this tumor type
+            omim_code = self.manifestation_omim_map.get(tt_str)
+            if omim_code and omim_code not in omim_codes:
+                omim_codes.append(omim_code)
+
+        return omim_codes
 
     def get_disease_ontology(self, diagnosis: str) -> Optional[str]:
         """
@@ -330,13 +550,23 @@ class ModelMetadataEnricher:
         # Data context category
         enriched["Data Context"] = self.categorize_data_context(row)
 
-        # HPO phenotypes - both codes and labels
+        # HPO phenotypes - determined from tumorType column
+        # Extracts both HPO codes and human-readable labels
         present_hpo_codes = self.extract_present_phenotypes(row)
         phenotype_labels = self.extract_phenotype_labels(present_hpo_codes)
 
         enriched["Phenotypes"] = json.dumps(phenotype_labels) if phenotype_labels else None
         enriched["Phenotype HPO Codes"] = json.dumps(present_hpo_codes) if present_hpo_codes else None
         enriched["Phenotype Count"] = len(present_hpo_codes)
+
+        # Tumor manifestation ontology codes - also from tumorType column
+        tumor_ncit_codes = self.extract_tumor_ncit_codes(row)
+        tumor_mondo_codes = self.extract_tumor_mondo_codes(row)
+        tumor_omim_codes = self.extract_tumor_omim_codes(row)
+
+        enriched["Tumor Type NCIT Codes"] = json.dumps(tumor_ncit_codes) if tumor_ncit_codes else None
+        enriched["Tumor Type MONDO Codes"] = json.dumps(tumor_mondo_codes) if tumor_mondo_codes else None
+        enriched["Tumor Type OMIM Codes"] = json.dumps(tumor_omim_codes) if tumor_omim_codes else None
 
         # MONDO disease code, NCIT code, and canonical label
         # Note: diagnosis field may be JSON array like ['Neurofibromatosis type 1']
@@ -440,10 +670,12 @@ class SynapseMaterializedViewCreator:
         """
         Define additional columns for enriched views.
 
+        Note: HPO phenotypes are mapped from tumorType column in syn16858331.
+
         Note on Synapse API limit: 64KB per row
         - Base columns from syn16858331: ~10-20KB typical
         - Enriched columns total: ~2KB max
-        - hpoPhenotypes (1KB max): Stores JSON array of HPO codes
+        - Phenotype HPO Codes (1KB max): Stores JSON array of HPO codes from tumorType
         - Total per row: Well under 64KB limit
         """
         if SYNAPSE_AVAILABLE:
@@ -452,6 +684,9 @@ class SynapseMaterializedViewCreator:
                 Column(name="Phenotypes", columnType=ColumnType.STRING, maximumSize=2000, facetType="enumeration"),  # JSON array of labels
                 Column(name="Phenotype HPO Codes", columnType=ColumnType.STRING, maximumSize=1000),  # JSON array, ~1KB
                 Column(name="Phenotype Count", columnType=ColumnType.INTEGER, facetType="range"),
+                Column(name="Tumor Type NCIT Codes", columnType=ColumnType.STRING, maximumSize=500),  # JSON array of NCIT codes
+                Column(name="Tumor Type MONDO Codes", columnType=ColumnType.STRING, maximumSize=500),  # JSON array of MONDO codes
+                Column(name="Tumor Type OMIM Codes", columnType=ColumnType.STRING, maximumSize=500),  # JSON array of OMIM codes
                 Column(name="Diagnosis MONDO Code", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
                 Column(name="Diagnosis NCIT Code", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
                 Column(name="Diagnosis", columnType=ColumnType.STRING, maximumSize=200, facetType="enumeration"),
@@ -466,6 +701,9 @@ class SynapseMaterializedViewCreator:
                 {"name": "Phenotypes", "type": "STRING(2000)", "facet": "enumeration"},
                 {"name": "Phenotype HPO Codes", "type": "STRING(1000)", "facet": None},
                 {"name": "Phenotype Count", "type": "INTEGER", "facet": "range"},
+                {"name": "Tumor Type NCIT Codes", "type": "STRING(500)", "facet": None},
+                {"name": "Tumor Type MONDO Codes", "type": "STRING(500)", "facet": None},
+                {"name": "Tumor Type OMIM Codes", "type": "STRING(500)", "facet": None},
                 {"name": "Diagnosis MONDO Code", "type": "STRING(50)", "facet": "enumeration"},
                 {"name": "Diagnosis NCIT Code", "type": "STRING(50)", "facet": "enumeration"},
                 {"name": "Diagnosis", "type": "STRING(200)", "facet": "enumeration"},
