@@ -476,6 +476,43 @@ class ModelMetadataEnricher:
             return None
         return self._TISSUE_ALIASES.get(v, v)
 
+    _CELL_TYPE_ALIASES: Dict[str, str] = {
+        # Case variants — lowercase is canonical (matches dominant form in data)
+        "Schwann":          "schwann",
+        "Ipn02.8":          "ipn02.8",
+        "Meningioma":       "meningioma",
+        "Tumor":            "tumor",
+        # Abbreviation casing — sMPNST (spontaneous MPNST, lowercase 's' by convention)
+        "SMPNST":           "sMPNST",
+        # Non-breaking space artifact → regular space + lowercase
+        "Cell\xa0line":     "cell line",
+    }
+
+    def normalize_cell_type(self, raw: Optional[str]) -> Optional[str]:
+        """Normalize cellType annotation, fixing case variants and encoding artifacts."""
+        if not raw:
+            return None
+        v = str(raw).strip()
+        if v.lower() in ("", "nan", "none", "na"):
+            return None
+        return self._CELL_TYPE_ALIASES.get(v, v)
+
+    _GENE_PERTURBED_ALIASES: Dict[str, str] = {
+        # All-lowercase gene symbols are clearly data entry errors;
+        # NF1/NF2 are human HGNC symbols (uppercase). Nf1/Nf2 (mouse) are left as-is.
+        "nf1": "NF1",
+        "nf2": "NF2",
+    }
+
+    def normalize_gene_perturbed(self, raw: Optional[str]) -> Optional[str]:
+        """Normalize genePerturbed annotation, fixing all-lowercase gene symbol typos."""
+        if not raw:
+            return None
+        v = str(raw).strip()
+        if v.lower() in ("", "nan", "none", "na"):
+            return None
+        return self._GENE_PERTURBED_ALIASES.get(v, v)
+
     def normalize_data_type(self, raw: Optional[str]) -> Optional[str]:
         """
         Normalize a raw dataType annotation, unifying camelCase and
@@ -953,6 +990,16 @@ class ModelMetadataEnricher:
         normalized_tissue = self.normalize_tissue(row.get("tissue"))
         if normalized_tissue is not None:
             enriched["tissue"] = normalized_tissue
+
+        # Normalize cellType — fixes case variants and encoding artifacts
+        normalized_cell_type = self.normalize_cell_type(row.get("cellType"))
+        if normalized_cell_type is not None:
+            enriched["cellType"] = normalized_cell_type
+
+        # Normalize genePerturbed — fixes all-lowercase gene symbol typos (nf1→NF1)
+        normalized_gene = self.normalize_gene_perturbed(row.get("genePerturbed"))
+        if normalized_gene is not None:
+            enriched["genePerturbed"] = normalized_gene
 
         # HumanCohortTemplate manifestation fields — pass through as-is from annotations
         if enriched["Data Context"] == "clinical":
