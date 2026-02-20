@@ -617,6 +617,13 @@ class ModelMetadataEnricher:
         if enriched["Data Context"] != "clinical":
             enriched["Model Type"] = self._categorize_model_system(row)
 
+        # HumanCohortTemplate manifestation fields — pass through as-is from annotations
+        if enriched["Data Context"] == "clinical":
+            for field in ALL_MANIFESTATION_FIELDS:
+                val = row.get(field)
+                if val is not None and str(val).lower() not in ("nan", "none", ""):
+                    enriched[field] = val
+
         return enriched
 
     def _categorize_model_system(self, row: Dict) -> Optional[str]:
@@ -650,6 +657,70 @@ class ModelMetadataEnricher:
         return "other"
 
 
+# HumanCohortTemplate manifestation fields (from REiNS Table 2)
+# These are stored as annotations on Synapse files and surfaced as facets in the clinical view.
+# Grouped by NF subtype for clarity; all use enumeration faceting.
+NF1_PRESENCE_FIELDS = [
+    # Simple absent/present/unknown (PresenceEnum)
+    "cafeaulaitMacules",
+    "skinFoldFreckling",
+    "IrisLischNodules",
+    "heartDefect",
+    "vascularDisease",
+    "peripheralNeuropathy",
+    "aqueductalStenosis",
+    "longBoneDysplasia",
+    "sphenoidDysplasia",
+    "scoliosis",
+    "intellectualDisability",
+    "learningDisability",
+    "attentionDeficitDisorder",
+    "pheochromocytoma",
+    "glomusTumor",
+    "MPNSTCharacterization",
+    "nonopticGlioma",
+    "GIST",
+    "leukemia",
+    "breastCancer",
+    "otherTumors",
+]
+NF1_NEUROFIBROMA_FIELDS = [
+    # absent/scattered/dense/unknown (NeurofibromaManifestationEnum)
+    "dermalNeurofibromas",
+    "subcutaneousNodularNeurofibromas",
+    "diffuseDermalNeurofibromas",
+]
+NF1_COMPLEX_FIELDS = [
+    # Richer enums specific to NF1 manifestations
+    "spinalNeurofibromas",
+    "plexiformNeurofibromas",
+    "opticGlioma",
+    "pubertyOnset",
+    "stature",
+]
+NF2_FIELDS = [
+    # Imaging-based manifestation enums for NF2
+    "vestibularSchwannoma",
+    "meningioma",
+    "gliomaOrEpendymoma",
+    "spinalSchwannoma",
+    "dermalSchwannoma",
+    "nonvestibularCranialSchwannoma",
+    "lenticularOpacity",
+]
+SCHWANNOMATOSIS_FIELDS = [
+    "nonvestibularSchwannomas",
+    "numberOfSchwannomas",
+]
+ALL_MANIFESTATION_FIELDS = (
+    NF1_PRESENCE_FIELDS
+    + NF1_NEUROFIBROMA_FIELDS
+    + NF1_COMPLEX_FIELDS
+    + NF2_FIELDS
+    + SCHWANNOMATOSIS_FIELDS
+)
+
+
 class SynapseMaterializedViewCreator:
     """Creates context-specific materialized views in Synapse for different model types."""
 
@@ -679,7 +750,7 @@ class SynapseMaterializedViewCreator:
         - Total per row: Well under 64KB limit
         """
         if SYNAPSE_AVAILABLE:
-            return [
+            columns = [
                 Column(name="Data Context", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
                 Column(name="Phenotypes", columnType=ColumnType.STRING, maximumSize=2000, facetType="enumeration"),  # JSON array of labels
                 Column(name="Phenotype HPO Codes", columnType=ColumnType.STRING, maximumSize=1000),  # JSON array, ~1KB
@@ -694,9 +765,19 @@ class SynapseMaterializedViewCreator:
                 Column(name="Age Group", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
                 Column(name="Model Type", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
             ]
+            # HumanCohortTemplate manifestation fields — explicitly typed with faceting so
+            # Synapse surfaces them as filter facets rather than plain annotation columns.
+            for field in ALL_MANIFESTATION_FIELDS:
+                columns.append(Column(
+                    name=field,
+                    columnType=ColumnType.STRING,
+                    maximumSize=100,
+                    facetType="enumeration",
+                ))
+            return columns
         else:
             # Return column specs as dicts for dry-run
-            return [
+            columns = [
                 {"name": "Data Context", "type": "STRING(50)", "facet": "enumeration"},
                 {"name": "Phenotypes", "type": "STRING(2000)", "facet": "enumeration"},
                 {"name": "Phenotype HPO Codes", "type": "STRING(1000)", "facet": None},
@@ -711,6 +792,9 @@ class SynapseMaterializedViewCreator:
                 {"name": "Age Group", "type": "STRING(50)", "facet": "enumeration"},
                 {"name": "Model Type", "type": "STRING(50)", "facet": "enumeration"},
             ]
+            for field in ALL_MANIFESTATION_FIELDS:
+                columns.append({"name": field, "type": "STRING(100)", "facet": "enumeration"})
+            return columns
 
     def get_facet_columns(self, view_type: str) -> List[str]:
         """
@@ -745,7 +829,7 @@ class SynapseMaterializedViewCreator:
                 "vitalStatus",
                 "nf1Genotype",
                 "nf2Genotype",
-            ],
+            ] + ALL_MANIFESTATION_FIELDS,
             "animal_model": [
                 "Model Type",
                 "species",
