@@ -263,10 +263,12 @@ class ModelMetadataEnricher:
         # Normalize raw tumorType string values before ontology lookup.
         # Keys are the raw forms seen in Synapse data; values are the canonical display forms.
         self._tumor_type_normalizations = {
-            "unknown": "Unknown",   # lowercase → title-case
-            "nan":     "Not Applicable",  # null-as-string → proper N/A label
-            "normal":  "Normal",    # lowercase → title-case
-            "tumor":   "Tumor",     # lowercase → title-case
+            "unknown":    "Unknown",        # lowercase → title-case
+            "nan":        "Not Applicable", # null-as-string → proper N/A label
+            "NA":         "Not Applicable", # abbreviated N/A → proper label
+            "normal":     "Normal",         # lowercase → title-case
+            "tumor":      "Tumor",          # lowercase → title-case
+            "schwannoma": "Schwannoma",     # lowercase → title-case
         }
 
         # Build case-insensitive lookup for diseases
@@ -407,11 +409,11 @@ class ModelMetadataEnricher:
         if lower_v in ("knockdown", "control", "overexpression", "non-targeting control"):
             return None  # perturbation type, not genotype
         if lower_v in ("unknown", "unk", "not known"):
-            return "unknown"
+            return "Unknown"
         if lower_v == "multiple":
             return "multiple"
         if v == "+/?":
-            return "unknown"
+            return "Unknown"
 
         # Fix underscore-for-slash typo ("/_" → "/-")
         v = v.replace("/_", "/-").replace("_/", "-/")
@@ -461,6 +463,21 @@ class ModelMetadataEnricher:
     def _normalize_tumor_type_value(self, tt_str: str) -> str:
         """Normalize a single extracted tumorType string to its canonical display form."""
         return self._tumor_type_normalizations.get(tt_str, tt_str)
+
+    _SEX_NORMALIZATIONS: Dict[str, str] = {
+        "unknown": "Unknown",
+        "female":  "Female",
+        "male":    "Male",
+    }
+
+    def normalize_sex(self, raw: Optional[str]) -> Optional[str]:
+        """Normalize sex annotation to title-case canonical form."""
+        if not raw:
+            return None
+        v = str(raw).strip()
+        if v.lower() in ("", "nan", "none", "na"):
+            return None
+        return self._SEX_NORMALIZATIONS.get(v, v)
 
     def extract_present_phenotypes(self, row: Dict) -> List[str]:
         """
@@ -886,6 +903,11 @@ class ModelMetadataEnricher:
 
         # Normalized data type — unifies camelCase variants (drugScreen → drug screen, etc.)
         enriched["Data Type"] = self.normalize_data_type(row.get("dataType"))
+
+        # Normalized sex — title-cases lowercase variants (unknown→Unknown, female→Female)
+        normalized_sex = self.normalize_sex(row.get("sex"))
+        if normalized_sex is not None:
+            enriched["sex"] = normalized_sex
 
         # HumanCohortTemplate manifestation fields — pass through as-is from annotations
         if enriched["Data Context"] == "clinical":

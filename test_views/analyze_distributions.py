@@ -25,7 +25,7 @@ NF1_GENOTYPE_VALS = {"+/+", "+/-", "-/-", "unknown", "Unknown"}
 NF2_GENOTYPE_VALS = {"+/+", "+/-", "-/-", "unknown", "Unknown"}
 
 GENOTYPE_NORMALIZED_VALS = {
-    "+/+", "+/-", "-/-", "unknown", "Unknown", "multiple",
+    "+/+", "+/-", "-/-", "Unknown", "multiple",
     # Compound alleles (mixed-population cell lines/models):
     "+/+, -/-", "-/-, +/-", "+/-, +/+", "+/-, -/-",
 }
@@ -45,7 +45,7 @@ VIEW_FIELDS = {
         # raw base annotations (for comparison / coverage cross-check)
         ("diagnosis",           None),
         ("tumorType",           None),
-        ("sex",                 {"Male", "Female", "male", "female", "Unknown", "unknown"}),
+        ("sex",                 {"Male", "Female", "Unknown"}),
         ("species",             None),
         ("vitalStatus",         {"alive", "deceased", "unknown", "Unknown"}),
         ("nf1Genotype",         NF1_GENOTYPE_VALS),
@@ -88,7 +88,7 @@ VIEW_FIELDS = {
         ("diagnosis",           None),
         ("tumorType",           None),
         ("tissue",              None),
-        ("sex",                 {"Male", "Female", "male", "female", "Unknown", "unknown"}),
+        ("sex",                 {"Male", "Female", "Unknown"}),
         ("cellType",            None),
         ("nf1Genotype",         NF1_GENOTYPE_VALS),
         ("nf2Genotype",         NF2_GENOTYPE_VALS),
@@ -136,11 +136,14 @@ BLANK = {"", "nan", "none", "NaN", "None", "NA", "N/A", "n/a", "[]", "['']"}
 
 # Mirror of ModelMetadataEnricher._tumor_type_normalizations
 TUMOR_TYPE_NORMALIZATIONS = {
-    "unknown": "Unknown",
-    "nan":     "Not Applicable",
-    "normal":  "Normal",
-    "tumor":   "Tumor",
+    "unknown":    "Unknown",
+    "nan":        "Not Applicable",
+    "NA":         "Not Applicable",
+    "normal":     "Normal",
+    "tumor":      "Tumor",
+    "schwannoma": "Schwannoma",
 }
+
 
 
 def is_blank(v):
