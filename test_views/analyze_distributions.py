@@ -134,6 +134,13 @@ VIEW_FIELDS = {
 
 BLANK = {"", "nan", "none", "NaN", "None", "NA", "N/A", "n/a", "[]", "['']"}
 
+# Mirror of ModelMetadataEnricher._tumor_type_normalizations
+TUMOR_TYPE_NORMALIZATIONS = {
+    "unknown": "Unknown",
+    "nan":     "Not Applicable",
+    "normal":  "Normal",
+}
+
 
 def is_blank(v):
     return v is None or str(v).strip() in BLANK
@@ -261,6 +268,7 @@ def analyze_raw_tumor_vs_phenotypes(rows):
         if is_blank(raw):
             continue
         for v in unpack_list_field(raw):
+            v = TUMOR_TYPE_NORMALIZATIONS.get(v, v)  # apply same normalizations as enricher
             if is_blank(hpo) and is_blank(ncit):
                 unmapped[v] += 1
     return unmapped

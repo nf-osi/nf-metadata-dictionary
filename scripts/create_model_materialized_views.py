@@ -260,6 +260,14 @@ class ModelMetadataEnricher:
             "JMML": "OMIM:607785",
         }
 
+        # Normalize raw tumorType string values before ontology lookup.
+        # Keys are the raw forms seen in Synapse data; values are the canonical display forms.
+        self._tumor_type_normalizations = {
+            "unknown": "Unknown",   # lowercase → title-case
+            "nan":     "Not Applicable",  # null-as-string → proper N/A label
+            "normal":  "Normal",    # lowercase → title-case
+        }
+
         # Build case-insensitive lookup for diseases
         self._disease_lookup_normalized = {}
         for disease, code in self.disease_mondo_map.items():
@@ -449,6 +457,10 @@ class ModelMetadataEnricher:
         normalized = [self._DATATYPE_ALIASES.get(p, p) for p in parts]
         return ", ".join(normalized)
 
+    def _normalize_tumor_type_value(self, tt_str: str) -> str:
+        """Normalize a single extracted tumorType string to its canonical display form."""
+        return self._tumor_type_normalizations.get(tt_str, tt_str)
+
     def extract_present_phenotypes(self, row: Dict) -> List[str]:
         """
         Extract list of HPO terms for present phenotypes from tumorType column.
@@ -484,7 +496,7 @@ class ModelMetadataEnricher:
         for tt in tumor_types:
             if not tt:
                 continue
-            tt_str = str(tt).strip()
+            tt_str = self._normalize_tumor_type_value(str(tt).strip())
             if not tt_str:
                 continue
 
@@ -537,7 +549,7 @@ class ModelMetadataEnricher:
         for tt in tumor_types:
             if not tt:
                 continue
-            tt_str = str(tt).strip()
+            tt_str = self._normalize_tumor_type_value(str(tt).strip())
             if not tt_str:
                 continue
 
@@ -582,7 +594,7 @@ class ModelMetadataEnricher:
         for tt in tumor_types:
             if not tt:
                 continue
-            tt_str = str(tt).strip()
+            tt_str = self._normalize_tumor_type_value(str(tt).strip())
             if not tt_str:
                 continue
 
@@ -627,7 +639,7 @@ class ModelMetadataEnricher:
         for tt in tumor_types:
             if not tt:
                 continue
-            tt_str = str(tt).strip()
+            tt_str = self._normalize_tumor_type_value(str(tt).strip())
             if not tt_str:
                 continue
 
