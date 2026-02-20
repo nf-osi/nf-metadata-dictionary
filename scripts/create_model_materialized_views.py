@@ -266,6 +266,7 @@ class ModelMetadataEnricher:
             "unknown": "Unknown",   # lowercase → title-case
             "nan":     "Not Applicable",  # null-as-string → proper N/A label
             "normal":  "Normal",    # lowercase → title-case
+            "tumor":   "Tumor",     # lowercase → title-case
         }
 
         # Build case-insensitive lookup for diseases

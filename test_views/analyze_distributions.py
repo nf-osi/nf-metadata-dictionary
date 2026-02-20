@@ -139,6 +139,7 @@ TUMOR_TYPE_NORMALIZATIONS = {
     "unknown": "Unknown",
     "nan":     "Not Applicable",
     "normal":  "Normal",
+    "tumor":   "Tumor",
 }
 
 
