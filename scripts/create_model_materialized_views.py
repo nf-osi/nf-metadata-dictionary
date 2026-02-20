@@ -441,6 +441,41 @@ class ModelMetadataEnricher:
 
         return v.strip() or None
 
+    _ASSAY_ALIASES: Dict[str, str] = {
+        # Case variants — canonical form is lowercase / standard bioinformatics convention
+        "RNA-Seq":               "RNA-seq",
+        "Whole Exome Sequencing": "whole exome sequencing",
+        "Genotyping":            "genotyping",
+        "Immunoprecipitation":   "immunoprecipitation",
+        "Scale":                 "scale",
+        "Weight":                "weight",
+    }
+
+    def normalize_assay(self, raw: Optional[str]) -> Optional[str]:
+        """Normalize assay annotation, fixing case variants."""
+        if not raw:
+            return None
+        v = str(raw).strip()
+        if v.lower() in ("", "nan", "none", "na"):
+            return None
+        return self._ASSAY_ALIASES.get(v, v)
+
+    _TISSUE_ALIASES: Dict[str, str] = {
+        # Lowercase is canonical (matches the large majority of tissue values)
+        "Primary Tumor":       "primary tumor",
+        "Skin":                "skin",
+        "Dorsal Root Ganglion": "dorsal root ganglion",
+    }
+
+    def normalize_tissue(self, raw: Optional[str]) -> Optional[str]:
+        """Normalize tissue annotation, fixing case variants."""
+        if not raw:
+            return None
+        v = str(raw).strip()
+        if v.lower() in ("", "nan", "none", "na"):
+            return None
+        return self._TISSUE_ALIASES.get(v, v)
+
     def normalize_data_type(self, raw: Optional[str]) -> Optional[str]:
         """
         Normalize a raw dataType annotation, unifying camelCase and
@@ -908,6 +943,16 @@ class ModelMetadataEnricher:
         normalized_sex = self.normalize_sex(row.get("sex"))
         if normalized_sex is not None:
             enriched["sex"] = normalized_sex
+
+        # Normalize assay — fixes case variants (RNA-Seq→RNA-seq, Whole Exome Sequencing→…)
+        normalized_assay = self.normalize_assay(row.get("assay"))
+        if normalized_assay is not None:
+            enriched["assay"] = normalized_assay
+
+        # Normalize tissue — lowercase canonical (Primary Tumor→primary tumor, etc.)
+        normalized_tissue = self.normalize_tissue(row.get("tissue"))
+        if normalized_tissue is not None:
+            enriched["tissue"] = normalized_tissue
 
         # HumanCohortTemplate manifestation fields — pass through as-is from annotations
         if enriched["Data Context"] == "clinical":
