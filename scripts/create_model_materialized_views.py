@@ -102,6 +102,9 @@ class ModelMetadataEnricher:
             "Recurrent MPNST": "HP:0009733",
             "recurrent MPNST": "HP:0009733",
             "Atypical MPNST": "HP:0009733",
+            # Atypical Neurofibroma — HP:0007524 verified (NCIT:C41426, UMLS:C1510961, DOID:5153)
+            "Atypical Neurofibroma": "HP:0007524",
+            "atypical neurofibroma": "HP:0007524",
             # Schwannoma
             "Schwannoma": "HP:0100008",
             "schwannoma": "HP:0100008",
@@ -120,6 +123,7 @@ class ModelMetadataEnricher:
             "HP:0002858": "Meningioma",
             "HP:0009735": "Spinal neurofibroma",
             "HP:0009733": "Malignant peripheral nerve sheath tumor",
+            "HP:0007524": "Atypical neurofibroma",
             "HP:0100008": "Schwannoma",
             "HP:0012209": "Juvenile myelomonocytic leukemia",
         }
@@ -215,6 +219,9 @@ class ModelMetadataEnricher:
             "neurofibroma": "NCIT:C3272",
             "Diffuse Infiltrating Neurofibroma": "NCIT:C8426",         # C8426 = Diffuse Neurofibroma (verified)
             "Localized Neurofibroma": "NCIT:C3272",                    # no distinct code; use generic NF
+            # Atypical Neurofibroma — C41426 verified (UMLS:C1510961, DOID:5153, MONDO:0003306)
+            "Atypical Neurofibroma": "NCIT:C41426",
+            "atypical neurofibroma": "NCIT:C41426",
             # ANNUBP — C178255 verified via NCI EVS
             "ANNUBP": "NCIT:C178255",
             # Meningioma

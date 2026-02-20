@@ -24,16 +24,25 @@ from pathlib import Path
 NF1_GENOTYPE_VALS = {"+/+", "+/-", "-/-", "unknown", "Unknown"}
 NF2_GENOTYPE_VALS = {"+/+", "+/-", "-/-", "unknown", "Unknown"}
 
+GENOTYPE_NORMALIZED_VALS = {
+    "+/+", "+/-", "-/-", "unknown", "Unknown", "multiple",
+    # Compound alleles (mixed-population cell lines/models):
+    "+/+, -/-", "-/-, +/-", "+/-, +/+", "+/-, -/-",
+}
+
 VIEW_FIELDS = {
     "clinical": [
-        # enriched
+        # enriched columns
         ("Diagnosis",           None),
         ("Diagnosis MONDO Code",None),
         ("Has Treatment",       {"True", "False"}),
         ("Age Group",           {"infant", "child", "adolescent", "adult"}),
         ("Phenotypes",          None),       # JSON list – will unpack
         ("Phenotype Count",     None),
-        # base annotations – key clinical facets
+        ("NF1 Genotype",        GENOTYPE_NORMALIZED_VALS),
+        ("NF2 Genotype",        GENOTYPE_NORMALIZED_VALS),
+        ("Data Type",           None),
+        # raw base annotations (for comparison / coverage cross-check)
         ("diagnosis",           None),
         ("tumorType",           None),
         ("sex",                 {"Male", "Female", "male", "female", "Unknown", "unknown"}),
@@ -41,16 +50,19 @@ VIEW_FIELDS = {
         ("vitalStatus",         {"alive", "deceased", "unknown", "Unknown"}),
         ("nf1Genotype",         NF1_GENOTYPE_VALS),
         ("nf2Genotype",         NF2_GENOTYPE_VALS),
-        ("nf2Genotype",         NF2_GENOTYPE_VALS),
         ("dataType",            None),
         ("assay",               None),
     ],
     "animal_model": [
+        # enriched
         ("NF Type",             None),
         ("Diagnosis",           None),
         ("Model Type",          {"mouse", "rat", "zebrafish", "drosophila", "other"}),
         ("Has Treatment",       {"True", "False"}),
-        # base
+        ("NF1 Genotype",        GENOTYPE_NORMALIZED_VALS),
+        ("NF2 Genotype",        GENOTYPE_NORMALIZED_VALS),
+        ("Data Type",           None),
+        # raw base
         ("diagnosis",           None),
         ("species",             None),
         ("modelSystemName",     None),
@@ -64,11 +76,15 @@ VIEW_FIELDS = {
         ("assay",               None),
     ],
     "cell_line": [
+        # enriched
         ("NF Type",             None),
         ("Diagnosis",           None),
         ("Tissue of Origin",    None),
         ("Has Treatment",       {"True", "False"}),
-        # base
+        ("NF1 Genotype",        GENOTYPE_NORMALIZED_VALS),
+        ("NF2 Genotype",        GENOTYPE_NORMALIZED_VALS),
+        ("Data Type",           None),
+        # raw base
         ("diagnosis",           None),
         ("tumorType",           None),
         ("tissue",              None),
@@ -81,10 +97,14 @@ VIEW_FIELDS = {
         ("assay",               None),
     ],
     "pdx": [
+        # enriched
         ("NF Type",             None),
         ("Diagnosis",           None),
         ("Has Treatment",       {"True", "False"}),
-        # base
+        ("NF1 Genotype",        GENOTYPE_NORMALIZED_VALS),
+        ("NF2 Genotype",        GENOTYPE_NORMALIZED_VALS),
+        ("Data Type",           None),
+        # raw base
         ("diagnosis",           None),
         ("tumorType",           None),
         ("transplantationType", None),
@@ -94,10 +114,14 @@ VIEW_FIELDS = {
         ("assay",               None),
     ],
     "organoid": [
+        # enriched
         ("NF Type",             None),
         ("Diagnosis",           None),
         ("Has Treatment",       {"True", "False"}),
-        # base
+        ("NF1 Genotype",        GENOTYPE_NORMALIZED_VALS),
+        ("NF2 Genotype",        GENOTYPE_NORMALIZED_VALS),
+        ("Data Type",           None),
+        # raw base
         ("diagnosis",           None),
         ("tumorType",           None),
         ("tissue",              None),
