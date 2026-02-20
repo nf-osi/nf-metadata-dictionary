@@ -56,6 +56,9 @@ class ModelMetadataEnricher:
 
         HPO mappings are based on tumorType values from syn16858331.
         """
+        # Lookup populated by build_model_db_lookup(); used to cross-reference
+        # cell lines (syn26486823) and animal models (syn26486808) with clinical info.
+        self.model_db_lookup: Dict[str, Dict] = {}
 
         # HPO mappings - Maps tumorType values to HPO codes
         # Source: tumorType column in syn16858331
@@ -209,6 +212,62 @@ class ModelMetadataEnricher:
         self._disease_lookup_normalized = {}
         for disease, code in self.disease_mondo_map.items():
             self._disease_lookup_normalized[disease.lower().strip()] = (disease, code, "MONDO")
+
+    def build_model_db_lookup(
+        self,
+        syn,
+        cell_line_table: str = "syn26486823",
+        animal_model_table: str = "syn26486808",
+    ) -> None:
+        """
+        Load clinical/model info from NF Research Tools Central into self.model_db_lookup.
+
+        Cell lines (syn26486823) are keyed by individualID.
+        Animal models (syn26486808) are keyed by modelSystemName.
+        Used to enrich cell_line, animal_model, and pdx views with NF type info
+        when the base file annotation does not carry a diagnosis field.
+
+        Args:
+            syn: Authenticated Synapse client
+            cell_line_table: Synapse ID for cell lines table (default: syn26486823)
+            animal_model_table: Synapse ID for animal models table (default: syn26486808)
+        """
+        lookup = {}
+        for table_id in (cell_line_table, animal_model_table):
+            try:
+                results = syn.tableQuery(f"SELECT * FROM {table_id} LIMIT 10000")
+                df = results.asDataFrame()
+                # Identify the name key column — try common names used in NFTC schema
+                key_col = next(
+                    (c for c in df.columns if c.lower() in (
+                        "resourcename", "individualid", "modelsystemname", "name", "celllinename"
+                    )),
+                    df.columns[0] if len(df.columns) > 0 else None
+                )
+                if key_col is None:
+                    continue
+                for _, record in df.iterrows():
+                    key = str(record.get(key_col, "")).strip()
+                    if key:
+                        lookup[key] = dict(record)
+                logger.info(f"Loaded {len(df)} records from {table_id} for cross-referencing")
+            except Exception as e:
+                logger.warning(f"Could not load model DB from {table_id}: {e}")
+        self.model_db_lookup = lookup
+
+    def get_nf_type_from_lookup(self, key: Optional[str]) -> Optional[str]:
+        """
+        Return NF disease type for a cell line or animal model from the NFTC lookup.
+        Tries common column name variants used in nf-research-tools-schema.
+        """
+        if not key or key not in self.model_db_lookup:
+            return None
+        record = self.model_db_lookup[key]
+        for col in ("diagnosis", "nfType", "disease", "nf_type", "NF Type", "diseaseFocus"):
+            val = record.get(col)
+            if val and str(val).strip().lower() not in ("", "nan", "none", "unknown"):
+                return str(val).strip()
+        return None
 
     def extract_present_phenotypes(self, row: Dict) -> List[str]:
         """
@@ -624,6 +683,24 @@ class ModelMetadataEnricher:
                 if val is not None and str(val).lower() not in ("nan", "none", ""):
                     enriched[field] = val
 
+        # For non-clinical views: cross-reference NFTC to get NF disease type when
+        # the file annotation lacks a diagnosis (cell lines and models are derived from
+        # NF patients/models — this info lives in syn26486823 / syn26486808).
+        if enriched["Data Context"] in ("cell_line", "animal_model", "pdx", "organoid"):
+            if not enriched.get("Diagnosis"):
+                context = enriched["Data Context"]
+                lookup_key = None
+                if context in ("cell_line",):
+                    lookup_key = row.get("individualID")
+                elif context in ("animal_model", "pdx", "organoid"):
+                    lookup_key = row.get("modelSystemName")
+                nf_type = self.get_nf_type_from_lookup(lookup_key)
+                if nf_type:
+                    enriched["NF Type"] = nf_type
+            else:
+                # Diagnosis already annotated — mirror it as NF Type for consistent filtering
+                enriched["NF Type"] = enriched.get("Diagnosis")
+
         return enriched
 
     def _categorize_model_system(self, row: Dict) -> Optional[str]:
@@ -734,44 +811,61 @@ class SynapseMaterializedViewCreator:
         """
         self.syn = syn
         self.parent_id = parent_id
-        self.enricher = ModelMetadataEnricher()
         self.source_view_id = "syn16858331"
+        self.enricher = ModelMetadataEnricher()
+        # Pre-load NFTC model DB for cross-referencing cell lines and animal models.
+        # Skipped in dry-run mode (syn is None) — lookup will be empty but schema is valid.
+        if syn is not None:
+            self.enricher.build_model_db_lookup(syn)
 
-    def define_enriched_columns(self) -> List:
+    def define_enriched_columns(self, view_type: str = "all") -> List:
         """
-        Define additional columns for enriched views.
+        Define additional computed columns for a context-specific view.
 
-        Note: HPO phenotypes are mapped from tumorType column in syn16858331.
+        Columns are scoped by view_type to avoid unnecessary column bloat and stay
+        within Synapse's 152-column limit per materialized view.
 
-        Note on Synapse API limit: 64KB per row
-        - Base columns from syn16858331: ~10-20KB typical
-        - Enriched columns total: ~2KB max
-        - Phenotype HPO Codes (1KB max): Stores JSON array of HPO codes from tumorType
-        - Total per row: Well under 64KB limit
+        Args:
+            view_type: One of 'clinical', 'animal_model', 'cell_line', 'organoid', 'pdx'
+
+        Note on Synapse API limit: 64KB per row; base columns ~10-20KB, enriched ~2-4KB.
         """
         if SYNAPSE_AVAILABLE:
+            # Columns present in every view
             columns = [
                 Column(name="Data Context", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
-                Column(name="Phenotypes", columnType=ColumnType.STRING, maximumSize=2000, facetType="enumeration"),  # JSON array of labels
-                Column(name="Phenotype HPO Codes", columnType=ColumnType.STRING, maximumSize=1000),  # JSON array, ~1KB
-                Column(name="Phenotype Count", columnType=ColumnType.INTEGER, facetType="range"),
-                Column(name="Tumor Type NCIT Codes", columnType=ColumnType.STRING, maximumSize=500),  # JSON array of NCIT codes
-                Column(name="Tumor Type MONDO Codes", columnType=ColumnType.STRING, maximumSize=500),  # JSON array of MONDO codes
-                Column(name="Tumor Type OMIM Codes", columnType=ColumnType.STRING, maximumSize=500),  # JSON array of OMIM codes
+                Column(name="Diagnosis", columnType=ColumnType.STRING, maximumSize=200, facetType="enumeration"),
                 Column(name="Diagnosis MONDO Code", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
                 Column(name="Diagnosis NCIT Code", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
-                Column(name="Diagnosis", columnType=ColumnType.STRING, maximumSize=200, facetType="enumeration"),
                 Column(name="Has Treatment", columnType=ColumnType.BOOLEAN, facetType="enumeration"),
                 Column(name="Age Group", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
                 Column(name="Model Type", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
             ]
-            # HumanCohortTemplate manifestation fields — explicitly typed with faceting so
-            # Synapse surfaces them as filter facets rather than plain annotation columns.
-            for field in ALL_MANIFESTATION_FIELDS:
+            if view_type == "clinical":
+                # Phenotype enrichment from tumorType (clinical-only — rich HPO/ontology mapping)
+                columns += [
+                    Column(name="Phenotypes", columnType=ColumnType.STRING, maximumSize=2000, facetType="enumeration"),
+                    Column(name="Phenotype HPO Codes", columnType=ColumnType.STRING, maximumSize=1000),
+                    Column(name="Phenotype Count", columnType=ColumnType.INTEGER, facetType="range"),
+                    Column(name="Tumor Type NCIT Codes", columnType=ColumnType.STRING, maximumSize=500),
+                    Column(name="Tumor Type MONDO Codes", columnType=ColumnType.STRING, maximumSize=500),
+                    Column(name="Tumor Type OMIM Codes", columnType=ColumnType.STRING, maximumSize=500),
+                ]
+                # HumanCohortTemplate manifestation fields — explicit faceting for clinical filters
+                for field in ALL_MANIFESTATION_FIELDS:
+                    columns.append(Column(
+                        name=field,
+                        columnType=ColumnType.STRING,
+                        maximumSize=100,
+                        facetType="enumeration",
+                    ))
+            else:
+                # Non-clinical views: NF type cross-referenced from NFTC (syn26486823/syn26486808)
+                # when the base file annotation lacks a diagnosis field.
                 columns.append(Column(
-                    name=field,
+                    name="NF Type",
                     columnType=ColumnType.STRING,
-                    maximumSize=100,
+                    maximumSize=200,
                     facetType="enumeration",
                 ))
             return columns
@@ -779,21 +873,26 @@ class SynapseMaterializedViewCreator:
             # Return column specs as dicts for dry-run
             columns = [
                 {"name": "Data Context", "type": "STRING(50)", "facet": "enumeration"},
-                {"name": "Phenotypes", "type": "STRING(2000)", "facet": "enumeration"},
-                {"name": "Phenotype HPO Codes", "type": "STRING(1000)", "facet": None},
-                {"name": "Phenotype Count", "type": "INTEGER", "facet": "range"},
-                {"name": "Tumor Type NCIT Codes", "type": "STRING(500)", "facet": None},
-                {"name": "Tumor Type MONDO Codes", "type": "STRING(500)", "facet": None},
-                {"name": "Tumor Type OMIM Codes", "type": "STRING(500)", "facet": None},
+                {"name": "Diagnosis", "type": "STRING(200)", "facet": "enumeration"},
                 {"name": "Diagnosis MONDO Code", "type": "STRING(50)", "facet": "enumeration"},
                 {"name": "Diagnosis NCIT Code", "type": "STRING(50)", "facet": "enumeration"},
-                {"name": "Diagnosis", "type": "STRING(200)", "facet": "enumeration"},
                 {"name": "Has Treatment", "type": "BOOLEAN", "facet": "enumeration"},
                 {"name": "Age Group", "type": "STRING(50)", "facet": "enumeration"},
                 {"name": "Model Type", "type": "STRING(50)", "facet": "enumeration"},
             ]
-            for field in ALL_MANIFESTATION_FIELDS:
-                columns.append({"name": field, "type": "STRING(100)", "facet": "enumeration"})
+            if view_type == "clinical":
+                columns += [
+                    {"name": "Phenotypes", "type": "STRING(2000)", "facet": "enumeration"},
+                    {"name": "Phenotype HPO Codes", "type": "STRING(1000)", "facet": None},
+                    {"name": "Phenotype Count", "type": "INTEGER", "facet": "range"},
+                    {"name": "Tumor Type NCIT Codes", "type": "STRING(500)", "facet": None},
+                    {"name": "Tumor Type MONDO Codes", "type": "STRING(500)", "facet": None},
+                    {"name": "Tumor Type OMIM Codes", "type": "STRING(500)", "facet": None},
+                ]
+                for field in ALL_MANIFESTATION_FIELDS:
+                    columns.append({"name": field, "type": "STRING(100)", "facet": "enumeration"})
+            else:
+                columns.append({"name": "NF Type", "type": "STRING(200)", "facet": "enumeration"})
             return columns
 
     def get_facet_columns(self, view_type: str) -> List[str]:
@@ -815,7 +914,11 @@ class SynapseMaterializedViewCreator:
             "assay",
         ]
 
-        # View-specific facets
+        # View-specific facets — only columns that exist in syn16858331 or are enriched columns.
+        # Columns verified against base view headers: species, diagnosis, tumorType, tissue,
+        # modelSystemName, genePerturbed, genePerturbationType, nf1Genotype, nf2Genotype,
+        # sex, cellType, transplantationType, vitalStatus are all present.
+        # NOT in base view: specimenType, cellLineCategory, bodySite.
         view_facets = {
             "clinical": [
                 "Diagnosis MONDO Code",
@@ -831,32 +934,44 @@ class SynapseMaterializedViewCreator:
                 "nf2Genotype",
             ] + ALL_MANIFESTATION_FIELDS,
             "animal_model": [
+                "NF Type",
+                "Diagnosis",
                 "Model Type",
                 "species",
                 "modelSystemName",
                 "genePerturbed",
                 "genePerturbationType",
+                "nf1Genotype",
+                "nf2Genotype",
+                "tissue",
                 "Has Treatment",
             ],
             "cell_line": [
-                "specimenType",
-                "cellLineCategory",
+                "NF Type",
+                "Diagnosis",
                 "tumorType",
-                "individualID",
+                "nf1Genotype",
+                "nf2Genotype",
+                "sex",
+                "tissue",
+                "cellType",
+                "Has Treatment",
             ],
             "organoid": [
-                "specimenType",
-                "bodySite",
-                "tumorType",
+                "NF Type",
+                "Diagnosis",
                 "modelSystemName",
+                "tumorType",
+                "tissue",
             ],
             "pdx": [
-                "Model Type",
+                "NF Type",
+                "Diagnosis",
                 "transplantationType",
                 "tumorType",
-                "individualID",
+                "modelSystemName",
                 "species",
-            ]
+            ],
         }
 
         return common_facets + view_facets.get(view_type, [])
@@ -878,7 +993,7 @@ class SynapseMaterializedViewCreator:
 
         # Define view schema
         view_name = "NF Clinical Data - Enriched Filters"
-        view_columns = self.define_enriched_columns()
+        view_columns = self.define_enriched_columns(view_type="clinical")
 
         # SQL to populate view (filters for clinical context)
         # Note: SELECT * includes ALL base columns from syn16858331 including:
@@ -956,7 +1071,7 @@ class SynapseMaterializedViewCreator:
         logger.info("Creating animal model materialized view...")
 
         view_name = "NF Animal Model Data - Enriched Filters"
-        view_columns = self.define_enriched_columns()
+        view_columns = self.define_enriched_columns(view_type="animal_model")
         facet_columns = self.get_facet_columns("animal_model")
 
         # Note: SELECT * includes ALL base columns from syn16858331
@@ -1009,7 +1124,7 @@ class SynapseMaterializedViewCreator:
         logger.info("Creating cell line materialized view...")
 
         view_name = "NF Cell Line Data - Enriched Filters"
-        view_columns = self.define_enriched_columns()
+        view_columns = self.define_enriched_columns(view_type="cell_line")
         facet_columns = self.get_facet_columns("cell_line")
 
         # Note: SELECT * includes ALL base columns from syn16858331
@@ -1060,7 +1175,7 @@ class SynapseMaterializedViewCreator:
         logger.info("Creating organoid materialized view...")
 
         view_name = "NF Organoid Data - Enriched Filters"
-        view_columns = self.define_enriched_columns()
+        view_columns = self.define_enriched_columns(view_type="organoid")
         facet_columns = self.get_facet_columns("organoid")
 
         # Note: SELECT * includes ALL base columns from syn16858331
@@ -1111,7 +1226,7 @@ class SynapseMaterializedViewCreator:
         logger.info("Creating PDX materialized view...")
 
         view_name = "NF PDX Data - Enriched Filters"
-        view_columns = self.define_enriched_columns()
+        view_columns = self.define_enriched_columns(view_type="pdx")
         facet_columns = self.get_facet_columns("pdx")
 
         # Note: SELECT * includes ALL base columns from syn16858331
