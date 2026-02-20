@@ -269,6 +269,37 @@ class ModelMetadataEnricher:
                 return str(val).strip()
         return None
 
+    def get_model_db_fields(self, key: Optional[str]) -> Dict[str, Optional[str]]:
+        """
+        Return a dict of clinical/model fields for a cell line or animal model from NFTC.
+
+        Used to backfill enriched columns when base file annotations in syn16858331
+        are missing. Tries common column name variants from nf-research-tools-schema.
+
+        Returns:
+            Dict with keys: nf_type, tissue, sex, tumor_type (all Optional[str])
+        """
+        empty: Dict[str, Optional[str]] = {
+            "nf_type": None, "tissue": None, "sex": None, "tumor_type": None
+        }
+        if not key or key not in self.model_db_lookup:
+            return empty
+        record = self.model_db_lookup[key]
+
+        def _get(*cols: str) -> Optional[str]:
+            for col in cols:
+                val = record.get(col)
+                if val and str(val).strip().lower() not in ("", "nan", "none", "unknown"):
+                    return str(val).strip()
+            return None
+
+        return {
+            "nf_type": _get("diagnosis", "nfType", "disease", "nf_type", "NF Type", "diseaseFocus"),
+            "tissue": _get("tissue", "tissueOfOrigin", "tissue_of_origin", "primaryTissue"),
+            "sex": _get("sex", "donorSex", "gender"),
+            "tumor_type": _get("tumorType", "tumor", "tumor_type", "tumorTypeOfOrigin"),
+        }
+
     def extract_present_phenotypes(self, row: Dict) -> List[str]:
         """
         Extract list of HPO terms for present phenotypes from tumorType column.
@@ -683,23 +714,32 @@ class ModelMetadataEnricher:
                 if val is not None and str(val).lower() not in ("nan", "none", ""):
                     enriched[field] = val
 
-        # For non-clinical views: cross-reference NFTC to get NF disease type when
-        # the file annotation lacks a diagnosis (cell lines and models are derived from
-        # NF patients/models — this info lives in syn26486823 / syn26486808).
+        # For non-clinical views: cross-reference NFTC to get NF disease type and
+        # additional clinical metadata when the file annotation lacks these fields.
+        # Cell lines (syn26486823) keyed by individualID; models (syn26486808) by modelSystemName.
         if enriched["Data Context"] in ("cell_line", "animal_model", "pdx", "organoid"):
-            if not enriched.get("Diagnosis"):
-                context = enriched["Data Context"]
-                lookup_key = None
-                if context in ("cell_line",):
-                    lookup_key = row.get("individualID")
-                elif context in ("animal_model", "pdx", "organoid"):
-                    lookup_key = row.get("modelSystemName")
-                nf_type = self.get_nf_type_from_lookup(lookup_key)
-                if nf_type:
-                    enriched["NF Type"] = nf_type
-            else:
-                # Diagnosis already annotated — mirror it as NF Type for consistent filtering
-                enriched["NF Type"] = enriched.get("Diagnosis")
+            context = enriched["Data Context"]
+            lookup_key = row.get("individualID") if context == "cell_line" else row.get("modelSystemName")
+            db_fields = self.get_model_db_fields(lookup_key)
+
+            # NF Type: prefer already-resolved Diagnosis annotation, fall back to NFTC lookup
+            if enriched.get("Diagnosis"):
+                enriched["NF Type"] = enriched["Diagnosis"]
+            elif db_fields["nf_type"]:
+                enriched["NF Type"] = db_fields["nf_type"]
+
+            # Cell line-specific: enrich tissue and sex from syn26486823 when not annotated
+            if context == "cell_line":
+                base_tissue = row.get("tissue")
+                if base_tissue and str(base_tissue).strip().lower() not in ("", "nan", "none"):
+                    enriched["Tissue of Origin"] = str(base_tissue).strip()
+                elif db_fields["tissue"]:
+                    enriched["Tissue of Origin"] = db_fields["tissue"]
+
+                base_sex = row.get("sex")
+                if not base_sex or str(base_sex).strip().lower() in ("", "nan", "none"):
+                    if db_fields["sex"]:
+                        enriched["sex"] = db_fields["sex"]
 
         return enriched
 
@@ -868,6 +908,15 @@ class SynapseMaterializedViewCreator:
                     maximumSize=200,
                     facetType="enumeration",
                 ))
+                if view_type == "cell_line":
+                    # Tissue of origin cross-referenced from syn26486823 (cell line DB),
+                    # backfilling the often-sparse base tissue annotation.
+                    columns.append(Column(
+                        name="Tissue of Origin",
+                        columnType=ColumnType.STRING,
+                        maximumSize=200,
+                        facetType="enumeration",
+                    ))
             return columns
         else:
             # Return column specs as dicts for dry-run
@@ -893,6 +942,8 @@ class SynapseMaterializedViewCreator:
                     columns.append({"name": field, "type": "STRING(100)", "facet": "enumeration"})
             else:
                 columns.append({"name": "NF Type", "type": "STRING(200)", "facet": "enumeration"})
+                if view_type == "cell_line":
+                    columns.append({"name": "Tissue of Origin", "type": "STRING(200)", "facet": "enumeration"})
             return columns
 
     def get_facet_columns(self, view_type: str) -> List[str]:
@@ -949,11 +1000,11 @@ class SynapseMaterializedViewCreator:
             "cell_line": [
                 "NF Type",
                 "Diagnosis",
+                "Tissue of Origin",
                 "tumorType",
                 "nf1Genotype",
                 "nf2Genotype",
                 "sex",
-                "tissue",
                 "cellType",
                 "Has Treatment",
             ],
