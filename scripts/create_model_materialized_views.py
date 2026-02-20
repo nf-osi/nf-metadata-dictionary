@@ -23,6 +23,7 @@ Usage:
 
 import argparse
 import logging
+import re
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 import json
@@ -343,6 +344,103 @@ class ModelMetadataEnricher:
             "sex": _get("sex", "donorSex", "gender"),
             "tumor_type": _get("tumorType", "tumor", "tumor_type", "tumorTypeOfOrigin"),
         }
+
+    # ------------------------------------------------------------------
+    # Genotype and dataType normalization
+    # ------------------------------------------------------------------
+
+    # Alias map: raw annotation value → canonical value for dataType
+    _DATATYPE_ALIASES: Dict[str, str] = {
+        "drugScreen":       "drug screen",
+        "geneExpression":   "gene expression",
+        "genomicVariants":  "genomic variants",
+        "Weight":           "weight",
+        "RNA-Seq":          "RNA-seq",
+        "drugscreen":       "drug screen",
+    }
+    # Gene-name prefix that appears before the allele notation, e.g. "NF1-/-"
+    _GENOTYPE_GENE_PREFIX_RE = re.compile(
+        r'^(?:NF\d?|Nf\d?)\s*([+\-][/][+\-].*)', re.IGNORECASE
+    )
+
+    def normalize_genotype(self, raw: Optional[str]) -> Optional[str]:
+        """
+        Normalize a raw nf1Genotype/nf2Genotype annotation to a clean,
+        facet-friendly string.
+
+        Transformations:
+        - Strip leading backtick typos (`` `+/+ `` → `+/+`)
+        - Remove gene-name prefixes (NF-, NF1-, Nf1-) from allele notation
+        - For multi-gene strings (semicolon-separated), take the first allele part
+        - Fix underscore-for-slash typo (``-/_`` → ``-/-``)
+        - Normalize comma-separated compound alleles: ``+/+,-/-`` → ``+/+, -/-``
+        - Map ambiguous values: ``+/?`` → ``unknown``, ``knockdown`` → None
+        - Mutation descriptions (e.g. ``R816X (Nf1 gene)``) → ``+/-``
+        """
+        if not raw:
+            return None
+        v = str(raw).strip()
+        if v.lower() in ("", "nan", "none", "na", "n/a", "not applicable"):
+            return None
+
+        # Remove leading backtick (data entry error)
+        v = v.lstrip("`").strip()
+
+        # Non-genotype annotation values
+        lower_v = v.lower()
+        if lower_v in ("knockdown", "control", "overexpression", "non-targeting control"):
+            return None  # perturbation type, not genotype
+        if lower_v in ("unknown", "unk", "not known"):
+            return "unknown"
+        if lower_v == "multiple":
+            return "multiple"
+        if v == "+/?":
+            return "unknown"
+
+        # Fix underscore-for-slash typo ("/_" → "/-")
+        v = v.replace("/_", "/-").replace("_/", "-/")
+
+        # Multi-gene compound (semicolon-separated): use the first allele part
+        # e.g. "NF1-/-; P53-/-" → parts[0] = "NF1-/-" → after prefix strip → "-/-"
+        if ";" in v:
+            v = v.split(";")[0].strip()
+
+        # Remove gene-name prefix preceding the allele notation
+        # e.g. "NF1-/-" → "-/-", "Nf1-/-" → "-/-", "NF-/-" → "-/-"
+        m = self._GENOTYPE_GENE_PREFIX_RE.match(v)
+        if m:
+            v = m.group(1)
+
+        # Mutation description (e.g. "R816X (Nf1 gene)") → heterozygous
+        if re.match(r'^[A-Z]\d+[A-Z]', v) or ("gene" in v.lower() and "/" not in v):
+            return "+/-"
+
+        # Normalize comma-separated compound alleles (no space → add space)
+        # "+/+,-/-" → "+/+, -/-";  "-/-, +/-" → "-/-, +/-" (idempotent)
+        if "," in v:
+            parts = [p.strip() for p in v.split(",")]
+            v = ", ".join(parts)
+
+        return v.strip() or None
+
+    def normalize_data_type(self, raw: Optional[str]) -> Optional[str]:
+        """
+        Normalize a raw dataType annotation, unifying camelCase and
+        comma-separated multi-values to consistent lowercase labels.
+
+        e.g. ``drugScreen`` → ``drug screen``; ``geneExpression`` → ``gene expression``
+        Also handles multi-value strings like ``behavior process,Weight`` →
+        ``behavior process, weight``.
+        """
+        if not raw:
+            return None
+        v = str(raw).strip()
+        if v.lower() in ("", "nan", "none"):
+            return None
+        # Handle comma-separated multi-values
+        parts = [p.strip() for p in v.split(",")]
+        normalized = [self._DATATYPE_ALIASES.get(p, p) for p in parts]
+        return ", ".join(normalized)
 
     def extract_present_phenotypes(self, row: Dict) -> List[str]:
         """
@@ -760,6 +858,15 @@ class ModelMetadataEnricher:
         if enriched["Data Context"] != "clinical":
             enriched["Model Type"] = self._categorize_model_system(row)
 
+        # Normalized genotype columns — clean up raw nf1Genotype/nf2Genotype annotations:
+        # removes gene-name prefixes, backtick typos, normalizes compound allele spacing,
+        # and resolves ambiguous values so facet filters work consistently.
+        enriched["NF1 Genotype"] = self.normalize_genotype(row.get("nf1Genotype"))
+        enriched["NF2 Genotype"] = self.normalize_genotype(row.get("nf2Genotype"))
+
+        # Normalized data type — unifies camelCase variants (drugScreen → drug screen, etc.)
+        enriched["Data Type"] = self.normalize_data_type(row.get("dataType"))
+
         # HumanCohortTemplate manifestation fields — pass through as-is from annotations
         if enriched["Data Context"] == "clinical":
             for field in ALL_MANIFESTATION_FIELDS:
@@ -933,6 +1040,10 @@ class SynapseMaterializedViewCreator:
                 Column(name="Has Treatment", columnType=ColumnType.BOOLEAN, facetType="enumeration"),
                 Column(name="Age Group", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
                 Column(name="Model Type", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
+                # Normalized versions of raw annotation fields — cleaner facet values
+                Column(name="NF1 Genotype", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
+                Column(name="NF2 Genotype", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
+                Column(name="Data Type", columnType=ColumnType.STRING, maximumSize=100, facetType="enumeration"),
             ]
             if view_type == "clinical":
                 # Phenotype enrichment from tumorType (clinical-only — rich HPO/ontology mapping)
@@ -981,6 +1092,9 @@ class SynapseMaterializedViewCreator:
                 {"name": "Has Treatment", "type": "BOOLEAN", "facet": "enumeration"},
                 {"name": "Age Group", "type": "STRING(50)", "facet": "enumeration"},
                 {"name": "Model Type", "type": "STRING(50)", "facet": "enumeration"},
+                {"name": "NF1 Genotype", "type": "STRING(50)", "facet": "enumeration"},
+                {"name": "NF2 Genotype", "type": "STRING(50)", "facet": "enumeration"},
+                {"name": "Data Type", "type": "STRING(100)", "facet": "enumeration"},
             ]
             if view_type == "clinical":
                 columns += [
@@ -1009,19 +1123,23 @@ class SynapseMaterializedViewCreator:
         Returns:
             List of column names to enable as facets
         """
-        # Common facets for all views
+        # Common facets for all views — use enriched/normalized columns where available.
+        # "Data Type" replaces raw "dataType" (normalizes camelCase aliases).
+        # "NF1/NF2 Genotype" replace raw "nf1/nf2Genotype" (normalized).
         common_facets = [
             "Data Context",
             "accessType",
             "createdOn",
-            "dataType",
+            "Data Type",   # enriched (normalized dataType)
             "assay",
+            "NF1 Genotype",  # enriched (normalized nf1Genotype)
+            "NF2 Genotype",  # enriched (normalized nf2Genotype)
         ]
 
         # View-specific facets — only columns that exist in syn16858331 or are enriched columns.
         # Columns verified against base view headers: species, diagnosis, tumorType, tissue,
-        # modelSystemName, genePerturbed, genePerturbationType, nf1Genotype, nf2Genotype,
-        # sex, cellType, transplantationType, vitalStatus are all present.
+        # modelSystemName, genePerturbed, genePerturbationType, sex, cellType,
+        # transplantationType, vitalStatus are all present.
         # NOT in base view: specimenType, cellLineCategory, bodySite.
         view_facets = {
             "clinical": [
@@ -1034,8 +1152,6 @@ class SynapseMaterializedViewCreator:
                 "sex",
                 "species",
                 "vitalStatus",
-                "nf1Genotype",
-                "nf2Genotype",
             ] + ALL_MANIFESTATION_FIELDS,
             "animal_model": [
                 "NF Type",
@@ -1045,8 +1161,6 @@ class SynapseMaterializedViewCreator:
                 "modelSystemName",
                 "genePerturbed",
                 "genePerturbationType",
-                "nf1Genotype",
-                "nf2Genotype",
                 "tissue",
                 "Has Treatment",
             ],
@@ -1055,8 +1169,6 @@ class SynapseMaterializedViewCreator:
                 "Diagnosis",
                 "Tissue of Origin",
                 "tumorType",
-                "nf1Genotype",
-                "nf2Genotype",
                 "sex",
                 "cellType",
                 "Has Treatment",
