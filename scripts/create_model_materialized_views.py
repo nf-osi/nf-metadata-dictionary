@@ -1001,6 +1001,30 @@ class ModelMetadataEnricher:
         if normalized_gene is not None:
             enriched["genePerturbed"] = normalized_gene
 
+        # Normalize tumorType annotation column — apply _tumor_type_normalizations so
+        # facet filters show consistent values (schwannoma→Schwannoma, nan→Not Applicable,
+        # unknown→Unknown, etc.).  Handles both single-string and JSON-array list fields.
+        tumor_type_raw = row.get("tumorType")
+        if tumor_type_raw:
+            if isinstance(tumor_type_raw, list):
+                tt_items = tumor_type_raw
+            elif isinstance(tumor_type_raw, str) and tumor_type_raw.startswith("["):
+                try:
+                    tt_items = json.loads(tumor_type_raw.replace("'", '"'))
+                except (json.JSONDecodeError, ValueError):
+                    tt_items = [tumor_type_raw]
+            else:
+                tt_items = [tumor_type_raw]
+            normalized_tts = [
+                self._normalize_tumor_type_value(str(tt).strip())
+                for tt in tt_items
+                if str(tt).strip()
+            ]
+            if normalized_tts:
+                enriched["tumorType"] = (
+                    json.dumps(normalized_tts) if len(normalized_tts) > 1 else normalized_tts[0]
+                )
+
         # HumanCohortTemplate manifestation fields — pass through as-is from annotations
         if enriched["Data Context"] == "clinical":
             for field in ALL_MANIFESTATION_FIELDS:
@@ -1025,8 +1049,9 @@ class ModelMetadataEnricher:
             # Cell line-specific: enrich tissue and sex from syn26486823 when not annotated
             if context == "cell_line":
                 base_tissue = row.get("tissue")
-                if base_tissue and str(base_tissue).strip().lower() not in ("", "nan", "none"):
-                    enriched["Tissue of Origin"] = str(base_tissue).strip()
+                normalized_base_tissue = self.normalize_tissue(base_tissue)
+                if normalized_base_tissue:
+                    enriched["Tissue of Origin"] = normalized_base_tissue
                 elif db_fields["tissue"]:
                     enriched["Tissue of Origin"] = db_fields["tissue"]
 
