@@ -64,7 +64,7 @@ class ModelMetadataEnricher:
         # Source: tumorType column in syn16858331
         # DO NOT add codes without verification against actual HPO ontology
         self.phenotype_hpo_map = {
-            # Common tumor types from syn16858331 mapped to HPO codes
+            # Neurofibromas — HP codes verified via hpo.jax.org
             "Plexiform Neurofibroma": "HP:0009732",
             "plexiform neurofibroma": "HP:0009732",
             "Cutaneous Neurofibroma": "HP:0001067",
@@ -73,31 +73,41 @@ class ModelMetadataEnricher:
             "dermal neurofibroma": "HP:0001067",
             "Neurofibroma": "HP:0001067",  # Generic neurofibroma
             "neurofibroma": "HP:0001067",
-            "Nodular Neurofibroma": "HP:0009729",  # Nodular neurofibroma (HPO verified)
+            "Diffuse Infiltrating Neurofibroma": "HP:0001067",  # diffuse subtype → HP:0001067
+            "Localized Neurofibroma": "HP:0001067",             # localized → HP:0001067
+            "Nodular Neurofibroma": "HP:0009729",               # Verified HP:0009729
+            # Gliomas
             "Optic Nerve Glioma": "HP:0009734",
             "optic glioma": "HP:0009734",
-            "Optic Pathway Glioma": "HP:0009734",  # Verified HP:0009734
+            "Optic Pathway Glioma": "HP:0009734",
             "optic pathway glioma": "HP:0009734",
+            # Schwannomas
             "Vestibular Schwannoma": "HP:0009589",
             "vestibular schwannoma": "HP:0009589",
+            # Meningioma
             "Meningioma": "HP:0002858",
             "meningioma": "HP:0002858",
-            "Low Grade Glioma": "HP:0009734",  # Map to optic nerve glioma for now
+            # Spinal
             "Spinal Neurofibroma": "HP:0009735",
             "spinal neurofibroma": "HP:0009735",
+            # MPNST (all grades/variants map to HP:0009733)
             "MPNST": "HP:0009733",
             "Malignant Peripheral Nerve Sheath Tumor": "HP:0009733",
             "High Grade MPNST": "HP:0009733",
+            "High grade MPNST": "HP:0009733",
+            "high grade MPNST": "HP:0009733",
+            "high grade metastatic MPNST": "HP:0009733",
+            "high grade MPNST with divergent differentiation": "HP:0009733",
+            "Recurrent MPNST": "HP:0009733",
+            "recurrent MPNST": "HP:0009733",
+            "Atypical MPNST": "HP:0009733",
+            # Schwannoma
             "Schwannoma": "HP:0100008",
             "schwannoma": "HP:0100008",
+            # JMML — HP:0012209 verified via hpo.jax.org and Monarch Initiative
+            "Juvenile Myelomonocytic Leukemia": "HP:0012209",
+            "JMML": "HP:0012209",
         }
-
-        # TODO: The following tumor types from syn16858331 need HPO code verification:
-        # - "Low-Grade Glioma NOS" (198 samples) - may not have specific HPO code
-        # - "High-Grade Glioma NOS" (117 samples) - may not have specific HPO code
-        # - "Pilocytic Astrocytoma" (109 samples) - verify at https://hpo.jax.org/
-        # - "Juvenile Myelomonocytic Leukemia" (8 samples) - may use OMIM:607785 instead
-        # Note: Many tumor diagnoses use NCIT codes (see manifestation_ncit_map) rather than HPO
 
         # HPO code to friendly label mapping
         self.hpo_label_map = {
@@ -110,6 +120,7 @@ class ModelMetadataEnricher:
             "HP:0009735": "Spinal neurofibroma",
             "HP:0009733": "Malignant peripheral nerve sheath tumor",
             "HP:0100008": "Schwannoma",
+            "HP:0012209": "Juvenile myelomonocytic leukemia",
         }
 
         # MONDO mappings for DISEASES (underlying genetic conditions)
@@ -133,6 +144,19 @@ class ModelMetadataEnricher:
 
             # Related syndromes
             "Legius syndrome": "MONDO:0012705",
+            # Noonan Syndrome — MONDO:0018997 verified via OBO Foundry/Monarch Initiative
+            "Noonan Syndrome": "MONDO:0018997",
+            "Noonan syndrome": "MONDO:0018997",
+        }
+        # Synonym → canonical label mapping for get_canonical_disease()
+        # Used to normalize common abbreviations/synonyms to preferred display names.
+        self._synonym_to_canonical = {
+            "NF1": "Neurofibromatosis type 1",
+            "Neurofibromatosis 1": "Neurofibromatosis type 1",
+            "Neurofibromatosis type 2": "NF2-related schwannomatosis",
+            "NF2": "NF2-related schwannomatosis",
+            "JMML": "Juvenile myelomonocytic leukemia",
+            "Noonan syndrome": "Noonan Syndrome",
         }
         # Note: Tumor manifestations (MPNST, atypical neurofibroma, etc.) belong in tumorType, not diagnosis
         # NOTE: Schwannomatosis in Diagnosis.yaml has meaning: NCIT:C6557, not MONDO
@@ -158,18 +182,24 @@ class ModelMetadataEnricher:
         self.manifestation_mondo_map = {
             "atypical neurofibroma": "MONDO:0003306",
             "Atypical Neurofibroma": "MONDO:0003306",
+            # ANNUBP is the same concept (NCIT:C178255 cross-references MONDO:0003306)
+            "ANNUBP": "MONDO:0003306",
         }
 
+        # NCIT codes verified via NCI EVS REST API (api-evsrest.nci.nih.gov)
         self.manifestation_ncit_map = {
-            # MPNST variants from syn16858331 data
+            # MPNST — C9030 is High Grade specifically; C3798 is generic MPNST
             "High Grade Malignant Peripheral Nerve Sheath Tumor": "NCIT:C9030",
             "High Grade MPNST": "NCIT:C9030",
             "High grade MPNST": "NCIT:C9030",
             "high grade MPNST": "NCIT:C9030",
             "high grade metastatic MPNST": "NCIT:C9030",
             "high grade MPNST with divergent differentiation": "NCIT:C9030",
-            "Malignant Peripheral Nerve Sheath Tumor": "NCIT:C9030",
-            "MPNST": "NCIT:C9030",
+            "Malignant Peripheral Nerve Sheath Tumor": "NCIT:C3798",  # generic MPNST
+            "MPNST": "NCIT:C3798",
+            "Atypical MPNST": "NCIT:C3798",                           # no distinct code; use generic
+            "Recurrent MPNST": "NCIT:C8823",                          # C8823 = Recurrent MPNST (verified)
+            "recurrent MPNST": "NCIT:C8823",
             # Schwannomas
             "Vestibular Schwannoma": "NCIT:C3276",
             "vestibular schwannoma": "NCIT:C3276",
@@ -177,28 +207,42 @@ class ModelMetadataEnricher:
             "Sporadic Schwannoma": "NCIT:C129278",
             "Schwannoma": "NCIT:C3269",  # Generic schwannoma
             "schwannoma": "NCIT:C3269",
-            # Neurofibromas
-            "Plexiform Neurofibroma": "NCIT:C3798",
-            "plexiform neurofibroma": "NCIT:C3798",
-            "Cutaneous Neurofibroma": "NCIT:C3797",
-            "cutaneous neurofibroma": "NCIT:C3797",
-            "Neurofibroma": "NCIT:C3272",  # Generic
+            # Neurofibromas — C3797 = Plexiform NF (verified); C3272 = generic NF
+            "Plexiform Neurofibroma": "NCIT:C3797",                   # was C3798 (wrong)
+            "plexiform neurofibroma": "NCIT:C3797",
+            "Neurofibroma": "NCIT:C3272",                              # Generic
             "neurofibroma": "NCIT:C3272",
+            "Diffuse Infiltrating Neurofibroma": "NCIT:C8426",         # C8426 = Diffuse Neurofibroma (verified)
+            "Localized Neurofibroma": "NCIT:C3272",                    # no distinct code; use generic NF
+            # ANNUBP — C178255 verified via NCI EVS
+            "ANNUBP": "NCIT:C178255",
             # Meningioma
             "Meningioma": "NCIT:C3230",
             "meningioma": "NCIT:C3230",
             # Gliomas
             "Optic Nerve Glioma": "NCIT:C4688",
             "optic glioma": "NCIT:C4688",
-            "Optic Pathway Glioma": "NCIT:C4537",  # Verified NCIT:C4537
+            "Optic Pathway Glioma": "NCIT:C4537",
             "optic pathway glioma": "NCIT:C4537",
             "Low-Grade Glioma": "NCIT:C4936",
             "Low Grade Glioma": "NCIT:C4936",
+            "Low-Grade Glioma NOS": "NCIT:C132067",                    # C132067 = Low Grade Glioma (verified)
             "High-Grade Glioma": "NCIT:C4051",
             "High Grade Glioma": "NCIT:C4051",
-            "Pilocytic Astrocytoma": "NCIT:C3798",
+            "High-Grade Glioma NOS": "NCIT:C4822",                     # C4822 = Malignant Glioma (verified)
+            "Glioma": "NCIT:C3058",                                    # generic glioma
+            "Pilocytic Astrocytoma": "NCIT:C4047",                     # was C3798 (wrong); C4047 = WHO Grade 1
+            "Pilomyxoid Astrocytoma": "NCIT:C40315",                   # C40315 verified
+            "Diffuse Astrocytoma": "NCIT:C7173",                       # C7173 verified
+            "Glioblastoma": "NCIT:C3058",                              # C3058 verified
+            "Glioblastoma Multiforme": "NCIT:C3058",                   # synonym of Glioblastoma
+            # Hematologic
+            "Juvenile Myelomonocytic Leukemia": "NCIT:C9233",          # C9233 verified
+            "JMML": "NCIT:C9233",
             # Other tumors
-            "Sarcoma": "NCIT:C9118",  # Verified NCIT:C9118
+            "Fibromatosis": "NCIT:C3042",                              # C3042 verified
+            "Melanoma": "NCIT:C3224",                                  # C3224 verified
+            "Sarcoma": "NCIT:C9118",
             "sarcoma": "NCIT:C9118",
         }
 
@@ -544,6 +588,9 @@ class ModelMetadataEnricher:
         """
         Get canonical disease label (handles case variations and synonyms).
 
+        Synonyms (NF1, NF2, JMML, etc.) are normalized to their preferred display
+        names so facet filters are consistent across studies using different naming.
+
         Args:
             diagnosis: Diagnosis string from data (may be synonym or different case)
 
@@ -553,15 +600,21 @@ class ModelMetadataEnricher:
         if not diagnosis:
             return None
 
-        # Try exact match first
-        if diagnosis in self.disease_mondo_map:
+        # Check synonym→canonical map first (NF1→Neurofibromatosis type 1, etc.)
+        if diagnosis in self._synonym_to_canonical:
+            return self._synonym_to_canonical[diagnosis]
+
+        # Canonical names map to themselves
+        if diagnosis in self.disease_mondo_map and diagnosis not in self._synonym_to_canonical.values():
+            # Only return as-is if it's a true canonical name (not an alias)
             return diagnosis
 
-        # Try case-insensitive match to get canonical form
+        # Try case-insensitive match
         normalized = diagnosis.lower().strip()
         if normalized in self._disease_lookup_normalized:
             canonical, _, _ = self._disease_lookup_normalized[normalized]
-            return canonical
+            # Apply synonym normalization to the resolved canonical form too
+            return self._synonym_to_canonical.get(canonical, canonical)
 
         # Return original if no match (will still be searchable)
         return diagnosis
