@@ -1,24 +1,46 @@
 #!/usr/bin/env python3
 """
-Create Synapse materialized views with context-specific filters for different model types.
+Create per-model Synapse materialized views and index them into OpenSearch for unified search.
 
-This script:
-1. Queries the main entity view (syn16858331) for metadata annotations
-2. Applies Phenopacket-inspired transformations to enrich metadata
-3. Creates context-specific materialized views under parent syn26451327
+This script supports two modes:
 
-Context-specific views:
-- Clinical data (human patient data with HPO phenotypes from tumorType column)
-- Animal model data (model organism experiments)
-- Cell line data (in vitro cell systems)
-- Advanced cellular models (organoids, spheroids)
-- Patient-derived systems (PDX, patient-derived organoids)
+  create-views  (default)
+    Creates context-specific Synapse materialized views under parent syn26451327.
+    Separate views per biological model keep each view well within Synapse's 64KB
+    row size limit while surfacing model-relevant facets:
+      - clinical      (human patient data, HPO phenotypes from tumorType)
+      - animal_model  (mouse/rat/zebrafish model organism experiments)
+      - cell_line     (in vitro cell systems)
+      - organoid      (organoids and spheroids)
+      - pdx           (patient-derived xenografts)
 
-Note: HPO phenotypes are determined from the tumorType column in syn16858331.
+  index-opensearch
+    ETLs from all Synapse materialized views into a single OpenSearch index,
+    enabling unified search with dependent faceted filtering.
+
+    Dependent facets follow the OpenSearch post_filter + filter aggregations pattern:
+    https://docs.opensearch.org/latest/tutorials/faceted-search/#step-4-filter-by-facet-values
+
+    - post_filter applies all active user selections to filter search results.
+    - Each facet's aggregation applies all OTHER active filters (not its own),
+      so selecting Diagnosis=NF1 still shows all available diagnoses, but
+      filters modelSystemName/species/etc. to only values co-occurring with NF1.
+    - The 64KB row limit is a Synapse constraint only; OpenSearch has no such limit,
+      so all enriched facet fields live in the index regardless of Synapse column budgets.
 
 Usage:
-    python scripts/create_model_materialized_views.py --parent syn26451327 --dry-run
-    python scripts/create_model_materialized_views.py --parent syn26451327 --execute
+    # Create Synapse views
+    python scripts/create_model_materialized_views.py --dry-run
+    python scripts/create_model_materialized_views.py --execute
+
+    # Index from existing Synapse views into OpenSearch
+    python scripts/create_model_materialized_views.py index-opensearch \\
+        --view-ids '{"clinical":"synAAA","animal_model":"synBBB","cell_line":"synCCC","organoid":"synDDD","pdx":"synEEE"}' \\
+        --opensearch-host localhost:9200
+
+    # Dry-run index (shows document counts without writing to OpenSearch)
+    python scripts/create_model_materialized_views.py index-opensearch \\
+        --view-ids '{"clinical":"synAAA",...}' --dry-run
 """
 
 import argparse
@@ -35,6 +57,13 @@ try:
 except ImportError:
     SYNAPSE_AVAILABLE = False
     print("Warning: synapseclient not installed. Install with: pip install synapseclient")
+
+try:
+    from opensearchpy import OpenSearch
+    from opensearchpy.helpers import bulk as os_bulk
+    OPENSEARCH_AVAILABLE = True
+except ImportError:
+    OPENSEARCH_AVAILABLE = False
 
 # Configure logging
 logging.basicConfig(

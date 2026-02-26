@@ -1,5 +1,12 @@
 # Synapse Clinical Materialized Views - Implementation Guide
 
+> **Scope**: This guide covers the **Files search tab** Synapse materialized view
+> architecture — per-model views with enriched clinical metadata filters.
+>
+> Related guides:
+> - OpenSearch indexing for the Files tab: [`FILES_OPENSEARCH_GUIDE.md`](./FILES_OPENSEARCH_GUIDE.md)
+> - OpenSearch indexing for the Tools tab: [`TOOLS_OPENSEARCH_GUIDE.md`](./TOOLS_OPENSEARCH_GUIDE.md)
+
 ## Overview
 
 This guide describes how to create context-specific Synapse materialized views with enriched clinical metadata filters, inspired by GA4GH Phenopacket structure.
