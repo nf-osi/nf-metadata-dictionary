@@ -4,10 +4,11 @@ Validate schema against Synapse platform limits.
 
 Checks against FILE VIEW configuration limits (stricter than JSON schema):
 - STRING: 80 chars, LIST: 80 chars × 40 items, name: 256 chars
-- Row limit: 64KB, Enum limit: 100 values (for annotations)
+- Row limit: 64KB
 
 Note: JSON schemas can have larger enums and longer strings for validation.
 File views require stricter limits due to 64KB row size constraint.
+Note: Synapse no longer enforces a 100-value limit on enums.
 """
 
 import json
@@ -23,15 +24,13 @@ CONFIG = {
     'LIST_MAX_LENGTH': 40,
     'NAME_MAX_SIZE': 256,
     'SYSTEM_OVERHEAD': 3500,
-    'ENUM_LIMIT': 100,
     'ROW_LIMIT': 64000,
-    'ENUM_WARNING': 80,
     'ROW_WARNING': 57600,
 }
 
 
 def check_enum_sizes(modules_dir: Path) -> Dict[str, List]:
-    """Check enum sizes against 100-value limit."""
+    """Count enum sizes (informational only; no limit is enforced)."""
     enum_counts = {}
 
     for yaml_file in modules_dir.rglob("*.yaml"):
@@ -44,18 +43,13 @@ def check_enum_sizes(modules_dir: Path) -> Dict[str, List]:
                         enum_counts[name] = {
                             'file': str(yaml_file.relative_to(modules_dir.parent)),
                             'count': count,
-                            'remaining': CONFIG['ENUM_LIMIT'] - count
                         }
         except:
             pass
 
-    exceeds = [e for e in enum_counts.values() if e['count'] > CONFIG['ENUM_LIMIT']]
-    approaching = [e for e in enum_counts.values() if CONFIG['ENUM_WARNING'] <= e['count'] <= CONFIG['ENUM_LIMIT']]
-
     return {
-        'exceeds': sorted(exceeds, key=lambda x: x['count'], reverse=True),
-        'approaching': sorted(approaching, key=lambda x: x['count'], reverse=True),
-        'total': len(enum_counts)
+        'total': len(enum_counts),
+        'largest': sorted(enum_counts.values(), key=lambda x: x['count'], reverse=True)[:5],
     }
 
 
@@ -149,23 +143,20 @@ def format_markdown(enum_data, string_data, row_data) -> str:
     lines.extend([
         "## File View Configuration (Synapse Platform Limits)",
         f"- STRING: {CONFIG['STRING_MAX_SIZE']} chars, LIST: {CONFIG['LIST_MAX_SIZE']} chars × {CONFIG['LIST_MAX_LENGTH']} items, name: {CONFIG['NAME_MAX_SIZE']} chars",
-        f"- Limits: {CONFIG['ROW_LIMIT']:,} bytes/row, {CONFIG['ENUM_LIMIT']} values/enum (annotations)",
+        f"- Limits: {CONFIG['ROW_LIMIT']:,} bytes/row",
         "",
         "_Note: These are stricter than JSON schema limits due to 64KB row size constraint._",
+        "_Note: Synapse no longer enforces a per-enum value count limit._",
         ""
     ])
 
-    # Enums
-    lines.append("## Enum Sizes")
-    if enum_data['exceeds']:
-        lines.append(f"### ❌ {len(enum_data['exceeds'])} enums exceed limit")
-        for e in enum_data['exceeds'][:10]:
-            lines.append(f"- {e['count']} values (exceeds by {e['count'] - CONFIG['ENUM_LIMIT']}): `{e['file']}`")
-    else:
-        lines.append("### ✅ All enums within limit")
-
-    if enum_data['approaching']:
-        lines.append(f"### ⚠️  {len(enum_data['approaching'])} approaching limit")
+    # Enums (informational)
+    lines.append("## Enum Sizes (informational)")
+    lines.append(f"### {enum_data['total']} enums found (no limit enforced)")
+    if enum_data['largest']:
+        lines.append("Top 5 largest:")
+        for e in enum_data['largest']:
+            lines.append(f"- {e['count']} values: `{e['file']}`")
     lines.append("")
 
     # String lengths
@@ -205,13 +196,13 @@ def format_markdown(enum_data, string_data, row_data) -> str:
     lines.extend([
         "",
         "## Summary",
-        f"- Enums: {enum_data['total']} total, {len(enum_data['exceeds'])} exceed, {len(enum_data['approaching'])} approaching",
+        f"- Enums: {enum_data['total']} total (no limit enforced)",
         f"- Schemas: {len(row_data['schemas'])} total, {len(row_data['exceeds'])} exceed, {len(row_data['approaching'])} approaching",
     ])
 
-    if enum_data['exceeds'] or row_data['exceeds']:
+    if row_data['exceeds']:
         lines.append("\n❌ **VALIDATION FAILED** - Critical issues found")
-    elif enum_data['approaching'] or row_data['approaching']:
+    elif row_data['approaching']:
         lines.append("\n⚠️  **WARNINGS** - Some limits approaching")
     else:
         lines.append("\n✅ **ALL CHECKS PASSED**")
@@ -255,9 +246,9 @@ def main():
 
     # Exit codes
     if args.strict:
-        if enum_data['exceeds'] or row_data['exceeds']:
+        if row_data['exceeds']:
             sys.exit(1)
-        elif enum_data['approaching'] or row_data['approaching']:
+        elif row_data['approaching']:
             sys.exit(2)
 
     sys.exit(0)
