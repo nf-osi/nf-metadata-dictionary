@@ -778,6 +778,7 @@ slots:
     title: Leukemia
   libraryKitID:
     description: Library kit ID.
+    range: LibraryKitIDEnum
     title: Library Kit ID
     required: true
   libraryPrep:
@@ -1407,9 +1408,8 @@ slots:
     title: Summary
     required: true
   targetCaptureKitID:
-    description: 'A unique identifier for the kit used to construct a genomic library using target capture-based techniques, which should be composed of the vendor name, kit name and kit version.
-
-      '
+    description: A unique identifier for the kit used to construct a genomic library using target capture-based techniques, composed of the vendor name, kit name and kit version.
+    range: TargetCaptureKitEnum
     title: Target Capture Kit ID
     required: false
   targetDepth:
