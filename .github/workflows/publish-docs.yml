@@ -2,14 +2,15 @@ name: Build and publish docs to GH Pages
 
 on:
   push:
-    branches: 
+    branches:
       - main
     paths:
       - 'modules/**'
       - 'docs/**'
+      - 'dca-template-config.json'
       - '.github/workflows/publish-docs.yml'
   pull_request:
-    branches: 
+    branches:
       - main
     types:
       - opened
@@ -19,24 +20,43 @@ on:
     paths:
       - 'modules/**'
       - 'docs/**'
+      - 'dca-template-config.json'
       - '.github/workflows/publish-docs.yml'
-
 
 jobs:
 
   build-and-publish:
     runs-on: ubuntu-latest
-      
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Build using docker
+      - name: Setup Node.js
+        if: github.event.action != 'closed'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: docs/package-lock.json
+
+      - name: Build TTL if needed
         if: github.event.action != 'closed'
         run: |
-          docker build -t data-model-docs ./docs
-          docker run -v $(pwd):/app data-model-docs    
-      
+          if [ ! -f dist/NF.ttl ]; then
+            make NF.ttl
+          fi
+
+      - name: Install docs dependencies
+        if: github.event.action != 'closed'
+        working-directory: docs
+        run: npm ci
+
+      - name: Build docs
+        if: github.event.action != 'closed'
+        working-directory: docs
+        run: node build.mjs
+
       - name: Deploy preview for PRs
         if: github.event_name == 'pull_request'
         id: preview-deployment
@@ -44,7 +64,7 @@ jobs:
         with:
           source-dir: ./docs
 
-      - name: Deploy 🚀
+      - name: Deploy
         if: github.event_name != 'pull_request'
         id: prod-deployment
         uses: JamesIves/github-pages-deploy-action@v4
