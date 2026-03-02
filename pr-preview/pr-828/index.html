@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NF Metadata Dictionary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-left">
+      <h1 class="site-title">NF Metadata Dictionary</h1>
+      <span class="site-subtitle">NF-OSI Data Coordinating Center</span>
+      <span class="site-updated" id="last-updated"></span>
+    </div>
+    <div class="header-right">
+      <div class="global-search-wrapper">
+        <input type="search" id="global-search" class="global-search" placeholder="Search templates, fields, terms..." autocomplete="off">
+        <div id="search-results" class="search-results" hidden></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Tab Navigation -->
+  <nav class="tab-nav" role="tablist">
+    <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-templates" data-tab="templates">Templates</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-vocabulary" data-tab="vocabulary">Vocabulary</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-sparql" data-tab="sparql">SPARQL Explorer</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-about" data-tab="about">About</button>
+  </nav>
+
+  <!-- Templates Tab -->
+  <section id="tab-templates" class="tab-panel active" role="tabpanel">
+    <div class="templates-layout">
+      <!-- Sidebar -->
+      <aside class="templates-sidebar">
+        <h3 class="sidebar-title">Template Hierarchy</h3>
+        <div id="hierarchy-tree" class="hierarchy-tree"></div>
+      </aside>
+
+      <!-- Main content -->
+      <div class="templates-main">
+        <!-- List view -->
+        <div id="templates-list-view">
+          <div class="filter-bar">
+            <input type="search" id="template-search" class="filter-search" placeholder="Filter templates...">
+            <select id="filter-type" class="filter-select">
+              <option value="">All types</option>
+              <option value="file">File-based</option>
+              <option value="record">Record-based</option>
+              <option value="partial">Partial</option>
+            </select>
+            <select id="filter-granularity" class="filter-select">
+              <option value="">All levels</option>
+              <option value="specimen-level">Specimen-level</option>
+              <option value="individual-level">Individual-level</option>
+              <option value="aggregate-level">Aggregate-level</option>
+              <option value="population-level">Population-level</option>
+            </select>
+            <label class="filter-toggle">
+              <input type="checkbox" id="filter-abstract" checked>
+              <span>Recommended for curation</span>
+            </label>
+            <label class="filter-toggle">
+              <span>Min fields</span>
+              <input type="number" id="filter-min-fields" class="filter-number" min="0" value="" placeholder="0">
+            </label>
+          </div>
+          <div id="template-cards" class="card-grid"></div>
+        </div>
+
+        <!-- Detail view -->
+        <div id="template-detail-view" class="detail-view" hidden>
+          <button id="back-to-templates" class="back-btn">&larr; Back to templates</button>
+          <div id="template-detail-content"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vocabulary Tab -->
+  <section id="tab-vocabulary" class="tab-panel" role="tabpanel" hidden>
+    <div class="vocab-controls">
+      <input type="search" id="vocab-search" class="filter-search" placeholder="Search enums and values...">
+      <select id="vocab-select" class="vocab-select">
+        <option value="">All enums</option>
+      </select>
+    </div>
+    <div id="vocab-cards" class="vocab-grid"></div>
+  </section>
+
+  <!-- SPARQL Explorer Tab -->
+  <section id="tab-sparql" class="tab-panel" role="tabpanel" hidden>
+    <div class="sparql-layout">
+      <div class="sparql-info">
+        <p>Query the NF data model directly using SPARQL. The full RDF graph (<code>NF.ttl</code>) is loaded into an in-browser triple store powered by <a href="https://github.com/oxigraph/oxigraph" target="_blank" rel="noopener">Oxigraph</a> WASM.</p>
+      </div>
+      <div class="sparql-controls">
+        <label for="sparql-examples">Example queries:</label>
+        <select id="sparql-examples" class="sparql-examples-select">
+          <option value="">Select an example...</option>
+        </select>
+      </div>
+      <textarea id="sparql-editor" class="sparql-editor" rows="12" spellcheck="false" placeholder="Enter SPARQL query..."></textarea>
+      <div class="sparql-actions">
+        <button id="sparql-run" class="btn btn-primary">Run Query</button>
+        <button id="sparql-clear" class="btn btn-secondary">Clear</button>
+        <span id="sparql-status" class="sparql-status"></span>
+      </div>
+      <div id="sparql-results" class="sparql-results"></div>
+    </div>
+  </section>
+
+  <!-- About Tab -->
+  <section id="tab-about" class="tab-panel" role="tabpanel" hidden>
+    <div class="about-content">
+      <h2>About the NF Metadata Dictionary</h2>
+      <p>The NF Metadata Dictionary defines the data model for the Neurofibromatosis (NF) research community, maintained by the <strong>NF Open Science Initiative (NF-OSI)</strong> Data Coordinating Center at <a href="https://sagebionetworks.org" target="_blank" rel="noopener">Sage Bionetworks</a>.</p>
+
+      <p>Built with <a href="https://linkml.io" target="_blank" rel="noopener">LinkML</a>, the model compiles to multiple formats including JSON-LD (for <a href="https://github.com/Sage-Bionetworks/schematic" target="_blank" rel="noopener">schematic</a> validation) and JSON Schema (for <a href="https://www.synapse.org" target="_blank" rel="noopener">Synapse</a> platform validation).</p>
+
+      <h3>Model Statistics</h3>
+      <div id="about-stats" class="stats-grid"></div>
+
+      <h3>Links</h3>
+      <ul class="about-links">
+        <li><a href="https://github.com/nf-osi/nf-metadata-dictionary" target="_blank" rel="noopener">GitHub Repository</a></li>
+        <li><a href="https://nf.synapse.org" target="_blank" rel="noopener">NF Data Portal</a></li>
+        <li><a href="https://linkml.io" target="_blank" rel="noopener">LinkML Framework</a></li>
+        <li><a href="https://www.synapse.org" target="_blank" rel="noopener">Synapse Platform</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
