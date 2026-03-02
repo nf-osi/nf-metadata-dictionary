@@ -263,6 +263,32 @@ a:hover { text-decoration: underline; }
 
 .filter-toggle input { cursor: pointer; }
 
+.filter-select {
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family);
+  font-size: var(--fs-sm);
+  background: var(--color-surface);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.filter-select:focus { border-color: var(--color-primary); }
+
+.filter-number {
+  width: 60px;
+  padding: 4px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family);
+  font-size: var(--fs-sm);
+  background: var(--color-surface);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.filter-number:focus { border-color: var(--color-primary); }
+
 /* Card Grid */
 .card-grid {
   display: grid;
@@ -316,6 +342,12 @@ a:hover { text-decoration: underline; }
   flex-wrap: wrap;
 }
 
+.template-card-fields {
+  margin-top: 8px;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
 /* Badges */
 .badge {
   display: inline-block;
@@ -325,12 +357,9 @@ a:hover { text-decoration: underline; }
   font-weight: 500;
 }
 
-.badge-public { background: #dcfce7; color: #166534; }
 .badge-abstract { background: #f1f5f9; color: var(--color-text-secondary); }
-.badge-slots { background: #e0f2fe; color: #0369a1; }
-.badge-parent { background: #fef3c7; color: #92400e; }
-.badge-record { background: #f3e8ff; color: #6b21a8; }
-.badge-file { background: #dbeafe; color: #1e40af; }
+.badge-type { background: #dbeafe; color: #1e40af; }
+.badge-granularity { background: #f3e8ff; color: #6b21a8; }
 
 /* Detail View */
 .detail-view { }
@@ -375,6 +404,12 @@ a:hover { text-decoration: underline; }
   color: var(--color-text-secondary);
   line-height: 1.6;
   margin-bottom: 16px;
+}
+
+.detail-meta {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
 }
 
 .detail-badges {
@@ -512,15 +547,6 @@ a:hover { text-decoration: underline; }
 
 .tree-label:hover { background: var(--color-bg); }
 .tree-label.active { background: #dbeafe; color: var(--color-primary); font-weight: 500; }
-
-.tree-public-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-success);
-  flex-shrink: 0;
-}
 
 .tree-children { overflow: hidden; }
 .tree-children.collapsed { display: none; }

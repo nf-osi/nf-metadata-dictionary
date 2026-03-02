@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Build script: Parses dist/NF.ttl → docs/data.json
- * Extracts templates, slots, enums, and cross-references dca-template-config.json
+ * Extracts templates, slots, enums, and reads annotations from source YAML
  */
 
 import { readFileSync, writeFileSync, copyFileSync, existsSync, readdirSync } from 'fs';
@@ -72,21 +72,7 @@ const quads = parser.parse(ttlContent);
 store.addQuads(quads);
 console.log(`Loaded ${store.size} quads`);
 
-// 2. Load DCA template config for public template info
-const dcaPath = resolve(rootDir, 'dca-template-config.json');
-let dcaTemplates = {};
-if (existsSync(dcaPath)) {
-  const dca = JSON.parse(readFileSync(dcaPath, 'utf-8'));
-  for (const t of dca.manifest_schemas || []) {
-    dcaTemplates[t.schema_name] = {
-      displayName: t.display_name,
-      type: t.type
-    };
-  }
-  console.log(`Loaded ${Object.keys(dcaTemplates).length} DCA templates`);
-}
-
-// 2b. Read annotations from source YAML (stripped during TTL build)
+// 2. Read annotations from source YAML (stripped during TTL build)
 const templateAnnotations = {};
 const templateDir = resolve(rootDir, 'modules', 'Template');
 if (existsSync(templateDir)) {
@@ -124,19 +110,13 @@ for (const q of classQuads) {
   const slotRefs = getAll(store, q.subject, namedNode(LINKML + 'slots'), null);
   const slotNames = slotRefs.map(s => localName(s));
 
-  // Check DCA config
-  const dcaInfo = dcaTemplates[name];
-
   templates.push({
     name,
     uri,
     description: description.trim(),
     isAbstract,
     parent,
-    slots: slotNames,
-    isPublic: !!dcaInfo,
-    displayName: dcaInfo?.displayName || null,
-    dcaType: dcaInfo?.type || null
+    slots: slotNames
   });
 }
 
@@ -336,7 +316,7 @@ function computeTemplateType(name) {
 }
 
 for (const t of templates) {
-  t.templateType = computeTemplateType(t.name) || t.dcaType || null;
+  t.templateType = computeTemplateType(t.name);
   const annots = templateAnnotations[t.name];
   t.dataGranularity = annots?.dataGranularity || null;
 }

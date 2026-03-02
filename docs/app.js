@@ -31,7 +31,7 @@ async function init() {
 function buildSearchIndex() {
   searchIndex = [];
   for (const t of DATA.templates) {
-    searchIndex.push({ type: 'template', name: t.name, display: t.displayName || t.name, desc: t.description });
+    searchIndex.push({ type: 'template', name: t.name, display: t.name, desc: t.description });
   }
   for (const s of Object.values(DATA.slots)) {
     searchIndex.push({ type: 'slot', name: s.name, display: s.displayName, desc: s.description });
@@ -137,8 +137,10 @@ function initTemplates() {
   renderTemplateCards();
 
   document.getElementById('template-search').addEventListener('input', renderTemplateCards);
-  document.getElementById('filter-public').addEventListener('change', renderTemplateCards);
+  document.getElementById('filter-type').addEventListener('change', renderTemplateCards);
+  document.getElementById('filter-granularity').addEventListener('change', renderTemplateCards);
   document.getElementById('filter-abstract').addEventListener('change', renderTemplateCards);
+  document.getElementById('filter-min-fields').addEventListener('input', renderTemplateCards);
   document.getElementById('back-to-templates').addEventListener('click', () => {
     location.hash = '#templates';
   });
@@ -194,10 +196,9 @@ function renderHierarchyTree() {
       (a.displayName || a.name).localeCompare(b.displayName || b.name)
     );
 
-    const publicDot = t.isPublic ? '<span class="tree-public-dot" title="Public template"></span>' : '';
     let childHtml = `<li>
       <span class="tree-toggle">\u00A0</span>
-      <span class="tree-label" data-name="${esc(t.name)}">${publicDot}${esc(t.displayName || t.name)}</span>
+      <span class="tree-label" data-name="${esc(t.name)}">${esc(t.name)}</span>
     </li>`;
     for (const c of sorted) {
       childHtml += buildLeaf(c);
@@ -213,7 +214,6 @@ function renderHierarchyTree() {
   // Render a concrete template as a leaf, with optional nested children.
   // Only shows direct children (not all descendants) to avoid duplicates.
   function buildLeaf(t) {
-    const publicDot = t.isPublic ? '<span class="tree-public-dot" title="Public template"></span>' : '';
     // Get direct concrete children + concrete descendants of direct abstract children
     const directChildren = DATA.templates.filter(c => c.parent === t.name);
     const visibleChildren = [];
@@ -229,15 +229,15 @@ function renderHierarchyTree() {
     if (visibleChildren.length === 0) {
       return `<li>
         <span class="tree-toggle">\u00A0</span>
-        <span class="tree-label" data-name="${esc(t.name)}">${publicDot}${esc(t.displayName || t.name)}</span>
+        <span class="tree-label" data-name="${esc(t.name)}">${esc(t.name)}</span>
       </li>`;
     }
     // Concrete template with children: show as expandable
-    const sorted = visibleChildren.sort((a, b) => (a.displayName || a.name).localeCompare(b.displayName || b.name));
+    const sorted = visibleChildren.sort((a, b) => a.name.localeCompare(b.name));
     const childHtml = sorted.map(c => buildLeaf(c)).join('');
     return `<li>
       <span class="tree-toggle">\u25BC</span>
-      <span class="tree-label" data-name="${esc(t.name)}">${publicDot}${esc(t.displayName || t.name)}</span>
+      <span class="tree-label" data-name="${esc(t.name)}">${esc(t.name)}</span>
       <div class="tree-children"><ul>${childHtml}</ul></div>
     </li>`;
   }
@@ -337,13 +337,12 @@ function renderHierarchyTree() {
 
   // "Other" group for standalone concrete templates without a tree parent
   if (concreteStandalone.length > 0) {
-    const items = concreteStandalone.sort((a, b) => (a.displayName || a.name).localeCompare(b.displayName || b.name));
+    const items = concreteStandalone.sort((a, b) => a.name.localeCompare(b.name));
     let inner = '';
     for (const t of items) {
-      const publicDot = t.isPublic ? '<span class="tree-public-dot" title="Public template"></span>' : '';
       inner += `<li>
         <span class="tree-toggle">\u00A0</span>
-        <span class="tree-label" data-name="${esc(t.name)}">${publicDot}${esc(t.displayName || t.name)}</span>
+        <span class="tree-label" data-name="${esc(t.name)}">${esc(t.name)}</span>
       </li>`;
     }
     html += `<li>
@@ -388,17 +387,20 @@ function humanize(name) {
 function renderTemplateCards() {
   const container = document.getElementById('template-cards');
   const query = document.getElementById('template-search').value.toLowerCase();
-  const publicOnly = document.getElementById('filter-public').checked;
-  const hideAbstract = document.getElementById('filter-abstract').checked;
+  const typeFilter = document.getElementById('filter-type').value;
+  const granFilter = document.getElementById('filter-granularity').value;
+  const curateOnly = document.getElementById('filter-abstract').checked;
+  const minFields = parseInt(document.getElementById('filter-min-fields').value, 10) || 0;
 
   let filtered = DATA.templates;
   if (query) filtered = filtered.filter(t =>
     t.name.toLowerCase().includes(query) ||
-    (t.displayName && t.displayName.toLowerCase().includes(query)) ||
     t.description.toLowerCase().includes(query)
   );
-  if (publicOnly) filtered = filtered.filter(t => t.isPublic);
-  if (hideAbstract) filtered = filtered.filter(t => !t.isAbstract);
+  if (typeFilter) filtered = filtered.filter(t => t.templateType === typeFilter);
+  if (granFilter) filtered = filtered.filter(t => t.dataGranularity === granFilter);
+  if (curateOnly) filtered = filtered.filter(t => !t.isAbstract);
+  if (minFields > 0) filtered = filtered.filter(t => t.slots.length >= minFields);
 
   if (filtered.length === 0) {
     container.innerHTML = '<div class="empty-state">No templates match your filters</div>';
@@ -411,12 +413,11 @@ function renderTemplateCards() {
         <span class="template-card-name">${esc(t.name)}</span>
       </div>
       ${t.description ? `<div class="template-card-desc">${esc(t.description)}</div>` : ''}
+      <div class="template-card-fields">${t.slots.length} fields${t.parent ? ` · ${esc(t.parent)}` : ''}</div>
       <div class="template-card-meta">
-        ${t.isPublic ? '<span class="badge badge-public">Public</span>' : ''}
         ${t.isAbstract ? '<span class="badge badge-abstract">Abstract</span>' : ''}
-        ${t.dcaType ? `<span class="badge badge-${t.dcaType}">${esc(t.dcaType)}</span>` : ''}
-        <span class="badge badge-slots">${t.slots.length} fields</span>
-        ${t.parent ? `<span class="badge badge-parent">${esc(t.parent)}</span>` : ''}
+        ${t.templateType ? `<span class="badge badge-type">${esc(t.templateType === 'file' ? 'File-based' : t.templateType === 'record' ? 'Record-based' : t.templateType === 'partial' ? 'Partial' : t.templateType)}</span>` : ''}
+        ${t.dataGranularity ? `<span class="badge badge-granularity">${esc(t.dataGranularity)}</span>` : ''}
       </div>
     </div>
   `).join('');
@@ -446,15 +447,13 @@ function showTemplateDetail(name) {
   content.innerHTML = `
     <div class="detail-header">
       <h2 class="detail-title">${esc(t.name)}</h2>
-      ${t.displayName ? `<p class="detail-display-name">${esc(t.displayName)}</p>` : ''}
     </div>
     ${t.description ? `<p class="detail-desc">${esc(t.description)}</p>` : ''}
+    ${t.parent ? `<p class="detail-meta">${slots.length} fields · Inherits from ${esc(t.parent)}</p>` : `<p class="detail-meta">${slots.length} fields</p>`}
     <div class="detail-badges">
-      ${t.isPublic ? '<span class="badge badge-public">Public Template</span>' : ''}
       ${t.isAbstract ? '<span class="badge badge-abstract">Abstract</span>' : ''}
-      ${t.dcaType ? `<span class="badge badge-${t.dcaType}">${esc(t.dcaType)}-based</span>` : ''}
-      ${t.parent ? `<span class="badge badge-parent">Inherits: ${esc(t.parent)}</span>` : ''}
-      <span class="badge badge-slots">${slots.length} fields</span>
+      ${t.templateType ? `<span class="badge badge-type">${esc(t.templateType === 'file' ? 'File-based' : t.templateType === 'record' ? 'Record-based' : t.templateType === 'partial' ? 'Partial' : t.templateType)}</span>` : ''}
+      ${t.dataGranularity ? `<span class="badge badge-granularity">${esc(t.dataGranularity)}</span>` : ''}
     </div>
     ${slots.length > 0 ? `
     <div class="slot-table-wrapper">

@@ -48,13 +48,26 @@
         <div id="templates-list-view">
           <div class="filter-bar">
             <input type="search" id="template-search" class="filter-search" placeholder="Filter templates...">
-            <label class="filter-toggle">
-              <input type="checkbox" id="filter-public">
-              <span>Public only</span>
-            </label>
+            <select id="filter-type" class="filter-select">
+              <option value="">All types</option>
+              <option value="file">File-based</option>
+              <option value="record">Record-based</option>
+              <option value="partial">Partial</option>
+            </select>
+            <select id="filter-granularity" class="filter-select">
+              <option value="">All levels</option>
+              <option value="specimen-level">Specimen-level</option>
+              <option value="individual-level">Individual-level</option>
+              <option value="aggregate-level">Aggregate-level</option>
+              <option value="population-level">Population-level</option>
+            </select>
             <label class="filter-toggle">
               <input type="checkbox" id="filter-abstract" checked>
-              <span>Hide abstract</span>
+              <span>Recommended for curation</span>
+            </label>
+            <label class="filter-toggle">
+              <span>Min fields</span>
+              <input type="number" id="filter-min-fields" class="filter-number" min="0" value="" placeholder="0">
             </label>
           </div>
           <div id="template-cards" class="card-grid"></div>
