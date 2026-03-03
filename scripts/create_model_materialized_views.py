@@ -367,14 +367,56 @@ class ModelMetadataEnricher:
     # Genotype and dataType normalization
     # ------------------------------------------------------------------
 
-    # Alias map: raw annotation value → canonical value for dataType
+    # Alias map: raw annotation value → canonical value for dataType.
+    # Sourced from kg-pipeline/mappings/sssom/data_lookup.sssom.tsv (manual curation + camelCase
+    # normalization). Only unambiguous aliases are included; generic terms that could cause false
+    # mappings (e.g. "Count", "Nature", "Document") are intentionally omitted.
     _DATATYPE_ALIASES: Dict[str, str] = {
-        "drugScreen":       "drug screen",
-        "geneExpression":   "gene expression",
-        "genomicVariants":  "genomic variants",
-        "Weight":           "weight",
-        "RNA-Seq":          "RNA-seq",
-        "drugscreen":       "drug screen",
+        # camelCase / legacy spellings of core NF data types
+        "drugScreen":                           "drug screen",
+        "drugscreen":                           "drug screen",
+        "geneExpression":                       "gene expression",
+        "genomicVariants":                      "genomic variants",
+        "cellularPhysiology":                   "cellular physiology",
+        "chromatinActivity":                    "chromatin activity",
+        "surveyData":                           "survey data",
+        # Alternate labels for sequence / omics data types
+        "AlignedReads":                         "aligned reads",
+        "Gene sequence variations":             "genomic variants",
+        "Gene expression data matrix":          "gene expression matrix",
+        "Normalised microarray data":           "gene expression matrix",
+        "Read count matrix":                    "count matrix",
+        "Isoform Measurement":                  "isoform expression",
+        "Isoform Quantitation":                 "isoform expression",
+        "Protein Isoform Measurement":          "isoform expression",
+        "Protein Isoform Quantitation":         "isoform expression",
+        # Clinical / demographic data types
+        "behavior process":                     "behavioral data",
+        "Demographic Factor":                   "demographics",
+        "Demography":                           "demographics",
+        "Population Studies / Demography":      "demographics",
+        "Immunological Laboratory Method":      "immunoassay",
+        "Immunology Test":                      "immunoassay",
+        "PK Study":                             "pharmacokinetics",
+        "Pharmacokinetic Study":                "pharmacokinetics",
+        # Document / report variants
+        "DMP":                                  "data sharing plan",
+        "Data Management Plan":                 "data sharing plan",
+        "Data Landscape Survey":                "data sharing plan",
+        "Enrichment report":                    "over-representation data",
+        "Over-representation report":           "over-representation data",
+        "Nucleotide sequence record":           "nucleic acid sequence record",
+        "Sequence record (nucleic acid)":       "nucleic acid sequence record",
+        # Physical measurement variants
+        "Image data":                           "image",
+        "Physicochemical property":             "molecular property",
+        "Vol":                                  "volume",
+        "Total Volume":                         "volume",
+        "Volume":                               "volume",
+        "Feature":                              "characteristic",
+        # Case corrections
+        "Weight":                               "weight",
+        "RNA-Seq":                              "RNA-seq",
     }
     # Gene-name prefix that appears before the allele notation, e.g. "NF1-/-"
     _GENOTYPE_GENE_PREFIX_RE = re.compile(
@@ -408,6 +450,8 @@ class ModelMetadataEnricher:
         lower_v = v.lower()
         if lower_v in ("knockdown", "control", "overexpression", "non-targeting control"):
             return None  # perturbation type, not genotype
+        if lower_v == "wt":
+            return "+/+"  # nf1_genotype_lookup.sssom.tsv: WT → nf:NF1WildType
         if lower_v in ("unknown", "unk", "not known"):
             return "Unknown"
         if lower_v == "multiple":
