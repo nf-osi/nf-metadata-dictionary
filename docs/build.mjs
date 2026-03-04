@@ -27,6 +27,10 @@ const { namedNode, literal } = DataFactory;
 function localName(uri) {
   if (!uri) return '';
   const str = typeof uri === 'string' ? uri : uri.value;
+  // For known namespace prefixes, strip the prefix to handle values with '/' in them
+  for (const ns of [VOCAB, LINKML]) {
+    if (str.startsWith(ns)) return decodeURIComponent(str.slice(ns.length));
+  }
   const frag = str.lastIndexOf('#');
   const slash = str.lastIndexOf('/');
   const idx = Math.max(frag, slash);
@@ -300,7 +304,7 @@ for (const t of templates) {
   t.children = templates.filter(c => c.parent === t.name).map(c => c.name);
 }
 
-// 8. Compute templateType from hierarchy and attach annotations
+// 8. Compute templateType, depth, and attach annotations
 function computeTemplateType(name) {
   const visited = new Set();
   let current = name;
@@ -315,8 +319,19 @@ function computeTemplateType(name) {
   return null;
 }
 
+function computeDepth(name) {
+  let depth = 0;
+  let current = templateMap[name];
+  while (current && current.parent && templateMap[current.parent]) {
+    depth++;
+    current = templateMap[current.parent];
+  }
+  return depth;
+}
+
 for (const t of templates) {
   t.templateType = computeTemplateType(t.name);
+  t.depth = computeDepth(t.name);
   const annots = templateAnnotations[t.name];
   t.dataGranularity = annots?.dataGranularity || null;
 }

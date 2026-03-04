@@ -37,7 +37,7 @@ function buildSearchIndex() {
     searchIndex.push({ type: 'slot', name: s.name, display: s.displayName, desc: s.description });
   }
   for (const e of Object.values(DATA.enums)) {
-    searchIndex.push({ type: 'enum', name: e.name, display: e.name, desc: `${e.valueCount} values` });
+    searchIndex.push({ type: 'vocab', name: e.name, display: e.name, desc: `${e.valueCount} values` });
     for (const v of e.values) {
       searchIndex.push({ type: 'value', name: v.name, display: v.name, desc: v.definition, parent: e.name });
     }
@@ -115,7 +115,7 @@ function initGlobalSearch() {
     const parent = item.dataset.parent;
 
     if (type === 'template') location.hash = `#template/${name}`;
-    else if (type === 'enum') location.hash = `#vocab/${name}`;
+    else if (type === 'vocab') location.hash = `#vocab/${name}`;
     else if (type === 'value') location.hash = `#vocab/${parent}`;
     else if (type === 'slot') {
       // Find a template that uses this slot and navigate there
@@ -384,6 +384,13 @@ function humanize(name) {
     .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2');
 }
 
+function humanizeEnumName(name) {
+  return name
+    .replace(/Enum$/, '')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2');
+}
+
 function renderTemplateCards() {
   const container = document.getElementById('template-cards');
   const query = document.getElementById('template-search').value.toLowerCase();
@@ -406,6 +413,13 @@ function renderTemplateCards() {
     container.innerHTML = '<div class="empty-state">No templates match your filters</div>';
     return;
   }
+
+  // Sort: shallower depth first (go-to templates), then alphabetically
+  filtered = [...filtered].sort((a, b) => {
+    const da = a.depth || 0, db = b.depth || 0;
+    if (da !== db) return da - db;
+    return a.name.localeCompare(b.name);
+  });
 
   container.innerHTML = filtered.map(t => `
     <div class="template-card" data-name="${esc(t.name)}">
@@ -532,12 +546,12 @@ function renderSlotRows(slots) {
 function renderRange(slot) {
   if (slot.rangeUnion && slot.rangeUnion.length > 0) {
     return '<span class="range-union">' +
-      slot.rangeUnion.map(r => isEnum(r) ? `<span class="range-link" data-enum="${esc(r)}">${esc(r)}</span>` : esc(r))
+      slot.rangeUnion.map(r => isEnum(r) ? `<span class="range-link" data-enum="${esc(r)}">${esc(humanizeEnumName(r))}</span>` : esc(r))
         .join(' | ') +
       '</span>';
   }
   const r = slot.range || 'string';
-  if (isEnum(r)) return `<span class="range-link" data-enum="${esc(r)}">${esc(r)}</span>`;
+  if (isEnum(r)) return `<span class="range-link" data-enum="${esc(r)}">${esc(humanizeEnumName(r))}</span>`;
   return esc(r);
 }
 
@@ -567,7 +581,7 @@ function initVocabulary() {
   for (const name of enumNames) {
     const opt = document.createElement('option');
     opt.value = name;
-    opt.textContent = `${name} (${DATA.enums[name].valueCount})`;
+    opt.textContent = `${humanizeEnumName(name)} (${DATA.enums[name].valueCount})`;
     select.appendChild(opt);
   }
 
@@ -595,7 +609,7 @@ function renderVocabCards(scrollToEnum) {
   }
 
   if (enums.length === 0) {
-    container.innerHTML = '<div class="empty-state">No enums match your search</div>';
+    container.innerHTML = '<div class="empty-state">No vocabularies match your search</div>';
     return;
   }
 
@@ -604,7 +618,7 @@ function renderVocabCards(scrollToEnum) {
     return `
     <div class="enum-card" data-name="${esc(e.name)}" id="enum-${esc(e.name)}">
       <div class="enum-card-header">
-        <span class="enum-card-name">${esc(e.name)}</span>
+        <span class="enum-card-name">${esc(humanizeEnumName(e.name))}</span>
         <span class="enum-card-count">${e.valueCount} values</span>
       </div>
       ${e.description ? `<div class="enum-card-desc">${esc(e.description)}</div>` : ''}
@@ -683,8 +697,8 @@ function initAbout() {
   stats.innerHTML = `
     <div class="stat-card"><div class="stat-value">${m.templateCount}</div><div class="stat-label">Templates</div></div>
     <div class="stat-card"><div class="stat-value">${m.slotCount}</div><div class="stat-label">Attributes</div></div>
-    <div class="stat-card"><div class="stat-value">${m.enumCount}</div><div class="stat-label">Enums</div></div>
-    <div class="stat-card"><div class="stat-value">${m.totalEnumValues.toLocaleString()}</div><div class="stat-label">Total Enum Values</div></div>
+    <div class="stat-card"><div class="stat-value">${m.enumCount}</div><div class="stat-label">Controlled Vocabularies</div></div>
+    <div class="stat-card"><div class="stat-value">${m.totalEnumValues.toLocaleString()}</div><div class="stat-label">Total Allowed Values</div></div>
   `;
 }
 
