@@ -334,6 +334,7 @@ for (const t of templates) {
   t.depth = computeDepth(t.name);
   const annots = templateAnnotations[t.name];
   t.dataGranularity = annots?.dataGranularity || null;
+  t.templateUsage = annots?.templateUsage || null;
 }
 
 // 9. Compile output

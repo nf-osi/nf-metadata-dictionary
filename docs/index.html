@@ -61,10 +61,11 @@
               <option value="aggregate-level">Aggregate-level</option>
               <option value="population-level">Population-level</option>
             </select>
-            <label class="filter-toggle">
-              <input type="checkbox" id="filter-abstract" checked>
-              <span>Recommended for curation</span>
-            </label>
+            <select id="filter-usage" class="filter-select">
+              <option value="most_common" selected>Most common</option>
+              <option value="common">Common</option>
+              <option value="">All</option>
+            </select>
             <label class="filter-toggle">
               <span>Min fields</span>
               <input type="number" id="filter-min-fields" class="filter-number" min="0" value="" placeholder="0">

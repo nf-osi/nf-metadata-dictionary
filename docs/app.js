@@ -139,7 +139,7 @@ function initTemplates() {
   document.getElementById('template-search').addEventListener('input', renderTemplateCards);
   document.getElementById('filter-type').addEventListener('change', renderTemplateCards);
   document.getElementById('filter-granularity').addEventListener('change', renderTemplateCards);
-  document.getElementById('filter-abstract').addEventListener('change', renderTemplateCards);
+  document.getElementById('filter-usage').addEventListener('change', renderTemplateCards);
   document.getElementById('filter-min-fields').addEventListener('input', renderTemplateCards);
   document.getElementById('back-to-templates').addEventListener('click', () => {
     location.hash = '#templates';
@@ -396,9 +396,10 @@ function renderTemplateCards() {
   const query = document.getElementById('template-search').value.toLowerCase();
   const typeFilter = document.getElementById('filter-type').value;
   const granFilter = document.getElementById('filter-granularity').value;
-  const curateOnly = document.getElementById('filter-abstract').checked;
+  const usageFilter = document.getElementById('filter-usage').value;
   const minFields = parseInt(document.getElementById('filter-min-fields').value, 10) || 0;
 
+  const usageTiers = { most_common: 0, common: 1, specialized: 2, internal: 3 };
   let filtered = DATA.templates;
   if (query) filtered = filtered.filter(t =>
     t.name.toLowerCase().includes(query) ||
@@ -406,7 +407,15 @@ function renderTemplateCards() {
   );
   if (typeFilter) filtered = filtered.filter(t => t.templateType === typeFilter);
   if (granFilter) filtered = filtered.filter(t => t.dataGranularity === granFilter);
-  if (curateOnly) filtered = filtered.filter(t => !t.isAbstract);
+  if (usageFilter) {
+    const threshold = usageTiers[usageFilter] ?? 2;
+    filtered = filtered.filter(t => (usageTiers[t.templateUsage] ?? 2) <= threshold);
+  }
+  // Always hide abstract and internal unless searching or "All" selected
+  if (!query) {
+    filtered = filtered.filter(t => !t.isAbstract);
+    if (usageFilter) filtered = filtered.filter(t => t.templateUsage !== 'internal');
+  }
   if (minFields > 0) filtered = filtered.filter(t => t.slots.length >= minFields);
 
   if (filtered.length === 0) {
@@ -414,10 +423,11 @@ function renderTemplateCards() {
     return;
   }
 
-  // Sort: shallower depth first (go-to templates), then alphabetically
+  // Sort: by usage tier (most_common first), then alphabetically
+  const usageOrder = { most_common: 0, common: 1, specialized: 2, internal: 3 };
   filtered = [...filtered].sort((a, b) => {
-    const da = a.depth || 0, db = b.depth || 0;
-    if (da !== db) return da - db;
+    const ua = usageOrder[a.templateUsage] ?? 2, ub = usageOrder[b.templateUsage] ?? 2;
+    if (ua !== ub) return ua - ub;
     return a.name.localeCompare(b.name);
   });
 
