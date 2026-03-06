@@ -18,6 +18,10 @@
       <span class="site-updated" id="last-updated"></span>
     </div>
     <div class="header-right">
+      <a href="https://nf.synapse.org" target="_blank" rel="noopener" class="portal-link">
+        <span class="portal-link-icon">←</span>
+        <span>Back to NF Portal</span>
+      </a>
       <div class="global-search-wrapper">
         <input type="search" id="global-search" class="global-search" placeholder="Search templates, fields, terms..." autocomplete="off">
         <div id="search-results" class="search-results" hidden></div>
@@ -61,14 +65,19 @@
               <option value="aggregate-level">Aggregate-level</option>
               <option value="population-level">Population-level</option>
             </select>
-            <label class="filter-toggle">
-              <input type="checkbox" id="filter-abstract" checked>
-              <span>Recommended for curation</span>
-            </label>
+            <select id="filter-usage" class="filter-select">
+              <option value="most_common" selected>Most common</option>
+              <option value="common">Common</option>
+              <option value="">All</option>
+            </select>
             <label class="filter-toggle">
               <span>Min fields</span>
               <input type="number" id="filter-min-fields" class="filter-number" min="0" value="" placeholder="0">
             </label>
+          </div>
+          <div id="filter-notice" class="filter-notice">
+            <span class="filter-notice-text">Showing <strong id="filter-notice-label">most common</strong> templates</span>
+            <button id="show-all-btn" class="filter-notice-link">Show all templates</button>
           </div>
           <div id="template-cards" class="card-grid"></div>
         </div>
@@ -85,9 +94,9 @@
   <!-- Vocabulary Tab -->
   <section id="tab-vocabulary" class="tab-panel" role="tabpanel" hidden>
     <div class="vocab-controls">
-      <input type="search" id="vocab-search" class="filter-search" placeholder="Search enums and values...">
+      <input type="search" id="vocab-search" class="filter-search" placeholder="Search vocabularies and values...">
       <select id="vocab-select" class="vocab-select">
-        <option value="">All enums</option>
+        <option value="">All vocabularies</option>
       </select>
     </div>
     <div id="vocab-cards" class="vocab-grid"></div>
@@ -118,21 +127,78 @@
   <!-- About Tab -->
   <section id="tab-about" class="tab-panel" role="tabpanel" hidden>
     <div class="about-content">
-      <h2>About the NF Metadata Dictionary</h2>
-      <p>The NF Metadata Dictionary defines the data model for the Neurofibromatosis (NF) research community, maintained by the <strong>NF Open Science Initiative (NF-OSI)</strong> Data Coordinating Center at <a href="https://sagebionetworks.org" target="_blank" rel="noopener">Sage Bionetworks</a>.</p>
+      <!-- Hero Section -->
+      <div class="about-hero">
+        <h2>About the NF Metadata Dictionary</h2>
+        <p class="about-lead">The NF Metadata Dictionary defines the data model for the Neurofibromatosis (NF) research community, maintained by the <strong>NF Open Science Initiative (NF-OSI)</strong> Data Coordinating Center at <a href="https://sagebionetworks.org" target="_blank" rel="noopener">Sage Bionetworks</a>.</p>
+      </div>
 
-      <p>Built with <a href="https://linkml.io" target="_blank" rel="noopener">LinkML</a>, the model compiles to multiple formats including JSON-LD (for <a href="https://github.com/Sage-Bionetworks/schematic" target="_blank" rel="noopener">schematic</a> validation) and JSON Schema (for <a href="https://www.synapse.org" target="_blank" rel="noopener">Synapse</a> platform validation).</p>
+      <!-- Stats Grid -->
+      <div class="about-section">
+        <h3 class="about-section-title">Model Statistics</h3>
+        <div id="about-stats" class="stats-grid"></div>
+      </div>
 
-      <h3>Model Statistics</h3>
-      <div id="about-stats" class="stats-grid"></div>
+      <!-- Technical Details -->
+      <div class="about-section">
+        <h3 class="about-section-title">Technical Framework</h3>
+        <div class="about-card">
+          <p>Built with <a href="https://linkml.io" target="_blank" rel="noopener">LinkML</a>, the model compiles to multiple formats including JSON-LD (for <a href="https://github.com/Sage-Bionetworks/schematic" target="_blank" rel="noopener">schematic</a> validation) and JSON Schema (for <a href="https://www.synapse.org" target="_blank" rel="noopener">Synapse</a> platform validation).</p>
+        </div>
+      </div>
 
-      <h3>Links</h3>
-      <ul class="about-links">
-        <li><a href="https://github.com/nf-osi/nf-metadata-dictionary" target="_blank" rel="noopener">GitHub Repository</a></li>
-        <li><a href="https://nf.synapse.org" target="_blank" rel="noopener">NF Data Portal</a></li>
-        <li><a href="https://linkml.io" target="_blank" rel="noopener">LinkML Framework</a></li>
-        <li><a href="https://www.synapse.org" target="_blank" rel="noopener">Synapse Platform</a></li>
-      </ul>
+      <!-- Application Cards -->
+      <div class="about-section">
+        <h3 class="about-section-title">Using the Templates</h3>
+        <p class="about-section-desc">Templates from this dictionary are used for metadata curation in two applications:</p>
+        <div class="app-cards">
+          <div class="app-card">
+            <h4 class="app-card-title">Data Curator App (DCA)</h4>
+            <p class="app-card-desc">Standalone web application for generating and validating metadata manifests</p>
+            <a href="https://dca.app.sagebionetworks.org" target="_blank" rel="noopener" class="app-card-link">Visit DCA →</a>
+          </div>
+          <div class="app-card">
+            <h4 class="app-card-title">Synapse Curator Grid</h4>
+            <p class="app-card-desc">Integrated metadata curation tool within the Synapse platform for annotating datasets directly</p>
+            <a href="https://www.synapse.org" target="_blank" rel="noopener" class="app-card-link">Learn more →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Links Section -->
+      <div class="about-section">
+        <h3 class="about-section-title">Resources</h3>
+        <div class="resource-links">
+          <a href="https://github.com/nf-osi/nf-metadata-dictionary" target="_blank" rel="noopener" class="resource-link">
+            <span class="resource-link-icon">📦</span>
+            <div>
+              <div class="resource-link-title">GitHub Repository</div>
+              <div class="resource-link-desc">Source code and documentation</div>
+            </div>
+          </a>
+          <a href="https://nf.synapse.org" target="_blank" rel="noopener" class="resource-link">
+            <span class="resource-link-icon">🔬</span>
+            <div>
+              <div class="resource-link-title">NF Data Portal</div>
+              <div class="resource-link-desc">Browse NF research data</div>
+            </div>
+          </a>
+          <a href="https://linkml.io" target="_blank" rel="noopener" class="resource-link">
+            <span class="resource-link-icon">🔗</span>
+            <div>
+              <div class="resource-link-title">LinkML Framework</div>
+              <div class="resource-link-desc">Linked data modeling language</div>
+            </div>
+          </a>
+          <a href="https://www.synapse.org" target="_blank" rel="noopener" class="resource-link">
+            <span class="resource-link-icon">☁️</span>
+            <div>
+              <div class="resource-link-title">Synapse Platform</div>
+              <div class="resource-link-desc">Collaborative research platform</div>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 

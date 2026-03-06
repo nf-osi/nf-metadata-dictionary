@@ -56,7 +56,7 @@ ORDER BY ?field`
 ORDER BY ?template ?field`
   },
   {
-    name: 'Enum values with ontology mappings',
+    name: 'Vocabulary values with ontology mappings',
     query: `SELECT ?enum ?value ?ontology WHERE {
   ?e linkml:permissible_values ?v .
   ?v linkml:meaning ?ontology .
