@@ -141,6 +141,10 @@ function initTemplates() {
   document.getElementById('filter-granularity').addEventListener('change', renderTemplateCards);
   document.getElementById('filter-usage').addEventListener('change', renderTemplateCards);
   document.getElementById('filter-min-fields').addEventListener('input', renderTemplateCards);
+  document.getElementById('show-all-btn').addEventListener('click', () => {
+    document.getElementById('filter-usage').value = '';
+    renderTemplateCards();
+  });
   document.getElementById('back-to-templates').addEventListener('click', () => {
     location.hash = '#templates';
   });
@@ -398,6 +402,19 @@ function renderTemplateCards() {
   const granFilter = document.getElementById('filter-granularity').value;
   const usageFilter = document.getElementById('filter-usage').value;
   const minFields = parseInt(document.getElementById('filter-min-fields').value, 10) || 0;
+
+  // Update filter notice
+  const notice = document.getElementById('filter-notice');
+  const noticeLabel = document.getElementById('filter-notice-label');
+  const showAllBtn = document.getElementById('show-all-btn');
+
+  if (query || !usageFilter) {
+    notice.classList.add('hidden');
+  } else {
+    notice.classList.remove('hidden');
+    noticeLabel.textContent = usageFilter.replace('_', ' ');
+    showAllBtn.style.display = usageFilter ? 'block' : 'none';
+  }
 
   const usageTiers = { most_common: 0, common: 1, specialized: 2, internal: 3 };
   let filtered = DATA.templates;
