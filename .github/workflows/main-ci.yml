@@ -217,6 +217,42 @@ jobs:
           name: test-logs-${{ env.SCHEMATIC_VERSION }}
           path: tests/**/logs
 
+  docs-preview:
+    name: Build and preview docs
+    needs: [build]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: docs/package-lock.json
+
+      - name: Download built artifacts from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .
+
+      - name: Install docs dependencies
+        working-directory: docs
+        run: npm ci
+
+      - name: Build docs
+        working-directory: docs
+        run: node build.mjs
+
+      - name: Deploy PR preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./docs
+
   check-schema-limits:
     name: Validate schema limits (Synapse platform)
     needs: [build]

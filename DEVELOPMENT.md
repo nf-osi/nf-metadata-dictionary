@@ -1,6 +1,6 @@
 # Development Guide
 
-Developer-oriented documentation for the NF Metadata Dictionary. For general overview, see the root [README](../README.md).
+Developer-oriented documentation for the NF Metadata Dictionary. For general overview, see the [README](README.md).
 
 ## Quick Reference
 
@@ -205,8 +205,8 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/register-schemas.py \
 
 ## Curation Tasks
 
-Synapse curation tasks enable structured metadata collection using the registered JSON schemas. 
-They are part of the downstream schema setup and testing workflow. 
+Synapse curation tasks enable structured metadata collection using the registered JSON schemas.
+They are part of the downstream schema setup and testing workflow.
 Two task types are supported.
 
 > [!IMPORTANT]
