@@ -59,6 +59,19 @@ jobs:
         with:
           python-version: '3.10.12'
 
+      - name: Install dependencies
+        run: pip install synapseclient
+
+      - name: Check if schemas with this version already exist in Synapse
+        env:
+          SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
+          SCHEMA_VERSION: ${{ steps.get_version.outputs.version }}
+        run: |
+          echo "Checking if schemas with version $SCHEMA_VERSION already exist in Synapse"
+          python utils/check-schema-versions.py \
+            --schema-dir "registered-json-schemas" \
+            --version "$SCHEMA_VERSION"
+
       - name: Ensure git tag exists for manual releases
         if: github.event_name == 'workflow_dispatch'
         env:
@@ -78,9 +91,6 @@ jobs:
             git tag "$TAG" "$GITHUB_SHA"
             git push origin "$TAG"
           fi
-
-      - name: Install dependencies
-        run: pip install synapseclient
 
       - name: Create versioned schemas
         env:
@@ -111,13 +121,6 @@ jobs:
             --schema-dir "versioned-schemas" \
             --log-file "schema-registration-log-$SCHEMA_VERSION.md" \
             --exclude Superdataset.json
-
-      - name: Setup schematic
-        run: |
-          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}
-          pip show schematicpy
-          schematic schema convert NF.jsonld
-          python utils/fix_display_names.py retold_NF.jsonld NF.jsonld
 
       - name: Upload versioned schemas as artifact
         uses: actions/upload-artifact@v4
