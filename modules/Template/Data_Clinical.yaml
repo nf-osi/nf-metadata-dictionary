@@ -42,16 +42,6 @@ classes:
         - range: DocumentFileFormatEnum
       dataType:
         ifabsent: string(clinical)
-    rules:
-    - description: If compoundDose is provided, compoundDoseUnit must be provided
-      preconditions:
-        slot_conditions:
-          compoundDose:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          compoundDoseUnit:
-            value_presence: PRESENT
 
   BehavioralAssayTemplate:
     annotations:
