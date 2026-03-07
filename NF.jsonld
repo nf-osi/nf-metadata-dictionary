@@ -25,6 +25,23 @@
       "sms:validationRules": []
     },
     {
+      "@id": "bts:TargetCaptureKitEnum",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Controlled vocabulary for target capture kits used in exome and targeted sequencing. Kit names follow UCSC Genome Browser exomeProbesets track conventions.",
+      "rdfs:label": "TargetCaptureKitEnum",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "TargetCaptureKitEnum",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
       "@id": "bts:SequencingAssayEnum",
       "@type": "rdfs:Class",
       "rdfs:comment": "Sequencing-based assays including RNA-seq, DNA-seq, and related methods",
@@ -157,6 +174,23 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "SexEnum",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:LibraryKitIDEnum",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "LibraryKitIDEnum",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Thing"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "LibraryKitIDEnum",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -8774,7 +8808,7 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "compoundDoseUnit",
-      "sms:required": "sms:true",
+      "sms:required": "sms:false",
       "sms:validationRules": []
     },
     {
@@ -9363,7 +9397,13 @@
           "@id": "bts:Diagnosis"
         },
         {
+          "@id": "bts:LibraryKitID"
+        },
+        {
           "@id": "bts:LibraryPreparationMethod"
+        },
+        {
+          "@id": "bts:TargetCaptureKitID"
         },
         {
           "@id": "bts:TumorType"
@@ -12111,7 +12151,7 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "compoundDose",
-      "sms:required": "sms:true",
+      "sms:required": "sms:false",
       "sms:requiresDependency": [
         {
           "@id": "bts:CompoundDoseUnit"
@@ -18736,7 +18776,7 @@
     {
       "@id": "bts:TargetCaptureKitID",
       "@type": "rdfs:Class",
-      "rdfs:comment": "A unique identifier for the kit used to construct a genomic library using target capture-based techniques, which should be composed of the vendor name, kit name and kit version.\n",
+      "rdfs:comment": "A unique identifier for the kit used to construct a genomic library using target capture-based techniques, composed of the vendor name, kit name and kit version.",
       "rdfs:label": "TargetCaptureKitID",
       "rdfs:subClassOf": [
         {
@@ -18746,7 +18786,672 @@
       "schema:isPartOf": {
         "@id": "http://schema.biothings.io"
       },
+      "schema:rangeIncludes": [
+        {
+          "@id": "bts:IDTxGenExomeResearchPanelV1.0"
+        },
+        {
+          "@id": "bts:IDTxGenExomeResearchPanelV2.0"
+        },
+        {
+          "@id": "bts:TwistRefSeqExomePanel"
+        },
+        {
+          "@id": "bts:TwistCoreExomePanel"
+        },
+        {
+          "@id": "bts:TwistComprehensiveExomePanel"
+        },
+        {
+          "@id": "bts:TwistExomePanel2.0"
+        },
+        {
+          "@id": "bts:MGIEasyExomeCaptureV4"
+        },
+        {
+          "@id": "bts:MGIEasyExomeCaptureV5"
+        },
+        {
+          "@id": "bts:AgilentSureSelectClinicalResearchExome"
+        },
+        {
+          "@id": "bts:AgilentSureSelectClinicalResearchExomeV2"
+        },
+        {
+          "@id": "bts:AgilentSureSelectFocusedExome"
+        },
+        {
+          "@id": "bts:AgilentSureSelectAllExonV4"
+        },
+        {
+          "@id": "bts:AgilentSureSelectAllExonV4+UTRs"
+        },
+        {
+          "@id": "bts:AgilentSureSelectAllExonV5"
+        },
+        {
+          "@id": "bts:AgilentSureSelectAllExonV5+UTRs"
+        },
+        {
+          "@id": "bts:AgilentSureSelectAllExonV6r2"
+        },
+        {
+          "@id": "bts:AgilentSureSelectAllExonV6+COSMICr2"
+        },
+        {
+          "@id": "bts:AgilentSureSelectAllExonV6+UTRr2"
+        },
+        {
+          "@id": "bts:AgilentSureSelectAllExonV7"
+        },
+        {
+          "@id": "bts:RocheKAPAHyperExome"
+        },
+        {
+          "@id": "bts:RocheSeqCapEZExomeV3"
+        },
+        {
+          "@id": "bts:RocheSeqCapEZExomeV3+UTR"
+        },
+        {
+          "@id": "bts:RocheSeqCapEZMedExome"
+        },
+        {
+          "@id": "bts:RocheSeqCapEZMedExome+Mito"
+        },
+        {
+          "@id": "bts:IlluminaNexteraDNAExomeV1.2"
+        },
+        {
+          "@id": "bts:IlluminaNexteraRapidCaptureExome"
+        },
+        {
+          "@id": "bts:IlluminaNexteraRapidCaptureExomeV1.2"
+        },
+        {
+          "@id": "bts:IlluminaNexteraRapidCaptureExpandedExome"
+        },
+        {
+          "@id": "bts:IlluminaTruSeqDNAExomeV1.2"
+        },
+        {
+          "@id": "bts:IlluminaTruSeqRapidExomeV1.2"
+        },
+        {
+          "@id": "bts:IlluminaTruSightONEV1.1"
+        },
+        {
+          "@id": "bts:IlluminaTruSightExome"
+        },
+        {
+          "@id": "bts:IlluminaAmpliSeqExomePanel"
+        },
+        {
+          "@id": "bts:Unknown"
+        }
+      ],
       "sms:displayName": "targetCaptureKitID",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:IDTxGenExomeResearchPanelV1.0",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "IDTxGenExomeResearchPanelV1.0",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "IDT xGen Exome Research Panel V1.0",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:IDTxGenExomeResearchPanelV2.0",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "IDTxGenExomeResearchPanelV2.0",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "IDT xGen Exome Research Panel V2.0",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:TwistRefSeqExomePanel",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "TwistRefSeqExomePanel",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Twist RefSeq Exome Panel",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:TwistCoreExomePanel",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "TwistCoreExomePanel",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Twist Core Exome Panel",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:TwistComprehensiveExomePanel",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "TwistComprehensiveExomePanel",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Twist Comprehensive Exome Panel",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:TwistExomePanel2.0",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "TwistExomePanel2.0",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Twist Exome Panel 2.0",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MGIEasyExomeCaptureV4",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MGIEasyExomeCaptureV4",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "MGI Easy Exome Capture V4",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:MGIEasyExomeCaptureV5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "MGIEasyExomeCaptureV5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "MGI Easy Exome Capture V5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:AgilentSureSelectClinicalResearchExome",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "AgilentSureSelectClinicalResearchExome",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Agilent SureSelect Clinical Research Exome",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:AgilentSureSelectClinicalResearchExomeV2",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "AgilentSureSelectClinicalResearchExomeV2",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Agilent SureSelect Clinical Research Exome V2",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:AgilentSureSelectFocusedExome",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "AgilentSureSelectFocusedExome",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Agilent SureSelect Focused Exome",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:AgilentSureSelectAllExonV4",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "AgilentSureSelectAllExonV4",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Agilent SureSelect All Exon V4",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:AgilentSureSelectAllExonV4+UTRs",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "AgilentSureSelectAllExonV4+UTRs",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Agilent SureSelect All Exon V4 + UTRs",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:AgilentSureSelectAllExonV5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "AgilentSureSelectAllExonV5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Agilent SureSelect All Exon V5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:AgilentSureSelectAllExonV5+UTRs",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "AgilentSureSelectAllExonV5+UTRs",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Agilent SureSelect All Exon V5 + UTRs",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:AgilentSureSelectAllExonV6r2",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "AgilentSureSelectAllExonV6r2",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Agilent SureSelect All Exon V6 r2",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:AgilentSureSelectAllExonV6+COSMICr2",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "AgilentSureSelectAllExonV6+COSMICr2",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Agilent SureSelect All Exon V6 + COSMIC r2",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:AgilentSureSelectAllExonV6+UTRr2",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "AgilentSureSelectAllExonV6+UTRr2",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Agilent SureSelect All Exon V6 + UTR r2",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:AgilentSureSelectAllExonV7",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "AgilentSureSelectAllExonV7",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Agilent SureSelect All Exon V7",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RocheKAPAHyperExome",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RocheKAPAHyperExome",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Roche KAPA HyperExome",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RocheSeqCapEZExomeV3",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RocheSeqCapEZExomeV3",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Roche SeqCap EZ Exome V3",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RocheSeqCapEZExomeV3+UTR",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RocheSeqCapEZExomeV3+UTR",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Roche SeqCap EZ Exome V3 + UTR",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RocheSeqCapEZMedExome",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RocheSeqCapEZMedExome",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Roche SeqCap EZ MedExome",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:RocheSeqCapEZMedExome+Mito",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "RocheSeqCapEZMedExome+Mito",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Roche SeqCap EZ MedExome + Mito",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:IlluminaNexteraDNAExomeV1.2",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "IlluminaNexteraDNAExomeV1.2",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Illumina Nextera DNA Exome V1.2",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:IlluminaNexteraRapidCaptureExome",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "IlluminaNexteraRapidCaptureExome",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Illumina Nextera Rapid Capture Exome",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:IlluminaNexteraRapidCaptureExomeV1.2",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "IlluminaNexteraRapidCaptureExomeV1.2",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Illumina Nextera Rapid Capture Exome V1.2",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:IlluminaNexteraRapidCaptureExpandedExome",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "IlluminaNexteraRapidCaptureExpandedExome",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Illumina Nextera Rapid Capture Expanded Exome",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:IlluminaTruSeqDNAExomeV1.2",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "IlluminaTruSeqDNAExomeV1.2",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Illumina TruSeq DNA Exome V1.2",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:IlluminaTruSeqRapidExomeV1.2",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "IlluminaTruSeqRapidExomeV1.2",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Illumina TruSeq Rapid Exome V1.2",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:IlluminaTruSightONEV1.1",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "IlluminaTruSightONEV1.1",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Illumina TruSight ONE V1.1",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:IlluminaTruSightExome",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "IlluminaTruSightExome",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Illumina TruSight Exome",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:IlluminaAmpliSeqExomePanel",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "IlluminaAmpliSeqExomePanel",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TargetCaptureKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Illumina AmpliSeq Exome Panel",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -18949,6 +19654,9 @@
           "@id": "bts:Bgzip"
         },
         {
+          "@id": "bts:Cloupe"
+        },
+        {
           "@id": "bts:Bigwig"
         },
         {
@@ -19058,6 +19766,9 @@
         },
         {
           "@id": "bts:Czi"
+        },
+        {
+          "@id": "bts:Dm3"
         },
         {
           "@id": "bts:Hdr"
@@ -19430,6 +20141,23 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "bgzip",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Cloupe",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Cloupe",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:FileFormat"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "cloupe",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -20059,6 +20787,23 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "czi",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Dm3",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Dm3",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:FileFormat"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "dm3",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -24161,8 +24906,413 @@
       "schema:isPartOf": {
         "@id": "http://schema.biothings.io"
       },
+      "schema:rangeIncludes": [
+        {
+          "@id": "bts:ChromiumNextGEMSingleCell3'ReagentKitv3.1"
+        },
+        {
+          "@id": "bts:ChromiumNextGEMSingleCell5'ReagentKitv1.1"
+        },
+        {
+          "@id": "bts:ChromiumSingleCell3'ReagentKitv3"
+        },
+        {
+          "@id": "bts:ChromiumSingleCell5'ReagentKitv1"
+        },
+        {
+          "@id": "bts:TruSeqDNAPCR-FreeLibraryPrepKit"
+        },
+        {
+          "@id": "bts:TruSeqDNANanoLibraryPrepKit"
+        },
+        {
+          "@id": "bts:TruSeqStrandedmRNALibraryPrepKit"
+        },
+        {
+          "@id": "bts:TruSeqStrandedTotalRNALibraryPrepKit"
+        },
+        {
+          "@id": "bts:NEBNextUltraIIDNALibraryPrepKit"
+        },
+        {
+          "@id": "bts:NEBNextUltraIIRNALibraryPrepKit"
+        },
+        {
+          "@id": "bts:KAPAHyperPrepKit"
+        },
+        {
+          "@id": "bts:KAPARNAHyperPrepKit"
+        },
+        {
+          "@id": "bts:NexteraDNAFlexLibraryPrepKit"
+        },
+        {
+          "@id": "bts:NexteraXTDNALibraryPrepKit"
+        },
+        {
+          "@id": "bts:SMART-Seqv4UltraLowInputRNAKit"
+        },
+        {
+          "@id": "bts:QuantSeq3'mRNA-SeqLibraryPrepKitFWD"
+        },
+        {
+          "@id": "bts:ThruPLEXDNA-SeqKit"
+        },
+        {
+          "@id": "bts:Swift2STurboDNALibraryKit"
+        },
+        {
+          "@id": "bts:OxfordNanoporeLigationSequencingKit"
+        },
+        {
+          "@id": "bts:OxfordNanoporeRapidSequencingKit"
+        },
+        {
+          "@id": "bts:Unknown"
+        }
+      ],
       "sms:displayName": "libraryKitID",
       "sms:required": "sms:true",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:ChromiumNextGEMSingleCell3'ReagentKitv3.1",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "ChromiumNextGEMSingleCell3'ReagentKitv3.1",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Chromium NextGEM Single Cell 3' Reagent Kit v3.1",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:ChromiumNextGEMSingleCell5'ReagentKitv1.1",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "ChromiumNextGEMSingleCell5'ReagentKitv1.1",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Chromium NextGEM Single Cell 5' Reagent Kit v1.1",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:ChromiumSingleCell3'ReagentKitv3",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "ChromiumSingleCell3'ReagentKitv3",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Chromium Single Cell 3' Reagent Kit v3",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:ChromiumSingleCell5'ReagentKitv1",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "ChromiumSingleCell5'ReagentKitv1",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Chromium Single Cell 5' Reagent Kit v1",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:TruSeqDNAPCR-FreeLibraryPrepKit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "TruSeqDNAPCR-FreeLibraryPrepKit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "TruSeq DNA PCR-Free Library Prep Kit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:TruSeqDNANanoLibraryPrepKit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "TruSeqDNANanoLibraryPrepKit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "TruSeq DNA Nano Library Prep Kit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:TruSeqStrandedmRNALibraryPrepKit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "TruSeqStrandedmRNALibraryPrepKit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "TruSeq Stranded mRNA Library Prep Kit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:TruSeqStrandedTotalRNALibraryPrepKit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "TruSeqStrandedTotalRNALibraryPrepKit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "TruSeq Stranded Total RNA Library Prep Kit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NEBNextUltraIIDNALibraryPrepKit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NEBNextUltraIIDNALibraryPrepKit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NEBNext Ultra II DNA Library Prep Kit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NEBNextUltraIIRNALibraryPrepKit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NEBNextUltraIIRNALibraryPrepKit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "NEBNext Ultra II RNA Library Prep Kit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:KAPAHyperPrepKit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "KAPAHyperPrepKit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "KAPA HyperPrep Kit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:KAPARNAHyperPrepKit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "KAPARNAHyperPrepKit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "KAPA RNA HyperPrep Kit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NexteraDNAFlexLibraryPrepKit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NexteraDNAFlexLibraryPrepKit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Nextera DNA Flex Library Prep Kit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:NexteraXTDNALibraryPrepKit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "NexteraXTDNALibraryPrepKit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Nextera XT DNA Library Prep Kit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:SMART-Seqv4UltraLowInputRNAKit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "SMART-Seqv4UltraLowInputRNAKit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "SMART-Seq v4 Ultra Low Input RNA Kit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:QuantSeq3'mRNA-SeqLibraryPrepKitFWD",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "QuantSeq3'mRNA-SeqLibraryPrepKitFWD",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "QuantSeq 3' mRNA-Seq Library Prep Kit FWD",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:ThruPLEXDNA-SeqKit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "ThruPLEXDNA-SeqKit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "ThruPLEX DNA-Seq Kit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Swift2STurboDNALibraryKit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Swift2STurboDNALibraryKit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Swift 2S Turbo DNA Library Kit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:OxfordNanoporeLigationSequencingKit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "OxfordNanoporeLigationSequencingKit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Oxford Nanopore Ligation Sequencing Kit",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:OxfordNanoporeRapidSequencingKit",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "OxfordNanoporeRapidSequencingKit",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:LibraryKitID"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Oxford Nanopore Rapid Sequencing Kit",
+      "sms:required": "sms:false",
       "sms:validationRules": []
     },
     {
@@ -46210,7 +47360,7 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "compoundName",
-      "sms:required": "sms:true",
+      "sms:required": "sms:false",
       "sms:validationRules": []
     },
     {
@@ -49739,6 +50889,9 @@
           "@id": "bts:Transcranialdopplerultrasonography"
         },
         {
+          "@id": "bts:Westernblot"
+        },
+        {
           "@id": "bts:FIA-MSMS"
         },
         {
@@ -50130,9 +51283,6 @@
         },
         {
           "@id": "bts:Twinspotassay"
-        },
-        {
-          "@id": "bts:Westernblot"
         },
         {
           "@id": "bts:Whole-cellpatchclamp"
@@ -51439,6 +52589,26 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "transcranial doppler ultrasonography",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Westernblot",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Westernblot",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:ProtocolAssay"
+        },
+        {
+          "@id": "bts:Assay"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "western blot",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -53926,26 +55096,6 @@
       "sms:validationRules": []
     },
     {
-      "@id": "bts:Westernblot",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "Westernblot",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:ProtocolAssay"
-        },
-        {
-          "@id": "bts:Assay"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "western blot",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
       "@id": "bts:Whole-cellpatchclamp",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
@@ -54207,6 +55357,9 @@
         },
         {
           "@id": "bts:Transcranialdopplerultrasonography"
+        },
+        {
+          "@id": "bts:Westernblot"
         },
         {
           "@id": "bts:FIA-MSMS"
@@ -54600,9 +55753,6 @@
         },
         {
           "@id": "bts:Twinspotassay"
-        },
-        {
-          "@id": "bts:Westernblot"
         },
         {
           "@id": "bts:Whole-cellpatchclamp"
@@ -55015,6 +56165,9 @@
         },
         {
           "@id": "bts:2DCellTiter-Glo"
+        },
+        {
+          "@id": "bts:BioTek"
         },
         {
           "@id": "bts:EnVision2103MultiplateReader"
@@ -56748,6 +57901,23 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "2D CellTiter-Glo",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:BioTek",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "BioTek",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Platform"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "BioTek",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
