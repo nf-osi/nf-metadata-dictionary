@@ -250,15 +250,15 @@ slots:
       requiresDependency: compoundDoseUnit
     description: A dose quantity for the treatment compound. To be used with compoundDoseUnit.
     title: Compound Dose
-    required: true
+    required: false
   compoundDoseUnit:
     description: A unit associated with the value(s) in compoundDose.
     title: Compound Dose Unit
-    required: true
+    required: false
   compoundName:
     description: "Common name for a compound, e.g. \"Selumetinib\" (https://pubchem.ncbi.nlm.nih.gov/compound/10127622)"
     title: Compound Name
-    required: true
+    required: false
   concentrationMaterial:
     annotations:
       requiresDependency: concentrationMaterialUnit
@@ -778,6 +778,7 @@ slots:
     title: Leukemia
   libraryKitID:
     description: Library kit ID.
+    range: LibraryKitIDEnum
     title: Library Kit ID
     required: true
   libraryPrep:
@@ -1407,9 +1408,8 @@ slots:
     title: Summary
     required: true
   targetCaptureKitID:
-    description: 'A unique identifier for the kit used to construct a genomic library using target capture-based techniques, which should be composed of the vendor name, kit name and kit version.
-
-      '
+    description: A unique identifier for the kit used to construct a genomic library using target capture-based techniques, composed of the vendor name, kit name and kit version.
+    range: TargetCaptureKitEnum
     title: Target Capture Kit ID
     required: false
   targetDepth:
