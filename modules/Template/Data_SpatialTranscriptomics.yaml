@@ -1,0 +1,41 @@
+classes:
+  SpatialTranscriptomicsTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateUsage: most_common
+      templateFor:
+        dataType:
+        - gene expression
+        assay:
+        - spatial transcriptomics
+      dataGranularity: specimen-level
+    close_mappings:
+    - htan:VisiumSpatialTranscriptomicsLevel1
+    description: Template for describing raw data from spatial transcriptomics experiments,
+      including sequencing-based approaches (e.g. 10x Visium, 10x Visium CytAssist)
+      and in-situ hybridization-based approaches (e.g. NanoString CosMx, GeoMx).
+    is_a: GeneticsAssayTemplate
+    slots:
+    - captureArea
+    - visiumslideID
+    - cytassistSample
+    - probeSet
+    - libraryPrep
+    - libraryPreparationMethod
+    - specimenType
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+        ifabsent: string(spatial transcriptomics)
+      platform:
+        any_of:
+        - range: SequencingPlatformEnum
+        - range: ArrayPlatformEnum
+        - range: ImagingSystemPlatformEnum
+      fileFormat:
+        any_of:
+        - range: SequencingFileFormatEnum
+        - range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(gene expression)

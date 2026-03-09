@@ -338,6 +338,13 @@ slots:
     title: Current Version
     required: false
     see_also: https://www.w3.org/TR/vocab-dcat-3/#Property:resource_version
+  cytassistSample:
+    description: Whether the 10x Genomics CytAssist instrument was used for sample preparation in the spatial transcriptomics experiment.
+    enum_range:
+    - 'True'
+    - 'False'
+    title: CytAssist Sample
+    required: false
   dataCollectionMode:
     description: Mode of data collection in tandem MS assays. Either DDA (data-dependent acquisition) or DIA (data-independent) acquisition.
     enum_range:
@@ -1131,6 +1138,11 @@ slots:
     - range: DrugScreenAssayEnum
     required: false
     title: Protocol assay
+  probeSet:
+    description: Identifier or name of the probe set used in the spatial transcriptomics experiment (e.g., Visium Human Transcriptome Probe Set v2.0).
+    range: string
+    title: Probe Set
+    required: false
   protocolPurpose:
     description: Brief description of the protocol purpose.
     in_subset:
@@ -1479,6 +1491,11 @@ slots:
     range: LateralManifestationEnum
     required: false
     title: Vestibular schwannoma
+  visiumslideID:
+    description: Unique identifier for the Visium slide used in the spatial transcriptomics experiment. Slide serial numbers begin with V1, V4, V5, or H1 (e.g., V10J25-015).
+    range: string
+    title: Visium Slide ID
+    required: false
   vitalStatus:
     description: Vital status of the patient.
     range: VitalStatusEnum
