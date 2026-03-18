@@ -867,3 +867,89 @@ enums:
       small molecule library screen:
         description: High throughput sample analysis of small molecules for purpose such as drug discovery, or biochemical, genetic or pharmacological tests.
         meaning: ERO:0001726
+
+  MechanismOfActionEnum:
+    description: >-
+      Primary pharmacological mechanism of the study compound. Supports the 2026 NFRTC
+      funder requirement for MOA-based search and filtering (tech specs Section 1, 6, 13).
+    title: Mechanism of Action
+    permissible_values:
+      MEK inhibitor:
+        description: Compound that inhibits MEK (MAP2K) kinases in the RAS/MAPK pathway.
+        meaning: NCIT:C129822
+      RAS pathway inhibitor (non-MEK):
+        description: >-
+          Compound targeting RAS pathway components other than MEK, including direct RAS
+          inhibitors, RAF inhibitors, or ERK inhibitors.
+      mTOR inhibitor:
+        description: Compound that inhibits the mTOR (mechanistic target of rapamycin) kinase.
+        meaning: NCIT:C91079
+      VEGF/angiogenesis inhibitor:
+        description: Compound targeting VEGF signaling or tumor angiogenesis.
+        meaning: NCIT:C62090
+      CDK inhibitor:
+        description: Compound that inhibits cyclin-dependent kinases.
+        meaning: NCIT:C129825
+      HDAC inhibitor:
+        description: Compound that inhibits histone deacetylase enzymes.
+        meaning: NCIT:C129823
+      kinase inhibitor (other):
+        description: Compound that inhibits a kinase not covered by other categories.
+        meaning: NCIT:C129824
+      immunotherapy:
+        description: Treatment that uses or stimulates the immune system to fight disease.
+        meaning: NCIT:C15262
+      chemotherapy:
+        description: Treatment with cytotoxic chemical agents.
+        meaning: NCIT:C15632
+      other:
+        description: Mechanism not listed above.
+
+  RouteOfAdministrationEnum:
+    description: >-
+      Route by which a compound is administered. Required by the drug developer persona
+      to assess blood-brain barrier penetration relevance (2026 NFRTC tech specs Section 6).
+    title: Route of Administration
+    permissible_values:
+      oral:
+        description: Compound administered by mouth.
+        meaning: NCIT:C38288
+      intravenous:
+        description: Compound administered directly into a vein.
+        meaning: NCIT:C38276
+      intraperitoneal:
+        description: Compound administered into the peritoneal cavity.
+        meaning: NCIT:C38264
+      subcutaneous:
+        description: Compound administered beneath the skin.
+        meaning: NCIT:C38299
+      intracranial:
+        description: Compound administered directly into the cranial cavity or brain.
+        meaning: NCIT:C38224
+      intranasal:
+        description: Compound administered through the nasal passage.
+        meaning: NCIT:C38284
+      topical:
+        description: Compound applied to a body surface.
+        meaning: NCIT:C38304
+      other:
+        description: Route of administration not listed above.
+
+  StudyStageEnum:
+    description: >-
+      Translational stage of the study. Supports the funder's "early-stage screening vs.
+      late-stage validation designation" filter (2026 NFRTC tech specs Section 1).
+    title: Study Stage
+    permissible_values:
+      screening:
+        description: >-
+          Primary screening study intended to identify active compounds or hits
+          from a larger library; typically high-throughput, lower-confidence.
+      validation:
+        description: >-
+          Confirmatory study designed to validate hits from screening using additional
+          models, endpoints, or dose-response characterization.
+      mechanistic:
+        description: >-
+          Study designed to understand the mechanism by which a compound exerts its
+          effect, including pathway engagement, target engagement, or biomarker studies.

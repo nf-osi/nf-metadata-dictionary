@@ -260,6 +260,89 @@ class ModelMetadataEnricher:
             "JMML": "OMIM:607785",
         }
 
+        # Maps normalized tumorType values → NF-specific strategic category labels.
+        # Designed for the NFRTC funder decision-support taxonomy (2026 tech specs):
+        # drug developers need to filter by NF1-PN, NF1-MPNST, NF1-LGG, NF1-HGG, NF1-OPG, etc.
+        # Keys should match post-normalization values from _tumor_type_normalizations.
+        self._tumor_type_category_map = {
+            # NF1-PN: Plexiform Neurofibroma
+            "Plexiform Neurofibroma": "NF1-PN",
+            "plexiform neurofibroma": "NF1-PN",
+            # NF1-cNF: Cutaneous Neurofibroma
+            "Cutaneous Neurofibroma": "NF1-cNF",
+            "cutaneous neurofibroma": "NF1-cNF",
+            # NF1-aNF: Atypical Neurofibroma / ANNUBP
+            "Atypical Neurofibroma": "NF1-aNF",
+            "atypical neurofibroma": "NF1-aNF",
+            "ANNUBP": "NF1-aNF",
+            # NF1-NF: Generic / diffuse neurofibromas
+            "Neurofibroma": "NF1-NF",
+            "neurofibroma": "NF1-NF",
+            "Diffuse Infiltrating Neurofibroma": "NF1-NF",
+            "Localized Neurofibroma": "NF1-NF",
+            # NF1-MPNST: Malignant Peripheral Nerve Sheath Tumor (all grades)
+            "Malignant Peripheral Nerve Sheath Tumor": "NF1-MPNST",
+            "MPNST": "NF1-MPNST",
+            "High Grade Malignant Peripheral Nerve Sheath Tumor": "NF1-MPNST",
+            "High Grade MPNST": "NF1-MPNST",
+            "High grade MPNST": "NF1-MPNST",
+            "high grade MPNST": "NF1-MPNST",
+            "high grade metastatic MPNST": "NF1-MPNST",
+            "high grade MPNST with divergent differentiation": "NF1-MPNST",
+            "Atypical MPNST": "NF1-MPNST",
+            "Recurrent MPNST": "NF1-MPNST",
+            "recurrent MPNST": "NF1-MPNST",
+            # NF1-OPG: Optic Pathway Glioma (distinct from other LGG due to clinical focus)
+            "Optic Nerve Glioma": "NF1-OPG",
+            "optic glioma": "NF1-OPG",
+            "Optic Pathway Glioma": "NF1-OPG",
+            "optic pathway glioma": "NF1-OPG",
+            # NF1-LGG: Low-Grade Glioma (non-optic)
+            "Low Grade Glioma": "NF1-LGG",
+            "Low-Grade Glioma": "NF1-LGG",
+            "Low-Grade Glioma NOS": "NF1-LGG",
+            "Pilocytic Astrocytoma": "NF1-LGG",
+            "Pilomyxoid Astrocytoma": "NF1-LGG",
+            "Diffuse Astrocytoma": "NF1-LGG",
+            "Glioma": "NF1-LGG",   # generic glioma without grade — most NF1 gliomas are LGG
+            # NF1-HGG: High-Grade Glioma
+            "High Grade Glioma": "NF1-HGG",
+            "High-Grade Glioma": "NF1-HGG",
+            "High-Grade Glioma NOS": "NF1-HGG",
+            "Glioblastoma": "NF1-HGG",
+            "Glioblastoma Multiforme": "NF1-HGG",
+            # NF2-Schwannoma
+            "Schwannoma": "NF2-Schwannoma",
+            "Vestibular Schwannoma": "NF2-Schwannoma",
+            "vestibular schwannoma": "NF2-Schwannoma",
+            "Acoustic Neuroma": "NF2-Schwannoma",
+            "Sporadic Schwannoma": "NF2-Schwannoma",
+            # NF2-Meningioma
+            "Meningioma": "NF2-Meningioma",
+            "meningioma": "NF2-Meningioma",
+            # NF1-Leukemia
+            "Juvenile Myelomonocytic Leukemia": "NF1-Leukemia",
+            "JMML": "NF1-Leukemia",
+        }
+
+        # Tumor types and tissue values that indicate CNS/brain involvement.
+        # Used to derive the "CNS Involvement" boolean facet.
+        self._cns_tumor_types = frozenset({
+            "Optic Nerve Glioma", "optic glioma", "Optic Pathway Glioma", "optic pathway glioma",
+            "Low Grade Glioma", "Low-Grade Glioma", "Low-Grade Glioma NOS",
+            "High Grade Glioma", "High-Grade Glioma", "High-Grade Glioma NOS",
+            "Glioma", "Pilocytic Astrocytoma", "Pilomyxoid Astrocytoma", "Diffuse Astrocytoma",
+            "Glioblastoma", "Glioblastoma Multiforme",
+            "Meningioma", "meningioma",
+        })
+        self._cns_tissues = frozenset({
+            "brain", "Brain", "Whole Brain", "whole brain",
+            "cerebral cortex", "Cerebral Cortex",
+            "optic nerve", "Optic Nerve",
+            "spinal cord", "Spinal Cord",
+            "meninges", "Meninges",
+        })
+
         # Normalize raw tumorType string values before ontology lookup.
         # Keys are the raw forms seen in Synapse data; values are the canonical display forms.
         self._tumor_type_normalizations = {
@@ -1069,6 +1152,20 @@ class ModelMetadataEnricher:
                     json.dumps(normalized_tts) if len(normalized_tts) > 1 else normalized_tts[0]
                 )
 
+        # Tumor Type Category — NF-specific strategic classification (funder 2026 tech specs).
+        # Maps raw tumorType → NF1-PN / NF1-MPNST / NF1-LGG / NF1-HGG / NF1-OPG / etc.
+        # Enables drug developers to filter by the specific tumor type they are targeting.
+        enriched["Tumor Type Category"] = self.categorize_tumor_type(row.get("tumorType"))
+
+        # CNS Involvement — True when tumorType or tissue indicates brain/CNS relevance.
+        # Critical filter for the brain tumor / glioma focus of the funder's drug developer persona.
+        enriched["CNS Involvement"] = self.derive_cns_involvement(row)
+
+        # Drug screen and PK/PD data presence flags — derived from dataType annotation.
+        # Enables "which models have associated drug efficacy data?" filter across all views.
+        enriched["Has Drug Screen Data"] = self.derive_has_drug_screen_data(row)
+        enriched["Has PK/PD Data"] = self.derive_has_pkpd_data(row)
+
         # HumanCohortTemplate manifestation fields — pass through as-is from annotations
         if enriched["Data Context"] == "clinical":
             for field in ALL_MANIFESTATION_FIELDS:
@@ -1135,6 +1232,108 @@ class ModelMetadataEnricher:
             return "drosophila"
 
         return "other"
+
+    # Priority order for multi-tumor-type cases — most clinically actionable first.
+    _TUMOR_CATEGORY_PRIORITY = [
+        "NF1-MPNST", "NF1-HGG", "NF1-OPG", "NF1-LGG",
+        "NF1-PN", "NF1-aNF", "NF1-cNF",
+        "NF2-Schwannoma", "NF2-Meningioma", "NF1-Leukemia", "NF1-NF",
+    ]
+
+    def categorize_tumor_type(self, tumor_type_raw) -> Optional[str]:
+        """
+        Classify raw tumorType into NF-specific strategic categories for funder decision support.
+
+        Categories align with the 2026 NFRTC funder taxonomy:
+        NF1-PN, NF1-cNF, NF1-aNF, NF1-NF, NF1-MPNST, NF1-OPG, NF1-LGG, NF1-HGG,
+        NF1-Leukemia, NF2-Schwannoma, NF2-Meningioma.
+
+        When multiple tumor types are present, returns the highest-priority category
+        (MPNST > HGG > OPG > LGG > PN > aNF > cNF > Schwannoma > Meningioma > NF).
+        """
+        if not tumor_type_raw:
+            return None
+
+        # Parse multi-value fields (JSON array or single string)
+        if isinstance(tumor_type_raw, list):
+            tt_items = tumor_type_raw
+        elif isinstance(tumor_type_raw, str) and tumor_type_raw.startswith("["):
+            try:
+                tt_items = json.loads(tumor_type_raw.replace("'", '"'))
+            except (json.JSONDecodeError, ValueError):
+                tt_items = [tumor_type_raw]
+        else:
+            tt_items = [tumor_type_raw]
+
+        categories: List[str] = []
+        for tt in tt_items:
+            if not tt:
+                continue
+            # Apply existing normalization first, then look up category
+            normalized = self._normalize_tumor_type_value(str(tt).strip())
+            category = (
+                self._tumor_type_category_map.get(normalized)
+                or self._tumor_type_category_map.get(str(tt).strip())
+            )
+            if category and category not in categories:
+                categories.append(category)
+
+        if not categories:
+            return None
+
+        # Return highest-priority category when multiple are present
+        for priority in self._TUMOR_CATEGORY_PRIORITY:
+            if priority in categories:
+                return priority
+        return categories[0]
+
+    def derive_cns_involvement(self, row: Dict) -> Optional[bool]:
+        """
+        Derive CNS involvement flag from tumorType and tissue annotations.
+
+        Returns True if the data is associated with a CNS tumor or CNS tissue.
+        Returns None when information is insufficient to determine (not False, to
+        avoid falsely excluding records that may lack annotations).
+        """
+        # Check tumorType for CNS-indicating values
+        tumor_type = row.get("tumorType")
+        if tumor_type:
+            tt_items: List[str] = []
+            if isinstance(tumor_type, list):
+                tt_items = tumor_type
+            elif isinstance(tumor_type, str) and tumor_type.startswith("["):
+                try:
+                    tt_items = json.loads(tumor_type.replace("'", '"'))
+                except (json.JSONDecodeError, ValueError):
+                    tt_items = [tumor_type]
+            else:
+                tt_items = [tumor_type]
+            for tt in tt_items:
+                raw = str(tt).strip()
+                normalized = self._normalize_tumor_type_value(raw)
+                if normalized in self._cns_tumor_types or raw in self._cns_tumor_types:
+                    return True
+
+        # Check tissue for CNS-indicating values
+        tissue = row.get("tissue", "") or ""
+        if str(tissue).strip() in self._cns_tissues:
+            return True
+
+        return None  # insufficient info; avoid false negatives
+
+    def derive_has_drug_screen_data(self, row: Dict) -> bool:
+        """Return True if dataType indicates this file contains drug screen or response data."""
+        data_type = str(row.get("dataType", "") or "").lower()
+        return any(kw in data_type for kw in (
+            "drug screen", "drug combination screen", "drug response", "drug_screen",
+        ))
+
+    def derive_has_pkpd_data(self, row: Dict) -> bool:
+        """Return True if dataType indicates this file contains PK or PD data."""
+        data_type = str(row.get("dataType", "") or "").lower()
+        return any(kw in data_type for kw in (
+            "pharmacokinetics", "pharmacodynamics", "pk study", "pk/pd",
+        ))
 
 
 # HumanCohortTemplate manifestation fields (from REiNS Table 2)
@@ -1247,6 +1446,10 @@ class SynapseMaterializedViewCreator:
                 Column(name="NF1 Genotype", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
                 Column(name="NF2 Genotype", columnType=ColumnType.STRING, maximumSize=50, facetType="enumeration"),
                 Column(name="Data Type", columnType=ColumnType.STRING, maximumSize=100, facetType="enumeration"),
+                # Drug data presence flags — derived from dataType; present on all views so
+                # users can filter "only studies with drug screen data" across model types.
+                Column(name="Has Drug Screen Data", columnType=ColumnType.BOOLEAN, facetType="enumeration"),
+                Column(name="Has PK/PD Data", columnType=ColumnType.BOOLEAN, facetType="enumeration"),
             ]
             if view_type == "clinical":
                 # Phenotype enrichment from tumorType (clinical-only — rich HPO/ontology mapping)
@@ -1275,6 +1478,21 @@ class SynapseMaterializedViewCreator:
                     maximumSize=200,
                     facetType="enumeration",
                 ))
+                # Tumor Type Category — NF-specific strategic classification for all model views.
+                # Enables the drug developer / clinical trialist personas to filter by NF1-PN,
+                # NF1-MPNST, NF1-LGG, NF1-HGG, NF1-OPG, NF2-Schwannoma, etc.
+                columns.append(Column(
+                    name="Tumor Type Category",
+                    columnType=ColumnType.STRING,
+                    maximumSize=50,
+                    facetType="enumeration",
+                ))
+                # CNS Involvement — True when tumor/tissue is brain/CNS-associated.
+                columns.append(Column(
+                    name="CNS Involvement",
+                    columnType=ColumnType.BOOLEAN,
+                    facetType="enumeration",
+                ))
                 if view_type == "cell_line":
                     # Tissue of origin cross-referenced from syn26486823 (cell line DB),
                     # backfilling the often-sparse base tissue annotation.
@@ -1298,6 +1516,8 @@ class SynapseMaterializedViewCreator:
                 {"name": "NF1 Genotype", "type": "STRING(50)", "facet": "enumeration"},
                 {"name": "NF2 Genotype", "type": "STRING(50)", "facet": "enumeration"},
                 {"name": "Data Type", "type": "STRING(100)", "facet": "enumeration"},
+                {"name": "Has Drug Screen Data", "type": "BOOLEAN", "facet": "enumeration"},
+                {"name": "Has PK/PD Data", "type": "BOOLEAN", "facet": "enumeration"},
             ]
             if view_type == "clinical":
                 columns += [
@@ -1312,6 +1532,8 @@ class SynapseMaterializedViewCreator:
                     columns.append({"name": field, "type": "STRING(100)", "facet": "enumeration"})
             else:
                 columns.append({"name": "NF Type", "type": "STRING(200)", "facet": "enumeration"})
+                columns.append({"name": "Tumor Type Category", "type": "STRING(50)", "facet": "enumeration"})
+                columns.append({"name": "CNS Involvement", "type": "BOOLEAN", "facet": "enumeration"})
                 if view_type == "cell_line":
                     columns.append({"name": "Tissue of Origin", "type": "STRING(200)", "facet": "enumeration"})
             return columns
@@ -1333,10 +1555,12 @@ class SynapseMaterializedViewCreator:
             "Data Context",
             "accessType",
             "createdOn",
-            "Data Type",   # enriched (normalized dataType)
+            "Data Type",               # enriched (normalized dataType)
             "assay",
-            "NF1 Genotype",  # enriched (normalized nf1Genotype)
-            "NF2 Genotype",  # enriched (normalized nf2Genotype)
+            "NF1 Genotype",            # enriched (normalized nf1Genotype)
+            "NF2 Genotype",            # enriched (normalized nf2Genotype)
+            "Has Drug Screen Data",    # derived: True when dataType includes drug screen
+            "Has PK/PD Data",          # derived: True when dataType includes pharmacokinetics
         ]
 
         # View-specific facets — only columns that exist in syn16858331 or are enriched columns.
@@ -1359,17 +1583,22 @@ class SynapseMaterializedViewCreator:
             "animal_model": [
                 "NF Type",
                 "Diagnosis",
+                "Tumor Type Category",   # enriched: NF1-PN / NF1-MPNST / NF1-LGG / NF1-HGG / NF1-OPG
+                "CNS Involvement",       # enriched: True when tumor/tissue is brain/CNS
                 "Model Type",
                 "species",
                 "modelSystemName",
                 "genePerturbed",
                 "genePerturbationType",
+                "tumorType",             # added: was absent from animal_model despite being in source view
                 "tissue",
                 "Has Treatment",
             ],
             "cell_line": [
                 "NF Type",
                 "Diagnosis",
+                "Tumor Type Category",
+                "CNS Involvement",
                 "Tissue of Origin",
                 "tumorType",
                 "sex",
@@ -1379,6 +1608,8 @@ class SynapseMaterializedViewCreator:
             "organoid": [
                 "NF Type",
                 "Diagnosis",
+                "Tumor Type Category",
+                "CNS Involvement",
                 "modelSystemName",
                 "tumorType",
                 "tissue",
@@ -1386,6 +1617,8 @@ class SynapseMaterializedViewCreator:
             "pdx": [
                 "NF Type",
                 "Diagnosis",
+                "Tumor Type Category",
+                "CNS Involvement",
                 "transplantationType",
                 "tumorType",
                 "modelSystemName",

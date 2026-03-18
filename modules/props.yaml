@@ -259,6 +259,30 @@ slots:
     description: "Common name for a compound, e.g. \"Selumetinib\" (https://pubchem.ncbi.nlm.nih.gov/compound/10127622)"
     title: Compound Name
     required: true
+  mechanismOfAction:
+    description: >-
+      The primary mechanism by which the study compound exerts its pharmacological effect.
+      Used to group drug studies by target pathway (e.g., MEK inhibitors, mTOR inhibitors),
+      enabling the drug developer persona to filter for studies relevant to their compound class.
+    range: MechanismOfActionEnum
+    title: Mechanism of Action
+    required: false
+  routeOfAdministration:
+    description: >-
+      Route by which a compound or treatment is administered to the subject.
+      Primarily applies to in vivo drug studies (animal models, PDX). Required by the
+      funder's drug developer persona to assess BBB penetration relevance (oral vs. IV vs. IP).
+    range: RouteOfAdministrationEnum
+    title: Route of Administration
+    required: false
+  studyStage:
+    description: >-
+      The translational stage of the study: primary drug screening, confirmatory validation,
+      or mechanistic investigation. Supports the funder's "early-stage screening vs.
+      late-stage validation designation" filter (2026 NFRTC tech specs, Section 1).
+    range: StudyStageEnum
+    title: Study Stage
+    required: false
   concentrationMaterial:
     annotations:
       requiresDependency: concentrationMaterialUnit
