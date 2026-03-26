@@ -160,7 +160,7 @@ def _create_columns_from_json_schema(json_schema: dict[str, Any]) -> list[Column
             maximum_size = 80  # Covers 100% of values (max is 77 chars)
         if column_type in LIST_TYPE_DICT.values():
             maximum_size = 80  # List item size
-            maximum_list_length = 40  # Conservative limit for large templates
+            maximum_list_length = 20  # Synapse stores 4 bytes/char (UTF-8), so 40×80×4×3 lists = 38KB alone
 
         column = Column(
             name=name,
