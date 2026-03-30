@@ -19960,6 +19960,9 @@
           "@id": "bts:Gb"
         },
         {
+          "@id": "bts:H5"
+        },
+        {
           "@id": "bts:Hdf5"
         },
         {
@@ -21882,6 +21885,23 @@
       "sms:validationRules": []
     },
     {
+      "@id": "bts:H5",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "H5",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:FileFormat"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "h5",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
       "@id": "bts:Hdf5",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
@@ -22168,6 +22188,9 @@
           "@id": "bts:Musmusculus"
         },
         {
+          "@id": "bts:Macacanemestrina"
+        },
+        {
           "@id": "bts:Musmusculus(humanized)"
         },
         {
@@ -22287,6 +22310,26 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "Mus musculus",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Macacanemestrina",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Macacanemestrina",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Species"
+        },
+        {
+          "@id": "bts:ModelSpecies"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "Macaca nemestrina",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -45356,6 +45399,9 @@
           "@id": "bts:Musmusculus"
         },
         {
+          "@id": "bts:Macacanemestrina"
+        },
+        {
           "@id": "bts:Musmusculus(humanized)"
         },
         {
@@ -50754,6 +50800,9 @@
           "@id": "bts:MiRNA-seq"
         },
         {
+          "@id": "bts:Next-generationsequencing"
+        },
+        {
           "@id": "bts:Nextgenerationtargetedsequencing"
         },
         {
@@ -50839,6 +50888,12 @@
         },
         {
           "@id": "bts:FunctionalMRI"
+        },
+        {
+          "@id": "bts:Gelfiltrationchromatography"
+        },
+        {
+          "@id": "bts:Highcontentscreen"
         },
         {
           "@id": "bts:Highfrequencyultrasound"
@@ -50929,6 +50984,9 @@
         },
         {
           "@id": "bts:Proximityextensionassay"
+        },
+        {
+          "@id": "bts:SomaScan"
         },
         {
           "@id": "bts:Ultrahigh-performanceliquidchromatography/tandemmassspectrometry"
@@ -51072,6 +51130,9 @@
           "@id": "bts:Weight"
         },
         {
+          "@id": "bts:Survival"
+        },
+        {
           "@id": "bts:Wordrecognitionscore"
         },
         {
@@ -51183,13 +51244,7 @@
           "@id": "bts:Focusformingassay"
         },
         {
-          "@id": "bts:Gelfiltrationchromatography"
-        },
-        {
           "@id": "bts:Gelpermeationchromatography"
-        },
-        {
-          "@id": "bts:Highcontentscreen"
         },
         {
           "@id": "bts:Immunoassay"
@@ -51274,9 +51329,6 @@
         },
         {
           "@id": "bts:Staticlightscattering"
-        },
-        {
-          "@id": "bts:Survival"
         },
         {
           "@id": "bts:Trans-endothelialelectricalresistance"
@@ -51689,6 +51741,26 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "miRNA-seq",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Next-generationsequencing",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Next-generationsequencing",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:ProtocolAssay"
+        },
+        {
+          "@id": "bts:Assay"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "next-generation sequencing",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -52269,6 +52341,46 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "functional MRI",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Gelfiltrationchromatography",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Gelfiltrationchromatography",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:ProtocolAssay"
+        },
+        {
+          "@id": "bts:Assay"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "gel filtration chromatography",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Highcontentscreen",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Highcontentscreen",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:ProtocolAssay"
+        },
+        {
+          "@id": "bts:Assay"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "high content screen",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -52869,6 +52981,26 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "proximity extension assay",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:SomaScan",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "SomaScan",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:ProtocolAssay"
+        },
+        {
+          "@id": "bts:Assay"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "SomaScan",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -53776,6 +53908,26 @@
       "sms:validationRules": []
     },
     {
+      "@id": "bts:Survival",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Survival",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:ProtocolAssay"
+        },
+        {
+          "@id": "bts:Assay"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "survival",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
       "@id": "bts:Wordrecognitionscore",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
@@ -54476,26 +54628,6 @@
       "sms:validationRules": []
     },
     {
-      "@id": "bts:Gelfiltrationchromatography",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "Gelfiltrationchromatography",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:ProtocolAssay"
-        },
-        {
-          "@id": "bts:Assay"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "gel filtration chromatography",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
       "@id": "bts:Gelpermeationchromatography",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
@@ -54512,26 +54644,6 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "gel permeation chromatography",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
-      "@id": "bts:Highcontentscreen",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "Highcontentscreen",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:ProtocolAssay"
-        },
-        {
-          "@id": "bts:Assay"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "high content screen",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -55036,26 +55148,6 @@
       "sms:validationRules": []
     },
     {
-      "@id": "bts:Survival",
-      "@type": "rdfs:Class",
-      "rdfs:comment": "TBD",
-      "rdfs:label": "Survival",
-      "rdfs:subClassOf": [
-        {
-          "@id": "bts:ProtocolAssay"
-        },
-        {
-          "@id": "bts:Assay"
-        }
-      ],
-      "schema:isPartOf": {
-        "@id": "http://schema.biothings.io"
-      },
-      "sms:displayName": "survival",
-      "sms:required": "sms:false",
-      "sms:validationRules": []
-    },
-    {
       "@id": "bts:Trans-endothelialelectricalresistance",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
@@ -55224,6 +55316,9 @@
           "@id": "bts:MiRNA-seq"
         },
         {
+          "@id": "bts:Next-generationsequencing"
+        },
+        {
           "@id": "bts:Nextgenerationtargetedsequencing"
         },
         {
@@ -55309,6 +55404,12 @@
         },
         {
           "@id": "bts:FunctionalMRI"
+        },
+        {
+          "@id": "bts:Gelfiltrationchromatography"
+        },
+        {
+          "@id": "bts:Highcontentscreen"
         },
         {
           "@id": "bts:Highfrequencyultrasound"
@@ -55399,6 +55500,9 @@
         },
         {
           "@id": "bts:Proximityextensionassay"
+        },
+        {
+          "@id": "bts:SomaScan"
         },
         {
           "@id": "bts:Ultrahigh-performanceliquidchromatography/tandemmassspectrometry"
@@ -55542,6 +55646,9 @@
           "@id": "bts:Weight"
         },
         {
+          "@id": "bts:Survival"
+        },
+        {
           "@id": "bts:Wordrecognitionscore"
         },
         {
@@ -55653,13 +55760,7 @@
           "@id": "bts:Focusformingassay"
         },
         {
-          "@id": "bts:Gelfiltrationchromatography"
-        },
-        {
           "@id": "bts:Gelpermeationchromatography"
-        },
-        {
-          "@id": "bts:Highcontentscreen"
         },
         {
           "@id": "bts:Immunoassay"
@@ -55744,9 +55845,6 @@
         },
         {
           "@id": "bts:Staticlightscattering"
-        },
-        {
-          "@id": "bts:Survival"
         },
         {
           "@id": "bts:Trans-endothelialelectricalresistance"
