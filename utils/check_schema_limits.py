@@ -3,8 +3,8 @@
 Validate schema against Synapse platform limits.
 
 Checks against FILE VIEW configuration limits (stricter than JSON schema):
-- STRING: 80 chars, LIST: 80 chars × 40 items, name: 256 chars
-- Row limit: 64KB
+- STRING: 80 chars, LIST: 80 chars × 20 items (Synapse stores 4 bytes/char UTF-8)
+- Row limit: 64KB (only checked for Template schemas used in FileViews)
 
 Note: JSON schemas can have larger enums and longer strings for validation.
 File views require stricter limits due to 64KB row size constraint.
@@ -21,9 +21,11 @@ from typing import Dict, List, Any
 CONFIG = {
     'STRING_MAX_SIZE': 80,
     'LIST_MAX_SIZE': 80,
-    'LIST_MAX_LENGTH': 40,
-    'NAME_MAX_SIZE': 256,
-    'SYSTEM_OVERHEAD': 3500,
+    'LIST_MAX_LENGTH': 20,   # Must match json_schema_entity_view.py; reduced from 40 to stay under 64KB
+    'SYSTEM_OVERHEAD': 14554,  # System STRING cols × 4 + non-STRING × 8 + row overhead
+    # Breakdown: (name 256 + description 1000 + etag 36 + path 1000 + type 20 + dataFileName 256 +
+    #             dataFileMD5Hex 100 + dataFileConcreteType 65 + dataFileBucket 100 + dataFileKey 700) × 4
+    #             + (16 non-STRING cols × 8) + 294 base = 14132 + 128 + 294 = 14554
     'ROW_LIMIT': 64000,
     'ROW_WARNING': 57600,
 }
@@ -88,10 +90,19 @@ def check_string_lengths(schemas_dir: Path) -> Dict[str, Any]:
 
 
 def check_row_sizes(schemas_dir: Path) -> Dict[str, Any]:
-    """Calculate row sizes for all schemas."""
+    """Calculate row sizes for Template schemas (those used as Synapse FileView columns).
+
+    Row size formula: Synapse stores STRING columns as UTF-8 (max 4 bytes/char), so:
+      row_size = (string_cols × STRING_MAX_SIZE + list_cols × LIST_MAX_SIZE × LIST_MAX_LENGTH) × 4
+                 + SYSTEM_OVERHEAD
+    Only schemas ending in 'Template' are checked, as non-Template schemas (PortalDataset,
+    Superdataset, etc.) are not used to create FileViews via create_curation_task.py.
+    """
     schemas = []
 
     for schema_file in schemas_dir.glob("*.json"):
+        if not schema_file.stem.endswith("Template"):
+            continue
         try:
             schema = json.loads(schema_file.read_text())
             string_count = list_count = 0
@@ -107,9 +118,8 @@ def check_row_sizes(schemas_dir: Path) -> Dict[str, Any]:
                     string_count += 1
 
             row_size = (
-                string_count * CONFIG['STRING_MAX_SIZE'] +
-                list_count * CONFIG['LIST_MAX_SIZE'] * CONFIG['LIST_MAX_LENGTH'] +
-                CONFIG['NAME_MAX_SIZE'] +
+                (string_count * CONFIG['STRING_MAX_SIZE'] +
+                 list_count * CONFIG['LIST_MAX_SIZE'] * CONFIG['LIST_MAX_LENGTH']) * 4 +
                 CONFIG['SYSTEM_OVERHEAD']
             )
 
@@ -142,10 +152,10 @@ def format_markdown(enum_data, string_data, row_data) -> str:
     # Config
     lines.extend([
         "## File View Configuration (Synapse Platform Limits)",
-        f"- STRING: {CONFIG['STRING_MAX_SIZE']} chars, LIST: {CONFIG['LIST_MAX_SIZE']} chars × {CONFIG['LIST_MAX_LENGTH']} items, name: {CONFIG['NAME_MAX_SIZE']} chars",
-        f"- Limits: {CONFIG['ROW_LIMIT']:,} bytes/row",
+        f"- STRING: {CONFIG['STRING_MAX_SIZE']} chars × 4 bytes (UTF-8), LIST: {CONFIG['LIST_MAX_SIZE']} chars × {CONFIG['LIST_MAX_LENGTH']} items × 4 bytes",
+        f"- Limits: {CONFIG['ROW_LIMIT']:,} bytes/row (Template schemas only)",
         "",
-        "_Note: These are stricter than JSON schema limits due to 64KB row size constraint._",
+        "_Note: Synapse stores VARCHAR as UTF-8 (max 4 bytes/char). Row size = (string + list fields) × 4 + system overhead._",
         "_Note: Synapse no longer enforces a per-enum value count limit._",
         ""
     ])
