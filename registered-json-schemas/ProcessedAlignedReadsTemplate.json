@@ -94,62 +94,98 @@
     },
     "genomicReferenceLink": {
       "description": "Link to genome reference data file used for alignment in processing workflow",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "genomicReferenceLink"
     },
     "averageInsertSize": {
       "description": "Average insert size as reported by samtools",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "averageInsertSize"
     },
     "averageReadLength": {
       "description": "Average read length collected from samtools",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "averageReadLength"
     },
     "averageBaseQuality": {
       "description": "Average base quality collected from samtools",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "averageBaseQuality"
     },
     "pairsOnDifferentChr": {
       "description": "Pairs on different chromosomes collected from samtools",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "pairsOnDifferentChr"
     },
     "readsDuplicatedPercent": {
       "description": "Percent of duplicated reads collected from samtools",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "readsDuplicatedPercent"
     },
     "readsMappedPercent": {
       "description": "Percent of mapped reads collected from samtools",
-      "type": "number",
+      "type": [
+        "number",
+        "null"
+      ],
       "title": "readsMappedPercent"
     },
     "meanCoverage": {
       "description": "Mean coverage for whole genome sequencing, or mean target coverage for whole exome and targeted sequencing, collected from Picard Tools",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "meanCoverage"
     },
     "proportionCoverage10x": {
       "description": "Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 10X or greater coverage from Picard Tools",
-      "type": "number",
+      "type": [
+        "number",
+        "null"
+      ],
       "title": "proportionCoverage10x"
     },
     "proportionCoverage30x": {
       "description": "Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 30X or greater coverage from Picard Tools",
-      "type": "number",
+      "type": [
+        "number",
+        "null"
+      ],
       "title": "proportionCoverage30x"
     },
     "readDepth": {
       "description": "If available, the coverage statistic as output from bedtools coverage or samtools stats.",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "readDepth"
     },
     "totalReads": {
       "description": "If available, the total number of reads collected from samtools.",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "totalReads"
     },
     "workflow": {
@@ -175,12 +211,18 @@
     },
     "workflowLink": {
       "description": "Workflow URL reference",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "workflowLink"
     },
     "auxiliaryAsset": {
       "description": "URI to supplemental asset(s), e.g. QC reports or other auxiliary files to support the processing, analysis, or interpretation of the current entity.\n",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "auxiliaryAsset"
     },
     "specimenID": {
@@ -190,7 +232,10 @@
     },
     "age": {
       "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
-      "type": "number",
+      "type": [
+        "number",
+        "null"
+      ],
       "title": "age"
     },
     "ageUnit": {
@@ -393,6 +438,9 @@
         },
         {
           "type": "string"
+        },
+        {
+          "type": "null"
         }
       ],
       "description": "Antibody identifier. Select from the controlled vocabulary of antibodies in NF Research Tools Central (syn51730943) when available, or provide a custom identifier. Links to antibody details are available in the schema see_also field for enum values.",
@@ -617,7 +665,10 @@
     },
     "comments": {
       "description": "Brief free-text comments that may also be important to understanding the resource.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "comments"
     },
     "dataSubtype": {
@@ -636,6 +687,70 @@
     "dataType": {
       "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
       "type": "string",
+      "enum": [
+        "aligned reads",
+        "annotated germline variants",
+        "annotated somatic mutation",
+        "audio transcript",
+        "behavioral data",
+        "capsid sequence",
+        "cellular physiology",
+        "characteristic",
+        "chromatin activity",
+        "clinical",
+        "copy number variants",
+        "count matrix",
+        "data index",
+        "data sharing plan",
+        "demographics",
+        "drug combination screen",
+        "drug screen",
+        "electrophysiology",
+        "epidemiological data",
+        "gene expression",
+        "gene expression matrix",
+        "quantified gene expression",
+        "genomic features",
+        "genomic variants",
+        "germline variants",
+        "guide RNA sequence",
+        "image",
+        "immunoassay",
+        "isoform expression",
+        "kinomics",
+        "mask image",
+        "mass spectrometry data",
+        "metabolomics",
+        "molecular property",
+        "morphology parameter",
+        "network",
+        "nucleic acid sequence record",
+        "over-representation data",
+        "particle characterization",
+        "pharmacokinetics",
+        "physiology parameter",
+        "plasmid sequence",
+        "plot",
+        "primer sequence",
+        "probe sequence",
+        "promoter sequence",
+        "protein interaction data",
+        "protein interaction raw data",
+        "proteomics",
+        "raw counts",
+        "reference sequence",
+        "report",
+        "somatic variants",
+        "structural variants",
+        "survey data",
+        "text data",
+        "volume",
+        "weight",
+        "descriptive metadata",
+        "image metadata",
+        "metadata",
+        "workflow metadata"
+      ],
       "title": "dataType"
     },
     "diagnosis": {
@@ -828,6 +943,9 @@
         },
         {
           "type": "string"
+        },
+        {
+          "type": "null"
         }
       ],
       "description": "Identifier for genetic reagent used (e.g., CRISPR construct, shRNA, plasmid). Select from the controlled vocabulary of genetic reagents in NF Research Tools Central (syn51730943) when available, or provide a custom identifier. Links to reagent details are available in the schema see_also field for enum values.",
@@ -844,7 +962,10 @@
     },
     "modelAge": {
       "description": "Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.",
-      "type": "number",
+      "type": [
+        "number",
+        "null"
+      ],
       "title": "modelAge"
     },
     "modelAgeUnit": {
@@ -862,14 +983,38 @@
       "type": "string"
     },
     "modelSex": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "Female",
+            "Male"
+          ],
+          "title": "SexEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Not Applicable"
+          ],
+          "title": "NotApplicableEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Sex of the individual animal model used in the experiment. Distinct from donor sex.",
       "type": "string",
-      "enum": [
-        "Female",
-        "Male",
-        "Unknown",
-        "Not Applicable"
-      ],
       "title": "modelSex"
     },
     "modelSpecies": {
@@ -1707,31 +1852,68 @@
           "Prss56Cre;R26mT"
         ]
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "modelSystemName"
     },
     "nf1Genotype": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "+/+",
+            "+/-",
+            "-/-",
+            "Unknown"
+          ],
+          "title": "Genotype",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Genotype of NF1 gene in the biospecimen from which the data were derived, if known.",
       "type": "string",
-      "enum": [
-        "+/+",
-        "+/-",
-        "-/-",
-        "Unknown",
-        "Unknown"
-      ],
       "title": "nf1Genotype"
     },
     "nf2Genotype": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "+/+",
+            "+/-",
+            "-/-",
+            "Unknown"
+          ],
+          "title": "Genotype",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Genotype of NF2 gene in the biospecimen from which the data were derived, if known",
       "type": "string",
-      "enum": [
-        "+/+",
-        "+/-",
-        "-/-",
-        "Unknown",
-        "Unknown"
-      ],
       "title": "nf2Genotype"
     },
     "organ": {
@@ -1781,14 +1963,38 @@
       "type": "string"
     },
     "sex": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "Female",
+            "Male"
+          ],
+          "title": "SexEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Not Applicable"
+          ],
+          "title": "NotApplicableEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other.",
       "type": "string",
-      "enum": [
-        "Female",
-        "Male",
-        "Unknown",
-        "Not Applicable"
-      ],
       "title": "sex"
     },
     "species": {

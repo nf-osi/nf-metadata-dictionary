@@ -85,7 +85,10 @@
         "title": "Cell",
         "type": "string"
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "cellType"
     },
     "isCellLine": {
@@ -99,7 +102,10 @@
     },
     "cellID": {
       "description": "Also known as cell barcode, this value can be added for single-cell experiments to identify data at the cell level.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "cellID"
     },
     "dissociationMethod": {
@@ -210,37 +216,58 @@
       "description": "The read of origin, Read 1 or Read 2",
       "maximum": 2,
       "minimum": 1,
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "readPair"
     },
     "readLength": {
       "description": "Number of base pairs (bp) sequenced for a read",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "readLength"
     },
     "readDepth": {
       "description": "If available, the coverage statistic as output from bedtools coverage or samtools stats.",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "readDepth"
     },
     "targetDepth": {
       "description": "The targeted read depth prior to sequencing.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "targetDepth"
     },
     "batchID": {
       "description": "Batch identifier, can be used in any context where added batch information is helpful, such as different sequencing runs or collection times.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "batchID"
     },
     "auxiliaryAsset": {
       "description": "URI to supplemental asset(s), e.g. QC reports or other auxiliary files to support the processing, analysis, or interpretation of the current entity.\n",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "auxiliaryAsset"
     },
     "age": {
       "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
-      "type": "number",
+      "type": [
+        "number",
+        "null"
+      ],
       "title": "age"
     },
     "ageUnit": {
@@ -259,7 +286,10 @@
     },
     "aliquotID": {
       "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "aliquotID"
     },
     "antibodyID": {
@@ -448,6 +478,9 @@
         },
         {
           "type": "string"
+        },
+        {
+          "type": "null"
         }
       ],
       "description": "Antibody identifier. Select from the controlled vocabulary of antibodies in NF Research Tools Central (syn51730943) when available, or provide a custom identifier. Links to antibody details are available in the schema see_also field for enum values.",
@@ -495,7 +528,10 @@
     },
     "comments": {
       "description": "Brief free-text comments that may also be important to understanding the resource.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "comments"
     },
     "dataSubtype": {
@@ -770,6 +806,9 @@
         },
         {
           "type": "string"
+        },
+        {
+          "type": "null"
         }
       ],
       "description": "Identifier for genetic reagent used (e.g., CRISPR construct, shRNA, plasmid). Select from the controlled vocabulary of genetic reagents in NF Research Tools Central (syn51730943) when available, or provide a custom identifier. Links to reagent details are available in the schema see_also field for enum values.",
@@ -786,7 +825,10 @@
     },
     "modelAge": {
       "description": "Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.",
-      "type": "number",
+      "type": [
+        "number",
+        "null"
+      ],
       "title": "modelAge"
     },
     "modelAgeUnit": {
@@ -804,14 +846,38 @@
       "type": "string"
     },
     "modelSex": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "Female",
+            "Male"
+          ],
+          "title": "SexEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Not Applicable"
+          ],
+          "title": "NotApplicableEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Sex of the individual animal model used in the experiment. Distinct from donor sex.",
       "type": "string",
-      "enum": [
-        "Female",
-        "Male",
-        "Unknown",
-        "Not Applicable"
-      ],
       "title": "modelSex"
     },
     "modelSpecies": {
@@ -1649,31 +1715,68 @@
           "Prss56Cre;R26mT"
         ]
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "modelSystemName"
     },
     "nf1Genotype": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "+/+",
+            "+/-",
+            "-/-",
+            "Unknown"
+          ],
+          "title": "Genotype",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Genotype of NF1 gene in the biospecimen from which the data were derived, if known.",
       "type": "string",
-      "enum": [
-        "+/+",
-        "+/-",
-        "-/-",
-        "Unknown",
-        "Unknown"
-      ],
       "title": "nf1Genotype"
     },
     "nf2Genotype": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "+/+",
+            "+/-",
+            "-/-",
+            "Unknown"
+          ],
+          "title": "Genotype",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Genotype of NF2 gene in the biospecimen from which the data were derived, if known",
       "type": "string",
-      "enum": [
-        "+/+",
-        "+/-",
-        "-/-",
-        "Unknown",
-        "Unknown"
-      ],
       "title": "nf2Genotype"
     },
     "nucleicAcidSource": {
@@ -1721,7 +1824,10 @@
     },
     "parentSpecimenID": {
       "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "parentSpecimenID"
     },
     "platform": {
@@ -1770,14 +1876,38 @@
       "type": "string"
     },
     "sex": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "Female",
+            "Male"
+          ],
+          "title": "SexEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Not Applicable"
+          ],
+          "title": "NotApplicableEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other.",
       "type": "string",
-      "enum": [
-        "Female",
-        "Male",
-        "Unknown",
-        "Not Applicable"
-      ],
       "title": "sex"
     },
     "species": {

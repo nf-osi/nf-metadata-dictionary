@@ -12,19 +12,46 @@
       "title": "individualID"
     },
     "sex": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "Female",
+            "Male"
+          ],
+          "title": "SexEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Not Applicable"
+          ],
+          "title": "NotApplicableEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other.",
       "type": "string",
-      "enum": [
-        "Female",
-        "Male",
-        "Unknown",
-        "Not Applicable"
-      ],
       "title": "sex"
     },
     "age": {
       "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
-      "type": "number",
+      "type": [
+        "number",
+        "null"
+      ],
       "title": "age"
     },
     "ageUnit": {
@@ -96,32 +123,69 @@
       "type": "string"
     },
     "nf1Genotype": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "+/+",
+            "+/-",
+            "-/-",
+            "Unknown"
+          ],
+          "title": "Genotype",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Genotype of NF1 gene in the biospecimen from which the data were derived, if known.",
       "type": "string",
-      "enum": [
-        "+/+",
-        "+/-",
-        "-/-",
-        "Unknown",
-        "Unknown"
-      ],
       "title": "nf1Genotype"
     },
     "nf2Genotype": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "+/+",
+            "+/-",
+            "-/-",
+            "Unknown"
+          ],
+          "title": "Genotype",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Genotype of NF2 gene in the biospecimen from which the data were derived, if known",
       "type": "string",
-      "enum": [
-        "+/+",
-        "+/-",
-        "-/-",
-        "Unknown",
-        "Unknown"
-      ],
       "title": "nf2Genotype"
     },
     "germlineMutation": {
       "description": "The individual's actual germline mutation.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "germlineMutation"
     },
     "species": {
@@ -959,7 +1023,10 @@
           "Prss56Cre;R26mT"
         ]
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "modelSystemName"
     },
     "modelSpecies": {
@@ -982,19 +1049,46 @@
       "type": "string"
     },
     "modelSex": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "Female",
+            "Male"
+          ],
+          "title": "SexEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Not Applicable"
+          ],
+          "title": "NotApplicableEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Sex of the individual animal model used in the experiment. Distinct from donor sex.",
       "type": "string",
-      "enum": [
-        "Female",
-        "Male",
-        "Unknown",
-        "Not Applicable"
-      ],
       "title": "modelSex"
     },
     "modelAge": {
       "description": "Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.",
-      "type": "number",
+      "type": [
+        "number",
+        "null"
+      ],
       "title": "modelAge"
     },
     "modelAgeUnit": {

@@ -227,6 +227,9 @@
         },
         {
           "type": "string"
+        },
+        {
+          "type": "null"
         }
       ],
       "description": "Antibody identifier. Select from the controlled vocabulary of antibodies in NF Research Tools Central (syn51730943) when available, or provide a custom identifier. Links to antibody details are available in the schema see_also field for enum values.",
@@ -265,12 +268,18 @@
     },
     "peakCallingAlgorithm": {
       "description": "A list of commonly used peak-calling algorithms for ChIP-Seq data analysis.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "peakCallingAlgorithm"
     },
     "age": {
       "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
-      "type": "number",
+      "type": [
+        "number",
+        "null"
+      ],
       "title": "age"
     },
     "ageUnit": {
@@ -289,7 +298,10 @@
     },
     "aliquotID": {
       "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "aliquotID"
     },
     "assay": {
@@ -333,17 +345,26 @@
     },
     "batchID": {
       "description": "Batch identifier, can be used in any context where added batch information is helpful, such as different sequencing runs or collection times.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "batchID"
     },
     "bisulfiteConversionKitID": {
       "description": "Name of kit used in bisulfite conversion.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "bisulfiteConversionKitID"
     },
     "comments": {
       "description": "Brief free-text comments that may also be important to understanding the resource.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "comments"
     },
     "dataSubtype": {
@@ -618,6 +639,9 @@
         },
         {
           "type": "string"
+        },
+        {
+          "type": "null"
         }
       ],
       "description": "Identifier for genetic reagent used (e.g., CRISPR construct, shRNA, plasmid). Select from the controlled vocabulary of genetic reagents in NF Research Tools Central (syn51730943) when available, or provide a custom identifier. Links to reagent details are available in the schema see_also field for enum values.",
@@ -686,7 +710,10 @@
     },
     "modelAge": {
       "description": "Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.",
-      "type": "number",
+      "type": [
+        "number",
+        "null"
+      ],
       "title": "modelAge"
     },
     "modelAgeUnit": {
@@ -704,14 +731,38 @@
       "type": "string"
     },
     "modelSex": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "Female",
+            "Male"
+          ],
+          "title": "SexEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Not Applicable"
+          ],
+          "title": "NotApplicableEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Sex of the individual animal model used in the experiment. Distinct from donor sex.",
       "type": "string",
-      "enum": [
-        "Female",
-        "Male",
-        "Unknown",
-        "Not Applicable"
-      ],
       "title": "modelSex"
     },
     "modelSpecies": {
@@ -1549,31 +1600,68 @@
           "Prss56Cre;R26mT"
         ]
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "modelSystemName"
     },
     "nf1Genotype": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "+/+",
+            "+/-",
+            "-/-",
+            "Unknown"
+          ],
+          "title": "Genotype",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Genotype of NF1 gene in the biospecimen from which the data were derived, if known.",
       "type": "string",
-      "enum": [
-        "+/+",
-        "+/-",
-        "-/-",
-        "Unknown",
-        "Unknown"
-      ],
       "title": "nf1Genotype"
     },
     "nf2Genotype": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "+/+",
+            "+/-",
+            "-/-",
+            "Unknown"
+          ],
+          "title": "Genotype",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Genotype of NF2 gene in the biospecimen from which the data were derived, if known",
       "type": "string",
-      "enum": [
-        "+/+",
-        "+/-",
-        "-/-",
-        "Unknown",
-        "Unknown"
-      ],
       "title": "nf2Genotype"
     },
     "nucleicAcidSource": {
@@ -1621,24 +1709,36 @@
     },
     "parentSpecimenID": {
       "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "parentSpecimenID"
     },
     "readDepth": {
       "description": "If available, the coverage statistic as output from bedtools coverage or samtools stats.",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "readDepth"
     },
     "readLength": {
       "description": "Number of base pairs (bp) sequenced for a read",
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "readLength"
     },
     "readPair": {
       "description": "The read of origin, Read 1 or Read 2",
       "maximum": 2,
       "minimum": 1,
-      "type": "integer",
+      "type": [
+        "integer",
+        "null"
+      ],
       "title": "readPair"
     },
     "resourceType": {
@@ -1666,14 +1766,38 @@
       "type": "string"
     },
     "sex": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "Female",
+            "Male"
+          ],
+          "title": "SexEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Not Applicable"
+          ],
+          "title": "NotApplicableEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other.",
       "type": "string",
-      "enum": [
-        "Female",
-        "Male",
-        "Unknown",
-        "Not Applicable"
-      ],
       "title": "sex"
     },
     "species": {
@@ -1717,44 +1841,64 @@
       "type": "string"
     },
     "specimenType": {
+      "anyOf": [
+        {
+          "description": "Tissue is a group of cells that have similar structure and that function together as a unit.",
+          "enum": [
+            "Buccal Mucosa",
+            "Buffy Coat",
+            "CDX tissue",
+            "Dorsal Root Ganglion",
+            "PDX tissue",
+            "blood",
+            "bone marrow",
+            "cerebral cortex",
+            "connective tissue",
+            "embryonic tissue",
+            "meninges",
+            "microtissue",
+            "nerve tissue",
+            "optic nerve",
+            "organoid",
+            "plasma",
+            "primary tumor",
+            "retina",
+            "sciatic nerve",
+            "serum",
+            "spheroid",
+            "splenocyte",
+            "tumor-adjacent normal",
+            "whole brain"
+          ],
+          "title": "Tissue",
+          "type": "string"
+        },
+        {
+          "description": "This preferred root in the UBERON ontology is meant to cover organism-produced substances (bodily secretions and excreta) commonly used as assay specimens.",
+          "enum": [
+            "mucus",
+            "saliva",
+            "stool",
+            "sweat",
+            "urine"
+          ],
+          "title": "OrganismSubstance",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory substances.\n",
       "type": "string",
-      "enum": [
-        "Buccal Mucosa",
-        "Buffy Coat",
-        "CDX tissue",
-        "Dorsal Root Ganglion",
-        "PDX tissue",
-        "blood",
-        "bone marrow",
-        "cerebral cortex",
-        "connective tissue",
-        "embryonic tissue",
-        "meninges",
-        "microtissue",
-        "nerve tissue",
-        "optic nerve",
-        "organoid",
-        "plasma",
-        "primary tumor",
-        "retina",
-        "sciatic nerve",
-        "serum",
-        "spheroid",
-        "splenocyte",
-        "tumor-adjacent normal",
-        "whole brain",
-        "mucus",
-        "saliva",
-        "stool",
-        "sweat",
-        "urine"
-      ],
       "title": "specimenType"
     },
     "targetDepth": {
       "description": "The targeted read depth prior to sequencing.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "targetDepth"
     },
     "tumorType": {

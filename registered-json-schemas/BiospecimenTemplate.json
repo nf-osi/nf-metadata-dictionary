@@ -13,7 +13,10 @@
     },
     "parentSpecimenID": {
       "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "parentSpecimenID"
     },
     "specimenID": {
@@ -23,7 +26,10 @@
     },
     "aliquotID": {
       "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "aliquotID"
     },
     "tumorType": {
@@ -112,7 +118,10 @@
     },
     "experimentalCondition": {
       "description": "A free-text description of the experimental condition (e.g. 5 mM doxorubicin).",
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "title": "experimentalCondition"
     },
     "modelSystemName": {
@@ -931,7 +940,10 @@
           "Prss56Cre;R26mT"
         ]
       },
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "title": "modelSystemName"
     },
     "modelSpecies": {
@@ -954,19 +966,46 @@
       "type": "string"
     },
     "modelSex": {
+      "anyOf": [
+        {
+          "description": "",
+          "enum": [
+            "Female",
+            "Male"
+          ],
+          "title": "SexEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Unknown"
+          ],
+          "title": "UnknownEnum",
+          "type": "string"
+        },
+        {
+          "description": "",
+          "enum": [
+            "Not Applicable"
+          ],
+          "title": "NotApplicableEnum",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "description": "Sex of the individual animal model used in the experiment. Distinct from donor sex.",
       "type": "string",
-      "enum": [
-        "Female",
-        "Male",
-        "Unknown",
-        "Not Applicable"
-      ],
       "title": "modelSex"
     },
     "modelAge": {
       "description": "Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.",
-      "type": "number",
+      "type": [
+        "number",
+        "null"
+      ],
       "title": "modelAge"
     },
     "modelAgeUnit": {
