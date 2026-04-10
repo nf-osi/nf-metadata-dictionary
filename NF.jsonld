@@ -22607,6 +22607,9 @@
           "@id": "bts:CDXtissue"
         },
         {
+          "@id": "bts:Cellline"
+        },
+        {
           "@id": "bts:DorsalRootGanglion"
         },
         {
@@ -23844,11 +23847,11 @@
     {
       "@id": "bts:Pheochromocytoma",
       "@type": "rdfs:Class",
-      "rdfs:comment": "Characterization of the manifestation of Pheochromocytoma.",
+      "rdfs:comment": "TBD",
       "rdfs:label": "Pheochromocytoma",
       "rdfs:subClassOf": [
         {
-          "@id": "bts:Thing"
+          "@id": "bts:TumorType"
         }
       ],
       "schema:isPartOf": {
@@ -23865,7 +23868,7 @@
           "@id": "bts:Unknown"
         }
       ],
-      "sms:displayName": "pheochromocytoma",
+      "sms:displayName": "Pheochromocytoma",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -25458,6 +25461,26 @@
       "sms:validationRules": []
     },
     {
+      "@id": "bts:Cellline",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Cellline",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:TransplantationRecipientTissue"
+        },
+        {
+          "@id": "bts:SpecimenType"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "cell line",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
       "@id": "bts:DorsalRootGanglion",
       "@type": "rdfs:Class",
       "rdfs:comment": "TBD",
@@ -25922,6 +25945,9 @@
         },
         {
           "@id": "bts:CDXtissue"
+        },
+        {
+          "@id": "bts:Cellline"
         },
         {
           "@id": "bts:DorsalRootGanglion"
@@ -27873,6 +27899,9 @@
       },
       "schema:rangeIncludes": [
         {
+          "@id": "bts:Adrenalgland"
+        },
+        {
           "@id": "bts:BursaOfFabricius"
         },
         {
@@ -27912,6 +27941,9 @@
           "@id": "bts:Mesentery"
         },
         {
+          "@id": "bts:Innerear"
+        },
+        {
           "@id": "bts:Nerves"
         },
         {
@@ -27946,6 +27978,23 @@
         }
       ],
       "sms:displayName": "organ",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Adrenalgland",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Adrenalgland",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Organ"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "adrenal gland",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -28133,6 +28182,23 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "mesentery",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:Innerear",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "Innerear",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:Organ"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "inner ear",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -45695,6 +45761,9 @@
         },
         {
           "@id": "bts:OpticPathwayGlioma"
+        },
+        {
+          "@id": "bts:Pheochromocytoma"
         },
         {
           "@id": "bts:PilocyticAstrocytoma"
