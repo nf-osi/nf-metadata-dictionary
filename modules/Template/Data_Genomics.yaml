@@ -360,7 +360,10 @@ classes:
       platform:
         range: SequencingPlatformEnum
       fileFormat:
-        range: SequencingFileFormatEnum
+        any_of:
+        - range: SequencingFileFormatEnum
+        - range: TabularFileFormatEnum
+        - range: OtherFileFormatEnum
       dataType:
         ifabsent: string(gene expression)
     rules:
