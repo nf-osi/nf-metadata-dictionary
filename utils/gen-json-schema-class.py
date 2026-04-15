@@ -20,7 +20,13 @@ def run_cmd(cmd):
         return None
 
 def get_class_property_order(schema_yaml_path, cls_name):
-    """Get the property order from the original YAML schema."""
+    """Get the property order from the original YAML schema.
+
+    If any attribute/slot definition contains an 'order' key (integer), properties
+    are sorted ascending by that value.  Properties without an 'order' key are
+    appended after ordered ones, preserving their relative YAML position.
+    Falls back to plain YAML declaration order when no 'order' fields are present.
+    """
     try:
         # Use a custom YAML loader that preserves order
         from yaml import load
@@ -30,17 +36,50 @@ def get_class_property_order(schema_yaml_path, cls_name):
             from yaml import Loader
 
         with open(schema_yaml_path, 'r') as f:
-            # Load YAML while preserving key order
             schema_data = load(f, Loader=Loader)
 
         cls_def = schema_data.get('classes', {}).get(cls_name, {})
 
-        # Check if properties are defined in 'attributes' (PortalDataset style)
+        # --- attributes style (e.g. PortalDataset) ---
         if 'attributes' in cls_def:
-            return list(cls_def['attributes'].keys())
-        # Otherwise check for 'slots' (Template style)
-        elif 'slots' in cls_def:
-            return cls_def['slots']
+            attrs = cls_def['attributes']
+            has_order = any(
+                isinstance(v, dict) and 'order' in v
+                for v in attrs.values()
+            )
+            if has_order:
+                return [
+                    k for k, v in sorted(
+                        attrs.items(),
+                        key=lambda item: (
+                            item[1].get('order', float('inf'))
+                            if isinstance(item[1], dict)
+                            else float('inf')
+                        )
+                    )
+                ]
+            return list(attrs.keys())
+
+        # --- slots style (e.g. Template classes) ---
+        if 'slots' in cls_def:
+            slots = cls_def['slots']
+            slot_usage = cls_def.get('slot_usage', {})
+            global_slots = schema_data.get('slots', {})
+
+            def _slot_order(slot_name):
+                # slot_usage overrides take precedence over global slot definition
+                su = slot_usage.get(slot_name, {})
+                if isinstance(su, dict) and 'order' in su:
+                    return su['order']
+                sd = global_slots.get(slot_name, {})
+                if isinstance(sd, dict) and 'order' in sd:
+                    return sd['order']
+                return float('inf')
+
+            has_order = any(_slot_order(s) != float('inf') for s in slots)
+            if has_order:
+                return sorted(slots, key=_slot_order)
+            return slots
 
         return []
     except Exception as e:
