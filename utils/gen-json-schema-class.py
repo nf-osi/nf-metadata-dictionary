@@ -59,10 +59,10 @@ def reorder_properties(properties, property_order):
         if prop in properties:
             ordered[prop] = properties[prop]
 
-    # Then add any remaining properties not in the order list (alphabetically)
-    for prop in sorted(properties.keys()):
+    # Then add any remaining properties in their existing order
+    for prop, value in properties.items():
         if prop not in ordered:
-            ordered[prop] = properties[prop]
+            ordered[prop] = value
 
     return dict(ordered)
 
