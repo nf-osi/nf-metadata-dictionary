@@ -346,5 +346,5 @@ This checks:
 ## Additional Resources
 
 - **LinkML Documentation:** https://linkml.io
-- **Synapse JSON Schema Docs:** https://help.synapse.org/docs/JSON-Schemas.3107291536.html
+- **Synapse JSON Schema Docs:** [https://help.synapse.org/docs/JSON-Schemas.3107291536.html](https://docs.synapse.org/synapse-docs/json-schemas)
 - **Schematic Tooling (in development):** https://sagebionetworks.jira.com/wiki/x/QIBD-/
