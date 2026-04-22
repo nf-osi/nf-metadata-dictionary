@@ -268,6 +268,37 @@
       "type": "string",
       "title": "peakCallingAlgorithm"
     },
+    "assayTarget": {
+      "description": "Target of the assay such as a HUGO gene symbol, cell type, or tissue region depending on the capabilities of the assay.",
+      "type": "string",
+      "title": "assayTarget"
+    },
+    "genePerturbationType": {
+      "description": "",
+      "enum": [
+        "CRE Recombinase",
+        "CRISPR",
+        "RNAi"
+      ],
+      "title": "genePerturbationType",
+      "type": "string"
+    },
+    "genePerturbationTechnology": {
+      "description": "",
+      "enum": [
+        "CRE Recombinase",
+        "CRISPR",
+        "CRISPR Assisted mRNA Fragment Trans-splicing (CRAFT)",
+        "RNAi"
+      ],
+      "title": "genePerturbationTechnology",
+      "type": "string"
+    },
+    "genePerturbed": {
+      "description": "The HUGO gene symbol for the gene that is perturbed.",
+      "type": "string",
+      "title": "genePerturbed"
+    },
     "age": {
       "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
       "type": "number",
@@ -1784,6 +1815,7 @@
         "Glioma",
         "Hemorrhagic Neoplasm",
         "High-Grade Glioma NOS",
+        "Invasive Breast Carcinoma",
         "Juvenile Myelomonocytic Leukemia",
         "Localized Neurofibroma",
         "Low-Grade Glioma NOS",
