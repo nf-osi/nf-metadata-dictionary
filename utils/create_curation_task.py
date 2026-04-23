@@ -77,10 +77,66 @@ def generate_datatype(template_name: str, folder_id: str) -> str:
     return f"{base_name}-{folder_id}"
 
 
+def unbind_schema_from_folder(folder_id: str, syn) -> bool:
+    """
+    Unbind any existing JSON schema from a Synapse folder.
+
+    Args:
+        folder_id: Synapse folder ID
+        syn: Authenticated Synapse client
+
+    Returns:
+        True if a schema was removed, False if none was bound
+    """
+    from synapseclient.services.json_schema import JsonSchemaService
+
+    json_schema_service = JsonSchemaService(syn)
+    try:
+        json_schema_service.delete_json_schema_from_entity(synapse_id=folder_id)
+        print("✓ Existing schema unbound from folder")
+        return True
+    except Exception as e:
+        if "not found" in str(e).lower() or "no schema" in str(e).lower() or "404" in str(e):
+            print("  No existing schema binding found (skipping unbind)")
+            return False
+        else:
+            print(f"⚠ Warning: Could not unbind schema: {e}")
+            return False
+
+
+def delete_existing_curation_task(folder_id: str, project_id: str, syn) -> bool:
+    """
+    Find and delete any existing curation task whose upload folder matches folder_id.
+
+    Args:
+        folder_id: Synapse folder ID to match against task_properties.upload_folder_id
+        project_id: Synapse project ID to search within
+        syn: Authenticated Synapse client (used for context; list() uses cached client)
+
+    Returns:
+        True if a task was deleted, False if none was found
+    """
+    from synapseclient.models.curation import CurationTask
+
+    print(f"\nSearching for existing curation tasks for folder {folder_id}...")
+    deleted = False
+    for task in CurationTask.list(project_id=project_id):
+        props = task.task_properties
+        if props and getattr(props, "upload_folder_id", None) == folder_id:
+            print(f"  Found task {task.task_id} (dataType: {task.data_type}) — deleting...")
+            task.delete()
+            print(f"  ✓ Deleted task {task.task_id}")
+            deleted = True
+    if not deleted:
+        print("  No existing curation task found for this folder")
+    return deleted
+
+
 def bind_schema_to_folder(
     folder_id: str,
     schema_uri: str,
-    syn
+    syn,
+    replace: bool = False
 ) -> bool:
     """
     Bind a JSON schema to a Synapse folder.
@@ -89,18 +145,21 @@ def bind_schema_to_folder(
         folder_id: Synapse folder ID
         schema_uri: JSON schema URI
         syn: Authenticated Synapse client
+        replace: If True, unbind any existing schema before binding
 
     Returns:
-        True if binding succeeded, False if already bound
+        True if binding succeeded, False if already bound and replace=False
     """
     from synapseclient.services.json_schema import JsonSchemaService
 
     print(f"\nBinding schema to folder {folder_id}...")
     json_schema_service = JsonSchemaService(syn)
 
+    if replace:
+        unbind_schema_from_folder(folder_id, syn)
+
     try:
-        # Note: parameter names are synapse_id and json_schema_uri
-        binding = json_schema_service.bind_json_schema_to_entity(
+        json_schema_service.bind_json_schema_to_entity(
             synapse_id=folder_id,
             json_schema_uri=schema_uri
         )
@@ -120,6 +179,7 @@ def create_curation_task(
     template: str,
     instructions: str = "Please add metadata for your files",
     bind_schema: bool = True,
+    replace: bool = False,
     auth_token: str = None
 ) -> dict:
     """
@@ -134,6 +194,8 @@ def create_curation_task(
         template: Template name (e.g., 'ImagingAssayTemplate')
         instructions: Instructions for data contributors
         bind_schema: Whether to bind JSON schema to folder (default: True)
+        replace: If True, delete any existing curation task for this folder and
+                 rebind the schema before creating a new task (default: False)
         auth_token: Synapse authentication token (if None, reads from env)
 
     Returns:
@@ -199,9 +261,13 @@ def create_curation_task(
     data_type = generate_datatype(template_name, upload_folder_id)
     print(f"  Generated dataType: {data_type}")
 
+    # If replacing, delete existing curation task first
+    if replace:
+        delete_existing_curation_task(upload_folder_id, project_id, syn)
+
     # Optionally bind schema to folder
     if bind_schema:
-        bind_schema_to_folder(upload_folder_id, schema_uri, syn)
+        bind_schema_to_folder(upload_folder_id, schema_uri, syn, replace=replace)
 
     # Create EntityView (file view) using the better implementation from json_schema_entity_view
     print(f"\nCreating file view for folder...")
@@ -356,6 +422,17 @@ Notes:
     )
 
     parser.add_argument(
+        '--replace',
+        action='store_true',
+        default=False,
+        help=(
+            'Replace mode: delete any existing curation task for this folder '
+            'and rebind the schema before creating a new task. '
+            'Use when changing the template for an already-configured folder.'
+        )
+    )
+
+    parser.add_argument(
         '--output-format',
         choices=['json', 'github'],
         default='json',
@@ -369,7 +446,8 @@ Notes:
             upload_folder_id=args.folder_id,
             template=args.template,
             instructions=args.instructions,
-            bind_schema=args.bind_schema
+            bind_schema=args.bind_schema,
+            replace=args.replace
         )
 
         if args.output_format == 'github':
