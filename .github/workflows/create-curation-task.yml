@@ -15,6 +15,9 @@ on:
           # Default option - most commonly used for genomics data
           - GenomicsAssayTemplate
 
+          # Generic fallback (use when file format doesn't fit a specific pipeline-output template)
+          - GenericDataResourceTemplate
+
           # Assay technical metadata templates
           - BehavioralAssayTemplate
           - BiologicalAssayDataTemplate
@@ -87,6 +90,11 @@ on:
         required: false
         type: string
         default: 'Please add metadata for your files'
+      replace:
+        description: 'Replace mode: delete existing curation task for this folder and rebind schema. Use when changing the template for an already-configured folder.'
+        required: false
+        type: boolean
+        default: false
       create_issue:
         description: 'Create mirror GitHub issue with task info'
         required: false
@@ -133,6 +141,7 @@ jobs:
             --template "${{ inputs.template }}" \
             --instructions "${{ inputs.instructions }}" \
             --bind-schema \
+            ${{ inputs.replace && '--replace' || '' }} \
             --output-format github
 
       - name: Display task summary

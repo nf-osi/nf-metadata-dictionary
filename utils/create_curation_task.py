@@ -77,10 +77,111 @@ def generate_datatype(template_name: str, folder_id: str) -> str:
     return f"{base_name}-{folder_id}"
 
 
+def unbind_schema_from_folder(folder_id: str, syn) -> bool:
+    """
+    Unbind any existing JSON schema from a Synapse folder.
+
+    Args:
+        folder_id: Synapse folder ID
+        syn: Authenticated Synapse client
+
+    Returns:
+        True if a schema was removed, False if none was bound
+    """
+    from synapseclient.services.json_schema import JsonSchemaService
+
+    json_schema_service = JsonSchemaService(syn)
+    try:
+        json_schema_service.delete_json_schema_from_entity(synapse_id=folder_id)
+        print("✓ Existing schema unbound from folder")
+        return True
+    except Exception as e:
+        if "not found" in str(e).lower() or "no schema" in str(e).lower() or "404" in str(e):
+            print("  No existing schema binding found (skipping unbind)")
+            return False
+        else:
+            print(f"⚠ Warning: Could not unbind schema: {e}")
+            return False
+
+
+def check_existing_annotations(folder_id: str, schema_fields: set, syn) -> bool:
+    """
+    Warn if files in the folder already have annotations matching template fields.
+
+    Checks up to 10 files to keep runtime reasonable. Ignores system fields
+    (createdBy, modifiedOn, etc.) — only considers fields present in the schema.
+
+    Args:
+        folder_id: Synapse folder ID
+        schema_fields: Field names from the schema template's 'properties'
+        syn: Authenticated Synapse client
+
+    Returns:
+        True if pre-filled annotations were found, False otherwise
+    """
+    print(f"\nChecking for pre-existing annotations in folder {folder_id}...")
+    files_with_annotations = []
+    checked = 0
+
+    for child in syn.getChildren(folder_id, includeTypes=["file"]):
+        checked += 1
+        annotations = syn.get_annotations(child["id"])
+        filled = {k: v for k, v in annotations.items() if k in schema_fields and v not in (None, [], "")}
+        if filled:
+            files_with_annotations.append((child["name"], filled))
+        if checked >= 10:
+            break
+
+    if not checked:
+        print("  No files found in folder")
+        return False
+
+    if files_with_annotations:
+        print(f"⚠ Warning: {len(files_with_annotations)} of {checked} checked file(s) already have template annotations:")
+        for filename, fields in files_with_annotations[:3]:
+            print(f"  - {filename}: {list(fields.keys())}")
+        if len(files_with_annotations) > 3:
+            print(f"  ... and {len(files_with_annotations) - 3} more")
+        print("  Existing annotations will not be overwritten, but verify they are compatible with the new template.")
+        return True
+
+    print(f"  No pre-existing template annotations found ({checked} file(s) checked)")
+    return False
+
+
+def delete_existing_curation_task(folder_id: str, project_id: str, syn) -> bool:
+    """
+    Find and delete any existing curation task whose upload folder matches folder_id.
+
+    Args:
+        folder_id: Synapse folder ID to match against task_properties.upload_folder_id
+        project_id: Synapse project ID to search within
+        syn: Authenticated Synapse client (used for context; list() uses cached client)
+
+    Returns:
+        True if a task was deleted, False if none was found
+    """
+    from synapseclient.models.curation import CurationTask
+
+    print(f"\nSearching for existing curation tasks for folder {folder_id}...")
+    deleted = False
+    for task in CurationTask.list(project_id=project_id):
+        props = task.task_properties
+        if props and getattr(props, "upload_folder_id", None) == folder_id:
+            print(f"  Found task {task.task_id} (dataType: {task.data_type}) — deleting...")
+            task.delete()
+            print(f"  ✓ Deleted task {task.task_id}")
+            deleted = True
+    if not deleted:
+        print("  No existing curation task found for this folder")
+    return deleted
+
+
 def bind_schema_to_folder(
     folder_id: str,
     schema_uri: str,
-    syn
+    syn,
+    replace: bool = False
 ) -> bool:
     """
     Bind a JSON schema to a Synapse folder.
@@ -89,18 +190,21 @@ def bind_schema_to_folder(
         folder_id: Synapse folder ID
         schema_uri: JSON schema URI
         syn: Authenticated Synapse client
+        replace: If True, unbind any existing schema before binding
 
     Returns:
-        True if binding succeeded, False if already bound
+        True if binding succeeded, False if already bound and replace=False
     """
     from synapseclient.services.json_schema import JsonSchemaService
 
     print(f"\nBinding schema to folder {folder_id}...")
     json_schema_service = JsonSchemaService(syn)
 
+    if replace:
+        unbind_schema_from_folder(folder_id, syn)
+
     try:
-        # Note: parameter names are synapse_id and json_schema_uri
-        binding = json_schema_service.bind_json_schema_to_entity(
+        json_schema_service.bind_json_schema_to_entity(
             synapse_id=folder_id,
             json_schema_uri=schema_uri
         )
@@ -120,6 +224,7 @@ def create_curation_task(
     template: str,
     instructions: str = "Please add metadata for your files",
     bind_schema: bool = True,
+    replace: bool = False,
     auth_token: str = None
 ) -> dict:
     """
@@ -134,6 +239,8 @@ def create_curation_task(
         template: Template name (e.g., 'ImagingAssayTemplate')
         instructions: Instructions for data contributors
         bind_schema: Whether to bind JSON schema to folder (default: True)
+        replace: If True, delete any existing curation task for this folder and
+                 rebind the schema before creating a new task (default: False)
         auth_token: Synapse authentication token (if None, reads from env)
 
     Returns:
@@ -185,6 +292,18 @@ def create_curation_task(
     schema_uri, json_schema = load_schema_uri(template)
     print(f"  Schema URI: {schema_uri}")
 
+    # Fetch schema content now if not already loaded (external URI case),
+    # so schema fields are available for the annotation check below.
+    if json_schema is None:
+        print("  Fetching schema from URI...")
+        import requests
+        response = requests.get(schema_uri)
+        if response.status_code == 200:
+            json_schema = response.json()
+        else:
+            print(f"  ⚠ Could not fetch schema from URI (status {response.status_code})")
+            json_schema = {}
+
     # Determine template name for dataType generation
     # If full URI provided, extract template name or use a default
     if template.startswith('http://') or template.startswith('https://'):
@@ -199,28 +318,23 @@ def create_curation_task(
     data_type = generate_datatype(template_name, upload_folder_id)
     print(f"  Generated dataType: {data_type}")
 
+    # Warn early if files already have annotations matching the template fields,
+    # before any destructive action (schema unbind / task delete).
+    schema_fields = set(json_schema.get("properties", {}).keys())
+    if schema_fields:
+        check_existing_annotations(upload_folder_id, schema_fields, syn)
+
+    # If replacing, delete existing curation task first
+    if replace:
+        delete_existing_curation_task(upload_folder_id, project_id, syn)
+
     # Optionally bind schema to folder
     if bind_schema:
-        bind_schema_to_folder(upload_folder_id, schema_uri, syn)
+        bind_schema_to_folder(upload_folder_id, schema_uri, syn, replace=replace)
 
     # Create EntityView (file view) using the better implementation from json_schema_entity_view
     print(f"\nCreating file view for folder...")
     from synapseclient.models import Column, ColumnType, ViewTypeMask, EntityView
-
-    # Fetch the schema if we don't have it yet
-    if json_schema is None:
-        print("  Fetching schema from URI...")
-        import requests
-        response = requests.get(schema_uri)
-        if response.status_code == 200:
-            json_schema = response.json()
-        else:
-            print(f"  ⚠ Could not fetch schema, using local template if available...")
-            try:
-                _, json_schema = load_schema_uri(template_name)
-            except FileNotFoundError:
-                print("  ⚠ No schema available - creating view with default columns only")
-                json_schema = {}
 
     # Create columns from schema using the helper function
     import sys
@@ -356,6 +470,17 @@ Notes:
     )
 
     parser.add_argument(
+        '--replace',
+        action='store_true',
+        default=False,
+        help=(
+            'Replace mode: delete any existing curation task for this folder '
+            'and rebind the schema before creating a new task. '
+            'Use when changing the template for an already-configured folder.'
+        )
+    )
+
+    parser.add_argument(
         '--output-format',
         choices=['json', 'github'],
         default='json',
@@ -369,7 +494,8 @@ Notes:
             upload_folder_id=args.folder_id,
             template=args.template,
             instructions=args.instructions,
-            bind_schema=args.bind_schema
+            bind_schema=args.bind_schema,
+            replace=args.replace
         )
 
         if args.output_format == 'github':
