@@ -1433,6 +1433,11 @@ enums:
       scCGI-seq:
         description: A method for genome-wide CpG island (CGI) methylation sequencing for single cells (scCGI-seq), combining methylation-sensitive restriction enzyme digestion and multiple displacement amplification for selective detection of methylated CGIs
         source: https://www.ncbi.nlm.nih.gov/pubmed/28126923
+      shRNA-seq:
+        aliases:
+          - shRNA library screen sequencing
+        description: A sequencing-based functional genomics assay in which a pooled short hairpin RNA (shRNA) library is introduced into cells, and the relative abundance of individual shRNA constructs is quantified by amplicon sequencing to identify genes affecting a phenotype of interest.
+        meaning: EFO:0030034
       single cell ATAC-seq:
         aliases:
           - scATAC-Seq
@@ -9683,7 +9688,7 @@ classes:
       - FileBasedTemplate and RecordBasedTemplate are not technically mutually exclusive; some resources may have both file and record representations.
   BiologicalAssayDataTemplate:
     abstract: true
-    description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. Donor/individual attributes (species, sex, age, diagnosis) describe the original donor (e.g., human patient tumor). For cell lines, individualID references syn51730943. Model attributes (modelSpecies, modelSex, modelAge) describe any animal model host used. antibodyID and geneticReagentID reference treatments/reagents.'
+    description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. Donor/individual attributes (species, sex, age, diagnosis) describe the original donor (e.g., human patient tumor). For cell lines, individualID references syn51730943. antibodyID and geneticReagentID reference treatments/reagents. For PDX data, use PdxGenomicsAssayTemplate which includes model* attributes.'
     is_a: FileBasedTemplate
     slots:
       - dataType
@@ -9698,11 +9703,6 @@ classes:
       - nf1Genotype
       - nf2Genotype
       - tumorType
-      - modelSystemName
-      - modelSpecies
-      - modelSex
-      - modelAge
-      - modelAgeUnit
       - organ
       - antibodyID
       - geneticReagentID
@@ -10126,6 +10126,10 @@ classes:
       - transplantationRecipientSpecies
       - transplantationRecipientTissue
       - modelSystemName
+      - modelSpecies
+      - modelSex
+      - modelAge
+      - modelAgeUnit
       - experimentalCondition
       - experimentalTimepoint
       - timepointUnit

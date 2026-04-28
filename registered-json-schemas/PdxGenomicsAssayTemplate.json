@@ -962,6 +962,55 @@
       "type": "array",
       "title": "modelSystemName"
     },
+    "modelSpecies": {
+      "description": "",
+      "enum": [
+        "Danio rerio",
+        "Drosophila melanogaster",
+        "Gallus gallus",
+        "Homo sapiens",
+        "Mus musculus",
+        "Macaca nemestrina",
+        "Mus musculus (humanized)",
+        "Oryctolagus cuniculus",
+        "Pan troglodytes",
+        "Rattus norvegicus",
+        "Rhesus macaque",
+        "Sus scrofa"
+      ],
+      "title": "species",
+      "type": "string"
+    },
+    "modelSex": {
+      "description": "Sex of the individual animal model used in the experiment. Distinct from donor sex.",
+      "type": "string",
+      "enum": [
+        "Female",
+        "Male",
+        "Unknown",
+        "Not Applicable"
+      ],
+      "title": "modelSex"
+    },
+    "modelAge": {
+      "description": "Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.",
+      "type": "number",
+      "title": "modelAge"
+    },
+    "modelAgeUnit": {
+      "description": "",
+      "enum": [
+        "days",
+        "hours",
+        "minutes",
+        "months",
+        "seconds",
+        "weeks",
+        "years"
+      ],
+      "title": "timepointUnit",
+      "type": "string"
+    },
     "experimentalCondition": {
       "description": "A free-text description of the experimental condition (e.g. 5 mM doxorubicin).",
       "type": "string",
@@ -1230,6 +1279,7 @@
         "oxBS-seq",
         "ribo-seq",
         "scCGI-seq",
+        "shRNA-seq",
         "single cell ATAC-seq",
         "single-cell RNA-seq",
         "single-nucleus RNA-seq",
@@ -1597,55 +1647,6 @@
         "Not Applicable"
       ],
       "title": "libraryStrand"
-    },
-    "modelAge": {
-      "description": "Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.",
-      "type": "number",
-      "title": "modelAge"
-    },
-    "modelAgeUnit": {
-      "description": "",
-      "enum": [
-        "days",
-        "hours",
-        "minutes",
-        "months",
-        "seconds",
-        "weeks",
-        "years"
-      ],
-      "title": "timepointUnit",
-      "type": "string"
-    },
-    "modelSex": {
-      "description": "Sex of the individual animal model used in the experiment. Distinct from donor sex.",
-      "type": "string",
-      "enum": [
-        "Female",
-        "Male",
-        "Unknown",
-        "Not Applicable"
-      ],
-      "title": "modelSex"
-    },
-    "modelSpecies": {
-      "description": "",
-      "enum": [
-        "Danio rerio",
-        "Drosophila melanogaster",
-        "Gallus gallus",
-        "Homo sapiens",
-        "Mus musculus",
-        "Macaca nemestrina",
-        "Mus musculus (humanized)",
-        "Oryctolagus cuniculus",
-        "Pan troglodytes",
-        "Rattus norvegicus",
-        "Rhesus macaque",
-        "Sus scrofa"
-      ],
-      "title": "species",
-      "type": "string"
     },
     "nf1Genotype": {
       "description": "Genotype of NF1 gene in the biospecimen from which the data were derived, if known.",

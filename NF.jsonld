@@ -49105,6 +49105,9 @@
           "@id": "bts:ScCGI-seq"
         },
         {
+          "@id": "bts:ShRNA-seq"
+        },
+        {
           "@id": "bts:SinglecellATAC-seq"
         },
         {
@@ -50131,6 +50134,26 @@
         "@id": "http://schema.biothings.io"
       },
       "sms:displayName": "scCGI-seq",
+      "sms:required": "sms:false",
+      "sms:validationRules": []
+    },
+    {
+      "@id": "bts:ShRNA-seq",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "TBD",
+      "rdfs:label": "ShRNA-seq",
+      "rdfs:subClassOf": [
+        {
+          "@id": "bts:ProtocolAssay"
+        },
+        {
+          "@id": "bts:Assay"
+        }
+      ],
+      "schema:isPartOf": {
+        "@id": "http://schema.biothings.io"
+      },
+      "sms:displayName": "shRNA-seq",
       "sms:required": "sms:false",
       "sms:validationRules": []
     },
@@ -53619,6 +53642,9 @@
         },
         {
           "@id": "bts:ScCGI-seq"
+        },
+        {
+          "@id": "bts:ShRNA-seq"
         },
         {
           "@id": "bts:SinglecellATAC-seq"
@@ -58689,21 +58715,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -58811,21 +58822,6 @@
         },
         {
           "@id": "bts:TumorType"
-        },
-        {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:Organ"
@@ -59070,21 +59066,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -59182,21 +59163,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -59232,7 +59198,7 @@
     {
       "@id": "bts:BiologicalAssayDataTemplate",
       "@type": "rdfs:Class",
-      "rdfs:comment": "A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. Donor/individual attributes (species, sex, age, diagnosis) describe the original donor (e.g., human patient tumor). For cell lines, individualID references syn51730943. Model attributes (modelSpecies, modelSex, modelAge) describe any animal model host used. antibodyID and geneticReagentID reference treatments/reagents.",
+      "rdfs:comment": "A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. Donor/individual attributes (species, sex, age, diagnosis) describe the original donor (e.g., human patient tumor). For cell lines, individualID references syn51730943. antibodyID and geneticReagentID reference treatments/reagents. For PDX data, use PdxGenomicsAssayTemplate which includes model* attributes.",
       "rdfs:label": "BiologicalAssayDataTemplate",
       "rdfs:subClassOf": [
         {
@@ -59292,21 +59258,6 @@
         },
         {
           "@id": "bts:TumorType"
-        },
-        {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:Organ"
@@ -59465,21 +59416,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -59632,21 +59568,6 @@
         },
         {
           "@id": "bts:TumorType"
-        },
-        {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:Organ"
@@ -59892,21 +59813,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -59999,21 +59905,6 @@
         },
         {
           "@id": "bts:TumorType"
-        },
-        {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:Organ"
@@ -60159,21 +60050,6 @@
         },
         {
           "@id": "bts:TumorType"
-        },
-        {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:Organ"
@@ -60654,21 +60530,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -60809,21 +60670,6 @@
         },
         {
           "@id": "bts:TumorType"
-        },
-        {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:Organ"
@@ -60974,21 +60820,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -61119,21 +60950,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -61237,21 +61053,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -61322,6 +61123,21 @@
         },
         {
           "@id": "bts:TransplantationRecipientTissue"
+        },
+        {
+          "@id": "bts:ModelSystemName"
+        },
+        {
+          "@id": "bts:ModelSpecies"
+        },
+        {
+          "@id": "bts:ModelSex"
+        },
+        {
+          "@id": "bts:ModelAge"
+        },
+        {
+          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:ExperimentalCondition"
@@ -61400,21 +61216,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -61434,6 +61235,9 @@
         },
         {
           "@id": "bts:AliquotID"
+        },
+        {
+          "@id": "bts:ModelSystemName"
         },
         {
           "@id": "bts:ExperimentalFactor"
@@ -61531,21 +61335,6 @@
         },
         {
           "@id": "bts:TumorType"
-        },
-        {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:Organ"
@@ -61742,21 +61531,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -61885,21 +61659,6 @@
         },
         {
           "@id": "bts:TumorType"
-        },
-        {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:Organ"
@@ -62520,21 +62279,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -62635,21 +62379,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -62747,21 +62476,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -62857,21 +62571,6 @@
         },
         {
           "@id": "bts:TumorType"
-        },
-        {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:Organ"
@@ -62975,21 +62674,6 @@
         },
         {
           "@id": "bts:TumorType"
-        },
-        {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:Organ"
@@ -63196,21 +62880,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -63323,21 +62992,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -63439,21 +63093,6 @@
         },
         {
           "@id": "bts:TumorType"
-        },
-        {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:Organ"
@@ -63641,21 +63280,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -63772,21 +63396,6 @@
         },
         {
           "@id": "bts:TumorType"
-        },
-        {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:Organ"
@@ -63907,21 +63516,6 @@
         },
         {
           "@id": "bts:TumorType"
-        },
-        {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:Organ"
@@ -64106,21 +63700,6 @@
           "@id": "bts:TumorType"
         },
         {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
-        },
-        {
           "@id": "bts:Organ"
         },
         {
@@ -64131,6 +63710,9 @@
         },
         {
           "@id": "bts:Comments"
+        },
+        {
+          "@id": "bts:ModelSystemName"
         },
         {
           "@id": "bts:ExperimentalFactor"
@@ -64228,21 +63810,6 @@
         },
         {
           "@id": "bts:TumorType"
-        },
-        {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:Organ"
@@ -64687,21 +64254,6 @@
         },
         {
           "@id": "bts:TumorType"
-        },
-        {
-          "@id": "bts:ModelSystemName"
-        },
-        {
-          "@id": "bts:ModelSpecies"
-        },
-        {
-          "@id": "bts:ModelSex"
-        },
-        {
-          "@id": "bts:ModelAge"
-        },
-        {
-          "@id": "bts:ModelAgeUnit"
         },
         {
           "@id": "bts:Organ"
