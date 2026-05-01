@@ -1,5 +1,5 @@
 {
-  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-scsequencingassaytemplate",
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-spatialtranscriptomicssequencingtemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "allOf": [
     {
@@ -39,131 +39,27 @@
       }
     }
   ],
-  "description": "General template for raw RNA/DNA data, i.e. sequence data from a sequencing assay.",
+  "description": "Template for describing sequencing-based and expression data files from spatial transcriptomics experiments (e.g., FASTQ files and count matrices from 10x Visium, 10x Visium CytAssist, NanoString CosMx, GeoMx).",
   "properties": {
-    "cellType": {
-      "description": "A cell type is a distinct morphological or functional form of cell.",
-      "items": {
-        "description": "",
-        "enum": [
-          "B-lymphocytes",
-          "CD138+",
-          "CD8+ T-Cells",
-          "CNON",
-          "DRG/nerve root neurosphere cell",
-          "Embryonic stem cells",
-          "GABAergic neurons",
-          "GLUtamatergic neurons",
-          "NeuN+",
-          "NeuN-",
-          "SH-SY5Y",
-          "Schwann cell precursor",
-          "arachnoid",
-          "astrocytes",
-          "cultured Muller glia",
-          "epithelial",
-          "epithelial-like",
-          "fibroblast",
-          "iPSC",
-          "iPSC-derived astrocytes",
-          "iPSC-derived glia",
-          "iPSC-derived neuron",
-          "iPSC-derived neuronal progenitor cell",
-          "iPSC-derived telencephalic organoids",
-          "lymphoblast",
-          "macrophages",
-          "meningioma",
-          "microglia",
-          "monocyte-derived microglia",
-          "monocytes",
-          "oligodendrocyte",
-          "round",
-          "schwann",
-          "schwannoma",
-          "teratoma"
-        ],
-        "title": "Cell",
-        "type": "string"
-      },
-      "type": "array",
-      "title": "cellType"
-    },
-    "isCellLine": {
-      "description": "Boolean data as Yes/No enums",
-      "enum": [
-        "No",
-        "Yes"
-      ],
-      "title": "isCellLine",
-      "type": "string"
-    },
-    "cellID": {
-      "description": "Also known as cell barcode, this value can be added for single-cell experiments to identify data at the cell level.",
+    "captureArea": {
+      "description": "One of the either four or two active regions where tissue can be placed on a Visium slide. Each area is intended to contain only one tissue sample.  Slide areas are named consecutively from top to bottom:  A1, B1, C1, D1 for Visium slides with 6.5 mm Capture Area and A, B for CytAssist slides with 11 mm Capture Area.  Both CytAssist slides with 6.5 mm Capture Area and Gateway Slides contain only two slide areas, A1 and D1.\n",
       "type": "string",
-      "title": "cellID"
+      "title": "captureArea"
     },
-    "dissociationMethod": {
-      "description": "",
-      "enum": [
-        "10x_v2",
-        "FACS",
-        "Fluidigm C1",
-        "drop-seq",
-        "enzymatic",
-        "inDrop",
-        "mechanical",
-        "mouth pipette"
-      ],
-      "title": "dissociationMethod",
-      "type": "string"
-    },
-    "runType": {
-      "description": "",
-      "enum": [
-        "pairedEnd",
-        "singleEnd"
-      ],
-      "title": "runType",
-      "type": "string"
-    },
-    "libraryStrand": {
-      "description": "Strandedness of paired-end RNA-Sequencing data. This is an important parameter for RNA-seq analysis.",
+    "visiumslideID": {
+      "description": "Unique identifier for the Visium slide used in the spatial transcriptomics experiment. Slide serial numbers begin with V1, V4, V5, or H1 (e.g., V10J25-015).",
       "type": "string",
-      "enum": [
-        "FirstStranded",
-        "SecondStranded",
-        "Unstranded",
-        "Not Applicable"
-      ],
-      "title": "libraryStrand"
+      "title": "visiumslideID"
     },
-    "libraryKitID": {
-      "description": "",
-      "enum": [
-        "Chromium NextGEM Single Cell 3' Reagent Kit v3.1",
-        "Chromium NextGEM Single Cell 5' Reagent Kit v1.1",
-        "Chromium Single Cell 3' Reagent Kit v3",
-        "Chromium Single Cell 5' Reagent Kit v1",
-        "TruSeq DNA PCR-Free Library Prep Kit",
-        "TruSeq DNA Nano Library Prep Kit",
-        "TruSeq Stranded mRNA Library Prep Kit",
-        "TruSeq Stranded Total RNA Library Prep Kit",
-        "NEBNext Ultra II DNA Library Prep Kit",
-        "NEBNext Ultra II RNA Library Prep Kit",
-        "KAPA HyperPrep Kit",
-        "KAPA RNA HyperPrep Kit",
-        "Nextera DNA Flex Library Prep Kit",
-        "Nextera XT DNA Library Prep Kit",
-        "SMART-Seq v4 Ultra Low Input RNA Kit",
-        "QuantSeq 3' mRNA-Seq Library Prep Kit FWD",
-        "ThruPLEX DNA-Seq Kit",
-        "Swift 2S Turbo DNA Library Kit",
-        "Oxford Nanopore Ligation Sequencing Kit",
-        "Oxford Nanopore Rapid Sequencing Kit",
-        "unknown"
-      ],
-      "title": "libraryKitID",
-      "type": "string"
+    "cytassistSample": {
+      "description": "Whether the 10x Genomics CytAssist instrument was used for sample preparation in the spatial transcriptomics experiment.",
+      "type": "string",
+      "title": "cytassistSample"
+    },
+    "probeSet": {
+      "description": "Identifier or name of the probe set used in the spatial transcriptomics experiment (e.g., Visium Human Transcriptome Probe Set v2.0).",
+      "type": "string",
+      "title": "probeSet"
     },
     "libraryPrep": {
       "description": "",
@@ -206,37 +102,42 @@
       "title": "libraryPreparationMethod",
       "type": "string"
     },
-    "readPair": {
-      "description": "The read of origin, Read 1 or Read 2",
-      "maximum": 2,
-      "minimum": 1,
-      "type": "integer",
-      "title": "readPair"
-    },
-    "readLength": {
-      "description": "Number of base pairs (bp) sequenced for a read",
-      "type": "integer",
-      "title": "readLength"
-    },
-    "readDepth": {
-      "description": "If available, the coverage statistic as output from bedtools coverage or samtools stats.",
-      "type": "integer",
-      "title": "readDepth"
-    },
-    "targetDepth": {
-      "description": "The targeted read depth prior to sequencing.",
+    "specimenType": {
+      "description": "The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory substances.\n",
       "type": "string",
-      "title": "targetDepth"
-    },
-    "batchID": {
-      "description": "Batch identifier, can be used in any context where added batch information is helpful, such as different sequencing runs or collection times.",
-      "type": "string",
-      "title": "batchID"
-    },
-    "auxiliaryAsset": {
-      "description": "URI to supplemental asset(s), e.g. QC reports or other auxiliary files to support the processing, analysis, or interpretation of the current entity.\n",
-      "type": "string",
-      "title": "auxiliaryAsset"
+      "enum": [
+        "Buccal Mucosa",
+        "Buffy Coat",
+        "CDX tissue",
+        "cell line",
+        "Dorsal Root Ganglion",
+        "PDX tissue",
+        "blood",
+        "bone marrow",
+        "cerebral cortex",
+        "connective tissue",
+        "embryonic tissue",
+        "meninges",
+        "microtissue",
+        "nerve tissue",
+        "optic nerve",
+        "organoid",
+        "plasma",
+        "primary tumor",
+        "retina",
+        "sciatic nerve",
+        "serum",
+        "spheroid",
+        "splenocyte",
+        "tumor-adjacent normal",
+        "whole brain",
+        "mucus",
+        "saliva",
+        "stool",
+        "sweat",
+        "urine"
+      ],
+      "title": "specimenType"
     },
     "age": {
       "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
@@ -515,70 +416,6 @@
     "dataType": {
       "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
       "type": "string",
-      "enum": [
-        "aligned reads",
-        "annotated germline variants",
-        "annotated somatic mutation",
-        "audio transcript",
-        "behavioral data",
-        "capsid sequence",
-        "cellular physiology",
-        "characteristic",
-        "chromatin activity",
-        "clinical",
-        "copy number variants",
-        "count matrix",
-        "data index",
-        "data sharing plan",
-        "demographics",
-        "drug combination screen",
-        "drug screen",
-        "electrophysiology",
-        "epidemiological data",
-        "gene expression",
-        "gene expression matrix",
-        "quantified gene expression",
-        "genomic features",
-        "genomic variants",
-        "germline variants",
-        "guide RNA sequence",
-        "image",
-        "immunoassay",
-        "isoform expression",
-        "kinomics",
-        "mask image",
-        "mass spectrometry data",
-        "metabolomics",
-        "molecular property",
-        "morphology parameter",
-        "network",
-        "nucleic acid sequence record",
-        "over-representation data",
-        "particle characterization",
-        "pharmacokinetics",
-        "physiology parameter",
-        "plasmid sequence",
-        "plot",
-        "primer sequence",
-        "probe sequence",
-        "promoter sequence",
-        "protein interaction data",
-        "protein interaction raw data",
-        "proteomics",
-        "raw counts",
-        "reference sequence",
-        "report",
-        "somatic variants",
-        "structural variants",
-        "survey data",
-        "text data",
-        "volume",
-        "weight",
-        "descriptive metadata",
-        "image metadata",
-        "metadata",
-        "workflow metadata"
-      ],
       "title": "dataType"
     },
     "diagnosis": {
@@ -1018,8 +855,6 @@
     }
   },
   "required": [
-    "libraryStrand",
-    "libraryKitID",
     "libraryPreparationMethod",
     "specimenID",
     "tumorType",
@@ -1034,6 +869,6 @@
     "fileFormat",
     "resourceType"
   ],
-  "title": "ScSequencingAssayTemplate",
+  "title": "SpatialTranscriptomicsSequencingTemplate",
   "type": "object"
 }

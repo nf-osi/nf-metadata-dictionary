@@ -343,6 +343,10 @@ slots:
     title: Current Version
     required: false
     see_also: https://www.w3.org/TR/vocab-dcat-3/#Property:resource_version
+  cytassistSample:
+    description: Whether the 10x Genomics CytAssist instrument was used for sample preparation in the spatial transcriptomics experiment.
+    title: CytAssist Sample
+    required: false
   dataCollectionMode:
     description: Mode of data collection in tandem MS assays. Either DDA (data-dependent acquisition) or DIA (data-independent) acquisition.
     title: Data Collection Mode
@@ -1012,6 +1016,11 @@ slots:
       - range: DrugScreenAssayEnum
     required: false
     title: Protocol assay
+  probeSet:
+    description: Identifier or name of the probe set used in the spatial transcriptomics experiment (e.g., Visium Human Transcriptome Probe Set v2.0).
+    range: string
+    title: Probe Set
+    required: false
   protocolPurpose:
     description: Brief description of the protocol purpose.
     range: string
@@ -1308,6 +1317,11 @@ slots:
     range: LateralManifestationEnum
     required: false
     title: Vestibular schwannoma
+  visiumslideID:
+    description: Unique identifier for the Visium slide used in the spatial transcriptomics experiment. Slide serial numbers begin with V1, V4, V5, or H1 (e.g., V10J25-015).
+    range: string
+    title: Visium Slide ID
+    required: false
   vitalStatus:
     description: Vital status of the patient.
     range: VitalStatusEnum
@@ -1659,6 +1673,9 @@ enums:
         notes:
           - Note that term has no matches in OLS as of June 2022.
         source: https://doi.org/10.3390/photonics8050162
+      spatial transcriptomics:
+        description: Assay that allows visualization and quantitative analysis of the transcriptome with spatial resolution in individual tissue sections.
+        meaning: EFO:0008994
       traction force microscopy:
         description: An experimental method for determining the tractions on the surface of a biological cell by obtaining measurements of the surrounding displacement field within an in vitro extracellular matrix (ECM)
         source: https://en.wikipedia.org/wiki/Traction_force_microscopy
@@ -2735,6 +2752,9 @@ enums:
       Chromium X:
         description: (From 10x Genomics) Single-cell platform that can analyze hundreds to hundreds of thousands of cells in single run for e.g. gene expression, chromatin accessibility, cell surface proteins, immune clonotype, antigen specificity, CRISPR perturbation screens).
         source: https://www.10xgenomics.com/chromium-x
+      10X Visium CytAssist:
+        description: 10x Genomics CytAssist instrument that enables spatial gene expression profiling from standard histology tissue sections by transferring RNA to a Visium capture slide.
+        source: https://www.10xgenomics.com/products/visium-cytassist-spatial-gene-expression
   ArrayPlatformEnum:
     description: Array-based platforms for genomic and transcriptomic measurements
     title: Array Platform
@@ -10798,6 +10818,51 @@ classes:
         range: MassSpectrometryPlatformEnum
       fileFormat:
         range: MassSpecFileFormatEnum
+  SpatialTranscriptomicsSequencingTemplate:
+    close_mappings:
+      - htan:VisiumSpatialTranscriptomicsLevel1
+    description: Template for describing sequencing-based and expression data files from spatial transcriptomics experiments (e.g., FASTQ files and count matrices from 10x Visium, 10x Visium CytAssist, NanoString CosMx, GeoMx).
+    is_a: GeneticsAssayTemplate
+    slots:
+      - captureArea
+      - visiumslideID
+      - cytassistSample
+      - probeSet
+      - libraryPrep
+      - libraryPreparationMethod
+      - specimenType
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+        ifabsent: string(spatial transcriptomics)
+      platform:
+        any_of:
+          - range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(gene expression)
+  SpatialTranscriptomicsImagingTemplate:
+    description: Template for describing imaging data files from spatial transcriptomics experiments, such as tissue section histology or fluorescence images (e.g., from 10x Visium, NanoString CosMx, GeoMx).
+    is_a: ImagingAssayTemplate
+    slots:
+      - parentSpecimenID
+      - specimenID
+      - aliquotID
+      - captureArea
+      - visiumslideID
+      - cytassistSample
+      - specimenType
+    slot_usage:
+      assay:
+        range: ImagingAssayEnum
+        ifabsent: string(spatial transcriptomics)
+      platform:
+        range: ImagingSystemPlatformEnum
+      fileFormat:
+        range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
   PortalDataset:
     attributes:
       accessType:
