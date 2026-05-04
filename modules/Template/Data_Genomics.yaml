@@ -71,6 +71,22 @@ classes:
     - readDepth
     - targetDepth
     - batchID
+    rules:
+    - description: Organ is required when specimenType is a tissue (not an organism substance like saliva)
+      preconditions:
+        slot_conditions:
+          specimenType:
+            value_presence: PRESENT
+            none_of:
+              - equals_string: mucus
+              - equals_string: saliva
+              - equals_string: stool
+              - equals_string: sweat
+              - equals_string: urine
+      postconditions:
+        slot_conditions:
+          organ:
+            value_presence: PRESENT
 
   GenomicsArrayTemplate:
     annotations:
