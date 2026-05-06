@@ -75,7 +75,7 @@ jobs:
       # ── AI evaluation (schedule only) ────────────────────────────────
 
       - name: Evaluate release with Claude
-        if: (github.event_name == 'schedule' || inputs.evaluation_only) && steps.changes.outputs.has_changes == 'true'
+        if: (github.event_name == 'schedule' || inputs.evaluation_only || (github.event_name == 'workflow_dispatch' && !inputs.version)) && steps.changes.outputs.has_changes == 'true'
         id: evaluate
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -160,12 +160,8 @@ jobs:
         if: ${{ !inputs.evaluation_only }}
         id: resolve
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.version }}" ]; then
             INPUT="${{ inputs.version }}"
-            if [ -z "$INPUT" ]; then
-              echo "❌ Version is required for manual releases"
-              exit 1
-            fi
             INPUT="${INPUT#v}"
             INPUT="${INPUT%.}"
 
