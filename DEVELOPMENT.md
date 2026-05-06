@@ -9,7 +9,8 @@ Developer-oriented documentation for the NF Metadata Dictionary. For general ove
 | **Build all artifacts** | `make all` |
 | **Generate single schema** | `python utils/gen-json-schema-class.py --class DataLandscape --skip-validation` |
 | **Validate all schemas** | `python utils/gen-json-schema-class.py` |
-| **Register schemas** | `python utils/register-schemas.py` |
+| **Register schemas (production)** | `python utils/register-schemas.py` |
+| **Register schemas (preview)** | `python utils/register-schemas.py --preview` |
 | **Create file-based task** | `python utils/create_curation_task.py --folder-id syn123 --template RNASeqTemplate` |
 | **Create record-based task** | `python utils/create_recordset_task.py --folder-id syn456 --recordset-name "Study_2025" --template DataLandscape` |
 
@@ -20,6 +21,7 @@ Developer-oriented documentation for the NF Metadata Dictionary. For general ove
 1. [Background & Architecture](#background--architecture)
 2. [JSON Schema Integration with Synapse](#json-schema-integration-with-synapse)
 3. [Schema Generation & Management](#schema-generation--management)
+   - [Preview Schema Registration](#preview-schema-registration)
 4. [Curation Tasks](#curation-tasks)
 5. [Schema Limits & Validation](#schema-limits--validation)
 
@@ -140,6 +142,9 @@ Reference: [SWC-7491](https://sagebionetworks.jira.com/browse/SWC-7491?focusedCo
 **Schema Registration**
 Typically performed on versioned releases using `register-schemas.py`.
 
+**Preview Schema Registration** (`.github/workflows/register-preview-schemas.yml`)
+Triggered manually via `workflow_dispatch` on any branch. Registers schemas under `0.0.<run_number>` versioning (e.g. `org.synapse.nf-wgstemplate-0.0.1234`) so changes can be tested in Synapse before merging to `main`. See [Preview Schema Registration](#preview-schema-registration) below.
+
 ### Development Scripts
 
 #### gen-json-schema-class.py
@@ -183,7 +188,7 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/register-schemas.py
 
 # Register specific schemas only
 SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/register-schemas.py \
-  --include DataLandscape.json PortalDataset.json
+  --include DataLandscape PortalDataset
 
 # Register all *except* specific schemas
 SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/register-schemas.py \
@@ -198,8 +203,39 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/register-schemas.py \
 | `--log-file` | Registration log file path | `schema-registration-log.md` |
 | `--include` | Only register these files | All files |
 | `--exclude` | Exclude these files | None |
+| `--preview` | Register as preview schemas with `0.0.<build>` versioning | False |
+| `--build` | Build identifier for preview versioning (defaults to UTC timestamp if omitted) | None |
 
 **Note:** `--include` overrides `--exclude` if both provided.
+
+---
+
+### Preview Schema Registration
+
+Some schema changes require UI/UX validation in Synapse itself (e.g. testing that a new `if-then` conditional renders correctly in a form). Since production registration is reserved for merges to `main`, preview registration allows testing on a feature branch without polluting the production namespace.
+
+**How it works:** `--preview` rewrites each schema's `$id` in memory (the file on disk is unchanged) by appending `-0.0.<build>` before registering. This produces a distinct schema name that signals instability:
+
+| Mode | Schema ID |
+|------|-----------|
+| Production | `org.synapse.nf-wgstemplate` |
+| Preview (build 1234) | `org.synapse.nf-wgstemplate-0.0.1234` |
+
+**Via GitHub Actions (recommended):**
+
+Trigger the `Register preview schemas` workflow from the Actions UI on any branch. Optionally scope to specific schemas to avoid registering everything.
+
+**Locally:**
+```bash
+# Preview all schemas — timestamp used as build ID
+SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/register-schemas.py --preview
+
+# Preview a single schema with explicit build ID
+SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/register-schemas.py \
+  --preview --build 1234 --include WGSTemplate
+```
+
+After registration, bind the preview schema ID to a test Synapse entity and validate behavior. Preview schemas can be left to accumulate or manually deleted after testing.
 
 ---
 
