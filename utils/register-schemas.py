@@ -7,12 +7,35 @@ import argparse
 from pathlib import Path
 import synapseclient
 
-def register_schema(path: Path):
-    """Register schema with Synapse API (actual registration)."""
-    print(f"\n🚀 Registering: {path.name}")
+def rewrite_id_for_preview(data: dict, build: str) -> dict:
+    """Rewrite $id to use preview versioning 0.0.<build>.
+
+    Transforms e.g. 'org.synapse.nf-wgstemplate' →
+    'org.synapse.nf-wgstemplate-0.0.<build>' in the $id URL.
+    The file on disk is not modified.
+    """
+    import copy
+    data = copy.deepcopy(data)
+    if "$id" in data:
+        data["$id"] = data["$id"] + f"-0.0.{build}"
+    return data
+
+
+def register_schema(path: Path, preview_build: str | None = None):
+    """Register schema with Synapse API (actual registration).
+
+    Args:
+        path: Path to the JSON schema file.
+        preview_build: If set, rewrites $id to use 0.0.<preview_build> versioning
+            before registration. The file on disk is not modified.
+    """
+    label = f"{path.name} (preview 0.0.{preview_build})" if preview_build else path.name
+    print(f"\n🚀 Registering: {label}")
     try:
         data = json.loads(path.read_text())
-        body = json.dumps({"schema": data, "dryRun": False})  # Changed to False for actual registration
+        if preview_build:
+            data = rewrite_id_for_preview(data, preview_build)
+        body = json.dumps({"schema": data, "dryRun": False})
         
         # Initialize Synapse client with auth token
         syn = synapseclient.Synapse()
@@ -33,14 +56,17 @@ def register_schema(path: Path):
         
         # Check result
         if status["jobState"] == "FAILED":
-            print(f"❌ {path.name} REGISTRATION FAILED: {status.get('errorMessage')}")
+            print(f"❌ {label} REGISTRATION FAILED: {status.get('errorMessage')}")
             return False
         else:
-            print(f"✅ {path.name} REGISTERED SUCCESSFULLY")
+            print(f"✅ {label} REGISTERED SUCCESSFULLY")
+            if preview_build:
+                registered_id = data["$id"].rsplit("/", 1)[-1]
+                print(f"   Preview schema ID: {registered_id}")
             return True
             
     except Exception as e:
-        print(f"❌ Exception registering {path.name}: {e}")
+        print(f"❌ Exception registering {label}: {e}")
         return False
 
 def main():
@@ -59,8 +85,17 @@ def main():
                        nargs="*",
                        default=[],
                        help="Only register specific schema files (e.g., --include DataLandscape.json). Overrides --exclude.")
+    parser.add_argument("--preview",
+                       action="store_true",
+                       help="Register as preview schemas using 0.0.<build> versioning. Requires --build.")
+    parser.add_argument("--build",
+                       default=None,
+                       help="Build identifier appended as 0.0.<build> to schema $id when --preview is set (e.g. github.run_number).")
 
     args = parser.parse_args()
+
+    if args.preview and not args.build:
+        parser.error("--preview requires --build <identifier>")
 
     # Set up paths
     SCHEMA_DIR = Path(args.schema_dir)
@@ -91,13 +126,16 @@ def main():
         filter_info = f" (excluding: {', '.join(args.exclude)})"
     else:
         filter_info = ""
-    print(f"🚀 Registering {schema_count} schema(s) with Synapse{filter_info}...")
-    
+    if args.preview:
+        print(f"🚀 Registering {schema_count} PREVIEW schema(s) with Synapse (0.0.{args.build}){filter_info}...")
+    else:
+        print(f"🚀 Registering {schema_count} schema(s) with Synapse{filter_info}...")
+
     registration_results = []
     detailed_results = []
-    
+
     for json_file in json_files:
-        result = register_schema(json_file)
+        result = register_schema(json_file, preview_build=args.build if args.preview else None)
         registration_results.append(result)
         detailed_results.append((json_file.name, result))
     
@@ -109,6 +147,8 @@ def main():
     
     # Log registration results to markdown file
     filter_lines = []
+    if args.preview:
+        filter_lines.append(f"- **Mode:** preview (0.0.{args.build})")
     if args.include:
         filter_lines.append(f"- **Included:** {', '.join(args.include)}")
     if args.exclude:

@@ -1,0 +1,64 @@
+name: Register preview schemas
+
+on:
+  workflow_dispatch:
+    inputs:
+      schemas:
+        description: "Comma-separated schema file names to register (e.g. WGSTemplate.json,WESTemplate.json). Leave blank to register all."
+        required: false
+        default: ""
+
+jobs:
+  register-preview:
+    runs-on: ubuntu-latest
+    env:
+      SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup build tools and build schemas
+        shell: bash
+        run: |
+          bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
+          git clone --depth 1 https://github.com/anngvu/retold.git
+          pip install linkml==v1.8.1 synapseclient jsonref
+          npm install -g json-dereference-cli
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          make -B
+
+      - name: Register preview schemas
+        run: |
+          if [ -n "${{ github.event.inputs.schemas }}" ]; then
+            # Convert comma-separated list to --include args
+            INCLUDE=$(echo "${{ github.event.inputs.schemas }}" | tr ',' ' ')
+            python utils/register-schemas.py \
+              --preview \
+              --build ${{ github.run_number }} \
+              --include $INCLUDE \
+              --log-file schema-registration-preview-log.md
+          else
+            python utils/register-schemas.py \
+              --preview \
+              --build ${{ github.run_number }} \
+              --log-file schema-registration-preview-log.md
+          fi
+
+      - name: Upload registration log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: preview-registration-log
+          path: schema-registration-preview-log.md
+          retention-days: 7
+
+      - name: Summarize registered preview schema IDs
+        if: always()
+        run: |
+          BUILD=${{ github.run_number }}
+          echo "Preview build: 0.0.${BUILD}"
+          echo "Schema IDs registered (bind these to Synapse entities for testing):"
+          for f in registered-json-schemas/*.json; do
+            base=$(jq -r '."$id" | split("/") | last' "$f")
+            echo "  $(basename $f): ${base}-0.0.${BUILD}"
+          done
