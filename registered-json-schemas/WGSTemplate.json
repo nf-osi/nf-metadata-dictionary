@@ -5,6 +5,44 @@
     {
       "if": {
         "properties": {
+          "specimenType": {
+            "not": {
+              "anyOf": [
+                {
+                  "const": "mucus"
+                },
+                {
+                  "const": "saliva"
+                },
+                {
+                  "const": "stool"
+                },
+                {
+                  "const": "sweat"
+                },
+                {
+                  "const": "urine"
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "specimenType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "organ": {}
+        },
+        "required": [
+          "organ"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
           "age": {}
         },
         "required": [
