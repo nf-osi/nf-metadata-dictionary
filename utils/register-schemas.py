@@ -8,16 +8,21 @@ from pathlib import Path
 import synapseclient
 
 def rewrite_id_for_preview(data: dict, build: str) -> dict:
-    """Rewrite $id to use preview versioning 0.0.<build>.
+    """Rewrite $id to use a distinct preview schema name with 0.0.<build> semver.
 
     Transforms e.g. 'org.synapse.nf-wgstemplate' →
-    'org.synapse.nf-wgstemplate-0.0.<build>' in the $id URL.
+    'org.synapse.nf-wgstemplatedev-0.0.<build>' in the $id URL.
+
+    The 'dev' suffix is appended to the schema id (not added as a version of
+    the production schema) so that preview registrations never become the
+    latest version seen by production entities.
     The file on disk is not modified.
     """
     import copy
     data = copy.deepcopy(data)
     if "$id" in data:
-        data["$id"] = data["$id"] + f"-0.0.{build}"
+        base_url, schema_name = data["$id"].rsplit("/", 1)
+        data["$id"] = f"{base_url}/{schema_name}dev-0.0.{build}"
     return data
 
 
@@ -95,7 +100,8 @@ def main():
     args = parser.parse_args()
 
     if args.preview and not args.build:
-        parser.error("--preview requires --build <identifier>")
+        args.build = time.strftime('%Y%m%d%H%M%S', time.gmtime())
+        print(f"ℹ️  No --build given; using timestamp: {args.build}")
 
     # Set up paths
     SCHEMA_DIR = Path(args.schema_dir)
@@ -106,9 +112,10 @@ def main():
 
     # Get existing schemas from directory
     if args.include:
-        # If --include is specified, only register those schemas
-        json_files = [SCHEMA_DIR / name for name in args.include if (SCHEMA_DIR / name).exists()]
-        missing = [name for name in args.include if not (SCHEMA_DIR / name).exists()]
+        # Normalise: accept both "WGSTemplate" and "WGSTemplate.json"
+        normalised = [n if n.endswith(".json") else f"{n}.json" for n in args.include]
+        json_files = [SCHEMA_DIR / name for name in normalised if (SCHEMA_DIR / name).exists()]
+        missing = [name for name in normalised if not (SCHEMA_DIR / name).exists()]
         if missing:
             print(f"⚠️  Warning: Specified schemas not found: {', '.join(missing)}")
     else:

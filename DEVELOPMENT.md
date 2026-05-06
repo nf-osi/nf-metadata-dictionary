@@ -62,6 +62,12 @@ This section describes how JSON schema integrates with Synapse and what features
 
 **Reference:** [Synapse JSON Schema Docs](https://help.synapse.org/docs/JSON-Schemas.3107291536.html)
 
+> **How "latest" binding works in Synapse**
+>
+> Synapse schema IDs follow the format `{org}-{id}-{semver}`, where the semver is optional. When an entity is bound to the unversioned form (e.g. `org.synapse.nf-wgstemplate`), it resolves to the **latest registered version** of that schema. The intended advantage of this is that re-registering the production schema automatically propagates updated validation to all bound entities without requiring any rebinding.
+>
+> Note that "latest" means the most recently registered, regardless of semantic version ordering — a `0.0.x` registered after a `1.0.0` becomes the new latest. For this reason, preview schemas must use a **different schema id** (not just a different version) to avoid inadvertently becoming the latest for production entities. See [Preview Schema Registration](#preview-schema-registration).
+
 ### $refs (Schema References)
 
 Synapse supports `$refs` in a limited way:
@@ -214,12 +220,12 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/register-schemas.py \
 
 Some schema changes require UI/UX validation in Synapse itself (e.g. testing that a new `if-then` conditional renders correctly in a form). Since production registration is reserved for merges to `main`, preview registration allows testing on a feature branch without polluting the production namespace.
 
-**How it works:** `--preview` rewrites each schema's `$id` in memory (the file on disk is unchanged) by appending `-0.0.<build>` before registering. This produces a distinct schema name that signals instability:
+**How it works:** `--preview` rewrites each schema's `$id` in memory (the file on disk is unchanged) by appending `dev` to the schema id and adding `-0.0.<build>` as the semver. The `dev` suffix is part of the schema id (not a version of the production schema), so preview registrations never become the "latest" seen by production entities bound to the unversioned name:
 
 | Mode | Schema ID |
 |------|-----------|
 | Production | `org.synapse.nf-wgstemplate` |
-| Preview (build 1234) | `org.synapse.nf-wgstemplate-0.0.1234` |
+| Preview (build 1234) | `org.synapse.nf-wgstemplatedev-0.0.1234` |
 
 **Via GitHub Actions (recommended):**
 

@@ -60,5 +60,5 @@ jobs:
           echo "Schema IDs registered (bind these to Synapse entities for testing):"
           for f in registered-json-schemas/*.json; do
             base=$(jq -r '."$id" | split("/") | last' "$f")
-            echo "  $(basename $f): ${base}-0.0.${BUILD}"
+            echo "  $(basename $f): ${base}dev-0.0.${BUILD}"
           done
