@@ -7,10 +7,10 @@ No credentials needed; the Synapse schema version list endpoint is public.
 
 Usage:
     python get-schema-versions.py --schema-dir registered-json-schemas [--exclude file1.json ...]
+    python get-schema-versions.py --schema-dir registered-json-schemas --check-version 0.9.9
 
-Output:
-    Text summary of each schema's latest registered version in Synapse.
-    Schemas not yet registered are listed separately.
+Without --check-version: prints a version summary and exits 0.
+With --check-version VERSION: also exits 1 if any schema is already registered at that version.
 """
 
 import argparse
@@ -99,6 +99,11 @@ def main():
         default=[],
         help="Schema filenames to exclude (e.g. --exclude Superdataset.json)",
     )
+    parser.add_argument(
+        "--check-version",
+        metavar="VERSION",
+        help="Exit 1 if any schema is already registered at this version",
+    )
     args = parser.parse_args()
 
     if not args.schema_dir.exists():
@@ -110,6 +115,7 @@ def main():
 
     registered = []   # (full_name, latest_version, version_count)
     unregistered = [] # full_name
+    conflicts = []    # full_name — already at --check-version
     errors = []       # full_name
 
     for schema_file in schema_files:
@@ -129,13 +135,15 @@ def main():
             if versions:
                 latest = max(versions, key=parse_version)
                 registered.append((full_name, latest, len(versions)))
+                if args.check_version and args.check_version in versions:
+                    conflicts.append(full_name)
             else:
                 unregistered.append(full_name)
         except Exception as e:
             print(f"Warning: could not check {full_name}: {e}", file=sys.stderr)
             errors.append(full_name)
 
-    # Build summary
+    # Print summary
     lines = ["Schema versions currently registered in Synapse:", ""]
 
     for full_name, latest, count in registered:
@@ -159,6 +167,16 @@ def main():
     )
 
     print("\n".join(lines))
+
+    # Version conflict check
+    if args.check_version:
+        if conflicts:
+            print(f"\nERROR: The following schemas are already registered at version {args.check_version}:")
+            for full_name in conflicts:
+                print(f"  - {full_name}")
+            sys.exit(1)
+        else:
+            print(f"\nVersion {args.check_version} is available for all schemas.")
 
 
 if __name__ == "__main__":

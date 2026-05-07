@@ -1,10 +1,6 @@
 # Release workflow; AI agent by default but releases can also be done manually.
 # - Scheduled: Claude reviews changes and decides whether to release
 # - Manual: provide MAJOR.MINOR version to release immediately, skipping AI
-#
-# The staff assignee should verify the release completed at:
-# https://github.com/nf-osi/nf-metadata-dictionary/actions
-# and edit release notes as needed, then close the release issue.
 
 name: Release
 
@@ -219,17 +215,6 @@ jobs:
       - name: Install dependencies
         if: steps.resolve.outputs.should_release == 'true'
         run: pip install synapseclient
-
-      - name: Check if schemas with this version already exist in Synapse
-        if: steps.resolve.outputs.should_release == 'true'
-        env:
-          SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
-          SCHEMA_VERSION: ${{ steps.resolve.outputs.version }}
-        run: |
-          echo "Checking if schemas with version $SCHEMA_VERSION already exist in Synapse"
-          python utils/check-schema-versions.py \
-            --schema-dir "registered-json-schemas" \
-            --version "$SCHEMA_VERSION"
 
       - name: Create and push git tag
         if: steps.resolve.outputs.should_release == 'true'
