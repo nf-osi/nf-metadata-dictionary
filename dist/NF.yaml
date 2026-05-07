@@ -2337,10 +2337,14 @@ enums:
         description: RNA library enriched for lncRNA
       miRNAenrichment:
         description: RNA library with size selection for microRNAs
+      pAG-MNase fragmentation:
+        description: Protein A/G-MNase-based targeted fragmentation of chromatin at antibody-bound sites, used in CUT&RUN assays to profile histone modifications and transcription factor binding.
       polyAselection:
         description: RNA selection by polyA tail capture
       rRNAdepletion:
         description: Total RNA library with ribosomal RNA depleted.
+      Tn5 transposition:
+        description: Library preparation using Tn5 transposase to simultaneously fragment chromatin and insert sequencing adapters, preferentially at open/accessible chromatin regions. Used in ATAC-seq assays.
   LibraryPreparationMethodEnum:
     permissible_values:
       10x:
@@ -2382,6 +2386,9 @@ enums:
       NEBNext mRNA Library Prep Reagent Set for Illumina:
         description: NEBNext mRNA Library Prep Reagent Set for Illumina
         source: https://www.neb.com/products/e6100-nebnext-mrna-library-prep-reagent-set-for-illumina
+      NEBNext Ultra II DNA Library Prep Kit (E7103) for Illumina:
+        description: New England Biolabs NEBNext Ultra II DNA Library Prep Kit for Illumina (catalog #E7103). Widely used for chromatin immunoprecipitation (CUT&RUN, ChIP-seq) library preparation.
+        source: https://www.neb.com/en-us/products/e7103-nebnext-ultra-ii-dna-library-prep-kit-for-illumina
       Omni-ATAC:
         description: Omni-ATAC-seq library preparation
         source: https://protocolexchange.researchsquare.com/article/nprot-6107/v1
@@ -3418,6 +3425,9 @@ enums:
       Juvenile Myelomonocytic Leukemia (JMML):
       Low-Grade Glioma:
       Malignant Peripheral Nerve Sheath Tumor (MPNST):
+      Melanoma:
+        description: A malignant tumor composed of neoplastic melanocytes. NF1-mutant melanoma is a clinically recognized manifestation of Neurofibromatosis type 1, where germline NF1 mutations confer elevated melanoma risk due to NF1 tumor suppressor loss in melanocytes.
+        meaning: NCIT:C3224
       Memory:
       Meningioma:
       Pain:
@@ -9308,6 +9318,8 @@ enums:
           - Neurofibroma with Atypia
         description: A neurofibroma characterized by the presence of cellular pleomorphism.
         meaning: NCIT:C41426
+      Atypical MPNST:
+        description: An intermediate-grade malignant peripheral nerve sheath tumor with atypical features that place it between benign neurofibroma and high-grade MPNST. Characterized by increased cellularity, nuclear atypia, and low mitotic activity.
       Atypical Pilocytic Astrocytoma:
         description: Pilocytic astrocytoma with atypical features.
       Cellular Neurofibroma:
@@ -11180,7 +11192,7 @@ classes:
         required: true
       manifestation:
         multivalued: true
-        range: string
+        range: ManifestationEnum
         required: false
       nextPhaseProject:
         range: string
