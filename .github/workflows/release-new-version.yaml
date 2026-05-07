@@ -38,15 +38,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: main
 
       # ── Gather context ──────────────────────────────────────────────
 
       - name: Gather changes since last tag
         id: changes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          LAST_TAG=$(gh release list --limit 1 --json tagName -q '.[0].tagName' 2>/dev/null || echo "")
           if [ -z "$LAST_TAG" ]; then
-            echo "No previous tags found"
+            echo "No previous releases found"
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -125,6 +128,10 @@ jobs:
             are no meaningful commits, recommend no release.
           - If any schemas are listed as "not yet registered", they are new and
             should be included in the next release.
+          - Schema versions in Synapse may not always correspond to a GitHub release;
+            some versions were registered without official release. Use the GitHub
+            release history (current version above) as the authoritative reference for
+            what has been officially released, not the schema versions alone.
 
           Respond with ONLY valid JSON, no markdown fences or extra text:
           {"release": true, "version": "MAJOR.MINOR", "reasoning": "one sentence", "notes": "markdown release notes"}
