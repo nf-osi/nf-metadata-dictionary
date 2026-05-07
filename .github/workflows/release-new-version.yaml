@@ -72,6 +72,21 @@ jobs:
           echo "=== Files changed ==="
           cat /tmp/diffstat.txt
 
+      # ── Gather schema version context ────────────────────────────────
+
+      - name: Get current schema versions from Synapse
+        id: schema_versions
+        if: steps.changes.outputs.has_changes == 'true'
+        continue-on-error: true
+        run: |
+          python3 utils/get-schema-versions.py \
+            --schema-dir registered-json-schemas \
+            --exclude Superdataset.json \
+            > /tmp/schema_versions.txt \
+          || echo "(schema version retrieval failed)" > /tmp/schema_versions.txt
+          echo "=== Current schema versions ==="
+          cat /tmp/schema_versions.txt
+
       # ── AI evaluation (schedule only) ────────────────────────────────
 
       - name: Evaluate release with Claude
@@ -84,6 +99,7 @@ jobs:
           CURRENT_VERSION="${LAST_TAG#v}"
           COMMITS=$(cat /tmp/commits.txt)
           DIFFSTAT=$(cat /tmp/diffstat.txt)
+          SCHEMA_VERSIONS=$(cat /tmp/schema_versions.txt 2>/dev/null || echo "(schema version information unavailable)")
 
           # Build prompt as a readable file, then pass to jq
           cat > /tmp/prompt.txt <<PROMPT
@@ -98,6 +114,8 @@ jobs:
           Files changed:
           ${DIFFSTAT}
 
+          ${SCHEMA_VERSIONS}
+
           Versioning rules:
           - Commits containing "Rebuild all artifacts" or "[skip ci]" are automated
             and do NOT count as meaningful changes on their own.
@@ -107,6 +125,10 @@ jobs:
             restructured data model.
           - If ONLY automated rebuild commits exist, no release is needed.
           - You only decide MAJOR.MINOR. The PATCH number is auto-assigned.
+          - If all schemas are already registered at the current version and there
+            are no meaningful commits, recommend no release.
+          - If any schemas are listed as "not yet registered", they are new and
+            should be included in the next release.
 
           Respond with ONLY valid JSON, no markdown fences or extra text:
           {"release": true, "version": "MAJOR.MINOR", "reasoning": "one sentence", "notes": "markdown release notes"}
