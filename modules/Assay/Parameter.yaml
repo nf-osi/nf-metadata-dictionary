@@ -71,10 +71,14 @@ enums:
         description: RNA library enriched for lncRNA
       miRNAenrichment:
         description: RNA library with size selection for microRNAs
+      pAG-MNase fragmentation:
+        description: Protein A/G-MNase-based targeted fragmentation of chromatin at antibody-bound sites, used in CUT&RUN assays to profile histone modifications and transcription factor binding.
       polyAselection:
         description: RNA selection by polyA tail capture
       rRNAdepletion:
         description: Total RNA library with ribosomal RNA depleted.
+      Tn5 transposition:
+        description: Library preparation using Tn5 transposase to simultaneously fragment chromatin and insert sequencing adapters, preferentially at open/accessible chromatin regions. Used in ATAC-seq assays.
   LibraryPreparationMethodEnum:
     permissible_values:
       10x:
@@ -116,6 +120,9 @@ enums:
       NEBNext mRNA Library Prep Reagent Set for Illumina:
         description: NEBNext mRNA Library Prep Reagent Set for Illumina
         source: https://www.neb.com/products/e6100-nebnext-mrna-library-prep-reagent-set-for-illumina
+      NEBNext Ultra II DNA Library Prep Kit (E7103) for Illumina:
+        description: New England Biolabs NEBNext Ultra II DNA Library Prep Kit for Illumina (catalog #E7103). Widely used for chromatin immunoprecipitation (CUT&RUN, ChIP-seq) library preparation.
+        source: https://www.neb.com/en-us/products/e7103-nebnext-ultra-ii-dna-library-prep-kit-for-illumina
       Omni-ATAC:
         description: Omni-ATAC-seq library preparation
         source: https://protocolexchange.researchsquare.com/article/nprot-6107/v1
