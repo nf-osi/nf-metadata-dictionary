@@ -1,0 +1,61 @@
+
+# Age Masking Test Instances
+#
+# Documents JSON test instances for validating age masking rules introduced in GitHub #888.
+# All instances are validated against registered-json-schemas/{template}.json.
+#
+# Key rules under test:
+#   - age accepts float OR the AgeMask enum value ">= 90"
+#   - For Homo sapiens, numeric age must be < 90 (max 89.99999); use ">= 90" to mask
+#   - age is optional; ageUnit is required when age is present
+#
+# Related: 45 CFR §164.514(b)(2)(i)(C) — HIPAA Safe Harbor de-identification
+
+schema: HumanCohortTemplate
+instances:
+  - file: data/HumanCohortTemplate/valid_age_numeric.json
+    description: Adult NF1 patient with numeric age 89.5 — boundary case just below the 89.99999 masking threshold
+    expected: valid
+
+  - file: data/HumanCohortTemplate/valid_age_masked.json
+    description: Elderly patient whose exact age is masked per HIPAA Safe Harbor; age field is the string ">= 90"
+    expected: valid
+
+  - file: data/HumanCohortTemplate/valid_age_child.json
+    description: Pediatric NF1 patient; numeric age of 8 is unambiguously below the masking threshold
+    expected: valid
+
+  - file: data/HumanCohortTemplate/valid_age_absent.json
+    description: Age not recorded; field is omitted entirely (age is optional for this template)
+    expected: valid
+
+  - file: data/HumanCohortTemplate/invalid_age_unmasked_over90.json
+    description: Age provided as the number 92 for a Homo sapiens individual; violates HIPAA masking rule (must use ">= 90")
+    expected: invalid
+    reason: species is Homo sapiens and age exceeds maximum_value 89.99999
+
+---
+
+schema: RNASeqTemplate
+instances:
+  - file: data/RNASeqTemplate/valid_age_numeric.json
+    description: RNA-seq file from adult NF1 donor with numeric age below 90
+    expected: valid
+
+  - file: data/RNASeqTemplate/valid_age_masked.json
+    description: RNA-seq file from elderly NF1 donor; age masked as ">= 90" per HIPAA Safe Harbor
+    expected: valid
+
+  - file: data/RNASeqTemplate/valid_age_unknown.json
+    description: RNA-seq file where donor age was not recorded; uses AgeMask value "Unknown" with no ageUnit
+    expected: valid
+
+  - file: data/RNASeqTemplate/invalid_age_missing_ageunit.json
+    description: Age is provided as a number but ageUnit is absent; violates the rule requiring ageUnit when age is present
+    expected: invalid
+    reason: age is present but ageUnit is missing
+
+  - file: data/RNASeqTemplate/invalid_age_unmasked_over90.json
+    description: RNA-seq file with numeric age 93 for a Homo sapiens donor; violates HIPAA masking rule
+    expected: invalid
+    reason: species is Homo sapiens and age exceeds maximum_value 89.99999
