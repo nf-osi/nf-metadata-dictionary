@@ -142,6 +142,36 @@ def process_schema(raw_schema, cls_name, version=None, schema_yaml_path=None):
 
     combine_anyof_enums(deref.get("properties", {}))
 
+    # Remove spurious `required` entries from if-then blocks.
+    # LinkML adds a field to then.required whenever a postcondition constrains it,
+    # even when the intent is only to add maximum/minimum — not to make it required.
+    # Heuristic: if then.properties[field] is non-empty (has a real constraint like
+    # maximum), the required entry is spurious and should be removed. If it is empty
+    # ({}), the required IS the constraint (e.g. ageUnit required when age present)
+    # and must be kept.
+    for block in [deref] + deref.get("allOf", []):
+        then = block.get("then", {})
+        if "required" not in then:
+            continue
+        then_props = then.get("properties", {})
+        then["required"] = [
+            f for f in then["required"]
+            if not then_props.get(f)  # keep if property constraint is absent or empty
+        ]
+        if not then["required"]:
+            del then["required"]
+
+    # Remove spurious top-level `type` on properties with heterogeneous anyOf.
+    # LinkML emits `type: string` alongside `anyOf` even when anyOf includes
+    # numeric branches, making numbers fail validation. Strip it when anyOf
+    # already covers the type constraints.
+    if "properties" in deref:
+        for prop_schema in deref["properties"].values():
+            if isinstance(prop_schema, dict) and "anyOf" in prop_schema and "type" in prop_schema:
+                anyof_types = {item.get("type") for item in prop_schema["anyOf"] if isinstance(item, dict)}
+                if len(anyof_types) > 1 or anyof_types - {prop_schema["type"]}:
+                    del prop_schema["type"]
+
     # Set title to match property key name
     if "properties" in deref:
         for prop_name, prop_schema in deref["properties"].items():
