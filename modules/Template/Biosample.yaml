@@ -131,3 +131,24 @@ classes:
     slot_usage:
       species:
         ifabsent: string(Homo sapiens)
+    rules:
+    - description: If age is provided and is not "Unknown", ageUnit must be provided
+      preconditions:
+        slot_conditions:
+          age:
+            value_presence: PRESENT
+            none_of:
+              - equals_string: Unknown
+      postconditions:
+        slot_conditions:
+          ageUnit:
+            value_presence: PRESENT
+    - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value for ages at or above this threshold (HIPAA Safe Harbor)
+      preconditions:
+        slot_conditions:
+          species:
+            equals_string: Homo sapiens
+      postconditions:
+        slot_conditions:
+          age:
+            maximum_value: 89.99999
