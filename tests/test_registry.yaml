@@ -50,6 +50,10 @@ instances:
     description: RNA-seq file where donor age was not recorded; uses AgeMask value "Unknown" with no ageUnit
     expected: valid
 
+  - file: data/RNASeqTemplate/valid_mouse_age_over90.json
+    description: Mouse (Mus musculus) sample with numeric age 95 weeks; HIPAA masking rule must not apply to non-human species
+    expected: valid
+
   - file: data/RNASeqTemplate/invalid_age_missing_ageunit.json
     description: Age is provided as a number but ageUnit is absent; violates the rule requiring ageUnit when age is present
     expected: invalid
