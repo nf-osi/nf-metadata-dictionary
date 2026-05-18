@@ -5,7 +5,15 @@
     {
       "if": {
         "properties": {
-          "age": {}
+          "age": {
+            "not": {
+              "anyOf": [
+                {
+                  "const": "Unknown"
+                }
+              ]
+            }
+          }
         },
         "required": [
           "age"
@@ -18,6 +26,25 @@
         "required": [
           "ageUnit"
         ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "species": {
+            "const": "Homo sapiens"
+          }
+        },
+        "required": [
+          "species"
+        ]
+      },
+      "then": {
+        "properties": {
+          "age": {
+            "maximum": 89.99999
+          }
+        }
       }
     },
     {
@@ -42,8 +69,21 @@
   "description": "Alias to MassSpecAssayTemplate for backwards-compatibility.",
   "properties": {
     "age": {
-      "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
-      "type": "number",
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "description": "Masked age values for privacy protection. Used when exact age cannot be reported due to HIPAA or other privacy regulations.",
+          "enum": [
+            ">= 90",
+            "Unknown"
+          ],
+          "title": "AgeMask",
+          "type": "string"
+        }
+      ],
+      "description": "Age of the individual. Use with `ageUnit`. IMPORTANT: For human data, HIPAA requires masking ages >= 90; use the `AgeMask` value \">= 90\" instead of the exact value to protect participant privacy.",
       "title": "age"
     },
     "ageUnit": {
