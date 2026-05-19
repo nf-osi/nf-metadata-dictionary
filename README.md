@@ -250,6 +250,7 @@ Aside from meta specific to each type (class, slot, or enum) above, terms have c
 2. Find the yaml file in the new branch where the attribute belongs. The components of the data model are organized in the folder labeled [modules](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules).
 
 3. Create a [pull request (PR)](https://github.com/nf-osi/nf-metadata-dictionary/compare) to merge the branch to "main". Someone from https://github.com/orgs/nf-osi/teams/dcc-team will review. Creating the PR will:
+
    i. Build and validate all artifacts (JSON schemas, LinkML outputs, etc.) from the module source files.
    **Artifacts are not committed to the PR to avoid merge conflicts, but will be automatically rebuilt and committed to main after merge.**
 
