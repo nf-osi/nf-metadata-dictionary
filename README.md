@@ -197,24 +197,6 @@ BiologicalAssayDataTemplate:
             value_presence: PRESENT
 ```
 
-**Current conditional dependencies:**
-
-| Dependent Slot | Required Slot | Templates |
-|----------------|---------------|-----------|
-| age | ageUnit | BiologicalAssayDataTemplate (all assay templates) |
-| aliquotID | specimenID | GeneralMeasureDataTemplate, MicroscopyAssayTemplate |
-| compoundDose | compoundDoseUnit | BehavioralAssayTemplate, ClinicalAssayTemplate, GeneralMeasureDataTemplate, PharmacokineticsAssayTemplate, PlateBasedReporterAssayTemplate |
-| concentrationMaterial | concentrationMaterialUnit | MaterialScienceAssayTemplate |
-| concentrationNaCl | concentrationNaClUnit | MaterialScienceAssayTemplate, LightScatteringAssayTemplate |
-| dataType | dataSubtype | BiologicalAssayDataTemplate |
-| experimentalTimepoint | timepointUnit | BehavioralAssayTemplate, ElectrophysiologyAssayTemplate, GeneralMeasureDataTemplate, GenomicsAssayTemplateExtended, MRIAssayTemplate, PdxGenomicsAssayTemplate, PharmacokineticsAssayTemplate, PlateBasedReporterAssayTemplate |
-| genePerturbed | genePerturbationType, genePerturbationTechnology | BehavioralAssayTemplate, GeneralMeasureDataTemplate, GenomicsAssayTemplateExtended, RNASeqTemplate, ScRNASeqTemplate |
-| genomicReference | genomicReferenceLink | ProcessedAlignedReadsTemplate |
-| parentSpecimenID | specimenID | GeneralMeasureDataTemplate, MicroscopyAssayTemplate |
-| transplantationType | transplantationRecipientSpecies, transplantationRecipientTissue | PdxGenomicsAssayTemplate |
-| workflow | workflowLink | ProcessedAlignedReadsTemplate, ProcessedExpressionTemplate, ProcessedMergedDataTemplate, ProcessedVariantCallsTemplate, WorkflowReport |
-| workingDistance | workingDistanceUnit | MicroscopyAssayTemplate |
-
 **Note:** These rules are also represented as `requiresDependency` annotations in `modules/props.yaml`. These legacy annotations are retained until schematic-based tooling is fully deprecated and will be removed in a future cleanup.
 
 #### Enum
