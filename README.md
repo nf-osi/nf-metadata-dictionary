@@ -262,27 +262,20 @@ Aside from meta specific to each type (class, slot, or enum) above, terms have c
 - `notes`: Internal editor notes.
 
 
-### Steps to add an attribute to the Metadata Dictionary: 
+### Steps to contribute to the Metadata Dictionary: 
 
-1. Create a new [branch](https://github.com/nf-osi/nf-metadata-dictionary/branches) in the NF-metadata-dictionary repository. (example: patch/add-attribute)
+1. Create a new [branch](https://github.com/nf-osi/nf-metadata-dictionary/branches) in the NF-metadata-dictionary repository. (example: `patch/add-attribute`)
 2. Find the yaml file in the new branch where the attribute belongs. The components of the data model are organized in the folder labeled [modules](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules).
 
-3. Create a [pull request (PR)](https://github.com/nf-osi/nf-metadata-dictionary/compare) to merge the branch to "main". Add either @allaway, @anngvu, or @cconrad8 as a reviewer. Creating the PR will:
+3. Create a [pull request (PR)](https://github.com/nf-osi/nf-metadata-dictionary/compare) to merge the branch to "main". Someone from https://github.com/orgs/nf-osi/teams/dcc-team will review. Creating the PR will:
    i. Build and validate all artifacts (JSON schemas, LinkML outputs, etc.) from the module source files.
    **Artifacts are not committed to the PR to avoid merge conflicts, but will be automatically rebuilt and committed to main after merge.**
 
    ii. Run tests to make sure all looks good/generate previews. After some minutes, test reports will appear in the PR including artifact build status, schema validation, and test results. Note: Trivial changes can skip tests by labeling the PR with https://github.com/nf-osi/nf-metadata-dictionary/labels/skip%20tests.
-   
-   <img width="464" alt="image" src="https://github.com/nf-osi/nf-metadata-dictionary/assets/32753274/067f65ff-e39d-4b45-abae-ef22cf7df5eb">
-4. Make any necessary changes and then merge the new branch that was created to the main branch.
-5. [Draft a versioned release here](https://github.com/nf-osi/nf-metadata-dictionary/releases).
-6. Name the release with the convention MAJOR.MINOR.PATCH. These releases start at v1.0.0. Versioning is roughly following [semantic versioning](semver.org) concepts where: 
 
-   - MAJOR: *In-use* parent attributes are deleted from dictionary or modified, or in-use child attributes are modified in a non-backwards compatible way (e.g. `Neurofibromatosis 1` changed to `Neurofibromatosis type 1`).
-   - MINOR: Concepts/parent attributes are added.
-   - PATCH: Child attributes are added, or *unused* child/parent attributes are deleted/modified, or definitions/`comments` are added/modified, or `validation rules` are modified in a backwards compatible way.
+4. The reviewer might suggest changes, otherwise the changes are approved and the reviewer will merge into `main`. 
 
-7. **🎉 Congrats! The term is now added to the [metadata dictionary](https://nf-osi.github.io/nf-metadata-dictionary).**
+5. You should see the update [in the docs](https://nf-osi.github.io/nf-metadata-dictionary) after merge, but *versioned* data model releases happen approximately at beginning and middle of the month; contributions should be mentioned in the release notes of the next release.
 
 
 ### Further Information
