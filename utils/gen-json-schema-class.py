@@ -6,6 +6,7 @@ import json
 import time
 import os
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 import jsonref
 import synapseclient
@@ -198,41 +199,60 @@ def process_schema(raw_schema, cls_name, version=None, schema_yaml_path=None):
 
     return deref
 
-def validate_schema(path: Path):
-    """Validate schema against Synapse API (dry run)."""
-    print(f"\n🔍 Validating: {path.name}")
-    try:
+def validate_schemas(paths: list[Path], syn: synapseclient.Synapse) -> dict[Path, bool]:
+    """Validate schemas against Synapse API (dry run) in parallel.
+
+    Starts all async jobs concurrently, then polls until every job settles.
+    Returns a mapping of path → passed (bool).
+    """
+    # --- start all jobs ---
+    pending: dict[str, Path] = {}  # token → path
+    results: dict[Path, bool] = {}
+
+    def _start(path: Path):
         data = json.loads(path.read_text())
         body = json.dumps({"schema": data, "dryRun": True})
-        
-        # Initialize Synapse client with auth token
-        syn = synapseclient.Synapse()
-        auth_token = os.environ.get('SYNAPSE_AUTH_TOKEN')
-        if not auth_token:
-            raise ValueError("SYNAPSE_AUTH_TOKEN environment variable is required for validation")
-        syn.login(authToken=auth_token)
-        
-        # Start validation job
         resp = syn.restPOST("/schema/type/create/async/start", body)
-        token = resp["token"]
-        
-        # Poll for completion
-        status = syn.restGET(f"/asynchronous/job/{token}")
-        while status["jobState"] == "PROCESSING":
-            time.sleep(1)
-            status = syn.restGET(f"/asynchronous/job/{token}")
-        
-        # Check result
-        if status["jobState"] == "FAILED":
-            print(f"❌ {path.name} FAILED: {status.get('errorMessage')}")
-            return False
-        else:
-            print(f"✅ {path.name} OK")
-            return True
-            
-    except Exception as e:
-        print(f"❌ Exception validating {path.name}: {e}")
-        return False
+        return resp["token"], path
+
+    print(f"\n🚀 Starting {len(paths)} Synapse validation jobs...")
+    with ThreadPoolExecutor(max_workers=10) as pool:
+        futures = {pool.submit(_start, p): p for p in paths}
+        for future in as_completed(futures):
+            path = futures[future]
+            try:
+                token, p = future.result()
+                pending[token] = p
+            except Exception as e:
+                print(f"❌ Could not start job for {path.name}: {e}")
+                results[path] = False
+
+    # --- poll until all jobs settle ---
+    print(f"⏳ Polling {len(pending)} jobs...")
+    while pending:
+        settled_tokens = []
+        for token, path in list(pending.items()):
+            try:
+                status = syn.restGET(f"/asynchronous/job/{token}")
+                if status["jobState"] == "PROCESSING":
+                    continue
+                settled_tokens.append(token)
+                if status["jobState"] == "FAILED":
+                    print(f"❌ {path.name} FAILED: {status.get('errorMessage')}")
+                    results[path] = False
+                else:
+                    print(f"✅ {path.name} OK")
+                    results[path] = True
+            except Exception as e:
+                print(f"❌ Exception polling {path.name}: {e}")
+                results[path] = False
+                settled_tokens.append(token)
+        for t in settled_tokens:
+            del pending[t]
+        if pending:
+            time.sleep(2)
+
+    return results
 
 def main():
     parser = argparse.ArgumentParser(description="Generate and validate JSON schemas from LinkML")
@@ -282,30 +302,31 @@ def main():
     else:
         print(f"🔨 Generating JSON schemas for {len(classes)} classes...")
 
-    for cls_name in classes:
-        print(f"  🔨 {cls_name}")
-        
-        # Generate JSON schema
+    def _generate_one(cls_name):
         schema_str = run_cmd([
             "gen-json-schema",
             "--top-class", cls_name,
             "--inline", "--no-metadata", "--not-closed",
             str(SCHEMA_YAML)
         ])
-        
         if not schema_str:
-            continue
-        
+            return cls_name, False
         try:
             raw_schema = json.loads(schema_str)
             final_schema = process_schema(raw_schema, cls_name, args.version, SCHEMA_YAML)
-
-            # Write output
             output_file = OUT_DIR / f"{cls_name}.json"
             output_file.write_text(json.dumps(final_schema, indent=2))
-            
+            return cls_name, True
         except json.JSONDecodeError:
-            continue
+            return cls_name, False
+
+    print(f"🔨 Generating {len(classes)} schemas in parallel...")
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        futures = {pool.submit(_generate_one, name): name for name in classes}
+        for future in as_completed(futures):
+            cls_name, ok = future.result()
+            status = "✅" if ok else "❌"
+            print(f"  {status} {cls_name}")
     
     # Count only the schemas we generated in this run
     if args.class_name:
@@ -322,20 +343,22 @@ def main():
     # Only validate the schemas we generated in this run
     if args.class_name:
         schemas_to_validate = [OUT_DIR / f"{args.class_name}.json"]
-        print(f"\n🔨 Validating {args.class_name} schema against Synapse...")
     else:
-        schemas_to_validate = list(OUT_DIR.glob('*.json'))
-        print(f"\n🔨 Validating {len(schemas_to_validate)} schemas against Synapse...")
+        schemas_to_validate = sorted(OUT_DIR.glob('*.json'))
 
-    validation_results = []
+    # Initialize Synapse client once for all validations
+    syn = synapseclient.Synapse()
+    auth_token = os.environ.get('SYNAPSE_AUTH_TOKEN')
+    if not auth_token:
+        print("❌ SYNAPSE_AUTH_TOKEN environment variable is required for validation")
+        exit(1)
+    syn.login(authToken=auth_token)
 
-    for json_file in schemas_to_validate:
-        result = validate_schema(json_file)
-        validation_results.append(result)
+    results_map = validate_schemas(schemas_to_validate, syn)
 
     # Summary
-    passed = sum(validation_results)
-    failed = len(validation_results) - passed
+    passed = sum(results_map.values())
+    failed = len(results_map) - passed
 
     print(f"\n🎉 Validation complete: {passed} passed, {failed} failed")
 
@@ -352,8 +375,8 @@ Generated: {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}
 ## Details
 """
 
-    # Add details for each validated schema
-    for json_file, result in zip(schemas_to_validate, validation_results):
+    for json_file in schemas_to_validate:
+        result = results_map.get(json_file, False)
         status = "✅ PASSED" if result else "❌ FAILED"
         log_content += f"- `{json_file.name}`: {status}\n"
 
