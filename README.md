@@ -304,7 +304,11 @@ Aside from meta specific to each type (class, slot, or enum) above, terms have c
 ### Further Information
 
 #### Building Locally
-To build locally, install the [schematic](https://github.com/Sage-Bionetworks/schematic) package.  
+To build locally, install the [schematic](https://github.com/Sage-Bionetworks/schematic) package.
+
+#### Testing
+
+See [DEVELOPMENT.md](DEVELOPMENT.md#local-testing) for how to run tests and add new test cases.
 
 #### Help
 
