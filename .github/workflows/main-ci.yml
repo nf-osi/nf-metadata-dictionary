@@ -8,12 +8,12 @@ on:
       - 'modules/**'
       - '.github/workflows/main-ci.yml'
       - 'utils/gen-json-schema-class.py'
+      - 'tests/test_*.py'
+      - 'tests/test_registry*.yaml'
+      - 'tests/data/**'
   
   workflow_dispatch:
 
-env:
-  SCHEMATIC_VERSION: 24.7.2 # please update .devcontainer as well until this can be set globally somewhere...
-  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -55,19 +55,6 @@ jobs:
           message-path: |
             schema-validation-log.md
       
-      # Set up supported python.
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10.12' 
-      
-      - name: Setup schematic and do another convert pass
-        id: schematic-convert
-        run: |
-          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}
-          pip show schematicpy
-          schematic schema convert NF.jsonld
-          python utils/fix_display_names.py retold_NF.jsonld NF.jsonld
-    
       - name: Check if artifacts changed
         id: check_artifacts
         run: |
@@ -151,72 +138,6 @@ jobs:
           message-id: data-model-analysis
           message-path: analysis_output.md
 
-  # Additionally test PRs
-  test:
-    name: Test with schematic current version
-    needs: [build]
-    runs-on: ubuntu-latest
-    env:
-      SCHEMATIC_VERSION: 24.7.2
-      SCHEMATIC_SERVICE_ACCT_CREDS: ${{ secrets.SCHEMATIC_SERVICE_ACCT_CREDS }}
-    permissions:
-      pull-requests: write
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip tests') }}
-    # strategy:
-    #  matrix:
-    # cannot actually do parallel/concurrent testing because of API rate limits,
-    # so we currently only test with one schematic version because it takes much too long with sequential
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 1
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10.12'
-
-      - name: Download built artifacts from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          path: .
-
-      - name: Setup schematic
-        id: setup-schematic
-        run: |
-          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}
-          pip show schematicpy
-
-      - name: Test generate
-        working-directory: tests/schematic/generate
-        continue-on-error: true
-        run: ./basic_templates.sh
-
-      - name: Test validate
-        working-directory: tests/schematic/validate
-        continue-on-error: true
-        run: ./run_config.sh
-
-      - name: Create schematic test suite report
-        working-directory: tests/schematic
-        continue-on-error: true
-        run: docker run -v $(pwd):/tests -e SCHEMATIC=${{ env.SCHEMATIC_VERSION }} rocker/tidyverse R -e "rmarkdown::render('tests/test-suite-report.Rmd')"
-
-      - name: Report on test suite as PR comment
-        uses: mshick/add-pr-comment@v2
-        with:
-          message-id: test-suite-report-${{ env.SCHEMATIC_VERSION }}
-          message-path: |
-            tests/schematic/test-suite-report.md
-
-      - name: Upload test artifacts
-        uses:  actions/upload-artifact@v4
-        with:
-          name: test-logs-${{ env.SCHEMATIC_VERSION }}
-          path: tests/**/logs
-
   docs-preview:
     name: Build and preview docs
     needs: [build]
@@ -252,6 +173,34 @@ jobs:
         uses: rossjrw/pr-preview-action@v1
         with:
           source-dir: ./docs
+
+  pytest:
+    name: pytest (schema instances + model integrity)
+    needs: [build]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12'
+
+      - name: Download built artifacts from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .
+
+      - name: Install dependencies
+        run: pip install pytest jsonschema pyyaml
+
+      - name: Run pytest
+        run: pytest tests/test_schema_instances.py tests/test_template_datatypes.py tests/test_model_system_sync.py -v
 
   check-schema-limits:
     name: Validate schema limits (Synapse platform)
