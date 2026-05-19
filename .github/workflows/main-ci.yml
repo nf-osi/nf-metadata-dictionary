@@ -196,7 +196,35 @@ jobs:
         run: pip install pytest jsonschema pyyaml
 
       - name: Run pytest
-        run: pytest tests/test_schema_instances.py tests/test_template_datatypes.py tests/test_model_system_sync.py -v
+        id: pytest
+        run: |
+          pytest tests/test_schema_instances.py tests/test_template_datatypes.py tests/test_model_system_sync.py -v \
+            --tb=short 2>&1 | tee pytest_output.txt
+          echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
+
+      - name: Format pytest results as PR comment
+        if: always()
+        run: |
+          EXIT_CODE="${{ steps.pytest.outputs.exit_code }}"
+          if [ "$EXIT_CODE" = "0" ]; then
+            STATUS="✅ All tests passed"
+          else
+            STATUS="❌ Some tests failed"
+          fi
+          {
+            echo "## $STATUS"
+            echo ""
+            echo '```'
+            cat pytest_output.txt
+            echo '```'
+          } > pytest_report.md
+
+      - name: Post pytest results as PR comment
+        uses: mshick/add-pr-comment@v2
+        if: always()
+        with:
+          message-id: pytest-report
+          message-path: pytest_report.md
 
   check-schema-limits:
     name: Validate schema limits (Synapse platform)
