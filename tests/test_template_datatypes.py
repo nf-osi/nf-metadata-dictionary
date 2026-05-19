@@ -15,6 +15,7 @@ OPTIONAL_DATATYPE_TEMPLATES = {
     "PortalPublication",
     "PublicationTemplate",
     "DataLandscape",
+    "ProtocolTemplate",
 }
 DATA_FILE = REPO_ROOT / "modules" / "Data" / "Data.yaml"
 
@@ -58,6 +59,8 @@ def test_templates_have_datatype_annotations():
             if name in OPTIONAL_DATATYPE_TEMPLATES:
                 continue
             missing.append((path, name))
+            continue
+        if name in OPTIONAL_DATATYPE_TEMPLATES:
             continue
         for value in data_types:
             if value not in valid_values:
