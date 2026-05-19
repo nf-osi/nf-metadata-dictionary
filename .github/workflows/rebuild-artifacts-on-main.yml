@@ -12,7 +12,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  SCHEMATIC_VERSION: 24.7.2
   SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
 
 jobs:
@@ -44,13 +43,6 @@ jobs:
           echo "Generating JSON schemas"
           python utils/gen-json-schema-class.py
           make Superdataset
-
-      - name: Setup schematic and do convert pass
-        run: |
-          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}
-          pip show schematicpy
-          schematic schema convert NF.jsonld
-          python utils/fix_display_names.py retold_NF.jsonld NF.jsonld
 
       - name: Commit all artifacts if there are changes
         id: commit_artifacts
