@@ -9,7 +9,7 @@ We keep the main one, `NF.jsonld`, in the root of the repository, while others a
 
 | Artifact | Description | Generated During PRs | Committed to PRs | Updated on Main | Registered to Synapse |
 | -------- | ----------- | :------------------: | :--------------: | :-------------: | :-------------------: |
-| `NF.jsonld` | **Legacy.** JSON-LD artifact for schematic compatibility. No longer updated as part of the build pipeline; kept for reference while schematic-based tooling is phased out. | ❌ | ❌ | ❌ | N/A |
+| `NF.jsonld` | **Legacy.** JSON-LD artifact for schematic compatibility. No longer updated as part of the build pipeline; kept for reference but might be removed later. | ❌ | ❌ | ❌ | N/A |
 | `registered-json-schemas/*.json` | JSON serializations for a subset of the data model, for native functionality with Synapse platform or wherever a JSON definition is preferred. | ✅ (validated) | ❌ | ✅ (auto-committed) | ✅ (only on [release](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/.github/workflows/release-new-version.yaml)) |
 | `dist/NF.yaml` | Data model as as a single LinkML-valid YAML file, useful for using LinkML tooling to create Excel spreadsheets. | ✅ (validated) | ❌ | ✅ (auto-committed) | N/A |
 | `dist/NF_linkml.jsonld` | JSON-LD from LinkML, best if you want to compare/combine our model with others maintained in LinkML, e.g. see here. There are differences with the `NF.jsonld`. | ✅ (validated) | ❌ | ✅ (auto-committed) | N/A |
@@ -31,10 +31,8 @@ graph LR
     L --> J[*.json schemas]
     L --> T[NF.ttl]
     L --> LJ["NF_linkml.jsonld"]
-    A --> B[retold]
-    B --> C["NF.jsonld (legacy)"]
 
-class B,L tools
+class L tools
     
     %% Legend
     subgraph Legend
@@ -43,12 +41,10 @@ class B,L tools
     end
 
 style A fill:white,stroke:#333,stroke-width:2px;
-style C fill:#eee,stroke:#999,stroke-width:1px,stroke-dasharray:4;
 style G fill:white,stroke:#333,stroke-width:2px;
 style J fill:white,stroke:#333,stroke-width:2px;
 style T fill:white,stroke:#333,stroke-width:2px;
 style LJ fill:white,stroke:#333,stroke-width:2px;
-style B fill:#ddd,stroke:#999,stroke-width:1px
 style H fill:#aaf,stroke:#333,stroke-width:2px
 style L fill:#aaf,stroke:#333,stroke-width:2px
 ```
