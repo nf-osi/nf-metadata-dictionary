@@ -1,0 +1,35 @@
+
+# Conditional (if-then) Dependency Validation
+#
+# Tests that schemas enforce allOf if-then conditional dependencies.
+#
+# Migrations from tests/schematic/validate/:
+#   GenomicsAssayTemplate_2.csv — documented that schematic did NOT enforce the
+#   age → ageUnit conditional dependency (expect_pass: true, flagged as limitation).
+#   The JSON schema allOf rule DOES enforce this requirement, so the same data
+#   is invalid here.
+#
+# GenomicsAssayTemplate has three allOf conditions:
+#   [0] if specimenType is present and NOT a body fluid → organ is required
+#   [1] if age is present → ageUnit is required
+#   [2] if dataType is present → dataSubtype is required (redundant with required list)
+
+schema: GenomicsAssayTemplate
+instances:
+  - file: data/GenomicsAssayTemplate/valid_age_with_unit.json
+    description: age and ageUnit both provided — satisfies the conditional dependency
+    expected: valid
+
+  - file: data/GenomicsAssayTemplate/invalid_age_missing_ageunit.json
+    description: age is present but ageUnit is absent; migrated from GenomicsAssayTemplate_2.csv which documented this as a schematic limitation — the JSON schema allOf rule enforces it
+    expected: invalid
+    reason: age is present but ageUnit is missing
+
+  - file: data/GenomicsAssayTemplate/invalid_specimentype_missing_organ.json
+    description: specimenType is "primary tumor" (not a body fluid) but organ is absent; violates the allOf[0] specimenType→organ rule
+    expected: invalid
+    reason: non-body-fluid specimenType present but organ is missing
+
+  - file: data/GenomicsAssayTemplate/valid_specimentype_body_fluid.json
+    description: specimenType is "saliva" — exempt from the organ requirement; record is valid without organ
+    expected: valid

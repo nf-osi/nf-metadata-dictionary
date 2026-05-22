@@ -1,0 +1,55 @@
+
+# Genomics Template Tests
+#
+# Coverage for WGSTemplate, WESTemplate, and ProcessedAlignedReadsTemplate.
+#
+# WESTemplate has one required field not shared with WGSTemplate: targetCaptureKitID.
+# ProcessedAlignedReadsTemplate has two unique allOf conditionals:
+#   [0] if workflow is present → workflowLink is required
+#   [1] if genomicReference is present → genomicReferenceLink is required
+
+schema: WGSTemplate
+instances:
+  - file: data/WGSTemplate/valid_minimal.json
+    description: Minimal valid WGS record with all 14 required fields
+    expected: valid
+
+  - file: data/WGSTemplate/invalid_missing_libraryStrand.json
+    description: All required fields present except libraryStrand
+    expected: invalid
+    reason: libraryStrand is required
+
+---
+
+schema: WESTemplate
+instances:
+  - file: data/WESTemplate/valid_minimal.json
+    description: Minimal valid WES record including the targetCaptureKitID required field unique to this template
+    expected: valid
+
+  - file: data/WESTemplate/invalid_missing_targetCaptureKitID.json
+    description: All required fields present except targetCaptureKitID, which is required only in WESTemplate
+    expected: invalid
+    reason: targetCaptureKitID is required
+
+---
+
+schema: ProcessedAlignedReadsTemplate
+instances:
+  - file: data/ProcessedAlignedReadsTemplate/valid_minimal.json
+    description: Minimal valid processed aligned reads record; genomicReferenceLink is required alongside genomicReference per the allOf[1] conditional
+    expected: valid
+
+  - file: data/ProcessedAlignedReadsTemplate/valid_with_workflow.json
+    description: Valid record with workflow and workflowLink both provided — satisfies the conditional dependency
+    expected: valid
+
+  - file: data/ProcessedAlignedReadsTemplate/invalid_workflow_missing_workflowLink.json
+    description: workflow is present but workflowLink is absent; violates the allOf[0] workflow→workflowLink rule
+    expected: invalid
+    reason: workflow is present but workflowLink is missing
+
+  - file: data/ProcessedAlignedReadsTemplate/invalid_missing_genomicReference.json
+    description: genomicReference is a required field; omitting it should fail validation
+    expected: invalid
+    reason: genomicReference is required

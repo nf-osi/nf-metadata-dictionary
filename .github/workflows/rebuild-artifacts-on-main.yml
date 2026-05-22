@@ -12,7 +12,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  SCHEMATIC_VERSION: 24.7.2
   SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
 
 jobs:
@@ -28,11 +27,9 @@ jobs:
         with:
           python-version: '3.10.12'
 
-      - name: Setup custom build tools
+      - name: Setup build tools
         shell: bash
         run: |
-          bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
-          git clone --depth 1 https://github.com/anngvu/retold.git
           pip install linkml==v1.8.1 synapseclient jsonref
           npm install -g json-dereference-cli
           echo "$HOME/.local/bin" >> $GITHUB_PATH
@@ -45,13 +42,6 @@ jobs:
           python utils/gen-json-schema-class.py
           make Superdataset
 
-      - name: Setup schematic and do convert pass
-        run: |
-          pip install schematicpy==${{ env.SCHEMATIC_VERSION }}
-          pip show schematicpy
-          schematic schema convert NF.jsonld
-          python utils/fix_display_names.py retold_NF.jsonld NF.jsonld
-
       - name: Commit all artifacts if there are changes
         id: commit_artifacts
         run: |
@@ -59,7 +49,7 @@ jobs:
             echo "Artifacts have changed and will be committed to main"
             git config --local user.email "nf-osi@sagebionetworks.org"
             git config --local user.name "nf-osi[bot]"
-            git add NF.jsonld dist/NF.yaml dist/NF.ttl registered-json-schemas/
+            git add dist/NF.yaml dist/NF.ttl registered-json-schemas/
             git commit -m "Rebuild all artifacts [skip ci]"
             echo "artifacts_changed=true" >> "$GITHUB_OUTPUT"
           else

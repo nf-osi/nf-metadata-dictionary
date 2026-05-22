@@ -144,14 +144,11 @@ jobs:
         if: steps.changes.outputs.changes == 'true'
         run: |
           # Install required tools for building
-          bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
-          git clone --depth 1 https://github.com/anngvu/retold.git
           pip install linkml==v1.8.1
           npm install -g json-dereference-cli
 
           # Rebuild the data model
-          make NF.yaml
-          bb ./retold/retold as-jsonld --dir modules --out NF.jsonld
+          make NF.yaml NF.ttl
 
       # ============================================================
       # CREATE COMBINED PULL REQUEST
@@ -200,7 +197,7 @@ jobs:
 
             ✅ **Data model artifacts have been rebuilt** to reflect all changes from both sources:
             - `dist/NF.yaml` - Complete merged schema
-            - `NF.jsonld` - JSON-LD representation
+            - `dist/NF.ttl` - Turtle RDF
 
             ---
 

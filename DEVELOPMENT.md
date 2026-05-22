@@ -357,8 +357,9 @@ Individual test files:
 
 | Test file | What it covers |
 |---|---|
-| `tests/test_model_system_sync.py` | Model system data is in sync |
 | `tests/test_schema_instances.py` | JSON instances validate correctly against registered schemas |
+| `tests/test_template_datatypes.py` | Every non-abstract template class declares valid `dataType` annotations |
+| `tests/test_model_system_sync.py` | Model system data is in sync |
 
 ### JSON schema instance tests
 
@@ -368,7 +369,7 @@ Individual test files:
 
 1. Create a JSON file under `tests/data/<TemplateName>/` with the instance data, e.g. `tests/data/RNASeqTemplate/valid_my_case.json`.
 
-2. Register it in `tests/test_registry.yaml` (or a new `test_registry_*.yaml` file for a new topic area) under the matching `schema:` document:
+2. Register it in an existing `tests/test_registry*.yaml` (or a new `test_registry_<topic>.yaml`) under the matching `schema:` document:
 
    ```yaml
    schema: RNASeqTemplate
@@ -402,9 +403,6 @@ PATH=".venv/bin:$PATH" .venv/bin/python utils/gen-json-schema-class.py \
 PATH=".venv/bin:$PATH" .venv/bin/python utils/gen-json-schema-class.py \
   --skip-validation
 ```
-
-> **TODO:** Replace the legacy schematic-based CSV tests in `tests/schematic/` with
-> pytest-based JSON schema instance tests using the `test_registry.yaml` pattern.
 
 ---
 

@@ -33,12 +33,12 @@ def test_format_enum_entry():
     result = sync_model_systems.format_enum_entry(cell_line)
     expected = {
         'Test Cell Line': {
-            'source': 'https://web.expasy.org/cellosaurus/CVCL_0001'
+            'meaning': 'rrid:CVCL_0001'
         }
     }
-    
+
     assert result == expected, f"Expected {expected}, got {result}"
-    
+
     # Test cell line entry with different description (should include description)
     cell_line_with_desc = {
         'resourceName': 'Test Cell Line',
@@ -46,28 +46,28 @@ def test_format_enum_entry():
         'resourceType': 'cell line',
         'description': 'This is a different description'
     }
-    
+
     result = sync_model_systems.format_enum_entry(cell_line_with_desc)
     expected = {
         'Test Cell Line': {
             'description': 'This is a different description',
-            'source': 'https://web.expasy.org/cellosaurus/CVCL_0001'
+            'meaning': 'rrid:CVCL_0001'
         }
     }
-    
+
     assert result == expected, f"Expected {expected}, got {result}"
-    
+
     # Test animal model entry without separate description
     animal_model = {
         'resourceName': 'Test Mouse Model',
         'rrid': 'MGI:0001',
         'resourceType': 'animal model'
     }
-    
+
     result = sync_model_systems.format_enum_entry(animal_model)
     expected = {
         'Test Mouse Model': {
-            'source': 'http://www.informatics.jax.org/accession/MGI:0001'
+            'meaning': 'rrid:MGI:0001'
         }
     }
     
