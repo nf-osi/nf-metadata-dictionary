@@ -10595,7 +10595,9 @@ classes:
           - range: MRIPlatformEnum
           - range: ImagingSystemPlatformEnum
       fileFormat:
-        range: ImagingFileFormatEnum
+        any_of:
+          - range: ImagingFileFormatEnum
+          - range: TabularFileFormatEnum
       dataType:
         ifabsent: string(image)
     slots:
@@ -10624,7 +10626,9 @@ classes:
       platform:
         range: MicroscopyImagingPlatformEnum
       fileFormat:
-        range: ImagingFileFormatEnum
+        any_of:
+          - range: ImagingFileFormatEnum
+          - range: TabularFileFormatEnum
       dataType:
         ifabsent: string(image)
     rules:
@@ -10670,7 +10674,9 @@ classes:
       platform:
         range: MRIPlatformEnum
       fileFormat:
-        range: ImagingFileFormatEnum
+        any_of:
+          - range: ImagingFileFormatEnum
+          - range: TabularFileFormatEnum
       dataType:
         ifabsent: string(image)
     rules:

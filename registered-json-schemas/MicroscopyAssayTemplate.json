@@ -500,20 +500,18 @@
       "type": "string"
     },
     "fileFormat": {
-      "description": "File formats for imaging data including medical imaging, microscopy, and associated tabular metadata",
+      "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
+      "type": "string",
       "enum": [
         "DICOM",
         "NWB",
         "PAR",
-        "RCC",
         "REC",
         "aci",
         "avi",
         "bmp",
-        "csv",
         "czi",
         "dm3",
-        "excel",
         "hdr",
         "img",
         "jpg",
@@ -521,17 +519,19 @@
         "mov",
         "nii",
         "ome-tiff",
-        "parquet",
         "png",
         "svs",
         "sws",
         "tif",
         "tom",
+        "RCC",
+        "csv",
+        "excel",
+        "parquet",
         "tsv",
         "txt"
       ],
-      "title": "fileFormat",
-      "type": "string"
+      "title": "fileFormat"
     },
     "geneticReagentID": {
       "anyOf": [
