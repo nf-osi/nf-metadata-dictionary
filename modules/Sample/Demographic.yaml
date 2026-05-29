@@ -31,6 +31,15 @@ enums:
         description: Middle-aged mice from postnatal day 180 to 365 (6 to 12 months).
       P365+ Aged:
         description: Aged mice from postnatal day 365 onwards (12+ months).
+  AgeMask:
+    description: Masked age values for privacy protection. Used when exact age cannot be reported due to HIPAA or other privacy regulations.
+    see_also:
+    - https://www.law.cornell.edu/cfr/text/45/164.514
+    permissible_values:
+      ">= 90":
+        description: Age is 90 years or older. Used to mask exact ages >= 90 per HIPAA Safe Harbor de-identification requirements (45 CFR §164.514(b)(2)(i)(C)).
+      Unknown:
+        description: Age is not known or was not recorded.
   SexEnum:
     permissible_values:
       Female:

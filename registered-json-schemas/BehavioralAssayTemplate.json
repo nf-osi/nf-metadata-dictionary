@@ -77,7 +77,15 @@
     {
       "if": {
         "properties": {
-          "age": {}
+          "age": {
+            "not": {
+              "anyOf": [
+                {
+                  "const": "Unknown"
+                }
+              ]
+            }
+          }
         },
         "required": [
           "age"
@@ -90,6 +98,25 @@
         "required": [
           "ageUnit"
         ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "species": {
+            "const": "Homo sapiens"
+          }
+        },
+        "required": [
+          "species"
+        ]
+      },
+      "then": {
+        "properties": {
+          "age": {
+            "maximum": 89.99999
+          }
+        }
       }
     },
     {
@@ -1018,8 +1045,21 @@
       "title": "comments"
     },
     "age": {
-      "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
-      "type": "number",
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "description": "Masked age values for privacy protection. Used when exact age cannot be reported due to HIPAA or other privacy regulations.",
+          "enum": [
+            ">= 90",
+            "Unknown"
+          ],
+          "title": "AgeMask",
+          "type": "string"
+        }
+      ],
+      "description": "Age of the individual. Use with `ageUnit`. IMPORTANT: For human data, HIPAA requires masking ages >= 90; use the `AgeMask` value \">= 90\" instead of the exact value to protect participant privacy.",
       "title": "age"
     },
     "ageUnit": {
@@ -1262,6 +1302,7 @@
         "gait measurement",
         "genotyping",
         "grip strength",
+        "grooming behavior assay",
         "hand-held dynamometry",
         "metabolic screening",
         "n-back task",
@@ -1536,55 +1577,6 @@
       "type": "array",
       "title": "individualID"
     },
-    "modelAge": {
-      "description": "Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.",
-      "type": "number",
-      "title": "modelAge"
-    },
-    "modelAgeUnit": {
-      "description": "",
-      "enum": [
-        "days",
-        "hours",
-        "minutes",
-        "months",
-        "seconds",
-        "weeks",
-        "years"
-      ],
-      "title": "timepointUnit",
-      "type": "string"
-    },
-    "modelSex": {
-      "description": "Sex of the individual animal model used in the experiment. Distinct from donor sex.",
-      "type": "string",
-      "enum": [
-        "Female",
-        "Male",
-        "Unknown",
-        "Not Applicable"
-      ],
-      "title": "modelSex"
-    },
-    "modelSpecies": {
-      "description": "",
-      "enum": [
-        "Danio rerio",
-        "Drosophila melanogaster",
-        "Gallus gallus",
-        "Homo sapiens",
-        "Mus musculus",
-        "Macaca nemestrina",
-        "Mus musculus (humanized)",
-        "Oryctolagus cuniculus",
-        "Pan troglodytes",
-        "Rattus norvegicus",
-        "Rhesus macaque",
-        "Sus scrofa"
-      ],
-      "title": "species",
-      "type": "string"
-    },
     "nf1Genotype": {
       "description": "Genotype of NF1 gene in the biospecimen from which the data were derived, if known.",
       "type": "string",
@@ -1696,6 +1688,7 @@
         "Anaplastic Pilocytic Astrocytoma",
         "Anaplastic Pleomorphic Xanthoastrocytoma",
         "Atypical Neurofibroma",
+        "Atypical MPNST",
         "Atypical Pilocytic Astrocytoma",
         "Cellular Neurofibroma",
         "Colorectal Adenocarcinoma",

@@ -1,13 +1,8 @@
-all: NF.jsonld NF.yaml NF.ttl
+all: NF.yaml NF.ttl
 
 # TODO Implement analysis on data model changes
 analyze:
 	@echo "Analyzing data model..."
-
-NF.jsonld:
-	bb ./retold/retold as-jsonld --dir modules --out retold_NF.jsonld
-	cp retold_NF.jsonld NF.jsonld 
-
 
 NF.yaml:
 	yq eval-all '. as $$item ireduce ({}; . * $$item )' header.yaml modules/props.yaml modules/**/*.yaml > merged.yaml

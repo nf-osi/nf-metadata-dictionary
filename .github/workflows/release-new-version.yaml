@@ -1,120 +1,256 @@
-name: Release New Version
+# Release workflow; AI agent by default but releases can also be done manually.
+# - Scheduled: Claude reviews changes and decides whether to release
+# - Manual: provide MAJOR.MINOR version to release immediately, skipping AI
+
+name: Release
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'  # Trigger on push of semantic version tags (e.g., v9.9.0)
-
-  # Alternatively, trigger 
+  schedule:
+    # Run 1st and 15th of each month at 10:00 UTC
+    - cron: '00 10 1,15 * *'
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to use (e.g., v9.9.0 - with v prefix)'
-        required: true
-        type: string
-      release_notes:
-        description: 'Optional release notes; when empty, GitHub auto-generated notes are used'
+        description: 'MAJOR.MINOR version (e.g., 0.10). PATCH is auto-set to the run number.'
         required: false
         type: string
+      release_notes:
+        description: 'Optional release notes; when empty, auto-generated notes are used'
+        required: false
+        type: string
+      evaluation_only:
+        description: 'Run AI evaluation without creating a release. Ignores version input.'
+        required: false
+        type: boolean
+        default: false
 
-env:
-  SCHEMATIC_VERSION: 24.7.2
+permissions:
+  contents: write
 
 jobs:
-  release-json-schemas:
+  release:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: main
 
-      - name: Extract version from tag or input
-        id: get_version
+      # ── Gather context ──────────────────────────────────────────────
+
+      - name: Gather changes since last tag
+        id: changes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            # Remove 'v' prefix from input (v9.9.0 -> 9.9.0)
-            VERSION="${{ inputs.version }}"
-            VERSION="${VERSION#v}"
-          else
-            # Remove 'v' prefix from tag (v9.9.0 -> 9.9.0)
-            VERSION="${GITHUB_REF#refs/tags/v}"
+          LAST_TAG=$(gh release list --limit 1 --json tagName -q '.[0].tagName' 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            echo "No previous releases found"
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "last_tag=$LAST_TAG" >> "$GITHUB_OUTPUT"
+
+          COMMIT_COUNT=$(git rev-list "$LAST_TAG"..HEAD --count)
+          if [ "$COMMIT_COUNT" -eq 0 ]; then
+            echo "No commits since $LAST_TAG"
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
 
-          # Validate semantic version format
-          # Valid: 1.0.0, 10.5.2, 0.1.0
-          # Invalid: 01.0.0, 1.05.0, 1.0.01, 10.08.1
-          if ! echo "$VERSION" | grep -E '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$' > /dev/null; then
-            echo "❌ ERROR: Invalid version format: $VERSION"
-            echo "Version must follow semantic versioning (MAJOR.MINOR.PATCH) with no leading zeros."
-            echo "Valid examples: 1.0.0, 10.5.2, 0.1.0"
-            echo "Invalid examples: 01.0.0, 1.05.0, 1.0.01, 10.08.1"
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          git log "$LAST_TAG"..HEAD --oneline --no-merges > /tmp/commits.txt
+          git diff "$LAST_TAG"..HEAD --stat > /tmp/diffstat.txt
+
+          echo "=== $COMMIT_COUNT commits since $LAST_TAG ==="
+          cat /tmp/commits.txt
+          echo "=== Files changed ==="
+          cat /tmp/diffstat.txt
+
+      # ── Gather schema version context ────────────────────────────────
+
+      - name: Get current schema versions from Synapse
+        id: schema_versions
+        if: steps.changes.outputs.has_changes == 'true'
+        continue-on-error: true
+        run: |
+          python3 utils/get-schema-versions.py \
+            --schema-dir registered-json-schemas \
+            --exclude Superdataset.json \
+            > /tmp/schema_versions.txt \
+          || echo "(schema version retrieval failed)" > /tmp/schema_versions.txt
+          echo "=== Current schema versions ==="
+          cat /tmp/schema_versions.txt
+
+      # ── AI evaluation (schedule only) ────────────────────────────────
+
+      - name: Evaluate release with Claude
+        if: (github.event_name == 'schedule' || inputs.evaluation_only || (github.event_name == 'workflow_dispatch' && !inputs.version)) && steps.changes.outputs.has_changes == 'true'
+        id: evaluate
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          LAST_TAG="${{ steps.changes.outputs.last_tag }}"
+          CURRENT_VERSION="${LAST_TAG#v}"
+          COMMITS=$(cat /tmp/commits.txt)
+          DIFFSTAT=$(cat /tmp/diffstat.txt)
+          SCHEMA_VERSIONS=$(cat /tmp/schema_versions.txt 2>/dev/null || echo "(schema version information unavailable)")
+
+          # Build prompt as a readable file, then pass to jq
+          cat > /tmp/prompt.txt <<PROMPT
+          You are the release manager for the NF Metadata Dictionary,
+          a LinkML-based data model for the Neurofibromatosis research community.
+
+          Current version: ${CURRENT_VERSION}
+
+          Commits since last release:
+          ${COMMITS}
+
+          Files changed:
+          ${DIFFSTAT}
+
+          ${SCHEMA_VERSIONS}
+
+          Versioning rules:
+          - Commits containing "Rebuild all artifacts" or "[skip ci]" are automated
+            and do NOT count as meaningful changes on their own.
+          - MINOR bump: new templates, new assay/data types, vocabulary
+            expansions, new properties, bug fixes, typo corrections, synonym updates.
+          - MAJOR bump: breaking schema changes, removed templates/properties,
+            restructured data model.
+          - If ONLY automated rebuild commits exist, no release is needed.
+          - You only decide MAJOR.MINOR. The PATCH number is auto-assigned.
+          - If all schemas are already registered at the current version and there
+            are no meaningful commits, recommend no release.
+          - If any schemas are listed as "not yet registered", they are new and
+            should be included in the next release.
+          - Schema versions in Synapse may not always correspond to a GitHub release;
+            some versions were registered without official release. Use the GitHub
+            release history (current version above) as the authoritative reference for
+            what has been officially released, not the schema versions alone.
+
+          Respond with ONLY valid JSON, no markdown fences or extra text:
+          {"release": true, "version": "MAJOR.MINOR", "reasoning": "one sentence", "notes": "markdown release notes"}
+          or
+          {"release": false, "reasoning": "one sentence"}
+          PROMPT
+
+          PAYLOAD=$(jq -n --rawfile prompt /tmp/prompt.txt '{
+            model: "claude-sonnet-4-6",
+            max_tokens: 1024,
+            messages: [{ role: "user", content: $prompt }]
+          }')
+
+          HTTP_CODE=$(curl -s -o /tmp/api_response.json -w '%{http_code}' \
+            https://api.anthropic.com/v1/messages \
+            -H "content-type: application/json" \
+            -H "x-api-key: $ANTHROPIC_API_KEY" \
+            -H "anthropic-version: 2023-06-01" \
+            -d "$PAYLOAD")
+
+          if [ "$HTTP_CODE" -ne 200 ]; then
+            echo "❌ API request failed with HTTP $HTTP_CODE:"
+            cat /tmp/api_response.json
             exit 1
           fi
 
+          RESPONSE=$(cat /tmp/api_response.json)
+
+          # Extract text, strip markdown code fences if Claude wraps the response
+          TEXT=$(echo "$RESPONSE" | jq -r '.content[0].text' | sed '/^```/d')
+          echo "Claude's evaluation:"
+          echo "$TEXT"
+
+          SHOULD_RELEASE=$(echo "$TEXT" | jq -r '.release')
+          VERSION=$(echo "$TEXT" | jq -r '.version // empty')
+
+          echo "should_release=$SHOULD_RELEASE" >> "$GITHUB_OUTPUT"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "✅ Building schemas for version: $VERSION"
+
+          {
+            echo "reasoning<<REASONING_EOF"
+            echo "$TEXT" | jq -r '.reasoning'
+            echo "REASONING_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "$TEXT" | jq -r '.notes // empty' > /tmp/release_notes.md
+
+      # ── Resolve version ─────────────────────────────────────────────
+
+      - name: Resolve version
+        if: ${{ !inputs.evaluation_only }}
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.version }}" ]; then
+            INPUT="${{ inputs.version }}"
+            INPUT="${INPUT#v}"
+            INPUT="${INPUT%.}"
+
+            if ! echo "$INPUT" | grep -E '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$' > /dev/null; then
+              echo "❌ Invalid MAJOR.MINOR: $INPUT"
+              echo "Provide MAJOR.MINOR only (e.g., 0.10, 1.0). PATCH is set automatically."
+              exit 1
+            fi
+
+            echo "should_release=true" >> "$GITHUB_OUTPUT"
+            echo "version=${INPUT}.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+            echo "✅ Manual release: ${INPUT}.${{ github.run_number }}"
+
+          elif [ "${{ steps.evaluate.outputs.should_release }}" = "true" ]; then
+            # Schedule: Claude decided to release
+            VERSION="${{ steps.evaluate.outputs.version }}.${{ github.run_number }}"
+            echo "should_release=true" >> "$GITHUB_OUTPUT"
+            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+            echo "✅ Agent release: $VERSION"
+
+          else
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+            echo "No release will be created"
+          fi
+
+      # ── Release pipeline ────────────────────────────────────────────
 
       - uses: actions/setup-python@v5
+        if: steps.resolve.outputs.should_release == 'true'
         with:
           python-version: '3.10.12'
 
       - name: Install dependencies
+        if: steps.resolve.outputs.should_release == 'true'
         run: pip install synapseclient
 
-      - name: Check if schemas with this version already exist in Synapse
+      - name: Create and push git tag
+        if: steps.resolve.outputs.should_release == 'true'
         env:
-          SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
-          SCHEMA_VERSION: ${{ steps.get_version.outputs.version }}
-        run: |
-          echo "Checking if schemas with version $SCHEMA_VERSION already exist in Synapse"
-          python utils/check-schema-versions.py \
-            --schema-dir "registered-json-schemas" \
-            --version "$SCHEMA_VERSION"
-
-      - name: Ensure git tag exists for manual releases
-        if: github.event_name == 'workflow_dispatch'
-        env:
-          VERSION: ${{ steps.get_version.outputs.version }}
+          VERSION: ${{ steps.resolve.outputs.version }}
         run: |
           TAG="v${VERSION}"
-
-          echo "Ensuring tag ${TAG} exists for commit ${GITHUB_SHA}"
-
-          if git rev-parse "$TAG" >/dev/null 2>&1; then
-            echo "Tag ${TAG} already exists locally"
-          elif git ls-remote --exit-code origin "refs/tags/${TAG}" >/dev/null 2>&1; then
-            echo "Tag ${TAG} exists on origin, fetching"
-            git fetch origin "refs/tags/${TAG}:refs/tags/${TAG}"
-          else
-            echo "Creating and pushing tag ${TAG}"
-            git tag "$TAG" "$GITHUB_SHA"
-            git push origin "$TAG"
-          fi
+          echo "Tagging ${GITHUB_SHA} as ${TAG}"
+          git tag "$TAG" "$GITHUB_SHA"
+          git push origin "$TAG"
 
       - name: Create versioned schemas
+        if: steps.resolve.outputs.should_release == 'true'
         env:
-          SCHEMA_VERSION: ${{ steps.get_version.outputs.version }}
+          SCHEMA_VERSION: ${{ steps.resolve.outputs.version }}
         run: |
           echo "Creating versioned schemas for version $SCHEMA_VERSION"
           mkdir -p versioned-schemas
 
-          # Copy and version each schema
           for schema in registered-json-schemas/*.json; do
             filename=$(basename "$schema")
-            # Append version to the $id (before the closing quote)
-            # e.g., org.synapse.nf-animalindividualtemplate -> org.synapse.nf-animalindividualtemplate-0.9.9
             sed "s|\(\"\$id\": \".*\)\(\".*\)|\1-$SCHEMA_VERSION\2|" "$schema" > "versioned-schemas/$filename"
           done
 
           echo "✅ Created versioned schemas in versioned-schemas/"
-          # Show an example of the versioned $id
           head -3 versioned-schemas/*.json | grep '\$id' | head -1
 
       - name: Register versioned JSON schemas with Synapse
+        if: steps.resolve.outputs.should_release == 'true'
         env:
           SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
-          SCHEMA_VERSION: ${{ steps.get_version.outputs.version }}
+          SCHEMA_VERSION: ${{ steps.resolve.outputs.version }}
         run: |
           echo "Registering versioned JSON schemas with Synapse for version $SCHEMA_VERSION"
           python utils/register-schemas.py \
@@ -123,42 +259,40 @@ jobs:
             --exclude Superdataset.json
 
       - name: Upload versioned schemas as artifact
+        if: steps.resolve.outputs.should_release == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: json-schemas-${{ steps.get_version.outputs.version }}
+          name: json-schemas-${{ steps.resolve.outputs.version }}
           path: |
             versioned-schemas
-            schema-registration-log-${{ steps.get_version.outputs.version }}.md
+            schema-registration-log-${{ steps.resolve.outputs.version }}.md
 
       - name: Create release with schemas
+        if: steps.resolve.outputs.should_release == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NOTES_INPUT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_notes || '' }}
         run: |
-          VERSION="${{ steps.get_version.outputs.version }}"
+          VERSION="${{ steps.resolve.outputs.version }}"
           TARGET_COMMIT="${GITHUB_SHA}"
 
-          # Create a tarball of the versioned schemas
           tar -czf "json-schemas-${VERSION}.tar.gz" "versioned-schemas"
 
-          if gh release view "v${VERSION}" > /dev/null 2>&1; then
-            echo "Release v${VERSION} already exists, adding schemas as asset"
-            gh release upload "v${VERSION}" "json-schemas-${VERSION}.tar.gz" --clobber
+          # Determine release notes: manual input > Claude-generated > GitHub auto-generated
+          NOTES_FILE="/tmp/release_notes.md"
+          if [ -n "${{ inputs.release_notes }}" ]; then
+            echo "${{ inputs.release_notes }}" > "$NOTES_FILE"
+          fi
+
+          if [ -s "$NOTES_FILE" ]; then
+            gh release create "v${VERSION}" \
+              "json-schemas-${VERSION}.tar.gz" \
+              --title "v${VERSION}" \
+              --notes-file "$NOTES_FILE" \
+              --target "${TARGET_COMMIT}"
           else
-            echo "Creating new release v${VERSION} with schemas"
-            if [ -n "$NOTES_INPUT" ]; then
-              echo "Using custom release notes from workflow input"
-              gh release create "v${VERSION}" \
-                "json-schemas-${VERSION}.tar.gz" \
-                --title "Release v${VERSION}" \
-                --notes "$NOTES_INPUT" \
-                --target "${TARGET_COMMIT}"
-            else
-              echo "Using GitHub auto-generated release notes"
-              gh release create "v${VERSION}" \
-                "json-schemas-${VERSION}.tar.gz" \
-                --title "Release v${VERSION}" \
-                --generate-notes \
-                --target "${TARGET_COMMIT}"
-            fi
+            gh release create "v${VERSION}" \
+              "json-schemas-${VERSION}.tar.gz" \
+              --title "v${VERSION}" \
+              --generate-notes \
+              --target "${TARGET_COMMIT}"
           fi

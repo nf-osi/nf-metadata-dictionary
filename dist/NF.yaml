@@ -117,8 +117,11 @@ slots:
     title: Acknowledgement Statements
     required: false
   age:
-    description: A numeric value representing age of the individual. Use with `ageUnit`.
-    range: float
+    description: >-
+      Age of the individual. Use with `ageUnit`. IMPORTANT: For human data, HIPAA requires masking ages >= 90; use the `AgeMask` value ">= 90" instead of the exact value to protect participant privacy.
+    any_of:
+      - range: float
+      - range: AgeMask
     title: Age
     required: false
   ageUnit:
@@ -343,6 +346,10 @@ slots:
     title: Current Version
     required: false
     see_also: https://www.w3.org/TR/vocab-dcat-3/#Property:resource_version
+  cytassistSample:
+    description: Whether the 10x Genomics CytAssist instrument was used for sample preparation in the spatial transcriptomics experiment.
+    title: CytAssist Sample
+    required: false
   dataCollectionMode:
     description: Mode of data collection in tandem MS assays. Either DDA (data-dependent acquisition) or DIA (data-independent) acquisition.
     title: Data Collection Mode
@@ -1012,6 +1019,11 @@ slots:
       - range: DrugScreenAssayEnum
     required: false
     title: Protocol assay
+  probeSet:
+    description: Identifier or name of the probe set used in the spatial transcriptomics experiment (e.g., Visium Human Transcriptome Probe Set v2.0).
+    range: string
+    title: Probe Set
+    required: false
   protocolPurpose:
     description: Brief description of the protocol purpose.
     range: string
@@ -1308,6 +1320,11 @@ slots:
     range: LateralManifestationEnum
     required: false
     title: Vestibular schwannoma
+  visiumslideID:
+    description: Unique identifier for the Visium slide used in the spatial transcriptomics experiment. Slide serial numbers begin with V1, V4, V5, or H1 (e.g., V10J25-015).
+    range: string
+    title: Visium Slide ID
+    required: false
   vitalStatus:
     description: Vital status of the patient.
     range: VitalStatusEnum
@@ -1433,6 +1450,11 @@ enums:
       scCGI-seq:
         description: A method for genome-wide CpG island (CGI) methylation sequencing for single cells (scCGI-seq), combining methylation-sensitive restriction enzyme digestion and multiple displacement amplification for selective detection of methylated CGIs
         source: https://www.ncbi.nlm.nih.gov/pubmed/28126923
+      shRNA-seq:
+        aliases:
+          - shRNA library screen sequencing
+        description: A sequencing-based functional genomics assay in which a pooled short hairpin RNA (shRNA) library is introduced into cells, and the relative abundance of individual shRNA constructs is quantified by amplicon sequencing to identify genes affecting a phenotype of interest.
+        meaning: EFO:0030034
       single cell ATAC-seq:
         aliases:
           - scATAC-Seq
@@ -1654,6 +1676,9 @@ enums:
         notes:
           - Note that term has no matches in OLS as of June 2022.
         source: https://doi.org/10.3390/photonics8050162
+      spatial transcriptomics:
+        description: Assay that allows visualization and quantitative analysis of the transcriptome with spatial resolution in individual tissue sections.
+        meaning: EFO:0008994
       traction force microscopy:
         description: An experimental method for determining the tractions on the surface of a biological cell by obtaining measurements of the surrounding displacement field within an in vitro extracellular matrix (ECM)
         source: https://en.wikipedia.org/wiki/Traction_force_microscopy
@@ -1869,6 +1894,9 @@ enums:
           - GRIPSTR
         description: Assessment of muscle strength that measures that force with which one holds or grasps.
         meaning: NCIT:C139210
+      grooming behavior assay:
+        description: A behavioral assay devised to measure grooming behavior, typically quantifying the frequency, duration, or pattern of self-grooming in an experimental organism.
+        meaning: NBO:0000027
       hand-held dynamometry:
         description: A technique to assess isometric muscle strength using a hand-held dynamometer.
         meaning: NCIT:C186193
@@ -2315,10 +2343,14 @@ enums:
         description: RNA library enriched for lncRNA
       miRNAenrichment:
         description: RNA library with size selection for microRNAs
+      pAG-MNase fragmentation:
+        description: Protein A/G-MNase-based targeted fragmentation of chromatin at antibody-bound sites, used in CUT&RUN assays to profile histone modifications and transcription factor binding.
       polyAselection:
         description: RNA selection by polyA tail capture
       rRNAdepletion:
         description: Total RNA library with ribosomal RNA depleted.
+      Tn5 transposition:
+        description: Library preparation using Tn5 transposase to simultaneously fragment chromatin and insert sequencing adapters, preferentially at open/accessible chromatin regions. Used in ATAC-seq assays.
   LibraryPreparationMethodEnum:
     permissible_values:
       10x:
@@ -2360,6 +2392,9 @@ enums:
       NEBNext mRNA Library Prep Reagent Set for Illumina:
         description: NEBNext mRNA Library Prep Reagent Set for Illumina
         source: https://www.neb.com/products/e6100-nebnext-mrna-library-prep-reagent-set-for-illumina
+      NEBNext Ultra II DNA Library Prep Kit (E7103) for Illumina:
+        description: New England Biolabs NEBNext Ultra II DNA Library Prep Kit for Illumina (catalog #E7103). Widely used for chromatin immunoprecipitation (CUT&RUN, ChIP-seq) library preparation.
+        source: https://www.neb.com/en-us/products/e7103-nebnext-ultra-ii-dna-library-prep-kit-for-illumina
       Omni-ATAC:
         description: Omni-ATAC-seq library preparation
         source: https://protocolexchange.researchsquare.com/article/nprot-6107/v1
@@ -2730,6 +2765,9 @@ enums:
       Chromium X:
         description: (From 10x Genomics) Single-cell platform that can analyze hundreds to hundreds of thousands of cells in single run for e.g. gene expression, chromatin accessibility, cell surface proteins, immune clonotype, antigen specificity, CRISPR perturbation screens).
         source: https://www.10xgenomics.com/chromium-x
+      10X Visium CytAssist:
+        description: 10x Genomics CytAssist instrument that enables spatial gene expression profiling from standard histology tissue sections by transferring RNA to a Visium capture slide.
+        source: https://www.10xgenomics.com/products/visium-cytassist-spatial-gene-expression
   ArrayPlatformEnum:
     description: Array-based platforms for genomic and transcriptomic measurements
     title: Array Platform
@@ -3048,8 +3086,8 @@ enums:
         description: 'Access is restricted and only available after fulfilling specific requirements, such as submitting a research statement or getting approval directly from the data owner through Synapse. Note that for datasets, if any component file is under controlled access, the entire dataset is considered to be under controlled access.'
       Open Access:
         description: Access without any additional steps/requirements without even needing to be logged in to Synapse account.
-      Private Access:
-        description: Not accessible outside the project admins and study team -- check whether you are on an access team or contact the PI/admin of access team to request access.
+      Private:
+        description: Not accessible to general Synapse users; restricted to specific lab/collaborator members.
       Public Access:
         description: Access without any additional steps/requirements as long as you are logged in to Synapse.
     title: Access type
@@ -3393,6 +3431,9 @@ enums:
       Juvenile Myelomonocytic Leukemia (JMML):
       Low-Grade Glioma:
       Malignant Peripheral Nerve Sheath Tumor (MPNST):
+      Melanoma:
+        description: A malignant tumor composed of neoplastic melanocytes. NF1-mutant melanoma is a clinically recognized manifestation of Neurofibromatosis type 1, where germline NF1 mutations confer elevated melanoma risk due to NF1 tumor suppressor loss in melanocytes.
+        meaning: NCIT:C3224
       Memory:
       Meningioma:
       Pain:
@@ -8832,6 +8873,15 @@ enums:
         description: Middle-aged mice from postnatal day 180 to 365 (6 to 12 months).
       P365+ Aged:
         description: Aged mice from postnatal day 365 onwards (12+ months).
+  AgeMask:
+    description: Masked age values for privacy protection. Used when exact age cannot be reported due to HIPAA or other privacy regulations.
+    see_also:
+      - https://www.law.cornell.edu/cfr/text/45/164.514
+    permissible_values:
+      ">= 90":
+        description: Age is 90 years or older. Used to mask exact ages >= 90 per HIPAA Safe Harbor de-identification requirements (45 CFR §164.514(b)(2)(i)(C)).
+      Unknown:
+        description: Age is not known or was not recorded.
   SexEnum:
     permissible_values:
       Female:
@@ -9283,6 +9333,8 @@ enums:
           - Neurofibroma with Atypia
         description: A neurofibroma characterized by the presence of cellular pleomorphism.
         meaning: NCIT:C41426
+      Atypical MPNST:
+        description: An intermediate-grade malignant peripheral nerve sheath tumor with atypical features that place it between benign neurofibroma and high-grade MPNST. Characterized by increased cellularity, nuclear atypia, and low mitotic activity.
       Atypical Pilocytic Astrocytoma:
         description: Pilocytic astrocytoma with atypical features.
       Cellular Neurofibroma:
@@ -9561,6 +9613,27 @@ classes:
     slot_usage:
       species:
         ifabsent: string(Homo sapiens)
+    rules:
+      - description: If age is provided and is not "Unknown", ageUnit must be provided
+        preconditions:
+          slot_conditions:
+            age:
+              value_presence: PRESENT
+              none_of:
+                - equals_string: Unknown
+        postconditions:
+          slot_conditions:
+            ageUnit:
+              value_presence: PRESENT
+      - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value for ages at or above this threshold (HIPAA Safe Harbor)
+        preconditions:
+          slot_conditions:
+            species:
+              equals_string: Homo sapiens
+        postconditions:
+          slot_conditions:
+            age:
+              maximum_value: 89.99999
   DataLandscape:
     attributes:
       study:
@@ -9683,7 +9756,7 @@ classes:
       - FileBasedTemplate and RecordBasedTemplate are not technically mutually exclusive; some resources may have both file and record representations.
   BiologicalAssayDataTemplate:
     abstract: true
-    description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. Donor/individual attributes (species, sex, age, diagnosis) describe the original donor (e.g., human patient tumor). For cell lines, individualID references syn51730943. Model attributes (modelSpecies, modelSex, modelAge) describe any animal model host used. antibodyID and geneticReagentID reference treatments/reagents.'
+    description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. Donor/individual attributes (species, sex, age, diagnosis) describe the original donor (e.g., human patient tumor). For cell lines, individualID references syn51730943. antibodyID and geneticReagentID reference treatments/reagents. For PDX data, use PdxGenomicsAssayTemplate which includes model* attributes.'
     is_a: FileBasedTemplate
     slots:
       - dataType
@@ -9698,25 +9771,31 @@ classes:
       - nf1Genotype
       - nf2Genotype
       - tumorType
-      - modelSystemName
-      - modelSpecies
-      - modelSex
-      - modelAge
-      - modelAgeUnit
       - organ
       - antibodyID
       - geneticReagentID
       - comments
     rules:
-      - description: If age is provided, ageUnit must be provided
+      - description: If age is provided and is not "Unknown", ageUnit must be provided
         preconditions:
           slot_conditions:
             age:
               value_presence: PRESENT
+              none_of:
+                - equals_string: Unknown
         postconditions:
           slot_conditions:
             ageUnit:
               value_presence: PRESENT
+      - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value for ages at or above this threshold (HIPAA Safe Harbor)
+        preconditions:
+          slot_conditions:
+            species:
+              equals_string: Homo sapiens
+        postconditions:
+          slot_conditions:
+            age:
+              maximum_value: 89.99999
       - description: If dataType is provided, dataSubtype must be provided
         preconditions:
           slot_conditions:
@@ -10050,6 +10129,23 @@ classes:
       - readDepth
       - targetDepth
       - batchID
+      - modelSystemName
+    rules:
+      - description: Organ is required when specimenType is a tissue (not an organism substance like saliva)
+        preconditions:
+          slot_conditions:
+            specimenType:
+              value_presence: PRESENT
+              none_of:
+                - equals_string: mucus
+                - equals_string: saliva
+                - equals_string: stool
+                - equals_string: sweat
+                - equals_string: urine
+        postconditions:
+          slot_conditions:
+            organ:
+              value_presence: PRESENT
   GenomicsArrayTemplate:
     description: A template for describing raw data from array-based genomics/epigenomics, e.g. CEL files.
     is_a: GeneticsAssayTemplate
@@ -10126,6 +10222,10 @@ classes:
       - transplantationRecipientSpecies
       - transplantationRecipientTissue
       - modelSystemName
+      - modelSpecies
+      - modelSex
+      - modelAge
+      - modelAgeUnit
       - experimentalCondition
       - experimentalTimepoint
       - timepointUnit
@@ -10499,7 +10599,9 @@ classes:
           - range: MRIPlatformEnum
           - range: ImagingSystemPlatformEnum
       fileFormat:
-        range: ImagingFileFormatEnum
+        any_of:
+          - range: ImagingFileFormatEnum
+          - range: TabularFileFormatEnum
       dataType:
         ifabsent: string(image)
     slots:
@@ -10528,7 +10630,9 @@ classes:
       platform:
         range: MicroscopyImagingPlatformEnum
       fileFormat:
-        range: ImagingFileFormatEnum
+        any_of:
+          - range: ImagingFileFormatEnum
+          - range: TabularFileFormatEnum
       dataType:
         ifabsent: string(image)
     rules:
@@ -10574,7 +10678,9 @@ classes:
       platform:
         range: MRIPlatformEnum
       fileFormat:
-        range: ImagingFileFormatEnum
+        any_of:
+          - range: ImagingFileFormatEnum
+          - range: TabularFileFormatEnum
       dataType:
         ifabsent: string(image)
     rules:
@@ -10794,6 +10900,51 @@ classes:
         range: MassSpectrometryPlatformEnum
       fileFormat:
         range: MassSpecFileFormatEnum
+  SpatialTranscriptomicsSequencingTemplate:
+    close_mappings:
+      - htan:VisiumSpatialTranscriptomicsLevel1
+    description: Template for describing sequencing-based and expression data files from spatial transcriptomics experiments (e.g., FASTQ files and count matrices from 10x Visium, 10x Visium CytAssist, NanoString CosMx, GeoMx).
+    is_a: GeneticsAssayTemplate
+    slots:
+      - captureArea
+      - visiumslideID
+      - cytassistSample
+      - probeSet
+      - libraryPrep
+      - libraryPreparationMethod
+      - specimenType
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+        ifabsent: string(spatial transcriptomics)
+      platform:
+        any_of:
+          - range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(gene expression)
+  SpatialTranscriptomicsImagingTemplate:
+    description: Template for describing imaging data files from spatial transcriptomics experiments, such as tissue section histology or fluorescence images (e.g., from 10x Visium, NanoString CosMx, GeoMx).
+    is_a: ImagingAssayTemplate
+    slots:
+      - parentSpecimenID
+      - specimenID
+      - aliquotID
+      - captureArea
+      - visiumslideID
+      - cytassistSample
+      - specimenType
+    slot_usage:
+      assay:
+        range: ImagingAssayEnum
+        ifabsent: string(spatial transcriptomics)
+      platform:
+        range: ImagingSystemPlatformEnum
+      fileFormat:
+        range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)
   PortalDataset:
     attributes:
       accessType:
@@ -11095,7 +11246,7 @@ classes:
         required: true
       manifestation:
         multivalued: true
-        range: string
+        range: ManifestationEnum
         required: false
       nextPhaseProject:
         range: string

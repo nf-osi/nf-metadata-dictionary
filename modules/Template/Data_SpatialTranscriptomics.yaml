@@ -1,0 +1,71 @@
+classes:
+  SpatialTranscriptomicsSequencingTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateUsage: most_common
+      templateFor:
+        dataType:
+        - gene expression
+        assay:
+        - spatial transcriptomics
+      dataGranularity: specimen-level
+    close_mappings:
+    - htan:VisiumSpatialTranscriptomicsLevel1
+    description: Template for describing sequencing-based and expression data files from
+      spatial transcriptomics experiments (e.g., FASTQ files and count matrices from 10x
+      Visium, 10x Visium CytAssist, NanoString CosMx, GeoMx).
+    is_a: GeneticsAssayTemplate
+    slots:
+    - captureArea
+    - visiumslideID
+    - cytassistSample
+    - probeSet
+    - libraryPrep
+    - libraryPreparationMethod
+    - specimenType
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+        ifabsent: string(spatial transcriptomics)
+      platform:
+        any_of:
+        - range: SequencingPlatformEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+      dataType:
+        ifabsent: string(gene expression)
+
+  SpatialTranscriptomicsImagingTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateUsage: most_common
+      templateFor:
+        dataType:
+        - image
+        assay:
+        - spatial transcriptomics
+      dataGranularity: specimen-level
+    description: Template for describing imaging data files from spatial transcriptomics
+      experiments, such as tissue section histology or fluorescence images (e.g., from
+      10x Visium, NanoString CosMx, GeoMx).
+    is_a: ImagingAssayTemplate
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - captureArea
+    - visiumslideID
+    - cytassistSample
+    - specimenType
+    slot_usage:
+      assay:
+        range: ImagingAssayEnum
+        ifabsent: string(spatial transcriptomics)
+      platform:
+        range: ImagingSystemPlatformEnum
+      fileFormat:
+        range: ImagingFileFormatEnum
+      dataType:
+        ifabsent: string(image)

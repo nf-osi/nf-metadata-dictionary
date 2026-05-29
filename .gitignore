@@ -3,17 +3,14 @@
 creds.json
 .coreModelsConfig
 
-# Dist and test artifacts 
-tests/schematic/generate/creds.json
-tests/schematic/generate/NF.jsonld
-tests/schematic/generate/config.json
-tests/schematic/validate/great-expectations
+# Dist and test artifacts
 tests/submit/work
 tests/submit/NF.jsonld
-tests/test-suite-report.md
 tests/**/logs
 publish/**
 nfosi.xlsx
+pytest_output.txt
+pytest_report.md
 
 *.schema.json
 *.manifest.csv
@@ -22,7 +19,6 @@ nfosi.xlsx
 # IDE and code tools
 .venv
 venv
-retold
 .idea
 .lsp
 .clj-kondo
@@ -46,11 +42,10 @@ __pycache__/
 merged.yaml
 merged_no_extra_meta.yaml
 merged_no_inlined_range.yaml
-retold_NF.jsonld
 
 # Schema validation and registration logs
-schema-validation-log.md
-schema-registration-log.md
+schema-validation-log*.md
+schema-registration-log*.md
 
 # Docs build artifacts
 docs/data.json

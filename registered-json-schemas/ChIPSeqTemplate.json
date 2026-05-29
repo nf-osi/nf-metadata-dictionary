@@ -5,7 +5,53 @@
     {
       "if": {
         "properties": {
-          "age": {}
+          "specimenType": {
+            "not": {
+              "anyOf": [
+                {
+                  "const": "mucus"
+                },
+                {
+                  "const": "saliva"
+                },
+                {
+                  "const": "stool"
+                },
+                {
+                  "const": "sweat"
+                },
+                {
+                  "const": "urine"
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "specimenType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "organ": {}
+        },
+        "required": [
+          "organ"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "age": {
+            "not": {
+              "anyOf": [
+                {
+                  "const": "Unknown"
+                }
+              ]
+            }
+          }
         },
         "required": [
           "age"
@@ -18,6 +64,25 @@
         "required": [
           "ageUnit"
         ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "species": {
+            "const": "Homo sapiens"
+          }
+        },
+        "required": [
+          "species"
+        ]
+      },
+      "then": {
+        "properties": {
+          "age": {
+            "maximum": 89.99999
+          }
+        }
       }
     },
     {
@@ -258,7 +323,8 @@
         "PacBio Sequel II System",
         "PacBio Sequel IIe System",
         "Bionano Irys",
-        "Chromium X"
+        "Chromium X",
+        "10X Visium CytAssist"
       ],
       "title": "platform",
       "type": "string"
@@ -300,8 +366,21 @@
       "title": "genePerturbed"
     },
     "age": {
-      "description": "A numeric value representing age of the individual. Use with `ageUnit`.",
-      "type": "number",
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "description": "Masked age values for privacy protection. Used when exact age cannot be reported due to HIPAA or other privacy regulations.",
+          "enum": [
+            ">= 90",
+            "Unknown"
+          ],
+          "title": "AgeMask",
+          "type": "string"
+        }
+      ],
+      "description": "Age of the individual. Use with `ageUnit`. IMPORTANT: For human data, HIPAA requires masking ages >= 90; use the `AgeMask` value \">= 90\" instead of the exact value to protect participant privacy.",
       "title": "age"
     },
     "ageUnit": {
@@ -315,7 +394,7 @@
         "weeks",
         "years"
       ],
-      "title": "modelAgeUnit",
+      "title": "ageUnit",
       "type": "string"
     },
     "aliquotID": {
@@ -351,6 +430,7 @@
         "oxBS-seq",
         "ribo-seq",
         "scCGI-seq",
+        "shRNA-seq",
         "single cell ATAC-seq",
         "single-cell RNA-seq",
         "single-nucleus RNA-seq",
@@ -668,8 +748,10 @@
       "enum": [
         "lncRNAenrichment",
         "miRNAenrichment",
+        "pAG-MNase fragmentation",
         "polyAselection",
-        "rRNAdepletion"
+        "rRNAdepletion",
+        "Tn5 transposition"
       ],
       "title": "libraryPrep",
       "type": "string"
@@ -691,6 +773,7 @@
         "KAPA mRNA HyperPrep Kit",
         "MGIEasy FS PCR-Free DNA Library Prep Set",
         "NEBNext mRNA Library Prep Reagent Set for Illumina",
+        "NEBNext Ultra II DNA Library Prep Kit (E7103) for Illumina",
         "Omni-ATAC",
         "Oxford Nanopore Direct RNA Sequencing Kit",
         "QIAseq FX DNA Library Kit",
@@ -714,55 +797,6 @@
         "Not Applicable"
       ],
       "title": "libraryStrand"
-    },
-    "modelAge": {
-      "description": "Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.",
-      "type": "number",
-      "title": "modelAge"
-    },
-    "modelAgeUnit": {
-      "description": "",
-      "enum": [
-        "days",
-        "hours",
-        "minutes",
-        "months",
-        "seconds",
-        "weeks",
-        "years"
-      ],
-      "title": "modelAgeUnit",
-      "type": "string"
-    },
-    "modelSex": {
-      "description": "Sex of the individual animal model used in the experiment. Distinct from donor sex.",
-      "type": "string",
-      "enum": [
-        "Female",
-        "Male",
-        "Unknown",
-        "Not Applicable"
-      ],
-      "title": "modelSex"
-    },
-    "modelSpecies": {
-      "description": "",
-      "enum": [
-        "Danio rerio",
-        "Drosophila melanogaster",
-        "Gallus gallus",
-        "Homo sapiens",
-        "Mus musculus",
-        "Macaca nemestrina",
-        "Mus musculus (humanized)",
-        "Oryctolagus cuniculus",
-        "Pan troglodytes",
-        "Rattus norvegicus",
-        "Rhesus macaque",
-        "Sus scrofa"
-      ],
-      "title": "species",
-      "type": "string"
     },
     "modelSystemName": {
       "description": "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)",
@@ -1800,6 +1834,7 @@
         "Anaplastic Pilocytic Astrocytoma",
         "Anaplastic Pleomorphic Xanthoastrocytoma",
         "Atypical Neurofibroma",
+        "Atypical MPNST",
         "Atypical Pilocytic Astrocytoma",
         "Cellular Neurofibroma",
         "Colorectal Adenocarcinoma",

@@ -1,0 +1,61 @@
+
+# Required Fields Validation
+#
+# Tests that schemas correctly reject records missing required fields.
+#
+# Migrations from tests/schematic/validate/:
+#   ScRNASeqTemplate_1.csv  → ScRNASeqTemplate/invalid_missing_libraryStrand (expect_pass: false)
+#
+# New tests extend coverage to GenomicsAssayTemplate and BiospecimenTemplate.
+
+schema: GenomicsAssayTemplate
+instances:
+  - file: data/GenomicsAssayTemplate/valid_minimal.json
+    description: Baseline minimal valid record — only the 14 required fields, nothing else
+    expected: valid
+
+  - file: data/GenomicsAssayTemplate/invalid_missing_libraryStrand.json
+    description: All required fields present except libraryStrand
+    expected: invalid
+    reason: libraryStrand is required
+
+  - file: data/GenomicsAssayTemplate/invalid_missing_specimenID.json
+    description: All required fields present except specimenID
+    expected: invalid
+    reason: specimenID is required
+
+  - file: data/GenomicsAssayTemplate/invalid_bad_enum.json
+    description: diagnosis field contains a value not in the controlled vocabulary
+    expected: invalid
+    reason: diagnosis value is not a permissible enum value
+
+  - file: data/GenomicsAssayTemplate/invalid_readLength_string.json
+    description: readLength is an integer field; providing it as the string "150" should fail type validation
+    expected: invalid
+    reason: readLength must be integer, not string
+
+---
+
+schema: ScRNASeqTemplate
+instances:
+  - file: data/ScRNASeqTemplate/valid_minimal.json
+    description: Baseline minimal valid scRNA-seq record — only the 15 required fields
+    expected: valid
+
+  - file: data/ScRNASeqTemplate/invalid_missing_libraryStrand.json
+    description: All required fields present except libraryStrand; migrated from schematic test ScRNASeqTemplate_1.csv (expect_pass false)
+    expected: invalid
+    reason: libraryStrand is required
+
+---
+
+schema: BiospecimenTemplate
+instances:
+  - file: data/BiospecimenTemplate/valid_minimal.json
+    description: Minimal biospecimen record with the three required fields — individualID, specimenID, tumorType
+    expected: valid
+
+  - file: data/BiospecimenTemplate/invalid_missing_tumorType.json
+    description: Biospecimen record missing the required field tumorType
+    expected: invalid
+    reason: tumorType is required

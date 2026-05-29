@@ -9,7 +9,7 @@ We keep the main one, `NF.jsonld`, in the root of the repository, while others a
 
 | Artifact | Description | Generated During PRs | Committed to PRs | Updated on Main | Registered to Synapse |
 | -------- | ----------- | :------------------: | :--------------: | :-------------: | :-------------------: |
-| `NF.jsonld` | Main output in schematic-compatible JSON-LD format, for distribution and use with schematic and Data Curator. | ✅ (validated) | ❌ | ✅ (auto-committed) | N/A |
+| `NF.jsonld` | **Legacy.** JSON-LD artifact for schematic compatibility. No longer updated as part of the build pipeline; kept for reference but might be removed later. | ❌ | ❌ | ❌ | N/A |
 | `registered-json-schemas/*.json` | JSON serializations for a subset of the data model, for native functionality with Synapse platform or wherever a JSON definition is preferred. | ✅ (validated) | ❌ | ✅ (auto-committed) | ✅ (only on [release](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/.github/workflows/release-new-version.yaml)) |
 | `dist/NF.yaml` | Data model as as a single LinkML-valid YAML file, useful for using LinkML tooling to create Excel spreadsheets. | ✅ (validated) | ❌ | ✅ (auto-committed) | N/A |
 | `dist/NF_linkml.jsonld` | JSON-LD from LinkML, best if you want to compare/combine our model with others maintained in LinkML, e.g. see here. There are differences with the `NF.jsonld`. | ✅ (validated) | ❌ | ✅ (auto-committed) | N/A |
@@ -27,16 +27,12 @@ In general, .jsonld or .ttl artifacts facilate model querying and comparison if 
 
 ```mermaid
 graph LR
-    A[modules/*.yaml] --> B[retold]
-    B --> C[NF.jsonld]
-    C --> D[schematic]
-    D --> E[NF.jsonld]
-    A --> L[LinkML]
-    L --> J[*.json]
+    A[modules/*.yaml] --> L[LinkML]
+    L --> J[*.json schemas]
     L --> T[NF.ttl]
-    L --> LJ["(LinkML) NF.jsonld"]
+    L --> LJ["NF_linkml.jsonld"]
 
-class B,D tools
+class L tools
     
     %% Legend
     subgraph Legend
@@ -45,14 +41,10 @@ class B,D tools
     end
 
 style A fill:white,stroke:#333,stroke-width:2px;
-style C fill:white,stroke:#333,stroke-width:2px;
-style E fill:white,stroke:#333,stroke-width:2px;
 style G fill:white,stroke:#333,stroke-width:2px;
 style J fill:white,stroke:#333,stroke-width:2px;
 style T fill:white,stroke:#333,stroke-width:2px;
 style LJ fill:white,stroke:#333,stroke-width:2px;
-style B fill:#aaf,stroke:#333,stroke-width:2px
-style D fill:#aaf,stroke:#333,stroke-width:2px
 style H fill:#aaf,stroke:#333,stroke-width:2px
 style L fill:#aaf,stroke:#333,stroke-width:2px
 ```
@@ -88,7 +80,7 @@ Version format follows [semantic versioning](https://semver.org): `vMAJOR.MINOR.
 
 ### Data Model Framework
 
-The data model is maintained as a subset of the YAML-based **Linked Data Modeling Language ([LinkML](https://linkml.io/linkml/))** that is compatible with our internal tool [schematic](https://github.com/sage-bionetworks/schematic). 
+The data model is maintained in **[LinkML](https://linkml.io/linkml/)**, a YAML-based modeling language, and compiled to **JSON Schema** for native validation on the Synapse platform.
 This subset of LinkML should be easy to get started with.
 
 #### The 10-minute Intro
@@ -98,11 +90,11 @@ The data model primarily models different types of biological data and patients/
 
 To do this the building blocks are:
 
-| LinkML term        | Schematic Note | Other Note |
-| ------------------ | -------------  |------------|
-| Class              | Usually corresponds to "Component"; schematic uses definition to make a "manifest"                                  | Also known as "template"
-| Slot               | Schematic calls these "attributes"; the range can be typical types (string, int, etc.) or enumerations (below) | Also known as "property"
-| Enum (enumeration) | Schematic calls these "valid values"                                                                                | Also known as "controlled values"  
+| LinkML term        | Note | Legacy Schematic Note |
+| ------------------ | ---- |----------------------|
+| Class              | Also known as "template" | Corresponds to "Component"; schematic used this to generate a "manifest" |
+| Slot               | Also known as "property"; the range can be typical types (string, int, etc.) or enumerations (below) | Schematic called these "attributes" |
+| Enum (enumeration) | Also known as "controlled values" | Schematic called these "valid values" |
 
 Classes depend on slots being defined, and some slots depend on enumerated values being defined. 
 If a class uses a slot that is not defined, the model will error when trying to build; and same with a slot that uses an enumeration.
@@ -167,27 +159,20 @@ Note: In situations where "the data meets the template", issues with a required 
 
 ##### Validation rules
 
-Validation rules are used with slots/attributes. 
-We use schematic validation syntax exactly as documented in [this Confluence doc](https://sagebionetworks.jira.com/wiki/spaces/SCHEM/pages/2645262364/Data+Model+Validation+Rules).
+Validation constraints are expressed using native **LinkML rules** (preconditions/postconditions) and enforced at submission time via **JSON Schema** on the Synapse platform. See the [Conditional slot dependencies](#conditional-slot-dependencies-linkml-rules) section below for examples.
 
-Here is an example of a simple validation rule:
+Some slots also carry legacy `requiresDependency` and `validationRules` annotations inherited from the schematic era:
 
-```
+```yaml
 age:
     annotations:
-      requiresDependency: ageUnit
-      validationRules: num
+      requiresDependency: ageUnit  # legacy schematic annotation
+      validationRules: num         # legacy schematic annotation
     description: A numeric value representing age of the individual. Use with `ageUnit`.
     required: false
 ```
 
-Here is an example of a more complicated [combination rule](https://sagebionetworks.jira.com/wiki/spaces/SCHEM/pages/2645262364/Data+Model+Validation+Rules#Rule-Combinations):
-```
-readPair:
-    annotations:
-      validationRules: int::inRange 1 2
-...
-```
+These annotations are retained for reference but are no longer the primary validation mechanism.
 
 ##### Conditional slot dependencies (LinkML rules)
 
@@ -212,25 +197,7 @@ BiologicalAssayDataTemplate:
             value_presence: PRESENT
 ```
 
-**Current conditional dependencies:**
-
-| Dependent Slot | Required Slot | Templates |
-|----------------|---------------|-----------|
-| age | ageUnit | BiologicalAssayDataTemplate (all assay templates) |
-| aliquotID | specimenID | GeneralMeasureDataTemplate, MicroscopyAssayTemplate |
-| compoundDose | compoundDoseUnit | BehavioralAssayTemplate, ClinicalAssayTemplate, GeneralMeasureDataTemplate, PharmacokineticsAssayTemplate, PlateBasedReporterAssayTemplate |
-| concentrationMaterial | concentrationMaterialUnit | MaterialScienceAssayTemplate |
-| concentrationNaCl | concentrationNaClUnit | MaterialScienceAssayTemplate, LightScatteringAssayTemplate |
-| dataType | dataSubtype | BiologicalAssayDataTemplate |
-| experimentalTimepoint | timepointUnit | BehavioralAssayTemplate, ElectrophysiologyAssayTemplate, GeneralMeasureDataTemplate, GenomicsAssayTemplateExtended, MRIAssayTemplate, PdxGenomicsAssayTemplate, PharmacokineticsAssayTemplate, PlateBasedReporterAssayTemplate |
-| genePerturbed | genePerturbationType, genePerturbationTechnology | BehavioralAssayTemplate, GeneralMeasureDataTemplate, GenomicsAssayTemplateExtended, RNASeqTemplate, ScRNASeqTemplate |
-| genomicReference | genomicReferenceLink | ProcessedAlignedReadsTemplate |
-| parentSpecimenID | specimenID | GeneralMeasureDataTemplate, MicroscopyAssayTemplate |
-| transplantationType | transplantationRecipientSpecies, transplantationRecipientTissue | PdxGenomicsAssayTemplate |
-| workflow | workflowLink | ProcessedAlignedReadsTemplate, ProcessedExpressionTemplate, ProcessedMergedDataTemplate, ProcessedVariantCallsTemplate, WorkflowReport |
-| workingDistance | workingDistanceUnit | MicroscopyAssayTemplate |
-
-**Note for schematic users:** These rules are also represented as `requiresDependency` annotations in `modules/props.yaml` for backward compatibility with schematic. Both representations are maintained in sync during this transition period.
+**Note:** These rules are also represented as `requiresDependency` annotations in `modules/props.yaml`. These legacy annotations are retained until schematic-based tooling is fully deprecated and will be removed in a future cleanup.
 
 #### Enum
 
@@ -277,34 +244,31 @@ Aside from meta specific to each type (class, slot, or enum) above, terms have c
 - `notes`: Internal editor notes.
 
 
-### Steps to add an attribute to the Metadata Dictionary: 
+### Steps to contribute to the Metadata Dictionary: 
 
-1. Create a new [branch](https://github.com/nf-osi/nf-metadata-dictionary/branches) in the NF-metadata-dictionary repository. (example: patch/add-attribute)
+1. Create a new [branch](https://github.com/nf-osi/nf-metadata-dictionary/branches) in the NF-metadata-dictionary repository. (example: `patch/add-attribute`)
 2. Find the yaml file in the new branch where the attribute belongs. The components of the data model are organized in the folder labeled [modules](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules).
 
-3. Create a [pull request (PR)](https://github.com/nf-osi/nf-metadata-dictionary/compare) to merge the branch to "main". Add either @allaway, @anngvu, or @cconrad8 as a reviewer. Creating the PR will:
-   i. Build and validate all artifacts ([NF.jsonld](https://github.com/nf-osi/nf-metadata-dictionary/blob/main/NF.jsonld), JSON schemas, etc.) from the module source files.
+3. Create a [pull request (PR)](https://github.com/nf-osi/nf-metadata-dictionary/compare) to merge the branch to "main". Someone from https://github.com/orgs/nf-osi/teams/dcc-team will review. Creating the PR will:
+
+   i. Build and validate all artifacts (JSON schemas, LinkML outputs, etc.) from the module source files.
    **Artifacts are not committed to the PR to avoid merge conflicts, but will be automatically rebuilt and committed to main after merge.**
 
    ii. Run tests to make sure all looks good/generate previews. After some minutes, test reports will appear in the PR including artifact build status, schema validation, and test results. Note: Trivial changes can skip tests by labeling the PR with https://github.com/nf-osi/nf-metadata-dictionary/labels/skip%20tests.
-   
-   <img width="464" alt="image" src="https://github.com/nf-osi/nf-metadata-dictionary/assets/32753274/067f65ff-e39d-4b45-abae-ef22cf7df5eb">
-4. Make any necessary changes and then merge the new branch that was created to the main branch.
-5. [Draft a versioned release here](https://github.com/nf-osi/nf-metadata-dictionary/releases).
-6. Name the release with the convention MAJOR.MINOR.PATCH. These releases start at v1.0.0. Versioning is roughly following [semantic versioning](semver.org) concepts where: 
 
-   - MAJOR: *In-use* parent attributes are deleted from dictionary or modified, or in-use child attributes are modified in a non-backwards compatible way (e.g. `Neurofibromatosis 1` changed to `Neurofibromatosis type 1`).
-   - MINOR: Concepts/parent attributes are added.
-   - PATCH: Child attributes are added, or *unused* child/parent attributes are deleted/modified, or definitions/`comments` are added/modified, or `validation rules` are modified in a backwards compatible way.
+4. The reviewer might suggest changes, otherwise the changes are approved and the reviewer will merge into `main`. 
 
-7. Navigate to data curator app [config file](https://github.com/Sage-Bionetworks/data_curator_config/blob/main/dcc_config.csv) to update the version. First, update the staging branch to test on the [staging app](https://dca-staging.app.sagebionetworks.org/). Then, checkout the main branch on your fork, update dcc_config.csv for NF so it matches the staging set up, then create a PR to main on the sage-bionetworks repo. Once merged, the changes should be visible on the data curator app.
-8. **🎉 Congrats! The term is now added to the [metadata dictionary](https://nf-osi.github.io/nf-metadata-dictionary).**
+5. You should see the update [in the docs](https://nf-osi.github.io/nf-metadata-dictionary) after merge, but *versioned* data model releases happen approximately at beginning and middle of the month; contributions should be mentioned in the release notes of the next release.
 
 
 ### Further Information
 
 #### Building Locally
-To build locally, install the [schematic](https://github.com/Sage-Bionetworks/schematic) package.  
+To build locally you need [LinkML](https://linkml.io/linkml/), `make`, `yq`, and `jq`. See [DEVELOPMENT.md](DEVELOPMENT.md) for setup details.
+
+#### Testing
+
+See [DEVELOPMENT.md](DEVELOPMENT.md#local-testing) for how to run tests and add new test cases.
 
 #### Help
 

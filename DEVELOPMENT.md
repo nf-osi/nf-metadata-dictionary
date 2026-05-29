@@ -343,6 +343,69 @@ This checks:
 
 ---
 
+## Local Testing
+
+### Python unit tests
+
+Run all pytest-based tests from the repo root:
+
+```bash
+python -m pytest tests/ -v
+```
+
+Individual test files:
+
+| Test file | What it covers |
+|---|---|
+| `tests/test_schema_instances.py` | JSON instances validate correctly against registered schemas |
+| `tests/test_template_datatypes.py` | Every non-abstract template class declares valid `dataType` annotations |
+| `tests/test_model_system_sync.py` | Model system data is in sync |
+
+### JSON schema instance tests
+
+`tests/test_schema_instances.py` discovers all `test_registry*.yaml` fixture files in `tests/` and validates each listed JSON instance against its registered schema. Instances marked `expected: valid` must pass; `expected: invalid` must fail (they are marked `xfail(strict=True)`).
+
+**Adding and registering new test instances:**
+
+1. Create a JSON file under `tests/data/<TemplateName>/` with the instance data, e.g. `tests/data/RNASeqTemplate/valid_my_case.json`.
+
+2. Register it in an existing `tests/test_registry*.yaml` (or a new `test_registry_<topic>.yaml`) under the matching `schema:` document:
+
+   ```yaml
+   schema: RNASeqTemplate
+   instances:
+     - file: data/RNASeqTemplate/valid_my_case.json
+       description: What this instance tests and why
+       expected: valid          # or: invalid
+
+     # For invalid cases, add a reason explaining which rule should catch it:
+     - file: data/RNASeqTemplate/invalid_my_case.json
+       description: What constraint this violates
+       expected: invalid
+       reason: Brief explanation of the expected validation error
+   ```
+
+3. Rebuild the relevant schema locally (see below), then run `pytest tests/test_schema_instances.py -v` to confirm the result matches `expected`.
+
+### Rebuilding schemas locally before running tests
+
+The instance tests validate against `registered-json-schemas/`, which must be rebuilt after any changes to `modules/`. Use the `.venv` Python environment (Python 3.10) to avoid incompatibilities with the system Python:
+
+```bash
+# Rebuild NF.yaml from sources first
+make NF.yaml
+
+# Rebuild a specific schema (fast, no Synapse auth needed)
+PATH=".venv/bin:$PATH" .venv/bin/python utils/gen-json-schema-class.py \
+  --class HumanCohortTemplate --skip-validation
+
+# Rebuild all schemas (no Synapse auth)
+PATH=".venv/bin:$PATH" .venv/bin/python utils/gen-json-schema-class.py \
+  --skip-validation
+```
+
+---
+
 ## Additional Resources
 
 - **LinkML Documentation:** https://linkml.io
