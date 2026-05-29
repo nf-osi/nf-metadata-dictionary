@@ -50,7 +50,7 @@ classes:
       species:
         required: false
 
-  ResultTemplate:
+  AnalysisResultTemplate:
     annotations:
       templateUsage: common
       templateFor:
@@ -63,15 +63,13 @@ classes:
     slots:
     - dataType
     - dataSubtype
-    - assay
     - species
+    - relatedDataset
     - comments
     slot_usage:
       resourceType:
         ifabsent: string(result)
       species:
-        required: false
-      assay:
         required: false
       fileFormat:
         any_of:
