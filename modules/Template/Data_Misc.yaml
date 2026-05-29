@@ -50,6 +50,33 @@ classes:
       species:
         required: false
 
+  AnalysisResultTemplate:
+    annotations:
+      templateUsage: common
+      templateFor:
+        dataType:
+        - image
+        - report
+    description: Template for result files such as figures, presentations, and analysis
+      outputs that report data results but are not primary experimental data.
+    is_a: FileBasedTemplate
+    slots:
+    - dataType
+    - dataSubtype
+    - species
+    - relatedDataset
+    - comments
+    slot_usage:
+      resourceType:
+        ifabsent: string(result)
+      species:
+        required: false
+      fileFormat:
+        any_of:
+        - range: ImagingFileFormatEnum
+        - range: DocumentFileFormatEnum
+        - range: TabularFileFormatEnum
+
   UpdateMilestoneReport:
     annotations:
       required: false

@@ -1,0 +1,20 @@
+
+# ProcessedAggregatedDataTemplate Validation
+#
+# Tests that the template works for aggregate-level data (e.g. qPCR summaries)
+# without requiring specimenID or individualID.
+
+schema: ProcessedAggregatedDataTemplate
+instances:
+  - file: data/ProcessedAggregatedDataTemplate/valid_qpcr_summary.json
+    description: Minimal valid qPCR summary — no specimenID or individualID needed
+    expected: valid
+
+  - file: data/ProcessedAggregatedDataTemplate/valid_with_workflow.json
+    description: Valid with workflow and workflowLink both provided
+    expected: valid
+
+  - file: data/ProcessedAggregatedDataTemplate/invalid_workflow_missing_link.json
+    description: Workflow provided but workflowLink missing — violates conditional dependency
+    expected: invalid
+    reason: workflow is present but workflowLink is missing

@@ -671,6 +671,8 @@ classes:
     slot_usage:
       dataSubtype:
         ifabsent: string(processed)
+      expressionUnit:
+        required: true
     rules:
     - description: If workflow is provided, workflowLink must be provided
       preconditions:
@@ -713,6 +715,47 @@ classes:
     slot_usage:
       dataSubtype:
         ifabsent: string(processed)
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT
+
+  ProcessedAggregatedDataTemplate:
+    annotations:
+      templateUsage: common
+      templateFor:
+        dataType:
+        - aggregated somatic mutation
+        assay:
+        - quantitative PCR
+      dataGranularity: aggregate-level
+    description: Template for processed data aggregated across multiple specimens
+      into a single file, where individual-level attributes (specimenID, individualID)
+      do not apply. Use for summarized assay results such as qPCR Ct value tables.
+    is_a: FileBasedTemplate
+    slots:
+    - dataType
+    - dataSubtype
+    - assay
+    - expressionUnit
+    - workflow
+    - workflowLink
+    - auxiliaryAsset
+    - species
+    - comments
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
+      expressionUnit:
+        required: false
+      species:
+        required: false
     rules:
     - description: If workflow is provided, workflowLink must be provided
       preconditions:

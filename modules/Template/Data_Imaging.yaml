@@ -79,7 +79,9 @@ classes:
       assay:
         range: ImagingAssayEnum
       platform:
-        range: MicroscopyImagingPlatformEnum
+        any_of:
+        - range: MicroscopyImagingPlatformEnum
+        - range: OtherPlatformEnum
       fileFormat:
         any_of:
         - range: ImagingFileFormatEnum
