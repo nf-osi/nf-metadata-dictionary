@@ -3468,8 +3468,15 @@ enums:
         description: Germline variants annotated with some annotation workflow
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_germline_variation
       annotated somatic mutation:
-        description: Somatic variants annotated with some annotation workflow
+        description: Sequence variation data from non-germline cell or tissue samples that has been annotated.
+        meaning: NCIT:C184746
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation
+      aggregated somatic mutation:
+        description: Sequence variation data from non-germline cell or tissue samples that has been aggregated across samples, sequencing runs and/or multiple variant callers.
+        meaning: NCIT:C184741
+      masked annotated somatic mutation:
+        description: Annotated nucleotide sequence variation data where potential germline and low-quality base calls have been masked.
+        meaning: NCIT:C184775
       audio transcript:
         description: Text transcript of an audio recording.
         source: https://w3id.org/synapse/nfosi/vocab/audioTranscript
@@ -4014,6 +4021,9 @@ enums:
       dm3:
         description: Gatan DigitalMicrograph file format for electron microscopy images, storing image data along with acquisition metadata and calibration information.
         source: https://www.gatan.com/products/tem-analysis/gatan-microscopy-suite-software
+      emf:
+        description: Enhanced Metafile (EMF) image format used for storing vector graphics.
+        meaning: https://www.iana.org/assignments/media-types/image/emf
       hdr:
         description: MRI Header file, as in the NIFTI-1 Analyze 7.5 format
         source: https://nifti.nimh.nih.gov/pub/dist/src/niftilib/nifti1.h
@@ -4281,6 +4291,11 @@ enums:
       abf:
         description: The Axon Binary File format (ABF) was created for the storage of binary experimental data.
         source: https://mdc.custhelp.com/euf/assets/content/ABFHelp.pdf
+      raw:
+        description: Generic raw binary data file from an instrument or acquisition system.
+      spk:
+        description: Spike2 data file format used by CED's data acquisition system for electrophysiology recordings.
+        source: https://ced.co.uk/
       dna:
         description: Propietary SnapGene file format.
         source: https://www.snapgene.com/guides/convert-genbank-files
@@ -4365,6 +4380,8 @@ enums:
     permissible_values:
       experimentalData:
         description: Any file derived from or pertaining to a scientific experiment. Experimental data annotations should be applied, possibly disease-related.
+      manifest:
+        description: A metadata manifest file used for validation and annotation of other data files. Different validation rules may apply to manifests compared to experimental data files.
       metadata:
         description: Data about data, information that describes another set of data.
         meaning: NCIT:C52095
@@ -5155,6 +5172,23 @@ enums:
     permissible_values:
       Counts:
         description: Either raw read counts or normalized counts (use the more specific term if possible).
+      CPM:
+        description: Counts per million mapped reads, a simple normalization for sequencing depth.
+      Ct:
+        aliases:
+          - Cq
+          - cycle threshold
+        description: Cycle threshold (Ct) value from quantitative PCR, representing the cycle number at which fluorescence signal crosses a defined threshold.
+      delta Ct:
+        aliases:
+          - ΔCt
+        description: Relative cycle threshold value normalized to a reference gene (target Ct minus reference Ct).
+      delta delta Ct:
+        aliases:
+          - ΔΔCt
+        description: Fold change in expression relative to a control condition, calculated as the difference between sample delta Ct and control delta Ct.
+      fluorescence intensity:
+        description: Fluorescence signal intensity, typically from microarray or imaging-based expression assays.
       FPKM:
         description: Fragments per kilobase of transcript per miilion reads mapped
       Normalized Counts:
@@ -9931,7 +9965,9 @@ classes:
       assay:
         range: CellBasedAssayEnum
       fileFormat:
-        range: OtherFileFormatEnum
+        any_of:
+          - range: OtherFileFormatEnum
+          - range: TabularFileFormatEnum
     rules:
       - description: If experimentalTimepoint is provided, timepointUnit must be provided
         preconditions:
@@ -9964,6 +10000,7 @@ classes:
         range: CellBasedAssayEnum
       platform:
         range: PlateReaderPlatformEnum
+        required: false
       fileFormat:
         range: TabularFileFormatEnum
       individualID:
@@ -10529,6 +10566,8 @@ classes:
     slot_usage:
       dataSubtype:
         ifabsent: string(processed)
+      expressionUnit:
+        required: true
     rules:
       - description: If workflow is provided, workflowLink must be provided
         preconditions:
@@ -10557,6 +10596,36 @@ classes:
     slot_usage:
       dataSubtype:
         ifabsent: string(processed)
+    rules:
+      - description: If workflow is provided, workflowLink must be provided
+        preconditions:
+          slot_conditions:
+            workflow:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            workflowLink:
+              value_presence: PRESENT
+  ProcessedAggregatedDataTemplate:
+    description: Template for processed data aggregated across multiple specimens into a single file, where individual-level attributes (specimenID, individualID) do not apply. Use for summarized assay results such as qPCR Ct value tables.
+    is_a: FileBasedTemplate
+    slots:
+      - dataType
+      - dataSubtype
+      - assay
+      - expressionUnit
+      - workflow
+      - workflowLink
+      - auxiliaryAsset
+      - species
+      - comments
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
+      expressionUnit:
+        required: false
+      species:
+        required: false
     rules:
       - description: If workflow is provided, workflowLink must be provided
         preconditions:
@@ -10634,7 +10703,9 @@ classes:
       assay:
         range: ImagingAssayEnum
       platform:
-        range: MicroscopyImagingPlatformEnum
+        any_of:
+          - range: MicroscopyImagingPlatformEnum
+          - range: OtherPlatformEnum
       fileFormat:
         any_of:
           - range: ImagingFileFormatEnum
@@ -10782,6 +10853,25 @@ classes:
         ifabsent: string(experimentalData)
       species:
         required: false
+  AnalysisResultTemplate:
+    description: Template for result files such as figures, presentations, and analysis outputs that report data results but are not primary experimental data.
+    is_a: FileBasedTemplate
+    slots:
+      - dataType
+      - dataSubtype
+      - species
+      - relatedDataset
+      - comments
+    slot_usage:
+      resourceType:
+        ifabsent: string(result)
+      species:
+        required: false
+      fileFormat:
+        any_of:
+          - range: ImagingFileFormatEnum
+          - range: DocumentFileFormatEnum
+          - range: TabularFileFormatEnum
   UpdateMilestoneReport:
     description: Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF.
     is_a: PartialTemplate

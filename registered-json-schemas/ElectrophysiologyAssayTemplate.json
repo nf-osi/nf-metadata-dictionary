@@ -722,6 +722,8 @@
         "aligned reads",
         "annotated germline variants",
         "annotated somatic mutation",
+        "aggregated somatic mutation",
+        "masked annotated somatic mutation",
         "audio transcript",
         "behavioral data",
         "capsid sequence",
@@ -808,11 +810,14 @@
       "type": "string"
     },
     "fileFormat": {
-      "description": "Other specialized file formats",
+      "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
+      "type": "string",
       "enum": [
         "MPEG-4",
         "ab1",
         "abf",
+        "raw",
+        "spk",
         "dna",
         "edat3",
         "fcs",
@@ -827,10 +832,15 @@
         "sav",
         "sdf",
         "sif",
-        "svg"
+        "svg",
+        "RCC",
+        "csv",
+        "excel",
+        "parquet",
+        "tsv",
+        "txt"
       ],
-      "title": "fileFormat",
-      "type": "string"
+      "title": "fileFormat"
     },
     "geneticReagentID": {
       "anyOf": [
@@ -1028,6 +1038,7 @@
       "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
       "enum": [
         "experimentalData",
+        "manifest",
         "metadata",
         "protocol",
         "report",

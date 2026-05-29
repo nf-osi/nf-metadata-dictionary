@@ -90,6 +90,11 @@
       "description": "Quantification units for gene expression.",
       "enum": [
         "Counts",
+        "CPM",
+        "Ct",
+        "delta Ct",
+        "delta delta Ct",
+        "fluorescence intensity",
         "FPKM",
         "Normalized Counts",
         "Other",
@@ -604,6 +609,8 @@
         "aligned reads",
         "annotated germline variants",
         "annotated somatic mutation",
+        "aggregated somatic mutation",
+        "masked annotated somatic mutation",
         "audio transcript",
         "behavioral data",
         "capsid sequence",
@@ -741,6 +748,7 @@
         "bmp",
         "czi",
         "dm3",
+        "emf",
         "hdr",
         "img",
         "jpg",
@@ -799,6 +807,8 @@
         "MPEG-4",
         "ab1",
         "abf",
+        "raw",
+        "spk",
         "dna",
         "edat3",
         "fcs",
@@ -1013,6 +1023,7 @@
       "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
       "enum": [
         "experimentalData",
+        "manifest",
         "metadata",
         "protocol",
         "report",
@@ -1118,6 +1129,7 @@
     }
   },
   "required": [
+    "expressionUnit",
     "specimenID",
     "dataType",
     "dataSubtype",

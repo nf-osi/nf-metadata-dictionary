@@ -512,6 +512,7 @@
         "bmp",
         "czi",
         "dm3",
+        "emf",
         "hdr",
         "img",
         "jpg",
@@ -726,7 +727,8 @@
       "type": "string"
     },
     "platform": {
-      "description": "Microscopy and general imaging platforms",
+      "description": "A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data. Select from the recommended list when available or enter a custom name.",
+      "type": "string",
       "enum": [
         "Aperio CS2",
         "BioRad ChemiDoc MP Imaging System",
@@ -746,15 +748,25 @@
         "Zeiss LSM",
         "Zeiss LSM 700",
         "Zeiss LSM 980",
-        "Zeiss Apotome 3"
+        "Zeiss Apotome 3",
+        "2D Incucyte",
+        "Caliper",
+        "Malvern Zetasizer",
+        "NanoFCM",
+        "Not Applicable",
+        "Other Platform",
+        "Scale",
+        "XF24 Extracellular Flux Analyzer",
+        "Zeno Electronic Walkway",
+        "ZetaView"
       ],
-      "title": "platform",
-      "type": "string"
+      "title": "platform"
     },
     "resourceType": {
       "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
       "enum": [
         "experimentalData",
+        "manifest",
         "metadata",
         "protocol",
         "report",
