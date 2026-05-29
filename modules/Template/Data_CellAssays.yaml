@@ -154,7 +154,9 @@ classes:
       assay:
         range: CellBasedAssayEnum
       fileFormat:
-        range: OtherFileFormatEnum
+        any_of:
+        - range: OtherFileFormatEnum
+        - range: TabularFileFormatEnum
     rules:
     - description: If experimentalTimepoint is provided, timepointUnit must be provided
       preconditions:
@@ -208,6 +210,7 @@ classes:
         range: CellBasedAssayEnum
       platform:
         range: PlateReaderPlatformEnum
+        required: false
       fileFormat:
         range: TabularFileFormatEnum
       individualID:

@@ -16,8 +16,15 @@ enums:
         description: Germline variants annotated with some annotation workflow
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_germline_variation
       annotated somatic mutation:
-        description: Somatic variants annotated with some annotation workflow
+        description: Sequence variation data from non-germline cell or tissue samples that has been annotated.
+        meaning: NCIT:C184746
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation
+      aggregated somatic mutation:
+        description: Sequence variation data from non-germline cell or tissue samples that has been aggregated across samples, sequencing runs and/or multiple variant callers.
+        meaning: NCIT:C184741
+      masked annotated somatic mutation:
+        description: Annotated nucleotide sequence variation data where potential germline and low-quality base calls have been masked.
+        meaning: NCIT:C184775
       audio transcript:
         description: Text transcript of an audio recording.
         source: https://w3id.org/synapse/nfosi/vocab/audioTranscript
