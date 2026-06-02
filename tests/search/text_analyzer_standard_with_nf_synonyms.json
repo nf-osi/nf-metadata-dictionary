@@ -1,0 +1,28 @@
+{
+  "organizationName": "org.synapse.nf",
+  "name": "standard_with_nf_synonyms",
+  "description": "Example text analyzer referencing the org.synapse.nf-standard_synonyms synonym set.",
+  "settings": {
+    "tokenizer": {
+      "std": {
+        "type": "standard"
+      }
+    },
+    "filter": {
+      "nf_syn": {
+        "$ref": "org.synapse.nf-standard_synonyms"
+      }
+    },
+    "analyzer": {
+      "default": {
+        "type": "custom",
+        "tokenizer": "std",
+        "filter": [
+          "lowercase",
+          "nf_syn"
+        ],
+        "position_increment_gap": 100
+      }
+    }
+  }
+}
