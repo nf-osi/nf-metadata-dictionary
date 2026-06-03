@@ -16,6 +16,14 @@ Current scope:
 - Synonym set fixture (`rules`): [synonym_set_nf_rules.json](/tests/search/synonym_set_nf_rules.json)
 - Text analyzer fixture: [text_analyzer_standard_with_nf_synonyms.json](/tests/search/text_analyzer_standard_with_nf_synonyms.json)
 
+## Implementation Note
+
+The JSON files above are intentionally minimal test fixtures. They are useful for verifying the Synapse search-management payload shape, but they are not yet a complete source for NF search synonyms.
+
+We will need a script that compiles known aliases from the schema into the synonym format required by the Synapse search configuration. For example, `modules/Assay/Assay.yaml` already documents aliases for `next-generation sequencing`, including `NGS` and `next generation sequencing`. Those documented aliases should feed the generated synonym configuration rather than being maintained manually only in standalone test fixtures.
+
+One caveat: if the target field uses the OpenSearch `standard` analyzer, punctuation and common delimiters are already split during analysis. In that case, a spacing variant like `next generation sequencing` may be redundant for search relative to `next-generation sequencing`, while a true alias like `NGS` is still useful. The eventual synonym-compilation script should account for this so analyzer-equivalent variants do not add unnecessary synonym rules.
+
 ## Canonical Example
 
 ### Organization Prerequisite
