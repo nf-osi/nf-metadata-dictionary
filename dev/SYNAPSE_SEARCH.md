@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document captures a single clearer canonical example for Synapse search-management resources as we verify them in practice.
+This document provides a canonical example for Synapse search management configuration as we (NF) verify them in practice. 
 
 Current scope:
 
@@ -10,13 +10,11 @@ Current scope:
 2. A `TextAnalyzer` that references that synonym set via `"$ref"`
 3. A contextual explanation of where `SearchConfiguration` fits
 
-We will extend this document as we verify additional related resources.
+## Test Examples
 
-## Canonical Fixtures
-
-- Synonym set fixture (`synonym_graph`): [synonym_set_nf_domain.json](/home/avu/sage/nf/nf-research-tools-schema/tests/fixtures/synonym_set_nf_domain.json)
-- Synonym set fixture (`rules`): [synonym_set_nf_rules.json](/home/avu/sage/nf/nf-research-tools-schema/tests/fixtures/synonym_set_nf_rules.json)
-- Text analyzer fixture: [text_analyzer_standard_with_nf_synonyms.json](/home/avu/sage/nf/nf-research-tools-schema/tests/fixtures/text_analyzer_standard_with_nf_synonyms.json)
+- Synonym set fixture (`synonym_graph`): [synonym_set_nf_domain.json](/tests/search/synonym_set_nf_domain.json)
+- Synonym set fixture (`rules`): [synonym_set_nf_rules.json](/tests/search/synonym_set_nf_rules.json)
+- Text analyzer fixture: [text_analyzer_standard_with_nf_synonyms.json](/tests/search/text_analyzer_standard_with_nf_synonyms.json)
 
 ## Canonical Example
 
