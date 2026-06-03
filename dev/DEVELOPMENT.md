@@ -403,4 +403,4 @@ PATH=".venv/bin:$PATH" .venv/bin/python utils/gen-json-schema-class.py \
 
 - **LinkML Documentation:** https://linkml.io
 - **Synapse JSON Schema Docs:** [https://help.synapse.org/docs/JSON-Schemas.3107291536.html](https://docs.synapse.org/synapse-docs/json-schemas)
-- **Synapse Search Management Example:** [docs/SYNAPSE_SEARCH.md](../docs/SYNAPSE_SEARCH.md)
+- **Synapse Search Management Example:** [SYNAPSE_SEARCH.md](SYNAPSE_SEARCH.md)

@@ -10,11 +10,30 @@ Current scope:
 2. A `TextAnalyzer` that references that synonym set via `"$ref"`
 3. A contextual explanation of where `SearchConfiguration` fits
 
+## How This Relates to the Data Model
+
+The NF metadata model is the source of truth for domain terminology: canonical labels, controlled values, and documented aliases. Synapse search configuration is a downstream deployment artifact built from that terminology.
+
+In practice:
+
+1. LinkML schema files *already* define `aliases`.
+2. A generation step compiles relevant aliases into Synapse search resources such as `SynonymSet` (JSON). `SynonymSet`s are registered just like how other resource template JSON schemas are registered today.
+3. Synapse `TextAnalyzer` and `SearchConfiguration` reference those resources to control search behavior.
+4. The resulting configuration is bound in Synapse where search behavior should apply.
+
 ## Test Examples
 
 - Synonym set fixture (`synonym_graph`): [synonym_set_nf_domain.json](/tests/search/synonym_set_nf_domain.json)
 - Synonym set fixture (`rules`): [synonym_set_nf_rules.json](/tests/search/synonym_set_nf_rules.json)
 - Text analyzer fixture: [text_analyzer_standard_with_nf_synonyms.json](/tests/search/text_analyzer_standard_with_nf_synonyms.json)
+
+## Implementation Note
+
+The JSON files above are intentionally minimal test fixtures. They are useful as understandable examples and for verifying the Synapse search-management, but they are not yet a complete source for NF search synonyms.
+
+**TODO:** We will need a workflow step that compiles known aliases from the schema into the synonym format required by the Synapse search configuration. For example, `modules/Assay/Assay.yaml` already documents aliases for `next-generation sequencing`, including `NGS` and `next generation sequencing`. Those documented aliases should feed the generated synonym configuration rather than being maintained manually only in standalone test fixtures.
+
+One caveat: if the target field uses the OpenSearch `standard` analyzer, punctuation and common delimiters are already split during analysis. In that case, a spacing variant like `next generation sequencing` may be redundant for search relative to `next-generation sequencing`, while a true alias like `NGS` is still useful. The eventual synonym-compilation script should account for this so analyzer-equivalent variants do not add unnecessary synonym rules.
 
 ## Canonical Example
 
@@ -27,15 +46,7 @@ Reference:
 
 Before creating a `SynonymSet`, `TextAnalyzer`, or related search-management resource, the organization must already exist.
 
-In our case, `org.synapse.nf` already exists, so organization creation is not part of the canonical example below.
-
-If you are doing this for a different organization, first read those REST reference pages.
-
-Important details from those docs:
-
-- The organization is the root namespace for resources created under it.
-- Organization names are immutable after creation.
-- Search-management resources are created under that existing organization name.
+In our case, `org.synapse.nf` already exists, so organization creation is not shown. (If you are doing this for a different organization, first read those REST reference pages.)
 
 ### 1. Synonym Set
 
@@ -120,7 +131,7 @@ The analyzer references the synonym set using a qualified name in a filter entry
 
 Based on the public REST docs and the example we verified:
 
-- The organization must exist before these resources can be created under it.
+- The organization must exist and should be the same as the one to which JSON schemas are already registered (unless for some reason you want to create a new one).
 - `SynonymSet` is a named organization-scoped resource.
 - `TextAnalyzer.settings` can use an OpenSearch-style structure with named `filter` entries.
 - A filter can reference a synonym set by qualified name using `"$ref"`.
@@ -162,41 +173,18 @@ Practical guidance:
 
 For the NF example in this document, our custom work is centered on the synonym set. If the built-in analyzers already fit the desired tokenization behavior, the next step may be to reference those existing analyzers from a `SearchConfiguration` rather than creating a new custom analyzer.
 
-## Where SearchConfiguration Fits
+## SearchConfiguration
 
 Reference:
 - [`POST /search/configuration/list`](https://rest-docs.synapse.org/rest/POST/search/configuration/list.html)
 - [`POST /search/configuration`](https://rest-docs.synapse.org/rest/POST/search/configuration.html)
 - [`SearchConfiguration`](https://rest-docs.synapse.org/rest/org/sagebionetworks/repo/model/search/table/SearchConfiguration.html)
 
-The easiest way to think about `SearchConfiguration` is:
-
-- `SynonymSet` defines reusable synonym rules.
-- `TextAnalyzer` defines reusable analysis behavior, including platform-provided analyzers you may be able to reuse.
-- `SearchConfiguration` is the composition layer that bundles those reusable resources into one search setup that can be applied to content.
-
-For this canonical example, the practical relationship is:
+The `SearchConfiguration` is the composition layer that bundles those reusable resources into one search setup that can be applied to content. The practical relationship is:
 
 1. The synonym set named `standard_synonyms` lives in `org.synapse.nf`.
 2. The text analyzer named `standard_with_nf_synonyms` references that synonym set with `"$ref": "org.synapse.nf-standard_synonyms"`.
 3. A future `SearchConfiguration` can either use that custom analyzer or reuse an existing analyzer from `org.sagebionetworks`, plus any synonym sets or per-column overrides needed for a complete configuration.
-
-Current state for this repo:
-
-- `org.synapse.nf` does not yet have a `SearchConfiguration`.
-- `POST /search/configuration/list` is the clearest public REST endpoint to inspect what configurations already exist before creating a new one.
-
-From the public REST docs, `SearchConfiguration` is the object that:
-
-- Bundles a default `TextAnalyzer`
-- Can include zero or more `SynonymSet`s
-- Can include zero or more `ColumnAnalyzerOverride`s
-- Can be associated with a project, folder, or search index through a binding
-- Is resolved hierarchically when attached above an entity
-
-In other words, `SearchConfiguration` is not the same thing as the analyzer itself. It is the reusable package that says which analyzer should be the default, which synonym resources are available to that configuration, and which column-level exceptions should apply.
-
-We have not yet added a canonical `SearchConfiguration` payload fixture in this repo. When we do, it should be added as the next step after the synonym set and text analyzer examples above.
 
 ## Public REST Docs
 
@@ -210,10 +198,3 @@ We have not yet added a canonical `SearchConfiguration` payload fixture in this 
 - `POST /search/configuration`: https://rest-docs.synapse.org/rest/POST/search/configuration.html
 - `SearchConfiguration`: https://rest-docs.synapse.org/rest/org/sagebionetworks/repo/model/search/table/SearchConfiguration.html
 
-## Next Additions
-
-As we verify more of the canonical flow, add:
-
-1. `SearchConfiguration`
-2. Any binding object needed to attach configuration to an entity
-3. A fully connected end-to-end example
