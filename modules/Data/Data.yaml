@@ -6,13 +6,9 @@ enums:
     - Broad term/abstract class; should not be used for annotation
     permissible_values:
       aligned reads:
-        aliases:
-        - AlignedReads
         description: Aligned reads output from alignment workflows
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads
       annotated germline variants:
-        aliases:
-        - AnnotatedGermlineVariants
         description: Germline variants annotated with some annotation workflow
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_germline_variation
       annotated somatic mutation:
@@ -40,8 +36,6 @@ enums:
         notes:
         - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
       cellular physiology:
-        aliases:
-        - cellularPhysiology
         description: Data on the physiological parameter of a cell.
         source: https://w3id.org/synapse/nfosi/vocab/cellularPhysiology
       characteristic:
@@ -54,8 +48,6 @@ enums:
         - Not preferred for annotation; more specific term should be used.
         - May cover both morphology parameter and physiology parameter.
       chromatin activity:
-        aliases:
-        - chromatinActivity
         description: Data of chromatin activity, which allows access to condensed genomic DNA and potentially controls gene expression.
         see_also:
         - https://en.wikipedia.org/wiki/Chromatin_remodeling
@@ -78,8 +70,6 @@ enums:
         description: A table of unnormalized values representing summarised read counts per genomic region (e.g. gene, transcript, peak).
         meaning: EDAM:data_3917
       data index:
-        aliases:
-        - dataIndex
         description: A data index is information used to help with retrieval of some other data, especially large-scale data that would benefit from such an index. Very common formats are .bai and .tbi.
         meaning: EDAM:data_0955
       data sharing plan:
@@ -100,13 +90,9 @@ enums:
         description: The statistical characterization of human populations or segments of human populations (e.g., characterization by age, sex, race, or income).
         meaning: NCIT:C16495
       drug combination screen:
-        aliases:
-        - drugCombinationScreen
         description: Information on drug sensitivity of more than one compound
         source: https://www.ncbi.nlm.nih.gov/pubmed/29344898
       drug screen:
-        aliases:
-        - drugScreen
         description: Information on drug sensitivity and molecular markers of drug response
         source: https://w3id.org/synapse/nfosi/vocab/drugScreen
       electrophysiology:
@@ -118,7 +104,6 @@ enums:
         description: Data that is used to describe the distribution of a disease or health-related characteristic within a population and to identify factors that affect that distribution.
       gene expression:
         aliases:
-        - geneExpression
         - expression data
         description: Data of the levels and patterns of synthesis of gene products (proteins and functional RNA), including interpretation in functional terms of gene expression data.
         meaning: EDAM:data_2603
@@ -135,8 +120,6 @@ enums:
       quantified gene expression:
         description: Expression measurements that have been summarized or normalized, typically representing quantified abundance metrics rather than raw instrument output.
       genomic features:
-        aliases:
-        - genomicFeatures
         description: Data of sequence feature (continuous extent of biological sequence) that is of genomic origin.
         meaning: GENO:0000481
         notes:
@@ -145,7 +128,6 @@ enums:
       genomic variants:
         aliases:
         - Gene sequence variations
-        - genomicVariants
         description: 'Genomic alterations, including single nucleotide polymorphisms, short indels and structural variants. Use more specific term if possible, esp. if data is only of one specific subset.
 
           '
@@ -153,8 +135,6 @@ enums:
         notes:
         - Somewhat more specific than the concept URI it is mapped to.
       germline variants:
-        aliases:
-        - GermlineVariants
         description: Called germline variants
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=simple_germline_variation
       guide RNA sequence:
@@ -184,7 +164,6 @@ enums:
         - Isoform Quantitation
         - Protein Isoform Measurement
         - Protein Isoform Quantitation
-        - isoformExpression
         description: Expression of protein isoforms formed from alternative splicings or other post-translational modifications of a single gene through RNA splicing mechanisms.
         meaning: NCIT:C184767
         source: https://en.wikipedia.org/wiki/Protein_isoform
@@ -311,16 +290,12 @@ enums:
         description: A human-readable collection of information including annotation on a biological entity or phenomena, computer-generated reports of analysis of primary data... as distinct from the primary data itself.
         meaning: EDAM:data_2048
       somatic variants:
-        aliases:
-        - SomaticVariants
         description: Called somatic variants
         source: https://w3id.org/synapse/nfosi/vocab/SomaticVariants
       structural variants:
         description: Genomic variants data that covers deletions, duplications, CNVs, insertions, inversions, and translocations, which may be derived from specialized variant calling workflows.
         source: https://w3id.org/synapse/nfosi/vocab/StructuralVariantss
       survey data:
-        aliases:
-        - surveyData
         description: A data set that contains the outcome of a survey.
         meaning: OMIABIS:0000060
       text data:
@@ -332,12 +307,9 @@ enums:
         aliases:
         - Total Volume
         - Vol
-        - Volume
         description: Data of the three dimensional space occupied by an entity or the capacity of a space or container.
         meaning: NCIT:C25335
       weight:
-        aliases:
-        - Weight
         description: The vertical force exerted by a mass as a result of gravity.
         meaning: NCIT:C25208
   DataSubtypeEnum:

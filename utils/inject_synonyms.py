@@ -132,18 +132,27 @@ def inject_synonyms_into_yaml(yaml_file, synonyms_dict, output_file=None):
                 if 'permissible_values' in enum_data:
                     for term, term_data in enum_data['permissible_values'].items():
                         if term in synonyms_dict:
-                            # Filter synonyms
-                            filtered_synonyms = filter_synonyms(term, synonyms_dict[term])
-                            
-                            if filtered_synonyms:
+                            # Filter new synonyms from CSV
+                            filtered_new = filter_synonyms(term, synonyms_dict[term])
+
+                            if filtered_new:
                                 if term_data is None:
                                     term_data = {}
                                     enum_data['permissible_values'][term] = term_data
-                                
-                                # Add aliases
-                                term_data['aliases'] = filtered_synonyms
-                                modifications_made += 1
-                                print(f"Added {len(filtered_synonyms)} aliases to '{term}'")
+
+                                # Merge with existing aliases (preserve manually-added ones)
+                                existing = term_data.get('aliases', []) or []
+                                merged = list(existing)
+                                added = 0
+                                for syn in filtered_new:
+                                    if syn not in merged:
+                                        merged.append(syn)
+                                        added += 1
+
+                                if added > 0:
+                                    term_data['aliases'] = merged
+                                    modifications_made += 1
+                                    print(f"Added {added} new aliases to '{term}' (total: {len(merged)})")
         
         # Write output
         output_path = output_file or yaml_file
@@ -166,6 +175,84 @@ def inject_synonyms_into_yaml(yaml_file, synonyms_dict, output_file=None):
     except Exception as e:
         print(f"Error processing YAML file: {str(e)}")
         return False
+
+def cleanup_aliases_in_yaml(yaml_file):
+    """Remove aliases that differ from their term only by case, spacing, or punctuation."""
+
+    if not os.path.exists(yaml_file):
+        return False
+
+    try:
+        with open(yaml_file, 'r', encoding='utf-8') as f:
+            data = yaml.safe_load(f)
+
+        removals = 0
+
+        if 'enums' in data:
+            for enum_name, enum_data in data['enums'].items():
+                if 'permissible_values' not in enum_data:
+                    continue
+                for term, term_data in enum_data['permissible_values'].items():
+                    if term_data is None or not isinstance(term_data, dict):
+                        continue
+                    aliases = term_data.get('aliases')
+                    if not aliases:
+                        continue
+
+                    cleaned = []
+                    for alias in aliases:
+                        if is_case_only_difference(term, alias):
+                            print(f"  Removing '{alias}' from '{term}' (spacing/case-only diff)")
+                            removals += 1
+                        else:
+                            cleaned.append(alias)
+
+                    if len(cleaned) < len(aliases):
+                        if cleaned:
+                            term_data['aliases'] = cleaned
+                        else:
+                            del term_data['aliases']
+
+        if removals == 0:
+            return False
+
+        if DRY_RUN_MODE:
+            print(f"[DRY-RUN] Would remove {removals} low-quality aliases from {yaml_file}")
+        else:
+            with open(yaml_file, 'w', encoding='utf-8') as f:
+                yaml.dump(data, f, default_flow_style=False, allow_unicode=True, width=1000)
+            print(f"Removed {removals} low-quality aliases from {yaml_file}")
+
+        return True
+
+    except Exception as e:
+        print(f"Error cleaning up {yaml_file}: {e}")
+        return False
+
+
+def cleanup_aliases_in_modules(modules_dir):
+    """Clean up low-quality aliases across all module YAML files."""
+    import glob
+
+    if not os.path.exists(modules_dir):
+        print(f"Error: Modules directory {modules_dir} not found")
+        return False
+
+    yaml_files = glob.glob(os.path.join(modules_dir, "**/*.yaml"), recursive=True)
+    if not yaml_files:
+        print(f"No YAML files found in {modules_dir}")
+        return False
+
+    print(f"Scanning {len(yaml_files)} YAML files for low-quality aliases...")
+    modified = []
+    for yaml_file in yaml_files:
+        if cleanup_aliases_in_yaml(yaml_file):
+            modified.append(yaml_file)
+
+    print(f"\n=== Cleanup Summary ===")
+    print(f"Scanned {len(yaml_files)} files, {'would modify' if DRY_RUN_MODE else 'modified'} {len(modified)} files")
+    return len(modified) > 0
+
 
 def inject_synonyms_into_modules(modules_dir, synonyms_dict):
     """Inject synonyms as aliases into all module YAML files"""
@@ -225,14 +312,25 @@ def main():
                        help='Output file path (only works with --yaml option)')
     parser.add_argument('--fuzzy-threshold', type=float, default=0.9,
                        help='Fuzzy matching threshold (0.0-1.0, default: 0.9)')
+    parser.add_argument('--cleanup', action='store_true',
+                       help='Remove low-quality aliases (case/spacing-only diffs) from existing YAML files')
     parser.add_argument('--dry-run', action='store_true',
                        help='Show what would be changed without making actual modifications')
-    
+
     args = parser.parse_args()
-    
+
     # Set global dry-run mode
     DRY_RUN_MODE = args.dry_run
-    
+
+    if args.cleanup:
+        print("=== Synonym Cleanup Tool ===")
+        if DRY_RUN_MODE:
+            print("Mode: DRY-RUN (no files will be modified)")
+        modules_dir = args.modules_dir
+        print(f"Modules directory: {modules_dir}")
+        cleanup_aliases_in_modules(modules_dir)
+        return 0
+
     print("=== Synonym Injection Tool ===")
     print(f"CSV file: {args.csv}")
     print(f"Fuzzy threshold: {args.fuzzy_threshold}")
