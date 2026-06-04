@@ -7,7 +7,7 @@ enums:
     - See also https://github.com/PAIR-code/datacardsplaybook/blob/main/templates/DataCardsExtendedTemplate.md#access-type
     permissible_values:
       Controlled Access:
-        description: 'Access is restricted and only available after fulfilling specific requirements, such as submitting a research statement or getting approval directly from the data owner through Synapse. Note that for datasets, if any component file is under controlled access, the entire dataset is considered to be under controlled access.'
+        description: Access is restricted and only available after fulfilling specific requirements, such as submitting a research statement or getting approval directly from the data owner through Synapse. Note that for datasets, if any component file is under controlled access, the entire dataset is considered to be under controlled access.
       Open Access:
         description: Access without any additional steps/requirements without even needing to be logged in to Synapse account.
       Private:
@@ -17,11 +17,11 @@ enums:
     title: Access type
   DataCatalogEnum:
     permissible_values:
-      https://www.synapse.org/DataCatalog:0:
       https://nf.synapse.org/Explore/Datasets:
+      https://www.synapse.org/DataCatalog:0:
   DataSeriesEnum:
     permissible_values:
-      NF-OSI Processed Data: 
+      NF-OSI Processed Data:
       None:
   DataStatusEnum:
     permissible_values:
@@ -44,10 +44,33 @@ enums:
     permissible_values:
       22q-related schwannomatosis:
       LZTR1-related schwannomatosis:
+        aliases:
+        - Schwannomatosis type 2
+        - SWNTS2
+        - schwannomatosis 2
       Multiple:
       NF2-related schwannomatosis:
+        aliases:
+        - acoustic neurofibromatosis
+        - neurofibromatosis, type II
+        - NF2
+        - SWNV
+        - acoustic Schwannomas, bilateral
+        - acoustic neurinoma bilateral
+        - bilateral acoustic neurofibromatosis
+        - central neurofibromatosis
+        - full NF2
+        - full neurofibromatosis type 2
+        - neurofibromatosis 2
+        - neurofibromatosis central type
+        - nonmosaic NF2-related schwannomatosis
+        - nonmosaic neurofibromatosis type 2
       Neurofibromatosis type 1:
       SMARCB1-related schwannomatosis:
+        aliases:
+        - schwannomatosis, somatic
+        - SWNTS1
+        - schwannomatosis 1
       Schwannomatosis-NEC:
       Schwannomatosis-NOS:
     title: Disease Focus
@@ -117,136 +140,85 @@ enums:
     - https://help.figshare.com/article/what-is-the-most-appropriate-licence-for-my-research
     permissible_values:
       CC BY-NC:
-        aliases:
-        - cc-by-nc
-        description: 'This license is one of the Creative Commons licenses and allows users to share and adapt the dataset if they give credit to the copyright holder and do not use the dataset for any commercial purposes.'
+        description: This license is one of the Creative Commons licenses and allows users to share and adapt the dataset if they give credit to the copyright holder and do not use the dataset for any commercial purposes.
         source: https://creativecommons.org/licenses/by-nc/4.0/
         title: Creative Commons Attribution-NonCommercial 4.0 International
-      CC BY-NC 4.0:
-        aliases:
-        - cc-by-nc-4.0
-        - cc by-nc 4.0
-        meaning: https://creativecommons.org/licenses/by-nc/4.0/
-      CC BY-NC 3.0:
-        aliases:
-        - cc-by-nc-3.0
-        meaning: https://creativecommons.org/licenses/by-nc/3.0/
-      CC BY-NC 2.5:
-        aliases:
-        - cc-by-nc-2.5
-        meaning: https://creativecommons.org/licenses/by-nc/2.5/
-      CC BY-NC 2.0:
-        aliases:
-        - cc-by-nc-2.0
-        meaning: https://creativecommons.org/licenses/by-nc/2.0/
       CC BY-NC 1.0:
         aliases:
         - cc-by-nc-1.0
         meaning: https://creativecommons.org/licenses/by-nc/1.0/
+      CC BY-NC 2.0:
+        meaning: https://creativecommons.org/licenses/by-nc/2.0/
+      CC BY-NC 2.5:
+        meaning: https://creativecommons.org/licenses/by-nc/2.5/
+      CC BY-NC 3.0:
+        meaning: https://creativecommons.org/licenses/by-nc/3.0/
+      CC BY-NC 4.0:
+        meaning: https://creativecommons.org/licenses/by-nc/4.0/
       CC BY-NC-ND:
-        aliases:
-        - cc-by-nc-nd
-        description: 'This license is one of the Creative Commons licenses and allows users to use only your unmodified dataset if they give credit to the copyright holder and do not share it for commercial purposes. Users cannot make any additions, transformations or changes to the dataset under this license.'
+        description: This license is one of the Creative Commons licenses and allows users to use only your unmodified dataset if they give credit to the copyright holder and do not share it for commercial purposes. Users cannot make any additions, transformations or changes to the dataset under this license.
         source: https://creativecommons.org/licenses/by-nc-nd/4.0/
         title: Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
-      CC BY-NC-ND 4.0:
-        aliases:
-        - cc-by-nc-nd-4.0
-        meaning: https://creativecommons.org/licenses/by-nc-nd/4.0/
-      CC BY-NC-ND 3.0:
-        aliases:
-        - cc-by-nc-nd-3.0
-        meaning: https://creativecommons.org/licenses/by-nc-nd/3.0/
-      CC BY-NC-ND 2.5:
-        aliases:
-        - cc-by-nc-nd-2.5
-        meaning: https://creativecommons.org/licenses/by-nc-nd/2.5/
-      CC BY-NC-ND 2.0:
-        aliases:
-        - cc-by-nc-nd-2.0
-        meaning: https://creativecommons.org/licenses/by-nc-nd/2.0/
       CC BY-NC-ND 1.0:
         aliases:
         - cc-by-nc-nd-1.0
         meaning: https://creativecommons.org/licenses/by-nc-nd/1.0/
+      CC BY-NC-ND 2.0:
+        meaning: https://creativecommons.org/licenses/by-nc-nd/2.0/
+      CC BY-NC-ND 2.5:
+        meaning: https://creativecommons.org/licenses/by-nc-nd/2.5/
+      CC BY-NC-ND 3.0:
+        meaning: https://creativecommons.org/licenses/by-nc-nd/3.0/
+      CC BY-NC-ND 4.0:
+        meaning: https://creativecommons.org/licenses/by-nc-nd/4.0/
       CC BY-NC-SA:
-        aliases:
-        - cc-by-nc-sa
-        description: 'This license is one of the Creative Commons licenses and allows users to share the dataset only if they (1) give credit to the copyright holder, (2) do not use the dataset for any commercial purposes, and (3) distribute any additions, transformations or changes to the dataset under this same license.'
+        description: This license is one of the Creative Commons licenses and allows users to share the dataset only if they (1) give credit to the copyright holder, (2) do not use the dataset for any commercial purposes, and (3) distribute any additions, transformations or changes to the dataset under this same license.
         source: https://creativecommons.org/licenses/by-nc-sa/4.0/
         title: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
-      CC BY-NC-SA 4.0:
-        aliases:
-        - cc-by-nc-sa-4.0
-        meaning: https://creativecommons.org/licenses/by-nc-sa/4.0/
-      CC BY-NC-SA 3.0:
-        aliases:
-        - cc-by-nc-sa-3.0
-        meaning: https://creativecommons.org/licenses/by-nc-sa/3.0/
-      CC BY-NC-SA 2.5:
-        aliases:
-        - cc-by-nc-sa-2.5
-        meaning: https://creativecommons.org/licenses/by-nc-sa/2.5/
-      CC BY-NC-SA 2.0:
-        aliases:
-        - cc-by-nc-sa-2.0
-        meaning: https://creativecommons.org/licenses/by-nc-sa/2.0/
       CC BY-NC-SA 1.0:
         aliases:
         - cc-by-nc-sa-1.0
         meaning: https://creativecommons.org/licenses/by-nc-sa/1.0/
+      CC BY-NC-SA 2.0:
+        meaning: https://creativecommons.org/licenses/by-nc-sa/2.0/
+      CC BY-NC-SA 2.5:
+        meaning: https://creativecommons.org/licenses/by-nc-sa/2.5/
+      CC BY-NC-SA 3.0:
+        meaning: https://creativecommons.org/licenses/by-nc-sa/3.0/
+      CC BY-NC-SA 4.0:
+        meaning: https://creativecommons.org/licenses/by-nc-sa/4.0/
       CC BY-ND:
-        aliases:
-        - cc-by-nd
-        description: 'This license is one of the Creative Commons licenses and allows users to share the dataset if they give credit to copyright holder, but they cannot make any additions, transformations or changes to the dataset under this license.'
+        description: This license is one of the Creative Commons licenses and allows users to share the dataset if they give credit to copyright holder, but they cannot make any additions, transformations or changes to the dataset under this license.
         source: https://creativecommons.org/licenses/by-nd/4.0/
         title: Creative Commons Attribution-NoDerivatives 4.0 International
-      CC BY-ND 4.0:
-        aliases:
-        - cc-by-nd-4.0
-        meaning: https://creativecommons.org/licenses/by-nd/4.0/
-      CC BY-ND 3.0:
-        aliases:
-        - cc-by-nd-3.0
-        meaning: https://creativecommons.org/licenses/by-nd/3.0/
-      CC BY-ND 2.5:
-        aliases:
-        - cc-by-nd-2.5
-        meaning: https://creativecommons.org/licenses/by-nd/2.5/
-      CC BY-ND 2.0:
-        aliases:
-        - cc-by-nd-2.0
-        meaning: https://creativecommons.org/licenses/by-nd/2.0/
       CC BY-ND 1.0:
         aliases:
         - cc-by-nd-1.0
         meaning: https://creativecommons.org/licenses/by-nd/1.0/
+      CC BY-ND 2.0:
+        meaning: https://creativecommons.org/licenses/by-nd/2.0/
+      CC BY-ND 2.5:
+        meaning: https://creativecommons.org/licenses/by-nd/2.5/
+      CC BY-ND 3.0:
+        meaning: https://creativecommons.org/licenses/by-nd/3.0/
+      CC BY-ND 4.0:
+        meaning: https://creativecommons.org/licenses/by-nd/4.0/
       CC BY-SA:
-        aliases:
-        - cc-by-sa
-        description: 'This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformations or changes to the dataset under this same https://creativecommons.org/licenses/by/4.0/'
+        description: This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformations or changes to the dataset under this same https://creativecommons.org/licenses/by/4.0/
         source: https://creativecommons.org/licenses/by-nc-sa/4.0/
         title: Creative Commons Attribution-ShareAlike 4.0 International
-      CC BY-SA 4.0:
-        aliases:
-        - cc-by-sa-4.0
-        meaning: https://creativecommons.org/licenses/by-sa/4.0/
-      CC BY-SA 3.0:
-        aliases:
-        - cc-by-sa-3.0
-        meaning: https://creativecommons.org/licenses/by-sa/3.0/
-      CC BY-SA 2.5:
-        aliases:
-        - cc-by-sa-2.5
-        meaning: https://creativecommons.org/licenses/by-sa/2.5/
-      CC BY-SA 2.0:
-        aliases:
-        - cc-by-sa-2.0
-        meaning: https://creativecommons.org/licenses/by-sa/2.0/
       CC BY-SA 1.0:
         aliases:
         - cc-by-sa-1.0
         meaning: https://creativecommons.org/licenses/by-sa/1.0/
+      CC BY-SA 2.0:
+        meaning: https://creativecommons.org/licenses/by-sa/2.0/
+      CC BY-SA 2.5:
+        meaning: https://creativecommons.org/licenses/by-sa/2.5/
+      CC BY-SA 3.0:
+        meaning: https://creativecommons.org/licenses/by-sa/3.0/
+      CC BY-SA 4.0:
+        meaning: https://creativecommons.org/licenses/by-sa/4.0/
       CC-0:
         aliases:
         - cc0
@@ -255,37 +227,26 @@ enums:
         description: A Creative Commons license and is like a public domain dedication. The copyright holder surrenders rights in a dataset using this license.
         source: https://creativecommons.org/publicdomain/zero/1.0/
         title: Creative Commons Zero
-      CC0 1.0:
-        aliases:
-        - cc0-1.0
-        meaning: https://creativecommons.org/publicdomain/zero/1.0/
       CC-BY:
         aliases:
         - cc-by
         description: This license is one of the open Creative Commons licenses and allows users to share and adapt the dataset so long as they give credit to the copyright holder.
         source: https://creativecommons.org/licenses/by/4.0/
         title: Creative Commons Attribution 4.0 International
-      CC-BY 4.0:
-        aliases:
-        - cc-by-4.0
-        - cc by 4.0
-        meaning: https://creativecommons.org/licenses/by/4.0/
-      CC-BY 3.0:
-        aliases:
-        - cc-by-3.0
-        meaning: https://creativecommons.org/licenses/by/3.0/
-      CC-BY 2.5:
-        aliases:
-        - cc-by-2.5
-        meaning: https://creativecommons.org/licenses/by/2.5/
-      CC-BY 2.0:
-        aliases:
-        - cc-by-2.0
-        meaning: https://creativecommons.org/licenses/by/2.0/
       CC-BY 1.0:
         aliases:
         - cc-by-1.0
         meaning: https://creativecommons.org/licenses/by/1.0/
+      CC-BY 2.0:
+        meaning: https://creativecommons.org/licenses/by/2.0/
+      CC-BY 2.5:
+        meaning: https://creativecommons.org/licenses/by/2.5/
+      CC-BY 3.0:
+        meaning: https://creativecommons.org/licenses/by/3.0/
+      CC-BY 4.0:
+        meaning: https://creativecommons.org/licenses/by/4.0/
+      CC0 1.0:
+        meaning: https://creativecommons.org/publicdomain/zero/1.0/
       ODC-BY:
         aliases:
         - odc-by
@@ -297,9 +258,7 @@ enums:
         - odc-by-1.0
         meaning: https://opendatacommons.org/licenses/by/1-0/
       ODC-ODbL:
-        aliases:
-        - odc-odbl
-        description: 'This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformation or changes to the dataset.'
+        description: This license is one of the Open Data Commons licenses and allows users to share and adapt the dataset as long as they give credit to the copyright holder and distribute any additions, transformation or changes to the dataset.
         source: https://opendatacommons.org/licenses/odbl/
         title: Open Data Commons Open Database License
       ODC-ODbL 1.0:
@@ -307,9 +266,7 @@ enums:
         - odc-odbl-1.0
         meaning: https://opendatacommons.org/licenses/odbl/1-0/
       ODC-PDDL:
-        aliases:
-        - odc-pddl
-        description: 'This license is one of the Open Data Commons licenses and is like a public domain dedication. The copyright holder surrenders rights in a dataset using this license.'
+        description: This license is one of the Open Data Commons licenses and is like a public domain dedication. The copyright holder surrenders rights in a dataset using this license.
         source: https://opendatacommons.org/licenses/pddl/
         title: Open Data Commons Public Domain Dedication and License
       ODC-PDDL 1.0:
@@ -356,6 +313,10 @@ enums:
       Low-Grade Glioma:
       Malignant Peripheral Nerve Sheath Tumor (MPNST):
       Melanoma:
+        aliases:
+        - MELANOMA, MALIGNANT
+        - Malignant Melanoma
+        - Melanoma, NOS
         description: A malignant tumor composed of neoplastic melanocytes. NF1-mutant melanoma is a clinically recognized manifestation of Neurofibromatosis type 1, where germline NF1 mutations confer elevated melanoma risk due to NF1 tumor suppressor loss in melanocytes.
         meaning: NCIT:C3224
       Memory:

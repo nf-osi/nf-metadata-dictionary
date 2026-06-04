@@ -1,45 +1,10 @@
-
 classes:
-  GeneticsAssayTemplate:
-    abstract: true
-    annotations:
-      required: false
-      requiresComponent: ''
-      dataGranularity: specimen-level
-    description: 'Template for relatively raw data of RNA/DNA structure and expression.  This
-      is an abstract template encapsulating data from low-throughput to high-throughput
-      assays,  sequencing-based or non-sequencing based (e.g. microarrays, optical
-      genome mapping).  In practice, data are more specifically typed and matched
-      to one of the templates below.
-
-      '
-    is_a: BiologicalAssayDataTemplate
-    notes:
-    - http://purl.obolibrary.org/obo/GECKO_0000032
-    slots:
-    - parentSpecimenID
-    - specimenID
-    - aliquotID
-    - tumorType
-    - platform
-    - nucleicAcidSource
-    - specimenPreparationMethod
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-
   BulkSequencingAssayTemplate:
     annotations:
+      dataGranularity: specimen-level
       required: false
       requiresComponent: ''
-      templateUsage: common
       templateFor:
-        dataType:
-        - gene expression
         assay:
         - ISO-seq
         - miRNA-seq
@@ -49,17 +14,34 @@ classes:
         - scCGI-seq
         - Sanger sequencing
         - T cell receptor repertoire sequencing
-      dataGranularity: specimen-level
-    description: General template for raw (level 1) RNA/DNA data, i.e. sequence data
-      from a sequencing assay.
+        dataType:
+        - gene expression
+      templateUsage: common
+    description: General template for raw (level 1) RNA/DNA data, i.e. sequence data from a sequencing assay.
     is_a: GeneticsAssayTemplate
+    rules:
+    - description: Organ is required when specimenType is a tissue (not an organism substance like saliva)
+      postconditions:
+        slot_conditions:
+          organ:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          specimenType:
+            none_of:
+            - equals_string: mucus
+            - equals_string: saliva
+            - equals_string: stool
+            - equals_string: sweat
+            - equals_string: urine
+            value_presence: PRESENT
     slot_usage:
       assay:
         range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      platform:
+        range: SequencingPlatformEnum
     slots:
     - specimenType
     - runType
@@ -72,31 +54,103 @@ classes:
     - targetDepth
     - batchID
     - modelSystemName
-    rules:
-    - description: Organ is required when specimenType is a tissue (not an organism substance like saliva)
-      preconditions:
-        slot_conditions:
-          specimenType:
-            value_presence: PRESENT
-            none_of:
-              - equals_string: mucus
-              - equals_string: saliva
-              - equals_string: stool
-              - equals_string: sweat
-              - equals_string: urine
-      postconditions:
-        slot_conditions:
-          organ:
-            value_presence: PRESENT
-
-  GenomicsArrayTemplate:
+  ChIPSeqTemplate:
     annotations:
+      dataGranularity: specimen-level
       required: false
       requiresComponent: ''
-      templateUsage: common
       templateFor:
+        assay:
+        - ChIP-seq
         dataType:
-        - genomic features
+        - chromatin activity
+      templateUsage: common
+    description: Template for describing raw data from ChIP-Seq assays, typically used to identify DNA-protein interactions.
+    is_a: EpigenomicsAssayTemplate
+    slot_usage:
+      assay:
+        ifabsent: string(ChIP-seq)
+        range: SequencingAssayEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+      platform:
+        range: SequencingPlatformEnum
+    slots:
+    - antibodyID
+    - platform
+    - peakCallingAlgorithm
+    - assayTarget
+    - genePerturbationType
+    - genePerturbationTechnology
+    - genePerturbed
+  EpigenomicsAssayTemplate:
+    annotations:
+      dataGranularity: specimen-level
+      required: false
+      requiresComponent: ''
+      templateFor:
+        assay:
+        - ATAC-seq
+        - bisulfite sequencing
+        - CAPP-seq
+        - CUT&RUN
+        - ERR bisulfite sequencing
+        - HI-C
+        - NOMe-seq
+        - oxBS-seq
+        dataType:
+        - chromatin activity
+      templateUsage: common
+    close_mappings:
+    - htan:BulkMethylation-seqLevel1
+    description: Template for describing raw data from epigenetics sequencing assays such as bisulfite sequencing.
+    is_a: BulkSequencingAssayTemplate
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      fileFormat:
+        any_of:
+        - range: SequencingFileFormatEnum
+        - range: ArrayFileFormatEnum
+      platform:
+        any_of:
+        - range: SequencingPlatformEnum
+        - range: ArrayPlatformEnum
+    slots:
+    - bisulfiteConversionKitID
+  GeneticsAssayTemplate:
+    abstract: true
+    annotations:
+      dataGranularity: specimen-level
+      required: false
+      requiresComponent: ''
+    description: 'Template for relatively raw data of RNA/DNA structure and expression.  This is an abstract template encapsulating data from low-throughput to high-throughput assays,  sequencing-based or non-sequencing based (e.g. microarrays, optical genome mapping).  In practice, data are more specifically typed and matched to one of the templates below.
+
+      '
+    is_a: BiologicalAssayDataTemplate
+    notes:
+    - http://purl.obolibrary.org/obo/GECKO_0000032
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+      platform:
+        range: SequencingPlatformEnum
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    - tumorType
+    - platform
+    - nucleicAcidSource
+    - specimenPreparationMethod
+  GenomicsArrayTemplate:
+    annotations:
+      dataGranularity: specimen-level
+      required: false
+      requiresComponent: ''
+      templateFor:
         assay:
         - array
         - methylation array
@@ -105,58 +159,84 @@ classes:
         - RNA array
         - SNP array
         - NanoString nCounter Analysis System
-      dataGranularity: specimen-level
-    description: A template for describing raw data from array-based genomics/epigenomics,
-      e.g. CEL files.
+        dataType:
+        - genomic features
+      templateUsage: common
+    description: A template for describing raw data from array-based genomics/epigenomics, e.g. CEL files.
     is_a: GeneticsAssayTemplate
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      fileFormat:
+        range: ArrayFileFormatEnum
+      platform:
+        range: ArrayPlatformEnum
     slots:
     - platform
     - channel
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: ArrayPlatformEnum
-      fileFormat:
-        range: ArrayFileFormatEnum
-
   GenomicsAssayTemplate:
     annotations:
+      dataGranularity: specimen-level
       required: false
       requiresComponent: ''
-      templateUsage: most_common
       templateFor:
         dataType:
         - gene expression
-      dataGranularity: specimen-level
-    description: Alias to BulkSequencingAssayTemplate, use for sequence data on a
-      large scale when there is no template available that is more specific.
+      templateUsage: most_common
+    description: Alias to BulkSequencingAssayTemplate, use for sequence data on a large scale when there is no template available that is more specific.
     is_a: BulkSequencingAssayTemplate
     notes:
     - It's possible that not all raw genomics data equates to sequencing output.
-    slots:
-    - isXenograft
     slot_usage:
       assay:
         range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
       isXenograft:
         ifabsent: string(No)
-
+      platform:
+        range: SequencingPlatformEnum
+    slots:
+    - isXenograft
   GenomicsAssayTemplateExtended:
     annotations:
+      dataGranularity: specimen-level
       required: false
       requiresComponent: ''
-      templateUsage: specialized
       templateFor:
         dataType:
         - gene expression
-      dataGranularity: specimen-level
+      templateUsage: specialized
     description: Genomics assay template but with additional experiment data.
     is_a: GenomicsAssayTemplate
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
     slots:
     - experimentalCondition
     - experimentalTimepoint
@@ -165,48 +245,79 @@ classes:
     - genePerturbationTechnology
     - genePerturbationType
     - comments
+  MethylationArrayTemplate:
+    annotations:
+      dataGranularity: specimen-level
+      required: false
+      requiresComponent: ''
+      templateFor:
+        assay:
+        - methylation array
+        dataType:
+        - chromatin activity
+      templateUsage: common
+    description: Template for raw data files (idat) from DNA methylation arrays.
+    is_a: GenomicsArrayTemplate
+    slot_usage:
+      assay:
+        ifabsent: string(methylation array)
+        range: SequencingAssayEnum
+      fileFormat:
+        range: ArrayFileFormatEnum
+      platform:
+        range: ArrayPlatformEnum
+    slots:
+    - chipID
+    - chipPosition
+    - plateName
+    - plateWell
+    source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=raw_methylation_array
+  PdxGenomicsAssayTemplate:
+    annotations:
+      dataGranularity: specimen-level
+      required: false
+      requiresComponent: ''
+      templateFor:
+        dataType:
+        - gene expression
+      templateUsage: specialized
+    description: Raw genomics data from patient-derived xenograft (PDX) experiment, with additional PDX-relevant metadata.
+    is_a: GenomicsAssayTemplate
     rules:
     - description: If experimentalTimepoint is provided, timepointUnit must be provided
-      preconditions:
-        slot_conditions:
-          experimentalTimepoint:
-            value_presence: PRESENT
       postconditions:
         slot_conditions:
           timepointUnit:
             value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationType must be provided
       preconditions:
         slot_conditions:
-          genePerturbed:
+          experimentalTimepoint:
             value_presence: PRESENT
+    - description: If transplantationType is provided, transplantationRecipientSpecies must be provided
       postconditions:
         slot_conditions:
-          genePerturbationType:
+          transplantationRecipientSpecies:
             value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationTechnology must be
-        provided
       preconditions:
         slot_conditions:
-          genePerturbed:
+          transplantationType:
             value_presence: PRESENT
+    - description: If transplantationType is provided, transplantationRecipientTissue must be provided
       postconditions:
         slot_conditions:
-          genePerturbationTechnology:
+          transplantationRecipientTissue:
             value_presence: PRESENT
-
-  PdxGenomicsAssayTemplate:
-    annotations:
-      required: false
-      requiresComponent: ''
-      templateUsage: specialized
-      templateFor:
-        dataType:
-        - gene expression
-      dataGranularity: specimen-level
-    description: Raw genomics data from patient-derived xenograft (PDX) experiment,
-      with additional PDX-relevant metadata.
-    is_a: GenomicsAssayTemplate
+      preconditions:
+        slot_conditions:
+          transplantationType:
+            value_presence: PRESENT
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+      platform:
+        range: SequencingPlatformEnum
     slots:
     - transplantationType
     - transplantationRecipientSpecies
@@ -219,355 +330,50 @@ classes:
     - experimentalCondition
     - experimentalTimepoint
     - timepointUnit
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-    rules:
-    - description: If experimentalTimepoint is provided, timepointUnit must be provided
-      preconditions:
-        slot_conditions:
-          experimentalTimepoint:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          timepointUnit:
-            value_presence: PRESENT
-    - description: If transplantationType is provided, transplantationRecipientSpecies
-        must be provided
-      preconditions:
-        slot_conditions:
-          transplantationType:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          transplantationRecipientSpecies:
-            value_presence: PRESENT
-    - description: If transplantationType is provided, transplantationRecipientTissue
-        must be provided
-      preconditions:
-        slot_conditions:
-          transplantationType:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          transplantationRecipientTissue:
-            value_presence: PRESENT
-
-  RNASeqTemplate:
+  ProcessedAggregatedDataTemplate:
     annotations:
-      required: false
-      requiresComponent: ''
-      templateUsage: most_common
+      dataGranularity: aggregate-level
       templateFor:
-        dataType:
-        - gene expression
         assay:
-        - RNA-seq
-        - lncRNA-seq
-      dataGranularity: specimen-level
-    close_mappings:
-    - htan:BulkRNA-seqLevel1
-    description: Template for describing raw data from (bulk) RNA-sequencing
-    is_a: BulkSequencingAssayTemplate
-    slots:
-    - genePerturbed
-    - genePerturbationType
-    - genePerturbationTechnology
-    - experimentalCondition
-    - isCellLine
-    - isPrimaryCell
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-      dataType:
-        ifabsent: string(gene expression)
-      isPrimaryCell:
-        ifabsent: string(Yes)
-    rules:
-    - description: If genePerturbed is provided, genePerturbationType must be provided
-      preconditions:
-        slot_conditions:
-          genePerturbed:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          genePerturbationType:
-            value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationTechnology must be
-        provided
-      preconditions:
-        slot_conditions:
-          genePerturbed:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          genePerturbationTechnology:
-            value_presence: PRESENT
-
-  ScSequencingAssayTemplate:
-    annotations:
-      required: false
-      requiresComponent: ''
+        - quantitative PCR
+        dataType:
+        - aggregated somatic mutation
       templateUsage: common
-      templateFor:
-        dataType:
-        - gene expression
-        assay:
-        - ISO-seq
-        - miRNA-seq
-        - NOMe-seq
-        - next-generation sequencing
-        - ribo-seq
-        - scCGI-seq
-        - Sanger sequencing
-        - T cell receptor repertoire sequencing
-      dataGranularity: specimen-level
-    description: General template for raw RNA/DNA data, i.e. sequence data from a
-      sequencing assay.
-    is_a: GeneticsAssayTemplate
+    description: Template for processed data aggregated across multiple specimens into a single file, where individual-level attributes (specimenID, individualID) do not apply. Use for summarized assay results such as qPCR Ct value tables.
+    is_a: FileBasedTemplate
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
+      expressionUnit:
+        required: false
+      species:
+        required: false
     slots:
-    - cellType
-    - isCellLine
-    - cellID
-    - dissociationMethod
-    - runType
-    - libraryStrand
-    - libraryKitID
-    - libraryPrep
-    - libraryPreparationMethod
-    - readPair
-    - readLength
-    - readDepth
-    - targetDepth
-    - batchID
+    - dataType
+    - dataSubtype
+    - assay
+    - expressionUnit
+    - workflow
+    - workflowLink
     - auxiliaryAsset
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-
-  ScRNASeqTemplate:
-    annotations:
-      required: false
-      requiresComponent: ''
-      templateUsage: most_common
-      templateFor:
-        dataType:
-        - gene expression
-        assay:
-        - single-cell RNA-seq
-      dataGranularity: specimen-level
-    description: Template for describing raw data from single-cell RNA-seq.
-    is_a: ScSequencingAssayTemplate
-    slots:
-    - genePerturbed
-    - genePerturbationType
-    - genePerturbationTechnology
-    - experimentalCondition
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        any_of:
-        - range: SequencingFileFormatEnum
-        - range: TabularFileFormatEnum
-        - range: OtherFileFormatEnum
-      dataType:
-        ifabsent: string(gene expression)
-    rules:
-    - description: If genePerturbed is provided, genePerturbationType must be provided
-      preconditions:
-        slot_conditions:
-          genePerturbed:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          genePerturbationType:
-            value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationTechnology must be
-        provided
-      preconditions:
-        slot_conditions:
-          genePerturbed:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          genePerturbationTechnology:
-            value_presence: PRESENT
-
-  WESTemplate:
-    annotations:
-      required: false
-      requiresComponent: ''
-      templateUsage: most_common
-      templateFor:
-        dataType:
-        - genomic variants
-        assay:
-        - whole exome sequencing
-      dataGranularity: specimen-level
-    close_mappings:
-    - htan:BulkWESLevel1
-    description: Template for describing raw data from Whole Exome Sequencing (WES/WXS)
-    is_a: BulkSequencingAssayTemplate
-    slots:
-    - targetCaptureKitID
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-      dataType:
-        ifabsent: string(genomic variants)
-      targetCaptureKitID:
-        required: true
-
-  WGSTemplate:
-    annotations:
-      required: false
-      requiresComponent: ''
-      templateUsage: most_common
-      templateFor:
-        dataType:
-        - genomic variants
-        assay:
-        - whole genome sequencing
-      dataGranularity: specimen-level
-    description: Template for describing raw data from Whole Genome Sequencing (WGS)
-    is_a: BulkSequencingAssayTemplate
-    slots:
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-      dataType:
-        ifabsent: string(genomic variants)
-
-  # Epigenomics Templates
-  EpigenomicsAssayTemplate:
-    annotations:
-      required: false
-      requiresComponent: ''
-      templateUsage: common
-      templateFor:
-        dataType:
-        - chromatin activity
-        assay:
-        - ATAC-seq
-        - bisulfite sequencing
-        - CAPP-seq
-        - CUT&RUN
-        - ERR bisulfite sequencing
-        - HI-C
-        - NOMe-seq
-        - oxBS-seq
-      dataGranularity: specimen-level
-    close_mappings:
-    - htan:BulkMethylation-seqLevel1
-    description: Template for describing raw data from epigenetics sequencing assays
-      such as bisulfite sequencing.
-    is_a: BulkSequencingAssayTemplate
-    slots:
-    - bisulfiteConversionKitID
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-      platform:
-        any_of:
-        - range: SequencingPlatformEnum
-        - range: ArrayPlatformEnum
-      fileFormat:
-        any_of:
-        - range: SequencingFileFormatEnum
-        - range: ArrayFileFormatEnum
-
-  ChIPSeqTemplate:
-    annotations:
-      required: false
-      requiresComponent: ''
-      templateUsage: common
-      templateFor:
-        dataType:
-        - chromatin activity
-        assay:
-        - ChIP-seq
-      dataGranularity: specimen-level
-    description: Template for describing raw data from ChIP-Seq assays, typically
-      used to identify DNA-protein interactions.
-    is_a: EpigenomicsAssayTemplate
-    slots:
-    - antibodyID
-    - platform
-    - peakCallingAlgorithm
-    - assayTarget
-    - genePerturbationType
-    - genePerturbationTechnology
-    - genePerturbed
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-        ifabsent: string(ChIP-seq)
-      platform:
-        range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-
-  MethylationArrayTemplate:
-    annotations:
-      required: false
-      requiresComponent: ''
-      templateUsage: common
-      templateFor:
-        dataType:
-        - chromatin activity
-        assay:
-        - methylation array
-      dataGranularity: specimen-level
-    description: Template for raw data files (idat) from DNA methylation arrays.
-    is_a: GenomicsArrayTemplate
-    slots:
-    - chipID
-    - chipPosition
-    - plateName
-    - plateWell
-    source:
-      https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=raw_methylation_array
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-        ifabsent: string(methylation array)
-      platform:
-        range: ArrayPlatformEnum
-      fileFormat:
-        range: ArrayFileFormatEnum
-
-  # Processed Genomics/Epigenomics Templates
+    - species
+    - comments
   ProcessedAlignedReadsTemplate:
     annotations:
+      dataGranularity: specimen-level
       required: false
       requiresComponent: ''
-      templateUsage: common
       templateFor:
-        dataType:
-        - aligned reads
         assay:
         - ATAC-seq
         - CAPP-seq
@@ -585,15 +391,41 @@ classes:
         - targeted exome sequencing
         - whole exome sequencing
         - whole genome sequencing
-      dataGranularity: specimen-level
+        dataType:
+        - aligned reads
+      templateUsage: common
     close_mappings:
     - htan:ScRNA-seqLevel2
     - htan:BulkRNA-seqLevel2
     - htan:BulkWESLevel2
-    description: "Template for describing aligned reads (e.g. BAM/CRAM files) from
-      a sequencing assay. The QC meta are extracted from samtools stats when available
-      and are the same metrics preferred by GDC."
+    description: Template for describing aligned reads (e.g. BAM/CRAM files) from a sequencing assay. The QC meta are extracted from samtools stats when available and are the same metrics preferred by GDC.
     is_a: BiologicalAssayDataTemplate
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+    - description: If genomicReference is provided, genomicReferenceLink must be provided
+      postconditions:
+        slot_conditions:
+          genomicReferenceLink:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          genomicReference:
+            value_presence: PRESENT
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
+      dataType:
+        ifabsent: string(aligned reads)
+      fileFormat:
+        range: SequencingFileFormatEnum
     slots:
     - genomicReference
     - genomicReferenceLink
@@ -612,43 +444,12 @@ classes:
     - workflowLink
     - auxiliaryAsset
     - specimenID
-    slot_usage:
-      dataType:
-        ifabsent: string(aligned reads)
-      dataSubtype:
-        ifabsent: string(processed)
-      fileFormat:
-        range: SequencingFileFormatEnum
-    rules:
-    - description: If workflow is provided, workflowLink must be provided
-      preconditions:
-        slot_conditions:
-          workflow:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          workflowLink:
-            value_presence: PRESENT
-    - description: If genomicReference is provided, genomicReferenceLink must be provided
-      preconditions:
-        slot_conditions:
-          genomicReference:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          genomicReferenceLink:
-            value_presence: PRESENT
-
   ProcessedGeneExpressionTemplate:
     annotations:
+      dataGranularity: specimen-level
       required: false
       requiresComponent: ''
-      templateUsage: common
       templateFor:
-        dataType:
-        - count matrix
-        - quantified gene expression
-        - isoform expression
         assay:
         - quantitative PCR
         - microarray
@@ -656,55 +457,67 @@ classes:
         - RNA array
         - RNA-seq
         - single-cell RNA-seq
-      dataGranularity: specimen-level
+        dataType:
+        - count matrix
+        - quantified gene expression
+        - isoform expression
+      templateUsage: common
     close_mappings:
     - htan:BulkRNA-seqLevel3
-    description: Template for quantified gene/protein expression data that are still
-      represented as one file per sample.
+    description: Template for quantified gene/protein expression data that are still represented as one file per sample.
     is_a: BiologicalAssayDataTemplate
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
+      expressionUnit:
+        required: true
     slots:
     - expressionUnit
     - workflow
     - workflowLink
     - auxiliaryAsset
     - specimenID
-    slot_usage:
-      dataSubtype:
-        ifabsent: string(processed)
-      expressionUnit:
-        required: true
-    rules:
-    - description: If workflow is provided, workflowLink must be provided
-      preconditions:
-        slot_conditions:
-          workflow:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          workflowLink:
-            value_presence: PRESENT
-
   ProcessedMergedDataTemplate:
     annotations:
+      dataGranularity: aggregate-level
       required: false
       requiresComponent: ''
-      templateUsage: specialized
       templateFor:
         dataType:
         - gene expression matrix
         - quantified gene expression
         - genomic variants
-      dataGranularity: aggregate-level
+      templateUsage: specialized
     close_mappings:
     - https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aggregated_somatic_mutation
     - https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=gene_expression
-    description: 'Further processed data with multiple samples aggregated into one
-      file. This may be also be known as level-4 data. Unlike level-2 and level-3
-      data, individual-level attributes such as age and sex are no longer surfaced
-      on the data file directly.
+    description: 'Further processed data with multiple samples aggregated into one file. This may be also be known as level-4 data. Unlike level-2 and level-3 data, individual-level attributes such as age and sex are no longer surfaced on the data file directly.
 
       '
     is_a: FileBasedTemplate
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
     slots:
     - dataType
     - dataSubtype
@@ -712,67 +525,18 @@ classes:
     - workflowLink
     - auxiliaryAsset
     - assay
-    slot_usage:
-      dataSubtype:
-        ifabsent: string(processed)
-    rules:
-    - description: If workflow is provided, workflowLink must be provided
-      preconditions:
-        slot_conditions:
-          workflow:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          workflowLink:
-            value_presence: PRESENT
-
-  ProcessedAggregatedDataTemplate:
-    annotations:
-      templateUsage: common
-      templateFor:
-        dataType:
-        - aggregated somatic mutation
-        assay:
-        - quantitative PCR
-      dataGranularity: aggregate-level
-    description: Template for processed data aggregated across multiple specimens
-      into a single file, where individual-level attributes (specimenID, individualID)
-      do not apply. Use for summarized assay results such as qPCR Ct value tables.
-    is_a: FileBasedTemplate
-    slots:
-    - dataType
-    - dataSubtype
-    - assay
-    - expressionUnit
-    - workflow
-    - workflowLink
-    - auxiliaryAsset
-    - species
-    - comments
-    slot_usage:
-      dataSubtype:
-        ifabsent: string(processed)
-      expressionUnit:
-        required: false
-      species:
-        required: false
-    rules:
-    - description: If workflow is provided, workflowLink must be provided
-      preconditions:
-        slot_conditions:
-          workflow:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          workflowLink:
-            value_presence: PRESENT
-
   ProcessedVariantCallsTemplate:
     annotations:
+      dataGranularity: specimen-level
       required: false
       requiresComponent: ''
-      templateUsage: common
       templateFor:
+        assay:
+        - next-generation sequencing
+        - targeted exome sequencing
+        - whole exome sequencing
+        - whole genome sequencing
+        - TIDE
         dataType:
         - germline variants
         - annotated germline variants
@@ -780,36 +544,225 @@ classes:
         - annotated somatic mutation
         - copy number variants
         - structural variants
-        assay:
-        - next-generation sequencing
-        - targeted exome sequencing
-        - whole exome sequencing
-        - whole genome sequencing
-        - TIDE
-      dataGranularity: specimen-level
+      templateUsage: common
     close_mappings:
     - htan:BulkWESLevel3
-    description: Template for describing either simple germline/somatic variant calls
-      output data (VCF/MAF) as well as structural variants (e.g. CNVs).
+    description: Template for describing either simple germline/somatic variant calls output data (VCF/MAF) as well as structural variants (e.g. CNVs).
     is_a: BiologicalAssayDataTemplate
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+    slot_usage:
+      dataSubtype:
+        ifabsent: string(processed)
+      fileFormat:
+        range: SequencingFileFormatEnum
     slots:
     - isFilteredReads
     - workflow
     - workflowLink
     - auxiliaryAsset
     - specimenID
-    slot_usage:
-      dataSubtype:
-        ifabsent: string(processed)
-      fileFormat:
-        range: SequencingFileFormatEnum
+  RNASeqTemplate:
+    annotations:
+      dataGranularity: specimen-level
+      required: false
+      requiresComponent: ''
+      templateFor:
+        assay:
+        - RNA-seq
+        - lncRNA-seq
+        dataType:
+        - gene expression
+      templateUsage: most_common
+    close_mappings:
+    - htan:BulkRNA-seqLevel1
+    description: Template for describing raw data from (bulk) RNA-sequencing
+    is_a: BulkSequencingAssayTemplate
     rules:
-    - description: If workflow is provided, workflowLink must be provided
-      preconditions:
-        slot_conditions:
-          workflow:
-            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationType must be provided
       postconditions:
         slot_conditions:
-          workflowLink:
+          genePerturbationType:
             value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      dataType:
+        ifabsent: string(gene expression)
+      fileFormat:
+        range: SequencingFileFormatEnum
+      isPrimaryCell:
+        ifabsent: string(Yes)
+      platform:
+        range: SequencingPlatformEnum
+    slots:
+    - genePerturbed
+    - genePerturbationType
+    - genePerturbationTechnology
+    - experimentalCondition
+    - isCellLine
+    - isPrimaryCell
+  ScRNASeqTemplate:
+    annotations:
+      dataGranularity: specimen-level
+      required: false
+      requiresComponent: ''
+      templateFor:
+        assay:
+        - single-cell RNA-seq
+        dataType:
+        - gene expression
+      templateUsage: most_common
+    description: Template for describing raw data from single-cell RNA-seq.
+    is_a: ScSequencingAssayTemplate
+    rules:
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      dataType:
+        ifabsent: string(gene expression)
+      fileFormat:
+        any_of:
+        - range: SequencingFileFormatEnum
+        - range: TabularFileFormatEnum
+        - range: OtherFileFormatEnum
+      platform:
+        range: SequencingPlatformEnum
+    slots:
+    - genePerturbed
+    - genePerturbationType
+    - genePerturbationTechnology
+    - experimentalCondition
+  ScSequencingAssayTemplate:
+    annotations:
+      dataGranularity: specimen-level
+      required: false
+      requiresComponent: ''
+      templateFor:
+        assay:
+        - ISO-seq
+        - miRNA-seq
+        - NOMe-seq
+        - next-generation sequencing
+        - ribo-seq
+        - scCGI-seq
+        - Sanger sequencing
+        - T cell receptor repertoire sequencing
+        dataType:
+        - gene expression
+      templateUsage: common
+    description: General template for raw RNA/DNA data, i.e. sequence data from a sequencing assay.
+    is_a: GeneticsAssayTemplate
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      fileFormat:
+        range: SequencingFileFormatEnum
+      platform:
+        range: SequencingPlatformEnum
+    slots:
+    - cellType
+    - isCellLine
+    - cellID
+    - dissociationMethod
+    - runType
+    - libraryStrand
+    - libraryKitID
+    - libraryPrep
+    - libraryPreparationMethod
+    - readPair
+    - readLength
+    - readDepth
+    - targetDepth
+    - batchID
+    - auxiliaryAsset
+  WESTemplate:
+    annotations:
+      dataGranularity: specimen-level
+      required: false
+      requiresComponent: ''
+      templateFor:
+        assay:
+        - whole exome sequencing
+        dataType:
+        - genomic variants
+      templateUsage: most_common
+    close_mappings:
+    - htan:BulkWESLevel1
+    description: Template for describing raw data from Whole Exome Sequencing (WES/WXS)
+    is_a: BulkSequencingAssayTemplate
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      dataType:
+        ifabsent: string(genomic variants)
+      fileFormat:
+        range: SequencingFileFormatEnum
+      platform:
+        range: SequencingPlatformEnum
+      targetCaptureKitID:
+        required: true
+    slots:
+    - targetCaptureKitID
+  WGSTemplate:
+    annotations:
+      dataGranularity: specimen-level
+      required: false
+      requiresComponent: ''
+      templateFor:
+        assay:
+        - whole genome sequencing
+        dataType:
+        - genomic variants
+      templateUsage: most_common
+    description: Template for describing raw data from Whole Genome Sequencing (WGS)
+    is_a: BulkSequencingAssayTemplate
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      dataType:
+        ifabsent: string(genomic variants)
+      fileFormat:
+        range: SequencingFileFormatEnum
+      platform:
+        range: SequencingPlatformEnum
+    slots:

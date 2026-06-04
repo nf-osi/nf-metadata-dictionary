@@ -17,25 +17,15 @@ enums:
   ExpressionUnitEnum:
     description: Quantification units for gene expression.
     permissible_values:
-      Counts:
-        description: Either raw read counts or normalized counts (use the more specific term if possible).
       CPM:
         description: Counts per million mapped reads, a simple normalization for sequencing depth.
+      Counts:
+        description: Either raw read counts or normalized counts (use the more specific term if possible).
       Ct:
         aliases:
         - Cq
         - cycle threshold
         description: Cycle threshold (Ct) value from quantitative PCR, representing the cycle number at which fluorescence signal crosses a defined threshold.
-      delta Ct:
-        aliases:
-        - ΔCt
-        description: Relative cycle threshold value normalized to a reference gene (target Ct minus reference Ct).
-      delta delta Ct:
-        aliases:
-        - ΔΔCt
-        description: Fold change in expression relative to a control condition, calculated as the difference between sample delta Ct and control delta Ct.
-      fluorescence intensity:
-        description: Fluorescence signal intensity, typically from microarray or imaging-based expression assays.
       FPKM:
         description: Fragments per kilobase of transcript per miilion reads mapped
       Normalized Counts:
@@ -47,6 +37,16 @@ enums:
         description: Raw read counts of transcripts.
       TPM:
         description: Transcript per million
+      delta Ct:
+        aliases:
+        - ΔCt
+        description: Relative cycle threshold value normalized to a reference gene (target Ct minus reference Ct).
+      delta delta Ct:
+        aliases:
+        - ΔΔCt
+        description: Fold change in expression relative to a control condition, calculated as the difference between sample delta Ct and control delta Ct.
+      fluorescence intensity:
+        description: Fluorescence signal intensity, typically from microarray or imaging-based expression assays.
   TimeUnit:
     permissible_values:
       days:

@@ -1,12 +1,10 @@
 classes:
   ImagingAssayTemplate:
     annotations:
+      dataGranularity: specimen-level
       required: false
       requiresComponent: ''
-      templateUsage: most_common
       templateFor:
-        dataType:
-        - image
         assay:
         - 3D imaging
         - high content screen
@@ -18,36 +16,76 @@ classes:
         - positron emission tomography
         - spatial frequency domain imaging
         - western blot
-      dataGranularity: specimen-level
+        dataType:
+        - image
+      templateUsage: most_common
     description: General template for describing imaging data.
     is_a: BiologicalAssayDataTemplate
     slot_usage:
       assay:
         range: ImagingAssayEnum
+      dataType:
+        ifabsent: string(image)
+      fileFormat:
+        any_of:
+        - range: ImagingFileFormatEnum
+        - range: TabularFileFormatEnum
       platform:
         any_of:
         - range: MicroscopyImagingPlatformEnum
         - range: MRIPlatformEnum
         - range: ImagingSystemPlatformEnum
-      fileFormat:
-        any_of:
-        - range: ImagingFileFormatEnum
-        - range: TabularFileFormatEnum
-      dataType:
-        ifabsent: string(image)
     slots:
     - platform
     - assayTarget
     - auxiliaryAsset
-
-  MicroscopyAssayTemplate:
+  MRIAssayTemplate:
     annotations:
+      dataGranularity: individual-level
       required: false
       requiresComponent: ''
-      templateUsage: most_common
       templateFor:
+        assay:
+        - conventional MRI
+        - functional MRI
         dataType:
         - image
+      templateUsage: most_common
+    description: Template for describing MRI data.
+    is_a: ImagingAssayTemplate
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+    slot_usage:
+      assay:
+        range: ImagingAssayEnum
+      dataType:
+        ifabsent: string(image)
+      fileFormat:
+        any_of:
+        - range: ImagingFileFormatEnum
+        - range: TabularFileFormatEnum
+      platform:
+        range: MRIPlatformEnum
+    slots:
+    - bodySite
+    - MRISequence
+    - experimentalCondition
+    - experimentalTimepoint
+    - timepointUnit
+  MicroscopyAssayTemplate:
+    annotations:
+      dataGranularity: specimen-level
+      required: false
+      requiresComponent: ''
+      templateFor:
         assay:
         - 3D confocal imaging
         - 3D electron microscopy
@@ -58,12 +96,54 @@ classes:
         - immunohistochemistry
         - phase-contrast microscopy
         - traction force microscopy
-      dataGranularity: specimen-level
+        dataType:
+        - image
+      templateUsage: most_common
     close_mappings:
     - htan:ImagingLevel2
-    description: Template for microscopy imaging data. For immunofluorescence or
-      immunohistochemistry assays, provide antibodyID.
+    description: Template for microscopy imaging data. For immunofluorescence or immunohistochemistry assays, provide antibodyID.
     is_a: ImagingAssayTemplate
+    rules:
+    - description: If workingDistance is provided, workingDistanceUnit must be provided
+      postconditions:
+        slot_conditions:
+          workingDistanceUnit:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          workingDistance:
+            value_presence: PRESENT
+    - description: If aliquotID is provided, specimenID must be provided
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          aliquotID:
+            value_presence: PRESENT
+    - description: If parentSpecimenID is provided, specimenID must be provided
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          parentSpecimenID:
+            value_presence: PRESENT
+    slot_usage:
+      assay:
+        range: ImagingAssayEnum
+      dataType:
+        ifabsent: string(image)
+      fileFormat:
+        any_of:
+        - range: ImagingFileFormatEnum
+        - range: TabularFileFormatEnum
+      platform:
+        any_of:
+        - range: MicroscopyImagingPlatformEnum
+        - range: OtherPlatformEnum
     slots:
     - parentSpecimenID
     - specimenID
@@ -75,86 +155,3 @@ classes:
     - workingDistanceUnit
     - immersion
     - antibodyID
-    slot_usage:
-      assay:
-        range: ImagingAssayEnum
-      platform:
-        any_of:
-        - range: MicroscopyImagingPlatformEnum
-        - range: OtherPlatformEnum
-      fileFormat:
-        any_of:
-        - range: ImagingFileFormatEnum
-        - range: TabularFileFormatEnum
-      dataType:
-        ifabsent: string(image)
-    rules:
-    - description: If workingDistance is provided, workingDistanceUnit must be provided
-      preconditions:
-        slot_conditions:
-          workingDistance:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          workingDistanceUnit:
-            value_presence: PRESENT
-    - description: If aliquotID is provided, specimenID must be provided
-      preconditions:
-        slot_conditions:
-          aliquotID:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          specimenID:
-            value_presence: PRESENT
-    - description: If parentSpecimenID is provided, specimenID must be provided
-      preconditions:
-        slot_conditions:
-          parentSpecimenID:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          specimenID:
-            value_presence: PRESENT
-
-  MRIAssayTemplate:
-    annotations:
-      required: false
-      requiresComponent: ''
-      templateUsage: most_common
-      templateFor:
-        dataType:
-        - image
-        assay:
-        - conventional MRI
-        - functional MRI
-      dataGranularity: individual-level
-    description: Template for describing MRI data.
-    is_a: ImagingAssayTemplate
-    slots:
-    - bodySite
-    - MRISequence
-    - experimentalCondition
-    - experimentalTimepoint
-    - timepointUnit
-    slot_usage:
-      assay:
-        range: ImagingAssayEnum
-      platform:
-        range: MRIPlatformEnum
-      fileFormat:
-        any_of:
-        - range: ImagingFileFormatEnum
-        - range: TabularFileFormatEnum
-      dataType:
-        ifabsent: string(image)
-    rules:
-    - description: If experimentalTimepoint is provided, timepointUnit must be provided
-      preconditions:
-        slot_conditions:
-          experimentalTimepoint:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          timepointUnit:
-            value_presence: PRESENT

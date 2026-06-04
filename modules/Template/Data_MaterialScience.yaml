@@ -1,20 +1,77 @@
 classes:
-  MaterialScienceAssayTemplate:
+  LightScatteringAssayTemplate:
     annotations:
+      dataGranularity: specimen-level
       required: false
       requiresComponent: ''
-      templateUsage: specialized
       templateFor:
+        assay:
+        - dynamic light scattering
+        - microrheology
+        - oscillatory rheology
+        - static light scattering
         dataType:
-        - molecular property
         - particle characterization
+      templateUsage: specialized
+    description: Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.
+    is_a: MaterialScienceAssayTemplate
+    rules:
+    - description: If concentrationNaCl is provided, concentrationNaClUnit must be provided
+      postconditions:
+        slot_conditions:
+          concentrationNaClUnit:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          concentrationNaCl:
+            value_presence: PRESENT
+    slot_usage:
+      assay:
+        range: CellBasedAssayEnum
+      fileFormat:
+        range: TabularFileFormatEnum
+      platform:
+        range: OtherPlatformEnum
+    slots:
+    - pH
+    - concentrationNaCl
+    - concentrationNaClUnit
+    source: https://wiki.nci.nih.gov/display/icr/isa-tab-nano
+  MaterialScienceAssayTemplate:
+    annotations:
+      dataGranularity: specimen-level
+      required: false
+      requiresComponent: ''
+      templateFor:
         assay:
         - rheometry
         - oscillatory rheology
         - differential scanning calorimetry
-      dataGranularity: specimen-level
+        dataType:
+        - molecular property
+        - particle characterization
+      templateUsage: specialized
     description: General template for describing data for a materials science assay.
     is_a: NonBiologicalAssayDataTemplate
+    rules:
+    - description: If concentrationMaterial is provided, concentrationMaterialUnit must be provided
+      postconditions:
+        slot_conditions:
+          concentrationMaterialUnit:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          concentrationMaterial:
+            value_presence: PRESENT
+    - description: If concentrationNaCl is provided, concentrationNaClUnit must be provided
+      postconditions:
+        slot_conditions:
+          concentrationNaClUnit:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          concentrationNaCl:
+            value_presence: PRESENT
     slots:
     - platform
     - specimenID
@@ -23,65 +80,3 @@ classes:
     - concentrationMaterialUnit
     - concentrationNaCl
     - concentrationNaClUnit
-    rules:
-    - description: If concentrationMaterial is provided, concentrationMaterialUnit
-        must be provided
-      preconditions:
-        slot_conditions:
-          concentrationMaterial:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          concentrationMaterialUnit:
-            value_presence: PRESENT
-    - description: If concentrationNaCl is provided, concentrationNaClUnit must be
-        provided
-      preconditions:
-        slot_conditions:
-          concentrationNaCl:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          concentrationNaClUnit:
-            value_presence: PRESENT
-
-  LightScatteringAssayTemplate:
-    annotations:
-      required: false
-      requiresComponent: ''
-      templateUsage: specialized
-      templateFor:
-        dataType:
-        - particle characterization
-        assay:
-        - dynamic light scattering
-        - microrheology
-        - oscillatory rheology
-        - static light scattering
-      dataGranularity: specimen-level
-    description: Template for dynamic or static light scattering data adapted from
-      ISA-TAB-Nano specs.
-    is_a: MaterialScienceAssayTemplate
-    slots:
-    - pH
-    - concentrationNaCl
-    - concentrationNaClUnit
-    source: https://wiki.nci.nih.gov/display/icr/isa-tab-nano
-    slot_usage:
-      assay:
-        range: CellBasedAssayEnum
-      platform:
-        range: OtherPlatformEnum
-      fileFormat:
-        range: TabularFileFormatEnum
-    rules:
-    - description: If concentrationNaCl is provided, concentrationNaClUnit must be
-        provided
-      preconditions:
-        slot_conditions:
-          concentrationNaCl:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          concentrationNaClUnit:
-            value_presence: PRESENT

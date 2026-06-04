@@ -9,18 +9,14 @@ classes:
       acknowledgementStatements:
         range: string
         required: false
-      externalRepositoryUri:
-        range: string
-        required: false
       clinicalTrialID:
         range: string
         required: false
       dataCoordinatingCenter:
+        description: The organization or center responsible for coordinating data management and sharing for this study. Defaults to "NF-OSI".
+        ifabsent: string(NF-OSI)
         range: string
         required: false
-        description: The organization or center responsible for coordinating data
-          management and sharing for this study. Defaults to "NF-OSI".
-        ifabsent: string(NF-OSI)
       dataStatus:
         range: DataStatusEnum
         required: true
@@ -34,6 +30,9 @@ classes:
         required: false
       embargoEndDate:
         range: string
+      externalRepositoryUri:
+        range: string
+        required: false
       fundingAgency:
         range: string
         required: true
@@ -57,20 +56,17 @@ classes:
         range: ManifestationEnum
         required: false
       nextPhaseProject:
-        range: string
-        required: false
-        description: Synapse project ID of a follow-up project that represents a subsequent
-          funding phase, extension, or continuation of this study's research effort.
+        description: Synapse project ID of a follow-up project that represents a subsequent funding phase, extension, or continuation of this study's research effort.
         exact_mappings:
         - https://schema.org/successorOf
-      previousPhaseProject:
         range: string
         required: false
-        description: Synapse project ID of the previous project that this study continues
-          or extends, typically representing an earlier funding phase of the same
-          research effort.
+      previousPhaseProject:
+        description: Synapse project ID of the previous project that this study continues or extends, typically representing an earlier funding phase of the same research effort.
         exact_mappings:
         - https://schema.org/predecessorOf
+        range: string
+        required: false
       relatedStudies:
         multivalued: true
         range: string
@@ -96,12 +92,6 @@ classes:
       summary:
         range: string
         required: true
-    description: 'A scientific project of some planned duration with PIs and key contributors,
-      specific research topics, and potential publication/data/other outputs.  A study
-      is often represented as a Synapse project and so is also referred to as "project".
-      The study schema here is specifically for studies listed on the NF Portal at
-      https://nf.synapse.org/Explore/Studies.'
+    description: A scientific project of some planned duration with PIs and key contributors, specific research topics, and potential publication/data/other outputs.  A study is often represented as a Synapse project and so is also referred to as "project". The study schema here is specifically for studies listed on the NF Portal at https://nf.synapse.org/Explore/Studies.
     notes:
-    - There are small differences for the public portal representation of study vs.
-      elsewhere such as in the less-public data sharing plan, but it should always
-      be possible to translate DSP rep to the portal study rep.
+    - There are small differences for the public portal representation of study vs. elsewhere such as in the less-public data sharing plan, but it should always be possible to translate DSP rep to the portal study rep.

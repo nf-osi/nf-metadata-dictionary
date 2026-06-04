@@ -29,6 +29,12 @@ enums:
         description: CRE Recombinase catalyses site-specific recombination between two 34 base pair loxp sites and maintains the phage genome as a monomeric unit-copy plasmid in the lysogenic state.
         meaning: NCIT:C17285
       CRISPR:
+        aliases:
+        - CRISPR editing
+        - CRISPR-Cas9 editing
+        - CRISPR-Cas9
+        - CRISPR-Cas9-mediated gene editing
+        - CRISPR/Cas9 gene editing
         description: ''
       RNAi:
         aliases:
@@ -65,8 +71,74 @@ enums:
       rn6:
         description: Rat genome assembly 6.0 (Rnor_6.0)
         source: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001895.5/
+  LibraryKitIDEnum:
+    permissible_values:
+      Chromium NextGEM Single Cell 3' Reagent Kit v3.1:
+        description: 10x Genomics Chromium NextGEM Single Cell 3' Reagent Kit v3.1
+        source: https://www.10xgenomics.com/products/single-cell-gene-expression
+      Chromium NextGEM Single Cell 5' Reagent Kit v1.1:
+        description: 10x Genomics Chromium NextGEM Single Cell 5' Reagent Kit v1.1
+        source: https://www.10xgenomics.com/products/single-cell-gene-expression
+      Chromium Single Cell 3' Reagent Kit v3:
+        description: 10x Genomics Chromium Single Cell 3' Reagent Kit v3
+        source: https://www.10xgenomics.com/products/single-cell-gene-expression
+      Chromium Single Cell 5' Reagent Kit v1:
+        description: 10x Genomics Chromium Single Cell 5' Reagent Kit v1
+        source: https://www.10xgenomics.com/products/single-cell-gene-expression
+      KAPA HyperPrep Kit:
+        description: KAPA HyperPrep Kit for Illumina platforms
+        source: https://sequencing.roche.com/en/products-solutions/products/sample-preparation/dna-reagents/library-preparation/kapa-hyperprep.html
+      KAPA RNA HyperPrep Kit:
+        description: KAPA RNA HyperPrep Kit with RiboErase
+        source: https://sequencing.roche.com/global/en/products/group/kapa-rna-hyperprep-kits.html
+      NEBNext Ultra II DNA Library Prep Kit:
+        description: New England Biolabs NEBNext Ultra II DNA Library Prep Kit for Illumina
+        source: https://www.neb.com/products/e7645-nebnext-ultra-ii-dna-library-prep-kit-for-illumina
+      NEBNext Ultra II RNA Library Prep Kit:
+        description: New England Biolabs NEBNext Ultra II RNA Library Prep Kit for Illumina
+        source: https://www.neb.com/products/e7770-nebnext-ultra-ii-rna-library-prep-kit-for-illumina
+      Nextera DNA Flex Library Prep Kit:
+        description: Illumina Nextera DNA Flex Library Prep Kit
+        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html
+      Nextera XT DNA Library Prep Kit:
+        description: Illumina Nextera XT DNA Library Prep Kit
+        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-xt-dna.html
+      Oxford Nanopore Ligation Sequencing Kit:
+        description: Oxford Nanopore Technologies Ligation Sequencing Kit
+        source: https://store.nanoporetech.com/sequencing-kits.html
+      Oxford Nanopore Rapid Sequencing Kit:
+        description: Oxford Nanopore Technologies Rapid Sequencing Kit
+        source: https://store.nanoporetech.com/sequencing-kits.html
+      QuantSeq 3' mRNA-Seq Library Prep Kit FWD:
+        description: Lexogen QuantSeq 3' mRNA-Seq Library Prep Kit FWD for Illumina
+        source: https://www.lexogen.com/quantseq-3mrna-sequencing/
+      SMART-Seq v4 Ultra Low Input RNA Kit:
+        description: Takara Bio SMART-Seq v4 Ultra Low Input RNA Kit for Sequencing
+        source: https://www.takarabio.com/products/next-generation-sequencing/single-cell-rna-and-dna-seq/smart-seq-v4-for-mrna-seq
+      Swift 2S Turbo DNA Library Kit:
+        description: Swift Biosciences 2S Turbo DNA Library Kit
+        source: https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/
+      ThruPLEX DNA-Seq Kit:
+        description: Takara Bio ThruPLEX DNA-Seq Kit
+        source: https://www.takarabio.com/products/next-generation-sequencing/dna-seq/thruplex-dna-seq
+      TruSeq DNA Nano Library Prep Kit:
+        description: Illumina TruSeq DNA Nano Library Prep Kit
+        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/truseq-dna-nano.html
+      TruSeq DNA PCR-Free Library Prep Kit:
+        description: Illumina TruSeq DNA PCR-Free Library Prep Kit
+        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/truseq-dna-pcr-free.html
+      TruSeq Stranded Total RNA Library Prep Kit:
+        description: Illumina TruSeq Stranded Total RNA Library Prep Kit with Ribo-Zero
+        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/truseq-stranded-total-rna.html
+      TruSeq Stranded mRNA Library Prep Kit:
+        description: Illumina TruSeq Stranded mRNA Library Prep Kit
+        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/truseq-stranded-mrna.html
+      unknown:
+        description: Library kit information not provided or not available
   LibraryPrepEnum:
     permissible_values:
+      Tn5 transposition:
+        description: Library preparation using Tn5 transposase to simultaneously fragment chromatin and insert sequencing adapters, preferentially at open/accessible chromatin regions. Used in ATAC-seq assays.
       lncRNAenrichment:
         description: RNA library enriched for lncRNA
       miRNAenrichment:
@@ -77,8 +149,6 @@ enums:
         description: RNA selection by polyA tail capture
       rRNAdepletion:
         description: Total RNA library with ribosomal RNA depleted.
-      Tn5 transposition:
-        description: Library preparation using Tn5 transposase to simultaneously fragment chromatin and insert sequencing adapters, preferentially at open/accessible chromatin regions. Used in ATAC-seq assays.
   LibraryPreparationMethodEnum:
     permissible_values:
       10x:
@@ -117,12 +187,12 @@ enums:
       MGIEasy FS PCR-Free DNA Library Prep Set:
         description: MGI Tech PCR-free library preparation kit for DNA sequencing
         source: https://global-mgitech.com/library-preparation-kits/mgieasy-fs-pcr-free-dna-library-prep-set/
+      NEBNext Ultra II DNA Library Prep Kit (E7103) for Illumina:
+        description: New England Biolabs NEBNext Ultra II DNA Library Prep Kit for Illumina (catalog
+        source: https://www.neb.com/en-us/products/e7103-nebnext-ultra-ii-dna-library-prep-kit-for-illumina
       NEBNext mRNA Library Prep Reagent Set for Illumina:
         description: NEBNext mRNA Library Prep Reagent Set for Illumina
         source: https://www.neb.com/products/e6100-nebnext-mrna-library-prep-reagent-set-for-illumina
-      NEBNext Ultra II DNA Library Prep Kit (E7103) for Illumina:
-        description: New England Biolabs NEBNext Ultra II DNA Library Prep Kit for Illumina (catalog #E7103). Widely used for chromatin immunoprecipitation (CUT&RUN, ChIP-seq) library preparation.
-        source: https://www.neb.com/en-us/products/e7103-nebnext-ultra-ii-dna-library-prep-kit-for-illumina
       Omni-ATAC:
         description: Omni-ATAC-seq library preparation
         source: https://protocolexchange.researchsquare.com/article/nprot-6107/v1
@@ -148,174 +218,6 @@ enums:
         source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/truseq-stranded-total-rna.html
       unknown:
         description: information not provided
-  LibraryKitIDEnum:
-    permissible_values:
-      Chromium NextGEM Single Cell 3' Reagent Kit v3.1:
-        description: 10x Genomics Chromium NextGEM Single Cell 3' Reagent Kit v3.1
-        source: https://www.10xgenomics.com/products/single-cell-gene-expression
-      Chromium NextGEM Single Cell 5' Reagent Kit v1.1:
-        description: 10x Genomics Chromium NextGEM Single Cell 5' Reagent Kit v1.1
-        source: https://www.10xgenomics.com/products/single-cell-gene-expression
-      Chromium Single Cell 3' Reagent Kit v3:
-        description: 10x Genomics Chromium Single Cell 3' Reagent Kit v3
-        source: https://www.10xgenomics.com/products/single-cell-gene-expression
-      Chromium Single Cell 5' Reagent Kit v1:
-        description: 10x Genomics Chromium Single Cell 5' Reagent Kit v1
-        source: https://www.10xgenomics.com/products/single-cell-gene-expression
-      TruSeq DNA PCR-Free Library Prep Kit:
-        description: Illumina TruSeq DNA PCR-Free Library Prep Kit
-        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/truseq-dna-pcr-free.html
-      TruSeq DNA Nano Library Prep Kit:
-        description: Illumina TruSeq DNA Nano Library Prep Kit
-        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/truseq-dna-nano.html
-      TruSeq Stranded mRNA Library Prep Kit:
-        description: Illumina TruSeq Stranded mRNA Library Prep Kit
-        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/truseq-stranded-mrna.html
-      TruSeq Stranded Total RNA Library Prep Kit:
-        description: Illumina TruSeq Stranded Total RNA Library Prep Kit with Ribo-Zero
-        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/truseq-stranded-total-rna.html
-      NEBNext Ultra II DNA Library Prep Kit:
-        description: New England Biolabs NEBNext Ultra II DNA Library Prep Kit for Illumina
-        source: https://www.neb.com/products/e7645-nebnext-ultra-ii-dna-library-prep-kit-for-illumina
-      NEBNext Ultra II RNA Library Prep Kit:
-        description: New England Biolabs NEBNext Ultra II RNA Library Prep Kit for Illumina
-        source: https://www.neb.com/products/e7770-nebnext-ultra-ii-rna-library-prep-kit-for-illumina
-      KAPA HyperPrep Kit:
-        description: KAPA HyperPrep Kit for Illumina platforms
-        source: https://sequencing.roche.com/en/products-solutions/products/sample-preparation/dna-reagents/library-preparation/kapa-hyperprep.html
-      KAPA RNA HyperPrep Kit:
-        description: KAPA RNA HyperPrep Kit with RiboErase
-        source: https://sequencing.roche.com/global/en/products/group/kapa-rna-hyperprep-kits.html
-      Nextera DNA Flex Library Prep Kit:
-        description: Illumina Nextera DNA Flex Library Prep Kit
-        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html
-      Nextera XT DNA Library Prep Kit:
-        description: Illumina Nextera XT DNA Library Prep Kit
-        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-xt-dna.html
-      SMART-Seq v4 Ultra Low Input RNA Kit:
-        description: Takara Bio SMART-Seq v4 Ultra Low Input RNA Kit for Sequencing
-        source: https://www.takarabio.com/products/next-generation-sequencing/single-cell-rna-and-dna-seq/smart-seq-v4-for-mrna-seq
-      QuantSeq 3' mRNA-Seq Library Prep Kit FWD:
-        description: Lexogen QuantSeq 3' mRNA-Seq Library Prep Kit FWD for Illumina
-        source: https://www.lexogen.com/quantseq-3mrna-sequencing/
-      ThruPLEX DNA-Seq Kit:
-        description: Takara Bio ThruPLEX DNA-Seq Kit
-        source: https://www.takarabio.com/products/next-generation-sequencing/dna-seq/thruplex-dna-seq
-      Swift 2S Turbo DNA Library Kit:
-        description: Swift Biosciences 2S Turbo DNA Library Kit
-        source: https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/
-      Oxford Nanopore Ligation Sequencing Kit:
-        description: Oxford Nanopore Technologies Ligation Sequencing Kit
-        source: https://store.nanoporetech.com/sequencing-kits.html
-      Oxford Nanopore Rapid Sequencing Kit:
-        description: Oxford Nanopore Technologies Rapid Sequencing Kit
-        source: https://store.nanoporetech.com/sequencing-kits.html
-      unknown:
-        description: Library kit information not provided or not available
-  TargetCaptureKitEnum:
-    description: Controlled vocabulary for target capture kits used in exome and targeted sequencing. Kit names follow UCSC Genome Browser exomeProbesets track conventions.
-    permissible_values:
-      IDT xGen Exome Research Panel V1.0:
-        description: IDT xGen Exome Research Panel V1.0 - 39 Mb targeted region, coding sequences from RefSeq (19,396 genes)
-        source: https://www.idtdna.com/pages/products/next-generation-sequencing/targeted-sequencing/hybridization-capture/predesigned-panels/xgen-exome-research-panel-v1
-      IDT xGen Exome Research Panel V2.0:
-        description: IDT xGen Exome Research Panel V2.0 - 34 Mb targeted region, coding sequences from RefSeq 109 (19,433 genes)
-        source: https://www.idtdna.com/pages/products/next-generation-sequencing/targeted-sequencing/hybridization-capture/predesigned-panels/xgen-exome-research-panel-v2
-      Twist RefSeq Exome Panel:
-        description: Twist Bioscience RefSeq Exome Panel - 3.6 Mb targeted region, curated subset of protein coding genes from CCDS
-        source: https://www.twistbioscience.com/products/ngs
-      Twist Core Exome Panel:
-        description: Twist Bioscience Core Exome Panel - 33 Mb targeted region, protein coding genes from CCDS
-        source: https://www.twistbioscience.com/products/ngs/fixed-panels/human-core-exome-kit
-      Twist Comprehensive Exome Panel:
-        description: Twist Bioscience Comprehensive Exome Panel - 36.8 Mb targeted region, protein coding genes from RefSeq, CCDS, and GENCODE
-        source: https://www.twistbioscience.com/products/ngs
-      Twist Exome Panel 2.0:
-        description: Twist Bioscience Exome Panel 2.0 - 36.4 Mb targeted region, protein coding genes from RefSeq, CCDS, and GENCODE
-        source: https://www.twistbioscience.com/products/ngs
-      MGI Easy Exome Capture V4:
-        description: MGI Easy Exome Capture V4 - 59 Mb targeted region, CCDS, GENCODE, RefSeq, and miRBase
-        source: https://www.mgi-tech.com/
-      MGI Easy Exome Capture V5:
-        description: MGI Easy Exome Capture V5 - 69 Mb targeted region, CCDS, GENCODE, RefSeq, miRBase, and MGI Clinical Database
-        source: https://www.mgi-tech.com/
-      Agilent SureSelect Clinical Research Exome:
-        description: Agilent SureSelect Clinical Research Exome - 54 Mb targeted region, disease-associated regions from OMIM, HGMD, and ClinVar
-        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
-      Agilent SureSelect Clinical Research Exome V2:
-        description: Agilent SureSelect Clinical Research Exome V2 - 63.7 Mb targeted region, disease-associated regions from OMIM, HGMD, ClinVar, and ACMG
-        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
-      Agilent SureSelect Focused Exome:
-        description: Agilent SureSelect Focused Exome - 12 Mb targeted region, disease-associated regions from HGMD, OMIM and ClinVar
-        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
-      Agilent SureSelect All Exon V4:
-        description: Agilent SureSelect All Exon V4 - 51 Mb targeted region, coding regions from CCDS, RefSeq, and GENCODE v6, miRBase v17, TCGA v6, and UCSC known genes
-        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
-      Agilent SureSelect All Exon V4 + UTRs:
-        description: Agilent SureSelect All Exon V4 + UTRs - 71 Mb targeted region, coding regions and UTR sequences from CCDS, RefSeq, and GENCODE v6
-        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
-      Agilent SureSelect All Exon V5:
-        description: Agilent SureSelect All Exon V5 - 50 Mb targeted region, coding regions from RefSeq, GENCODE, UCSC, TCGA, CCDS, and miRBase
-        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
-      Agilent SureSelect All Exon V5 + UTRs:
-        description: Agilent SureSelect All Exon V5 + UTRs - 74 Mb targeted region, coding regions and UTR sequences from RefSeq, GENCODE, UCSC, TCGA, CCDS, and miRBase
-        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
-      Agilent SureSelect All Exon V6 r2:
-        description: Agilent SureSelect All Exon V6 r2 - 60 Mb targeted region, coding regions from RefSeq, CCDS, GENCODE, HGMD, and OMIM
-        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
-      Agilent SureSelect All Exon V6 + COSMIC r2:
-        description: Agilent SureSelect All Exon V6 + COSMIC r2 - 66 Mb targeted region, coding regions from RefSeq, CCDS, GENCODE, HGMD, and OMIM, and targets from TCGA and COSMIC
-        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
-      Agilent SureSelect All Exon V6 + UTR r2:
-        description: Agilent SureSelect All Exon V6 + UTR r2 - 75 Mb targeted region, coding regions and UTR sequences from RefSeq, GENCODE, CCDS, UCSC known genes, miRNAs and lncRNA
-        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
-      Agilent SureSelect All Exon V7:
-        description: Agilent SureSelect All Exon V7 - 35.7 Mb targeted region, coding regions from RefSeq, CCDS, GENCODE, and UCSC known genes
-        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
-      Roche KAPA HyperExome:
-        description: Roche KAPA HyperExome - 43 Mb targeted region, coding regions from CCDS, RefSeq, Ensembl, GENCODE, and variants from ClinVar
-        source: https://sequencing.roche.com/en/products-solutions/products/sample-preparation/dna-reagents/targeted-sequencing/kapa-hyperexome.html
-      Roche SeqCap EZ Exome V3:
-        description: Roche SeqCap EZ Exome V3 - 64 Mb targeted region, coding regions from RefSeq RefGene CDS, CCDS, and miRBase v14
-        source: https://sequencing.roche.com/global/en/products/group/seqcap-ez-exome-probes.html
-      Roche SeqCap EZ Exome V3 + UTR:
-        description: Roche SeqCap EZ Exome V3 + UTR - 92 Mb targeted region, coding sequences from RefSeq RefGene, CCDS, and miRBase v14, plus UTRs
-        source: https://sequencing.roche.com/global/en/products/group/seqcap-ez-exome-probes.html
-      Roche SeqCap EZ MedExome:
-        description: Roche SeqCap EZ MedExome - 47 Mb targeted region, coding sequences from CCDS, RefSeq, Ensembl, VEGA, GENCODE, miRBase, and disease-associated regions
-        source: https://sequencing.roche.com/global/en/products/group/seqcap-ez-exome-probes.html
-      Roche SeqCap EZ MedExome + Mito:
-        description: Roche SeqCap EZ MedExome + Mito - 47 Mb targeted region, coding sequences and mitochondrial genes from CCDS, RefSeq, Ensembl, VEGA, GENCODE, and miRBase
-        source: https://sequencing.roche.com/global/en/products/group/seqcap-ez-exome-probes.html
-      Illumina Nextera DNA Exome V1.2:
-        description: Illumina Nextera DNA Exome V1.2 - 45 Mb targeted region, coding regions from RefSeq, CCDS, Ensembl, and GENCODE v19
-        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-exome.html
-      Illumina Nextera Rapid Capture Exome:
-        description: Illumina Nextera Rapid Capture Exome - 37 Mb targeted region, 212,158 targeted exonic regions in GRCh37/hg19
-        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-rapid-capture-exome.html
-      Illumina Nextera Rapid Capture Exome V1.2:
-        description: Illumina Nextera Rapid Capture Exome V1.2 - 37 Mb targeted region, coding regions from RefSeq, CCDS, Ensembl, and GENCODE v12
-        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-rapid-capture-exome.html
-      Illumina Nextera Rapid Capture Expanded Exome:
-        description: Illumina Nextera Rapid Capture Expanded Exome - 66 Mb targeted region, coding regions from RefSeq, CCDS, Ensembl, and GENCODE v12
-        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-rapid-capture-expanded-exome.html
-      Illumina TruSeq DNA Exome V1.2:
-        description: Illumina TruSeq DNA Exome V1.2 - 45 Mb targeted region, coding regions from RefSeq, CCDS, and Ensembl
-        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/truseq-dna-exome.html
-      Illumina TruSeq Rapid Exome V1.2:
-        description: Illumina TruSeq Rapid Exome V1.2 - 45 Mb targeted region, coding regions from RefSeq, CCDS, Ensembl, and GENCODE v19
-        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/truseq-rapid-exome.html
-      Illumina TruSight ONE V1.1:
-        description: Illumina TruSight ONE V1.1 - 12 Mb targeted region, coding regions of 6700 genes from HGMD, OMIM, and GeneTest
-        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/trusight-one-sequencing-panel.html
-      Illumina TruSight Exome:
-        description: Illumina TruSight Exome - 7 Mb targeted region, disease-causing mutations as curated by HGMD
-        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/trusight-exome.html
-      Illumina AmpliSeq Exome Panel:
-        description: Illumina AmpliSeq Exome Panel - CCDS coding regions
-        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/ampliseq-exome-panel.html
-      unknown:
-        description: Target capture kit information not provided or not available
   MRISequenceEnum:
     permissible_values:
       PD-weighted:
@@ -388,6 +290,110 @@ enums:
         description: Sequences of read 2 align to the RNA strand, "reverse stranded".
       Unstranded:
         description: Either read 1 or read 2 can align to the RNA strand.
+  TargetCaptureKitEnum:
+    description: Controlled vocabulary for target capture kits used in exome and targeted sequencing. Kit names follow UCSC Genome Browser exomeProbesets track conventions.
+    permissible_values:
+      Agilent SureSelect All Exon V4:
+        description: Agilent SureSelect All Exon V4 - 51 Mb targeted region, coding regions from CCDS, RefSeq, and GENCODE v6, miRBase v17, TCGA v6, and UCSC known genes
+        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
+      Agilent SureSelect All Exon V4 + UTRs:
+        description: Agilent SureSelect All Exon V4 + UTRs - 71 Mb targeted region, coding regions and UTR sequences from CCDS, RefSeq, and GENCODE v6
+        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
+      Agilent SureSelect All Exon V5:
+        description: Agilent SureSelect All Exon V5 - 50 Mb targeted region, coding regions from RefSeq, GENCODE, UCSC, TCGA, CCDS, and miRBase
+        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
+      Agilent SureSelect All Exon V5 + UTRs:
+        description: Agilent SureSelect All Exon V5 + UTRs - 74 Mb targeted region, coding regions and UTR sequences from RefSeq, GENCODE, UCSC, TCGA, CCDS, and miRBase
+        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
+      Agilent SureSelect All Exon V6 + COSMIC r2:
+        description: Agilent SureSelect All Exon V6 + COSMIC r2 - 66 Mb targeted region, coding regions from RefSeq, CCDS, GENCODE, HGMD, and OMIM, and targets from TCGA and COSMIC
+        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
+      Agilent SureSelect All Exon V6 + UTR r2:
+        description: Agilent SureSelect All Exon V6 + UTR r2 - 75 Mb targeted region, coding regions and UTR sequences from RefSeq, GENCODE, CCDS, UCSC known genes, miRNAs and lncRNA
+        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
+      Agilent SureSelect All Exon V6 r2:
+        description: Agilent SureSelect All Exon V6 r2 - 60 Mb targeted region, coding regions from RefSeq, CCDS, GENCODE, HGMD, and OMIM
+        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
+      Agilent SureSelect All Exon V7:
+        description: Agilent SureSelect All Exon V7 - 35.7 Mb targeted region, coding regions from RefSeq, CCDS, GENCODE, and UCSC known genes
+        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
+      Agilent SureSelect Clinical Research Exome:
+        description: Agilent SureSelect Clinical Research Exome - 54 Mb targeted region, disease-associated regions from OMIM, HGMD, and ClinVar
+        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
+      Agilent SureSelect Clinical Research Exome V2:
+        description: Agilent SureSelect Clinical Research Exome V2 - 63.7 Mb targeted region, disease-associated regions from OMIM, HGMD, ClinVar, and ACMG
+        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
+      Agilent SureSelect Focused Exome:
+        description: Agilent SureSelect Focused Exome - 12 Mb targeted region, disease-associated regions from HGMD, OMIM and ClinVar
+        source: https://www.agilent.com/en/product/next-generation-sequencing/hybridization-based-next-generation-sequencing-ngs/ngs-exome-kits
+      IDT xGen Exome Research Panel V1.0:
+        description: IDT xGen Exome Research Panel V1.0 - 39 Mb targeted region, coding sequences from RefSeq (19,396 genes)
+        source: https://www.idtdna.com/pages/products/next-generation-sequencing/targeted-sequencing/hybridization-capture/predesigned-panels/xgen-exome-research-panel-v1
+      IDT xGen Exome Research Panel V2.0:
+        description: IDT xGen Exome Research Panel V2.0 - 34 Mb targeted region, coding sequences from RefSeq 109 (19,433 genes)
+        source: https://www.idtdna.com/pages/products/next-generation-sequencing/targeted-sequencing/hybridization-capture/predesigned-panels/xgen-exome-research-panel-v2
+      Illumina AmpliSeq Exome Panel:
+        description: Illumina AmpliSeq Exome Panel - CCDS coding regions
+        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/ampliseq-exome-panel.html
+      Illumina Nextera DNA Exome V1.2:
+        description: Illumina Nextera DNA Exome V1.2 - 45 Mb targeted region, coding regions from RefSeq, CCDS, Ensembl, and GENCODE v19
+        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-exome.html
+      Illumina Nextera Rapid Capture Exome:
+        description: Illumina Nextera Rapid Capture Exome - 37 Mb targeted region, 212,158 targeted exonic regions in GRCh37/hg19
+        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-rapid-capture-exome.html
+      Illumina Nextera Rapid Capture Exome V1.2:
+        description: Illumina Nextera Rapid Capture Exome V1.2 - 37 Mb targeted region, coding regions from RefSeq, CCDS, Ensembl, and GENCODE v12
+        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-rapid-capture-exome.html
+      Illumina Nextera Rapid Capture Expanded Exome:
+        description: Illumina Nextera Rapid Capture Expanded Exome - 66 Mb targeted region, coding regions from RefSeq, CCDS, Ensembl, and GENCODE v12
+        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-rapid-capture-expanded-exome.html
+      Illumina TruSeq DNA Exome V1.2:
+        description: Illumina TruSeq DNA Exome V1.2 - 45 Mb targeted region, coding regions from RefSeq, CCDS, and Ensembl
+        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/truseq-dna-exome.html
+      Illumina TruSeq Rapid Exome V1.2:
+        description: Illumina TruSeq Rapid Exome V1.2 - 45 Mb targeted region, coding regions from RefSeq, CCDS, Ensembl, and GENCODE v19
+        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/truseq-rapid-exome.html
+      Illumina TruSight Exome:
+        description: Illumina TruSight Exome - 7 Mb targeted region, disease-causing mutations as curated by HGMD
+        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/trusight-exome.html
+      Illumina TruSight ONE V1.1:
+        description: Illumina TruSight ONE V1.1 - 12 Mb targeted region, coding regions of 6700 genes from HGMD, OMIM, and GeneTest
+        source: https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/trusight-one-sequencing-panel.html
+      MGI Easy Exome Capture V4:
+        description: MGI Easy Exome Capture V4 - 59 Mb targeted region, CCDS, GENCODE, RefSeq, and miRBase
+        source: https://www.mgi-tech.com/
+      MGI Easy Exome Capture V5:
+        description: MGI Easy Exome Capture V5 - 69 Mb targeted region, CCDS, GENCODE, RefSeq, miRBase, and MGI Clinical Database
+        source: https://www.mgi-tech.com/
+      Roche KAPA HyperExome:
+        description: Roche KAPA HyperExome - 43 Mb targeted region, coding regions from CCDS, RefSeq, Ensembl, GENCODE, and variants from ClinVar
+        source: https://sequencing.roche.com/en/products-solutions/products/sample-preparation/dna-reagents/targeted-sequencing/kapa-hyperexome.html
+      Roche SeqCap EZ Exome V3:
+        description: Roche SeqCap EZ Exome V3 - 64 Mb targeted region, coding regions from RefSeq RefGene CDS, CCDS, and miRBase v14
+        source: https://sequencing.roche.com/global/en/products/group/seqcap-ez-exome-probes.html
+      Roche SeqCap EZ Exome V3 + UTR:
+        description: Roche SeqCap EZ Exome V3 + UTR - 92 Mb targeted region, coding sequences from RefSeq RefGene, CCDS, and miRBase v14, plus UTRs
+        source: https://sequencing.roche.com/global/en/products/group/seqcap-ez-exome-probes.html
+      Roche SeqCap EZ MedExome:
+        description: Roche SeqCap EZ MedExome - 47 Mb targeted region, coding sequences from CCDS, RefSeq, Ensembl, VEGA, GENCODE, miRBase, and disease-associated regions
+        source: https://sequencing.roche.com/global/en/products/group/seqcap-ez-exome-probes.html
+      Roche SeqCap EZ MedExome + Mito:
+        description: Roche SeqCap EZ MedExome + Mito - 47 Mb targeted region, coding sequences and mitochondrial genes from CCDS, RefSeq, Ensembl, VEGA, GENCODE, and miRBase
+        source: https://sequencing.roche.com/global/en/products/group/seqcap-ez-exome-probes.html
+      Twist Comprehensive Exome Panel:
+        description: Twist Bioscience Comprehensive Exome Panel - 36.8 Mb targeted region, protein coding genes from RefSeq, CCDS, and GENCODE
+        source: https://www.twistbioscience.com/products/ngs
+      Twist Core Exome Panel:
+        description: Twist Bioscience Core Exome Panel - 33 Mb targeted region, protein coding genes from CCDS
+        source: https://www.twistbioscience.com/products/ngs/fixed-panels/human-core-exome-kit
+      Twist Exome Panel 2.0:
+        description: Twist Bioscience Exome Panel 2.0 - 36.4 Mb targeted region, protein coding genes from RefSeq, CCDS, and GENCODE
+        source: https://www.twistbioscience.com/products/ngs
+      Twist RefSeq Exome Panel:
+        description: Twist Bioscience RefSeq Exome Panel - 3.6 Mb targeted region, curated subset of protein coding genes from CCDS
+        source: https://www.twistbioscience.com/products/ngs
+      unknown:
+        description: Target capture kit information not provided or not available
   WorkflowEnum:
     permissible_values:
       CNVkit:

@@ -1,56 +1,27 @@
 classes:
-  SpatialTranscriptomicsSequencingTemplate:
-    annotations:
-      required: false
-      requiresComponent: ''
-      templateUsage: most_common
-      templateFor:
-        dataType:
-        - gene expression
-        assay:
-        - spatial transcriptomics
-      dataGranularity: specimen-level
-    close_mappings:
-    - htan:VisiumSpatialTranscriptomicsLevel1
-    description: Template for describing sequencing-based and expression data files from
-      spatial transcriptomics experiments (e.g., FASTQ files and count matrices from 10x
-      Visium, 10x Visium CytAssist, NanoString CosMx, GeoMx).
-    is_a: GeneticsAssayTemplate
-    slots:
-    - captureArea
-    - visiumslideID
-    - cytassistSample
-    - probeSet
-    - libraryPrep
-    - libraryPreparationMethod
-    - specimenType
-    slot_usage:
-      assay:
-        range: SequencingAssayEnum
-        ifabsent: string(spatial transcriptomics)
-      platform:
-        any_of:
-        - range: SequencingPlatformEnum
-      fileFormat:
-        range: SequencingFileFormatEnum
-      dataType:
-        ifabsent: string(gene expression)
-
   SpatialTranscriptomicsImagingTemplate:
     annotations:
+      dataGranularity: specimen-level
       required: false
       requiresComponent: ''
-      templateUsage: most_common
       templateFor:
-        dataType:
-        - image
         assay:
         - spatial transcriptomics
-      dataGranularity: specimen-level
-    description: Template for describing imaging data files from spatial transcriptomics
-      experiments, such as tissue section histology or fluorescence images (e.g., from
-      10x Visium, NanoString CosMx, GeoMx).
+        dataType:
+        - image
+      templateUsage: most_common
+    description: Template for describing imaging data files from spatial transcriptomics experiments, such as tissue section histology or fluorescence images (e.g., from 10x Visium, NanoString CosMx, GeoMx).
     is_a: ImagingAssayTemplate
+    slot_usage:
+      assay:
+        ifabsent: string(spatial transcriptomics)
+        range: ImagingAssayEnum
+      dataType:
+        ifabsent: string(image)
+      fileFormat:
+        range: ImagingFileFormatEnum
+      platform:
+        range: ImagingSystemPlatformEnum
     slots:
     - parentSpecimenID
     - specimenID
@@ -59,13 +30,37 @@ classes:
     - visiumslideID
     - cytassistSample
     - specimenType
+  SpatialTranscriptomicsSequencingTemplate:
+    annotations:
+      dataGranularity: specimen-level
+      required: false
+      requiresComponent: ''
+      templateFor:
+        assay:
+        - spatial transcriptomics
+        dataType:
+        - gene expression
+      templateUsage: most_common
+    close_mappings:
+    - htan:VisiumSpatialTranscriptomicsLevel1
+    description: Template for describing sequencing-based and expression data files from spatial transcriptomics experiments (e.g., FASTQ files and count matrices from 10x Visium, 10x Visium CytAssist, NanoString CosMx, GeoMx).
+    is_a: GeneticsAssayTemplate
     slot_usage:
       assay:
-        range: ImagingAssayEnum
         ifabsent: string(spatial transcriptomics)
-      platform:
-        range: ImagingSystemPlatformEnum
-      fileFormat:
-        range: ImagingFileFormatEnum
+        range: SequencingAssayEnum
       dataType:
-        ifabsent: string(image)
+        ifabsent: string(gene expression)
+      fileFormat:
+        range: SequencingFileFormatEnum
+      platform:
+        any_of:
+        - range: SequencingPlatformEnum
+    slots:
+    - captureArea
+    - visiumslideID
+    - cytassistSample
+    - probeSet
+    - libraryPrep
+    - libraryPreparationMethod
+    - specimenType

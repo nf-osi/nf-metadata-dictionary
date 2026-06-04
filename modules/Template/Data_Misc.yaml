@@ -1,33 +1,54 @@
 classes:
+  AnalysisResultTemplate:
+    annotations:
+      templateFor:
+        dataType:
+        - image
+        - report
+      templateUsage: common
+    description: Template for result files such as figures, presentations, and analysis outputs that report data results but are not primary experimental data.
+    is_a: FileBasedTemplate
+    slot_usage:
+      fileFormat:
+        any_of:
+        - range: ImagingFileFormatEnum
+        - range: DocumentFileFormatEnum
+        - range: TabularFileFormatEnum
+      resourceType:
+        ifabsent: string(result)
+      species:
+        required: false
+    slots:
+    - dataType
+    - dataSubtype
+    - species
+    - relatedDataset
+    - comments
   GenericDataResourceTemplate:
     annotations:
       required: false
       requiresComponent: ''
-      templateUsage: specialized
       templateFor:
         dataType:
         - characteristic
-    description: Stand-in template for deposited data resources when a more specific
-      template is not yet available. Use temporarily while a domain-specific template
-      is being developed.
+      templateUsage: specialized
+    description: Stand-in template for deposited data resources when a more specific template is not yet available. Use temporarily while a domain-specific template is being developed.
     is_a: FileBasedTemplate
+    slot_usage:
+      resourceType:
+        ifabsent: string(experimentalData)
+      species:
+        required: false
     slots:
     - dataType
     - dataSubtype
     - assay
     - species
     - comments
-    slot_usage:
-      species:
-        required: false
-      resourceType:
-        ifabsent: string(experimentalData)
-
   ReferenceSequenceTemplate:
     annotations:
       required: false
       requiresComponent: ''
-      templateUsage: specialized
       templateFor:
         dataType:
         - reference sequence
@@ -35,90 +56,60 @@ classes:
         - plasmid sequence
         - primer sequence
         - probe sequence
-    description: Template for reference sequence files used in experimental design,
-      such as guide RNAs, plasmids, primers, probes, or other construct elements.
+      templateUsage: specialized
+    description: Template for reference sequence files used in experimental design, such as guide RNAs, plasmids, primers, probes, or other construct elements.
     is_a: FileBasedTemplate
+    slot_usage:
+      resourceType:
+        ifabsent: string(experimentalData)
+      species:
+        required: false
     slots:
     - dataType
     - sequenceName
     - sequenceLength
     - species
     - comments
-    slot_usage:
-      resourceType:
-        ifabsent: string(experimentalData)
-      species:
-        required: false
-
-  AnalysisResultTemplate:
-    annotations:
-      templateUsage: common
-      templateFor:
-        dataType:
-        - image
-        - report
-    description: Template for result files such as figures, presentations, and analysis
-      outputs that report data results but are not primary experimental data.
-    is_a: FileBasedTemplate
-    slots:
-    - dataType
-    - dataSubtype
-    - species
-    - relatedDataset
-    - comments
-    slot_usage:
-      resourceType:
-        ifabsent: string(result)
-      species:
-        required: false
-      fileFormat:
-        any_of:
-        - range: ImagingFileFormatEnum
-        - range: DocumentFileFormatEnum
-        - range: TabularFileFormatEnum
-
   UpdateMilestoneReport:
     annotations:
       required: false
       requiresComponent: ''
-      templateUsage: specialized
       templateFor:
         dataType:
         - report
-    description: Metadata template for updating milestone report values in NF studies
-      -- currently a supported feature for NTAP and GFF.
+      templateUsage: specialized
+    description: Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF.
     is_a: PartialTemplate
     slots:
     - Filename
     - resourceType
     - progressReportNumber
-
   WorkflowReport:
+    annotations:
+      templateFor:
+        dataType:
+        - workflow metadata
+      templateUsage: specialized
     description: Template used for miscellaneous workflow reports and accessory files
     is_a: FileBasedTemplate
     notes:
     - resourceType should default to "workflow report"
     - note that `dataType` and `dataSubtype` don't apply
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+    slot_usage:
+      resourceType:
+        ifabsent: string(report)
     slots:
     - assay
     - relatedDataset
     - workflow
     - workflowLink
-    slot_usage:
-      resourceType:
-        ifabsent: string(report)
-    rules:
-    - description: If workflow is provided, workflowLink must be provided
-      preconditions:
-        slot_conditions:
-          workflow:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          workflowLink:
-            value_presence: PRESENT
-    annotations:
-      templateUsage: specialized
-      templateFor:
-        dataType:
-        - workflow metadata

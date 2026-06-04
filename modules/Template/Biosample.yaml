@@ -1,14 +1,11 @@
 classes:
   AnimalIndividualTemplate:
     annotations:
+      dataGranularity: individual-level
       required: false
       requiresComponent: ''
       templateUsage: most_common
-      dataGranularity: individual-level
-    description: 'Template for non-human individual-level data. For xenografts, individualID
-      references the cell line donor. Use sex/age/species for the individual animal.
-      Use modelSystemName for the animal model genetic background, with modelSpecies/modelSex/modelAge
-      for the model host animal.'
+    description: Template for non-human individual-level data. For xenografts, individualID references the cell line donor. Use sex/age/species for the individual animal. Use modelSystemName for the animal model genetic background, with modelSpecies/modelSex/modelAge for the model host animal.
     slots:
     - individualID
     - sex
@@ -29,16 +26,14 @@ classes:
     - modelAgeUnit
   BiospecimenTemplate:
     annotations:
+      dataGranularity: specimen-level
       required: false
       requiresComponent: ''
-      templateUsage: most_common
       templateFor:
         dataType:
         - characteristic
-      dataGranularity: specimen-level
-    description: 'Specimen-level data, whether from human or animal. For cell line
-      specimens, individualID references the cell line. For xenografts, also specify
-      modelSystemName and model attributes.'
+      templateUsage: most_common
+    description: Specimen-level data, whether from human or animal. For cell line specimens, individualID references the cell line. For xenografts, also specify modelSystemName and model attributes.
     slots:
     - individualID
     - parentSpecimenID
@@ -54,25 +49,44 @@ classes:
     - modelAgeUnit
   HumanCohortTemplate:
     annotations:
+      dataGranularity: individual-level
       required: false
       requiresComponent: ''
-      templateUsage: most_common
       templateFor:
         dataType:
         - demographics
-      dataGranularity: individual-level
-    description: 'Data of biosamples from human patients. Adapted from Table 2 of
-      http://nrs.harvard.edu/urn-3:HUL.InstRepos:32725809. This template should be
-      used when biosamples are from NF patients to provides a more valuable characterization
-      and make additional gene-phenotype insights possible.
+      templateUsage: most_common
+    description: 'Data of biosamples from human patients. Adapted from Table 2 of http://nrs.harvard.edu/urn-3:HUL.InstRepos:32725809. This template should be used when biosamples are from NF patients to provides a more valuable characterization and make additional gene-phenotype insights possible.
 
       '
     notes:
     - Instead of collecting birth month/year, age is collected.
-    - What has been required is still required, while all new recommendations are
-      optional.
-    - Include attributes used for the portal but not in recommendations (nf1Genotype,
-      nf1Genotype, species).
+    - What has been required is still required, while all new recommendations are optional.
+    - Include attributes used for the portal but not in recommendations (nf1Genotype, nf1Genotype, species).
+    rules:
+    - description: If age is provided and is not "Unknown", ageUnit must be provided
+      postconditions:
+        slot_conditions:
+          ageUnit:
+            value_presence: PRESENT
+      preconditions:
+        slot_conditions:
+          age:
+            none_of:
+            - equals_string: Unknown
+            value_presence: PRESENT
+    - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value for ages at or above this threshold (HIPAA Safe Harbor)
+      postconditions:
+        slot_conditions:
+          age:
+            maximum_value: 89.99999
+      preconditions:
+        slot_conditions:
+          species:
+            equals_string: Homo sapiens
+    slot_usage:
+      species:
+        ifabsent: string(Homo sapiens)
     slots:
     - individualID
     - sex
@@ -128,27 +142,3 @@ classes:
     - lenticularOpacity
     - nonvestibularSchwannomas
     - numberOfSchwannomas
-    slot_usage:
-      species:
-        ifabsent: string(Homo sapiens)
-    rules:
-    - description: If age is provided and is not "Unknown", ageUnit must be provided
-      preconditions:
-        slot_conditions:
-          age:
-            value_presence: PRESENT
-            none_of:
-              - equals_string: Unknown
-      postconditions:
-        slot_conditions:
-          ageUnit:
-            value_presence: PRESENT
-    - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value for ages at or above this threshold (HIPAA Safe Harbor)
-      preconditions:
-        slot_conditions:
-          species:
-            equals_string: Homo sapiens
-      postconditions:
-        slot_conditions:
-          age:
-            maximum_value: 89.99999

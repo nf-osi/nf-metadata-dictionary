@@ -1,230 +1,160 @@
 enums:
-  SequencingAssayEnum:
-    description: Sequencing-based assays including RNA-seq, DNA-seq, and related methods
-    title: Sequencing Assay
+  CellBasedAssayEnum:
+    description: Cell-based assays including viability, proliferation, and functional assays
     permissible_values:
-      ATAC-seq:
-        description: Open chromatin regions measured by sequencing DNA after assay for transposase-accessible chromatin (ATAC) treatment
-        meaning: OBI:0002039
-      CAPP-seq:
-        description: Cancer Personalized Profiling by deep sequencing (CAPP-seq) is a novel blood-based assay that uses next-generating sequencing to quantitate circulating tumor DNA (ctDNA)
-        meaning: EFO:0008672
-        source: https://www.redjournal.org/article/S0360-3016(16)30438-2/fulltext
-      CUT&RUN:
-        description: Cleavage Under Targets and Release Using Nuclease (CUT&RUN) is a chromatin profiling strategy in which antibody-targeted controlled cleavage by micrococcal nuclease releases specific protein-DNA complexes into the supernatant for paired-end DNA sequencing. (doi:10.7554/eLife.21856)
-      ChIP-seq:
-        description: Chromatin immuno-precipitation followed by sequencing
-        meaning: OBI:0000716
-      ERR bisulfite sequencing:
-        description: 'Enhanced reduced representation bisulfite sequencing (ERRBS) '
-      HI-C:
-        description: Chromatin interactions detected by HI-C protocol
-        meaning: EFO:0007693
-      ISO-seq:
-        description: Full isoform sequencing
-      NOMe-seq:
+      2D AlamarBlue absorbance:
+        description: Cell viability assay based on detection of AlamarBlue (resazurin). Living cells reduce blue, non-fluorescent resazurin to the red, fluorescent molecule resorufin.  The amount of fluorescence or absorbance is proportional to the number of living cells and corresponds to the cell’s metabolic activity. For the absorbance-based assay, absorbance can be read at 570 nm.
+        source: https://www.thermofisher.com/us/en/home/life-science/cell-analysis/fluorescence-microplate-assays/microplate-assays-cell-viability/alamarblue-assay-cell-viability.html
+      2D AlamarBlue fluorescence:
+        description: Cell viability assay based on detection of AlamarBlue (resazurin). Living cells reduce blue, non-fluorescent resazurin to the red, fluorescent molecule resorufin. The amount of fluorescence or absorbance is proportional to the number of living cells and corresponds to the cell’s metabolic activity. For the fluorescence-based assay, color change and fluorescence can be detected using 560/590 nm (excitation/emission).
+        source: https://www.thermofisher.com/us/en/home/life-science/cell-analysis/fluorescence-microplate-assays/microplate-assays-cell-viability/alamarblue-assay-cell-viability.html
+      3D microtissue viability:
+        description: Cell viability assay on a 3D microtissue model.
+        source: https://www.ncbi.nlm.nih.gov/books/NBK343426/
+      ATPase activity assay:
+        description: As an assay used for drug discovery, measures enzymatic ATP hydrolysis to help assess levels of enzymatic activity induced by a candidate drug molecule.
+        meaning: MI:0880
+        notes:
+        - See also https://www.bellbrooklabs.com/atpase-activity-assay-for-drug-discovery/ for discussion
+      BrdU proliferation assay:
+        description: A cell proliferation assay in which cells are cultured in the presence of BrdU which is incorporated into newly synthesized DNA of replicating cells (during the S phase of the cell cycle).
+        meaning: OBI:0000664
+      ELISA:
         aliases:
-        - Nucleosome Occupancy and Methylome Sequencing
-        description: Nucleosome Occupancy and Methylome Sequencing
-        meaning: NCIT:C106053
-      RNA array:
-        description: RNA measurements captured by array technology
-        meaning: OBI:0001463
-      RNA-seq:
-        description: Bulk RNA sequencing
-        meaning: OBI:0001271
-      SNP array:
-        description: SNP measurements captured by array technology
-        meaning: OBI:0001204
-      SaferSeqS:
-        description: A blood-based assay that evaluates mutations in circulating tumor DNA and chromosomal copy number changes to detect minimal residual disease (MRD) with high specificity towards tumor type.
-        source: https://doi.org/10.1038/s41587-021-00900-z
-      Sanger sequencing:
-        aliases:
-        - Dideoxy Chain Termination DNA Sequencing
-        description: A DNA sequencing technique in which a mixture of deoxynucleosidetriphosphates (dNTPs) and chain-terminating dNTPs, which are radioactively or fluorescently labeled, are combined within the reaction mixture. Once the reaction is complete, the DNA strands are separated by size, and the labeled chain terminating dNTPs can be read in sequence by the investigator or by a machine.
-        meaning: NCIT:C19641
-      T cell receptor repertoire sequencing:
-        description: A sequencing assay that determines the sequences of DNA or RNA molecules that encode the repertoire of T cell receptors within an input sample.
-        meaning: OBI:0002990
-      bisulfite sequencing:
-        description: Methylation data captured by sequencing of DNA treated by a bisulfite-based chemical process
-        meaning: OBI:0000748
-      jumping library:
-        description: 'Jumping libraries are created to bypass difficult to align/map regions, such as those containing repetitive DNA sequences. Briefly, the DNA of interest is identified, cut into fragments either with restriction enzymes or by shearing.  The size-selected fragments are ligated to adapters for bead-capture and circularized. After bead-capture, the DNA is linearized via restriction enzymes, and can be sequenced using adapter primers facing in outward [reverse/forward (RF)] directions.  These library inserts are considered jumping because the ends originate from distal genomic DNA sequences and are ligated adjacent to one another during circularization.
+        - Enzyme-linked Immunosorbent Assay
+        description: A highly sensitive technique for detecting and measuring antigens or antibodies in a solution; the solution is run over a surface to which immobilized antibodies specific to the substance have been attached, and if the substance is present, it will bind to the antibody layer, and its presence is verified and visualized with an application of antibodies that have been tagged in some way.
+        meaning: NCIT:C16553
+      EdU proliferation assay:
+        description: Proliferation assay using EdU as a thymidine nucleoside analog is an alternative to the classical BrdU assay.
+        meaning: OBI:0000891
+        source: https://www.sigmaaldrich.com/deepweb/assets/sigmaaldrich/product/documents/100/843/17-1052x.pdf
+      FLIPR high-throughput cellular screening:
+        description: 'An imaging-based system that allows measurement and analysis of peaks of human-derived induced pluripotent stem cells (hiPSCs),  differentiated into cardiomyocytes and neurons,  up to 100 times per second and quickly cherry pick events such as Early-After-Depolarization-like events (EAD-like events), fibrillation, and irregular beating.
 
           '
-        source: https://gatk.broadinstitute.org/hc/en-us/articles/360035890751-Jumping-libraries
-      lncRNA-seq:
-        description: Long non-coding RNA measurements collected from RNA-Seq experiments
-      methylation array:
-        description: Methylation data captured by array technology
-        meaning: OBI:0001332
-      miRNA array:
-        description: microRNA measurements captured by array technology
-        meaning: OBI:0001335
-      miRNA-seq:
-        description: Small RNA measurements collected from RNA sequencing experiments
-        meaning: OBI:0002112
-      next-generation sequencing:
+        source: https://www.moleculardevices.com/products/flipr-penta-high-throughput-cellular-screening-system
+      HPLC:
         aliases:
-        - NGS
-        - next generation sequencing
-        description: High-throughput DNA sequencing methods that allow massively parallel sequencing of millions of DNA fragments simultaneously.
-        meaning: NCIT:C101294
-      next generation targeted sequencing:
-        aliases:
-        - Targeted NGS
-        - Targeted NGS (sequencing of selected regions of the genome either via targeted capture or amplification)
-        - Targeted Sequencing
-        description: A type of next generation sequencing in which specific genes or portions of genes are targeted for sequencing using amplicon-based workflow.
-        meaning: NCIT:C130177
-      oxBS-seq:
-        description: Oxidative bisulfite sequencing (oxBS-Seq) to map 5-methylcytosine and 5-hydroxymethylcytosine
-        meaning: EFO:0008840
-      ribo-seq:
-        description: Ribosome profiling (Ribo-Seq).
-        meaning: EFO:0008891
-      scCGI-seq:
-        description: A method for genome-wide CpG island (CGI) methylation sequencing for single cells (scCGI-seq), combining methylation-sensitive restriction enzyme digestion and multiple displacement amplification for selective detection of methylated CGIs
-        source: https://www.ncbi.nlm.nih.gov/pubmed/28126923
-      shRNA-seq:
-        aliases:
-        - shRNA library screen sequencing
-        description: A sequencing-based functional genomics assay in which a pooled short hairpin RNA (shRNA) library is introduced into cells, and the relative abundance of individual shRNA constructs is quantified by amplicon sequencing to identify genes affecting a phenotype of interest.
-        meaning: EFO:0030034
-      single cell ATAC-seq:
-        aliases:
-        - scATAC-Seq
-        description: A molecular genetic technique where DNA is isolated from single cell (sc) samples and amplified to create a genomic library. Then the library is subjected to ATAC-seq, which isolates and sequences regions rich in open chromatin.
-        meaning: NCIT:C179458
-      single-cell RNA-seq:
-        aliases:
-        - Single Cell RNA Sequencing
-        - Single Cell Transcriptome Sequencing
-        - scRNA-Seq
-        description: A procedure that can determine the nucleotide sequence for all of the RNA transcripts in an amplified nucleotide sample that was derived from a single cell.
-        meaning: NCIT:C171152
-      single-nucleus RNA-seq:
-        aliases:
-        - single-nucleus RNA sequencing assay
-        - snRNA-Seq
-        description: A method for quantifying the transcriptome of individual cells, in which transcripts isolated from single nuclei are subjected to high-throughput sequencing and mapping to a reference genome.
-        meaning: FBcv:0009001
-      spatial transcriptomics:
-        description: assay that allows visualization and quantitative analysis of the transcriptome with spatial resolution in individual tissue sections
-        meaning: EFO:0008994
-      targeted exome sequencing:
-        description: Also known as Clinical Exome Sequencing, Targeted Exome Sequencing is a subset of WES as it covers a limited number of genes, typically 3000 to 6000 genes.
-        source: https://labassure.com/whole-exome-sequencing-vs-clinical-exome-sequencing/
-      whole exome sequencing:
-        aliases:
-        - Exome
-        - Exome Sequencing
-        - WES
-        - WXS
-        description: A procedure that can determine the DNA sequence for all of the exons in an individual.
-        meaning: NCIT:C101295
-      whole genome sequencing:
-        aliases:
-        - Genome sequencing
-        - WGS
-        description: Laboratory technique to sequence the complete DNA sequence of an organism's genome at a single time
-        meaning: EDAM:topic_3673
-  ImagingAssayEnum:
-    description: Imaging-based assays including microscopy, MRI, and related methods
-    title: Imaging Assay
-    permissible_values:
-      3D confocal imaging:
-        description: Confocal microscopy with 3D reconstruction of the sample tissue.
-        source: https://pubmed.ncbi.nlm.nih.gov/34331281
-      3D electron microscopy:
-        aliases:
-        - 3D-EM
-        - electron tomog
-        description: Three-dimensional (3D) reconstruction of single, transparent objects from a collection of projection images recorded with a transmission electron microscope. It offers the opportunity to obtain 3D information on structural cellular arrangements with a high resolution.
-        meaning: MI:0410
-      3D imaging:
-        aliases:
-        - 3-Dimensional Imaging
-        - Medical Imaging, Three Dimensional
-        - Three Dimensional Imaging
-        description: Technique to produce 3D images to visualize important structures in great detail. To produce 3D images, many scans are made, and then combined by computers to produce a 3D model, which can then be manipulated. 3D ultrasounds are produced using a somewhat similar technique.
-        meaning: NCIT:C18485
-      CODEX:
-        description: CODEX imaging.
-      DNA optical mapping:
-        description: Fluorescent imaging of linearly extended DNA molecules to probe information patterns along the molecules
-        source: https://doi.org/10.1016/j.copbio.2013.01.009
-      Fluorescence In Situ Hybridization:
-        aliases:
-        - FISH
-        description: 'A physical mapping approach that uses fluorescent tags to detect hybridization of probes within metaphase chromosomes or less condensed somatic interphase chromatin.  This technique can be used for identification of chromosomal abnormalities and for gene mapping.
+        - High Performance Liquid Chromatography
+        description: 'Frequently referred to simply as HPLC, this form of column chromatography is used frequently in biochemistry.  The analyte is forced through a column by liquid at high pressure, which decreases the time the separated components remain on the stationary phase.
 
           '
-        meaning: NCIT:C17563
-      Magnetization-Prepared Rapid Gradient Echo MRI:
+        meaning: NCIT:C16434
+      Migration Assay:
+        description: An in vitro assay in which cultured cells are monitored and analyzed for their ability to move into an acellular area of a culture material.
+        source: http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C19425
+      SDS-PAGE:
         aliases:
-        - MP RAGE
-        - MP-RAGE MRI
-        description: 'A magnetic resonance imaging modality that offers rapid imaging time, easy reconstruction of any plane, and three-dimensional surface contour rendering with cut away postprocessing.  Especially useful for imaging brain, MP-RAGE captures high tissue contrast and provides high spatial resolution with whole brain coverage in a short scan time.
+        - sodium dodecyl sulfate polyacrylamide gel electrophoresis
+        - SDS polyacrylamide gel electrophoresis of proteins
+        - SDS polyacrylamide gel electrophoresis
+        - SDS-PAGE electrophoresis
+        - sodium dodecyl sulphate–polyacrylamide gel electrophoresis
+        description: Denaturing polyacrylamide gel electrophoresis using SDS to separate proteins primarily by molecular weight.
+        meaning: EFO:0010936
+      STR profile:
+        aliases:
+        - Short Tandem Repeat Profile
+        description: The analysis of all of the short tandem repeats in the genome of a biological sample.
+        meaning: NCIT:C129889
+      TIDE:
+        description: 'Tracking of Indels by Decomposition (TIDE) is a simple and accurate assay to precisely determine the spectrum and frequency of targeted mutations generated  in a pool of cells by genome editing tools such as CRISPR/Cas9, TALENs and ZFNs.
 
           '
-        meaning: NCIT:C118462
-      SUSHI:
-        description: Fast super-resolution method that exploits sparsity in the underlying vasculature and statistical independence within the measured signals to detect slow-flowing blood, facilitating noninvasive perfusion measurements.
-        source: https://pubmed.ncbi.nlm.nih.gov/30295619/
-      atomic force microscopy:
+        source: https://tide.nki.nl/
+      TriKinetics activity monitoring:
+        description: TriKinetics systems quantify animal movement over time, and can be used to measure circadian rhythm, sleep, longevity, social interaction, geotaxis, learning, phototaxis, and drug response in various species of flies, mosquitoes, bees, spiders, ants, cockroaches, beetles, moths, zooplankton, and fish, among others.
+        source: https://trikinetics.com/
+      array:
+        description: ''
+      blue native PAGE:
         aliases:
-        - scanning force microscopy
-        - AFM
-        - atomic force imaging
-        - SFM
-        description: Microscopy which uses a sharp spike (known as a 'tip') mounted on the end of a cantilever to scan the surface of the specimen
-        meaning: CHMO:0000113
-      autoradiography:
-        description: A radioactivity detection technique using X-ray film to visualize molecules or fragments of molecules that have been radioactively labeled.
-        meaning: ERO:0000716
-      brightfield microscopy:
+        - bn-page
+        description: Blue native PAGE (BN-PAGE) permits a high-resolution separation of multi-protein complexes under native conditions.
+        meaning: MI:0276
+      bone histomorphometry:
+        description: Asasy providing quantitative information on metabolic bone diseases and fracture healing. This is the broader assay concept containing both static and dynamic histomorphometry.
+      cAMP-Glo Max Assay:
+        description: The cAMP-Glo Max Assay from Promega is a bioluminescent assay used for the quantification of cyclic AMP (cAMP) in cell-based assays. It utilizes a luminescent luciferase-based detection system to detect the levels of cAMP in cell lysates, which can be used to study G protein-coupled receptor (GPCR) signaling and other intracellular signaling pathways.
+        source: https://www.promega.com/products/cell-signaling/gpcr-signaling/camp_glo-max-assay/?catNum=V1681
+      calcium retention capacity assay:
+        description: The CRC assay assesses Ca2+-related mitochondrial functions
+        see_also:
+        - https://pubmed.ncbi.nlm.nih.gov/29781984/
+      cell competition:
+        description: An assay in which two or more labeled populations of cells or organoids are mixed, allowed to grow, possibly in the presence of a drug or other perturbagen. The relative quantity of the cell populations is measured at the end of the experiment.
+        source: https://pubmed.ncbi.nlm.nih.gov/22113311/
+      cell count:
         aliases:
-        - bright-field optical microscopy
-        - transmitted light microscopy
-        description: Microscopy where the specimen is illuminated with light transmitted from a source on the opposite side of the specimen from the objective
-        meaning: CHMO:0000104
-      live imaging:
+        - CELLS
+        - Total Cells
+        description: A procedure to determine the number of cells in a sample. Also used to mean the result of such a procedure.
+        meaning: NCIT:C48938
+      cell painting:
+        source: https://www.nature.com/articles/nprot.2016.105
+      cell permeability assay:
+        description: An assay measuring cell permeability.
+        meaning: BAO:0002778
+      cell proliferation:
+        description: A cellular assay that allows for the measurement of the multiplication or reproduction of cells, resulting in the expansion of a cell population.
+        meaning: ERO:0000636
+      cell viability assay:
         aliases:
-        - Live imaging
-        description: Imaging of live cells, tissues, or organisms over time to observe dynamic biological processes and behavior.
-        meaning: OBI:0001815
-      histology:
-        description: Microscopic examination of stained tissue sections to evaluate tissue architecture and cellular morphology.
-        meaning: NCIT:C16681
-      confocal microscopy:
-        description: 'Confocal microscopy has advantages over widefield optical microscopy, including the ability to eliminate or reduce background information away from the focal plane and collect serial optical sections from thick specimens.  It uses point illumination and a spatial pinhole to eliminate out-of-focus light in specimens that are thicker than the focal plane.
+        - viability assay
+        description: This assay type measures the cellular state of living or dying by measuring an indicator of life or death
+        meaning: BAO:0003009
+      combination library screen:
+        description: High throughput sample analysis of collections of compounds that provide a variety of chemically diverse structures that can be used to identify structure types that have affinity with pharmacological targets.
+        meaning: ERO:0001686
+      combination screen:
+        description: ''
+      complex II enzyme activity assay:
+        description: Assay measuring activity of the Complex II enzyme for e.g. high-throughput screening.
+        notes:
+        - Can be considered a mitochondrial assay
+        source: https://www.caymanchem.com/product/700940/mitocheck%C2%AE-complex-ii-activity-assay-kit
+      compound screen:
+        description: ''
+      current clamp assay:
+        description: 'The current clamp technique records the membrane potential by injecting current into a cell through the recording electrode.  Unlike in the voltage clamp mode, where the membrane potential is held at a level determined by the experimenter, in "current clamp" mode the membrane potential is free to vary,  and the amplifier records whatever voltage the cell generates on its own or as a result of stimulation.  This technique is used to study how a cell responds when electric current enters a cell; this is important for instance for understanding how neurons respond to neurotransmitters that act by opening membrane ion channels.
 
           '
-        meaning: BAO:0000453
-      conventional MRI:
+        meaning: OBI:0002185
+      differential scanning calorimetry:
         aliases:
-        - Conventional Magnetic Resonance Imaging
-        description: Magnetic resonance imaging using standard protocols for high resolution structural and anatomic characterization, including T1 weighted, T2 weighted, fluid attenuated inversion recovery (FLAIR), and gadolinium-enhanced sequences. [  NCI  ]
-        meaning: NCIT:C175525
-      diffusion MRI:
-        description: MRI method that measure the diffusion of water in the tissue, rather than the content of water as measured in conventional MRI.
-        meaning: NCIT:C20117
-      fluorescence microscopy assay:
+        - DSC
+        - differential scanning calorimetric analysis
+        description: Differential scanning calorimetry (DSC) is the measurement of thermodynamic parameters (e.g. enthalpy) during a chemical or biochemical reaction of both a sample and a reference, by the known variation (step-wise or linear) of one variable, whilst a second is kept constant.
+        meaning: CHMO:0000684
+      dynamic light scattering:
         aliases:
-        - FM
-        - fluorescence imaging
-        - fluorescence microscopic imaging
-        description: Uses fluorescent labels to visualize and quantify specific cellular components, proteins, or biological processes under a fluorescence microscope by detecting the emitted light when the fluorophores are excited by specific wavelengths.
-        meaning: CHMO:0000087
-      functional MRI:
-        aliases:
-        - Functional Magnetic Resonance Imaging
-        - fMRI
-        description: The principle of functional MRI imaging is to take a series of images of an organ in quick succession and to statistically analyze the images for differences among them. Most commonly used in studies of brain function. [  NCI  ]
-        meaning: NCIT:C17958
+        - photon correlation spectroscopy
+        - quasi-elastic light scattering spectrometry
+        - dynamic laser scattering
+        - PCS
+        - dynamic light scattering spectrometry
+        - QELS
+        - photon correlation spectrometry
+        - DLS
+        - quasi-elastic light scattering spectroscopy
+        - dynamic light scattering spectroscopy
+        - quasi-elastic light scattering
+        description: Dynamic Light Scattering (DLS), also known as photocorrelation spectroscopy, is a method for determining the size distribution of a sample of small particles in solution by illuminating the sample with a light source (usually a laser) and measuring the time-dependent fluctuations in the intensity of the scattered light caused by Brownian motion.
+        meaning: CHMO:0000167
+      electrochemiluminescence:
+        description: A method in which electromagnetic radiation, in the form of light emission, is generated from an electrochemical reaction in a solution.
+        meaning: NCIT:C111193
+        source: https://www.mesoscale.com/en/technical_resources/our_technology/ecl
+      electrophoretic light scattering:
+        description: Subtype of dynamic light scattering, used to measure electrophoretic mobility.
+        source: https://en.wikipedia.org/wiki/Electrophoretic_light_scattering
+      flow cytometry:
+        description: A cytometry assay in which an input cell population is put in solution, is passed by a laser, and optical sensors are used to detect scattering of the laser light and/or fluorescence of specific markers to count and characterize the particles in solution
+        meaning: OBI:0000916
+      focus forming assay:
+        description: The focus forming assay (FFA) is an immunostaining technique and a variation of the viral plaque assay. Instead of detecting the plaque formation after virus-induced cell lysis these assays detect infected host cells and infectious virus particles before a plaque is formed.
+        see_also:
+        - https://www.bpes.co.uk/focus-forming-assay-virus-titer-quantitation/
       gel filtration chromatography:
         aliases:
         - gel-permeation chromatography
@@ -233,187 +163,164 @@ enums:
 
           '
         meaning: CHMO:0001011
+      gel permeation chromatography:
+        description: AKA size exclusion chromatography (GPC/SEC), this assay is a type of high performance liquid chromatography used to determine the molecular weight distributions of polymers.
+        source: https://www.agilent.com/cs/library/primers/Public/5990-6969EN%20GPC%20SEC%20Chrom%20Guide.pdf
       high content screen:
+        aliases:
+        - HCS
         description: An image analysis technique combining automated fluorescence microscopy with multi-parameter quantitative image analysis for the large scale study of cells (cellomics).
         meaning: EFO:0007550
-      high frequency ultrasound:
-        description: High frequency ultrasound (HFUS) is an imaging modality that can give greater resolution of surface changes in skin (review in PMID:24583666)
-      immunocytochemistry:
+      immunoassay:
         aliases:
-        - ICC
-        description: The branch of immunochemistry dealing with cells and cellular activity; the application of immunochemical techniques to cytochemistry.
-        meaning: NCIT:C17731
-      immunofluorescence:
+        - Immunological Laboratory Method
+        - Immunology Test
+        description: Generic immunology assay
+      in silico synthesis:
+        description: Synthesis of molecules and compounds (e.g. drug candidates) via simulation or other system outside of a live biological system.
+      in vitro tumorigenesis:
         aliases:
-        - FLUORESCENT IMMUNOASSAY
-        - Fluorescent Antibody Assay
-        - Fluorescent Antibody Procedure
-        - Immunofluorescence Assay
-        - Immunologic, Immunofluorescence
-        description: An immunological procedure in which the antibodies are coupled with molecules which fluoresce under ultra violet (UV) light. This makes them particularly suitable for detection of specific antigens in tissues or on cells.
-        meaning: NCIT:C17370
-      immunohistochemistry:
-        description: An immunostaining assay to detect and potentially localize antigens within the cells of a tissue section
-        meaning: OBI:0001986
-      in vivo bioluminescence:
-        description: An imaging assay that allows detection of bioluminescence from a living organism or organisms.
-        meaning: ERO:0000651
-      laser speckle imaging:
+        - sphere formation
+        - tumor spheroid formation assay
+        - Matrigel-based tumorigenesis assay
+        description: An in vitro assay devised to measure tumor formation, including sphere formation assays where cells form three-dimensional spherical structures (spheroids) to assess tumor-initiating capacity, stem cell properties, and self-renewal capability. Includes Matrigel-based and other matrix-based approaches.
+        source: https://pmc.ncbi.nlm.nih.gov/articles/PMC6121836/
+      in vivo PDX viability:
+        description: Assay to assess viability using PDX model.
+      in vivo tumor growth:
+        description: The growth of a tumor measured using calipers, ruler, or another similar measurement device. See also "in vivo bioluminescence".
+      light scattering assay:
         aliases:
-        - LSCI
-        - Laser Speckle Contrast Imaging
-        description: A noninvasive, non-scanning optical imaging technique that provides full-field visualization of blood flow to the tissue being imaged, which provides information about tissue perfusion and the efficiency of disease treatment.
-        meaning: NCIT:C116492
-      magnetic resonance angiography:
+        - LSS
+        - light scattering spectroscopy
+        - light scattering spectrometry
+        - LiSSP
+        description: A method for determining structure by measuring the change in direction or energy of scattered visible light. Light is scattered by the electrons surrounding the atomic nuclei in the sample.
+        meaning: CHMO:0000166
+      local field potential recording:
+        description: An extracellular electrophysiology assay where a microelectrode is placed in the extracellular space of brain tissue to measure action potential and compared to an electrode either outside or inside that tissue.
+        meaning: OBI:0002189
+      long term potentiation assay:
         aliases:
-        - MA
-        - MR Angiography
-        description: Angiography using magnetic resonance imaging.
-        meaning: NCIT:C190557
-      magnetic resonance spectroscopy:
-        aliases:
-        - NMR Spectroscopy
-        - NUCLEAR MAGNETIC RESONANCE SPECTROSCOPY
-        - Spectroscopy, MR
-        - Spectroscopy, Nuclear Magnetic Resonance
-        description: Detection and measurement of the resonant spectra of molecular species in a tissue or sample.
-        meaning: NCIT:C16810
-      optical coherence tomography:
-        aliases:
-        - OCT
-        description: 'Optical Coherence Tomography (OCT) combines the principles of ultrasound with the imaging performance of a microscope.  OCT uses infrared light waves that reflect off the internal microstructure within the biological tissues.  The frequencies and bandwidths of infrared light are orders of magnitude higher than medical ultrasound signals, resulting in greatly increased image resolution, 8-25 times greater than any existing modality.  In addition to providing high-level resolutions for the evaluation of microanatomic structures OCT is also able to provide information regarding tissue composition. OCT is most widely used in ophthalmology.
-
-          '
-        meaning: NCIT:C20828
-        source: https://en.wikipedia.org/wiki/Optical_coherence_tomography
-      optical tomography:
-        description: 'Optical tomography is a form of computed tomography that creates a digital volumetric model of an object by reconstructing images made from light transmitted and scattered through an object. Subtypes are diffuse optical tomography, time-of-flight diffuse optical tomography, fluorescence molecular tomography, confocal diffuse tomography, optical coherence tomography.
-
-          '
-        source: https://en.wikipedia.org/wiki/Optical_tomography
-      phase-contrast microscopy:
-        aliases:
-        - Microscopy, Phase-Contrast
-        description: A simple non-quantitative form of interference microscopy of great utility in visualising live cells. Small differences in optical path length due to differences in refractive index and thickness of structures are visualised as differences in light intensity.
-        meaning: NCIT:C16857
-      photograph:
-        description: An image recorded by a camera.
-        meaning: NCIT:C86035
-      positron emission tomography:
-        aliases:
-        - Medical Imaging, Positron Emission Tomography
-        - PET
-        - PET SCAN
-        - PT
-        - Positron emission tomography (procedure)
-        - proton magnetic resonance spectroscopic imaging
-        description: A technique for measuring the gamma radiation produced by collisions of electrons and positrons (anti-electrons) within living tissue.
-        meaning: NCIT:C17007
-      spatial frequency domain imaging:
-        description: Spatial Frequency Domain Imaging (SFDI) is a non-contact, depth-varying and wide-field optical imaging technique for measuring optical properties in a wide field-of-view on a pixel-by-pixel basis. Relevant applications include including burn assessment, skin tissue evaluation, tumor tissue detection, brain tissue monitoring.
+        - 'LTP: CA3 region'
+        - LTP
+        description: A measure of the persistent robust synaptic response induced by synchronous stimulation of pre- and postsynaptic cells.
+        meaning: VT:0002207
+      massively parallel reporter assay:
+        description: An assay in which multiplexing the construction and interrogation of larger libraries of reporter constructs allows measurement of the transcriptional regulatory activities of thousands to hundreds of thousands of DNA sequences.
+        meaning: OBI:0002675
+      microrheology:
+        description: A technique used to measure the rheological properties of a medium, such as microviscosity and microviscoelasticity.
         notes:
-        - Note that term has no matches in OLS as of June 2022.
-        source: https://doi.org/10.3390/photonics8050162
-      spatial transcriptomics:
-        description: Assay that allows visualization and quantitative analysis of the transcriptome with spatial resolution in individual tissue sections.
-        meaning: EFO:0008994
-      traction force microscopy:
-        description: An experimental method for determining the tractions on the surface of a biological cell by obtaining measurements of the surrounding displacement field within an in vitro extracellular matrix (ECM)
-        source: https://en.wikipedia.org/wiki/Traction_force_microscopy
-      transcranial doppler ultrasonography:
+        - Dynamic light scattering (DLS) is the ancestor of microrheology.
+        source: https://www.elveflow.com/microfluidic-reviews/general-microfluidics/microrheology-a-review/
+      multi-electrode array:
+        description: 'A multi-electrode array is a grid of tightly spaced microscopic electrodes embedded in the bottom of each well in a multi-well MEA plate.  Cells, such as cardiomyocytes or neurons, which are electrically active, can be cultured over the electrodes creating a cohesive network.  The functional behavior or electrical activity of this network can be recorded.
+
+          '
+        source: https://www.axionbiosystems.com/multielectrode-array
+      nanoparticle tracking analysis:
+        description: Particle sizing technique based on Brownian motion and scattered light.
+        meaning: ENM:0000065
+      oscillatory rheology:
+        description: Oscillatory rheology is a standard experimental tool for studying viscosity.
+        source: https://www.semanticscholar.org/paper/Oscillatory-Rheology-Measuring-the-Viscoelastic-of-Weitz-Wyss/b0e44c88a9c0bd691eea6f3fb87393c975403d5f
+      oxygen consumption assay:
+        description: Assay measuring oxygen consumption rate (OCR) to assess changes in metabolism in e.g. cancer cells
+        source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8275291/
+      pattern electroretinogram:
+        description: Pattern electroretinogram (PERG) is an electrophysiologic ophthalmologic test that provides non-invasive objective, quantitative measurement of central retinal function. PERG is the retinal response to a pattern-reversing, black-and-white checkerboard or stripped stimulus. The PERG assesses both macular and retinal ganglion cell electrical activity and can help differentiate between diseases of macular versus optic nerve dysfunction.
+        source: https://www.ncbi.nlm.nih.gov/books/NBK560641
+      perineurial cell thickness:
         aliases:
-        - Non-imaging TCD
-        - TCD
-        - Transcranial Doppler
-        - Transcranial Doppler Ultrasound
-        description: A diagnostic technique that uses pulsed Doppler ultrasound to measure the velocity of blood flow through the major blood vessels of the brain.
-        meaning: NCIT:C122930
+        - 3D-EM
+        - electron tomog
+        description: Measuring the thickness of the cells in the perineurium, e.g. in developing Drosophila melanogaster.
+        meaning: MI:0410
+      pharmocokinetic ADME assay:
+        description: 'Any one or more ADME assays used to assess absorption, distribution, metabolism, and excretion, for evaluation of drug candidates and other pharmaceuticals.
+
+          '
+      polymerase chain reaction:
+        aliases:
+        - PCR
+        - PCR assay
+        description: A rapid technique for in vitro amplification of specific DNA or RNA sequences, allowing small quantities of short sequences to be analyzed without cloning
+        meaning: MMO:0000459
+      quantitative PCR:
+        aliases:
+        - q-pcr
+        description: Quantitative PCR (Q-PCR) is used to measure the quantity of a PCR product (commonly in real-time). It quantitatively measures starting amounts of DNA, cDNA, or RNA.
+        meaning: MI:1195
+      reactive oxygen species assay:
+        description: Reactive oxygen species (ROS) are measured to assess oxidative events and to investigate their biological importance using antioxidants or inhibitors to modulate the phenomena observed.
+        notes:
+        - https://www.nature.com/articles/s42255-022-00591-z for good discussion
+        source: https://www.nature.com/articles/s42255-022-00591-z
+      reporter gene assay:
+        description: 'Reporter gene assay measures the gene expression from a reporter gene. The reporter gene is inserted under the control of a foreign promoter or an artificial regulatory element of interest.  Reporters include luciferase, beta galactosidase, beta lactamase, chloramphenicol acetyl transferase, or a fluorescent protein.
+
+          '
+        meaning: OBI:0002082
+      rheometry:
+        aliases:
+        - rheological measurements
+        - rheology
+        description: 'The study of the flow of fluids which cannot be defined by a single value of viscosity. Rheometry (synonym: rheology) is the measurement of the relationship between deformation and stress for these liquids. [ https://orcid.org/0000-0002-0640-0422 ]'
+        meaning: CHMO:0000915
+      sandwich ELISA:
+        description: The sandwich ELISA measures the amount of antigen between two layers of antibodies. The antigens to be measured must contain at least two antigenic sites, capable of binding to antibody, since at least two antibodies act in the sandwich. So sandwich assays are restricted to the quantitation of multivalent antigens such as proteins or polysaccharides. Sandwich ELISAs for quantitation of antigens are especially valuable when the concentration of antigens is low and/or they are contained in high concentrations of contaminating protein.
+        meaning: BAO:0002421
+      single molecule drug screen assay:
+        description: An experiment in which a single molecule was used in an assay
+      small molecule library screen:
+        description: High throughput sample analysis of small molecules for purpose such as drug discovery, or biochemical, genetic or pharmacological tests.
+        meaning: ERO:0001726
+      sorbitol dehydrogenase activity level assay:
+        description: An enzymatic activity level assay that measures the activity of sorbitol dehydrogenase in a sample.
+        meaning: OBI:0003434
+      split-GFP assay:
+        description: An assay where complementary non-fluorescent fragments of GFP are fused to interacting proteins or brought into proximity; reconstitution of fluorescence indicates interaction or proximity.
+      static histomorphometry:
+        description: Static histomorphometry involves evaluation of bone parameters at a particular time point.
+      static light scattering:
+        aliases:
+        - static light scattering spectrometry
+        - integrated light scattering
+        - differential light-scattering spectroscopy
+        - total intensity light scattering
+        - traditional light scattering
+        - differential static light scattering
+        - classical light scattering
+        - DLSS
+        - static light scattering spectroscopy
+        - TILS
+        description: Static Light Scattering is a method for determining structure by measuring the total or time-averaged scattering intensity of scattered visible light as a function of angle.
+        meaning: CHMO:0000180
+      survival:
+        aliases:
+        - 3D-EM
+        - electron tomog
+        description: Any quantitative measurement of survival of or in an individual or study population.
+        meaning: MI:0410
+      trans-endothelial electrical resistance:
+        description: Trans-endothelial electrical resistance (TEER), aka epithelial voltohmmeter (EVOM) assay, is used to assess the integrity and barrier function of epithelial cell monolayers in cell culture experiments.
+        meaning: ENM:8000301
+      twin spot assay:
+        description: Two individual and genetically different populations of cells that originate from the same mitotic recombination event; twin spots allow a direct and reliable comparison between mutant and wild-type clones, and the size of the wild-type twin can serve as a reference for comparison with the homozygous mutant clones.
+        source: https://pubmed.ncbi.nlm.nih.gov/29378809/
       western blot:
         description: A multistep process in which a mixture of proteins is separated by gel electrophoresis
         meaning: MMO:0000338
-  MassSpectrometryAssayEnum:
-    description: Mass spectrometry-based assays
-    title: Mass Spectrometry Assay
-    permissible_values:
-      FIA-MSMS:
-        description: Flow injection analysis - tandem mass spectrometer
-        source: https://www.ncbi.nlm.nih.gov/pubmed/28667829
-      FTIR spectroscopy:
-        aliases:
-        - FTIR spectrometry
-        - FTIR
-        - Fourier transform infra-red absorption spectroscopy
-        - Fourier transform infrared spectrometry
-        - Fourier transform infrared (FT-IR)
-        - Fourier transform infrared spectroscopy
-        description: 'Fourier transform infrared (FTIR) spectroscopy is a technique used to obtain an infrared spectrum of absorption or emission of a solid, liquid or gas.  An FTIR spectrometer simultaneously collects high-resolution spectral data over a wide spectral range.
-
-          '
-        meaning: CHMO:0000636
-      MIB/MS:
-        description: Kinomics assay using multiplexed kinase inhibitor beads and mass spectrometry (MIB/MS)
-        source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3328787/
-      MudPIT:
-        description: MudPIT is a method for rapid and large-scale protein identification by multidimensional liquid chromatography associated with tandem mass spectrometry
-        meaning: MI:0658
-      RPPA:
-        description: Reverse phase protein array (RPPA) is a an assay that measures multiple protein expression levels in a large number of biological samples simultaneously using high quality antibodies
-        meaning: BAO:0010030
-      TMT quantitation:
-        description: An isobaric labeling technique that uses tags containing four regions with the same total molecular weights and structure, so that during chromatographic or electrophoretic separation and in single MS mode, molecules labelled with different tags are indistinguishable.
-        meaning: ERO:0002175
-      high-performance liquid chromatography/tandem mass spectrometry:
-        aliases:
-        - HPLC/MS/MS
-        description: HPLC-MSMS is an analytical technique wherein high performance liquid chromatography is coupled to tandem mass spectrometry in order to separate, identify, and quantify substances in a sample.
-        meaning: NCIT:C120691
-      label free mass spectrometry:
-        description: A mass spectrometry assay that allows for measurement for endogenous targets in live cell assays, and eliminates the need for tags, dyes, or specialized reagents or engineered cells.
-        meaning: ERO:0000708
-      liquid chromatography-electrochemical detection:
-        aliases:
-        - liquid chromatography/electrochemistry
-        - LC-ED
-        - LCEC
-        description: A liquid chromatography method that is sensitive to compounds which can be either reduced or oxidised. The mobile phase passes directly over the working electrode, which is set to the specific potential required for oxidation or reduction. The current produced is then measured.
-        meaning: CHMO:0001746
-      liquid chromatography/mass spectrometry:
-        aliases:
-        - LC/MS
-        description: LC-MS is a hyphenated technique, combining the separation power of liquid chromatography (LC), an analytical chromatographic technique for separating ions or molecules dissolved in a solvent, with the detection power of mass spectrometry(MS), a technique to separate gas phase ions according their m/z (mass to charge ratio) value. Used for drug screening, pharmacology studies, environmental analyses and forensics.
-        meaning: NCIT:C18475
-      liquid chromatography/tandem mass spectrometry:
-        aliases:
-        - LC/MS/MS
-        description: LC-MSMS is an analytical technique wherein liquid chromatography is coupled to tandem mass spectrometry in order to separate, identify, and quantify substances in a sample.
-        meaning: NCIT:C122168
-      mass spectrometry:
-        description: A generic mass spectrometry assay that allows identification and amount of peptide or protein materials.
-        meaning: ERO:0000708
-      proximity extension assay:
-        description: Olink's Proximity Extension Assay (PEA) combines specificity and scalability to enable high-throughput, multiplex protein biomarker analysis.
-        source: https://olink.com/technology/what-is-pea
-      SomaScan:
-        aliases:
-        - SomaLogic SomaScan
-        description: Aptamer-based proteomics assay using SOMAmer reagents (modified DNA aptamers) to quantify thousands of proteins simultaneously from small sample volumes.
-        source: https://somalogic.com/somascan-platform/
-      ultra high-performance liquid chromatography/tandem mass spectrometry:
-        aliases:
-        - U-HPLC/MS/MS
-        description: UPLC-MSMS is an analytical technique wherein ultra-high performance liquid chromatography is coupled to tandem mass spectrometry in order to separate, identify, and quantify substances in a sample.
-        meaning: NCIT:C122176
+      whole-cell patch clamp:
+        description: A patch-clamp assay where the electrode is left in place on the cell, as in cell-attached recordings, but the membrane patch has been perforated, providing access from the interior of the pipette to the intracellular space of the cell. Measurements made with this technique involve recording currents through multiple channels simultaneously, over the membrane of the entire cell.
+        meaning: OBI:0002178
+    title: Cell-based Assay
   ClinicalBehavioralAssayEnum:
     description: Clinical assessments and behavioral assays
-    title: Clinical and Behavioral Assay
     permissible_values:
       AlgometRx Nociometer:
         description: Assay that can selectively measure the sensitivity of three different nerve fiber types. An overall score can be derived to indicate the type of pain a person is experiencing and can be used to monitor how well a patient responds to treatment of pain.
-      quantitative sensory testing:
-        aliases:
-        - QST
-        description: A battery of psychophysical tests to assess sensory nerve function and pain perception across modalities (e.g., thermal, mechanical, vibration) and quantify sensory thresholds.
-        meaning: NCIT:C155860
       Child Behavior Checklist for Ages 1.5-5:
         aliases:
         - CBCL/1.5-5
@@ -509,6 +416,9 @@ enums:
 
           '
       elevated plus maze test:
+        aliases:
+        - EPM apparatus method
+        - EPM test
         description: A method which utilizes an experimental apparatus consisting of four arms, usually two enclosed and two open, in the shape of a plus (+) upon which the test animal can walk. The maze is elevated a set distance, for example 40 to 60 centimeters, above the floor or platform upon which the apparatus sits.
         meaning: MMO:0000262
       feeding assay:
@@ -567,6 +477,11 @@ enums:
         meaning: MAXO:0000915
       pure tone average:
         description: Metric used to summarize hearing sensitivity at specific frequencies to assess hearing impairment. As PTA increases, hearing ability decreases.
+      quantitative sensory testing:
+        aliases:
+        - QST
+        description: A battery of psychophysical tests to assess sensory nerve function and pain perception across modalities (e.g., thermal, mechanical, vibration) and quantify sensory thresholds.
+        meaning: NCIT:C155860
       questionnaire:
         description: A document with a set of printed or written questions with a choice of answers, devised for the purposes of a survey or statistical study.
         meaning: OBI:0001000
@@ -579,166 +494,117 @@ enums:
       six-minute walk test:
         description: The six-minute walk test (6MWT) is a simple, standardized functional assay of exercise capacity that measures how far the human subject can walk within a 6-minute duration; used to to evaluate lung and heart conditions.
         source: https://www.ncbi.nlm.nih.gov/books/NBK576420/
+      survival:
+        aliases:
+        - 3D-EM
+        - electron tomog
+        description: Any quantitative measurement of survival of or in an individual or study population.
+        meaning: MI:0410
       weight:
         description: An assay or measurement that quantifies the mass or weight of a subject, specimen, or sample. Commonly used in clinical assessments, biosample characterization, and longitudinal health monitoring.
         meaning: EFO:0004338
-      survival:
-        description: Any quantitative measurement of survival of or in an individual or study population.
-        meaning: MI:0410
       word recognition score:
         description: Assays how well a person can understand speech by repeating a list of words. The WRS is a percentage of words correctly repeated. It's a more functional measure because it predicts whether hearing loss can be improved with amplification.
-  CellBasedAssayEnum:
-    description: Cell-based assays including viability, proliferation, and functional assays
-    title: Cell-based Assay
+    title: Clinical and Behavioral Assay
+  DrugScreenAssayEnum:
+    description: Drug screening assays - subset of cell-based assays focused on drug discovery
     permissible_values:
-      2D AlamarBlue absorbance:
-        description: Cell viability assay based on detection of AlamarBlue (resazurin). Living cells reduce blue, non-fluorescent resazurin to the red, fluorescent molecule resorufin.  The amount of fluorescence or absorbance is proportional to the number of living cells and corresponds to the cell’s metabolic activity. For the absorbance-based assay, absorbance can be read at 570 nm.
-        source: https://www.thermofisher.com/us/en/home/life-science/cell-analysis/fluorescence-microplate-assays/microplate-assays-cell-viability/alamarblue-assay-cell-viability.html
-      2D AlamarBlue fluorescence:
-        description: Cell viability assay based on detection of AlamarBlue (resazurin). Living cells reduce blue, non-fluorescent resazurin to the red, fluorescent molecule resorufin. The amount of fluorescence or absorbance is proportional to the number of living cells and corresponds to the cell’s metabolic activity. For the fluorescence-based assay, color change and fluorescence can be detected using 560/590 nm (excitation/emission).
-        source: https://www.thermofisher.com/us/en/home/life-science/cell-analysis/fluorescence-microplate-assays/microplate-assays-cell-viability/alamarblue-assay-cell-viability.html
-      3D microtissue viability:
-        description: Cell viability assay on a 3D microtissue model.
-        source: https://www.ncbi.nlm.nih.gov/books/NBK343426/
-      ATPase activity assay:
-        description: As an assay used for drug discovery, measures enzymatic ATP hydrolysis to help assess levels of enzymatic activity induced by a candidate drug molecule.
-        meaning: MI:0880
-        notes:
-        - See also https://www.bellbrooklabs.com/atpase-activity-assay-for-drug-discovery/ for discussion
-      BrdU proliferation assay:
-        description: A cell proliferation assay in which cells are cultured in the presence of BrdU which is incorporated into newly synthesized DNA of replicating cells (during the S phase of the cell cycle).
-        meaning: OBI:0000664
-      ELISA:
-        aliases:
-        - Enzyme-linked Immunosorbent Assay
-        description: A highly sensitive technique for detecting and measuring antigens or antibodies in a solution; the solution is run over a surface to which immobilized antibodies specific to the substance have been attached, and if the substance is present, it will bind to the antibody layer, and its presence is verified and visualized with an application of antibodies that have been tagged in some way.
-        meaning: NCIT:C16553
-      EdU proliferation assay:
-        description: Proliferation assay using EdU as a thymidine nucleoside analog is an alternative to the classical BrdU assay.
-        meaning: OBI:0000891
-        source: https://www.sigmaaldrich.com/deepweb/assets/sigmaaldrich/product/documents/100/843/17-1052x.pdf
-      FLIPR high-throughput cellular screening:
-        description: 'An imaging-based system that allows measurement and analysis of peaks of human-derived induced pluripotent stem cells (hiPSCs),  differentiated into cardiomyocytes and neurons,  up to 100 times per second and quickly cherry pick events such as Early-After-Depolarization-like events (EAD-like events), fibrillation, and irregular beating.
-
-          '
-        source: https://www.moleculardevices.com/products/flipr-penta-high-throughput-cellular-screening-system
-      HPLC:
-        aliases:
-        - High Performance Liquid Chromatography
-        description: 'Frequently referred to simply as HPLC, this form of column chromatography is used frequently in biochemistry.  The analyte is forced through a column by liquid at high pressure, which decreases the time the separated components remain on the stationary phase.
-
-          '
-        meaning: NCIT:C16434
-      Migration Assay:
-        description: An in vitro assay in which cultured cells are monitored and analyzed for their ability to move into an acellular area of a culture material.
-        source: http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C19425
-      STR profile:
-        aliases:
-        - Short Tandem Repeat Profile
-        description: The analysis of all of the short tandem repeats in the genome of a biological sample.
-        meaning: NCIT:C129889
-      TIDE:
-        description: 'Tracking of Indels by Decomposition (TIDE) is a simple and accurate assay to precisely determine the spectrum and frequency of targeted mutations generated  in a pool of cells by genome editing tools such as CRISPR/Cas9, TALENs and ZFNs.
-
-          '
-        source: https://tide.nki.nl/
-      TriKinetics activity monitoring:
-        description: TriKinetics systems quantify animal movement over time, and can be used to measure circadian rhythm, sleep, longevity, social interaction, geotaxis, learning, phototaxis, and drug response in various species of flies, mosquitoes, bees, spiders, ants, cockroaches, beetles, moths, zooplankton, and fish, among others.
-        source: https://trikinetics.com/
-      array:
-        description: ''
-      blue native PAGE:
-        aliases:
-        - bn-page
-        description: Blue native PAGE (BN-PAGE) permits a high-resolution separation of multi-protein complexes under native conditions.
-        meaning: MI:0276
-      SDS-PAGE:
-        aliases:
-        - SDS PAGE
-        - sodium dodecyl sulfate polyacrylamide gel electrophoresis
-        description: Denaturing polyacrylamide gel electrophoresis using SDS to separate proteins primarily by molecular weight.
-        meaning: EFO:0010936
-      bone histomorphometry:
-        description: Asasy providing quantitative information on metabolic bone diseases and fracture healing. This is the broader assay concept containing both static and dynamic histomorphometry.
-      cAMP-Glo Max Assay:
-        description: The cAMP-Glo Max Assay from Promega is a bioluminescent assay used for the quantification of cyclic AMP (cAMP) in cell-based assays. It utilizes a luminescent luciferase-based detection system to detect the levels of cAMP in cell lysates, which can be used to study G protein-coupled receptor (GPCR) signaling and other intracellular signaling pathways.
-        source: https://www.promega.com/products/cell-signaling/gpcr-signaling/camp_glo-max-assay/?catNum=V1681
-      calcium retention capacity assay:
-        description: The CRC assay assesses Ca2+-related mitochondrial functions
-        see_also:
-        - https://pubmed.ncbi.nlm.nih.gov/29781984/
-      cell competition:
-        description: An assay in which two or more labeled populations of cells or organoids are mixed, allowed to grow, possibly in the presence of a drug or other perturbagen. The relative quantity of the cell populations is measured at the end of the experiment.
-        source: https://pubmed.ncbi.nlm.nih.gov/22113311/
-      cell count:
-        aliases:
-        - CELLS
-        - Total Cells
-        description: A procedure to determine the number of cells in a sample. Also used to mean the result of such a procedure.
-        meaning: NCIT:C48938
-      cell painting:
-        source: https://www.nature.com/articles/nprot.2016.105
-      cell permeability assay:
-        description: An assay measuring cell permeability.
-        meaning: BAO:0002778
-      cell proliferation:
-        description: A cellular assay that allows for the measurement of the multiplication or reproduction of cells, resulting in the expansion of a cell population.
-        meaning: ERO:0000636
-      cell viability assay:
-        description: This assay type measures the cellular state of living or dying by measuring an indicator of life or death
-        meaning: BAO:0003009
       combination library screen:
         description: High throughput sample analysis of collections of compounds that provide a variety of chemically diverse structures that can be used to identify structure types that have affinity with pharmacological targets.
         meaning: ERO:0001686
       combination screen:
         description: ''
-      complex II enzyme activity assay:
-        description: Assay measuring activity of the Complex II enzyme for e.g. high-throughput screening.
-        notes:
-        - Can be considered a mitochondrial assay
-        source: https://www.caymanchem.com/product/700940/mitocheck%C2%AE-complex-ii-activity-assay-kit
-      compound screen:
-        description: ''
-      current clamp assay:
-        description: 'The current clamp technique records the membrane potential by injecting current into a cell through the recording electrode.  Unlike in the voltage clamp mode, where the membrane potential is held at a level determined by the experimenter, in "current clamp" mode the membrane potential is free to vary,  and the amplifier records whatever voltage the cell generates on its own or as a result of stimulation.  This technique is used to study how a cell responds when electric current enters a cell; this is important for instance for understanding how neurons respond to neurotransmitters that act by opening membrane ion channels.
+      single molecule drug screen assay:
+        description: An experiment in which a single molecule was used in an assay
+      small molecule library screen:
+        description: High throughput sample analysis of small molecules for purpose such as drug discovery, or biochemical, genetic or pharmacological tests.
+        meaning: ERO:0001726
+    title: Drug Screen Assay
+  ImagingAssayEnum:
+    description: Imaging-based assays including microscopy, MRI, and related methods
+    permissible_values:
+      3D confocal imaging:
+        description: Confocal microscopy with 3D reconstruction of the sample tissue.
+        source: https://pubmed.ncbi.nlm.nih.gov/34331281
+      3D electron microscopy:
+        aliases:
+        - 3D-EM
+        - electron tomog
+        description: Three-dimensional (3D) reconstruction of single, transparent objects from a collection of projection images recorded with a transmission electron microscope. It offers the opportunity to obtain 3D information on structural cellular arrangements with a high resolution.
+        meaning: MI:0410
+      3D imaging:
+        aliases:
+        - 3-Dimensional Imaging
+        - Medical Imaging, Three Dimensional
+        - Three Dimensional Imaging
+        description: Technique to produce 3D images to visualize important structures in great detail. To produce 3D images, many scans are made, and then combined by computers to produce a 3D model, which can then be manipulated. 3D ultrasounds are produced using a somewhat similar technique.
+        meaning: NCIT:C18485
+      CODEX:
+        description: CODEX imaging.
+      DNA optical mapping:
+        description: Fluorescent imaging of linearly extended DNA molecules to probe information patterns along the molecules
+        source: https://doi.org/10.1016/j.copbio.2013.01.009
+      Fluorescence In Situ Hybridization:
+        aliases:
+        - FISH
+        description: 'A physical mapping approach that uses fluorescent tags to detect hybridization of probes within metaphase chromosomes or less condensed somatic interphase chromatin.  This technique can be used for identification of chromosomal abnormalities and for gene mapping.
 
           '
-        meaning: OBI:0002185
-      differential scanning calorimetry:
+        meaning: NCIT:C17563
+      Magnetization-Prepared Rapid Gradient Echo MRI:
         aliases:
-        - DSC
-        - differential scanning calorimetric analysis
-        description: Differential scanning calorimetry (DSC) is the measurement of thermodynamic parameters (e.g. enthalpy) during a chemical or biochemical reaction of both a sample and a reference, by the known variation (step-wise or linear) of one variable, whilst a second is kept constant.
-        meaning: CHMO:0000684
-      dynamic light scattering:
+        - MP RAGE
+        - MP-RAGE MRI
+        description: 'A magnetic resonance imaging modality that offers rapid imaging time, easy reconstruction of any plane, and three-dimensional surface contour rendering with cut away postprocessing.  Especially useful for imaging brain, MP-RAGE captures high tissue contrast and provides high spatial resolution with whole brain coverage in a short scan time.
+
+          '
+        meaning: NCIT:C118462
+      SUSHI:
+        description: Fast super-resolution method that exploits sparsity in the underlying vasculature and statistical independence within the measured signals to detect slow-flowing blood, facilitating noninvasive perfusion measurements.
+        source: https://pubmed.ncbi.nlm.nih.gov/30295619/
+      atomic force microscopy:
         aliases:
-        - photon correlation spectroscopy
-        - quasi-elastic light scattering spectrometry
-        - dynamic laser scattering
-        - PCS
-        - dynamic light scattering spectrometry
-        - QELS
-        - photon correlation spectrometry
-        - DLS
-        - quasi-elastic light scattering spectroscopy
-        - dynamic light scattering spectroscopy
-        - quasi-elastic light scattering
-        description: Dynamic Light Scattering (DLS), also known as photocorrelation spectroscopy, is a method for determining the size distribution of a sample of small particles in solution by illuminating the sample with a light source (usually a laser) and measuring the time-dependent fluctuations in the intensity of the scattered light caused by Brownian motion.
-        meaning: CHMO:0000167
-      electrochemiluminescence:
-        description: A method in which electromagnetic radiation, in the form of light emission, is generated from an electrochemical reaction in a solution.
-        meaning: NCIT:C111193
-        source: https://www.mesoscale.com/en/technical_resources/our_technology/ecl
-      electrophoretic light scattering:
-        description: Subtype of dynamic light scattering, used to measure electrophoretic mobility.
-        source: https://en.wikipedia.org/wiki/Electrophoretic_light_scattering
-      flow cytometry:
-        description: A cytometry assay in which an input cell population is put in solution, is passed by a laser, and optical sensors are used to detect scattering of the laser light and/or fluorescence of specific markers to count and characterize the particles in solution
-        meaning: OBI:0000916
-      focus forming assay:
-        description: The focus forming assay (FFA) is an immunostaining technique and a variation of the viral plaque assay. Instead of detecting the plaque formation after virus-induced cell lysis these assays detect infected host cells and infectious virus particles before a plaque is formed.
-        see_also:
-        - https://www.bpes.co.uk/focus-forming-assay-virus-titer-quantitation/
+        - scanning force microscopy
+        - AFM
+        - atomic force imaging
+        - SFM
+        description: Microscopy which uses a sharp spike (known as a 'tip') mounted on the end of a cantilever to scan the surface of the specimen
+        meaning: CHMO:0000113
+      autoradiography:
+        description: A radioactivity detection technique using X-ray film to visualize molecules or fragments of molecules that have been radioactively labeled.
+        meaning: ERO:0000716
+      brightfield microscopy:
+        aliases:
+        - bright-field optical microscopy
+        - transmitted light microscopy
+        description: Microscopy where the specimen is illuminated with light transmitted from a source on the opposite side of the specimen from the objective
+        meaning: CHMO:0000104
+      confocal microscopy:
+        description: 'Confocal microscopy has advantages over widefield optical microscopy, including the ability to eliminate or reduce background information away from the focal plane and collect serial optical sections from thick specimens.  It uses point illumination and a spatial pinhole to eliminate out-of-focus light in specimens that are thicker than the focal plane.
+
+          '
+        meaning: BAO:0000453
+      conventional MRI:
+        aliases:
+        - Conventional Magnetic Resonance Imaging
+        description: Magnetic resonance imaging using standard protocols for high resolution structural and anatomic characterization, including T1 weighted, T2 weighted, fluid attenuated inversion recovery (FLAIR), and gadolinium-enhanced sequences. [  NCI  ]
+        meaning: NCIT:C175525
+      diffusion MRI:
+        description: MRI method that measure the diffusion of water in the tissue, rather than the content of water as measured in conventional MRI.
+        meaning: NCIT:C20117
+      fluorescence microscopy assay:
+        aliases:
+        - FM
+        - fluorescence imaging
+        - fluorescence microscopic imaging
+        description: Uses fluorescent labels to visualize and quantify specific cellular components, proteins, or biological processes under a fluorescence microscope by detecting the emitted light when the fluorophores are excited by specific wavelengths.
+        meaning: CHMO:0000087
+      functional MRI:
+        aliases:
+        - Functional Magnetic Resonance Imaging
+        - fMRI
+        description: The principle of functional MRI imaging is to take a series of images of an organ in quick succession and to statistically analyze the images for differences among them. Most commonly used in studies of brain function. [  NCI  ]
+        meaning: NCIT:C17958
       gel filtration chromatography:
         aliases:
         - gel-permeation chromatography
@@ -747,165 +613,322 @@ enums:
 
           '
         meaning: CHMO:0001011
-      gel permeation chromatography:
-        description: AKA size exclusion chromatography (GPC/SEC), this assay is a type of high performance liquid chromatography used to determine the molecular weight distributions of polymers.
-        source: https://www.agilent.com/cs/library/primers/Public/5990-6969EN%20GPC%20SEC%20Chrom%20Guide.pdf
       high content screen:
+        aliases:
+        - HCS
         description: An image analysis technique combining automated fluorescence microscopy with multi-parameter quantitative image analysis for the large scale study of cells (cellomics).
         meaning: EFO:0007550
-      immunoassay:
+      high frequency ultrasound:
+        description: High frequency ultrasound (HFUS) is an imaging modality that can give greater resolution of surface changes in skin (review in PMID:24583666)
+      histology:
         aliases:
-        - Immunological Laboratory Method
-        - Immunology Test
-        description: Generic immunology assay
-      in silico synthesis:
-        description: Synthesis of molecules and compounds (e.g. drug candidates) via simulation or other system outside of a live biological system.
-      in vitro tumorigenesis:
+        - Microanatomy
+        description: Microscopic examination of stained tissue sections to evaluate tissue architecture and cellular morphology.
+        meaning: NCIT:C16681
+      immunocytochemistry:
         aliases:
-        - sphere formation
-        - tumor spheroid formation assay
-        - Matrigel-based tumorigenesis assay
-        description: An in vitro assay devised to measure tumor formation, including sphere formation assays where cells form three-dimensional spherical structures (spheroids) to assess tumor-initiating capacity, stem cell properties, and self-renewal capability. Includes Matrigel-based and other matrix-based approaches.
-        source: https://pmc.ncbi.nlm.nih.gov/articles/PMC6121836/
-      in vivo PDX viability:
-        description: Assay to assess viability using PDX model.
-      in vivo tumor growth:
-        description: The growth of a tumor measured using calipers, ruler, or another similar measurement device. See also "in vivo bioluminescence".
-      light scattering assay:
+        - ICC
+        description: The branch of immunochemistry dealing with cells and cellular activity; the application of immunochemical techniques to cytochemistry.
+        meaning: NCIT:C17731
+      immunofluorescence:
         aliases:
-        - LSS
-        - light scattering spectroscopy
-        - light scattering spectrometry
-        - LiSSP
-        description: A method for determining structure by measuring the change in direction or energy of scattered visible light. Light is scattered by the electrons surrounding the atomic nuclei in the sample.
-        meaning: CHMO:0000166
-      local field potential recording:
-        description: An extracellular electrophysiology assay where a microelectrode is placed in the extracellular space of brain tissue to measure action potential and compared to an electrode either outside or inside that tissue.
-        meaning: OBI:0002189
-      long term potentiation assay:
+        - FLUORESCENT IMMUNOASSAY
+        - Fluorescent Antibody Assay
+        - Fluorescent Antibody Procedure
+        - Immunofluorescence Assay
+        - Immunologic, Immunofluorescence
+        description: An immunological procedure in which the antibodies are coupled with molecules which fluoresce under ultra violet (UV) light. This makes them particularly suitable for detection of specific antigens in tissues or on cells.
+        meaning: NCIT:C17370
+      immunohistochemistry:
+        description: An immunostaining assay to detect and potentially localize antigens within the cells of a tissue section
+        meaning: OBI:0001986
+      in vivo bioluminescence:
+        description: An imaging assay that allows detection of bioluminescence from a living organism or organisms.
+        meaning: ERO:0000651
+      laser speckle imaging:
         aliases:
-        - 'LTP: CA3 region'
-        - LTP
-        description: A measure of the persistent robust synaptic response induced by synchronous stimulation of pre- and postsynaptic cells.
-        meaning: VT:0002207
-      massively parallel reporter assay:
-        description: An assay in which multiplexing the construction and interrogation of larger libraries of reporter constructs allows measurement of the transcriptional regulatory activities of thousands to hundreds of thousands of DNA sequences.
-        meaning: OBI:0002675
-      microrheology:
-        description: A technique used to measure the rheological properties of a medium, such as microviscosity and microviscoelasticity.
+        - LSCI
+        - Laser Speckle Contrast Imaging
+        description: A noninvasive, non-scanning optical imaging technique that provides full-field visualization of blood flow to the tissue being imaged, which provides information about tissue perfusion and the efficiency of disease treatment.
+        meaning: NCIT:C116492
+      live imaging:
+        description: Imaging of live cells, tissues, or organisms over time to observe dynamic biological processes and behavior.
+        meaning: OBI:0001815
+      magnetic resonance angiography:
+        aliases:
+        - MA
+        - MR Angiography
+        description: Angiography using magnetic resonance imaging.
+        meaning: NCIT:C190557
+      magnetic resonance spectroscopy:
+        aliases:
+        - NMR Spectroscopy
+        - NUCLEAR MAGNETIC RESONANCE SPECTROSCOPY
+        - Spectroscopy, MR
+        - Spectroscopy, Nuclear Magnetic Resonance
+        description: Detection and measurement of the resonant spectra of molecular species in a tissue or sample.
+        meaning: NCIT:C16810
+      optical coherence tomography:
+        aliases:
+        - OCT
+        description: 'Optical Coherence Tomography (OCT) combines the principles of ultrasound with the imaging performance of a microscope.  OCT uses infrared light waves that reflect off the internal microstructure within the biological tissues.  The frequencies and bandwidths of infrared light are orders of magnitude higher than medical ultrasound signals, resulting in greatly increased image resolution, 8-25 times greater than any existing modality.  In addition to providing high-level resolutions for the evaluation of microanatomic structures OCT is also able to provide information regarding tissue composition. OCT is most widely used in ophthalmology.
+
+          '
+        meaning: NCIT:C20828
+        source: https://en.wikipedia.org/wiki/Optical_coherence_tomography
+      optical tomography:
+        description: 'Optical tomography is a form of computed tomography that creates a digital volumetric model of an object by reconstructing images made from light transmitted and scattered through an object. Subtypes are diffuse optical tomography, time-of-flight diffuse optical tomography, fluorescence molecular tomography, confocal diffuse tomography, optical coherence tomography.
+
+          '
+        source: https://en.wikipedia.org/wiki/Optical_tomography
+      phase-contrast microscopy:
+        aliases:
+        - Microscopy, Phase-Contrast
+        description: A simple non-quantitative form of interference microscopy of great utility in visualising live cells. Small differences in optical path length due to differences in refractive index and thickness of structures are visualised as differences in light intensity.
+        meaning: NCIT:C16857
+      photograph:
+        description: An image recorded by a camera.
+        meaning: NCIT:C86035
+      positron emission tomography:
+        aliases:
+        - Medical Imaging, Positron Emission Tomography
+        - PET
+        - PET SCAN
+        - PT
+        - Positron emission tomography (procedure)
+        - proton magnetic resonance spectroscopic imaging
+        description: A technique for measuring the gamma radiation produced by collisions of electrons and positrons (anti-electrons) within living tissue.
+        meaning: NCIT:C17007
+      spatial frequency domain imaging:
+        description: Spatial Frequency Domain Imaging (SFDI) is a non-contact, depth-varying and wide-field optical imaging technique for measuring optical properties in a wide field-of-view on a pixel-by-pixel basis. Relevant applications include including burn assessment, skin tissue evaluation, tumor tissue detection, brain tissue monitoring.
         notes:
-        - Dynamic light scattering (DLS) is the ancestor of microrheology.
-        source: https://www.elveflow.com/microfluidic-reviews/general-microfluidics/microrheology-a-review/
-      multi-electrode array:
-        description: 'A multi-electrode array is a grid of tightly spaced microscopic electrodes embedded in the bottom of each well in a multi-well MEA plate.  Cells, such as cardiomyocytes or neurons, which are electrically active, can be cultured over the electrodes creating a cohesive network.  The functional behavior or electrical activity of this network can be recorded.
-
-          '
-        source: https://www.axionbiosystems.com/multielectrode-array
-      nanoparticle tracking analysis:
-        description: Particle sizing technique based on Brownian motion and scattered light.
-        meaning: ENM:0000065
-      oscillatory rheology:
-        description: Oscillatory rheology is a standard experimental tool for studying viscosity.
-        source: https://www.semanticscholar.org/paper/Oscillatory-Rheology-Measuring-the-Viscoelastic-of-Weitz-Wyss/b0e44c88a9c0bd691eea6f3fb87393c975403d5f
-      oxygen consumption assay:
-        description: Assay measuring oxygen consumption rate (OCR) to assess changes in metabolism in e.g. cancer cells
-        source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8275291/
-      pattern electroretinogram:
-        description: Pattern electroretinogram (PERG) is an electrophysiologic ophthalmologic test that provides non-invasive objective, quantitative measurement of central retinal function. PERG is the retinal response to a pattern-reversing, black-and-white checkerboard or stripped stimulus. The PERG assesses both macular and retinal ganglion cell electrical activity and can help differentiate between diseases of macular versus optic nerve dysfunction.
-        source: https://www.ncbi.nlm.nih.gov/books/NBK560641
-      perineurial cell thickness:
+        - Note that term has no matches in OLS as of June 2022.
+        source: https://doi.org/10.3390/photonics8050162
+      spatial transcriptomics:
+        description: Assay that allows visualization and quantitative analysis of the transcriptome with spatial resolution in individual tissue sections.
+        meaning: EFO:0008994
+      traction force microscopy:
+        description: An experimental method for determining the tractions on the surface of a biological cell by obtaining measurements of the surrounding displacement field within an in vitro extracellular matrix (ECM)
+        source: https://en.wikipedia.org/wiki/Traction_force_microscopy
+      transcranial doppler ultrasonography:
         aliases:
-        - 3D-EM
-        - electron tomog
-        description: Measuring the thickness of the cells in the perineurium, e.g. in developing Drosophila melanogaster.
-        meaning: MI:0410
-      pharmocokinetic ADME assay:
-        description: 'Any one or more ADME assays used to assess absorption, distribution, metabolism, and excretion, for evaluation of drug candidates and other pharmaceuticals.
-
-          '
-      polymerase chain reaction:
-        aliases:
-        - PCR
-        - PCR assay
-        description: A rapid technique for in vitro amplification of specific DNA or RNA sequences, allowing small quantities of short sequences to be analyzed without cloning
-        meaning: MMO:0000459
-      quantitative PCR:
-        aliases:
-        - q-pcr
-        description: Quantitative PCR (Q-PCR) is used to measure the quantity of a PCR product (commonly in real-time). It quantitatively measures starting amounts of DNA, cDNA, or RNA.
-        meaning: MI:1195
-      reactive oxygen species assay:
-        description: Reactive oxygen species (ROS) are measured to assess oxidative events and to investigate their biological importance using antioxidants or inhibitors to modulate the phenomena observed.
-        notes:
-        - https://www.nature.com/articles/s42255-022-00591-z for good discussion
-        source: https://www.nature.com/articles/s42255-022-00591-z
-      reporter gene assay:
-        description: 'Reporter gene assay measures the gene expression from a reporter gene. The reporter gene is inserted under the control of a foreign promoter or an artificial regulatory element of interest.  Reporters include luciferase, beta galactosidase, beta lactamase, chloramphenicol acetyl transferase, or a fluorescent protein.
-
-          '
-        meaning: OBI:0002082
-      split-GFP assay:
-        aliases:
-        - split GFP assay
-        description: An assay where complementary non-fluorescent fragments of GFP are fused to interacting proteins or brought into proximity; reconstitution of fluorescence indicates interaction or proximity.
-      rheometry:
-        aliases:
-        - rheological measurements
-        - rheology
-        description: 'The study of the flow of fluids which cannot be defined by a single value of viscosity. Rheometry (synonym: rheology) is the measurement of the relationship between deformation and stress for these liquids. [ https://orcid.org/0000-0002-0640-0422 ]'
-        meaning: CHMO:0000915
-      sandwich ELISA:
-        description: The sandwich ELISA measures the amount of antigen between two layers of antibodies. The antigens to be measured must contain at least two antigenic sites, capable of binding to antibody, since at least two antibodies act in the sandwich. So sandwich assays are restricted to the quantitation of multivalent antigens such as proteins or polysaccharides. Sandwich ELISAs for quantitation of antigens are especially valuable when the concentration of antigens is low and/or they are contained in high concentrations of contaminating protein.
-        meaning: BAO:0002421
-      single molecule drug screen assay:
-        description: An experiment in which a single molecule was used in an assay
-      small molecule library screen:
-        description: High throughput sample analysis of small molecules for purpose such as drug discovery, or biochemical, genetic or pharmacological tests.
-        meaning: ERO:0001726
-      sorbitol dehydrogenase activity level assay:
-        description: An enzymatic activity level assay that measures the activity of sorbitol dehydrogenase in a sample.
-        meaning: OBI:0003434
-      static histomorphometry:
-        description: Static histomorphometry involves evaluation of bone parameters at a particular time point.
-      static light scattering:
-        aliases:
-        - static light scattering spectrometry
-        - integrated light scattering
-        - differential light-scattering spectroscopy
-        - total intensity light scattering
-        - traditional light scattering
-        - differential static light scattering
-        - classical light scattering
-        - DLSS
-        - static light scattering spectroscopy
-        description: Static Light Scattering is a method for determining structure by measuring the total or time-averaged scattering intensity of scattered visible light as a function of angle.
-        meaning: CHMO:0000180
-      survival:
-        description: Any quantitative measurement of survival of or in an individual or study population.
-        meaning: MI:0410
-      trans-endothelial electrical resistance:
-        description: Trans-endothelial electrical resistance (TEER), aka epithelial voltohmmeter (EVOM) assay, is used to assess the integrity and barrier function of epithelial cell monolayers in cell culture experiments.
-        meaning: ENM:8000301
-      twin spot assay:
-        description: Two individual and genetically different populations of cells that originate from the same mitotic recombination event; twin spots allow a direct and reliable comparison between mutant and wild-type clones, and the size of the wild-type twin can serve as a reference for comparison with the homozygous mutant clones.
-        source: https://pubmed.ncbi.nlm.nih.gov/29378809/
+        - Non-imaging TCD
+        - TCD
+        - Transcranial Doppler
+        - Transcranial Doppler Ultrasound
+        description: A diagnostic technique that uses pulsed Doppler ultrasound to measure the velocity of blood flow through the major blood vessels of the brain.
+        meaning: NCIT:C122930
       western blot:
         description: A multistep process in which a mixture of proteins is separated by gel electrophoresis
         meaning: MMO:0000338
-      whole-cell patch clamp:
-        description: A patch-clamp assay where the electrode is left in place on the cell, as in cell-attached recordings, but the membrane patch has been perforated, providing access from the interior of the pipette to the intracellular space of the cell. Measurements made with this technique involve recording currents through multiple channels simultaneously, over the membrane of the entire cell.
-        meaning: OBI:0002178
-  DrugScreenAssayEnum:
-    description: Drug screening assays - subset of cell-based assays focused on drug discovery
-    title: Drug Screen Assay
+    title: Imaging Assay
+  MassSpectrometryAssayEnum:
+    description: Mass spectrometry-based assays
     permissible_values:
-      combination library screen:
-        description: High throughput sample analysis of collections of compounds that provide a variety of chemically diverse structures that can be used to identify structure types that have affinity with pharmacological targets.
-        meaning: ERO:0001686
-      combination screen:
-        description: ''
-      single molecule drug screen assay:
-        description: An experiment in which a single molecule was used in an assay
-      small molecule library screen:
-        description: High throughput sample analysis of small molecules for purpose such as drug discovery, or biochemical, genetic or pharmacological tests.
-        meaning: ERO:0001726
+      FIA-MSMS:
+        description: Flow injection analysis - tandem mass spectrometer
+        source: https://www.ncbi.nlm.nih.gov/pubmed/28667829
+      FTIR spectroscopy:
+        aliases:
+        - FTIR spectrometry
+        - FTIR
+        - Fourier transform infra-red absorption spectroscopy
+        - Fourier transform infrared spectrometry
+        - Fourier transform infrared (FT-IR)
+        - Fourier transform infrared spectroscopy
+        description: 'Fourier transform infrared (FTIR) spectroscopy is a technique used to obtain an infrared spectrum of absorption or emission of a solid, liquid or gas.  An FTIR spectrometer simultaneously collects high-resolution spectral data over a wide spectral range.
+
+          '
+        meaning: CHMO:0000636
+      MIB/MS:
+        description: Kinomics assay using multiplexed kinase inhibitor beads and mass spectrometry (MIB/MS)
+        source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3328787/
+      MudPIT:
+        description: MudPIT is a method for rapid and large-scale protein identification by multidimensional liquid chromatography associated with tandem mass spectrometry
+        meaning: MI:0658
+      RPPA:
+        description: Reverse phase protein array (RPPA) is a an assay that measures multiple protein expression levels in a large number of biological samples simultaneously using high quality antibodies
+        meaning: BAO:0010030
+      SomaScan:
+        aliases:
+        - SomaLogic SomaScan
+        description: Aptamer-based proteomics assay using SOMAmer reagents (modified DNA aptamers) to quantify thousands of proteins simultaneously from small sample volumes.
+        source: https://somalogic.com/somascan-platform/
+      TMT quantitation:
+        description: An isobaric labeling technique that uses tags containing four regions with the same total molecular weights and structure, so that during chromatographic or electrophoretic separation and in single MS mode, molecules labelled with different tags are indistinguishable.
+        meaning: ERO:0002175
+      high-performance liquid chromatography/tandem mass spectrometry:
+        aliases:
+        - HPLC/MS/MS
+        description: HPLC-MSMS is an analytical technique wherein high performance liquid chromatography is coupled to tandem mass spectrometry in order to separate, identify, and quantify substances in a sample.
+        meaning: NCIT:C120691
+      label free mass spectrometry:
+        description: A mass spectrometry assay that allows for measurement for endogenous targets in live cell assays, and eliminates the need for tags, dyes, or specialized reagents or engineered cells.
+        meaning: ERO:0000708
+      liquid chromatography-electrochemical detection:
+        aliases:
+        - liquid chromatography/electrochemistry
+        - LC-ED
+        - LCEC
+        description: A liquid chromatography method that is sensitive to compounds which can be either reduced or oxidised. The mobile phase passes directly over the working electrode, which is set to the specific potential required for oxidation or reduction. The current produced is then measured.
+        meaning: CHMO:0001746
+      liquid chromatography/mass spectrometry:
+        aliases:
+        - LC/MS
+        description: LC-MS is a hyphenated technique, combining the separation power of liquid chromatography (LC), an analytical chromatographic technique for separating ions or molecules dissolved in a solvent, with the detection power of mass spectrometry(MS), a technique to separate gas phase ions according their m/z (mass to charge ratio) value. Used for drug screening, pharmacology studies, environmental analyses and forensics.
+        meaning: NCIT:C18475
+      liquid chromatography/tandem mass spectrometry:
+        aliases:
+        - LC/MS/MS
+        description: LC-MSMS is an analytical technique wherein liquid chromatography is coupled to tandem mass spectrometry in order to separate, identify, and quantify substances in a sample.
+        meaning: NCIT:C122168
+      mass spectrometry:
+        description: A generic mass spectrometry assay that allows identification and amount of peptide or protein materials.
+        meaning: ERO:0000708
+      proximity extension assay:
+        description: Olink's Proximity Extension Assay (PEA) combines specificity and scalability to enable high-throughput, multiplex protein biomarker analysis.
+        source: https://olink.com/technology/what-is-pea
+      ultra high-performance liquid chromatography/tandem mass spectrometry:
+        aliases:
+        - U-HPLC/MS/MS
+        description: UPLC-MSMS is an analytical technique wherein ultra-high performance liquid chromatography is coupled to tandem mass spectrometry in order to separate, identify, and quantify substances in a sample.
+        meaning: NCIT:C122176
+    title: Mass Spectrometry Assay
+  SequencingAssayEnum:
+    description: Sequencing-based assays including RNA-seq, DNA-seq, and related methods
+    permissible_values:
+      ATAC-seq:
+        description: Open chromatin regions measured by sequencing DNA after assay for transposase-accessible chromatin (ATAC) treatment
+        meaning: OBI:0002039
+      CAPP-seq:
+        description: Cancer Personalized Profiling by deep sequencing (CAPP-seq) is a novel blood-based assay that uses next-generating sequencing to quantitate circulating tumor DNA (ctDNA)
+        meaning: EFO:0008672
+        source: https://www.redjournal.org/article/S0360-3016(16)30438-2/fulltext
+      CUT&RUN:
+        description: Cleavage Under Targets and Release Using Nuclease (CUT&RUN) is a chromatin profiling strategy in which antibody-targeted controlled cleavage by micrococcal nuclease releases specific protein-DNA complexes into the supernatant for paired-end DNA sequencing. (doi:10.7554/eLife.21856)
+      ChIP-seq:
+        description: Chromatin immuno-precipitation followed by sequencing
+        meaning: OBI:0000716
+      ERR bisulfite sequencing:
+        description: 'Enhanced reduced representation bisulfite sequencing (ERRBS) '
+      HI-C:
+        description: Chromatin interactions detected by HI-C protocol
+        meaning: EFO:0007693
+      ISO-seq:
+        description: Full isoform sequencing
+      NOMe-seq:
+        aliases:
+        - Nucleosome Occupancy and Methylome Sequencing
+        description: Nucleosome Occupancy and Methylome Sequencing
+        meaning: NCIT:C106053
+      RNA array:
+        description: RNA measurements captured by array technology
+        meaning: OBI:0001463
+      RNA-seq:
+        description: Bulk RNA sequencing
+        meaning: OBI:0001271
+      SNP array:
+        description: SNP measurements captured by array technology
+        meaning: OBI:0001204
+      SaferSeqS:
+        description: A blood-based assay that evaluates mutations in circulating tumor DNA and chromosomal copy number changes to detect minimal residual disease (MRD) with high specificity towards tumor type.
+        source: https://doi.org/10.1038/s41587-021-00900-z
+      Sanger sequencing:
+        aliases:
+        - Dideoxy Chain Termination DNA Sequencing
+        description: A DNA sequencing technique in which a mixture of deoxynucleosidetriphosphates (dNTPs) and chain-terminating dNTPs, which are radioactively or fluorescently labeled, are combined within the reaction mixture. Once the reaction is complete, the DNA strands are separated by size, and the labeled chain terminating dNTPs can be read in sequence by the investigator or by a machine.
+        meaning: NCIT:C19641
+      T cell receptor repertoire sequencing:
+        description: A sequencing assay that determines the sequences of DNA or RNA molecules that encode the repertoire of T cell receptors within an input sample.
+        meaning: OBI:0002990
+      bisulfite sequencing:
+        description: Methylation data captured by sequencing of DNA treated by a bisulfite-based chemical process
+        meaning: OBI:0000748
+      jumping library:
+        description: 'Jumping libraries are created to bypass difficult to align/map regions, such as those containing repetitive DNA sequences. Briefly, the DNA of interest is identified, cut into fragments either with restriction enzymes or by shearing.  The size-selected fragments are ligated to adapters for bead-capture and circularized. After bead-capture, the DNA is linearized via restriction enzymes, and can be sequenced using adapter primers facing in outward [reverse/forward (RF)] directions.  These library inserts are considered jumping because the ends originate from distal genomic DNA sequences and are ligated adjacent to one another during circularization.
+
+          '
+        source: https://gatk.broadinstitute.org/hc/en-us/articles/360035890751-Jumping-libraries
+      lncRNA-seq:
+        description: Long non-coding RNA measurements collected from RNA-Seq experiments
+      methylation array:
+        description: Methylation data captured by array technology
+        meaning: OBI:0001332
+      miRNA array:
+        description: microRNA measurements captured by array technology
+        meaning: OBI:0001335
+      miRNA-seq:
+        description: Small RNA measurements collected from RNA sequencing experiments
+        meaning: OBI:0002112
+      next generation targeted sequencing:
+        aliases:
+        - Targeted NGS
+        - Targeted NGS (sequencing of selected regions of the genome either via targeted capture or amplification)
+        - Targeted Sequencing
+        description: A type of next generation sequencing in which specific genes or portions of genes are targeted for sequencing using amplicon-based workflow.
+        meaning: NCIT:C130177
+      next-generation sequencing:
+        aliases:
+        - NGS
+        - WGS (whole genome sequencing)
+        - WGS
+        description: High-throughput DNA sequencing methods that allow massively parallel sequencing of millions of DNA fragments simultaneously.
+        meaning: NCIT:C101294
+      oxBS-seq:
+        description: Oxidative bisulfite sequencing (oxBS-Seq) to map 5-methylcytosine and 5-hydroxymethylcytosine
+        meaning: EFO:0008840
+      ribo-seq:
+        aliases:
+        - ARTSeq
+        - active mRNA translation sequencing
+        - ribosome footprinting
+        - ribosome profiling
+        description: Ribosome profiling (Ribo-Seq).
+        meaning: EFO:0008891
+      scCGI-seq:
+        description: A method for genome-wide CpG island (CGI) methylation sequencing for single cells (scCGI-seq), combining methylation-sensitive restriction enzyme digestion and multiple displacement amplification for selective detection of methylated CGIs
+        source: https://www.ncbi.nlm.nih.gov/pubmed/28126923
+      shRNA-seq:
+        aliases:
+        - shRNA library screen sequencing
+        description: A sequencing-based functional genomics assay in which a pooled short hairpin RNA (shRNA) library is introduced into cells, and the relative abundance of individual shRNA constructs is quantified by amplicon sequencing to identify genes affecting a phenotype of interest.
+        meaning: EFO:0030034
+      single cell ATAC-seq:
+        aliases:
+        - scATAC-Seq
+        description: A molecular genetic technique where DNA is isolated from single cell (sc) samples and amplified to create a genomic library. Then the library is subjected to ATAC-seq, which isolates and sequences regions rich in open chromatin.
+        meaning: NCIT:C179458
+      single-cell RNA-seq:
+        aliases:
+        - Single Cell RNA Sequencing
+        - Single Cell Transcriptome Sequencing
+        - scRNA-Seq
+        description: A procedure that can determine the nucleotide sequence for all of the RNA transcripts in an amplified nucleotide sample that was derived from a single cell.
+        meaning: NCIT:C171152
+      single-nucleus RNA-seq:
+        aliases:
+        - single-nucleus RNA sequencing assay
+        - snRNA-Seq
+        description: A method for quantifying the transcriptome of individual cells, in which transcripts isolated from single nuclei are subjected to high-throughput sequencing and mapping to a reference genome.
+        meaning: FBcv:0009001
+      spatial transcriptomics:
+        description: assay that allows visualization and quantitative analysis of the transcriptome with spatial resolution in individual tissue sections
+        meaning: EFO:0008994
+      targeted exome sequencing:
+        description: Also known as Clinical Exome Sequencing, Targeted Exome Sequencing is a subset of WES as it covers a limited number of genes, typically 3000 to 6000 genes.
+        source: https://labassure.com/whole-exome-sequencing-vs-clinical-exome-sequencing/
+      whole exome sequencing:
+        aliases:
+        - Exome
+        - Exome Sequencing
+        - WES
+        - WXS
+        description: A procedure that can determine the DNA sequence for all of the exons in an individual.
+        meaning: NCIT:C101295
+      whole genome sequencing:
+        aliases:
+        - Genome sequencing
+        - WGS
+        description: Laboratory technique to sequence the complete DNA sequence of an organism's genome at a single time
+        meaning: EDAM:topic_3673
+    title: Sequencing Assay
