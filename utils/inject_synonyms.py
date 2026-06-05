@@ -154,21 +154,16 @@ def inject_synonyms_into_yaml(yaml_file, synonyms_dict, output_file=None):
                                     modifications_made += 1
                                     print(f"Added {added} new aliases to '{term}' (total: {len(merged)})")
         
-        # Write output
-        output_path = output_file or yaml_file
-        
-        if DRY_RUN_MODE:
-            print(f"\n[DRY-RUN] Would write changes to: {output_path}")
-            print(f"[DRY-RUN] Would modify {modifications_made} terms")
-        else:
-            with open(output_path, 'w', encoding='utf-8') as f:
-                yaml.dump(data, f, default_flow_style=False, allow_unicode=True, width=1000)
-            
-        print(f"\nCompleted! {'Would modify' if DRY_RUN_MODE else 'Modified'} {modifications_made} terms.")
-        if output_file:
-            print(f"Results {'would be written' if DRY_RUN_MODE else 'written'} to {output_file}")
-        else:
-            print(f"{'Would update' if DRY_RUN_MODE else 'Updated'} {yaml_file} in place")
+        # Write output only if changes were made
+        if modifications_made > 0:
+            output_path = output_file or yaml_file
+            if DRY_RUN_MODE:
+                print(f"\n[DRY-RUN] Would write changes to: {output_path}")
+                print(f"[DRY-RUN] Would modify {modifications_made} terms")
+            else:
+                with open(output_path, 'w', encoding='utf-8') as f:
+                    yaml.dump(data, f, default_flow_style=False, allow_unicode=True, width=1000)
+                print(f"Modified {modifications_made} terms in {output_path}")
             
         return modifications_made > 0
         
