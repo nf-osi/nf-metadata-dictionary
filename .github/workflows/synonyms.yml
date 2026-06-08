@@ -1,10 +1,7 @@
 name: Synonyms Management
 
 on:
-  release:
-    types: [published]
-  
-  workflow_dispatch:  # Allows manual triggering
+  workflow_dispatch:
     inputs:
       action:
         description: 'Action to perform'
@@ -30,15 +27,13 @@ on:
 jobs:
   synonyms:
     runs-on: ubuntu-latest
-    timeout-minutes: 70  # Allow enough time for extraction
+    timeout-minutes: 20
     permissions:
       contents: write  # Allow the workflow to push changes back to the repository
       pull-requests: write  # Allow creating pull requests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: main  # Always checkout main branch, even when triggered by release
 
       - name: Print workflow info
         run: |
@@ -65,49 +60,40 @@ jobs:
           pip install pyyaml requests rdflib tqdm
 
       - name: Extract synonyms
-        if: (contains(github.event.inputs.action, 'extract') || github.event_name == 'release') && (github.event.inputs.action != 'test-inject')
+        id: extraction
+        if: contains(github.event.inputs.action, 'extract') && (github.event.inputs.action != 'test-inject')
         run: |
-          echo "🔍 Starting synonym extraction..."
-          ACTION="${{ github.event.inputs.action || 'extract-and-inject' }}"
-          if [ "${{ github.event.inputs.test_mode }}" = "true" ]; then
-            echo "🧪 Test mode: Running extraction with timeout handling..."
-            timeout 1800 python utils/extract_synonyms.py || {
-              exit_code=$?
-              if [ $exit_code -eq 124 ]; then
-                echo "⏰ Extraction timed out after 30 minutes in test mode"
-              else
-                echo "❌ Extraction failed with exit code: $exit_code"
-              fi
-              exit $exit_code
-            }
-          else
-            echo "🚀 Production mode: Running full extraction..."
-            timeout 3600 python utils/extract_synonyms.py || {
-              exit_code=$?
-              if [ $exit_code -eq 124 ]; then
-                echo "⏰ Extraction timed out after 60 minutes, but partial results may be available"
-              else
-                echo "❌ Extraction failed with exit code: $exit_code"
-              fi
-              exit $exit_code
-            }
-          fi
+          echo "Starting synonym extraction..."
+          timeout 900 python utils/extract_synonyms.py || {
+            exit_code=$?
+            if [ $exit_code -eq 124 ]; then
+              echo "Extraction timed out after 15 minutes, partial results may be available"
+            else
+              echo "Extraction failed with exit code: $exit_code"
+            fi
+            exit $exit_code
+          }
         continue-on-error: true
 
       - name: Check extraction results
-        if: (contains(github.event.inputs.action, 'extract') || github.event_name == 'release') && (github.event.inputs.action != 'test-inject')
+        if: contains(github.event.inputs.action, 'extract') && (github.event.inputs.action != 'test-inject')
         run: |
           if [ ! -f term_synonyms.csv ]; then
-            echo "❌ Error: term_synonyms.csv was not created"
+            echo "Warning: term_synonyms.csv was not created"
+            echo "Extraction step outcome: ${{ steps.extraction.outcome }}"
             exit 1
           fi
-          echo "✅ CSV file was created successfully"
-          echo "📊 CSV file size: $(wc -l < term_synonyms.csv) lines"
-          echo "📋 First 5 lines:"
+          LINE_COUNT=$(wc -l < term_synonyms.csv)
+          echo "CSV file created with $LINE_COUNT lines"
+          if [ "$LINE_COUNT" -lt 2 ]; then
+            echo "Warning: CSV has no data rows (only header or empty)"
+            exit 1
+          fi
+          echo "First 5 lines:"
           head -5 term_synonyms.csv
 
       - name: Verify CSV file for injection
-        if: contains(github.event.inputs.action, 'inject') || github.event.inputs.action == 'test-inject' || github.event_name == 'release'
+        if: contains(github.event.inputs.action, 'inject') || github.event.inputs.action == 'test-inject'
         run: |
           CSV_FILE="${{ github.event.inputs.csv_file || 'term_synonyms.csv' }}"
           if [ ! -f "$CSV_FILE" ]; then
@@ -130,7 +116,7 @@ jobs:
           python utils/inject_synonyms.py --csv "$CSV_FILE" --modules-dir modules --dry-run
 
       - name: Inject synonyms (production)
-        if: ((contains(github.event.inputs.action, 'inject') && github.event.inputs.test_mode != 'true') || github.event_name == 'release') && github.event.inputs.action != 'test-inject'
+        if: contains(github.event.inputs.action, 'inject') && github.event.inputs.test_mode != 'true' && github.event.inputs.action != 'test-inject'
         run: |
           CSV_FILE="${{ github.event.inputs.csv_file || 'term_synonyms.csv' }}"
           echo "🚀 Running synonym injection in production mode..."
@@ -170,7 +156,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          base: main  # Explicitly set base branch for PRs (required when triggered by release)
+          base: main
           commit-message: |
             Update synonyms: ${{ github.event.inputs.action }}
             
@@ -219,7 +205,7 @@ jobs:
           delete-branch: true
 
       - name: Upload CSV artifact
-        if: (contains(github.event.inputs.action, 'extract') || github.event_name == 'release') && github.event.inputs.action != 'test-inject'
+        if: contains(github.event.inputs.action, 'extract') && github.event.inputs.action != 'test-inject'
         uses: actions/upload-artifact@v4
         with:
           name: synonym-csv-${{ github.run_id }}
