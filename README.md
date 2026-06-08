@@ -23,7 +23,7 @@ In general, .jsonld or .ttl artifacts facilate model querying and comparison if 
 
 - `modules/*.yaml`: Source files. Refer to [Data Model Framework](#data-model-framework) for editing guidelines.
 - `Makefile`: Scripts to build the artifacts from the source files.
-- Read docs/DEVELOPMENT.md
+- Read [dev/DEVELOPMENT.md](dev/DEVELOPMENT.md)
 
 ```mermaid
 graph LR
@@ -264,11 +264,11 @@ Aside from meta specific to each type (class, slot, or enum) above, terms have c
 ### Further Information
 
 #### Building Locally
-To build locally you need [LinkML](https://linkml.io/linkml/), `make`, `yq`, and `jq`. See [DEVELOPMENT.md](DEVELOPMENT.md) for setup details.
+To build locally you need [LinkML](https://linkml.io/linkml/), `make`, `yq`, and `jq`. See [dev/DEVELOPMENT.md](dev/DEVELOPMENT.md) for setup details.
 
 #### Testing
 
-See [DEVELOPMENT.md](DEVELOPMENT.md#local-testing) for how to run tests and add new test cases.
+See [dev/DEVELOPMENT.md](dev/DEVELOPMENT.md#local-testing) for how to run tests and add new test cases.
 
 #### Help
 

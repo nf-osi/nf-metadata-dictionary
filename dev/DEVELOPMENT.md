@@ -1,6 +1,6 @@
 # Development Guide
 
-Developer-oriented documentation for the NF Metadata Dictionary. For general overview, see the [README](README.md).
+Developer-oriented documentation for the NF Metadata Dictionary. For general overview, see the [README](../README.md).
 
 ## Quick Reference
 
@@ -17,50 +17,50 @@ Developer-oriented documentation for the NF Metadata Dictionary. For general ove
 
 ## Table of Contents
 
-1. [Background & Architecture](#background--architecture)
-2. [JSON Schema Integration with Synapse](#json-schema-integration-with-synapse)
-3. [Schema Generation & Management](#schema-generation--management)
-4. [Curation Tasks](#curation-tasks)
-5. [Schema Limits & Validation](#schema-limits--validation)
+A. [Background & Architecture](#background--architecture)  
+B. [Synapse Curation Integration](#synapse-curation-integration)  
+  - [JSON Schema Support](#json-schema-support)     
+  - [Schema Generation & Management](#schema-generation--management)
+  - [Schema Limits & Validation](#schema-limits--validation)
+  - [Curation Tasks](#curation-tasks)
+  - [Local Testing](#local-testing)
 
 ---
 
 ## Background & Architecture
 
-### Evolution of the Data Model
+The model has gone through three evolutions:
 
-**CSV Era (Original)**
-Single `.csv` file compiled to JSONLD for schematic framework validation.
+1. **CSV Era (Original)**
+Single `.csv` file compiled to `NF.jsonld` for Schematic validation.
 
-**Modular CSV Era**
-CSV files split into modules for easier development.
+2. **Modular CSV Era**
+CSV files split into modules, still compiled to `NF.jsonld`.
 
-**LinkML Era (Current)**
-YAML source files using the LinkML framework, compiled to:
-- **NF.jsonld** - Schematic-compatible format (legacy support)
-- **JSON schemas** - Synapse platform validation (primary)
-- **dist/NF.yaml** - Merged LinkML YAML
-- **dist/NF.ttl** - RDF/Turtle format
+3. **LinkML Era (Current)**
+YAML source files using LinkML, compiled to:
+  - **JSON schemas** - Synapse validation (primary)
+  - **dist/NF.yaml** - Merged LinkML YAML
+  - **dist/NF.ttl** - RDF/Turtle format
 
-### Current Validation Approach
-
-Validation is now handled directly by the **Synapse platform** using standard JSON schemas, rather than the schematic Python package. The JSONLD format remains useful for semantic data model comparison.
+The rest of this guide assumes the current LinkML era.
 
 ---
 
-## JSON Schema Integration with Synapse
+## Synapse Curation Integration
 
-This section describes how JSON schema integrates with Synapse and what features are supported within Synapse.
+A data model may be used by many downstream systems. Here we focus on Synapse, which is the primary system used for schema registration, validation, and curation workflows.
 
-### Schema Registration and Binding
+### JSON Schema Support
 
-**Registration:** Schemas must be registered with Synapse before use.
+This section covers the Synapse behavior that matters for registration, validation, and curation.
 
-**Binding:** Registered schemas are "bound" to Synapse entities (folders, RecordSets) to enable validation. Child entities inherit parent schema bindings (similar to sharing settings).
+- **Registration:** Schemas must be registered with Synapse before use.
+- **Binding:** Registered schemas are bound to folders or RecordSets for validation. Child entities inherit parent bindings.
 
 **Reference:** [Synapse JSON Schema Docs](https://help.synapse.org/docs/JSON-Schemas.3107291536.html)
 
-### $refs (Schema References)
+#### $refs (Schema References)
 
 Synapse supports `$refs` in a limited way:
 - ✅ References to definitions **within** the same schema
@@ -71,15 +71,15 @@ Our conversion pipeline uses dereferencing for simplicity.
 
 **Reference:** [Synapse REST API Docs](https://rest-docs.synapse.org/rest/POST/schema/type/create/async/start.html)
 
-### If-Then-Else (Conditional Schemas)
+#### If-Then-Else (Conditional Schemas)
 
-JSON Schema's `if-then-else` enables:
-1. **Derived annotations** - Auto-populate fields based on other values
-2. **Dynamic schema application** - Apply different schemas based on field values (e.g., different validation for `dataType: "image"` vs `dataType: "gene expression"`)
+JSON Schema `if` / `then` / `else` is used for:
+1. **Derived annotations** - Auto-populating fields from other values
+2. **Dynamic validation** - Switching rules by field value, such as `dataType`
 
-Complex conditional rules are stored in `rules/` directory.
+More complex conditional rules live in `rules/`.
 
-**Example use case:** When `dataType` changes, appropriate assay options, file formats, and required fields update automatically.
+**Example use case:** Changing `dataType` updates the allowed assay options, file formats, and required fields.
 
 <details>
 <summary>Example: Dynamic schema based on dataType (click to expand)</summary>
@@ -119,17 +119,16 @@ Complex conditional rules are stored in `rules/` directory.
 ```
 </details>
 
----
 
-### Disabling editing of an attribute in JSON schema-based Grid
+#### Read-only fields in Grid
 
-Within the Synapse Grid, properties annotated in the JSON Schema with `"readOnly": true` will be disabled for editing by a user.
+In Synapse Grid, properties marked `"readOnly": true` are not editable.
 
 Reference: [SWC-7491](https://sagebionetworks.jira.com/browse/SWC-7491?focusedCommentId=276013)
 
-## Schema Generation & Management
+### Schema Generation & Management
 
-### CI/CD Workflows
+#### CI/CD Workflows
 
 **PR Validation** (`.github/workflows/main-ci.yml`)
 1. Generates JSON schemas from LinkML sources
@@ -140,9 +139,9 @@ Reference: [SWC-7491](https://sagebionetworks.jira.com/browse/SWC-7491?focusedCo
 **Schema Registration**
 Typically performed on versioned releases using `register-schemas.py`.
 
-### Development Scripts
+#### Development Scripts
 
-#### gen-json-schema-class.py
+##### gen-json-schema-class.py
 
 Generate and validate JSON schemas from LinkML sources.
 
@@ -172,7 +171,7 @@ python utils/gen-json-schema-class.py --version 0.2.0
 | `--version` | Semantic version for schema URIs | None |
 | `--log-file` | Validation log file path | `schema-validation-log.md` |
 
-#### register-schemas.py
+##### register-schemas.py
 
 Register validated JSON schemas with Synapse.
 
@@ -201,13 +200,56 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/register-schemas.py \
 
 **Note:** `--include` overrides `--exclude` if both provided.
 
----
 
-## Curation Tasks
+### Schema Limits & Validation
 
-Synapse curation tasks enable structured metadata collection using the registered JSON schemas.
-They are part of the downstream schema setup and testing workflow.
-Two task types are supported.
+The NF Metadata Dictionary must satisfy several Synapse limits:
+
+- **Enum values:** 100 per annotation field
+- **Row size:** 64KB per file view row
+- **String lengths:** Depend on whether the target is a JSON schema or a file view
+
+#### File View Configuration (Stricter)
+
+File views have the stricter limit, so we use conservative column sizes:
+
+```
+STRING: 80 chars (covers 100% of enum values, max: 77 chars)
+LIST: 80 chars × 40 items max
+name column: 256 chars
+Largest schema: ~52.7KB (PortalDataset, Superdataset)
+```
+
+**Applied in:** `utils/json_schema_entity_view.py`, `utils/create_curation_task.py`
+
+#### JSON Schema Validation (More Permissive)
+
+Registered JSON schemas are more permissive:
+- Enum sizes: Some exceed 100 values (e.g., `CellLineModel`: 638, `Institution`: 335)
+- String lengths: No strict character limits beyond what's semantically meaningful
+- Used for: Data validation, dropdown generation, documentation
+
+**Applied in:** `registered-json-schemas/*.json`
+
+#### Validation Tool
+
+Run:
+```bash
+python utils/check_schema_limits.py
+```
+
+It checks:
+- **Enum sizes** against 100-value annotation limit
+- **Enum string lengths** against file view column limits (80 chars)
+- **Row sizes** against 64KB file view limit
+- Documents current bytes used per schema
+
+**Key distinction:** JSON schemas can be broader for validation and documentation. File views must stay within the stricter 64KB row budget.
+
+
+### Curation Tasks
+
+Synapse curation tasks support structured metadata collection with registered JSON schemas. Two task types are supported.
 
 > [!IMPORTANT]
 > Currently, this functionality requires synapsePythonClient develop branch:
@@ -215,7 +257,7 @@ Two task types are supported.
 > pip install git+https://github.com/Sage-Bionetworks/synapsePythonClient.git@develop
 > ```
 
-### File-Based Curation Tasks
+#### File-Based Curation Tasks
 
 **Use case:** Associate metadata with uploaded files in a folder (e.g., sequencing data, images).
 
@@ -252,7 +294,7 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_curation_task.py \
 
 **Output:** `task_id`, `fileview_id`, `data_type`, `schema_uri`, `project_id`
 
-### Record-Based Curation Tasks
+#### Record-Based Curation Tasks
 
 **Use case:** Structured metadata records not tied to individual files (e.g., data landscape, publication records, cohort info).
 
@@ -290,62 +332,13 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_recordset_task.py \
 **Output:** `recordset_id`, `task_id`, `data_grid_session_id`, `schema_uri`, `project_id`, `folder_id`, `record_set_name`
 
 **Notes:**
-- **Project ID** is automatically derived from the folder
-- **Upsert keys:** Specify field names that uniquely identify each record. This enables updates to existing records rather than creating duplicates. Common choices: `study`, `name`, `individualID`, etc.
+- **Project ID** is derived automatically from the folder.
+- **Upsert keys** define record uniqueness so updates modify existing rows instead of creating duplicates. Common choices: `study`, `name`, `individualID`.
 
----
 
-## Schema Limits & Validation
+### Local Testing
 
-The NF Metadata Dictionary must comply with **Synapse platform limits**:
-
-### Platform Limits
-- **Enum values:** 100 values per annotation field (API limit for annotations)
-- **Row size:** 64KB per row (file view table limit)
-- **String lengths:** Vary by context (JSON schema vs file views)
-
-### File View Configuration (Stricter)
-
-File views have a **64KB row limit**, requiring conservative column sizes:
-
-```
-STRING: 80 chars (covers 100% of enum values, max: 77 chars)
-LIST: 80 chars × 40 items max
-name column: 256 chars
-Largest schema: ~52.7KB (PortalDataset, Superdataset)
-```
-
-**Applied in:** `utils/json_schema_entity_view.py`, `utils/create_curation_task.py`
-
-### JSON Schema Validation (More Permissive)
-
-JSON schemas support longer strings and larger enums without the 64KB constraint:
-- Enum sizes: Some exceed 100 values (e.g., `CellLineModel`: 638, `Institution`: 335)
-- String lengths: No strict character limits beyond what's semantically meaningful
-- Used for: Data validation, dropdown generation, documentation
-
-**Applied in:** `registered-json-schemas/*.json`
-
-### Validation Tool
-
-Run comprehensive validation with:
-```bash
-python utils/check_schema_limits.py
-```
-
-This checks:
-- **Enum sizes** against 100-value annotation limit
-- **Enum string lengths** against file view column limits (80 chars)
-- **Row sizes** against 64KB file view limit
-- Documents current bytes used per schema
-
-**Key Distinction:** JSON schemas can have large enums (>100 values) and long strings (>80 chars) for validation purposes. File views must use stricter limits to stay under the 64KB row constraint.
-
----
-
-## Local Testing
-
-### Python unit tests
+#### Python unit tests
 
 Run all pytest-based tests from the repo root:
 
@@ -361,9 +354,9 @@ Individual test files:
 | `tests/test_template_datatypes.py` | Every non-abstract template class declares valid `dataType` annotations |
 | `tests/test_model_system_sync.py` | Model system data is in sync |
 
-### JSON schema instance tests
+#### JSON schema instance tests
 
-`tests/test_schema_instances.py` discovers all `test_registry*.yaml` fixture files in `tests/` and validates each listed JSON instance against its registered schema. Instances marked `expected: valid` must pass; `expected: invalid` must fail (they are marked `xfail(strict=True)`).
+`tests/test_schema_instances.py` discovers `test_registry*.yaml` fixtures in `tests/` and validates each listed JSON instance against its registered schema. Cases marked `expected: valid` must pass; `expected: invalid` must fail and are marked `xfail(strict=True)`.
 
 **Adding and registering new test instances:**
 
@@ -387,9 +380,9 @@ Individual test files:
 
 3. Rebuild the relevant schema locally (see below), then run `pytest tests/test_schema_instances.py -v` to confirm the result matches `expected`.
 
-### Rebuilding schemas locally before running tests
+#### Rebuilding schemas locally before running tests
 
-The instance tests validate against `registered-json-schemas/`, which must be rebuilt after any changes to `modules/`. Use the `.venv` Python environment (Python 3.10) to avoid incompatibilities with the system Python:
+These tests run against `registered-json-schemas/`, so rebuild after changes to `modules/`. Use the `.venv` Python environment (Python 3.10) to avoid system Python incompatibilities:
 
 ```bash
 # Rebuild NF.yaml from sources first
@@ -410,4 +403,4 @@ PATH=".venv/bin:$PATH" .venv/bin/python utils/gen-json-schema-class.py \
 
 - **LinkML Documentation:** https://linkml.io
 - **Synapse JSON Schema Docs:** [https://help.synapse.org/docs/JSON-Schemas.3107291536.html](https://docs.synapse.org/synapse-docs/json-schemas)
-- **Schematic Tooling (in development):** https://sagebionetworks.jira.com/wiki/x/QIBD-/
+- **Synapse Search Management Example:** [SYNAPSE_SEARCH.md](SYNAPSE_SEARCH.md)
