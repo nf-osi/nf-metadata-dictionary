@@ -5,6 +5,11 @@ enums:
     - http://edamontology.org/data_0006
     - Broad term/abstract class; should not be used for annotation
     permissible_values:
+      aggregated somatic mutation:
+        aliases:
+        - Aggregated Somatic Variation Data
+        description: Sequence variation data from non-germline cell or tissue samples that has been aggregated across samples, sequencing runs and/or multiple variant callers.
+        meaning: NCIT:C184741
       aligned reads:
         description: Aligned reads output from alignment workflows
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=aligned_reads
@@ -12,15 +17,11 @@ enums:
         description: Germline variants annotated with some annotation workflow
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_germline_variation
       annotated somatic mutation:
+        aliases:
+        - Annotated Somatic Variation Data
         description: Sequence variation data from non-germline cell or tissue samples that has been annotated.
         meaning: NCIT:C184746
         source: https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=annotated_somatic_mutation
-      aggregated somatic mutation:
-        description: Sequence variation data from non-germline cell or tissue samples that has been aggregated across samples, sequencing runs and/or multiple variant callers.
-        meaning: NCIT:C184741
-      masked annotated somatic mutation:
-        description: Annotated nucleotide sequence variation data where potential germline and low-quality base calls have been masked.
-        meaning: NCIT:C184775
       audio transcript:
         description: Text transcript of an audio recording.
         source: https://w3id.org/synapse/nfosi/vocab/audioTranscript
@@ -31,6 +32,8 @@ enums:
         notes:
         - Legacy concept previously labeled "behavior process", updated to "behavioral data".
       capsid sequence:
+        aliases:
+        - DNA sequences
         description: Sequence of capsid protein regions (AAV9, AAVsc, etc.)
         meaning: EDAM:data_3494
         notes:
@@ -105,6 +108,24 @@ enums:
       gene expression:
         aliases:
         - expression data
+        - Gene expression data
+        - Gene product profile
+        - Gene product quantification data
+        - Gene transcription profile
+        - Gene transcription quantification data
+        - Metabolite expression data
+        - Microarray data
+        - Non-coding RNA profile
+        - Non-coding RNA quantification data
+        - Protein expression data
+        - Protein profile
+        - Protein quantification data
+        - Proteome profile
+        - RNA profile
+        - RNA quantification data
+        - RNA-seq data
+        - Transcriptome profile
+        - Transcriptome quantification data
         description: Data of the levels and patterns of synthesis of gene products (proteins and functional RNA), including interpretation in functional terms of gene expression data.
         meaning: EDAM:data_2603
         notes:
@@ -117,8 +138,6 @@ enums:
         - Normalised microarray data
         description: The final processed (normalised) data for a set of hybridisations in a microarray experiment. This combines data from all hybridisations.
         meaning: EDAM:data_3112
-      quantified gene expression:
-        description: Expression measurements that have been summarized or normalized, typically representing quantified abundance metrics rather than raw instrument output.
       genomic features:
         description: Data of sequence feature (continuous extent of biological sequence) that is of genomic origin.
         meaning: GENO:0000481
@@ -141,6 +160,7 @@ enums:
         aliases:
         - sgRNA sequence
         - gRNA sequence
+        - DNA sequences
         description: Sequence data for guide RNAs used in CRISPR or other gene editing experiments.
         meaning: EDAM:data_3494
         notes:
@@ -176,6 +196,11 @@ enums:
       mask image:
         description: Image used as the mask for an image processing operation, such as subtraction.
         meaning: DCM:121321
+      masked annotated somatic mutation:
+        aliases:
+        - Masked Annotated Somatic Variation Data
+        description: Annotated nucleotide sequence variation data where potential germline and low-quality base calls have been masked.
+        meaning: NCIT:C184775
       mass spectrometry data:
         description: Data from mass spectrometry measurement.
         meaning: EDAM:data_2536
@@ -230,6 +255,8 @@ enums:
         notes:
         - Relation to pharmacokinetic data -- certain physiology parameteres inherent to the organism influences its pharmokinetics of a drug.
       plasmid sequence:
+        aliases:
+        - DNA sequences
         description: Sequence data for plasmid vectors used in cloning or gene expression experiments.
         meaning: EDAM:data_3494
         notes:
@@ -240,16 +267,22 @@ enums:
         description: Data that has been plotted as a graph of some type, or data representing such a graph.
         meaning: EDAM:data_2884
       primer sequence:
+        aliases:
+        - DNA sequences
         description: Sequence data for oligonucleotide primers used in PCR or sequencing experiments.
         meaning: EDAM:data_3494
         notes:
         - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
       probe sequence:
+        aliases:
+        - DNA sequences
         description: Sequence data for nucleic acid probes used in hybridization experiments.
         meaning: EDAM:data_3494
         notes:
         - Mapping to broader concept since EDAM doesn't have further granularity for sequence data.
       promoter sequence:
+        aliases:
+        - DNA sequences
         description: Sequence data of promoter region (P0, flCAG, etc.)
         meaning: EDAM:data_3494
         notes:
@@ -267,8 +300,14 @@ enums:
         description: Protein-protein interaction data from for example yeast two-hybrid analysis, protein microarrays, immunoaffinity chromatography followed by mass spectrometry, phage display etc.
         meaning: EDAM:data_0905
       proteomics:
+        aliases:
+        - Bottom-up proteomics
+        - Quantitative proteomics
+        - Top-down proteomics
         description: Protein and peptide identification, especially in the study of whole proteomes of organisms.
         meaning: EDAM:topic_0121
+      quantified gene expression:
+        description: Expression measurements that have been summarized or normalized, typically representing quantified abundance metrics rather than raw instrument output.
       raw counts:
         aliases:
         - Count
@@ -278,6 +317,8 @@ enums:
         description: The number or amount of something.
         meaning: NCIT:C25463
       reference sequence:
+        aliases:
+        - DNA sequences
         description: Generic sequence data used as a reference in experimental design or analysis.
         meaning: EDAM:data_3494
         notes:
@@ -301,6 +342,8 @@ enums:
       text data:
         aliases:
         - space-delimited text
+        - Article data
+        - Scientific text data
         description: Data that is represented as text, usually referring to "unstructured data".
         meaning: EDAM:data_2526
       volume:
