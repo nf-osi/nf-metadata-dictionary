@@ -1,0 +1,193 @@
+enums:
+  GliomaFrontlineRegimenEnum:
+    description: Controlled vocabulary for frontline systemic treatment regimens used in glioma.
+    permissible_values:
+      6-thioguanine:
+        meaning: NCIT:C876
+      BRAF inhibitor:
+        meaning: NCIT:C155322
+      Bevacizumab:
+        meaning: NCIT:C2039
+      Cabozantinib:
+        meaning: NCIT:C52200
+      Carboplatinum:
+        aliases:
+        - Carboplatin
+        meaning: NCIT:C1282
+      Clinical Trial or Others:
+        meaning: NCIT:C71104
+      Etoposide:
+        meaning: NCIT:C491
+      Irinotecan:
+        meaning: NCIT:C62040
+      Lomustine:
+        meaning: NCIT:C617
+      MEK inhibitor:
+        meaning: NCIT:C69145
+      Methotrexate:
+        meaning: NCIT:C642
+      PolyICLC:
+        meaning: NCIT:C1198
+      Procarbazine:
+        meaning: NCIT:C62072
+      Radiation:
+        meaning: NCIT:C58009
+      Surgery:
+        meaning: NCIT:C17173
+      Temozolomide:
+        meaning: NCIT:C1244
+      Vinblastine:
+        meaning: NCIT:C930
+      Vincristine:
+        meaning: NCIT:C933
+      Vinorelbine:
+        meaning: NCIT:C1275
+      mTOR inhibitor:
+        meaning: NCIT:C2201
+  GliomaLocationEnum:
+    description: Location of glioma biopsied and/or resected.
+    permissible_values:
+      Brainstem:
+        meaning: NCIT:C12441
+      Cerebellum:
+        meaning: NCIT:C12445
+      Cortical – Frontal Lobe:
+        meaning: NCIT:C12352
+      Cortical – Temporal / Parietal / Occipital Lobe:
+        description: Glioma located in the temporal, parietal, or occipital lobe.
+      Other Midline Structures (e.g., Thalamus):
+        description: Glioma located in other midline structures such as the thalamus.
+      Spinal Cord:
+        meaning: NCIT:C12464
+  GliomaPathologicDiagnosisEnum:
+    description: Pathologic diagnosis for gliomas, primarily low-grade types and glioneuronal tumors.
+    permissible_values:
+      Angiocentric glioma:
+        meaning: NCIT:C92552
+      Astroblastoma:
+        meaning: NCIT:C4324
+      Central neurocytoma:
+        meaning: NCIT:C3791
+      Desmoplastic infantile ganglioglioma/astrocytoma:
+        description: A rare low-grade glioneuronal tumor occurring in infants.
+        meaning: MONDO:0016731
+      Diffuse astrocytoma, MYB- or MYBL1-altered:
+        meaning: NCIT:C185196
+      Diffuse glioneuronal tumor with oligodendroglioma-like features and nuclear clusters:
+        description: A rare diffuse glioneuronal tumor variant.
+      Diffuse leptomeningeal glioneuronal tumor:
+        meaning: NCIT:C129424
+      Diffuse low-grade glioma, MAPK pathway altered:
+        meaning: NCIT:C185218
+      Dysembryoplastic neuroepithelial tumor:
+        meaning: NCIT:C9505
+      Gangliocytoma:
+        meaning: NCIT:C6934
+      Ganglioglioma:
+        meaning: NCIT:C3788
+      Low grade glioneuronal tumor, NOS:
+        description: Low grade glioneuronal tumor, not otherwise specified.
+      Low grade glioma, NOS:
+        meaning: NCIT:C132067
+      Multinodular and vacuolating neuronal tumor:
+        meaning: NCIT:C129427
+      Oligodendroglioma:
+        meaning: NCIT:C3288
+      Other:
+        meaning: NCIT:C17649
+      Pilocytic astrocytoma:
+        meaning: NCIT:C4047
+      Pilomyxoid astrocytoma:
+        meaning: NCIT:C40315
+      Pleomorphic xanthoastrocytoma:
+        meaning: NCIT:C4323
+      Polymorphous low-grade neuroepithelial tumor of the young:
+        meaning: NCIT:C180378
+      Radiographic Diagnosis Only:
+        description: Diagnosis based on radiographic imaging only, without pathologic confirmation.
+      Rosette-forming glioneuronal tumor:
+        meaning: NCIT:C129431
+      Subependymal giant cell astrocytoma:
+        meaning: NCIT:C3696
+  HGGPathologicDiagnosisEnum:
+    description: Pathologic diagnosis for high-grade gliomas (WHO grade 3 and 4).
+    permissible_values:
+      Anaplastic astrocytoma:
+        meaning: NCIT:C9477
+      Anaplastic pilocytic astrocytoma:
+        description: Pilocytic astrocytoma with anaplastic features.
+        meaning: MONDO:0971118
+      Diffuse hemispheric glioma, H3G34-mutant, WHO grade 4:
+        meaning: NCIT:C185371
+      Diffuse midline glioma, EGFR mutant subtype, WHO grade 4:
+        meaning: NCIT:C185369
+      Diffuse midline glioma, H3 K27-mutant subtype, WHO grade 4:
+        meaning: NCIT:C129309
+      Diffuse pediatric-type high-grade glioma, H3-wildtype and IDH-wildtype, WHO grade 4:
+        meaning: NCIT:C185467
+      Glioblastoma, WHO grade 4:
+        meaning: NCIT:C9094
+      High grade astrocytoma with piloid features:
+        meaning: NCIT:C185879
+      High grade glioma NOS (Not Otherwise Specified):
+        meaning: NCIT:C4822
+      Infant-type hemispheric glioma:
+        meaning: NCIT:C185471
+      Other:
+        meaning: NCIT:C17649
+      Pleomorphic xanthoastrocytoma, WHO grade 3:
+        meaning: NCIT:C4323
+  NF1GliomaTypeEnum:
+    description: High-level NF1 glioma type classification distinguishing between optic pathway and non-optic pathway, and by grade.
+    permissible_values:
+      High grade glioma (any location):
+        meaning: NCIT:C4822
+      Non-optic pathway low grade glioma:
+        meaning: NCIT:C132067
+  RadiationTypeEnum:
+    description: Type of radiation received at any time for glioma treatment.
+    permissible_values:
+      Craniospinal:
+        meaning: NCIT:C116437
+      Focal:
+        meaning: NCIT:C201542
+      None:
+        meaning: NCIT:C41132
+  SurgicalResectionAtDiagnosisEnum:
+    description: Type of surgical resection performed at diagnosis.
+    permissible_values:
+      Biopsy:
+        meaning: NCIT:C15189
+      Gross Total:
+        meaning: NCIT:C131672
+      Near-Total:
+        meaning: NCIT:C175027
+      Subtotal:
+        meaning: NCIT:C131680
+  TreatmentEndIndicationEnum:
+    description: Indication for end of first treatment regimen.
+    permissible_values:
+      Completion of Planned Therapy:
+        meaning: NCIT:C168935
+      Non-compliance:
+        meaning: NCIT:C201294
+      Toxicity/Allergy:
+        description: Treatment ended due to toxicity or allergic reaction.
+        meaning: NCIT:C27990
+      Tumor Progression:
+        meaning: NCIT:C17609
+      Unknown:
+        meaning: NCIT:C17998
+  TreatmentInitiationIndicationEnum:
+    description: Indication for initiation of treatment.
+    permissible_values:
+      Change in neurologic examination or function:
+        description: Change in neurologic examination or function prompting treatment initiation.
+      Increase in Tumor Enhancement on MRI:
+        description: Increased tumor enhancement observed on MRI.
+      Increase in Tumor Size on MRI:
+        meaning: NCIT:C35571
+      Other:
+        meaning: NCIT:C17649
+      Other change in tumor in MRI:
+        description: Other change in tumor observed on MRI.

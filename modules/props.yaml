@@ -586,11 +586,27 @@ slots:
     description: Indicates a summary testing result for individual's germline mutation only.
     title: Germline Mutation Indicator
     range: TestSummaryEnum
+  gliomaFrontlineRegimen:
+    description: Frontline systemic treatment regimen(s) used for glioma. Select all that apply.
+    range: GliomaFrontlineRegimenEnum
+    multivalued: true
+    required: false
+    title: Glioma frontline regimen
+  gliomaLocation:
+    description: Location of the glioma that was biopsied and/or resected.
+    range: GliomaLocationEnum
+    required: false
+    title: Glioma location
   gliomaOrEpendymoma:
     description: Characterization of the manifestation of Glioma or ependymoma.
     range: BinaryImagingDiagnosisEnum
     required: false
     title: Glioma or ependymoma
+  gliomaPathologicDiagnosis:
+    description: Pathologic diagnosis for the glioma, primarily for low-grade and glioneuronal tumor types.
+    range: GliomaPathologicDiagnosisEnum
+    required: false
+    title: Glioma pathologic diagnosis
   glomusTumor:
     description: Characterization of the manifestation of Glomus tumor.
     range: PresenceEnum
@@ -603,6 +619,11 @@ slots:
     range: string
     title: Grant DOI
     required: false
+  hggPathologicDiagnosis:
+    description: Pathologic diagnosis for high-grade glioma (WHO grade 3 or 4).
+    range: HGGPathologicDiagnosisEnum
+    required: false
+    title: HGG pathologic diagnosis
   heartDefect:
     description: Characterization of the manifestation of Heart defect.
     range: PresenceEnum
@@ -925,6 +946,11 @@ slots:
     - Unlike nf1Variant, this is free-text and not constrained to enumerated values of known variants, making it more flexible for new mutations and different nomenclatures.
     title: NF1 Germline Mutation
     required: false
+  nf1GliomaType:
+    description: High-level NF1 glioma type classification distinguishing optic pathway vs. non-optic pathway and by grade.
+    range: NF1GliomaTypeEnum
+    required: false
+    title: NF1 glioma type
   nf1SomaticMutation:
     description: NF1 somatic mutation, i.e. in tumor samples.
     title: NF1 Somatic Mutation
@@ -1167,6 +1193,11 @@ slots:
     title: Publisher
     required: false
     see_also: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/publisher
+  radiationAtAnyTime:
+    description: Type of radiation received at any time for glioma treatment.
+    range: RadiationTypeEnum
+    required: false
+    title: Radiation at any time
   readDepth:
     annotations:
       validationRules: int
@@ -1423,6 +1454,11 @@ slots:
     range: string
     title: Summary
     required: true
+  surgicalResectionAtDiagnosis:
+    description: Type of surgical resection performed at diagnosis.
+    range: SurgicalResectionAtDiagnosisEnum
+    required: false
+    title: Surgical resection at diagnosis
   targetCaptureKitID:
     description: A unique identifier for the kit used to construct a genomic library using target capture-based techniques, composed of the vendor name, kit name and kit version.
     range: TargetCaptureKitEnum
@@ -1470,6 +1506,17 @@ slots:
     range: TransplantationType
     title: Transplantation Type
     required: false
+  treatmentEndIndication:
+    description: Indication(s) for end of first treatment regimen. Select all that apply.
+    range: TreatmentEndIndicationEnum
+    multivalued: true
+    required: false
+    title: Treatment end indication
+  treatmentInitiationIndication:
+    description: Indication for initiation of treatment.
+    range: TreatmentInitiationIndicationEnum
+    required: false
+    title: Treatment initiation indication
   tumorTreatmentStatus:
     description: Tumor treatment status for the individual.
     range: TumorTreatmentEnum
