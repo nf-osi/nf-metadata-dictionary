@@ -1,0 +1,164 @@
+{
+  "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-opticgliomaclinicaltemplate",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Partial template for optic glioma clinical data capturing NF1 glioma classification, pathologic diagnosis, treatment, and disease characterization. Intended to be used as a mixin alongside a subject identifier template or combined with other clinical templates.",
+  "properties": {
+    "nf1GliomaType": {
+      "description": "High-level NF1 glioma type classification distinguishing between optic pathway and non-optic pathway, and by grade.",
+      "enum": [
+        "High grade glioma (any location)",
+        "Non-optic pathway low grade glioma"
+      ],
+      "title": "nf1GliomaType",
+      "type": "string"
+    },
+    "gliomaLocation": {
+      "description": "Location of glioma biopsied and/or resected.",
+      "enum": [
+        "Brainstem",
+        "Cerebellum",
+        "Cortical \u2013 Frontal Lobe",
+        "Cortical \u2013 Occipital Lobe",
+        "Cortical \u2013 Parietal Lobe",
+        "Cortical \u2013 Temporal Lobe",
+        "Other Midline Structures (e.g., Thalamus)",
+        "Spinal Cord"
+      ],
+      "title": "gliomaLocation",
+      "type": "string"
+    },
+    "gliomaPathologicDiagnosis": {
+      "description": "Pathologic diagnosis for gliomas, primarily low-grade types and glioneuronal tumors.",
+      "enum": [
+        "Angiocentric glioma",
+        "Astroblastoma",
+        "Central neurocytoma",
+        "Desmoplastic infantile ganglioglioma/astrocytoma",
+        "Diffuse astrocytoma, MYB- or MYBL1-altered",
+        "Diffuse glioneuronal tumor with oligodendroglioma-like features and nuclear clusters",
+        "Diffuse leptomeningeal glioneuronal tumor",
+        "Diffuse low-grade glioma, MAPK pathway altered",
+        "Dysembryoplastic neuroepithelial tumor",
+        "Gangliocytoma",
+        "Ganglioglioma",
+        "Low grade glioneuronal tumor, NOS",
+        "Low grade glioma, NOS",
+        "Multinodular and vacuolating neuronal tumor",
+        "Oligodendroglioma",
+        "Other",
+        "Pilocytic astrocytoma",
+        "Pilomyxoid astrocytoma",
+        "Pleomorphic xanthoastrocytoma",
+        "Polymorphous low-grade neuroepithelial tumor of the young",
+        "Radiographic Diagnosis Only",
+        "Rosette-forming glioneuronal tumor",
+        "Subependymal giant cell astrocytoma"
+      ],
+      "title": "gliomaPathologicDiagnosis",
+      "type": "string"
+    },
+    "hggPathologicDiagnosis": {
+      "description": "Pathologic diagnosis for high-grade gliomas (WHO grade 3 and 4).",
+      "enum": [
+        "Anaplastic astrocytoma",
+        "Anaplastic pilocytic astrocytoma",
+        "Diffuse hemispheric glioma, H3G34-mutant, WHO grade 4",
+        "Diffuse midline glioma, EGFR mutant subtype, WHO grade 4",
+        "Diffuse midline glioma, H3 K27-mutant subtype, WHO grade 4",
+        "Diffuse pediatric-type high-grade glioma, H3-wildtype and IDH-wildtype, WHO grade 4",
+        "Glioblastoma, WHO grade 4",
+        "High grade astrocytoma with piloid features",
+        "High grade glioma NOS (Not Otherwise Specified)",
+        "Infant-type hemispheric glioma",
+        "Other",
+        "Pleomorphic xanthoastrocytoma, WHO grade 3"
+      ],
+      "title": "hggPathologicDiagnosis",
+      "type": "string"
+    },
+    "surgicalResectionAtDiagnosis": {
+      "description": "Type of surgical resection performed at diagnosis.",
+      "enum": [
+        "Biopsy",
+        "Gross Total",
+        "Near-Total",
+        "Subtotal"
+      ],
+      "title": "surgicalResectionAtDiagnosis",
+      "type": "string"
+    },
+    "treatmentInitiationIndication": {
+      "description": "Indication for initiation of treatment.",
+      "enum": [
+        "Change in neurologic examination or function",
+        "Increase in Tumor Enhancement on MRI",
+        "Increase in Tumor Size on MRI",
+        "Other",
+        "Other change in tumor in MRI"
+      ],
+      "title": "treatmentInitiationIndication",
+      "type": "string"
+    },
+    "radiationAtAnyTime": {
+      "description": "Type of radiation received at any time for glioma treatment.",
+      "enum": [
+        "Craniospinal",
+        "Focal",
+        "None"
+      ],
+      "title": "radiationAtAnyTime",
+      "type": "string"
+    },
+    "gliomaFrontlineRegimen": {
+      "description": "Frontline systemic treatment regimen(s) used for glioma. Select all that apply.",
+      "items": {
+        "description": "Controlled vocabulary for frontline systemic treatment regimens used in glioma.",
+        "enum": [
+          "6-thioguanine",
+          "BRAF inhibitor",
+          "Bevacizumab",
+          "Cabozantinib",
+          "Carboplatinum",
+          "Clinical Trial or Others",
+          "Etoposide",
+          "Irinotecan",
+          "Lomustine",
+          "MEK inhibitor",
+          "Methotrexate",
+          "PolyICLC",
+          "Procarbazine",
+          "Radiation",
+          "Surgery",
+          "Temozolomide",
+          "Vinblastine",
+          "Vincristine",
+          "Vinorelbine",
+          "mTOR inhibitor"
+        ],
+        "title": "GliomaFrontlineRegimenEnum",
+        "type": "string"
+      },
+      "type": "array",
+      "title": "gliomaFrontlineRegimen"
+    },
+    "treatmentEndIndication": {
+      "description": "Indication(s) for end of first treatment regimen. Select all that apply.",
+      "items": {
+        "description": "Indication for end of first treatment regimen.",
+        "enum": [
+          "Completion of Planned Therapy",
+          "Non-compliance",
+          "Toxicity/Allergy",
+          "Tumor Progression",
+          "Unknown"
+        ],
+        "title": "TreatmentEndIndicationEnum",
+        "type": "string"
+      },
+      "type": "array",
+      "title": "treatmentEndIndication"
+    }
+  },
+  "title": "OpticGliomaClinicalTemplate",
+  "type": "object"
+}
