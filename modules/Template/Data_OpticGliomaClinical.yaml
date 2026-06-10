@@ -1,0 +1,29 @@
+classes:
+  OpticGliomaClinicalTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateUsage: specialized
+      templateFor:
+        dataType:
+        - clinical
+      dataGranularity: individual-level
+    description: >-
+      Partial template for optic glioma clinical data capturing NF1 glioma
+      classification, pathologic diagnosis, treatment, and disease
+      characterization. Intended to be used as a mixin alongside a subject
+      identifier template or combined with other clinical templates.
+    notes:
+    - 'Reference poster: https://www.canva.com/design/DAGqwQf5vyI/k62IoPwZbLGXR3raxnV_aQ/view'
+    - 'Source data model project: https://www.synapse.org/Synapse:syn68391586'
+    is_a: RecordSet
+    slots:
+    - nf1GliomaType
+    - gliomaLocation
+    - gliomaPathologicDiagnosis
+    - hggPathologicDiagnosis
+    - surgicalResectionAtDiagnosis
+    - treatmentInitiationIndication
+    - radiationAtAnyTime
+    - gliomaFrontlineRegimen
+    - treatmentEndIndication
