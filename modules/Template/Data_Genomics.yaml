@@ -1,4 +1,3 @@
-
 classes:
   GeneticsAssayTemplate:
     abstract: true
@@ -29,9 +28,30 @@ classes:
         range: SequencingAssayEnum
       platform:
         range: SequencingPlatformEnum
+        required: false
       fileFormat:
         range: SequencingFileFormatEnum
 
+      specimenID:
+        required: false
+      specimenPreparationMethod:
+        required: false
+    rules:
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+          platform:
+            value_presence: PRESENT
+          specimenPreparationMethod:
+            value_presence: PRESENT
   BulkSequencingAssayTemplate:
     annotations:
       required: false
@@ -60,6 +80,10 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      libraryStrand:
+        required: false
+      libraryPreparationMethod:
+        required: false
     slots:
     - specimenType
     - runType
@@ -73,22 +97,36 @@ classes:
     - batchID
     - modelSystemName
     rules:
-    - description: Organ is required when specimenType is a tissue (not an organism substance like saliva)
+    - description: Organ is required when specimenType is a tissue (not an organism
+        substance like saliva)
       preconditions:
         slot_conditions:
           specimenType:
             value_presence: PRESENT
             none_of:
-              - equals_string: mucus
-              - equals_string: saliva
-              - equals_string: stool
-              - equals_string: sweat
-              - equals_string: urine
+            - equals_string: mucus
+            - equals_string: saliva
+            - equals_string: stool
+            - equals_string: sweat
+            - equals_string: urine
       postconditions:
         slot_conditions:
           organ:
             value_presence: PRESENT
 
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          libraryStrand:
+            value_presence: PRESENT
+          libraryPreparationMethod:
+            value_presence: PRESENT
   GenomicsArrayTemplate:
     annotations:
       required: false
@@ -120,6 +158,20 @@ classes:
       fileFormat:
         range: ArrayFileFormatEnum
 
+      channel:
+        required: false
+    rules:
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          channel:
+            value_presence: PRESENT
   GenomicsAssayTemplate:
     annotations:
       required: false
@@ -357,6 +409,28 @@ classes:
       fileFormat:
         range: SequencingFileFormatEnum
 
+      libraryStrand:
+        required: false
+      libraryKitID:
+        required: false
+      libraryPreparationMethod:
+        required: false
+    rules:
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          libraryStrand:
+            value_presence: PRESENT
+          libraryKitID:
+            value_presence: PRESENT
+          libraryPreparationMethod:
+            value_presence: PRESENT
   ScRNASeqTemplate:
     annotations:
       required: false
@@ -435,8 +509,20 @@ classes:
       dataType:
         ifabsent: string(genomic variants)
       targetCaptureKitID:
-        required: true
+        required: false
 
+    rules:
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          targetCaptureKitID:
+            value_presence: PRESENT
   WGSTemplate:
     annotations:
       required: false
@@ -548,7 +634,7 @@ classes:
     - chipPosition
     - plateName
     - plateWell
-    source:
+    source: 
       https://docs.gdc.cancer.gov/Data_Dictionary/viewer/#?view=table-definition-view&id=raw_methylation_array
     slot_usage:
       assay:
@@ -619,6 +705,10 @@ classes:
         ifabsent: string(processed)
       fileFormat:
         range: SequencingFileFormatEnum
+      genomicReference:
+        required: false
+      specimenID:
+        required: false
     rules:
     - description: If workflow is provided, workflowLink must be provided
       preconditions:
@@ -639,6 +729,19 @@ classes:
           genomicReferenceLink:
             value_presence: PRESENT
 
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          genomicReference:
+            value_presence: PRESENT
+          specimenID:
+            value_presence: PRESENT
   ProcessedGeneExpressionTemplate:
     annotations:
       required: false
@@ -672,7 +775,9 @@ classes:
       dataSubtype:
         ifabsent: string(processed)
       expressionUnit:
-        required: true
+        required: false
+      specimenID:
+        required: false
     rules:
     - description: If workflow is provided, workflowLink must be provided
       preconditions:
@@ -684,6 +789,19 @@ classes:
           workflowLink:
             value_presence: PRESENT
 
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          expressionUnit:
+            value_presence: PRESENT
+          specimenID:
+            value_presence: PRESENT
   ProcessedMergedDataTemplate:
     annotations:
       required: false
@@ -715,6 +833,11 @@ classes:
     slot_usage:
       dataSubtype:
         ifabsent: string(processed)
+        required: false
+      dataType:
+        required: false
+      assay:
+        required: false
     rules:
     - description: If workflow is provided, workflowLink must be provided
       preconditions:
@@ -726,6 +849,21 @@ classes:
           workflowLink:
             value_presence: PRESENT
 
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          dataType:
+            value_presence: PRESENT
+          dataSubtype:
+            value_presence: PRESENT
+          assay:
+            value_presence: PRESENT
   ProcessedAggregatedDataTemplate:
     annotations:
       templateUsage: common
@@ -752,9 +890,14 @@ classes:
     slot_usage:
       dataSubtype:
         ifabsent: string(processed)
+        required: false
       expressionUnit:
         required: false
       species:
+        required: false
+      dataType:
+        required: false
+      assay:
         required: false
     rules:
     - description: If workflow is provided, workflowLink must be provided
@@ -767,6 +910,21 @@ classes:
           workflowLink:
             value_presence: PRESENT
 
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          dataType:
+            value_presence: PRESENT
+          dataSubtype:
+            value_presence: PRESENT
+          assay:
+            value_presence: PRESENT
   ProcessedVariantCallsTemplate:
     annotations:
       required: false
@@ -803,6 +961,8 @@ classes:
         ifabsent: string(processed)
       fileFormat:
         range: SequencingFileFormatEnum
+      specimenID:
+        required: false
     rules:
     - description: If workflow is provided, workflowLink must be provided
       preconditions:
@@ -812,4 +972,15 @@ classes:
       postconditions:
         slot_conditions:
           workflowLink:
+            value_presence: PRESENT
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          specimenID:
             value_presence: PRESENT
