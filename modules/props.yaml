@@ -9,6 +9,8 @@ slots:
     required: false
   GIST:
     description: Characterization of the manifestation of Gastrointestinal stromal tumor (GIST).
+    exact_mappings:
+    - MONDO:0011719
     range: PresenceEnum
     title: GIST
     required: false
@@ -20,11 +22,15 @@ slots:
     required: false
   IrisLischNodules:
     description: Characterization of the manifestation of Iris Lisch Nodules.
+    exact_mappings:
+    - HP:0009737
     range: PresenceEnum
     required: false
     title: Iris Lisch nodules
   MPNSTCharacterization:
     description: Characterization of the manifestation of MPNST.
+    exact_mappings:
+    - MONDO:0017827
     range: PresenceEnum
     required: false
     title: MPNST Characterization
@@ -103,6 +109,8 @@ slots:
     required: false
   aqueductalStenosis:
     description: Characterization of the manifestation of aqueductal stenosis.
+    exact_mappings:
+    - HP:0002410
     range: PresenceEnum
     required: false
     title: Aqueductal stenosis
@@ -123,6 +131,8 @@ slots:
     required: false
   attentionDeficitDisorder:
     description: Characterization of the manifestation of Attention Deficit Disorder.
+    exact_mappings:
+    - HP:0007018
     range: PresenceEnum
     required: false
     title: Attention deficit disorder
@@ -178,6 +188,8 @@ slots:
     slot_uri: https://cancerdhc.github.io/ccdhmodel/v1.1/BodySite/
   breastCancer:
     description: Characterization of the manifestation of Breast cancer.
+    exact_mappings:
+    - MONDO:0007254
     range: PresenceEnum
     required: false
     title: Breast cancer
@@ -409,11 +421,15 @@ slots:
     required: false
   dermalNeurofibromas:
     description: Characterization of the manifestation of Dermal neurofibromas.
+    broad_mappings:
+    - MONDO:0016755
     range: NeurofibromaManifestationEnum
     required: false
     title: Dermal neurofibromas
   dermalSchwannoma:
     description: Characterization of the manifestation of Dermal schwannoma.
+    broad_mappings:
+    - MONDO:0002546
     range: PresenceEnum
     required: false
     title: Dermal schwannoma
@@ -435,6 +451,8 @@ slots:
     title: Diagnosis age group
   diffuseDermalNeurofibromas:
     description: Characterization of the manifestation of Diffuse dermal neurofibromas.
+    broad_mappings:
+    - MONDO:0016755
     range: NeurofibromaManifestationEnum
     required: false
     title: Diffuse dermal neurofibromas
@@ -599,6 +617,9 @@ slots:
     title: Glioma location
   gliomaOrEpendymoma:
     description: Characterization of the manifestation of Glioma or ependymoma.
+    related_mappings:
+    - MONDO:0021042
+    - MONDO:0016698
     range: BinaryImagingDiagnosisEnum
     required: false
     title: Glioma or ependymoma
@@ -609,6 +630,8 @@ slots:
     title: Glioma pathologic diagnosis
   glomusTumor:
     description: Characterization of the manifestation of Glomus tumor.
+    exact_mappings:
+    - MONDO:0018327
     range: PresenceEnum
     required: false
     title: Glomus tumor
@@ -626,6 +649,8 @@ slots:
     title: HGG pathologic diagnosis
   heartDefect:
     description: Characterization of the manifestation of Heart defect.
+    broad_mappings:
+    - HP:0001627
     range: PresenceEnum
     required: false
     title: Heart defect
@@ -673,6 +698,8 @@ slots:
     required: false
   intellectualDisability:
     description: Characterization of the manifestation of Intellectual disability.
+    exact_mappings:
+    - HP:0001249
     range: PresenceEnum
     required: false
     title: Intellectual disability
@@ -788,6 +815,8 @@ slots:
     required: false
   learningDisability:
     description: Characterization of the manifestation of Learning disability.
+    exact_mappings:
+    - HP:0001328
     range: PresenceEnum
     required: false
     title: Learning disability
@@ -800,11 +829,15 @@ slots:
     required: false
   lenticularOpacity:
     description: Characterization of the manifestation of Lenticular opacity.
+    broad_mappings:
+    - HP:0000518
     range: PresenceEnum
     required: false
     title: Lenticular opacity
   leukemia:
     description: Characterization of the manifestation of Leukemia.
+    exact_mappings:
+    - MONDO:0005059
     range: PresenceEnum
     required: false
     title: Leukemia
@@ -850,6 +883,10 @@ slots:
     title: License
   longBoneDysplasia:
     description: Characterization of the manifestation of Long bone dysplasia.
+    notes:
+    - 'Unmapped: no precise HPO term for "long bone dysplasia". The NF1 long-bone
+      manifestation is typically long-bone bowing (HP:0002751) or pseudarthrosis
+      (HP:0009736); a curator should confirm the intended concept before mapping.'
     range: PresenceEnum
     required: false
     title: Long bone dysplasia
@@ -875,6 +912,8 @@ slots:
     required: false
   meningioma:
     description: Characterization of the manifestation of Meningioma.
+    exact_mappings:
+    - MONDO:0016642
     range: MultipleImagingDiagnosisEnum
     required: false
     title: Meningioma
@@ -971,16 +1010,22 @@ slots:
     required: false
   nonopticGlioma:
     description: Characterization of the manifestation of Nonoptic glioma.
+    broad_mappings:
+    - MONDO:0021042
     range: PresenceEnum
     required: false
     title: Nonoptic glioma
   nonvestibularCranialSchwannoma:
     description: Characterization of the manifestation of Nonvestibular cranial schwannoma.
+    broad_mappings:
+    - MONDO:0002546
     range: BinaryImagingDiagnosisEnum
     required: false
     title: Nonvestibular cranial schwannoma
   nonvestibularSchwannomas:
     description: Characterization of the manifestation of Nonvestibular schwannomas.
+    broad_mappings:
+    - MONDO:0002546
     range: NonvestibularSchwannomaManifestationEnum
     required: false
     title: Nonvestibular schwannomas
@@ -1000,6 +1045,8 @@ slots:
     required: false
   opticGlioma:
     description: Characterization of the manifestation of Optic glioma.
+    exact_mappings:
+    - MONDO:0003235
     range: OpticGliomaManifestationEnum
     required: false
     title: Optic glioma
@@ -1062,11 +1109,15 @@ slots:
     required: false
   peripheralNeuropathy:
     description: Characterization of the manifestation of Peripheral neuropathy.
+    exact_mappings:
+    - HP:0009830
     range: PresenceEnum
     required: false
     title: Peripheral neuropathy
   pheochromocytoma:
     description: Characterization of the manifestation of Pheochromocytoma.
+    exact_mappings:
+    - MONDO:0008233
     range: PresenceEnum
     required: false
     title: Pheochromocytoma
@@ -1097,6 +1148,8 @@ slots:
     required: true
   plexiformNeurofibromas:
     description: Characterization of the manifestation of Plexiform neurofibromas.
+    exact_mappings:
+    - MONDO:0003304
     range: PlexiformNeurofibromaManifestationEnum
     required: false
     title: Plexiform neurofibromas
@@ -1314,6 +1367,8 @@ slots:
     title: Sample type
   scoliosis:
     description: Characterization of the manifestation of Scoliosis.
+    exact_mappings:
+    - HP:0002650
     range: PresenceEnum
     required: false
     title: Scoliosis
@@ -1389,16 +1444,22 @@ slots:
     required: false
   sphenoidDysplasia:
     description: Characterization of the manifestation of Sphenoid dysplasia.
+    exact_mappings:
+    - HP:6001124
     range: PresenceEnum
     required: false
     title: Sphenoid dysplasia
   spinalNeurofibromas:
     description: Characterization of the manifestation of Spinal neurofibromas.
+    exact_mappings:
+    - MONDO:0001789
     range: SpinalNeuromaManifestationEnum
     required: false
     title: Spinal neurofibromas
   spinalSchwannoma:
     description: Characterization of the manifestation of Spinal schwannoma.
+    broad_mappings:
+    - MONDO:0002546
     range: MultipleImagingDiagnosisEnum
     required: false
     title: Spinal schwannoma
@@ -1444,6 +1505,8 @@ slots:
     required: true
   subcutaneousNodularNeurofibromas:
     description: Characterization of the manifestation of Subcutaneous nodular neurofibromas.
+    broad_mappings:
+    - MONDO:0016755
     range: NeurofibromaManifestationEnum
     required: false
     title: Subcutaneous nodular neurofibromas
@@ -1534,11 +1597,15 @@ slots:
     required: false
   vascularDisease:
     description: Characterization of the manifestation of Vascular disease.
+    broad_mappings:
+    - HP:0002597
     range: PresenceEnum
     required: false
     title: Vascular disease
   vestibularSchwannoma:
     description: Characterization of the manifestation of Vestibular schwannoma.
+    exact_mappings:
+    - MONDO:0001569
     range: LateralManifestationEnum
     required: false
     title: Vestibular schwannoma
