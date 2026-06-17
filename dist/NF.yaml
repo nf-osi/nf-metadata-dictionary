@@ -4352,6 +4352,10 @@ enums:
           - This file format encompasses/includes the h5ad anndata format commonly used for scRNAseq data sharing.
       idx:
         description: ''
+      log:
+        description: Plain-text log file recording messages, events, or diagnostic output produced by a tool, pipeline, or acquisition system. Commonly co-located with primary data as an auxiliary file.
+      out:
+        description: Generic output file (often standard output or a tool-specific dump) produced by a program or workflow step. Commonly co-located with primary data as an auxiliary file.
       psydat:
         description: TrialHandler or StairHandler object that has been saved to disk with the python cPickle module, ideal for batch analysis and plotting with Python.
         notes:
@@ -4407,6 +4411,9 @@ enums:
         description: R script with expected extension “.R”.
         meaning: EDAM:format_3999
       bash script:
+        aliases:
+          - sh
+          - shell script
         description: Bash shell script with .sh extension.
         source: https://en.wikipedia.org/wiki/Shell_script
       js:
