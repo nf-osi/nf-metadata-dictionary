@@ -136,6 +136,38 @@
           "dataSubtype"
         ]
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "resourceType": {
+            "const": "experimentalData"
+          }
+        },
+        "required": [
+          "resourceType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "assay": {},
+          "dataSubtype": {},
+          "dataType": {},
+          "diagnosis": {},
+          "individualID": {},
+          "species": {},
+          "tumorType": {}
+        },
+        "required": [
+          "dataType",
+          "dataSubtype",
+          "assay",
+          "individualID",
+          "species",
+          "diagnosis",
+          "tumorType"
+        ]
+      }
     }
   ],
   "description": "Template for behavioral assay data from model organisms measuring behaviors such as feeding, learning, memory, motor coordination, and activity patterns.",
@@ -1340,72 +1372,6 @@
     "dataType": {
       "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
       "type": "string",
-      "enum": [
-        "aggregated somatic mutation",
-        "aligned reads",
-        "annotated germline variants",
-        "annotated somatic mutation",
-        "audio transcript",
-        "behavioral data",
-        "capsid sequence",
-        "cellular physiology",
-        "characteristic",
-        "chromatin activity",
-        "clinical",
-        "copy number variants",
-        "count matrix",
-        "data index",
-        "data sharing plan",
-        "demographics",
-        "drug combination screen",
-        "drug screen",
-        "electrophysiology",
-        "epidemiological data",
-        "gene expression",
-        "gene expression matrix",
-        "genomic features",
-        "genomic variants",
-        "germline variants",
-        "guide RNA sequence",
-        "image",
-        "immunoassay",
-        "isoform expression",
-        "kinomics",
-        "mask image",
-        "masked annotated somatic mutation",
-        "mass spectrometry data",
-        "metabolomics",
-        "molecular property",
-        "morphology parameter",
-        "network",
-        "nucleic acid sequence record",
-        "over-representation data",
-        "particle characterization",
-        "pharmacokinetics",
-        "physiology parameter",
-        "plasmid sequence",
-        "plot",
-        "primer sequence",
-        "probe sequence",
-        "promoter sequence",
-        "protein interaction data",
-        "protein interaction raw data",
-        "proteomics",
-        "quantified gene expression",
-        "raw counts",
-        "reference sequence",
-        "report",
-        "somatic variants",
-        "structural variants",
-        "survey data",
-        "text data",
-        "volume",
-        "weight",
-        "descriptive metadata",
-        "image metadata",
-        "metadata",
-        "workflow metadata"
-      ],
       "title": "dataType"
     },
     "diagnosis": {
@@ -1746,13 +1712,6 @@
     }
   },
   "required": [
-    "dataType",
-    "dataSubtype",
-    "assay",
-    "individualID",
-    "species",
-    "diagnosis",
-    "tumorType",
     "fileFormat",
     "resourceType"
   ],

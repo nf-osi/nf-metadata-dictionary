@@ -41,6 +41,54 @@
     {
       "if": {
         "properties": {
+          "resourceType": {
+            "const": "experimentalData"
+          }
+        },
+        "required": [
+          "resourceType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "libraryKitID": {},
+          "libraryPreparationMethod": {},
+          "libraryStrand": {}
+        },
+        "required": [
+          "libraryStrand",
+          "libraryKitID",
+          "libraryPreparationMethod"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resourceType": {
+            "const": "experimentalData"
+          }
+        },
+        "required": [
+          "resourceType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "platform": {},
+          "specimenID": {},
+          "specimenPreparationMethod": {}
+        },
+        "required": [
+          "specimenID",
+          "platform",
+          "specimenPreparationMethod"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
           "age": {
             "not": {
               "anyOf": [
@@ -98,6 +146,38 @@
         },
         "required": [
           "dataSubtype"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resourceType": {
+            "const": "experimentalData"
+          }
+        },
+        "required": [
+          "resourceType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "assay": {},
+          "dataSubtype": {},
+          "dataType": {},
+          "diagnosis": {},
+          "individualID": {},
+          "species": {},
+          "tumorType": {}
+        },
+        "required": [
+          "dataType",
+          "dataSubtype",
+          "assay",
+          "individualID",
+          "species",
+          "diagnosis",
+          "tumorType"
         ]
       }
     }
@@ -792,12 +872,6 @@
     "libraryStrand": {
       "description": "Strandedness of paired-end RNA-Sequencing data. This is an important parameter for RNA-seq analysis.",
       "type": "string",
-      "enum": [
-        "FirstStranded",
-        "SecondStranded",
-        "Unstranded",
-        "Not Applicable"
-      ],
       "title": "libraryStrand"
     },
     "nf1Genotype": {
@@ -1067,19 +1141,6 @@
     }
   },
   "required": [
-    "libraryStrand",
-    "libraryKitID",
-    "libraryPreparationMethod",
-    "specimenID",
-    "tumorType",
-    "platform",
-    "specimenPreparationMethod",
-    "dataType",
-    "dataSubtype",
-    "assay",
-    "individualID",
-    "species",
-    "diagnosis",
     "fileFormat",
     "resourceType"
   ],

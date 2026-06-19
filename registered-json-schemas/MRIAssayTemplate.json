@@ -23,6 +23,26 @@
     {
       "if": {
         "properties": {
+          "resourceType": {
+            "const": "experimentalData"
+          }
+        },
+        "required": [
+          "resourceType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "platform": {}
+        },
+        "required": [
+          "platform"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
           "age": {
             "not": {
               "anyOf": [
@@ -80,6 +100,38 @@
         },
         "required": [
           "dataSubtype"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resourceType": {
+            "const": "experimentalData"
+          }
+        },
+        "required": [
+          "resourceType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "assay": {},
+          "dataSubtype": {},
+          "dataType": {},
+          "diagnosis": {},
+          "individualID": {},
+          "species": {},
+          "tumorType": {}
+        },
+        "required": [
+          "dataType",
+          "dataSubtype",
+          "assay",
+          "individualID",
+          "species",
+          "diagnosis",
+          "tumorType"
         ]
       }
     }
@@ -842,14 +894,6 @@
     }
   },
   "required": [
-    "platform",
-    "dataType",
-    "dataSubtype",
-    "assay",
-    "individualID",
-    "species",
-    "diagnosis",
-    "tumorType",
     "fileFormat",
     "resourceType"
   ],

@@ -79,6 +79,52 @@
     {
       "if": {
         "properties": {
+          "resourceType": {
+            "const": "experimentalData"
+          }
+        },
+        "required": [
+          "resourceType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "libraryPreparationMethod": {},
+          "libraryStrand": {}
+        },
+        "required": [
+          "libraryStrand",
+          "libraryPreparationMethod"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resourceType": {
+            "const": "experimentalData"
+          }
+        },
+        "required": [
+          "resourceType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "platform": {},
+          "specimenID": {},
+          "specimenPreparationMethod": {}
+        },
+        "required": [
+          "specimenID",
+          "platform",
+          "specimenPreparationMethod"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
           "age": {
             "not": {
               "anyOf": [
@@ -136,6 +182,38 @@
         },
         "required": [
           "dataSubtype"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resourceType": {
+            "const": "experimentalData"
+          }
+        },
+        "required": [
+          "resourceType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "assay": {},
+          "dataSubtype": {},
+          "dataType": {},
+          "diagnosis": {},
+          "individualID": {},
+          "species": {},
+          "tumorType": {}
+        },
+        "required": [
+          "dataType",
+          "dataSubtype",
+          "assay",
+          "individualID",
+          "species",
+          "diagnosis",
+          "tumorType"
         ]
       }
     }
@@ -739,12 +817,6 @@
     "libraryStrand": {
       "description": "Strandedness of paired-end RNA-Sequencing data. This is an important parameter for RNA-seq analysis.",
       "type": "string",
-      "enum": [
-        "FirstStranded",
-        "SecondStranded",
-        "Unstranded",
-        "Not Applicable"
-      ],
       "title": "libraryStrand"
     },
     "modelSystemName": {
@@ -1870,18 +1942,6 @@
     }
   },
   "required": [
-    "libraryStrand",
-    "libraryPreparationMethod",
-    "specimenID",
-    "tumorType",
-    "platform",
-    "specimenPreparationMethod",
-    "dataType",
-    "dataSubtype",
-    "assay",
-    "individualID",
-    "species",
-    "diagnosis",
     "fileFormat",
     "resourceType"
   ],

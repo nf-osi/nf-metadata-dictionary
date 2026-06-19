@@ -10256,6 +10256,42 @@ classes:
           slot_conditions:
             dataSubtype:
               value_presence: PRESENT
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            dataType:
+              value_presence: PRESENT
+            dataSubtype:
+              value_presence: PRESENT
+            assay:
+              value_presence: PRESENT
+            individualID:
+              value_presence: PRESENT
+            species:
+              value_presence: PRESENT
+            diagnosis:
+              value_presence: PRESENT
+            tumorType:
+              value_presence: PRESENT
+    slot_usage:
+      dataType:
+        required: false
+      dataSubtype:
+        required: false
+      assay:
+        required: false
+      individualID:
+        required: false
+      species:
+        required: false
+      diagnosis:
+        required: false
+      tumorType:
+        required: false
   NonBiologicalAssayDataTemplate:
     abstract: true
     description: 'Describes data artifacts (i.e. files) from an experimental/physical-sciences assay  where input specimens are more at the level of synthesized molecules or inorganic materials.
@@ -10268,6 +10304,27 @@ classes:
       - dataType
       - dataSubtype
       - assay
+    slot_usage:
+      dataType:
+        required: false
+      dataSubtype:
+        required: false
+      assay:
+        required: false
+    rules:
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            dataType:
+              value_presence: PRESENT
+            dataSubtype:
+              value_presence: PRESENT
+            assay:
+              value_presence: PRESENT
   CellTissuePhenotypingTemplate:
     description: 'Data that characterizes cell/tissue morphology or physiology often in the context of different experimental conditions'
     is_a: BiologicalAssayDataTemplate
@@ -10342,6 +10399,18 @@ classes:
           slot_conditions:
             specimenID:
               value_presence: PRESENT
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            specimenID:
+              value_presence: PRESENT
+    slot_usage:
+      specimenID:
+        required: false
   FlowCytometryTemplate:
     close_mappings:
       - https://www.immport.org/shared/dataModelDocumentation?table=fcs_analyzed_result
@@ -10357,8 +10426,19 @@ classes:
         ifabsent: string(flow cytometry)
       platform:
         range: FlowCytometryPlatformEnum
+        required: false
       fileFormat:
         range: OtherFileFormatEnum
+    rules:
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            platform:
+              value_presence: PRESENT
   ElectrophysiologyAssayTemplate:
     description: Template for raw electrophysiology data (electrical recordings).
     is_a: BiologicalAssayDataTemplate
@@ -10379,6 +10459,8 @@ classes:
         any_of:
           - range: OtherFileFormatEnum
           - range: TabularFileFormatEnum
+      platform:
+        required: false
     rules:
       - description: If experimentalTimepoint is provided, timepointUnit must be provided
         preconditions:
@@ -10388,6 +10470,15 @@ classes:
         postconditions:
           slot_conditions:
             timepointUnit:
+              value_presence: PRESENT
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            platform:
               value_presence: PRESENT
   PlateBasedReporterAssayTemplate:
     description: Generic template for describing data from a plate-based reporter assay.
@@ -10417,11 +10508,13 @@ classes:
       individualID:
         required: false
       compoundName:
-        required: true
+        required: false
       compoundDose:
-        required: true
+        required: false
       compoundDoseUnit:
-        required: true
+        required: false
+      specimenID:
+        required: false
     rules:
       - description: If experimentalTimepoint is provided, timepointUnit must be provided
         preconditions:
@@ -10439,6 +10532,21 @@ classes:
               value_presence: PRESENT
         postconditions:
           slot_conditions:
+            compoundDoseUnit:
+              value_presence: PRESENT
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            specimenID:
+              value_presence: PRESENT
+            compoundName:
+              value_presence: PRESENT
+            compoundDose:
+              value_presence: PRESENT
             compoundDoseUnit:
               value_presence: PRESENT
   ClinicalAssayTemplate:
@@ -10539,6 +10647,21 @@ classes:
     slot_usage:
       dataType:
         ifabsent: string(epidemiological data)
+        required: false
+      epidemiologyMetric:
+        required: false
+    rules:
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            dataType:
+              value_presence: PRESENT
+            epidemiologyMetric:
+              value_presence: PRESENT
   GeneticsAssayTemplate:
     abstract: true
     description: 'Template for relatively raw data of RNA/DNA structure and expression.  This is an abstract template encapsulating data from low-throughput to high-throughput assays,  sequencing-based or non-sequencing based (e.g. microarrays, optical genome mapping).  In practice, data are more specifically typed and matched to one of the templates below.
@@ -10560,8 +10683,27 @@ classes:
         range: SequencingAssayEnum
       platform:
         range: SequencingPlatformEnum
+        required: false
       fileFormat:
         range: SequencingFileFormatEnum
+      specimenID:
+        required: false
+      specimenPreparationMethod:
+        required: false
+    rules:
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            specimenID:
+              value_presence: PRESENT
+            platform:
+              value_presence: PRESENT
+            specimenPreparationMethod:
+              value_presence: PRESENT
   BulkSequencingAssayTemplate:
     description: General template for raw (level 1) RNA/DNA data, i.e. sequence data from a sequencing assay.
     is_a: GeneticsAssayTemplate
@@ -10572,6 +10714,10 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      libraryStrand:
+        required: false
+      libraryPreparationMethod:
+        required: false
     slots:
       - specimenType
       - runType
@@ -10600,6 +10746,17 @@ classes:
           slot_conditions:
             organ:
               value_presence: PRESENT
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            libraryStrand:
+              value_presence: PRESENT
+            libraryPreparationMethod:
+              value_presence: PRESENT
   GenomicsArrayTemplate:
     description: A template for describing raw data from array-based genomics/epigenomics, e.g. CEL files.
     is_a: GeneticsAssayTemplate
@@ -10613,6 +10770,18 @@ classes:
         range: ArrayPlatformEnum
       fileFormat:
         range: ArrayFileFormatEnum
+      channel:
+        required: false
+    rules:
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            channel:
+              value_presence: PRESENT
   GenomicsAssayTemplate:
     description: Alias to BulkSequencingAssayTemplate, use for sequence data on a large scale when there is no template available that is more specific.
     is_a: BulkSequencingAssayTemplate
@@ -10786,6 +10955,26 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+      libraryStrand:
+        required: false
+      libraryKitID:
+        required: false
+      libraryPreparationMethod:
+        required: false
+    rules:
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            libraryStrand:
+              value_presence: PRESENT
+            libraryKitID:
+              value_presence: PRESENT
+            libraryPreparationMethod:
+              value_presence: PRESENT
   ScRNASeqTemplate:
     description: Template for describing raw data from single-cell RNA-seq.
     is_a: ScSequencingAssayTemplate
@@ -10842,7 +11031,17 @@ classes:
       dataType:
         ifabsent: string(genomic variants)
       targetCaptureKitID:
-        required: true
+        required: false
+    rules:
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            targetCaptureKitID:
+              value_presence: PRESENT
   WGSTemplate:
     description: Template for describing raw data from Whole Genome Sequencing (WGS)
     is_a: BulkSequencingAssayTemplate
@@ -10944,6 +11143,10 @@ classes:
         ifabsent: string(processed)
       fileFormat:
         range: SequencingFileFormatEnum
+      genomicReference:
+        required: false
+      specimenID:
+        required: false
     rules:
       - description: If workflow is provided, workflowLink must be provided
         preconditions:
@@ -10963,6 +11166,17 @@ classes:
           slot_conditions:
             genomicReferenceLink:
               value_presence: PRESENT
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            genomicReference:
+              value_presence: PRESENT
+            specimenID:
+              value_presence: PRESENT
   ProcessedGeneExpressionTemplate:
     close_mappings:
       - htan:BulkRNA-seqLevel3
@@ -10978,7 +11192,9 @@ classes:
       dataSubtype:
         ifabsent: string(processed)
       expressionUnit:
-        required: true
+        required: false
+      specimenID:
+        required: false
     rules:
       - description: If workflow is provided, workflowLink must be provided
         preconditions:
@@ -10988,6 +11204,17 @@ classes:
         postconditions:
           slot_conditions:
             workflowLink:
+              value_presence: PRESENT
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            expressionUnit:
+              value_presence: PRESENT
+            specimenID:
               value_presence: PRESENT
   ProcessedMergedDataTemplate:
     close_mappings:
@@ -11007,6 +11234,11 @@ classes:
     slot_usage:
       dataSubtype:
         ifabsent: string(processed)
+        required: false
+      dataType:
+        required: false
+      assay:
+        required: false
     rules:
       - description: If workflow is provided, workflowLink must be provided
         preconditions:
@@ -11016,6 +11248,19 @@ classes:
         postconditions:
           slot_conditions:
             workflowLink:
+              value_presence: PRESENT
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            dataType:
+              value_presence: PRESENT
+            dataSubtype:
+              value_presence: PRESENT
+            assay:
               value_presence: PRESENT
   ProcessedAggregatedDataTemplate:
     description: Template for processed data aggregated across multiple specimens into a single file, where individual-level attributes (specimenID, individualID) do not apply. Use for summarized assay results such as qPCR Ct value tables.
@@ -11033,9 +11278,14 @@ classes:
     slot_usage:
       dataSubtype:
         ifabsent: string(processed)
+        required: false
       expressionUnit:
         required: false
       species:
+        required: false
+      dataType:
+        required: false
+      assay:
         required: false
     rules:
       - description: If workflow is provided, workflowLink must be provided
@@ -11046,6 +11296,19 @@ classes:
         postconditions:
           slot_conditions:
             workflowLink:
+              value_presence: PRESENT
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            dataType:
+              value_presence: PRESENT
+            dataSubtype:
+              value_presence: PRESENT
+            assay:
               value_presence: PRESENT
   ProcessedVariantCallsTemplate:
     close_mappings:
@@ -11063,6 +11326,8 @@ classes:
         ifabsent: string(processed)
       fileFormat:
         range: SequencingFileFormatEnum
+      specimenID:
+        required: false
     rules:
       - description: If workflow is provided, workflowLink must be provided
         preconditions:
@@ -11072,6 +11337,15 @@ classes:
         postconditions:
           slot_conditions:
             workflowLink:
+              value_presence: PRESENT
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            specimenID:
               value_presence: PRESENT
   ImagingAssayTemplate:
     description: General template for describing imaging data.
@@ -11084,6 +11358,7 @@ classes:
           - range: MicroscopyImagingPlatformEnum
           - range: MRIPlatformEnum
           - range: ImagingSystemPlatformEnum
+        required: false
       fileFormat:
         any_of:
           - range: ImagingFileFormatEnum
@@ -11094,6 +11369,16 @@ classes:
       - platform
       - assayTarget
       - auxiliaryAsset
+    rules:
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            platform:
+              value_presence: PRESENT
   MicroscopyAssayTemplate:
     close_mappings:
       - htan:ImagingLevel2
@@ -11123,6 +11408,8 @@ classes:
           - range: TabularFileFormatEnum
       dataType:
         ifabsent: string(image)
+      specimenID:
+        required: false
     rules:
       - description: If workingDistance is provided, workingDistanceUnit must be provided
         preconditions:
@@ -11147,6 +11434,15 @@ classes:
           slot_conditions:
             parentSpecimenID:
               value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            specimenID:
+              value_presence: PRESENT
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
         postconditions:
           slot_conditions:
             specimenID:
@@ -11211,6 +11507,22 @@ classes:
           slot_conditions:
             concentrationNaClUnit:
               value_presence: PRESENT
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            specimenID:
+              value_presence: PRESENT
+            platform:
+              value_presence: PRESENT
+    slot_usage:
+      specimenID:
+        required: false
+      platform:
+        required: false
   LightScatteringAssayTemplate:
     description: Template for dynamic or static light scattering data adapted from ISA-TAB-Nano specs.
     is_a: MaterialScienceAssayTemplate
@@ -11250,6 +11562,26 @@ classes:
         required: false
       resourceType:
         ifabsent: string(experimentalData)
+      dataType:
+        required: false
+      dataSubtype:
+        required: false
+      assay:
+        required: false
+    rules:
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            dataType:
+              value_presence: PRESENT
+            dataSubtype:
+              value_presence: PRESENT
+            assay:
+              value_presence: PRESENT
   ReferenceSequenceTemplate:
     description: Template for reference sequence files used in experimental design, such as guide RNAs, plasmids, primers, probes, or other construct elements.
     is_a: FileBasedTemplate
@@ -11264,6 +11596,18 @@ classes:
         ifabsent: string(experimentalData)
       species:
         required: false
+      dataType:
+        required: false
+    rules:
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            dataType:
+              value_presence: PRESENT
   AnalysisResultTemplate:
     description: Template for result files such as figures, presentations, and analysis outputs that report data results but are not primary experimental data.
     is_a: FileBasedTemplate
@@ -11283,6 +11627,22 @@ classes:
           - range: ImagingFileFormatEnum
           - range: DocumentFileFormatEnum
           - range: TabularFileFormatEnum
+      dataType:
+        required: false
+      dataSubtype:
+        required: false
+    rules:
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            dataType:
+              value_presence: PRESENT
+            dataSubtype:
+              value_presence: PRESENT
   UpdateMilestoneReport:
     description: Metadata template for updating milestone report values in NF studies -- currently a supported feature for NTAP and GFF.
     is_a: PartialTemplate
@@ -11304,6 +11664,8 @@ classes:
     slot_usage:
       resourceType:
         ifabsent: string(report)
+      assay:
+        required: false
     rules:
       - description: If workflow is provided, workflowLink must be provided
         preconditions:
@@ -11313,6 +11675,15 @@ classes:
         postconditions:
           slot_conditions:
             workflowLink:
+              value_presence: PRESENT
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            assay:
               value_presence: PRESENT
   OpticGliomaClinicalTemplate:
     description: >-
@@ -11346,8 +11717,23 @@ classes:
         range: MassSpectrometryAssayEnum
       platform:
         range: MassSpectrometryPlatformEnum
+        required: false
       fileFormat:
         range: MassSpecFileFormatEnum
+      specimenID:
+        required: false
+    rules:
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            specimenID:
+              value_presence: PRESENT
+            platform:
+              value_presence: PRESENT
   MassSpecAssayTemplate:
     close_mappings:
       - htan:MassSpectrometryLevel1
@@ -11364,6 +11750,18 @@ classes:
         range: MassSpectrometryPlatformEnum
       fileFormat:
         range: MassSpecFileFormatEnum
+      dataCollectionMode:
+        required: false
+    rules:
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            dataCollectionMode:
+              value_presence: PRESENT
   ProteomicsAssayTemplate:
     description: Alias to MassSpecAssayTemplate for backwards-compatibility.
     is_a: MassSpecAssayTemplate
@@ -11448,6 +11846,18 @@ classes:
         range: SequencingFileFormatEnum
       dataType:
         ifabsent: string(gene expression)
+      libraryPreparationMethod:
+        required: false
+    rules:
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            libraryPreparationMethod:
+              value_presence: PRESENT
   SpatialTranscriptomicsImagingTemplate:
     description: Template for describing imaging data files from spatial transcriptomics experiments, such as tissue section histology or fluorescence images (e.g., from 10x Visium, NanoString CosMx, GeoMx).
     is_a: ImagingAssayTemplate
@@ -11469,6 +11879,18 @@ classes:
         range: ImagingFileFormatEnum
       dataType:
         ifabsent: string(image)
+      specimenID:
+        required: false
+    rules:
+      - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+        preconditions:
+          slot_conditions:
+            resourceType:
+              equals_string: experimentalData
+        postconditions:
+          slot_conditions:
+            specimenID:
+              value_presence: PRESENT
   PortalDataset:
     attributes:
       accessType:

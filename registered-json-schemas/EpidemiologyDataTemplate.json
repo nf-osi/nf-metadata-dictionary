@@ -2,6 +2,16 @@
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-epidemiologydatatemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "For aggregated data from defined populations or cohorts, used in/derived from epidemiology studies.",
+  "if": {
+    "properties": {
+      "resourceType": {
+        "const": "experimentalData"
+      }
+    },
+    "required": [
+      "resourceType"
+    ]
+  },
   "properties": {
     "dataType": {
       "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
@@ -169,11 +179,19 @@
     }
   },
   "required": [
-    "dataType",
-    "epidemiologyMetric",
     "fileFormat",
     "resourceType"
   ],
+  "then": {
+    "properties": {
+      "dataType": {},
+      "epidemiologyMetric": {}
+    },
+    "required": [
+      "dataType",
+      "epidemiologyMetric"
+    ]
+  },
   "title": "EpidemiologyDataTemplate",
   "type": "object"
 }

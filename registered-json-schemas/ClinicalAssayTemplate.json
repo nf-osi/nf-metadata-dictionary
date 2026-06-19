@@ -82,6 +82,38 @@
           "dataSubtype"
         ]
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "resourceType": {
+            "const": "experimentalData"
+          }
+        },
+        "required": [
+          "resourceType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "assay": {},
+          "dataSubtype": {},
+          "dataType": {},
+          "diagnosis": {},
+          "individualID": {},
+          "species": {},
+          "tumorType": {}
+        },
+        "required": [
+          "dataType",
+          "dataSubtype",
+          "assay",
+          "individualID",
+          "species",
+          "diagnosis",
+          "tumorType"
+        ]
+      }
     }
   ],
   "description": "General template for typically tabular **individual-level** data. This can include repeated measures and a drug treatment context.",
@@ -783,13 +815,6 @@
     }
   },
   "required": [
-    "dataType",
-    "dataSubtype",
-    "assay",
-    "individualID",
-    "species",
-    "diagnosis",
-    "tumorType",
     "fileFormat",
     "resourceType"
   ],
