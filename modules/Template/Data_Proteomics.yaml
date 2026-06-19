@@ -19,9 +19,26 @@ classes:
         range: MassSpectrometryAssayEnum
       platform:
         range: MassSpectrometryPlatformEnum
+        required: false
       fileFormat:
         range: MassSpecFileFormatEnum
 
+      specimenID:
+        required: false
+    rules:
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+          platform:
+            value_presence: PRESENT
   MassSpecAssayTemplate:
     annotations:
       required: false
@@ -58,6 +75,20 @@ classes:
       fileFormat:
         range: MassSpecFileFormatEnum
 
+      dataCollectionMode:
+        required: false
+    rules:
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          dataCollectionMode:
+            value_presence: PRESENT
   ProteomicsAssayTemplate:
     annotations:
       required: false

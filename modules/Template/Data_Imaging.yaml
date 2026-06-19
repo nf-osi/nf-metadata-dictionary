@@ -29,6 +29,7 @@ classes:
         - range: MicroscopyImagingPlatformEnum
         - range: MRIPlatformEnum
         - range: ImagingSystemPlatformEnum
+        required: false
       fileFormat:
         any_of:
         - range: ImagingFileFormatEnum
@@ -40,6 +41,18 @@ classes:
     - assayTarget
     - auxiliaryAsset
 
+    rules:
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          platform:
+            value_presence: PRESENT
   MicroscopyAssayTemplate:
     annotations:
       required: false
@@ -61,8 +74,8 @@ classes:
       dataGranularity: specimen-level
     close_mappings:
     - htan:ImagingLevel2
-    description: Template for microscopy imaging data. For immunofluorescence or
-      immunohistochemistry assays, provide antibodyID.
+    description: Template for microscopy imaging data. For immunofluorescence or immunohistochemistry
+      assays, provide antibodyID.
     is_a: ImagingAssayTemplate
     slots:
     - parentSpecimenID
@@ -88,6 +101,8 @@ classes:
         - range: TabularFileFormatEnum
       dataType:
         ifabsent: string(image)
+      specimenID:
+        required: false
     rules:
     - description: If workingDistance is provided, workingDistanceUnit must be provided
       preconditions:
@@ -117,6 +132,17 @@ classes:
           specimenID:
             value_presence: PRESENT
 
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
   MRIAssayTemplate:
     annotations:
       required: false

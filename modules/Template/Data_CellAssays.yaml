@@ -22,7 +22,8 @@ classes:
         - in vivo tumor growth
         - in vitro tumorigenesis
       dataGranularity: specimen-level
-    description: 'Data that characterizes cell/tissue morphology or physiology often in the context of different experimental conditions'
+    description: 'Data that characterizes cell/tissue morphology or physiology often
+      in the context of different experimental conditions'
     is_a: BiologicalAssayDataTemplate
     slots:
     - parentSpecimenID
@@ -97,6 +98,20 @@ classes:
           specimenID:
             value_presence: PRESENT
 
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+    slot_usage:
+      specimenID:
+        required: false
   FlowCytometryTemplate:
     annotations:
       required: false
@@ -122,9 +137,22 @@ classes:
         ifabsent: string(flow cytometry)
       platform:
         range: FlowCytometryPlatformEnum
+        required: false
       fileFormat:
         range: OtherFileFormatEnum
 
+    rules:
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          platform:
+            value_presence: PRESENT
   ElectrophysiologyAssayTemplate:
     annotations:
       templateUsage: common
@@ -157,6 +185,8 @@ classes:
         any_of:
         - range: OtherFileFormatEnum
         - range: TabularFileFormatEnum
+      platform:
+        required: false
     rules:
     - description: If experimentalTimepoint is provided, timepointUnit must be provided
       preconditions:
@@ -168,6 +198,17 @@ classes:
           timepointUnit:
             value_presence: PRESENT
 
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          platform:
+            value_presence: PRESENT
   PlateBasedReporterAssayTemplate:
     annotations:
       required: false
@@ -216,11 +257,13 @@ classes:
       individualID:
         required: false
       compoundName:
-        required: true
+        required: false
       compoundDose:
-        required: true
+        required: false
       compoundDoseUnit:
-        required: true
+        required: false
+      specimenID:
+        required: false
     rules:
     - description: If experimentalTimepoint is provided, timepointUnit must be provided
       preconditions:
@@ -238,5 +281,22 @@ classes:
             value_presence: PRESENT
       postconditions:
         slot_conditions:
+          compoundDoseUnit:
+            value_presence: PRESENT
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+          compoundName:
+            value_presence: PRESENT
+          compoundDose:
+            value_presence: PRESENT
           compoundDoseUnit:
             value_presence: PRESENT

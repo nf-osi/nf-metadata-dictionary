@@ -12,9 +12,9 @@ classes:
       dataGranularity: specimen-level
     close_mappings:
     - htan:VisiumSpatialTranscriptomicsLevel1
-    description: Template for describing sequencing-based and expression data files from
-      spatial transcriptomics experiments (e.g., FASTQ files and count matrices from 10x
-      Visium, 10x Visium CytAssist, NanoString CosMx, GeoMx).
+    description: Template for describing sequencing-based and expression data files
+      from spatial transcriptomics experiments (e.g., FASTQ files and count matrices
+      from 10x Visium, 10x Visium CytAssist, NanoString CosMx, GeoMx).
     is_a: GeneticsAssayTemplate
     slots:
     - captureArea
@@ -36,6 +36,20 @@ classes:
       dataType:
         ifabsent: string(gene expression)
 
+      libraryPreparationMethod:
+        required: false
+    rules:
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          libraryPreparationMethod:
+            value_presence: PRESENT
   SpatialTranscriptomicsImagingTemplate:
     annotations:
       required: false
@@ -48,8 +62,8 @@ classes:
         - spatial transcriptomics
       dataGranularity: specimen-level
     description: Template for describing imaging data files from spatial transcriptomics
-      experiments, such as tissue section histology or fluorescence images (e.g., from
-      10x Visium, NanoString CosMx, GeoMx).
+      experiments, such as tissue section histology or fluorescence images (e.g.,
+      from 10x Visium, NanoString CosMx, GeoMx).
     is_a: ImagingAssayTemplate
     slots:
     - parentSpecimenID
@@ -69,3 +83,17 @@ classes:
         range: ImagingFileFormatEnum
       dataType:
         ifabsent: string(image)
+      specimenID:
+        required: false
+    rules:
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT

@@ -1,0 +1,58 @@
+# Relaxed conditional validation by resourceType (issue #825)
+#
+# Co-located auxiliary files (manifest.csv, .log, .out, etc.) carry a
+# non-experimentalData resourceType (manifest, metadata, report, workflow
+# report, tool, result, weblink, protocol) and should validate with only
+# fileFormat + resourceType required. experimentalData files keep the full
+# template requirements (re-required via resourceType-conditional rules).
+
+schema: ProcessedAggregatedDataTemplate
+instances:
+  - file: data/ProcessedAggregatedDataTemplate/valid_manifest_relaxed.json
+    description: Manifest co-located file — only fileFormat + resourceType required
+    expected: valid
+  - file: data/ProcessedAggregatedDataTemplate/valid_workflowreport_relaxed.json
+    description: Workflow report file — relaxed validation
+    expected: valid
+  - file: data/ProcessedAggregatedDataTemplate/invalid_experimentaldata_missing_required.json
+    description: experimentalData still requires dataType/dataSubtype/assay
+    expected: invalid
+    reason: resourceType is experimentalData but dataType/dataSubtype/assay missing
+  - file: data/ProcessedAggregatedDataTemplate/invalid_manifest_missing_fileformat.json
+    description: fileFormat stays unconditionally required even for auxiliary files
+    expected: invalid
+    reason: fileFormat is required for all resource types
+  - file: data/ProcessedAggregatedDataTemplate/invalid_missing_resourcetype.json
+    description: resourceType is the discriminator and stays unconditionally required
+    expected: invalid
+    reason: resourceType is required for all file templates
+---
+schema: WGSTemplate
+instances:
+  - file: data/WGSTemplate/valid_metadata_relaxed.json
+    description: Auxiliary metadata file in a genomics folder — genetics-tier fields (specimenID, platform, libraryStrand, ...) not required
+    expected: valid
+  - file: data/WGSTemplate/invalid_experimentaldata_missing_required.json
+    description: experimentalData still requires the full genomics annotation set
+    expected: invalid
+    reason: resourceType is experimentalData but specimenID/platform/library*/etc. missing
+---
+schema: MaterialScienceAssayTemplate
+instances:
+  - file: data/MaterialScienceAssayTemplate/valid_metadata_relaxed.json
+    description: Non-biological assay — auxiliary file relaxed (specimenID/platform not required)
+    expected: valid
+  - file: data/MaterialScienceAssayTemplate/invalid_experimentaldata_missing_required.json
+    description: experimentalData still requires specimenID/platform/dataType/dataSubtype/assay
+    expected: invalid
+    reason: resourceType is experimentalData but required annotations missing
+---
+schema: PlateBasedReporterAssayTemplate
+instances:
+  - file: data/PlateBasedReporterAssayTemplate/valid_manifest_relaxed.json
+    description: Manifest in a plate-based reporter folder — compound* and specimen fields not required
+    expected: valid
+  - file: data/PlateBasedReporterAssayTemplate/invalid_experimentaldata_missing_compound.json
+    description: experimentalData still requires compoundName/compoundDose/compoundDoseUnit
+    expected: invalid
+    reason: resourceType is experimentalData but compound* fields missing

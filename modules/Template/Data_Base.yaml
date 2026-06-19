@@ -27,9 +27,9 @@ classes:
     description: 'A template defining basic metadata on deposited data artifacts (i.e.
       files) from experimental assays involving biosamples. Donor/individual attributes
       (species, sex, age, diagnosis) describe the original donor (e.g., human patient
-      tumor). For cell lines, individualID references syn51730943. antibodyID
-      and geneticReagentID reference treatments/reagents. For PDX data, use
-      PdxGenomicsAssayTemplate which includes model* attributes.'
+      tumor). For cell lines, individualID references syn51730943. antibodyID and
+      geneticReagentID reference treatments/reagents. For PDX data, use PdxGenomicsAssayTemplate
+      which includes model* attributes.'
     is_a: FileBasedTemplate
     slots:
     - dataType
@@ -55,12 +55,13 @@ classes:
           age:
             value_presence: PRESENT
             none_of:
-              - equals_string: Unknown
+            - equals_string: Unknown
       postconditions:
         slot_conditions:
           ageUnit:
             value_presence: PRESENT
-    - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value for ages at or above this threshold (HIPAA Safe Harbor)
+    - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value
+        for ages at or above this threshold (HIPAA Safe Harbor)
       preconditions:
         slot_conditions:
           species:
@@ -78,9 +79,47 @@ classes:
         slot_conditions:
           dataSubtype:
             value_presence: PRESENT
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          dataType:
+            value_presence: PRESENT
+          dataSubtype:
+            value_presence: PRESENT
+          assay:
+            value_presence: PRESENT
+          individualID:
+            value_presence: PRESENT
+          species:
+            value_presence: PRESENT
+          diagnosis:
+            value_presence: PRESENT
+          tumorType:
+            value_presence: PRESENT
     annotations:
       dataGranularity: specimen-level
 
+    slot_usage:
+      dataType:
+        required: false
+      dataSubtype:
+        required: false
+      assay:
+        required: false
+      individualID:
+        required: false
+      species:
+        required: false
+      diagnosis:
+        required: false
+      tumorType:
+        required: false
   NonBiologicalAssayDataTemplate:
     abstract: true
     description: 'Describes data artifacts (i.e. files) from an experimental/physical-sciences
@@ -97,3 +136,26 @@ classes:
     - assay
     annotations:
       dataGranularity: specimen-level
+    slot_usage:
+      dataType:
+        required: false
+      dataSubtype:
+        required: false
+      assay:
+        required: false
+    rules:
+    - description: 'Relaxed conditional validation (issue #825): the listed fields
+        are required only for experimentalData. Auxiliary co-located files (manifest,
+        metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
+      preconditions:
+        slot_conditions:
+          resourceType:
+            equals_string: experimentalData
+      postconditions:
+        slot_conditions:
+          dataType:
+            value_presence: PRESENT
+          dataSubtype:
+            value_presence: PRESENT
+          assay:
+            value_presence: PRESENT
