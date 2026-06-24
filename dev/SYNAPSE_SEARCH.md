@@ -19,6 +19,16 @@ In practice:
 - Synonym set fixture (`rules`): [synonym_set_nf_rules.json](/tests/search/synonym_set_nf_rules.json)
 - Text analyzer fixture: [text_analyzer_standard_with_nf_synonyms.json](/tests/search/text_analyzer_standard_with_nf_synonyms.json)
 
+## Registering a Synonym Set
+
+Use `utils/register-synonyms.py` to register or update a `SynonymSet`. It resolves the live `id` and `etag` automatically (matching by `name`, or pass `--synonym-set-id`), then issues the `PUT /search/synonym/set/{id}` update (or a `POST` create with `--create`). Auth comes from `SYNAPSE_AUTH_TOKEN` (needs the `modify` scope).
+
+```bash
+export SYNAPSE_AUTH_TOKEN=<token>
+python utils/register-synonyms.py --file tests/search/synonym_set_nf_domain.json
+# --dry-run to preview, --create to make a new set
+```
+
 ## Implementation Note
 
 The JSON files above are intentionally minimal test fixtures. They are useful as understandable examples and for verifying the Synapse search-management, but they are not yet a complete source for NF search synonyms.
