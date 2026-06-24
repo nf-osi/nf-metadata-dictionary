@@ -91,6 +91,12 @@ These are **search-time** synonyms (`synonym_graph`): expansion happens on the q
 - **Replace (`a => b`)** when literal short-form hits are themselves noise — e.g. `sc => schwann cell` (a bare `sc` matches `sc`-prefixed IDs everywhere).
 - **Keep (`a => a, b`)** when the abbreviation should find the concept yet retain real entities that contain it — e.g. `pnf` must keep the `3PNF_*` cell lines, `cnf` its 7 literal docs. Prefer this over a bare `a => b`, which silently drops them.
 
+Further reading:
+
+- [OpenSearch — Synonym graph token filter](https://docs.opensearch.org/latest/analyzers/token-filters/synonym-graph/): the filter Synapse uses; covers `synonym_graph` syntax and multi-word handling.
+- [Apache Solr — Filters reference](https://solr.apache.org/guide/solr/latest/indexing-guide/filters.html): defines the `=>` explicit-mapping rule (the original token is dropped unless also listed on the right) and equivalent `a, b` rules.
+- [Search synonyms: index-time vs query-time](https://bigdataboutique.com/blog/search-synonyms-elasticsearch-opensearch): why query-time `synonym_graph` (what we use) avoids reindexing and position bugs.
+
 ### 2. Text Analyzer Referencing the Synonym Set
 
 Reference:
