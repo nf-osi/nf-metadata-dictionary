@@ -19,6 +19,16 @@ In practice:
 - Synonym set fixture (`rules`): [synonym_set_nf_rules.json](/tests/search/synonym_set_nf_rules.json)
 - Text analyzer fixture: [text_analyzer_standard_with_nf_synonyms.json](/tests/search/text_analyzer_standard_with_nf_synonyms.json)
 
+## Registering a Synonym Set
+
+Use `utils/register-synonyms.py` to register or update a `SynonymSet`. It resolves the live `id` and `etag` automatically (matching by `name`, or pass `--synonym-set-id`), then issues the `PUT /search/synonym/set/{id}` update (or a `POST` create with `--create`). Auth comes from `SYNAPSE_AUTH_TOKEN` (needs the `modify` scope).
+
+```bash
+export SYNAPSE_AUTH_TOKEN=<token>
+python utils/register-synonyms.py --file tests/search/synonym_set_nf_domain.json
+# --dry-run to preview, --create to make a new set
+```
+
 ## Implementation Note
 
 The JSON files above are intentionally minimal test fixtures. They are useful as understandable examples and for verifying the Synapse search-management, but they are not yet a complete source for NF search synonyms.
@@ -57,19 +67,35 @@ The synonym set resource can be defined in two formats. The preferred one is the
     "synonyms": [
       "nf, neurofibromatosis",
       "nf1, neurofibromatosis type 1",
-      "cnf => cutaneous neurofibroma",
+      "cnf => cnf, cutaneous neurofibroma",
       "mpnst, malignant peripheral nerve sheath tumor",
       "sc => schwann cell",
-      "pnf => plexiform neurofibroma"
+      "pnf => pnf, plexiform neurofibroma"
     ]
   }
 }
 ```
 
-Notes on rule direction:
+#### Choosing a rule form
 
-- `a, b, c` mean the terms are genuinely interchangeable for search and yields equivalent rules
-- `a => b` means expansion should flow one way only; this becomes a directional rule, usually better for abbreviations or shorthand that should expand to a canonical phrase without forcing the canonical phrase to match every short form in reverse. In our NF example, `cnf => cutaneous neurofibroma` and `pnf => plexiform neurofibroma` are directional because the abbreviations should expand to the full term, but the full term should not necessarily be rewritten back to the abbreviation.
+These are **search-time** synonyms (`synonym_graph`): expansion happens on the query, never on indexed docs, so query text is lowercased before the filter — keep rule keys lowercase.
+
+| Form | Example | Effect |
+| --- | --- | --- |
+| **Equivalent** `a, b` | `mpnst, malignant peripheral nerve sheath tumor` | symmetric — a search for *either* form matches docs containing *either*; keeps all literal hits |
+| **Replace** `a => b` | `sc => schwann cell` | query `a` is rewritten to `b`; literal `a` hits are **dropped** |
+| **Keep** `a => a, b` | `pnf => pnf, plexiform neurofibroma` | `a` expands to find the concept **and** retains its own literal hits; `b` does not drag `a` back in |
+
+**Default to equivalent (`a, b`)** — simplest and lossless. Switch to directional only when the short form is a noisy token (very short, a common word, appears in unrelated contexts):
+
+- **Replace (`a => b`)** when literal short-form hits are themselves noise — e.g. `sc => schwann cell` (a bare `sc` matches `sc`-prefixed IDs everywhere).
+- **Keep (`a => a, b`)** when the abbreviation should find the concept yet retain real entities that contain it — e.g. `pnf` must keep the `3PNF_*` cell lines, `cnf` its 7 literal docs. Prefer this over a bare `a => b`, which silently drops them.
+
+Further reading:
+
+- [OpenSearch — Synonym graph token filter](https://docs.opensearch.org/latest/analyzers/token-filters/synonym-graph/): the filter Synapse uses; covers `synonym_graph` syntax and multi-word handling.
+- [Apache Solr — Filters reference](https://solr.apache.org/guide/solr/latest/indexing-guide/filters.html): defines the `=>` explicit-mapping rule (the original token is dropped unless also listed on the right) and equivalent `a, b` rules.
+- [Search synonyms: index-time vs query-time](https://bigdataboutique.com/blog/search-synonyms-elasticsearch-opensearch): why query-time `synonym_graph` (what we use) avoids reindexing and position bugs.
 
 ### 2. Text Analyzer Referencing the Synonym Set
 
