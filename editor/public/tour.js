@@ -5,42 +5,72 @@ const SEEN_KEY = 'nf-editor-tour-seen';
 const STEPS = [
   {
     title: 'Welcome to the Model Editor 👋',
-    body: 'A visual, local-only workspace for the NF metadata model. In ~45 seconds, here\'s everything it does. Every change you make writes straight to the source YAML in your working tree — nothing is committed.',
+    body: 'A visual, local-only workspace for the NF metadata model. This quick tour covers everything it does. Every change writes straight to the source YAML in your working tree — nothing is committed, so you review with <code>git diff</code> as usual.',
   },
   {
     view: 'graph', target: '.tabs',
-    title: 'The workspaces',
-    body: 'Switch between the <b>Graph Editor</b> (explore & edit), <b>Ontology Gaps</b> (find values you\'re missing), <b>Import Ontology</b> (pull in terms wholesale), and <b>Changes</b> (review everything different from <code>main</code> before committing).',
+    title: 'Four workspaces',
+    body: '<b>Graph Editor</b> (explore & edit) · <b>Ontology Gaps</b> (find values you\'re missing) · <b>Import Ontology</b> (pull in terms wholesale) · <b>Changes</b> (review the diff vs <code>main</code> before committing).',
   },
   {
     view: 'graph', target: '#entity-search',
     title: 'Find anything',
-    body: 'Search across all <span style="color:#3b6ef0;font-weight:600">classes</span>, <span style="color:#0fa371;font-weight:600">slots</span>, and <span style="color:#ef8a17;font-weight:600">enums</span> — or load a whole module. Click a result to drop it on the canvas with its neighbors.',
+    body: 'Search across all <span style="color:#2e4c8c;font-weight:600">classes</span>, <span style="color:#2e7d6e;font-weight:600">slots</span>, and <span style="color:#b9791a;font-weight:600">enums</span>. Click a result to focus it. <b>⌂ Whole model</b> resets to the full class hierarchy.',
+  },
+  {
+    view: 'graph', target: '#legend',
+    title: 'Filter by kind',
+    body: 'These chips are toggles — click <b>class</b>, <b>slot</b>, or <b>enum</b> to show or hide that kind in the list.',
   },
   {
     view: 'graph', target: '.canvas-wrap',
-    title: 'See how it all links',
-    body: 'The graph draws <code>is_a</code>, <code>uses</code>, and <code>range</code> relationships between nodes. <b>Double-click</b> any node to expand its connections, drag to pan, scroll to zoom.',
+    title: 'A hierarchical map',
+    body: 'The graph shows one scope at a time, laid out as a tree, with <code>is_a</code> / <code>uses</code> / <code>range</code> links. <b>Double-click</b> a node to re-center the view on it; drag to pan, scroll to zoom.',
   },
   {
     view: 'graph', target: '#inspector',
     title: 'Edit in place',
-    body: 'Select a node to edit it here — slot ranges, required flags, descriptions, enum values. Saves land in the correct source file as a <b>minimal one-line diff</b>.',
+    body: 'Select a node to edit it here — slot range/required/description, enum values and their ontology mappings, class slots. Saves land in the correct source file as a <b>minimal, one-line diff</b>.',
+  },
+  {
+    view: 'graph', target: '#add-term-btn',
+    title: 'Add a term — assisted',
+    body: 'The fast path for the #1 task. Pick a value set, type a term, and it <b>live-searches the right ontologies</b> (EBI OLS) and fills in the value, <code>meaning:</code> (CURIE), <code>source:</code>, description, and synonyms — one click, no copy-paste. (Shortcut: press <b>A</b>.)',
+  },
+  {
+    view: 'graph', target: '#new-class-btn',
+    title: 'Add a class / template',
+    body: 'Create a new template: choose a parent to inherit from, the slots to include, and — for concrete templates — the required <code>dataType</code>. It can also register the template in the Data Curator App config.',
   },
   {
     view: 'gaps', target: '#gaps-list',
-    title: 'Fill the ontology gaps',
-    body: 'These enums have values with no <code>meaning:</code> CURIE. Pick one, hit <b>Find mapping</b> on a value, and click an EBI&nbsp;OLS suggestion to write it — no copy-paste.',
+    title: 'Ontology coverage',
+    body: 'The real gap is usually a <b>missing value</b>. Pick a value set, search an ontology <b>branch</b>, and it diffs the branch against your enum to show the terms you don\'t have yet — add them in bulk. (You can also fill mappings on existing values.)',
   },
   {
     view: 'import', target: '.import-grid',
     title: 'Import ontology subtrees',
-    body: 'Search a root term (e.g. a disease or assay), pull its descendants from OLS, pick the ones you want, and import them as a new enum or append to an existing one — with <code>meaning:</code> + <code>source:</code> filled in.',
+    body: 'Search a root term (a disease, assay, etc.), pull its descendants from OLS, pick the ones you want, and import them as a new enum or append to an existing one — <code>meaning:</code> + <code>source:</code> filled in.',
+  },
+  {
+    view: 'changes', target: '#diff-list',
+    title: 'Review your changes',
+    body: 'See everything different from <code>main</code> — committed and unsaved edits — with a real diff. Defaults to <b>model files only</b>; untick to see the whole branch.',
+  },
+  {
+    view: 'graph', target: '#build-bar',
+    title: 'Validate & build',
+    body: 'A live <b>changed-files</b> indicator, plus one-click <b>Check model</b> (QC — undeclared prefixes, untyped slots, missing dataTypes…), <b>Rebuild</b>, <b>Generate schemas</b>, <b>Check limits</b>, and <b>Run tests</b>.',
+  },
+  {
+    view: 'graph', target: '#terminal-btn',
+    title: 'Terminal for the rest',
+    body: 'Open a real shell at the repo root — run <b><code>claude</code></b> (Claude Code) or any CLI for bulk / out-of-scope edits. The app <b>auto-reflects</b> external edits, so changes show up here with no reload.',
   },
   {
     view: 'graph', target: '#tutorial-btn',
     title: 'That\'s the tour!',
-    body: 'Reopen this anytime from the <b>Tutorial</b> button. Remember: review your edits with <code>git diff</code> before committing. Happy curating!',
+    body: 'Reopen this anytime from <b>Tutorial</b>. Everything you do is a normal working-tree edit — review with <code>git diff</code> and commit like always. Happy curating!',
   },
 ];
 
