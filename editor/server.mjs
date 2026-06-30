@@ -19,7 +19,7 @@ import { exec, execFile } from 'child_process';
 import { existsSync as fexists } from 'fs';
 import { resolve as rpath } from 'path';
 import { loadModel, buildGraph, modelSummary, readSourceFile, classifyRange, slotRanges, ROOT } from './model.mjs';
-import { setScalarField, addEnumValues, createEnum, createClass, addDcaEntry, addListItem, setSlotUsage } from './patch.mjs';
+import { setScalarField, addEnumValues, createEnum, createClass, addDcaEntry, addListItem, setSlotUsage, removeEnumValue } from './patch.mjs';
 import { searchOntology, getDescendants, getTerm, getParents, domainHint } from './ontology.mjs';
 
 const KINDS = { classes: 'classes', slots: 'slots', enums: 'enums' };
@@ -98,6 +98,12 @@ app.patch('/api/enums/:name/value/:value', wrap((req, res) => {
   const rel = fileFor('enums', name);
   const result = setScalarField(rel, ['enums', name, 'permissible_values', value], field, val);
   res.json({ ok: true, file: rel, ...result });
+}));
+
+// Remove a permissible value from an enum.
+app.delete('/api/enums/:name/value/:value', wrap((req, res) => {
+  const rel = fileFor('enums', req.params.name);
+  res.json({ ok: true, file: rel, ...removeEnumValue(rel, req.params.name, req.params.value) });
 }));
 
 // Append permissible values to an existing enum (bulk import / manual add).

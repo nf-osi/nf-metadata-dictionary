@@ -327,6 +327,21 @@ export function addListItem(rel, segs, item) {
   return { changed: true };
 }
 
+/** Delete a permissible value (and its whole block) from an enum. */
+export function removeEnumValue(rel, enumName, value) {
+  const { abs, text } = load(rel);
+  if (text == null) throw new Error(`file not found: ${rel}`);
+  const trailingNL = text.endsWith('\n');
+  const lines = text.replace(/\n$/, '').split('\n');
+  const pvIdx = findPath(lines, ['enums', enumName, 'permissible_values']);
+  if (pvIdx < 0) throw new Error(`permissible_values not found for enum ${enumName}`);
+  const vIdx = findChild(lines, pvIdx, value);
+  if (vIdx < 0) throw new Error(`value "${value}" not found in ${enumName}`);
+  lines.splice(vIdx, blockEnd(lines, vIdx) - vIdx);
+  save(abs, trailingNL ? [...lines, ''] : lines);
+  return { removed: value };
+}
+
 /**
  * Edit a slot's contextual override inside a class's `slot_usage`.
  *   ranges:   array of range names — 1 => `range:`, >1 => `any_of:`; [] / undefined => leave range untouched

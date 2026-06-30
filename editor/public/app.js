@@ -483,7 +483,18 @@ function enumValueRow(enumNode, v) {
   const findBtn = el('button', { className: 'btn btn-sm', textContent: v.meaning ? 'Re-map' : 'Find mapping' });
   const sugg = el('div', { className: 'suggestions' });
   findBtn.addEventListener('click', () => suggestFor(enumNode, v, sugg, meaning));
-  row.append(el('div', { className: 'mini' }, findBtn), sugg);
+  const removeBtn = el('button', { className: 'btn btn-sm', textContent: 'Remove', title: 'delete this value from the enum' });
+  removeBtn.addEventListener('click', async () => {
+    if (!confirm(`Remove “${v.value}” from ${enumNode.name}?\nThis deletes the permissible value from the source YAML (existing data using it would no longer validate).`)) return;
+    try {
+      await api('DELETE', `/api/enums/${encodeURIComponent(enumNode.name)}/value/${encodeURIComponent(v.value)}`);
+      const i = enumNode.values.findIndex((x) => x.value === v.value);
+      if (i >= 0) { if (enumNode.values[i].meaning) enumNode.mappedCount = Math.max(0, enumNode.mappedCount - 1); enumNode.values.splice(i, 1); enumNode.valueCount = Math.max(0, enumNode.valueCount - 1); }
+      const n = STATE.cy?.getElementById(enumNode.id); if (n?.length) { n.data('valueCount', enumNode.valueCount); n.data('mappedCount', enumNode.mappedCount); }
+      toast(`Removed “${v.value}”`, 'ok'); refreshChanges(); renderSidebar(); row.remove();
+    } catch (e) { toast(e.message, 'err'); }
+  });
+  row.append(el('div', { className: 'mini' }, findBtn, removeBtn), sugg);
   return row;
 }
 
