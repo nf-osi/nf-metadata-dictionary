@@ -9,8 +9,8 @@ const STEPS = [
   },
   {
     view: 'graph', target: '.tabs',
-    title: 'Four workspaces',
-    body: '<b>Graph Editor</b> (explore & edit) · <b>Ontology Gaps</b> (find values you\'re missing) · <b>Import Ontology</b> (pull in terms wholesale) · <b>Changes</b> (review the diff vs <code>main</code> before committing).',
+    title: 'Five workspaces',
+    body: '<b>Graph Editor</b> (explore & edit) · <b>Ontology Gaps</b> (find values you\'re missing) · <b>Import Ontology</b> (pull in terms wholesale) · <b>Changes</b> (diff vs <code>main</code>) · <b>Issues</b> (the GitHub backlog).',
   },
   {
     view: 'graph', target: '#entity-search',
@@ -66,6 +66,11 @@ const STEPS = [
     view: 'graph', target: '#terminal-btn',
     title: 'Terminal for the rest',
     body: 'Open a real shell at the repo root — run <b><code>claude</code></b> (Claude Code) or any CLI for bulk / out-of-scope edits. The app <b>auto-reflects</b> external edits, so changes show up here with no reload.',
+  },
+  {
+    view: 'issues', target: '#issues-list',
+    title: 'Work the backlog',
+    body: 'The repo\'s GitHub issues, pulled right in. Read one here, then <b>Copy prompt for Claude</b>, jump to the <b>terminal</b>, or open it on GitHub. Filter to <code>linkml-review</code> for the model-review items.',
   },
   {
     view: 'graph', target: '#tutorial-btn',

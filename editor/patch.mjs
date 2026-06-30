@@ -327,4 +327,58 @@ export function addListItem(rel, segs, item) {
   return { changed: true };
 }
 
+/**
+ * Edit a slot's contextual override inside a class's `slot_usage`.
+ *   ranges:   array of range names — 1 => `range:`, >1 => `any_of:`; [] / undefined => leave range untouched
+ *   required: true | false (set) | null (remove the override) | undefined (leave untouched)
+ * Only the range/any_of/required lines are touched; other keys (e.g. ifabsent) are preserved.
+ * Empties (slot entry / slot_usage block) are cleaned up.
+ */
+export function setSlotUsage(rel, className, slot, { ranges, required } = {}) {
+  const { abs, text } = load(rel);
+  if (text == null) throw new Error(`file not found: ${rel}`);
+  const trailingNL = text.endsWith('\n');
+  const lines = text.replace(/\n$/, '').split('\n');
+
+  const classesIdx = findTopKey(lines, 'classes');
+  if (classesIdx < 0) throw new Error(`no classes: block in ${rel}`);
+  const classIdx = findChild(lines, classesIdx, className);
+  if (classIdx < 0) throw new Error(`class ${className} not found in ${rel}`);
+  const cfi = childIndent(lines, classIdx) ?? indentOf(lines[classIdx]) + 2;
+
+  let suIdx = findChild(lines, classIdx, 'slot_usage');
+  if (suIdx < 0) { const end = blockEnd(lines, classIdx); lines.splice(end, 0, ' '.repeat(cfi) + 'slot_usage:'); suIdx = end; }
+  const si = childIndent(lines, suIdx) ?? indentOf(lines[suIdx]) + 2; // slot-entry indent
+  const fi = si + 2;                                                  // field indent within an entry
+
+  let slotIdx = findChild(lines, suIdx, slot);
+  if (slotIdx < 0) { const end = blockEnd(lines, suIdx); lines.splice(end, 0, ' '.repeat(si) + `${quoteKey(slot)}:`); slotIdx = end; }
+
+  if (ranges && ranges.length) {
+    const rm = [];
+    const rIdx = findChild(lines, slotIdx, 'range'); if (rIdx >= 0) rm.push([rIdx, rIdx + 1]);
+    const aIdx = findChild(lines, slotIdx, 'any_of'); if (aIdx >= 0) rm.push([aIdx, blockEnd(lines, aIdx)]);
+    rm.sort((a, b) => b[0] - a[0]).forEach(([s, e]) => lines.splice(s, e - s));
+    slotIdx = findChild(lines, suIdx, slot);
+    const ins = [];
+    if (ranges.length > 1) { ins.push(' '.repeat(fi) + 'any_of:'); ranges.forEach((r) => ins.push(' '.repeat(fi + 2) + `- range: ${fmtScalar(r)}`)); }
+    else ins.push(' '.repeat(fi) + `range: ${fmtScalar(ranges[0])}`);
+    lines.splice(slotIdx + 1, 0, ...ins);
+  }
+  if (required !== undefined) {
+    slotIdx = findChild(lines, suIdx, slot);
+    const qIdx = findChild(lines, slotIdx, 'required');
+    if (required === null) { if (qIdx >= 0) lines.splice(qIdx, 1); }
+    else { const ln = ' '.repeat(fi) + `required: ${required === true || required === 'true'}`; if (qIdx >= 0) lines[qIdx] = ln; else lines.splice(slotIdx + 1, 0, ln); }
+  }
+  // prune emptied entry / block
+  slotIdx = findChild(lines, suIdx, slot);
+  if (slotIdx >= 0 && childIndent(lines, slotIdx) == null) lines.splice(slotIdx, 1);
+  suIdx = findChild(lines, classIdx, 'slot_usage');
+  if (suIdx >= 0 && childIndent(lines, suIdx) == null) lines.splice(suIdx, 1);
+
+  save(abs, trailingNL ? [...lines, ''] : lines);
+  return { ok: true };
+}
+
 export { keyOf, findPath, findChild, blockEnd, childIndent };

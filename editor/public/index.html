@@ -25,9 +25,9 @@
       <button class="tab" data-view="gaps" role="tab">Ontology Gaps</button>
       <button class="tab" data-view="import" role="tab">Import Ontology</button>
       <button class="tab" data-view="changes" role="tab">Changes</button>
+      <button class="tab" data-view="issues" role="tab">Issues</button>
     </nav>
     <div class="topbar-right">
-      <div class="stats" id="stats"></div>
       <button class="add-btn" id="add-term-btn" title="Add a term (A)">
         <span class="add-icon">+</span> Add term
       </button>
@@ -149,12 +149,37 @@
         <div class="gaps-controls">
           <button class="btn btn-sm" id="diff-refresh">Refresh</button>
           <label class="chk"><input type="checkbox" id="diff-model-only" checked /> model files only</label>
+          <button class="btn btn-sm btn-primary" id="pr-btn">Create pull request</button>
           <span id="diff-summary" class="muted"></span>
         </div>
       </div>
       <div class="gaps-body">
         <div id="diff-list" class="gaps-list"></div>
         <div id="diff-detail" class="gaps-detail"><div class="inspector-empty">Select a file to see its diff.</div></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ ISSUES ============ -->
+  <main class="view" id="view-issues">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>GitHub issues</h2>
+        <p>Open issues from the repo — read one here, then resolve it in the terminal or hand it to Claude Code. Filter to <code>linkml-review</code> for the model-review backlog.</p>
+        <div class="gaps-controls">
+          <button class="btn btn-sm" id="issues-refresh">Refresh</button>
+          <input type="search" id="issues-label" class="search" placeholder="filter by label, e.g. linkml-review" />
+          <select id="issues-state" class="select" style="max-width:120px">
+            <option value="open">open</option>
+            <option value="closed">closed</option>
+            <option value="all">all</option>
+          </select>
+          <span id="issues-summary" class="muted"></span>
+        </div>
+      </div>
+      <div class="gaps-body">
+        <div id="issues-list" class="gaps-list"></div>
+        <div id="issues-detail" class="gaps-detail"><div class="inspector-empty">Select an issue to read it.</div></div>
       </div>
     </div>
   </main>

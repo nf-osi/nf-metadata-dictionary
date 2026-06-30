@@ -130,7 +130,9 @@ h3 { margin: 0 0 8px; font-size: 10.5px; text-transform: uppercase; letter-spaci
 .graph-status { right: 14px; top: 12px; font-family: var(--font-mono); font-weight: 500; }
 
 /* ---------- Inspector ---------- */
-.inspector { background: var(--surface); border-left: 1.5px solid var(--rule-2); padding: 18px; overflow: auto; }
+.inspector { background: var(--surface); border-left: 1.5px solid var(--rule-2); padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+.insp-top { flex: none; padding: 18px 18px 13px; border-bottom: 1px solid var(--rule); background: var(--surface); }
+.insp-scroll { flex: 1; min-height: 0; overflow: auto; padding: 14px 18px 18px; }
 .inspector-empty { color: var(--faint); font-size: 13px; padding: 36px 8px; text-align: center; font-style: italic; }
 .insp-kind { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--card); font-weight: 500; padding: 2px 9px; border-radius: 3px; display: inline-block; }
 .insp-kind.class { background: var(--class); } .insp-kind.slot { background: var(--slot); } .insp-kind.enum { background: var(--enum); }
@@ -309,6 +311,22 @@ input[type=checkbox], input[type=radio] { accent-color: var(--stamp); width: 15p
 .dl.hunk { background: var(--surface); color: var(--ink-soft); margin: 4px 0; }
 .dl.meta { color: var(--faint); }
 
+/* ---------- Create PR ---------- */
+.pr-files { display: flex; flex-direction: column; gap: 2px; max-height: 160px; overflow: auto; border: 1px solid var(--rule); border-radius: var(--r-sm); padding: 6px 8px; background: var(--surface); }
+.pr-file { font-family: var(--font-mono); font-size: 12px; }
+
+/* ---------- GitHub issues ---------- */
+.inum { font-family: var(--font-mono); color: var(--stamp); font-weight: 600; }
+.ilabels { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.ilabel { font-size: 10px; padding: 1px 8px; border-radius: 99px; background: var(--surface-2); border: 1px solid var(--rule); color: var(--ink-soft); white-space: nowrap; }
+.issue-head { display: flex; gap: 10px; align-items: center; }
+.issue-state { font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .06em; padding: 2px 9px; border-radius: 99px; color: #fff; }
+.issue-state.open { background: var(--verified); } .issue-state.closed { background: var(--stamp); }
+.issue-actions { display: flex; gap: 8px; margin: 0 0 16px; flex-wrap: wrap; }
+.issue-body { font-size: 13px; line-height: 1.6; color: var(--ink-2); white-space: pre-wrap; word-break: break-word; }
+.issue-body a { color: var(--stamp); }
+.issue-body code { background: var(--surface-3); }
+
 /* ---------- QC findings ---------- */
 .qc-list { display: flex; flex-direction: column; gap: 6px; }
 .qc-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--rule-2); border-left-width: 3px; border-radius: var(--r); background: var(--card); }
@@ -317,6 +335,15 @@ input[type=checkbox], input[type=radio] { accent-color: var(--stamp); width: 15p
 .qc-error .qc-sev { background: var(--stamp); } .qc-warn .qc-sev { background: var(--enum); } .qc-info .qc-sev { background: var(--faint); }
 .qc-msg { font-size: 13px; line-height: 1.45; }
 .qc-file { font-family: var(--font-mono); font-size: 11px; color: var(--faint); margin-top: 2px; }
+
+/* ---------- slot_usage editor (class inspector) ---------- */
+.su-list { display: flex; flex-direction: column; gap: 1px; }
+.su-row { display: flex; align-items: center; gap: 6px; padding: 4px 7px; border-radius: var(--r-sm); }
+.su-row:hover { background: var(--surface-2); }
+.su-name { flex: 1; cursor: pointer; font-size: 13px; }
+.su-name:hover { color: var(--stamp); }
+.su-gear { border: 1px solid var(--rule-2); background: var(--card); border-radius: var(--r-sm); cursor: pointer; font-size: 12px; line-height: 1; padding: 3px 8px; color: var(--ink-soft); }
+.su-gear:hover { border-color: var(--stamp); color: var(--stamp); }
 
 /* ---------- New-class: template annotation blocks ---------- */
 .tmpl-ann { border: 1px dashed var(--rule-2); border-radius: var(--r); padding: 12px; margin-bottom: 13px; background: var(--surface); }

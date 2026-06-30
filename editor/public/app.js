@@ -104,8 +104,10 @@ function applyDeepLink() {
 }
 
 function renderStats(s) {
+  const el = $('#stats');
+  if (!el) return; // stats were removed from the header
   const pct = s.enumValues ? Math.round((s.mappedEnumValues / s.enumValues) * 100) : 0;
-  $('#stats').innerHTML =
+  el.innerHTML =
     `<span class="stat-pill"><b>${s.classes}</b> classes</span>` +
     `<span class="stat-pill"><b>${s.slots}</b> slots</span>` +
     `<span class="stat-pill"><b>${s.enums}</b> enums</span>` +
@@ -118,6 +120,7 @@ function showView(view) {
   $$('.view').forEach((v) => v.classList.toggle('active', v.id === `view-${view}`));
   if (view === 'gaps') loadGaps();
   if (view === 'changes') loadDiff();
+  if (view === 'issues') loadIssues();
   if (STATE.cy && view === 'graph') STATE.cy.resize();
   if (location.hash !== `#${view}`) history.replaceState(null, '', `#${view}`);
 }
@@ -333,6 +336,15 @@ function inspectorHead(d) {
     d.file ? el('div', { className: 'insp-file', textContent: d.file }) : '');
 }
 
+// Render the inspector with a frozen top region and a scrolling body.
+function setInspector(top, body) {
+  const t = el('div', { className: 'insp-top' });
+  for (const n of top) if (n) t.append(n);
+  const b = el('div', { className: 'insp-scroll' });
+  for (const n of body) if (n) b.append(n);
+  $('#inspector').replaceChildren(t, b);
+}
+
 function fieldText(label, value, onSave, { textarea = false } = {}) {
   const input = textarea ? el('textarea', { value: value || '' }) : el('input', { type: 'text', value: value ?? '' });
   const btn = el('button', { className: 'btn btn-sm', textContent: 'Save' });
@@ -351,15 +363,18 @@ async function patchEntity(kind, name, field, value, btn) {
 }
 
 function renderClassInspector(d) {
-  const box = el('div', {}, inspectorHead(d));
-  box.append(fieldText('Description', d.description, (v, b) => patchEntity('classes', d.name, 'description', v, b), { textarea: true }));
-  // slots list + add
+  const body = el('div', {});
+  body.append(fieldText('Description', d.description, (v, b) => patchEntity('classes', d.name, 'description', v, b), { textarea: true }));
+  // slots list (each row: focus + ⚙ customize range/required for this template) + add
   const slotEdges = (STATE.edgesByNode.get(d.id) || []).filter((e) => e.type === 'uses' && e.source === d.id);
-  const chips = el('div', { className: 'chips' });
+  const slotsWrap = el('div', { className: 'su-list' });
   slotEdges.forEach((e) => {
-    const chip = el('span', { className: 'chip', textContent: NAME_OF(e.target) });
-    chip.addEventListener('click', () => { addNode(e.target, true); reconcileEdges(); relayout(); selectNode(e.target); });
-    chips.append(chip);
+    const sname = NAME_OF(e.target);
+    const name = el('span', { className: 'su-name', textContent: sname, title: 'focus this slot' });
+    name.addEventListener('click', () => focusEntity(e.target));
+    const gear = el('button', { className: 'su-gear', textContent: '⚙', title: 'customize range / required for this template' });
+    gear.addEventListener('click', () => openSlotUsage(d.name, sname));
+    slotsWrap.append(el('div', { className: 'su-row' }, name, gear));
   });
   const addInput = el('input', { type: 'text', placeholder: 'slot name to add…' });
   addInput.setAttribute('list', 'slot-options');
@@ -367,13 +382,13 @@ function renderClassInspector(d) {
   addBtn.addEventListener('click', async () => {
     const slot = addInput.value.trim(); if (!slot) return;
     try { const r = await api('POST', `/api/classes/${encodeURIComponent(d.name)}/slot`, { slot });
-      toast(r.changed ? `Added ${slot} → ${r.file}` : `${slot} already present`, 'ok'); addInput.value = ''; }
+      toast(r.changed ? `Added ${slot} → ${r.file}` : `${slot} already present`, 'ok'); addInput.value = ''; refreshChanges(); await refreshModel(d.id); }
     catch (e) { toast(e.message, 'err'); }
   });
-  box.append(el('div', { className: 'field' }, el('label', { textContent: `Slots (${slotEdges.length})` }), chips,
+  body.append(el('div', { className: 'field' }, el('label', { textContent: `Slots (${slotEdges.length}) — ⚙ to constrain per template` }), slotsWrap,
     el('div', { className: 'field inline', style: 'margin-top:6px' }, addInput, addBtn)));
   ensureSlotDatalist();
-  $('#inspector').replaceChildren(box);
+  setInspector([inspectorHead(d)], [body]);
 }
 
 function ensureSlotDatalist() {
@@ -382,43 +397,78 @@ function ensureSlotDatalist() {
   for (const [, d] of STATE.nodes) if (d.kind === 'slot') dl.append(el('option', { value: d.name }));
   document.body.append(dl);
 }
+function ensureRangeDatalist() {
+  if ($('#range-options')) return;
+  const dl = el('datalist', { id: 'range-options' });
+  for (const [, d] of STATE.nodes) if (d.kind === 'enum' || d.kind === 'class') dl.append(el('option', { value: d.name }));
+  document.body.append(dl);
+}
+
+// Edit a slot's contextual override (range / any_of / required) for one template.
+async function openSlotUsage(className, slot) {
+  ensureRangeDatalist();
+  let ov = {};
+  try { const r = await api('GET', `/api/entity/classes/${encodeURIComponent(className)}`); ov = r.def?.slot_usage?.[slot] || {}; } catch {}
+  const curRanges = ov.any_of ? ov.any_of.map((a) => a.range).filter(Boolean) : (ov.range ? [ov.range] : []);
+  const m = openModal({ title: `Customize “${slot}”`, subtitle: `in ${className} — overrides this template only (slot_usage)`, width: '520px' });
+
+  const ranges = chipField('add a range — enum or class…', 'range-options', curRanges);
+  const rangeNote = el('p', { className: 'muted', style: 'font-size:11.5px;margin:4px 0 0', textContent: 'One range, or several for an any_of union. Leave as-is to keep the current range.' });
+  const reqSel = el('select', { className: 'select' });
+  [['inherit', 'Required: inherit from slot'], ['required', 'Required: yes (in this template)'], ['optional', 'Required: no (in this template)']]
+    .forEach(([v, t]) => reqSel.append(el('option', { value: v, textContent: t })));
+  reqSel.value = ov.required === true ? 'required' : ov.required === false ? 'optional' : 'inherit';
+
+  m.body.append(labeledField('Range', el('div', {}, ranges.el, rangeNote)), labeledField('Required', reqSel));
+
+  const save = el('button', { className: 'btn btn-primary', textContent: 'Save override' });
+  save.addEventListener('click', async () => {
+    save.disabled = true; save.textContent = 'Saving…';
+    const required = reqSel.value === 'required' ? true : reqSel.value === 'optional' ? false : null;
+    try {
+      const r = await api('POST', `/api/classes/${encodeURIComponent(className)}/slot-usage`, { slot, ranges: [...ranges.set], required });
+      toast(`Updated ${slot} in ${className} → ${r.file}`, 'ok');
+      refreshChanges(); m.close();
+      await refreshModel(`class::${className}`);
+    } catch (e) { toast(e.message, 'err'); save.disabled = false; save.textContent = 'Save override'; }
+  });
+  m.foot.append(save, el('span', { className: 'muted', style: 'font-size:12px', textContent: 'writes classes › slot_usage' }),
+    el('span', { style: 'flex:1' }), el('button', { className: 'btn btn-sm', textContent: 'Cancel', onclick: m.close }));
+}
 
 function renderSlotInspector(d) {
-  const box = el('div', {}, inspectorHead(d));
-  box.append(fieldText('Title (display name)', d.title, (v, b) => patchEntity('slots', d.name, 'title', v, b)));
+  const body = el('div', {});
+  body.append(fieldText('Title (display name)', d.title, (v, b) => patchEntity('slots', d.name, 'title', v, b)));
   if ((d.ranges || []).length > 1) {
     // union range (any_of) — editing as a single scalar would corrupt it
-    box.append(el('div', { className: 'field' }, el('label', { textContent: 'Range (union — edit in YAML)' }),
+    body.append(el('div', { className: 'field' }, el('label', { textContent: 'Range (union — edit in YAML)' }),
       el('input', { type: 'text', value: d.ranges.join(' | '), readOnly: true, style: 'background:#f1f3f7' })));
   } else {
-    box.append(fieldText('Range', (d.ranges || [])[0] || '', (v, b) => patchEntity('slots', d.name, 'range', v, b)));
+    body.append(fieldText('Range', (d.ranges || [])[0] || '', (v, b) => patchEntity('slots', d.name, 'range', v, b)));
   }
   // required toggle
   const cb = el('input', { type: 'checkbox', checked: !!d.required });
   cb.addEventListener('change', () => patchEntity('slots', d.name, 'required', cb.checked));
-  box.append(el('div', { className: 'field inline' }, cb, el('label', { textContent: 'Required', style: 'text-transform:none' })));
-  box.append(fieldText('Description', d.description, (v, b) => patchEntity('slots', d.name, 'description', v, b), { textarea: true }));
+  body.append(el('div', { className: 'field inline' }, cb, el('label', { textContent: 'Required', style: 'text-transform:none' })));
+  body.append(fieldText('Description', d.description, (v, b) => patchEntity('slots', d.name, 'description', v, b), { textarea: true }));
   const usedBy = classesUsingSlot(d.name).size;
   const applyBtn = el('button', { className: 'btn', style: 'width:100%;margin-top:4px', textContent: `＋ Add this slot to templates…  (in ${usedBy} now)` });
   applyBtn.addEventListener('click', () => openApplySlot(d.name));
-  box.append(applyBtn);
+  body.append(applyBtn);
   if ((d.ranges || []).some((r) => STATE.enumsByName.has(r))) {
-    box.append(el('p', { className: 'muted', style: 'font-size:12px;margin-top:8px', textContent: 'Tip: this range is an enum — double-click its node to expand its values.' }));
+    body.append(el('p', { className: 'muted', style: 'font-size:12px;margin-top:8px', textContent: 'Tip: this range is an enum — double-click its node to expand its values.' }));
   }
-  $('#inspector').replaceChildren(box);
+  setInspector([inspectorHead(d)], [body]);
 }
 
 function renderEnumInspector(d) {
-  const box = el('div', {}, inspectorHead(d));
   const pct = d.valueCount ? Math.round((d.mappedCount / d.valueCount) * 100) : 0;
-  box.append(el('p', { className: 'muted', style: 'font-size:12px', textContent: `${d.mappedCount}/${d.valueCount} values mapped to ontology terms (${pct}%).` }));
-  const addBtn = el('button', { className: 'btn btn-primary', style: 'width:100%;margin-bottom:12px', textContent: '＋ Add term (assisted)' });
+  const summary = el('p', { className: 'muted', style: 'font-size:12px; margin:0 0 10px', textContent: `${d.mappedCount}/${d.valueCount} values mapped to ontology terms (${pct}%).` });
+  const addBtn = el('button', { className: 'btn btn-primary', style: 'width:100%', textContent: '＋ Add term (assisted)' });
   addBtn.addEventListener('click', () => openAddTerm(d.name));
-  box.append(addBtn);
   const rows = el('div', { className: 'val-rows' });
   for (const v of d.values) rows.append(enumValueRow(d, v));
-  box.append(rows);
-  $('#inspector').replaceChildren(box);
+  setInspector([inspectorHead(d), summary, addBtn], [rows]);
 }
 
 function enumValueRow(enumNode, v) {
@@ -659,13 +709,80 @@ async function renderGapDetail(g) {
 }
 
 // ============================================================
+//  GITHUB ISSUES
+// ============================================================
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+let issuesInit = false;
+async function loadIssues() {
+  if (!issuesInit) {
+    issuesInit = true;
+    $('#issues-refresh').addEventListener('click', loadIssues);
+    $('#issues-label').addEventListener('input', debounce(loadIssues, 400));
+    $('#issues-state').addEventListener('change', loadIssues);
+  }
+  const list = $('#issues-list');
+  list.replaceChildren(el('div', { className: 'muted', style: 'padding:12px', textContent: 'loading…' }));
+  const label = $('#issues-label').value.trim();
+  const state = $('#issues-state').value;
+  try {
+    const params = new URLSearchParams({ state });
+    if (label) params.set('label', label);
+    const { issues, error } = await api('GET', `/api/issues?${params}`);
+    if (error) throw new Error(error);
+    $('#issues-summary').textContent = `${issues.length} ${state} issue${issues.length === 1 ? '' : 's'}`;
+    list.replaceChildren();
+    if (!issues.length) { $('#issues-detail').replaceChildren(el('div', { className: 'inspector-empty', textContent: 'No matching issues.' })); return; }
+    for (const it of issues) {
+      const item = el('div', { className: 'gap-item' },
+        el('span', { className: 'gname' }, el('span', { className: 'inum', textContent: `#${it.number}` }), ' ', el('span', { textContent: it.title })),
+        el('span', { className: 'ilabels' }, ...it.labels.slice(0, 3).map((l) => el('span', { className: 'ilabel', textContent: l.name }))));
+      item.title = it.title;
+      item.addEventListener('click', () => { $$('.gap-item', list).forEach((x) => x.classList.remove('active')); item.classList.add('active'); showIssue(it); });
+      list.append(item);
+    }
+  } catch (e) { list.replaceChildren(el('div', { className: 'cand-none', textContent: e.message })); }
+}
+async function showIssue(it) {
+  const d = $('#issues-detail');
+  d.replaceChildren(el('div', { className: 'muted', textContent: 'loading…' }));
+  try {
+    const iss = await api('GET', `/api/issues/${it.number}`);
+    const box = el('div', {});
+    box.append(el('div', { className: 'issue-head' },
+      el('span', { className: 'inum', textContent: `#${iss.number}` }),
+      el('span', { className: `issue-state ${(iss.state || '').toLowerCase()}`, textContent: iss.state })));
+    box.append(el('h2', { textContent: iss.title, style: 'margin-top:6px' }));
+    if (iss.labels?.length) box.append(el('div', { className: 'ilabels', style: 'margin:8px 0 12px' }, ...iss.labels.map((l) => el('span', { className: 'ilabel', textContent: l.name }))));
+    const gh = el('button', { className: 'btn btn-sm', textContent: 'Open on GitHub ↗' });
+    gh.onclick = () => window.open(iss.url, '_blank', 'noopener');
+    const cp = el('button', { className: 'btn btn-sm', textContent: 'Copy prompt for Claude' });
+    cp.onclick = () => navigator.clipboard?.writeText(`In the nf-metadata-dictionary repo, resolve GitHub issue #${iss.number}: "${iss.title}".\n\n${iss.body || ''}`).then(() => toast('Prompt copied — paste into the terminal', 'ok'), () => toast('clipboard blocked', 'err'));
+    const tm = el('button', { className: 'btn btn-sm btn-primary', textContent: '❯ Open terminal' });
+    tm.onclick = () => openTerminal();
+    box.append(el('div', { className: 'issue-actions' }, gh, cp, tm));
+    box.append(renderIssueBody(iss.body || '_(no description)_'));
+    d.replaceChildren(box);
+  } catch (e) { d.replaceChildren(el('div', { className: 'cand-none', textContent: e.message })); }
+}
+function renderIssueBody(md) {
+  const esc = String(md).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const html = esc
+    .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  const div = el('div', { className: 'issue-body' });
+  div.innerHTML = html;
+  return div;
+}
+
+// ============================================================
 //  CHANGES (branch diff vs main)
 // ============================================================
 let diffInit = false;
 let DIFF = { base: 'main', files: [] };
 const isModelFile = (p) => p.startsWith('modules/') || p === 'header.yaml' || p === 'dca-template-config.json';
 async function loadDiff() {
-  if (!diffInit) { diffInit = true; $('#diff-refresh').addEventListener('click', loadDiff); $('#diff-model-only').addEventListener('change', renderDiffList); }
+  if (!diffInit) { diffInit = true; $('#diff-refresh').addEventListener('click', loadDiff); $('#diff-model-only').addEventListener('change', renderDiffList); $('#pr-btn').addEventListener('click', openPrModal); }
   const listEl = $('#diff-list');
   listEl.replaceChildren(el('div', { className: 'muted', style: 'padding:12px', textContent: 'loading…' }));
   try {
@@ -700,6 +817,41 @@ function renderDiffList() {
     listEl.append(item);
   }
 }
+function openPrModal() {
+  const files = (DIFF.files || []).filter((f) => isModelFile(f.path));
+  if (!files.length) { toast('No model changes to submit', 'err'); return; }
+  const m = openModal({ title: 'Create pull request', subtitle: `${files.length} model file(s) → a new branch off ${DIFF.base || 'main'}`, width: '560px' });
+  const stamp = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '');
+  const titleI = el('input', { type: 'text', value: 'Update metadata model' });
+  const branchI = el('input', { type: 'text', value: `model-update-${stamp}` });
+  const baseI = el('input', { type: 'text', value: DIFF.base || 'main' });
+  const bodyI = el('textarea', { style: 'min-height:70px' });
+  bodyI.value = 'Model changes from the visual editor:\n' + files.map((f) => `- ${f.path}`).join('\n');
+  const list = el('div', { className: 'pr-files' }, ...files.map((f) => {
+    const st = f.status === 'new' ? 'A' : f.status;
+    return el('div', { className: 'pr-file' }, el('span', { className: `diff-stat ds-${st}`, textContent: st }), ' ', el('span', { textContent: f.path }));
+  }));
+  const result = el('div', { className: 'import-result' });
+  m.body.append(labeledField('Title', titleI), labeledField('Branch', branchI), labeledField('Base branch', baseI),
+    labeledField('Description', bodyI), labeledField(`Includes (${files.length})`, list), result);
+
+  const create = el('button', { className: 'btn btn-primary', textContent: 'Create PR' });
+  create.addEventListener('click', async () => {
+    if (!titleI.value.trim()) { toast('title required', 'err'); return; }
+    create.disabled = true; create.textContent = 'Creating PR…';
+    result.className = 'import-result'; result.textContent = 'Pushing branch & opening PR…';
+    try {
+      const r = await api('POST', '/api/pr', { title: titleI.value.trim(), branch: branchI.value.trim(), base: baseI.value.trim() || 'main', body: bodyI.value });
+      result.className = 'import-result ok';
+      result.replaceChildren(el('span', { textContent: `✓ PR created for ${r.files} file(s) on ${r.branch} — ` }),
+        el('a', { href: r.url, target: '_blank', rel: 'noopener', textContent: 'open it ↗' }));
+      toast('Pull request created', 'ok'); refreshChanges();
+    } catch (e) { result.className = 'import-result err'; result.textContent = e.message; create.disabled = false; create.textContent = 'Create PR'; }
+  });
+  m.foot.append(create, el('span', { className: 'muted', style: 'font-size:12px', textContent: 'commits only model files; your working tree is untouched' }),
+    el('span', { style: 'flex:1' }), el('button', { className: 'btn btn-sm', textContent: 'Cancel', onclick: m.close }));
+}
+
 async function showDiff(f) {
   $('#diff-detail').replaceChildren(el('div', { className: 'muted', textContent: 'loading diff…' }));
   try {
@@ -1260,14 +1412,15 @@ async function showQc() {
 const labeledField = (label, control) => el('div', { className: 'field' }, el('label', { textContent: label }), control);
 const humanize = (name) => name.replace(/Template$/, '').replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/_/g, ' ').trim();
 
-function chipField(placeholder, datalistId) {
-  const set = new Set();
+function chipField(placeholder, datalistId, initial = []) {
+  const set = new Set(initial);
   const chips = el('div', { className: 'chips' });
   const input = el('input', { type: 'text', placeholder });
   if (datalistId) input.setAttribute('list', datalistId);
   const render = () => chips.replaceChildren(...[...set].map((v) => {
     const c = el('span', { className: 'chip', title: 'remove' }, `${v} ✕`); c.onclick = () => { set.delete(v); render(); }; return c;
   }));
+  render();
   const addv = () => { const v = input.value.trim(); if (v) { set.add(v); input.value = ''; render(); } };
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addv(); } });
   const addBtn = el('button', { className: 'btn btn-sm', textContent: 'Add' }); addBtn.onclick = addv;

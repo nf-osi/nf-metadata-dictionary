@@ -13,12 +13,13 @@ import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
-import { existsSync, watch } from 'fs';
-import { exec } from 'child_process';
+import { existsSync, watch, mkdirSync, copyFileSync, rmSync } from 'fs';
+import { tmpdir } from 'os';
+import { exec, execFile } from 'child_process';
 import { existsSync as fexists } from 'fs';
 import { resolve as rpath } from 'path';
 import { loadModel, buildGraph, modelSummary, readSourceFile, classifyRange, slotRanges, ROOT } from './model.mjs';
-import { setScalarField, addEnumValues, createEnum, createClass, addDcaEntry, addListItem } from './patch.mjs';
+import { setScalarField, addEnumValues, createEnum, createClass, addDcaEntry, addListItem, setSlotUsage } from './patch.mjs';
 import { searchOntology, getDescendants, getTerm, getParents, domainHint } from './ontology.mjs';
 
 const KINDS = { classes: 'classes', slots: 'slots', enums: 'enums' };
@@ -68,6 +69,16 @@ app.patch('/api/:kind(classes|slots)/:name', wrap((req, res) => {
   if (!field) return res.status(400).json({ error: 'missing field' });
   const rel = fileFor(kind, name);
   res.json({ ok: true, file: rel, ...setScalarField(rel, [kind, name], field, value) });
+}));
+
+// Edit a slot's contextual override (range / any_of / required) within a template.
+app.post('/api/classes/:name/slot-usage', wrap((req, res) => {
+  const { name } = req.params;
+  const { slot, ranges, required } = req.body || {};
+  if (!slot) return res.status(400).json({ error: 'missing slot' });
+  const rel = fileFor('classes', name);
+  setSlotUsage(rel, name, slot, { ranges: Array.isArray(ranges) ? ranges : undefined, required });
+  res.json({ ok: true, file: rel });
 }));
 
 // Append a slot reference to a class's `slots:` list.
@@ -285,6 +296,68 @@ app.get('/api/watch', (req, res) => {
   const ping = setInterval(() => { try { res.write(': ping\n\n'); } catch {} }, 25000);
   req.on('close', () => { clearInterval(ping); watchers.delete(res); });
 });
+
+// ---- Create a PR from the current MODEL changes (isolated worktree off base) ----
+const MODEL_PATHS = ['modules', 'header.yaml', 'dca-template-config.json'];
+// NB: do not trim stdout — `git status --porcelain` lines have a significant leading space.
+const run = (cmd, args, opts = {}) => new Promise((resolveP, reject) =>
+  execFile(cmd, args, { cwd: ROOT, maxBuffer: 32 * 1024 * 1024, ...opts },
+    (e, so, se) => (e ? reject(new Error((se || '').trim() || e.message)) : resolveP(so || ''))));
+
+app.post('/api/pr', wrap(async (req, res) => {
+  const title = (req.body?.title || '').trim();
+  const body = String(req.body?.body || '');
+  const base = (req.body?.base || 'main').replace(/[^\w./-]/g, '');
+  const branch = (req.body?.branch || '').trim().replace(/\s+/g, '-').replace(/[^\w./-]/g, '');
+  if (!title) return res.status(400).json({ error: 'title is required' });
+  if (!branch) return res.status(400).json({ error: 'branch is required' });
+
+  const status = await run('git', ['status', '--porcelain', '--', ...MODEL_PATHS]);
+  const lines = status.split('\n').filter(Boolean);
+  if (!lines.length) return res.status(400).json({ error: 'No model changes to submit.' });
+
+  const wt = rpath(tmpdir(), `nf-pr-${Date.now()}`);
+  try {
+    await run('git', ['fetch', 'origin', base]).catch(() => {});      // best-effort, ok if offline
+    await run('git', ['worktree', 'add', '-b', branch, wt, `origin/${base}`]);
+    for (const l of lines) {                                          // mirror each model change into the worktree
+      const xy = l.slice(0, 2); const p = l.slice(3);
+      const dst = rpath(wt, p);
+      if (xy.includes('D')) { try { rmSync(dst); } catch {} }
+      else { mkdirSync(dirname(dst), { recursive: true }); copyFileSync(rpath(ROOT, p), dst); }
+    }
+    await run('git', ['-C', wt, 'add', '-A', '--', ...MODEL_PATHS]);
+    await run('git', ['-C', wt, 'commit', '-m', title + (body ? `\n\n${body}` : '')]);
+    await run('git', ['-C', wt, 'push', '-u', 'origin', branch]);
+    const out = await run('gh', ['pr', 'create', '--base', base, '--head', branch, '--title', title, '--body', body || title], { cwd: wt });
+    const url = out.split('\n').map((s) => s.trim()).filter(Boolean).filter((s) => s.startsWith('http')).pop() || out.trim();
+    res.json({ ok: true, url, branch, files: lines.length });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  } finally {
+    try { await run('git', ['worktree', 'remove', '--force', wt]); } catch {}
+    try { rmSync(wt, { recursive: true, force: true }); } catch {}
+  }
+}));
+
+// ---- GitHub issues (via gh, repo inferred from the git remote) ----
+app.get('/api/issues', wrap((req, res) => {
+  const state = ['open', 'closed', 'all'].includes(req.query.state) ? req.query.state : 'open';
+  const args = ['issue', 'list', '--state', state, '--limit', '200', '--json', 'number,title,labels,state,url,updatedAt'];
+  if (req.query.label) args.push('--label', String(req.query.label));
+  execFile('gh', args, { cwd: ROOT, maxBuffer: 16 * 1024 * 1024 }, (err, stdout) => {
+    if (err) return res.json({ issues: [], error: err.message });
+    try { res.json({ issues: JSON.parse(stdout || '[]') }); } catch (e) { res.json({ issues: [], error: e.message }); }
+  });
+}));
+app.get('/api/issues/:n', wrap((req, res) => {
+  const n = String(req.params.n).replace(/\D/g, '');
+  if (!n) return res.status(400).json({ error: 'bad issue number' });
+  execFile('gh', ['issue', 'view', n, '--json', 'number,title,body,labels,state,url,author,createdAt'], { cwd: ROOT, maxBuffer: 16 * 1024 * 1024 }, (err, stdout) => {
+    if (err) return res.status(500).json({ error: err.message });
+    try { res.json(JSON.parse(stdout)); } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+}));
 
 // ---- Full branch diff vs a base (default main): committed + uncommitted + new files ----
 const git = (args, cb) => exec(`git ${args}`, { cwd: ROOT, maxBuffer: 64 * 1024 * 1024 }, cb);
