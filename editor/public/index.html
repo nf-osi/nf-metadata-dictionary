@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NF Model Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="/vendor/xterm/css/xterm.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">
+        <strong>NF Metadata Model</strong>
+        <span class="brand-sub">visual editor &amp; ontology tools</span>
+      </span>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-view="graph" role="tab">Graph Editor</button>
+      <button class="tab" data-view="gaps" role="tab">Ontology Gaps</button>
+      <button class="tab" data-view="import" role="tab">Import Ontology</button>
+      <button class="tab" data-view="changes" role="tab">Changes</button>
+    </nav>
+    <div class="topbar-right">
+      <div class="stats" id="stats"></div>
+      <button class="add-btn" id="add-term-btn" title="Add a term (A)">
+        <span class="add-icon">+</span> Add term
+      </button>
+      <button class="help-btn" id="terminal-btn" title="Open a terminal (run Claude Code for bulk edits)">
+        <span class="help-icon">❯</span> Terminal
+      </button>
+      <button class="help-btn" id="tutorial-btn" title="Take the guided tour">
+        <span class="help-icon">?</span> Tutorial
+      </button>
+    </div>
+  </header>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <!-- ============ GRAPH EDITOR ============ -->
+  <main class="view active" id="view-graph">
+    <aside class="sidebar">
+      <input type="search" id="entity-search" class="search" placeholder="Search classes, slots, enums…" autocomplete="off" />
+      <div class="legend" id="legend" title="Click to filter the list by kind">
+        <button class="lg lg-class" data-kind="class" aria-pressed="true">class</button>
+        <button class="lg lg-slot" data-kind="slot" aria-pressed="true">slot</button>
+        <button class="lg lg-enum" data-kind="enum" aria-pressed="true">enum</button>
+      </div>
+      <div class="sidebar-actions">
+        <button id="clear-graph" class="btn btn-sm" title="Show the whole class hierarchy">⌂ Whole model</button>
+        <button id="new-class-btn" class="btn btn-sm" title="Create a new class / template">＋ Class</button>
+      </div>
+      <div id="entity-list" class="entity-list"></div>
+    </aside>
+
+    <section class="canvas-wrap">
+      <div id="cy"></div>
+      <div class="graph-scope" id="graph-scope"></div>
+      <div class="canvas-hint">Click an item to focus its subset · double-click a node to re-center · ⌂ Whole model to reset</div>
+      <div class="graph-status" id="graph-status">0 nodes · 0 edges</div>
+    </section>
+
+    <aside class="inspector" id="inspector">
+      <div class="inspector-empty">Select a node to inspect and edit it.</div>
+    </aside>
+  </main>
+
+  <!-- ============ ONTOLOGY GAPS ============ -->
+  <main class="view" id="view-gaps">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Ontology coverage</h2>
+        <p>Find permissible values your enums are <strong>missing</strong> — compare a value set to an ontology branch and add the terms you don't have yet. You can also fill in mappings for existing values.</p>
+        <div class="gaps-controls">
+          <input type="search" id="gaps-filter" class="search" placeholder="Filter value sets…" />
+          <label class="chk"><input type="checkbox" id="gaps-hide-mapped" checked /> only sets with unmapped values</label>
+        </div>
+      </div>
+      <div class="gaps-body">
+        <div id="gaps-list" class="gaps-list"></div>
+        <div id="gaps-detail" class="gaps-detail"><div class="inspector-empty">Select an enum to see its unmapped values.</div></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ IMPORT ONTOLOGY ============ -->
+  <main class="view" id="view-import">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Import an ontology subset</h2>
+        <p class="muted">Find a root term, pull its descendants from EBI OLS, choose which to keep, then create a new enum or append the terms to an existing one.</p>
+      </div>
+      <div class="import-grid">
+        <div class="import-step">
+          <h3>1 · Find a root term</h3>
+          <div class="row">
+            <input type="search" id="import-q" class="search" placeholder="e.g. Schwannoma, Brain, Microscopy…" />
+            <input type="text" id="import-ont" class="search ont" placeholder="ontology (e.g. ncit, uberon)" />
+            <button id="import-search-btn" class="btn">Search</button>
+          </div>
+          <div id="import-roots" class="root-list"></div>
+        </div>
+        <div class="import-step">
+          <h3>2 · Pick descendants</h3>
+          <div class="row">
+            <label class="chk"><input type="radio" name="depth" value="direct" checked /> direct children</label>
+            <label class="chk"><input type="radio" name="depth" value="all" /> all descendants</label>
+            <span id="import-root-label" class="muted"></span>
+          </div>
+          <div class="root-toolbar" id="import-toolbar" hidden>
+            <button class="btn btn-sm" id="sel-all">Select all</button>
+            <button class="btn btn-sm" id="sel-none">None</button>
+            <span id="import-count" class="muted"></span>
+          </div>
+          <div id="import-terms" class="term-list"></div>
+        </div>
+        <div class="import-step">
+          <h3>3 · Destination</h3>
+          <div class="dest">
+            <label class="radio"><input type="radio" name="dest" value="new" checked /> New enum</label>
+            <div class="dest-fields" id="dest-new">
+              <input type="text" id="new-enum-name" class="search" placeholder="EnumName (e.g. SchwannomaType)" />
+              <select id="new-enum-file" class="select"></select>
+            </div>
+            <label class="radio"><input type="radio" name="dest" value="existing" /> Append to existing enum</label>
+            <div class="dest-fields" id="dest-existing">
+              <select id="existing-enum" class="select"></select>
+            </div>
+          </div>
+          <label class="chk"><input type="checkbox" id="incl-desc" checked /> include term descriptions</label>
+          <button id="do-import" class="btn btn-primary" disabled>Import selected terms</button>
+          <div id="import-result" class="import-result"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ CHANGES ============ -->
+  <main class="view" id="view-changes">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Session changes</h2>
+        <p>Everything on this branch that differs from <code id="diff-base">main</code> — committed and unsaved edits, plus new files. Review before committing.</p>
+        <div class="gaps-controls">
+          <button class="btn btn-sm" id="diff-refresh">Refresh</button>
+          <label class="chk"><input type="checkbox" id="diff-model-only" checked /> model files only</label>
+          <span id="diff-summary" class="muted"></span>
+        </div>
+      </div>
+      <div class="gaps-body">
+        <div id="diff-list" class="gaps-list"></div>
+        <div id="diff-detail" class="gaps-detail"><div class="inspector-empty">Select a file to see its diff.</div></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ TERMINAL DRAWER ============ -->
+  <section class="terminal-drawer" id="terminal-drawer" hidden>
+    <div class="term-resize" id="term-resize" title="Drag to resize"></div>
+    <div class="term-head">
+      <span class="term-title">Terminal · run <code>claude</code> for bulk or out-of-scope edits, then</span>
+      <button class="btn btn-sm" id="term-reflect" title="Re-read the model from disk after edits">↻ Reflect changes</button>
+      <span class="term-spacer"></span>
+      <span class="term-cwd" id="term-cwd"></span>
+      <button class="btn btn-sm" id="term-close">Close ✕</button>
+    </div>
+    <div class="term-unavailable" id="term-unavailable" hidden>
+      <strong>Terminal unavailable.</strong> The <code>node-pty</code> native module isn't built.
+      Run <code>cd editor &amp;&amp; npm install</code> (it needs a C/C++ toolchain), then reopen.
+    </div>
+    <div class="term-body" id="terminal"></div>
+  </section>
+
+  <!-- Build / validate toolbar -->
+  <footer class="build-bar" id="build-bar">
+    <span class="build-changes" id="build-changes">No unsaved changes</span>
+    <span class="build-spacer"></span>
+    <button class="btn btn-sm" id="qc-btn" title="Run model QC checks">Check model</button>
+    <button class="btn btn-sm" data-run="ttl">Rebuild model</button>
+    <button class="btn btn-sm" data-run="schemas">Generate schemas</button>
+    <button class="btn btn-sm" data-run="limits">Check limits</button>
+    <button class="btn btn-sm" data-run="tests">Run tests</button>
+    <span class="build-status" id="build-status"></span>
+  </footer>
+
+  <!-- Modal host -->
+  <div id="modal-root"></div>
+
+  <script src="/vendor/cytoscape/cytoscape.min.js"></script>
+  <script src="/vendor/xterm/lib/xterm.js"></script>
+  <script src="/vendor/xterm-fit/addon-fit.js"></script>
+  <script src="app.js" type="module"></script>
+  <script src="tour.js" type="module"></script>
+</body>
+</html>
