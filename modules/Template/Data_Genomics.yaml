@@ -279,6 +279,15 @@ classes:
       fileFormat:
         range: SequencingFileFormatEnum
     rules:
+    - description: If modelAge is provided, modelAgeUnit must be provided
+      preconditions:
+        slot_conditions:
+          modelAge:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          modelAgeUnit:
+            value_presence: PRESENT
     - description: If experimentalTimepoint is provided, timepointUnit must be provided
       preconditions:
         slot_conditions:
@@ -615,6 +624,25 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+    rules:
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
 
   MethylationArrayTemplate:
     annotations:

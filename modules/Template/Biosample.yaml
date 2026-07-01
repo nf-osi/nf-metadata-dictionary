@@ -27,6 +27,16 @@ classes:
     - modelSex
     - modelAge
     - modelAgeUnit
+    rules:
+    - description: If modelAge is provided, modelAgeUnit must be provided
+      preconditions:
+        slot_conditions:
+          modelAge:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          modelAgeUnit:
+            value_presence: PRESENT
   BiospecimenTemplate:
     annotations:
       required: false
@@ -52,6 +62,16 @@ classes:
     - modelSex
     - modelAge
     - modelAgeUnit
+    rules:
+    - description: If modelAge is provided, modelAgeUnit must be provided
+      preconditions:
+        slot_conditions:
+          modelAge:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          modelAgeUnit:
+            value_presence: PRESENT
   HumanCohortTemplate:
     annotations:
       required: false
