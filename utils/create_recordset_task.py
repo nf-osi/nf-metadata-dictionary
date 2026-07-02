@@ -65,6 +65,59 @@ def load_schema_uri(template_name_or_uri: str, schema_dir: str = "registered-jso
     return schema_id
 
 
+def derive_upsert_keys(template_name: str, model_path: str = None) -> list:
+    """
+    Derive record-uniqueness upsert keys from a template's LinkML ``unique_keys``.
+
+    LinkML ``unique_keys`` declare a template's natural key (e.g. specimenID +
+    individualID), but they are not expressed in the generated JSON Schema and
+    are therefore not enforced by the Synapse JSON-Schema consumer. Synapse
+    enforces record uniqueness through RecordSet upsert keys instead, so this
+    function bridges the two: it reads the merged model, finds the class for
+    ``template_name`` (walking ``is_a`` ancestry), and returns the slot names of
+    its first declared ``unique_keys`` entry.
+
+    Args:
+        template_name: LinkML class/template name (not a full schema URI).
+        model_path: Path to the merged model YAML. Defaults to ``dist/NF.yaml``.
+
+    Returns:
+        List of slot names to use as upsert keys, or ``None`` when the template
+        declares no ``unique_keys`` (so callers fall back to the default).
+    """
+    try:
+        import yaml
+    except ImportError:
+        return None
+
+    if model_path is None:
+        model_path = Path(__file__).parent.parent / "dist" / "NF.yaml"
+
+    try:
+        with open(model_path, 'r') as f:
+            model = yaml.safe_load(f)
+    except (FileNotFoundError, OSError):
+        return None
+
+    classes = (model or {}).get("classes", {}) or {}
+    name = template_name
+    seen = set()
+    while name and name in classes and name not in seen:
+        seen.add(name)
+        cls = classes[name] or {}
+        unique_keys = cls.get("unique_keys")
+        if unique_keys:
+            # A class may declare several unique keys; use the first as the
+            # primary natural key. dict order follows YAML declaration order.
+            first = next(iter(unique_keys.values()))
+            slots = first.get("unique_key_slots") if isinstance(first, dict) else None
+            if slots:
+                return list(slots)
+        name = cls.get("is_a")
+
+    return None
+
+
 def create_recordset_task(
     folder_id: str,
     record_set_name: str,
@@ -137,6 +190,15 @@ def create_recordset_task(
     print(f"\nLoading schema: {template}")
     schema_uri = load_schema_uri(template)
     print(f"  Schema URI: {schema_uri}")
+
+    # If no explicit upsert keys were provided, derive them from the template's
+    # LinkML unique_keys so record uniqueness matches the schema's natural key.
+    # (unique_keys are not enforced by the JSON-Schema consumer; upsert keys are.)
+    if upsert_keys is None:
+        derived_keys = derive_upsert_keys(template)
+        if derived_keys:
+            upsert_keys = derived_keys
+            print(f"  Derived upsert keys from unique_keys: {upsert_keys}")
 
     # Set defaults
     if record_set_description is None:
@@ -280,7 +342,8 @@ Notes:
         '--upsert-keys',
         nargs='+',
         default=None,
-        help='Field names that uniquely identify records'
+        help='Field names that uniquely identify records. If omitted, derived '
+             "from the template's LinkML unique_keys when declared."
     )
 
     parser.add_argument(

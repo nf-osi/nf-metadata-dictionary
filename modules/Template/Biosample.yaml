@@ -27,6 +27,12 @@ classes:
     - modelSex
     - modelAge
     - modelAgeUnit
+    unique_keys:
+      individual_natural_key:
+        description: Each record describes a distinct individual, so individualID
+          uniquely identifies a row.
+        unique_key_slots:
+        - individualID
   BiospecimenTemplate:
     annotations:
       required: false
@@ -52,6 +58,13 @@ classes:
     - modelSex
     - modelAge
     - modelAgeUnit
+    unique_keys:
+      specimen_natural_key:
+        description: Each record describes a distinct specimen; specimenID together
+          with individualID uniquely identifies a row.
+        unique_key_slots:
+        - individualID
+        - specimenID
   HumanCohortTemplate:
     annotations:
       required: false
@@ -128,6 +141,12 @@ classes:
     - lenticularOpacity
     - nonvestibularSchwannomas
     - numberOfSchwannomas
+    unique_keys:
+      individual_natural_key:
+        description: Each record describes a distinct individual, so individualID
+          uniquely identifies a row.
+        unique_key_slots:
+        - individualID
     slot_usage:
       species:
         ifabsent: string(Homo sapiens)

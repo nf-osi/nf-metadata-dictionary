@@ -282,7 +282,7 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_recordset_task.py \
 | `--template` | Template name or schema URI (required) | - |
 | `--description` | RecordSet description | Auto-generated |
 | `--task-name` | Curation task name | Auto-generated |
-| `--upsert-keys` | Fields that uniquely identify records | None |
+| `--upsert-keys` | Fields that uniquely identify records | Derived from the template's `unique_keys`, else `None` |
 | `--instructions` | Instructions for contributors | "Please add metadata records" |
 | `--bind-schema` / `--no-bind-schema` | Bind schema to RecordSet | True |
 | `--output-format` | `json` or `github` | `json` |
@@ -292,6 +292,10 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_recordset_task.py \
 **Notes:**
 - **Project ID** is automatically derived from the folder
 - **Upsert keys:** Specify field names that uniquely identify each record. This enables updates to existing records rather than creating duplicates. Common choices: `study`, `name`, `individualID`, etc.
+- **Natural keys and `unique_keys`:** Record-based templates can declare their natural key with LinkML [`unique_keys`](https://linkml.io/linkml/schemas/constraints.html) (e.g. `BiospecimenTemplate` keys on `individualID` + `specimenID`).
+  Note that `unique_keys` is **not** expressed in the generated JSON Schema, so the Synapse JSON-Schema consumer does not enforce it - it only enforces standard keywords (`required`, `enum`, `if/then`).
+  Record uniqueness is instead enforced at bind time via the RecordSet upsert keys above.
+  When `--upsert-keys` is omitted, `create_recordset_task.py` derives them from the template's `unique_keys`, so the declared natural key drives real enforcement.
 
 ---
 
