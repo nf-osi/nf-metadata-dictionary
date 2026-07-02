@@ -61,8 +61,6 @@ slots:
     title: Acknowledgement Statements
     required: false
   age:
-    annotations:
-      requiresDependency: ageUnit
     description: >-
       Age of the individual. Use with `ageUnit`. IMPORTANT: For human data,
       HIPAA requires masking ages >= 90; use the `AgeMask` value ">= 90"
@@ -83,8 +81,6 @@ slots:
     title: Age Group
     required: false
   aliquotID:
-    annotations:
-      requiresDependency: specimenID
     description: A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.
     title: Aliquot ID
     required: false
@@ -205,8 +201,6 @@ slots:
     title: Cell ID
     required: false
   cellType:
-    annotations:
-      validationRules: list like
     description: A cell type is a distinct morphological or functional form of cell.
     range: Cell
     multivalued: true
@@ -250,8 +244,6 @@ slots:
     required: false
     title: Comments
   compoundDose:
-    annotations:
-      requiresDependency: compoundDoseUnit
     description: A dose quantity for the treatment compound. To be used with compoundDoseUnit.
     title: Compound Dose
     required: false
@@ -264,9 +256,6 @@ slots:
     title: Compound Name
     required: false
   concentrationMaterial:
-    annotations:
-      requiresDependency: concentrationMaterialUnit
-      validationRules: num
     description: Numeric value for concentration of the material
     range: float
     title: Concentration Material
@@ -277,8 +266,6 @@ slots:
     title: Concentration Material Unit
     required: false
   concentrationNaCl:
-    annotations:
-      requiresDependency: concentrationNaClUnit
     description: Numeric value for NaCl concentration
     title: Concentration Na Cl
     required: false
@@ -376,8 +363,6 @@ slots:
     title: Data Subtype
     required: true
   dataType:
-    annotations:
-      requiresDependency: dataSubtype
     any_of:
     - range: Data
     - range: MetadataEnum
@@ -494,9 +479,6 @@ slots:
     title: Experimental Factor
     required: false
   experimentalTimepoint:
-    annotations:
-      requiresDependency: timepointUnit
-      validationRules: num
     description: The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit
     range: float
     title: Experimental Timepoint
@@ -558,14 +540,10 @@ slots:
     title: Gene Perturbation Type
     required: false
   genePerturbed:
-    annotations:
-      requiresDependency: genePerturbationType,genePerturbationTechnology
     description: The HUGO gene symbol for the gene that is perturbed.
     title: Gene Perturbed
     required: false
   genomicReference:
-    annotations:
-      requiresDependency: genomicReferenceLink
     description: Version of genome reference used for alignment in processing workflow
     range: GenomicReferenceEnum
     notes:
@@ -643,8 +621,6 @@ slots:
     title: Immersion
     required: false
   individualID:
-    annotations:
-      validationRules: list like
     description: A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.
     multivalued: true
     title: Individual ID
@@ -792,8 +768,6 @@ slots:
     required: false
     title: Learning disability
   lensAperture:
-    annotations:
-      validationRules: num
     description: Numerical aperture of the lens. Floating point value > 0.
     range: float
     title: Lens Aperture
@@ -824,8 +798,6 @@ slots:
     title: Library Preparation Method
     required: true
   libraryPCRCycles:
-    annotations:
-      validationRules: int
     description: The number of PCR cycles used during the construction of a sequencing library. Important for genomics data generated from cell-free DNA.
     range: integer
     required: false
@@ -879,8 +851,6 @@ slots:
     required: false
     title: Meningioma
   modelSystemName:
-    annotations:
-      validationRules: list like
     any_of:
     - range: CellLineModel
     - range: CellLineModelManual
@@ -902,15 +872,10 @@ slots:
     description: Sex of the individual animal model used in the experiment. Distinct from donor sex.
     required: false
   modelAge:
-    annotations:
-      requiresDependency: modelAgeUnit
-      validationRules: num
     description: Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.
     range: float
     required: false
   modelAgeUnit:
-    annotations:
-      requiresDependency: modelAge
     description: Time unit for modelAge (e.g., weeks for mice). Required when modelAge is specified.
     range: TimeUnit
     required: false
@@ -963,8 +928,6 @@ slots:
     title: NF2 Genotype
     required: false
   nominalMagnification:
-    annotations:
-      validationRules: num
     description: magnification of the lens as specified by the manufacturer - i.e. '60' is a 60X lens.
     range: float
     title: Nominal Magnification
@@ -1014,8 +977,6 @@ slots:
     required: false
     title: Other tumors
   pH:
-    annotations:
-      validationRules: num
     description: Numeric value for pH (range 0-14)
     range: float
     title: pH
@@ -1025,8 +986,6 @@ slots:
     range: PainEnum
     title: Pain status
   pairsOnDifferentChr:
-    annotations:
-      validationRules: int
     description: Pairs on different chromosomes collected from samtools
     range: integer
     title: Pairs On Different Chr
@@ -1036,8 +995,6 @@ slots:
     title: Parent ID
     required: false
   parentSpecimenID:
-    annotations:
-      requiresDependency: specimenID
     description: 'A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.
 
       '
@@ -1135,15 +1092,11 @@ slots:
     title: Progress Report Number
     required: false
   proportionCoverage10x:
-    annotations:
-      validationRules: num
     description: Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 10X or greater coverage from Picard Tools
     range: float
     title: Proportion Coverage 10x
     required: false
   proportionCoverage30x:
-    annotations:
-      validationRules: num
     description: Proportion of all reference bases for whole genome sequencing, or targeted bases for whole exome and targeted sequencing, that achieves 30X or greater coverage from Picard Tools
     range: float
     title: Proportion Coverage 30x
@@ -1199,22 +1152,16 @@ slots:
     required: false
     title: Radiation at any time
   readDepth:
-    annotations:
-      validationRules: int
     description: If available, the coverage statistic as output from bedtools coverage or samtools stats.
     range: integer
     title: Read Depth
     required: false
   readLength:
-    annotations:
-      validationRules: int
     description: Number of base pairs (bp) sequenced for a read
     range: integer
     title: Read Length
     required: false
   readPair:
-    annotations:
-      validationRules: inRange 1 2
     description: The read of origin, Read 1 or Read 2
     range: integer
     minimum_value: 1
@@ -1238,8 +1185,6 @@ slots:
     title: Reads Duplicated Percent
     required: false
   readsMappedPercent:
-    annotations:
-      validationRules: num
     description: Percent of mapped reads collected from samtools
     range: float
     title: Reads Mapped Percent
@@ -1481,8 +1426,6 @@ slots:
     required: true
     see_also: https://www.w3.org/TR/vocab-dcat-3/#Property:resource_title
   totalReads:
-    annotations:
-      validationRules: int
     description: If available, the total number of reads collected from samtools.
     range: integer
     title: Total Reads
@@ -1500,8 +1443,6 @@ slots:
     title: Transplantation Recipient Tissue
     required: false
   transplantationType:
-    annotations:
-      requiresDependency: transplantationRecipientSpecies,transplantationRecipientTissue
     description: Type of transplantation involved in the experiment, derived from MESH
     range: TransplantationType
     title: Transplantation Type
@@ -1552,8 +1493,6 @@ slots:
     range: VitalStatusEnum
     title: Vital status
   workflow:
-    annotations:
-      requiresDependency: workflowLink
     description: Name and version of the workflow used to generate/analyze the data
     range: WorkflowEnum
     title: Workflow
@@ -1563,9 +1502,6 @@ slots:
     title: Workflow Link
     required: false
   workingDistance:
-    annotations:
-      requiresDependency: workingDistanceUnit
-      validationRules: num
     description: Working distance of the lens expressed as a floating point number > 0.
     range: float
     title: Working Distance
@@ -1576,8 +1512,6 @@ slots:
     title: Working Distance Unit
     required: false
   yearProcessed:
-    annotations:
-      validationRules: int
     description: "Year in which the resource was processed/derived, if applicable.  This is only required for data processed by NF-OSI for tracking purposes, optional for community-contributed datasets. \n"
     in_subset:
     - portal
@@ -1587,8 +1521,6 @@ slots:
     title: Year Processed
     required: false
   yearPublished:
-    annotations:
-      validationRules: int
     description: Year in which the resource was published/generally made available.
     in_subset:
     - portal

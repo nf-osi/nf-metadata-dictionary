@@ -1,0 +1,32 @@
+# Conditional (if-then) Dependency Validation: modelAge -> modelAgeUnit
+#
+# Migrated from the legacy schematic annotation on the `modelAge` slot:
+#   requiresDependency: modelAgeUnit
+#
+# This is the animal-model analog of age -> ageUnit. The modelAge / modelAgeUnit
+# slots are exposed by BiospecimenTemplate and PdxGenomicsAssayTemplate, so the
+# rule is added to those. (modelAge is numeric, so there is no "Unknown"
+# exception like age has.)
+#
+# For PdxGenomicsAssayTemplate, resourceType is "metadata" so the #825 relaxed
+# experimentalData requirements do not interfere and the case isolates this rule.
+---
+schema: BiospecimenTemplate
+instances:
+  - file: data/BiospecimenTemplate/valid_modelage_with_unit.json
+    description: modelAge and modelAgeUnit both provided — satisfies the conditional dependency
+    expected: valid
+  - file: data/BiospecimenTemplate/invalid_modelage_missing_unit.json
+    description: modelAge is present but modelAgeUnit is absent
+    expected: invalid
+    reason: modelAge is present but modelAgeUnit is missing
+---
+schema: PdxGenomicsAssayTemplate
+instances:
+  - file: data/PdxGenomicsAssayTemplate/valid_modelage_with_unit.json
+    description: modelAge and modelAgeUnit both provided — satisfies the conditional dependency
+    expected: valid
+  - file: data/PdxGenomicsAssayTemplate/invalid_modelage_missing_unit.json
+    description: modelAge is present but modelAgeUnit is absent
+    expected: invalid
+    reason: modelAge is present but modelAgeUnit is missing

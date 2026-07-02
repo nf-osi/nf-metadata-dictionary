@@ -1,0 +1,32 @@
+# Conditional (if-then) Dependency Validation: genePerturbed
+#
+# Migrated from the legacy schematic annotation on the `genePerturbed` slot:
+#   requiresDependency: genePerturbationType,genePerturbationTechnology
+#
+# The LinkML `rules` on ChIPSeqTemplate express this as two allOf if-then
+# conditions (one per qualifier), which gen-json-schema materializes as:
+#   if genePerturbed is present -> genePerturbationType is required
+#   if genePerturbed is present -> genePerturbationTechnology is required
+#
+# resourceType is "metadata" (not "experimentalData") so the #825 relaxed
+# requirements do not apply and these cases isolate the genePerturbed rule.
+
+schema: ChIPSeqTemplate
+instances:
+  - file: data/ChIPSeqTemplate/valid_geneperturbed_complete.json
+    description: genePerturbed provided together with both genePerturbationType and genePerturbationTechnology — satisfies both conditional dependencies
+    expected: valid
+
+  - file: data/ChIPSeqTemplate/valid_no_geneperturbation.json
+    description: genePerturbed absent, so neither qualifier is required — the rule is not triggered
+    expected: valid
+
+  - file: data/ChIPSeqTemplate/invalid_geneperturbed_missing_qualifiers.json
+    description: genePerturbed present but both genePerturbationType and genePerturbationTechnology are missing
+    expected: invalid
+    reason: genePerturbed is present but genePerturbationType/genePerturbationTechnology are missing
+
+  - file: data/ChIPSeqTemplate/invalid_geneperturbed_missing_technology.json
+    description: genePerturbed and genePerturbationType present, but genePerturbationTechnology is missing
+    expected: invalid
+    reason: genePerturbed is present but genePerturbationTechnology is missing
