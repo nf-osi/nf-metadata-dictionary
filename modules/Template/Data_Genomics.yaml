@@ -279,6 +279,15 @@ classes:
       fileFormat:
         range: SequencingFileFormatEnum
     rules:
+    - description: If modelAge is provided, modelAgeUnit must be provided
+      preconditions:
+        slot_conditions:
+          modelAge:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          modelAgeUnit:
+            value_presence: PRESENT
     - description: If experimentalTimepoint is provided, timepointUnit must be provided
       preconditions:
         slot_conditions:
