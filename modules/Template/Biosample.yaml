@@ -5,10 +5,8 @@ classes:
       requiresComponent: ''
       templateUsage: most_common
       dataGranularity: individual-level
-    description: 'Template for non-human individual-level data. For xenografts, individualID
-      references the cell line donor. Use sex/age/species for the individual animal.
-      Use modelSystemName for the animal model genetic background, with modelSpecies/modelSex/modelAge
-      for the model host animal.'
+    description: 'Template for non-human individual-level data. Use sex/age/species
+      for the individual animal, and modelSystemName for the name of the mouse model.'
     slots:
     - individualID
     - sex
@@ -23,10 +21,6 @@ classes:
     - germlineMutation
     - species
     - modelSystemName
-    - modelSpecies
-    - modelSex
-    - modelAge
-    - modelAgeUnit
   BiospecimenTemplate:
     annotations:
       required: false
