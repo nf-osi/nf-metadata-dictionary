@@ -1,0 +1,20 @@
+# Slot range typing (issue #930): verify that slots which previously fell back
+# to the default `string` range now enforce their assigned type.
+#
+# peakCallingAlgorithm migrated from a stripped inline `enum_range` to the named
+# PeakCallingAlgorithmEnum, so the generated schema now enforces the controlled
+# vocabulary instead of accepting any string.
+#
+# resourceType is "metadata" (not "experimentalData") so the #825 relaxed
+# requirements do not apply and these cases isolate the peakCallingAlgorithm slot.
+
+schema: ChIPSeqTemplate
+instances:
+  - file: data/ChIPSeqTemplate/valid_peakcalling_macs2.json
+    description: peakCallingAlgorithm set to an allowed vocabulary value (MACS2)
+    expected: valid
+
+  - file: data/ChIPSeqTemplate/invalid_peakcalling_unlisted.json
+    description: peakCallingAlgorithm set to a value outside the PeakCallingAlgorithmEnum vocabulary
+    expected: invalid
+    reason: peakCallingAlgorithm "NotARealPeakCaller" is not a permissible PeakCallingAlgorithmEnum value

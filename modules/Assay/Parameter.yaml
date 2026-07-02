@@ -424,3 +424,59 @@ enums:
       micrometer:
       millimeter:
       nanometer:
+  CaptureAreaEnum:
+    description: Active region on a Visium/CytAssist slide where a tissue sample can be placed.
+    permissible_values:
+      A:
+      B:
+      C:
+      D:
+      A1:
+      B1:
+      C1:
+      D1:
+  DataCollectionModeEnum:
+    description: Mode of data collection in tandem MS assays.
+    permissible_values:
+      DDA:
+        description: Data-dependent acquisition.
+      DIA:
+        description: Data-independent acquisition.
+      Other:
+  ImmersionEnum:
+    description: Immersion medium of a microscope objective.
+    permissible_values:
+      air:
+      oil:
+      water:
+      other:
+  PeakCallingAlgorithmEnum:
+    description: Commonly used peak-calling algorithms for ChIP-Seq data analysis.
+    permissible_values:
+      MACS2:
+      SICER:
+      HOMER:
+      Genrich:
+      PeakRanger:
+      SEACR:
+      GEM:
+      MUSIC:
+      BroadPeak:
+      SWEMBL:
+      FSeq:
+      ZINBA:
+  RecordingSourceEnum:
+    description: Source of an electrophysiology recording.
+    permissible_values:
+      electrode:
+      tetrode:
+      shank:
+      Utah array:
+      other electrode array:
+  SlideVersionEnum:
+    description: Version of the imaging slide used; different versions have different capture area layouts.
+    permissible_values:
+      V1:
+      V2:
+      V3:
+      V4:
