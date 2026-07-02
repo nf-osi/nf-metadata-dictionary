@@ -1,17 +1,51 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-genericdataresourcetemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Stand-in template for deposited data resources when a more specific template is not yet available. Use temporarily while a domain-specific template is being developed.",
-  "if": {
-    "properties": {
-      "resourceType": {
-        "const": "experimentalData"
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "dataType": {}
+        },
+        "required": [
+          "dataType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "dataSubtype": {}
+        },
+        "required": [
+          "dataSubtype"
+        ]
       }
     },
-    "required": [
-      "resourceType"
-    ]
-  },
+    {
+      "if": {
+        "properties": {
+          "resourceType": {
+            "const": "experimentalData"
+          }
+        },
+        "required": [
+          "resourceType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "assay": {},
+          "dataSubtype": {},
+          "dataType": {}
+        },
+        "required": [
+          "dataType",
+          "dataSubtype",
+          "assay"
+        ]
+      }
+    }
+  ],
+  "description": "Stand-in template for deposited data resources when a more specific template is not yet available. Use temporarily while a domain-specific template is being developed.",
   "properties": {
     "dataType": {
       "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
@@ -214,18 +248,6 @@
     "fileFormat",
     "resourceType"
   ],
-  "then": {
-    "properties": {
-      "assay": {},
-      "dataSubtype": {},
-      "dataType": {}
-    },
-    "required": [
-      "dataType",
-      "dataSubtype",
-      "assay"
-    ]
-  },
   "title": "GenericDataResourceTemplate",
   "type": "object"
 }

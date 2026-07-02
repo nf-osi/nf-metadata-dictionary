@@ -9977,7 +9977,7 @@ classes:
       - Also called a manifest depending on context.
     description: A collection of fields representing some entity.
   AnimalIndividualTemplate:
-    description: 'Template for non-human individual-level data. For xenografts, individualID references the cell line donor. Use sex/age/species for the individual animal. Use modelSystemName for the animal model genetic background, with modelSpecies/modelSex/modelAge for the model host animal.'
+    description: 'Template for non-human individual-level data. Use sex/age/species for the individual animal, and modelSystemName for the name of the mouse model.'
     slots:
       - individualID
       - sex
@@ -9992,10 +9992,6 @@ classes:
       - germlineMutation
       - species
       - modelSystemName
-      - modelSpecies
-      - modelSex
-      - modelAge
-      - modelAgeUnit
   BiospecimenTemplate:
     description: 'Specimen-level data, whether from human or animal. For cell line specimens, individualID references the cell line. For xenografts, also specify modelSystemName and model attributes.'
     slots:
@@ -10011,6 +10007,16 @@ classes:
       - modelSex
       - modelAge
       - modelAgeUnit
+    rules:
+      - description: If modelAge is provided, modelAgeUnit must be provided
+        preconditions:
+          slot_conditions:
+            modelAge:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            modelAgeUnit:
+              value_presence: PRESENT
   HumanCohortTemplate:
     description: 'Data of biosamples from human patients. Adapted from Table 2 of http://nrs.harvard.edu/urn-3:HUL.InstRepos:32725809. This template should be used when biosamples are from NF patients to provides a more valuable characterization and make additional gene-phenotype insights possible.
 
@@ -10873,6 +10879,15 @@ classes:
       fileFormat:
         range: SequencingFileFormatEnum
     rules:
+      - description: If modelAge is provided, modelAgeUnit must be provided
+        preconditions:
+          slot_conditions:
+            modelAge:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            modelAgeUnit:
+              value_presence: PRESENT
       - description: If experimentalTimepoint is provided, timepointUnit must be provided
         preconditions:
           slot_conditions:
@@ -11106,6 +11121,25 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
+    rules:
+      - description: If genePerturbed is provided, genePerturbationType must be provided
+        preconditions:
+          slot_conditions:
+            genePerturbed:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            genePerturbationType:
+              value_presence: PRESENT
+      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+        preconditions:
+          slot_conditions:
+            genePerturbed:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            genePerturbationTechnology:
+              value_presence: PRESENT
   MethylationArrayTemplate:
     description: Template for raw data files (idat) from DNA methylation arrays.
     is_a: GenomicsArrayTemplate
@@ -11582,6 +11616,15 @@ classes:
       assay:
         required: false
     rules:
+      - description: If dataType is provided, dataSubtype must be provided
+        preconditions:
+          slot_conditions:
+            dataType:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            dataSubtype:
+              value_presence: PRESENT
       - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
         preconditions:
           slot_conditions:
@@ -11645,6 +11688,15 @@ classes:
       dataSubtype:
         required: false
     rules:
+      - description: If dataType is provided, dataSubtype must be provided
+        preconditions:
+          slot_conditions:
+            dataType:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            dataSubtype:
+              value_presence: PRESENT
       - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
         preconditions:
           slot_conditions:

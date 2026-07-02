@@ -1,17 +1,49 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-analysisresulttemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Template for result files such as figures, presentations, and analysis outputs that report data results but are not primary experimental data.",
-  "if": {
-    "properties": {
-      "resourceType": {
-        "const": "experimentalData"
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "dataType": {}
+        },
+        "required": [
+          "dataType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "dataSubtype": {}
+        },
+        "required": [
+          "dataSubtype"
+        ]
       }
     },
-    "required": [
-      "resourceType"
-    ]
-  },
+    {
+      "if": {
+        "properties": {
+          "resourceType": {
+            "const": "experimentalData"
+          }
+        },
+        "required": [
+          "resourceType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "dataSubtype": {},
+          "dataType": {}
+        },
+        "required": [
+          "dataType",
+          "dataSubtype"
+        ]
+      }
+    }
+  ],
+  "description": "Template for result files such as figures, presentations, and analysis outputs that report data results but are not primary experimental data.",
   "properties": {
     "dataType": {
       "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
@@ -123,16 +155,6 @@
     "fileFormat",
     "resourceType"
   ],
-  "then": {
-    "properties": {
-      "dataSubtype": {},
-      "dataType": {}
-    },
-    "required": [
-      "dataType",
-      "dataSubtype"
-    ]
-  },
   "title": "AnalysisResultTemplate",
   "type": "object"
 }

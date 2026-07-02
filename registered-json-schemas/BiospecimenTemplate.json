@@ -2,6 +2,14 @@
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-biospecimentemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Specimen-level data, whether from human or animal. For cell line specimens, individualID references the cell line. For xenografts, also specify modelSystemName and model attributes.",
+  "if": {
+    "properties": {
+      "modelAge": {}
+    },
+    "required": [
+      "modelAge"
+    ]
+  },
   "properties": {
     "individualID": {
       "description": "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
@@ -995,6 +1003,14 @@
     "specimenID",
     "tumorType"
   ],
+  "then": {
+    "properties": {
+      "modelAgeUnit": {}
+    },
+    "required": [
+      "modelAgeUnit"
+    ]
+  },
   "title": "BiospecimenTemplate",
   "type": "object"
 }
