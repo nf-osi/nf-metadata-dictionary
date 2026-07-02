@@ -64,13 +64,13 @@ EpigenomicsAssayTemplate:
 
 LinkML supports [dynamic enums](https://linkml.io/linkml/schemas/enums.html) that materialize permissible values from an ontology branch at build time via `reachable_from` (`source_ontology`, `source_nodes`, `relationship_types`, `is_direct`). A periodic schema review ([#923](https://github.com/nf-osi/nf-metadata-dictionary/issues/923)) recommended adopting this pattern for our large value sets — disease/tumor (MONDO/NCIT), cell lines (Cellosaurus), institutions (ROR), species (NCBITaxon).
 
-This is good general LinkML advice, but it does not fit this model's constraints. We are **deliberately not adopting `reachable_from`** for our large enums. This section records why, so the recommendation isn't re-proposed each review cycle.
+While this feature *sounds* good, it does not fit this model's constraints. Our conscious design decision is to **deliberately not adopt `reachable_from`** for our large enums, recorded here to help disabuse contributors missing context.   
 
-### Why our large enums are not ontology branches
+### Many of our large enums are **not** ontology branches
 
 The two largest synced enums are **not** "all descendants of an ontology node," so `reachable_from` cannot generate them in the first place:
 
-- **`CellLineModel`** (`modules/Sample/CellLineModel.yaml`) and **`AntibodyEnum`** (`modules/Experiment/Antibody.yaml`) are **auto-generated from the NF Research Tools Central truth tables in Synapse** (`syn26450069`, `syn51730943`) by `utils/sync_model_systems.py`. Their members are the specific reagents and cell lines that NF investigators have actually registered — each carrying a curated `source` link back to its Tools Central detail page (and, where known, an RRID / `rrid:CVCL_*` `meaning`). This is already a dynamic sync; it just sources from *our community's* authoritative registry rather than a public ontology branch. There is no Cellosaurus subtree that corresponds to "NF cell lines," so `reachable_from` would either under-cover (miss unregistered/community lines) or over-cover (pull in thousands of irrelevant lines).
+- **`CellLineModel`** (`modules/Sample/CellLineModel.yaml`) and **`AntibodyEnum`** (`modules/Experiment/Antibody.yaml`) are **auto-generated from the NF Research Tools Central truth tables in Synapse** (`syn26450069`, `syn51730943`) by `utils/sync_model_systems.py`. Their members are the specific reagents and cell lines that NF investigators have registered — each carrying a curated `source` link back to its Tools Central detail page (and, where known, an RRID / `rrid:CVCL_*` `meaning`). This is *already* a dynamic sync; it just sources from *our community's* authoritative registry rather than a public ontology branch. There is no Cellosaurus subtree that corresponds to "NF cell lines," so `reachable_from` would either under-cover (miss unregistered/community lines) or over-cover (pull in thousands of irrelevant lines).
 
 These enums also **round-trip with the annotation review workflow** (see below): free-text values contributors submit are surfaced and folded back into the registry. A build-time `reachable_from` materialization would have no place to absorb that community-driven vocabulary growth.
 
@@ -78,11 +78,11 @@ These enums also **round-trip with the annotation review workflow** (see below):
 
 For value sets that *do* map to an ontology branch, two hard constraints still rule out materializing the full branch:
 
-1. **Downstream UI limits.** The model is instantiated in a web application (the Data Curator App / Synapse manifest UI) where each enum becomes a dropdown. Dropdowns have real limits — Synapse JSON Schema enums are capped around **100 values** (already noted in the [Annotation Review Workflow](#annotation-review-workflow) section), and beyond a few dozen options the picker becomes unusable regardless of any hard cap. Materializing an ontology branch blows straight through both the technical cap and the usability ceiling.
+1. **Downstream UI limits.** The model is instantiated in a web application (the Synapse Curator UI) where each enum becomes a dropdown. Consider the size limits in the total JSON schema and performance considerations.
 
-2. **We don't want the whole branch — we want the relevant slice.** Pulling every descendant optimizes for completeness of the ontology, not usefulness to an NF curator:
+2. **We don't want the whole branch — we want the relevant slice.** Pulling every descendant optimizes for completeness of the ontology but not usefulness/good experience to an NF curator:
    - **`Institution` / `Organization`** (`modules/Other/Organization.yaml`): ROR contains **110,000+** institutions. NF data comes from a small, known set of contributing sites. A dropdown seeded from all of ROR is worse than the curated list, not better.
-   - **`Tumor`** (`modules/Sample/Tumor.yaml`): ~57 hand-picked, NF-relevant tumor types (curated from OncoTree / NCIT / MONDO). The full NCIT/MONDO neoplasm branch is thousands of terms, the vast majority of which are irrelevant to NF and would bury the ~57 that curators actually need to find.
+   - **`Tumor`** (`modules/Sample/Tumor.yaml`): ~57 hand-picked, NF-relevant tumor types (curated from OncoTree / NCIT / MONDO). The full NCIT/MONDO neoplasm branch is thousands of terms, the vast majority of which are irrelevant to NF and would bury the ~57 needed.
 
 ### The value we'd lose
 
