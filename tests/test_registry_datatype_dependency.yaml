@@ -1,0 +1,32 @@
+# Conditional (if-then) Dependency Validation: dataType -> dataSubtype
+#
+# Migrated from the legacy schematic annotation on the `dataType` slot:
+#   requiresDependency: dataSubtype
+#
+# BiologicalAssayDataTemplate / NonBiologicalAssayDataTemplate already carry
+# this rule (inherited by their subclasses). AnalysisResultTemplate and
+# GenericDataResourceTemplate descend directly from FileBasedTemplate, so they
+# did NOT inherit it despite offering both slots — the rule is added directly.
+#
+# resourceType is "metadata" so no other conditional requirements interfere;
+# these cases isolate the dataType -> dataSubtype dependency.
+---
+schema: AnalysisResultTemplate
+instances:
+  - file: data/AnalysisResultTemplate/valid_datatype_with_subtype.json
+    description: dataType and dataSubtype both provided — satisfies the conditional dependency
+    expected: valid
+  - file: data/AnalysisResultTemplate/invalid_datatype_missing_subtype.json
+    description: dataType is present but dataSubtype is absent
+    expected: invalid
+    reason: dataType is present but dataSubtype is missing
+---
+schema: GenericDataResourceTemplate
+instances:
+  - file: data/GenericDataResourceTemplate/valid_datatype_with_subtype.json
+    description: dataType and dataSubtype both provided — satisfies the conditional dependency
+    expected: valid
+  - file: data/GenericDataResourceTemplate/invalid_datatype_missing_subtype.json
+    description: dataType is present but dataSubtype is absent
+    expected: invalid
+    reason: dataType is present but dataSubtype is missing
