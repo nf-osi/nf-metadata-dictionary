@@ -3,8 +3,9 @@
 ## Table of Contents
 
 1. [Contextual Enum Subsets](#contextual-enum-subsets)
-2. [Conditional Dependencies (LinkML Rules)](#conditional-dependencies-linkml-rules)
-3. [Annotation Review Workflow](#annotation-review-workflow)
+2. [Enum Value Sourcing: Curated Sync vs. Dynamic Ontology Enums](#enum-value-sourcing-curated-sync-vs-dynamic-ontology-enums)
+3. [Conditional Dependencies (LinkML Rules)](#conditional-dependencies-linkml-rules)
+4. [Annotation Review Workflow](#annotation-review-workflow)
 
 ---
 
@@ -54,6 +55,56 @@ EpigenomicsAssayTemplate:
 - Create enum subsets when a general enum exceeds ~30-50 values
 - Apply slot_usage when templates have clear domain context (sequencing, imaging, clinical, etc.)
 - Use `any_of` for cross-domain templates or generic base templates
+
+---
+
+## Enum Value Sourcing: Curated Sync vs. Dynamic Ontology Enums
+
+### Background
+
+LinkML supports [dynamic enums](https://linkml.io/linkml/schemas/enums.html) that materialize permissible values from an ontology branch at build time via `reachable_from` (`source_ontology`, `source_nodes`, `relationship_types`, `is_direct`). A periodic schema review ([#923](https://github.com/nf-osi/nf-metadata-dictionary/issues/923)) recommended adopting this pattern for our large value sets — disease/tumor (MONDO/NCIT), cell lines (Cellosaurus), institutions (ROR), species (NCBITaxon).
+
+While this feature *sounds* good, it does not fit this model's constraints. Our conscious design decision is to **deliberately not adopt `reachable_from`** for our large enums, recorded here to help disabuse contributors missing context.   
+
+### Many of our large enums are **not** ontology branches
+
+The two largest synced enums are **not** "all descendants of an ontology node," so `reachable_from` cannot generate them in the first place:
+
+- **`CellLineModel`** (`modules/Sample/CellLineModel.yaml`) and **`AntibodyEnum`** (`modules/Experiment/Antibody.yaml`) are **auto-generated from the NF Research Tools Central truth tables in Synapse** (`syn26450069`, `syn51730943`) by `utils/sync_model_systems.py`. Their members are the specific reagents and cell lines that NF investigators have registered — each carrying a curated `source` link back to its Tools Central detail page (and, where known, an RRID / `rrid:CVCL_*` `meaning`). This is *already* a dynamic sync; it just sources from *our community's* authoritative registry rather than a public ontology branch. There is no Cellosaurus subtree that corresponds to "NF cell lines," so `reachable_from` would either under-cover (miss unregistered/community lines) or over-cover (pull in thousands of irrelevant lines).
+
+These enums also **round-trip with the annotation review workflow** (see below): free-text values contributors submit are surfaced and folded back into the registry. A build-time `reachable_from` materialization would have no place to absorb that community-driven vocabulary growth.
+
+### Why we don't pull whole ontology branches even where one exists
+
+For value sets that *do* map to an ontology branch, two hard constraints still rule out materializing the full branch:
+
+1. **Downstream UI limits.** The model is instantiated in a web application (the Synapse Curator UI) where each enum becomes a dropdown. Consider the size limits in the total JSON schema and performance considerations.
+
+2. **We don't want the whole branch — we want the relevant slice.** Pulling every descendant optimizes for completeness of the ontology but not usefulness/good experience to an NF curator:
+   - **`Institution` / `Organization`** (`modules/Other/Organization.yaml`): ROR contains **110,000+** institutions. NF data comes from a small, known set of contributing sites. A dropdown seeded from all of ROR is worse than the curated list, not better.
+   - **`Tumor`** (`modules/Sample/Tumor.yaml`): ~57 hand-picked, NF-relevant tumor types (curated from OncoTree / NCIT / MONDO). The full NCIT/MONDO neoplasm branch is thousands of terms, the vast majority of which are irrelevant to NF and would bury the ~57 needed.
+
+### The value we'd lose
+
+Our permissible values carry **bespoke, curated context** that a generated branch does not reproduce:
+
+- `Tumor` entries carry hand-written `description`s (e.g., the ANNUBP provisional-classification note, "Atypical MPNST" positioning between neurofibroma and high-grade MPNST) plus `aliases` for how NF investigators actually refer to them.
+- Synced reagent enums carry `source` links into Tools Central and RRIDs.
+
+`reachable_from` would replace these with generic ontology labels and definitions, losing the curation that makes the dropdowns usable in an NF context.
+
+### Our approach instead
+
+We get the maintainability benefit that dynamic enums promise, without the downsides, by:
+
+- **Syncing from authoritative sources we control the scope of** — Tools Central truth tables via `utils/sync_model_systems.py`, ontology synonyms via `utils/extract_synonyms.py` / `inject_synonyms.py`.
+- **Curating the relevant slice by hand** where an ontology branch is too broad (`Tumor`, `Institution`), keeping `source`/`meaning` links to the ontology for provenance without inheriting the whole branch.
+- **Absorbing real-world vocabulary** through the annotation review workflow rather than a static branch snapshot.
+- **Splitting large enums into [contextual subsets](#contextual-enum-subsets)** so any single dropdown stays small.
+
+### When `reachable_from` *would* be appropriate
+
+If a future value set is genuinely "every descendant of node X," is small enough to satisfy the ~100-value UI limit, needs no NF-specific descriptions/aliases, and has no community-registry or free-text feedback loop, then `reachable_from` is the right tool and should be used. None of our current large enums meet all four conditions.
 
 ---
 
