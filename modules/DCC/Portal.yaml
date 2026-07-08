@@ -75,54 +75,146 @@ enums:
       Schwannomatosis-NOS:
     title: Disease Focus
   DuoEnum:
-    permissible_values:
-      Clinical Care Use:
-        description: Clinical Care Use
-      Collaboration Required:
-        description: Collaboration Required - PI Contact information required
-      Disease Specific Research:
-        description: Disease Specific Research - Provide detail [DOID] or [MONDO]
-      Ethics Approval Required:
-        description: Ethics Approval Required - User prompted to provide IRB/IEC approval
-      General Research Use:
-        description: General Research Use
-      Genetic Studies Only:
-        description: Genetic Studies Only
-      Geographical Restriction:
-        description: Geographical Restriction - Provide country restriction [ISO 3166⍺2]
-      Health or Medical or Biomedical Research:
-        description: Health or Medical or Biomedical Research
-      Institution Specific Restriction:
-        description: Institution Specific Restriction - Name Institution [ror.org]
-      No General Methods Research:
-        description: No General Methods Research
-      No Restriction:
-        description: No Restriction - Data is available under Open or Anonymous access
-      Non-Commercial Use Only:
-        description: Non-Commercial Use Only
-      Not-for-Profit Non-Commercial Use Only:
-        description: Not-for-Profit, Non-Commercial Use Only
-      Not-for-Profit Organisation Use Only:
-        description: Not-for-Profit Organisation Use Only
-      Population Origins or Ancestry Research Only:
-        description: Population Origins or Ancestry Research Only - User must describe research use in IDU statement
-      Population Origins or Ancestry Research Prohibited:
-        description: Population Origins or Ancestry Research Prohibited
-      Project Specific Restriction:
-        description: Project Specific Restriction - User prompted to provide IDU statement
-      Publication Moratorium:
-        description: Publication Moratorium - Provide date [ISO 8601]
-      Publication Required:
-        description: Publication Required
-      Research Specific Restrictions:
-        description: Research Specific Restrictions - Provide detail
-      Return to Database or Resource:
-        description: Return to Database or Resource
-      Time Limit on Use:
-        description: Time Limit on Use - Provide date [ISO 8601]
-      User Specific Restriction:
-        description: User Specific Restriction - User may be required to register, enhance their profile, join a Synapse Team, or have a specific authentication, e.g., 2FA or RAS
     title: Data Use Modifiers
+    permissible_values:
+      "DUO:0000043":
+        description: Clinical Care Use
+        aliases:
+          - Clinical Care Use
+          - CC
+        meaning: DUO:0000043
+      "DUO:0000020":
+        description: Collaboration Required - PI Contact information required
+        aliases:
+          - Collaboration Required
+          - COL
+        meaning: DUO:0000020
+      "DUO:0000007":
+        description: Disease Specific Research - Provide detail [DOID] or [MONDO]
+        aliases:
+          - Disease Specific Research
+          - DS
+        meaning: DUO:0000007
+      "DUO:0000021":
+        description: Ethics Approval Required - User prompted to provide IRB/IEC approval
+        aliases:
+          - Ethics Approval Required
+          - IRB
+        meaning: DUO:0000021
+      "DUO:0000042":
+        description: General Research Use
+        aliases:
+          - General Research Use
+          - GRU
+        meaning: DUO:0000042
+      "DUO:0000016":
+        description: Genetic Studies Only
+        aliases:
+          - Genetic Studies Only
+          - GSO
+        meaning: DUO:0000016
+      "DUO:0000022":
+        description: Geographical Restriction - Provide country restriction [ISO 3166 alpha-2]
+        aliases:
+          - Geographical Restriction
+          - GS
+        meaning: DUO:0000022
+      "DUO:0000006":
+        description: Health or Medical or Biomedical Research
+        aliases:
+          - Health or Medical or Biomedical Research
+          - HMB
+        meaning: DUO:0000006
+      "DUO:0000028":
+        description: Institution Specific Restriction - Name Institution [ror.org]
+        aliases:
+          - Institution Specific Restriction
+          - IS
+        meaning: DUO:0000028
+      "DUO:0000015":
+        description: No General Methods Research
+        aliases:
+          - No General Methods Research
+          - NMDS
+        meaning: DUO:0000015
+      "DUO:0000004":
+        description: No Restriction - Data is available under Open or Anonymous access
+        aliases:
+          - No Restriction
+          - NRES
+        meaning: DUO:0000004
+      "DUO:0000046":
+        description: Non-Commercial Use Only
+        aliases:
+          - Non-Commercial Use Only
+          - NCU
+        meaning: DUO:0000046
+      "DUO:0000018":
+        description: Not-for-Profit, Non-Commercial Use Only
+        aliases:
+          - Not-for-Profit Non-Commercial Use Only
+          - NPUNCU
+        meaning: DUO:0000018
+      "DUO:0000045":
+        description: Not-for-Profit Organisation Use Only
+        aliases:
+          - Not-for-Profit Organisation Use Only
+          - NPU
+        meaning: DUO:0000045
+      "DUO:0000011":
+        description: Population Origins or Ancestry Research Only - User must describe research use in IDU statement
+        aliases:
+          - Population Origins or Ancestry Research Only
+          - POA
+        meaning: DUO:0000011
+      "DUO:0000044":
+        description: Population Origins or Ancestry Research Prohibited
+        aliases:
+          - Population Origins or Ancestry Research Prohibited
+          - NPOA
+        meaning: DUO:0000044
+      "DUO:0000027":
+        description: Project Specific Restriction - User prompted to provide IDU statement
+        aliases:
+          - Project Specific Restriction
+          - PS
+        meaning: DUO:0000027
+      "DUO:0000024":
+        description: Publication Moratorium - Provide date [ISO 8601]
+        aliases:
+          - Publication Moratorium
+          - MOR
+        meaning: DUO:0000024
+      "DUO:0000019":
+        description: Publication Required
+        aliases:
+          - Publication Required
+          - PUB
+        meaning: DUO:0000019
+      "DUO:0000012":
+        description: Research Specific Restrictions - Provide detail
+        aliases:
+          - Research Specific Restrictions
+          - RS
+        meaning: DUO:0000012
+      "DUO:0000029":
+        description: Return to Database or Resource
+        aliases:
+          - Return to Database or Resource
+          - RTN
+        meaning: DUO:0000029
+      "DUO:0000025":
+        description: Time Limit on Use - Provide date [ISO 8601]
+        aliases:
+          - Time Limit on Use
+          - TS
+        meaning: DUO:0000025
+      "DUO:0000026":
+        description: User Specific Restriction - User may be required to register, enhance their profile, join a Synapse Team, or have a specific authentication, e.g., 2FA or RAS
+        aliases:
+          - User Specific Restriction
+          - US
+        meaning: DUO:0000026
   FundingAgencyEnum:
     permissible_values:
       CTF:
