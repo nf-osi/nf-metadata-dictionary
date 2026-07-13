@@ -1,0 +1,18 @@
+{
+  "title": "AMP-ALS Data Model",
+  "subtitle": "visual editor & ontology tools",
+  "root": ".",
+  "sourceFiles": ["header.yaml"],
+  "sourceDirs": ["modules"],
+  "headerFile": "header.yaml",
+  "templateDir": null,
+  "dataTypeEnums": null,
+  "dcaConfig": null,
+  "build": {
+    "ttl": "make dist/ALS.yaml",
+    "schemas": "make ALS.jsonld",
+    "limits": "",
+    "tests": "",
+    "lint": "linkml-lint dist/ALS.yaml"
+  }
+}

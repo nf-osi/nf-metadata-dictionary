@@ -17,6 +17,11 @@ const EDITOR_PARENT = resolve(__dirname, '..'); // repo root when editor/ sits a
 const DEFAULTS = {
   title: 'NF Metadata Model',
   subtitle: 'visual editor & ontology tools',
+  // source dialect: 'linkml' (YAML modules) or 'schematic-csv' (a single DCA/schematic CSV).
+  // schematic-csv models load read-only (visualize + ontology-gap analysis; no write-back yet).
+  format: 'linkml',
+  // for format 'schematic-csv': path to the compiled model CSV (e.g. 'AD.model.csv')
+  csvModel: null,
   // repo root that holds the model source (relative to editor/'s parent, or absolute)
   root: '.',
   // top-level YAML files merged first (prefixes/defaults live here)
@@ -54,7 +59,12 @@ function loadConfig() {
   }
   const cfg = { ...DEFAULTS, ...user, build: { ...DEFAULTS.build, ...(user.build || {}) } };
   cfg.root = resolve(EDITOR_PARENT, cfg.root || '.');
-  if (!cfg.modelPaths) cfg.modelPaths = [...cfg.sourceDirs, ...cfg.sourceFiles, cfg.dcaConfig].filter(Boolean);
+  cfg.readOnly = cfg.format !== 'linkml'; // only LinkML write-back is wired
+  if (!cfg.modelPaths) {
+    cfg.modelPaths = cfg.format === 'schematic-csv'
+      ? [cfg.csvModel].filter(Boolean)
+      : [...cfg.sourceDirs, ...cfg.sourceFiles, cfg.dcaConfig].filter(Boolean);
+  }
   return cfg;
 }
 

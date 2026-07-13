@@ -41,6 +41,15 @@ app.use(express.json({ limit: '8mb' }));
 let lastApiWrite = 0;
 app.use((req, res, next) => { if (req.method !== 'GET' && req.path.startsWith('/api/')) lastApiWrite = Date.now(); next(); });
 
+// Read-only models (e.g. schematic-csv): block every mutating API. The app is still
+// fully usable for viewing the graph and ontology-gap analysis; write-back isn't wired.
+app.use('/api', (req, res, next) => {
+  if (CONFIG.readOnly && req.method !== 'GET') {
+    return res.status(409).json({ error: `This model is read-only in the editor (format: "${CONFIG.format}"). Editing isn't wired for ${CONFIG.format} models yet — use the app to explore the model and find ontology gaps.` });
+  }
+  next();
+});
+
 const wrap = (fn) => (req, res) => Promise.resolve(fn(req, res)).catch((e) => {
   console.error(e);
   res.status(500).json({ error: e.message });
@@ -119,6 +128,7 @@ app.post('/api/enums/:name/values', wrap((req, res) => {
 // App config (title + which repo-specific features are enabled).
 app.get('/api/config', (req, res) => res.json({
   title: CONFIG.title, subtitle: CONFIG.subtitle, templateDir: CONFIG.templateDir,
+  format: CONFIG.format, readOnly: !!CONFIG.readOnly,
   features: { dca: !!CONFIG.dcaConfig, dataType: !!(CONFIG.dataTypeEnums && CONFIG.dataTypeEnums.length) },
 }));
 

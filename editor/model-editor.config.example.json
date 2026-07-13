@@ -1,8 +1,14 @@
 {
   "//": "Copy to model-editor.config.json (at the repo root, or in editor/) to reuse the editor in another LinkML model repo. All paths are relative to `root`. Omit any key to keep the NF default. Delete the // notes.",
 
-  "title": "AD Knowledge Portal Model",
+  "title": "My Data Model",
   "subtitle": "visual editor & ontology tools",
+
+  "//format": "source dialect: 'linkml' (YAML modules, default, read+write) or 'schematic-csv' (a single DCA/schematic CSV, read-only). See examples/ for per-repo configs.",
+  "format": "linkml",
+
+  "//csvModel": "for format 'schematic-csv' only: path to the compiled model CSV, e.g. 'AD.model.csv'",
+  "csvModel": null,
 
   "//root": "repo root holding the model source, relative to editor/'s parent (default '.' = editor sits at repo top; use '..' etc. for a submodule layout)",
   "root": ".",

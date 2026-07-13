@@ -80,6 +80,14 @@ function applyBranding(cfg) {
   document.title = cfg.title || 'Model editor';
   const strong = document.querySelector('.brand-text strong'); if (strong && cfg.title) strong.textContent = cfg.title;
   const sub = document.querySelector('.brand-sub'); if (sub && cfg.subtitle) sub.textContent = cfg.subtitle;
+  // Read-only models (e.g. schematic-csv): flag the body so edit affordances hide, and show a banner.
+  document.body.classList.toggle('read-only', !!cfg.readOnly);
+  if (cfg.readOnly && !document.querySelector('.ro-banner')) {
+    const b = document.createElement('div');
+    b.className = 'ro-banner';
+    b.textContent = `Read-only — this is a ${cfg.format || ''} model. Explore the graph and find ontology gaps; editing isn't wired for this format yet.`;
+    document.body.appendChild(b);
+  }
 }
 async function init() {
   STATE.config = await api('GET', '/api/config').catch(() => ({ title: 'Model', subtitle: '', features: { dca: true, dataType: true } }));

@@ -11,6 +11,7 @@ import { resolve, relative, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
 import { CONFIG, ROOT } from './config.mjs';
+import { loadSchematicModel } from './schematic.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 export { ROOT };
@@ -52,6 +53,7 @@ export function listSourceFiles() {
  * where fileIndex maps `${kind}:${name}` -> repo-relative path.
  */
 export function loadModel() {
+  if (CONFIG.format === 'schematic-csv') return loadSchematicModel();
   const classes = {};
   const slots = {};
   const enums = {};

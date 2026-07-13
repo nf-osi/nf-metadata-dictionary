@@ -130,10 +130,18 @@ appear in the graph (existing-enum edits show up on the next page load).
 
 The editor is config‑driven, so it isn't tied to the NF model — with no config file
 it defaults to the NF layout, and a `model-editor.config.json` (at the repo root or
-in `editor/`) overrides any of: title/subtitle, source dirs/files, header/prefixes
-file, template dir, dataType enums, DCA registry, model paths for the Changes/PR
-flow, build commands, and ontology‑priority hints. See
-[`model-editor.config.example.json`](model-editor.config.example.json).
+in `editor/`) overrides any of: title/subtitle, **source dialect** (`linkml` or
+`schematic-csv`), source dirs/files, header/prefixes file, template dir, dataType
+enums, DCA registry, model paths for the Changes/PR flow, build commands, and
+ontology‑priority hints. See [`model-editor.config.example.json`](model-editor.config.example.json)
+and ready-to-use configs for other Sage models in
+[`examples/`](examples/) ([readiness matrix](examples/READINESS.md)).
+
+**Two source dialects.** LinkML repos (NF, AMP-ALS, HTAN2) are read/write. Sage
+**schematic/DCA CSV** models (e.g. AD Knowledge Portal's `AD.model.csv`) load via
+`"format": "schematic-csv"` + `"csvModel": "…"` — read-only for now (full graph +
+ontology-gap analysis; write-back to CSV isn't wired, so edits are blocked and a
+read-only banner is shown).
 
 Set a key to `null` to turn a feature off (e.g. `"dcaConfig": null` hides DCA
 registration, `"dataTypeEnums": null` drops the dataType requirement) — disabled
