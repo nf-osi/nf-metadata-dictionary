@@ -22,6 +22,7 @@ import { CONFIG } from './config.mjs';
 import { loadModel, buildGraph, modelSummary, readSourceFile, classifyRange, slotRanges, ROOT } from './model.mjs';
 import { setScalarField, addEnumValues, createEnum, createClass, addDcaEntry, addListItem, setSlotUsage, removeEnumValue } from './patch.mjs';
 import { searchOntology, getDescendants, getTerm, getParents, domainHint } from './ontology.mjs';
+import { toLinkMLYaml, slugify } from './linkml-export.mjs';
 
 const KINDS = { classes: 'classes', slots: 'slots', enums: 'enums' };
 function fileFor(kind, name) {
@@ -130,6 +131,21 @@ app.get('/api/config', (req, res) => res.json({
   title: CONFIG.title, subtitle: CONFIG.subtitle, templateDir: CONFIG.templateDir,
   format: CONFIG.format, readOnly: !!CONFIG.readOnly,
   features: { dca: !!CONFIG.dcaConfig, dataType: !!(CONFIG.dataTypeEnums && CONFIG.dataTypeEnums.length) },
+}));
+
+// Export the current model as a LinkML schema (migration artifact). GET, so it's
+// allowed even for read-only schematic models — this is the "output LinkML so the
+// team can migrate" path. Streams a downloadable .yaml.
+app.get('/api/export/linkml', wrap((req, res) => {
+  const model = loadModel();
+  const yamlText = toLinkMLYaml(model, CONFIG.title);
+  const fname = `${slugify(CONFIG.title)}.linkml.yaml`;
+  if (req.query.download) {
+    res.setHeader('Content-Type', 'application/x-yaml');
+    res.setHeader('Content-Disposition', `attachment; filename="${fname}"`);
+    return res.send(yamlText);
+  }
+  res.json({ filename: fname, yaml: yamlText, summary: modelSummary(model) });
 }));
 
 // Valid dataType annotation values (union of the configured dataType enums).

@@ -85,7 +85,14 @@ function applyBranding(cfg) {
   if (cfg.readOnly && !document.querySelector('.ro-banner')) {
     const b = document.createElement('div');
     b.className = 'ro-banner';
-    b.textContent = `Read-only — this is a ${cfg.format || ''} model. Explore the graph and find ontology gaps; editing isn't wired for this format yet.`;
+    const msg = document.createElement('span');
+    msg.textContent = `Read-only — this is a ${cfg.format || ''} model. Explore the graph and find ontology gaps. To migrate off ${cfg.format || 'CSV'}, export it as LinkML →`;
+    const btn = document.createElement('button');
+    btn.className = 'ro-export';
+    btn.textContent = 'Export to LinkML';
+    btn.title = 'Download a valid LinkML schema converted from this model';
+    btn.onclick = () => { window.location = '/api/export/linkml?download=1'; };
+    b.append(msg, btn);
     document.body.appendChild(b);
   }
 }

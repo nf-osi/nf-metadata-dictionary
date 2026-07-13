@@ -139,9 +139,15 @@ and ready-to-use configs for other Sage models in
 
 **Two source dialects.** LinkML repos (NF, AMP-ALS, HTAN2) are read/write. Sage
 **schematic/DCA CSV** models (e.g. AD Knowledge Portal's `AD.model.csv`) load via
-`"format": "schematic-csv"` + `"csvModel": "…"` — read-only for now (full graph +
-ontology-gap analysis; write-back to CSV isn't wired, so edits are blocked and a
-read-only banner is shown).
+`"format": "schematic-csv"` + `"csvModel": "…"` — read-only (full graph +
+ontology-gap analysis; edits are blocked and a read-only banner is shown).
+
+**Migrate schematic → LinkML.** Instead of writing back to CSV, a schematic model
+can be **exported as a valid LinkML schema** — the read-only banner's *Export to
+LinkML* button (or `GET /api/export/linkml?download=1`) downloads one `.yaml`. It
+round-trips through the editor's own loader with zero loss and compiles through
+LinkML's official `gen-json-schema`, so a team can commit it and start migrating
+off CSV (after which the editor edits it read/write like any LinkML repo).
 
 Set a key to `null` to turn a feature off (e.g. `"dcaConfig": null` hides DCA
 registration, `"dataTypeEnums": null` drops the dataType requirement) — disabled

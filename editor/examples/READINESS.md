@@ -42,7 +42,12 @@ indentation error upstream — the loader logs and skips it rather than failing.
 links). The `schematic-csv` adapter (`schematic.mjs`) maps it into the same
 internal shape. Almost nothing is mapped to an ontology CURIE yet (`meaning` is
 empty on ~all 1,665 values), so the ontology-gap view is where this model gets
-the most value. Making it editable = a CSV write-back path (next step).
+the most value.
+
+Rather than editing the CSV in place, schematic models **export to LinkML** (the
+read-only banner's *Export to LinkML* button) as a migration starting point. The
+ADKP export round-trips back through the LinkML loader with identical counts
+(32/279/105/1665) and compiles through LinkML's official `gen-json-schema`.
 
 ## Build commands
 

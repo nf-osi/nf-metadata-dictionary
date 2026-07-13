@@ -399,12 +399,20 @@ input[type=checkbox], input[type=radio] { accent-color: var(--stamp); width: 15p
 /* ---- Read-only models (schematic-csv, etc.) ---- */
 .ro-banner {
   position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%);
-  z-index: 60; max-width: 640px;
+  z-index: 60; max-width: 720px;
+  display: flex; align-items: center; gap: 12px;
   background: var(--ink, #23201c); color: #f4efe7;
   border: 1px solid var(--oxblood, #9a3324); border-left: 4px solid var(--oxblood, #9a3324);
   border-radius: 8px; padding: 9px 14px;
   font: 500 12.5px/1.45 "IBM Plex Sans", system-ui, sans-serif;
   box-shadow: 0 6px 22px rgba(0,0,0,.28); letter-spacing: .01em;
 }
+.ro-banner .ro-export {
+  flex: none; cursor: pointer; white-space: nowrap;
+  background: var(--leaf, #3f7a2e); color: #fff; border: 0;
+  border-radius: 6px; padding: 6px 12px;
+  font: 600 12px "IBM Plex Sans", system-ui, sans-serif; letter-spacing: .02em;
+}
+.ro-banner .ro-export:hover { filter: brightness(1.08); }
 body.read-only #add-term-btn,
 body.read-only #new-class-btn { display: none !important; }
