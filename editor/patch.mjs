@@ -283,8 +283,7 @@ export function createClass(rel, name, def = {}) {
 }
 
 /** Append one entry to the manifest_schemas array in dca-template-config.json (minimal diff). */
-export function addDcaEntry(displayName, schemaName, type = 'file') {
-  const rel = 'dca-template-config.json';
+export function addDcaEntry(displayName, schemaName, type = 'file', rel = 'dca-template-config.json') {
   const { abs, text } = load(rel);
   if (text == null) throw new Error('dca-template-config.json not found');
   const lines = text.split('\n');

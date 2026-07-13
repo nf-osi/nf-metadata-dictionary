@@ -126,6 +126,26 @@ appear in the graph (existing-enum edits show up on the next page load).
 - `#gaps`, `#import` — open a specific tab. `?gap=Tumor#gaps` opens a value set's coverage.
 - `?tour=off` — suppress the first-run tutorial (handy for demos/screenshots).
 
+## Reuse in another repo (AD model, etc.)
+
+The editor is config‑driven, so it isn't tied to the NF model — with no config file
+it defaults to the NF layout, and a `model-editor.config.json` (at the repo root or
+in `editor/`) overrides any of: title/subtitle, source dirs/files, header/prefixes
+file, template dir, dataType enums, DCA registry, model paths for the Changes/PR
+flow, build commands, and ontology‑priority hints. See
+[`model-editor.config.example.json`](model-editor.config.example.json).
+
+Set a key to `null` to turn a feature off (e.g. `"dcaConfig": null` hides DCA
+registration, `"dataTypeEnums": null` drops the dataType requirement) — disabled
+features also disappear from the UI.
+
+As a git submodule in the consuming model repo:
+```bash
+git submodule add <editor-repo-url> editor
+cp editor/model-editor.config.example.json model-editor.config.json   # then edit
+cd editor && npm install && npm start
+```
+
 ## How it works
 | File | Role |
 |------|------|

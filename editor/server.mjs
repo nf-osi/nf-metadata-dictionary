@@ -18,6 +18,7 @@ import { tmpdir } from 'os';
 import { exec, execFile } from 'child_process';
 import { existsSync as fexists } from 'fs';
 import { resolve as rpath } from 'path';
+import { CONFIG } from './config.mjs';
 import { loadModel, buildGraph, modelSummary, readSourceFile, classifyRange, slotRanges, ROOT } from './model.mjs';
 import { setScalarField, addEnumValues, createEnum, createClass, addDcaEntry, addListItem, setSlotUsage, removeEnumValue } from './patch.mjs';
 import { searchOntology, getDescendants, getTerm, getParents, domainHint } from './ontology.mjs';
@@ -115,13 +116,18 @@ app.post('/api/enums/:name/values', wrap((req, res) => {
   res.json({ ok: true, file: rel, ...addEnumValues(rel, name, values) });
 }));
 
-// Valid dataType annotation values (union of Data + MetadataEnum permissible values).
+// App config (title + which repo-specific features are enabled).
+app.get('/api/config', (req, res) => res.json({
+  title: CONFIG.title, subtitle: CONFIG.subtitle, templateDir: CONFIG.templateDir,
+  features: { dca: !!CONFIG.dcaConfig, dataType: !!(CONFIG.dataTypeEnums && CONFIG.dataTypeEnums.length) },
+}));
+
+// Valid dataType annotation values (union of the configured dataType enums).
 app.get('/api/datatypes', wrap((req, res) => {
   const m = loadModel();
   const vals = new Set();
-  for (const name of ['Data', 'MetadataEnum']) {
-    const pv = m.enums[name]?.permissible_values || {};
-    Object.keys(pv).forEach((k) => vals.add(k));
+  for (const name of CONFIG.dataTypeEnums || []) {
+    Object.keys(m.enums[name]?.permissible_values || {}).forEach((k) => vals.add(k));
   }
   res.json({ values: [...vals].sort() });
 }));
@@ -135,7 +141,7 @@ app.post('/api/classes', wrap((req, res) => {
   if (loadModel().classes[name]) return res.status(409).json({ error: `class ${name} already exists` });
   const result = createClass(file, name, def);
   let dcaResult = null;
-  if (dca && dca.display_name) dcaResult = addDcaEntry(dca.display_name, name, dca.type || 'file');
+  if (dca && dca.display_name && CONFIG.dcaConfig) dcaResult = addDcaEntry(dca.display_name, name, dca.type || 'file', CONFIG.dcaConfig);
   res.json({ ok: true, ...result, dca: dcaResult });
 }));
 
@@ -182,7 +188,7 @@ function runQc(model) {
   const F = [];
   const add = (severity, kind, message, opts = {}) => F.push({ severity, kind, message, ...opts });
   const validDataTypes = new Set();
-  for (const n of ['Data', 'MetadataEnum']) Object.keys(model.enums[n]?.permissible_values || {}).forEach((k) => validDataTypes.add(k));
+  for (const n of CONFIG.dataTypeEnums || []) Object.keys(model.enums[n]?.permissible_values || {}).forEach((k) => validDataTypes.add(k));
 
   // --- enums / permissible values ---
   const undeclaredPrefix = {}; // prefix -> count
@@ -200,7 +206,7 @@ function runQc(model) {
       if (!(v && v.description)) noDesc++;
     }
   }
-  for (const [p, n] of Object.entries(undeclaredPrefix)) add('error', 'undeclared-prefix', `CURIE prefix "${p}:" is used by ${n} value(s) but not declared in header.yaml prefixes.`, { entity: p, file: 'header.yaml' });
+  for (const [p, n] of Object.entries(undeclaredPrefix)) add('error', 'undeclared-prefix', `CURIE prefix "${p}:" is used by ${n} value(s) but not declared in ${CONFIG.headerFile} prefixes.`, { entity: p, file: CONFIG.headerFile });
   if (urlMeaning) add('warn', 'url-meaning', `${urlMeaning} value(s) use a full URL in meaning: instead of a CURIE (e.g. ${urlEx.join(', ')}). Prefer a CURIE; put URLs in source:.`);
   if (noDesc) add('info', 'no-description', `${noDesc} permissible value(s) have no description.`);
 
@@ -219,8 +225,8 @@ function runQc(model) {
       for (const r of slotRanges(ov)) if (classifyRange(r, model) === 'unknown') add('warn', 'usage-range', `Class "${name}" slot_usage "${s}" range "${r}" is not a known enum/class/type.`, { entity: name, file });
     }
     if (def.is_a && !model.classes[def.is_a]) add('error', 'missing-parent', `Class "${name}" is_a "${def.is_a}" which is not defined.`, { entity: name, file });
-    // template dataType requirement (mirrors tests/test_template_datatypes.py)
-    if (file.startsWith('modules/Template/') && !def.abstract && !OPTIONAL_DATATYPE.has(name)) {
+    // template dataType requirement (mirrors tests/test_template_datatypes.py) — only when configured
+    if (CONFIG.templateDir && CONFIG.dataTypeEnums?.length && file.startsWith(`${CONFIG.templateDir}/`) && !def.abstract && !OPTIONAL_DATATYPE.has(name)) {
       const dts = def.annotations?.templateFor?.dataType;
       if (!dts || !dts.length) add('error', 'template-datatype', `Template "${name}" has no dataType annotation (tests require one).`, { entity: name, file });
       else for (const dt of dts) if (!validDataTypes.has(dt)) add('error', 'invalid-datatype', `Template "${name}" dataType "${dt}" is not a valid Data/Metadata value.`, { entity: name, file });
@@ -258,7 +264,14 @@ app.get('/api/ontology/parents', wrap(async (req, res) => {
 }));
 
 // Domain hint for an enum (which ontologies to scope a search to).
-app.get('/api/enum-hint', wrap((req, res) => res.json(domainHint(req.query.enum || ''))));
+app.get('/api/enum-hint', wrap((req, res) => {
+  const name = req.query.enum || '';
+  if (Array.isArray(CONFIG.domainHints)) {                       // config-provided override rules
+    for (const h of CONFIG.domainHints) { try { if (new RegExp(h.match, 'i').test(name)) return res.json({ ontology: h.ontology || '', note: h.note || '' }); } catch {} }
+    return res.json({ ontology: '', note: 'Searching all ontologies' });
+  }
+  res.json(domainHint(name)); // built-in NF hints
+}));
 
 // ---- Prefixes (header.yaml) — for CURIE guardrails ----
 app.get('/api/prefixes', wrap((req, res) => res.json({ prefixes: loadModel().prefixes || {} })));
@@ -304,7 +317,7 @@ app.get('/api/watch', (req, res) => {
 });
 
 // ---- Create a PR from the current MODEL changes (isolated worktree off base) ----
-const MODEL_PATHS = ['modules', 'header.yaml', 'dca-template-config.json'];
+const MODEL_PATHS = CONFIG.modelPaths;
 // NB: do not trim stdout — `git status --porcelain` lines have a significant leading space.
 const run = (cmd, args, opts = {}) => new Promise((resolveP, reject) =>
   execFile(cmd, args, { cwd: ROOT, maxBuffer: 32 * 1024 * 1024, ...opts },
@@ -404,13 +417,11 @@ function pythonBin() {
   const venv = rpath(ROOT, '.venv', 'bin', 'python');
   return fexists(venv) ? venv : 'python3';
 }
-const TASKS = {
-  ttl: { label: 'Build TTL', cmd: () => 'make NF.ttl' },
-  schemas: { label: 'Generate JSON schemas', cmd: () => `${pythonBin()} utils/gen-json-schema-class.py --skip-validation` },
-  limits: { label: 'Check schema limits', cmd: () => `${pythonBin()} utils/check_schema_limits.py --strict` },
-  tests: { label: 'Run tests', cmd: () => `${pythonBin()} -m pytest tests/ -q` },
-  lint: { label: 'LinkML lint', cmd: () => 'linkml-lint dist/NF.yaml' },
-};
+const TASK_LABELS = { ttl: 'Rebuild model', schemas: 'Generate schemas', limits: 'Check limits', tests: 'Run tests', lint: 'LinkML lint' };
+const TASKS = Object.fromEntries(Object.entries(CONFIG.build).map(([k, cmd]) => [k, {
+  label: TASK_LABELS[k] || k,
+  cmd: () => String(cmd).replaceAll('{python}', pythonBin()),
+}]));
 app.post('/api/run/:task', wrap((req, res) => {
   const t = TASKS[req.params.task];
   if (!t) return res.status(400).json({ error: `unknown task ${req.params.task}` });
@@ -482,7 +493,7 @@ try {
 } catch (e) { console.warn(`[watch] file watching disabled: ${e.message}`); }
 
 server.listen(PORT, () => {
-  console.log(`\n  NF metadata model editor — http://localhost:${PORT}`);
+  console.log(`\n  ${CONFIG.title} — model editor — http://localhost:${PORT}`);
   console.log(`  Editing source under: ${ROOT}`);
   console.log(`  Terminal: ${pty ? 'enabled' : 'disabled (node-pty missing)'} · edits write to the working tree only.\n`);
 });

@@ -1,0 +1,43 @@
+{
+  "//": "Copy to model-editor.config.json (at the repo root, or in editor/) to reuse the editor in another LinkML model repo. All paths are relative to `root`. Omit any key to keep the NF default. Delete the // notes.",
+
+  "title": "AD Knowledge Portal Model",
+  "subtitle": "visual editor & ontology tools",
+
+  "//root": "repo root holding the model source, relative to editor/'s parent (default '.' = editor sits at repo top; use '..' etc. for a submodule layout)",
+  "root": ".",
+
+  "//sources": "top-level YAMLs merged first + dirs globbed recursively for *.yaml",
+  "sourceFiles": ["header.yaml"],
+  "sourceDirs": ["modules"],
+
+  "//headerFile": "file that declares CURIE prefixes: (used by the QC prefix check)",
+  "headerFile": "header.yaml",
+
+  "//templateDir": "dir whose classes are curation templates; null disables the dataType QC/requirement",
+  "templateDir": "modules/Template",
+
+  "//dataTypeEnums": "enums whose permissible values are the valid `dataType` annotations; null disables the dataType feature entirely",
+  "dataTypeEnums": ["Data", "MetadataEnum"],
+
+  "//dcaConfig": "Data Curator App registry to also update when creating a template; null disables DCA registration",
+  "dcaConfig": "dca-template-config.json",
+
+  "//modelPaths": "paths treated as model files for the Changes diff + Create-PR flow; omit to derive from sourceDirs + sourceFiles + dcaConfig",
+  "modelPaths": ["modules", "header.yaml"],
+
+  "//build": "one-click toolbar commands; {python} is replaced with .venv/bin/python if present, else python3",
+  "build": {
+    "ttl": "make NF.ttl",
+    "schemas": "{python} utils/gen-json-schema-class.py --skip-validation",
+    "limits": "{python} utils/check_schema_limits.py --strict",
+    "tests": "{python} -m pytest tests/ -q",
+    "lint": "linkml-lint dist/NF.yaml"
+  },
+
+  "//domainHints": "ontology-priority rules for the assisted term search (first regex match wins); omit for the built-in NF rules",
+  "domainHints": [
+    { "match": "disease|diagnosis|tumor|cancer", "ontology": "mondo,ncit", "note": "MONDO/NCIT for diseases" },
+    { "match": "brain|region|anatom", "ontology": "uberon,ncit", "note": "UBERON for anatomy" }
+  ]
+}

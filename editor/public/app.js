@@ -76,7 +76,14 @@ async function refreshModel(focusId) {
   } catch (e) { toast(`Couldn't refresh model: ${e.message}`, 'err'); }
 }
 
+function applyBranding(cfg) {
+  document.title = cfg.title || 'Model editor';
+  const strong = document.querySelector('.brand-text strong'); if (strong && cfg.title) strong.textContent = cfg.title;
+  const sub = document.querySelector('.brand-sub'); if (sub && cfg.subtitle) sub.textContent = cfg.subtitle;
+}
 async function init() {
+  STATE.config = await api('GET', '/api/config').catch(() => ({ title: 'Model', subtitle: '', features: { dca: true, dataType: true } }));
+  applyBranding(STATE.config);
   ingestGraph(await api('GET', '/api/graph'));
   await loadPrefixes();
   initTabs();
@@ -1476,9 +1483,15 @@ async function openNewClass() {
     el('div', { className: 'field inline' }, absC, el('label', { textContent: 'Abstract (base template, not curated directly)', style: 'text-transform:none' })),
     labeledField('Description', descI), labeledField('Slots to include', slots.el), annBlock, dcaBlock, warn);
 
-  const isTemplate = () => fileSel.value.startsWith('modules/Template/');
+  const feats = STATE.config?.features || { dca: true, dataType: true };
+  const tdir = STATE.config?.templateDir;
+  const isTemplate = () => (tdir ? fileSel.value.startsWith(`${tdir}/`) : false);
   const concrete = () => isTemplate() && !absC.checked;
-  const update = () => { annBlock.style.display = dcaBlock.style.display = concrete() ? '' : 'none'; if (!dcaName.value && nameI.value) dcaName.value = humanize(nameI.value); };
+  const update = () => {
+    annBlock.style.display = (concrete() && feats.dataType) ? '' : 'none';
+    dcaBlock.style.display = (concrete() && feats.dca) ? '' : 'none';
+    if (!dcaName.value && nameI.value) dcaName.value = humanize(nameI.value);
+  };
   parentI.addEventListener('input', () => { const p = classes.find((c) => c.name === parentI.value.trim()); if (p && p.file) fileSel.value = p.file; update(); });
   fileSel.addEventListener('change', update);
   absC.addEventListener('change', update);
@@ -1492,7 +1505,7 @@ async function openNewClass() {
     if (!/^[A-Za-z][A-Za-z0-9_]*$/.test(name)) { warn.style.display = 'flex'; warn.textContent = 'Name must be PascalCase with no spaces.'; return; }
     if (!fileSel.value) { warn.style.display = 'flex'; warn.textContent = 'Choose a source file.'; return; }
     const annotations = {};
-    if (concrete()) {
+    if (concrete() && feats.dataType) {
       if (!dts.set.size) { warn.style.display = 'flex'; warn.textContent = 'Concrete templates need at least one dataType (tests enforce this).'; return; }
       annotations.required = false; annotations.requiresComponent = '';
       if (usageSel.value) annotations.templateUsage = usageSel.value;
@@ -1501,7 +1514,7 @@ async function openNewClass() {
     }
     const def = { is_a: parentI.value.trim() || undefined, abstract: absC.checked || undefined,
       description: descI.value.trim() || undefined, slots: [...slots.set], annotations: Object.keys(annotations).length ? annotations : undefined };
-    const dca = (concrete() && dcaC.checked && dcaName.value.trim()) ? { display_name: dcaName.value.trim(), type: dcaType.value } : undefined;
+    const dca = (concrete() && feats.dca && dcaC.checked && dcaName.value.trim()) ? { display_name: dcaName.value.trim(), type: dcaType.value } : undefined;
     createBtn.disabled = true; createBtn.textContent = 'Creating…';
     try {
       const r = await api('POST', '/api/classes', { name, file: fileSel.value, def, dca });

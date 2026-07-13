@@ -10,10 +10,10 @@ import { readFileSync, writeFileSync, readdirSync, statSync, existsSync, mkdirSy
 import { resolve, relative, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
+import { CONFIG, ROOT } from './config.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-export const ROOT = resolve(__dirname, '..');
-const MODULES_DIR = resolve(ROOT, 'modules');
+export { ROOT };
 
 // LinkML built-in / primitive ranges we should treat as scalar types, not nodes.
 const PRIMITIVE_TYPES = new Set([
@@ -36,11 +36,12 @@ function walkYaml(dir, acc = []) {
   return acc;
 }
 
-/** List every source YAML file that feeds the merge, header + props first. */
+/** List every source YAML file that feeds the merge (config-driven; header first). */
 export function listSourceFiles() {
-  const files = [resolve(ROOT, 'header.yaml'), resolve(MODULES_DIR, 'props.yaml')];
-  for (const f of walkYaml(MODULES_DIR)) {
-    if (!files.includes(f)) files.push(f);
+  const files = CONFIG.sourceFiles.map((f) => resolve(ROOT, f));
+  for (const d of CONFIG.sourceDirs) {
+    const abs = resolve(ROOT, d);
+    if (existsSync(abs)) for (const f of walkYaml(abs)) if (!files.includes(f)) files.push(f);
   }
   return files.filter(existsSync);
 }
