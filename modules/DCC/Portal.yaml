@@ -131,6 +131,22 @@ enums:
       NIH-NCI:
       NTAP:
       Other:
+  HostingEnum:
+    description: Where a dataset's files physically live and whether they are downloadable through Synapse. This is distinct from access type (permission). Blank/absent is semantically "synapse".
+    permissible_values:
+      synapse:
+        description: Files are in Synapse/Sage-managed storage (S3/GCP). Standard download. The default.
+      external-cloud:
+        description: Files are in a third-party (non-Sage) cloud bucket; downloadable like Synapse files, but the bucket owner could remove them.
+      external-download:
+        description: Files are in an external repository (e.g. GEO, ENA, figshare, Zenodo) and directly downloadable through Synapse clients, but served externally (may be slow or go dead).
+      external-access:
+        description: Data is NOT downloadable through Synapse (e.g. dbGaP, EGA, LONI); access requires an external process. The card links out instead of downloading.
+      mixed:
+        description: Files span more than one location; some download through Synapse, some are hosted/controlled externally.
+      unavailable:
+        description: Indexed for discovery, but not downloadable through Synapse and with no external location to link to (distinct from external-access).
+    title: Hosting
   License:
     description: License attached to the data. If indicates UNKNOWN or RESTRICTED-USE, data may not be used without further contact for terms.
     notes:
