@@ -116,11 +116,26 @@ classes:
         range: string
         required: false
         title: External Repository URI
+      externalUrl:
+        description: "URL the dataset card links users to for external-access datasets
+          (a repository landing page, record, or DOI). Display/link target only; optional
+          for other hosting types."
+        range: string
+        required: false
+        title: External URL
       funder:
         multivalued: true
         range: FundingAgencyEnum
         required: true
         title: Funder
+      hosting:
+        description: Where the dataset's files physically live and whether they are
+          downloadable through Synapse. Drives the data portal card's download/access
+          action. Distinct from accessType (which is about permission). Blank/absent
+          is semantically "synapse".
+        range: HostingEnum
+        required: false
+        title: Hosting
       includedInDataCatalog:
         description: Link(s) to known data catalog(s) the dataset is included in.
         range: DataCatalogEnum
@@ -166,6 +181,14 @@ classes:
         - range: CellBasedAssayEnum
         - range: DrugScreenAssayEnum
         title: Measurement Technique
+      repository:
+        description: Human-readable name of the external repository shown in the data
+          portal card label/tooltip (e.g. "GEO", "ENA", "figshare", "Zenodo", "dbGaP",
+          "EGA", "LONI"). Display label only; does not change behavior. Relevant for
+          external-download, external-access, and mixed hosting.
+        range: string
+        required: false
+        title: Repository
       series:
         description: Datasets may belong to a curated series. Should be assigned by
           staff only; omit property if not applicable/unknown.
