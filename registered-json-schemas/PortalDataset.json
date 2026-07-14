@@ -221,6 +221,11 @@
       "type": "string",
       "title": "externalRepositoryUri"
     },
+    "externalUrl": {
+      "description": "URL the dataset card links users to for external-access datasets (a repository landing page, record, or DOI). Display/link target only; optional for other hosting types.",
+      "type": "string",
+      "title": "externalUrl"
+    },
     "funder": {
       "items": {
         "description": "",
@@ -237,6 +242,19 @@
       },
       "type": "array",
       "title": "funder"
+    },
+    "hosting": {
+      "description": "Where a dataset's files physically live and whether they are downloadable through Synapse. This is distinct from access type (permission). Blank/absent is semantically \"synapse\".",
+      "enum": [
+        "synapse",
+        "external-cloud",
+        "external-download",
+        "external-access",
+        "mixed",
+        "unavailable"
+      ],
+      "title": "hosting",
+      "type": "string"
     },
     "includedInDataCatalog": {
       "description": "Link(s) to known data catalog(s) the dataset is included in.",
@@ -572,6 +590,11 @@
       },
       "type": "array",
       "title": "measurementTechnique"
+    },
+    "repository": {
+      "description": "Human-readable name of the external repository shown in the data portal card label/tooltip (e.g. \"GEO\", \"ENA\", \"figshare\", \"Zenodo\", \"dbGaP\", \"EGA\", \"LONI\"). Display label only; does not change behavior. Relevant for external-download, external-access, and mixed hosting.",
+      "type": "string",
+      "title": "repository"
     },
     "series": {
       "description": "",
