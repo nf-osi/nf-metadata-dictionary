@@ -49,7 +49,7 @@ jobs:
             echo "Artifacts have changed and will be committed to main"
             git config --local user.email "nf-osi@sagebionetworks.org"
             git config --local user.name "nf-osi[bot]"
-            git add dist/NF.yaml dist/NF.ttl registered-json-schemas/
+            git add dist/NF.yaml dist/NF.ttl dist/NF.sssom.tsv registered-json-schemas/
             git commit -m "Rebuild all artifacts [skip ci]"
             echo "artifacts_changed=true" >> "$GITHUB_OUTPUT"
           else

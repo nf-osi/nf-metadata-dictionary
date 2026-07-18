@@ -14,6 +14,7 @@ We keep the main one, `NF.jsonld`, in the root of the repository, while others a
 | `dist/NF.yaml` | Data model as as a single LinkML-valid YAML file, useful for using LinkML tooling to create Excel spreadsheets. | ✅ (validated) | ❌ | ✅ (auto-committed) | N/A |
 | `dist/NF_linkml.jsonld` | JSON-LD from LinkML, best if you want to compare/combine our model with others maintained in LinkML, e.g. see here. There are differences with the `NF.jsonld`. | ✅ (validated) | ❌ | ✅ (auto-committed) | N/A |
 | `dist/NF.ttl` | Basically same as above but in Turtle format. | ✅ (validated) | ❌ | ✅ (auto-committed) | N/A |
+| `dist/NF.sssom.tsv` | [SSSOM](https://mapping-commons.github.io/sssom/) mapping set of the model's ontology mappings (permissible-value `meaning:` + class/slot `*_mappings`), for FAIR reuse and cross-model term alignment. | ✅ (validated) | ❌ | ✅ (auto-committed) | N/A |
 
 **Note:** All artifacts are built and validated during PRs but not committed to avoid merge conflicts. All artifacts are automatically rebuilt and committed to `main` after merge. **JSON schemas are only registered with Synapse during versioned releases** (see [release workflow](.github/workflows/release-new-version.yaml)).
 
@@ -31,6 +32,7 @@ graph LR
     L --> J[*.json schemas]
     L --> T[NF.ttl]
     L --> LJ["NF_linkml.jsonld"]
+    L --> S["NF.sssom.tsv"]
 
 class L tools
     
@@ -45,6 +47,7 @@ style G fill:white,stroke:#333,stroke-width:2px;
 style J fill:white,stroke:#333,stroke-width:2px;
 style T fill:white,stroke:#333,stroke-width:2px;
 style LJ fill:white,stroke:#333,stroke-width:2px;
+style S fill:white,stroke:#333,stroke-width:2px;
 style H fill:#aaf,stroke:#333,stroke-width:2px
 style L fill:#aaf,stroke:#333,stroke-width:2px
 ```

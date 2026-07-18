@@ -36,7 +36,24 @@ jobs:
           npm install -g json-dereference-cli
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           make -B
-  
+
+      - name: Lint and validate LinkML dist artifact
+        run: |
+          echo "Linting dist/NF.yaml and validating against the LinkML metamodel"
+          # --validate: check the schema against the LinkML metamodel (fails on structural errors).
+          # --ignore-warnings: fail only on errors, not on the many pre-existing stylistic
+          # warnings (naming conventions, canonical prefixes).
+          linkml-lint --validate --ignore-warnings --format markdown --output linkml-lint-report.md dist/NF.yaml
+          {
+            echo "## LinkML lint report (dist/NF.yaml)";
+            echo "";
+            echo "<details><summary>Full report</summary>";
+            echo "";
+            cat linkml-lint-report.md;
+            echo "";
+            echo "</details>";
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Generate and validate JSON schemas for all templates (classes)
         env:
           SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
@@ -76,6 +93,7 @@ jobs:
             **Artifacts validated:**
             - `dist/NF.yaml` (LinkML YAML)
             - `dist/NF.ttl` (Turtle RDF)
+            - `dist/NF.sssom.tsv` (SSSOM mapping set)
             - `registered-json-schemas/*.json` (Synapse JSON schemas)
 
             **Note:** Artifacts are not committed to this PR to avoid merge conflicts. All artifacts will be automatically rebuilt and committed to `main` after merge.
@@ -87,6 +105,7 @@ jobs:
           path: |
             dist/NF.yaml
             dist/NF.ttl
+            dist/NF.sssom.tsv
             registered-json-schemas/*.json
           retention-days: 1
 

@@ -1,4 +1,4 @@
-all: NF.yaml NF.ttl
+all: NF.yaml NF.ttl NF.sssom.tsv
 
 # TODO Implement analysis on data model changes
 analyze:
@@ -17,6 +17,12 @@ NF.ttl:
 
 linkml_jsonld:
 	gen-jsonld dist/NF.yaml > dist/NF_linkml.jsonld
+
+# Export accumulated permissible-value/class/slot mappings as an SSSOM mapping set (FAIR artifact).
+# meaning: -> skos:exactMatch; {exact,close,narrow,broad,related}_mappings -> corresponding SKOS predicates.
+NF.sssom.tsv:
+	make dist/NF.yaml
+	gen-sssom dist/NF.yaml -o dist/NF.sssom.tsv
 
 # Example generation of manifests as Excel using LinkML -- each manifest is a sheet with dropdowns where appropriate
 # We DON'T normally use these products, but this step is useful to provide as example for some
