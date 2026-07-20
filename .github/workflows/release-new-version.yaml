@@ -277,6 +277,9 @@ jobs:
 
           tar -czf "json-schemas-${VERSION}.tar.gz" "versioned-schemas"
 
+          # Version the SSSOM mapping set alongside the schemas
+          cp dist/NF.sssom.tsv "NF-${VERSION}.sssom.tsv"
+
           # Determine release notes: manual input > Claude-generated > GitHub auto-generated
           NOTES_FILE="/tmp/release_notes.md"
           if [ -n "${{ inputs.release_notes }}" ]; then
@@ -286,12 +289,14 @@ jobs:
           if [ -s "$NOTES_FILE" ]; then
             gh release create "v${VERSION}" \
               "json-schemas-${VERSION}.tar.gz" \
+              "NF-${VERSION}.sssom.tsv" \
               --title "v${VERSION}" \
               --notes-file "$NOTES_FILE" \
               --target "${TARGET_COMMIT}"
           else
             gh release create "v${VERSION}" \
               "json-schemas-${VERSION}.tar.gz" \
+              "NF-${VERSION}.sssom.tsv" \
               --title "v${VERSION}" \
               --generate-notes \
               --target "${TARGET_COMMIT}"

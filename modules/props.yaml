@@ -299,7 +299,8 @@ slots:
     range: string
     title: Contributor
     required: false
-    see_also: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#contributor
+    see_also:
+    - https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#contributor
   createdBy:
     description: Refers to the user who created the resource.
     in_subset:
@@ -321,14 +322,16 @@ slots:
     range: string
     title: Creator
     required: true
-    see_also: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#creator
+    see_also:
+    - https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#creator
   currentVersion:
     description: (Versionable entities only) The current version number of the resource.
     in_subset:
     - Synapse
     title: Current Version
     required: false
-    see_also: https://www.w3.org/TR/vocab-dcat-3/#Property:resource_version
+    see_also:
+    - https://www.w3.org/TR/vocab-dcat-3/#Property:resource_version
   cytassistSample:
     description: Whether the 10x Genomics CytAssist instrument was used for sample preparation in the spatial transcriptomics experiment.
     enum_range:
@@ -1145,7 +1148,8 @@ slots:
     range: string
     title: Publisher
     required: false
-    see_also: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/publisher
+    see_also:
+    - https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/publisher
   radiationAtAnyTime:
     description: Type of radiation received at any time for glioma treatment.
     range: RadiationTypeEnum
@@ -1269,7 +1273,8 @@ slots:
     range: string
     title: Series
     required: false
-    see_also: http://www.w3.org/ns/dcat#inSeries
+    see_also:
+    - http://www.w3.org/ns/dcat#inSeries
   sex:
     any_of:
     - range: SexEnum
@@ -1424,7 +1429,8 @@ slots:
     - portal
     range: string
     required: true
-    see_also: https://www.w3.org/TR/vocab-dcat-3/#Property:resource_title
+    see_also:
+    - https://www.w3.org/TR/vocab-dcat-3/#Property:resource_title
   totalReads:
     description: If available, the total number of reads collected from samtools.
     range: integer
