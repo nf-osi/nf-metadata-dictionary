@@ -245,6 +245,14 @@ jobs:
           message-id: pytest-report
           message-path: pytest_report.md
 
+      # `pytest | tee` makes the run step exit 0 even when tests fail, so the
+      # captured exit code has to be re-asserted after the report is posted.
+      - name: Fail if pytest failed
+        if: always() && steps.pytest.outputs.exit_code != '0'
+        run: |
+          echo "::error::pytest exited with ${{ steps.pytest.outputs.exit_code }} - see the pytest report comment on this PR."
+          exit 1
+
   check-schema-limits:
     name: Validate schema limits (Synapse platform)
     needs: [build]

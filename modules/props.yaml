@@ -140,14 +140,17 @@ slots:
     required: false
   averageBaseQuality:
     description: Average base quality collected from samtools
+    range: float
     title: Average Base Quality
     required: false
   averageInsertSize:
     description: Average insert size as reported by samtools
+    range: float
     title: Average Insert Size
     required: false
   averageReadLength:
     description: Average read length collected from samtools
+    range: float
     title: Average Read Length
     required: false
   batchID:
@@ -185,15 +188,7 @@ slots:
     description: 'One of the either four or two active regions where tissue can be placed on a Visium slide. Each area is intended to contain only one tissue sample.  Slide areas are named consecutively from top to bottom:  A1, B1, C1, D1 for Visium slides with 6.5 mm Capture Area and A, B for CytAssist slides with 11 mm Capture Area.  Both CytAssist slides with 6.5 mm Capture Area and Gateway Slides contain only two slide areas, A1 and D1.
 
       '
-    enum_range:
-    - A
-    - B
-    - C
-    - D
-    - A1
-    - B1
-    - C1
-    - D1
+    range: CaptureAreaEnum
     title: Capture Area
     required: false
   cellID:
@@ -245,6 +240,7 @@ slots:
     title: Comments
   compoundDose:
     description: A dose quantity for the treatment compound. To be used with compoundDoseUnit.
+    range: float
     title: Compound Dose
     required: false
   compoundDoseUnit:
@@ -267,6 +263,7 @@ slots:
     required: false
   concentrationNaCl:
     description: Numeric value for NaCl concentration
+    range: float
     title: Concentration Na Cl
     required: false
   concentrationNaClUnit:
@@ -341,10 +338,7 @@ slots:
     required: false
   dataCollectionMode:
     description: Mode of data collection in tandem MS assays. Either DDA (data-dependent acquisition) or DIA (data-independent) acquisition.
-    enum_range:
-    - DDA
-    - DIA
-    - Other
+    range: DataCollectionModeEnum
     title: Data Collection Mode
     required: true
   dataFileHandleId:
@@ -453,11 +447,7 @@ slots:
     required: false
   epidemiologyMetric:
     description: Common metrics used in epidemiology studies.
-    enum_range:
-    - Standardized Incidence Ratio
-    - Incidence Rate
-    - Mortality Rate
-    - Standardized Mortality Ratio
+    range: EpidemiologyMetricEnum
     title: Epidemiology Metric
     required: true
   etag:
@@ -616,11 +606,7 @@ slots:
     required: false
   immersion:
     description: Immersion medium
-    enum_range:
-    - air
-    - oil
-    - water
-    - other
+    range: ImmersionEnum
     title: Immersion
     required: false
   individualID:
@@ -662,6 +648,7 @@ slots:
     required: false
   isFilteredReads:
     description: Whether the reads in the processed result has been filtered by adding a 'PASS' filter or other filters as determined by the data generator
+    range: BooleanEnum
     title: Is Filtered Reads
     required: false
   isMultiIndividual:
@@ -846,6 +833,7 @@ slots:
     required: false
   meanCoverage:
     description: Mean coverage for whole genome sequencing, or mean target coverage for whole exome and targeted sequencing, collected from Picard Tools
+    range: float
     title: Mean Coverage
     required: false
   meningioma:
@@ -1005,19 +993,7 @@ slots:
     required: false
   peakCallingAlgorithm:
     description: A list of commonly used peak-calling algorithms for ChIP-Seq data analysis.
-    enum_range:
-    - MACS2
-    - SICER
-    - HOMER
-    - Genrich
-    - PeakRanger
-    - SEACR
-    - GEM
-    - MUSIC
-    - BroadPeak
-    - SWEMBL
-    - FSeq
-    - ZINBA
+    range: PeakCallingAlgorithmEnum
     title: Peak Calling Algorithm
     required: false
   peripheralNeuropathy:
@@ -1066,32 +1042,12 @@ slots:
     required: false
   programmingLanguage:
     description: A computer programming language
-    enum_range:
-    - Python
-    - R
-    - MATLAB
-    - Java
-    - C
-    - C++
-    - C#
-    - Javascript
-    - bash
+    range: ProgrammingLanguageEnum
     title: Programming Language
     required: false
   progressReportNumber:
     description: 'Indicates milestone the  data is associated with. Currently only required for projects funded by NTAP, GFF, and NFRI. For GFF studies, this is the ‘progress report’ timeline. Example: if submitting data for the 6-month milestone report for NTAP, progressReportNumber=1.  Also if submitting data associated with first milestone, progressReportNumber =1'
-    enum_range:
-    - '1'
-    - '2'
-    - '3'
-    - '4'
-    - '5'
-    - '6'
-    - '7'
-    - '8'
-    - '9'
-    - '10'
-    - Not Applicable
+    range: ProgressReportNumberEnum
     title: Progress Report Number
     required: false
   proportionCoverage10x:
@@ -1186,6 +1142,7 @@ slots:
     required: false
   readsDuplicatedPercent:
     description: Percent of duplicated reads collected from samtools
+    range: float
     title: Reads Duplicated Percent
     required: false
   readsMappedPercent:
@@ -1195,12 +1152,7 @@ slots:
     required: false
   recordingSource:
     description: Source of electrophysiology recording.
-    enum_range:
-    - electrode
-    - tetrode
-    - shank
-    - Utah array
-    - other electrode array
+    range: RecordingSourceEnum
     title: Recording Source
     required: false
   referenceSequence:
@@ -1295,11 +1247,7 @@ slots:
     required: false
   slideVersion:
     description: Version of imaging slide used. Slide version is critical for the analysis of the sequencing data as different slides have different capture area layouts.
-    enum_range:
-    - V1
-    - V2
-    - V3
-    - V4
+    range: SlideVersionEnum
     title: Slide Version
     required: false
   sourceName:
@@ -1416,6 +1364,7 @@ slots:
     required: false
   targetDepth:
     description: The targeted read depth prior to sequencing.
+    range: integer
     title: Target Depth
     required: false
   timepointUnit:
