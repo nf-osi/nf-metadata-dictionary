@@ -5,8 +5,9 @@
 # PeakCallingAlgorithmEnum, so the generated schema now enforces the controlled
 # vocabulary instead of accepting any string.
 #
-# resourceType is "metadata" (not "experimentalData") so the #825 relaxed
-# requirements do not apply and these cases isolate the peakCallingAlgorithm slot.
+# Both instances are complete, realistic ChIP-seq peak-call records that satisfy
+# every ChIPSeqTemplate required slot. They differ only in peakCallingAlgorithm,
+# so the invalid case fails on that slot alone and not on missing requirements.
 
 schema: ChIPSeqTemplate
 instances:
