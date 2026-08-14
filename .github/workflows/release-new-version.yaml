@@ -26,6 +26,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   release:
@@ -300,4 +301,36 @@ jobs:
               --title "v${VERSION}" \
               --generate-notes \
               --target "${TARGET_COMMIT}"
+          fi
+
+      # ── Surface failures ────────────────────────────────────────────
+      # A blocked/incomplete release (e.g. tag pushed but registration or
+      # release creation failed) should never fail silently - file or update
+      # an issue pointing at the run so a maintainer investigates.
+
+      - name: File issue for blocked release
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          VERSION="${{ steps.resolve.outputs.version }}"
+          TITLE="Release workflow failed (run #${{ github.run_number }})"
+
+          BODY=$(cat <<BODY_EOF
+          The release workflow did not complete successfully.
+
+          - **Run:** ${RUN_URL}
+          - **Trigger:** ${{ github.event_name }}
+          - **Version attempted:** ${VERSION:-"(not resolved before failure)"}
+
+          A git tag may have already been pushed for this version even though the release did not finish - check the run logs to see which step failed, and whether schemas were actually registered despite the reported failure (see the schema-registration-race note) before re-running.
+          BODY_EOF
+          )
+
+          EXISTING=$(gh issue list --state open --label release --search '"Release workflow failed" in:title' --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "Another failed run: ${RUN_URL} (${{ github.event_name }}, version ${VERSION:-n/a})"
+          else
+            gh issue create --title "$TITLE" --body "$BODY" --label release,automated
           fi
