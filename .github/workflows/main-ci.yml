@@ -217,9 +217,13 @@ jobs:
       - name: Run pytest
         id: pytest
         run: |
+          # `pytest | tee` would make this step exit 0 even when tests fail, so
+          # the captured exit code is re-asserted after the output is recorded.
           pytest tests/test_schema_instances.py tests/test_template_datatypes.py tests/test_model_system_sync.py -v \
             --tb=short 2>&1 | tee pytest_output.txt
-          echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
+          EXIT_CODE=${PIPESTATUS[0]}
+          echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
+          exit $EXIT_CODE
 
       - name: Format pytest results as PR comment
         if: always()
@@ -244,14 +248,6 @@ jobs:
         with:
           message-id: pytest-report
           message-path: pytest_report.md
-
-      # `pytest | tee` makes the run step exit 0 even when tests fail, so the
-      # captured exit code has to be re-asserted after the report is posted.
-      - name: Fail if pytest failed
-        if: always() && steps.pytest.outputs.exit_code != '0'
-        run: |
-          echo "::error::pytest exited with ${{ steps.pytest.outputs.exit_code }} - see the pytest report comment on this PR."
-          exit 1
 
   check-schema-limits:
     name: Validate schema limits (Synapse platform)
@@ -297,6 +293,12 @@ jobs:
             echo "status=⚠️  WARNING - Some limits approaching" >> $GITHUB_OUTPUT
           else
             echo "status=✅ PASSED - All limits within safe bounds" >> $GITHUB_OUTPUT
+          fi
+
+          # Exit 2 (approaching limits) stays advisory; only an actual limit
+          # violation fails the job, after the report has been recorded.
+          if [ $EXIT_CODE -eq 1 ]; then
+            exit 1
           fi
 
       - name: Post schema limits report as PR comment

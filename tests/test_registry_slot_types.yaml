@@ -18,4 +18,5 @@ instances:
   - file: data/ChIPSeqTemplate/invalid_peakcalling_unlisted.json
     description: peakCallingAlgorithm set to a value outside the PeakCallingAlgorithmEnum vocabulary
     expected: invalid
+    error_path: peakCallingAlgorithm
     reason: peakCallingAlgorithm "NotARealPeakCaller" is not a permissible PeakCallingAlgorithmEnum value
