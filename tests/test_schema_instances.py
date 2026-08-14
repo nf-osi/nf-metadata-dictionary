@@ -63,16 +63,17 @@ def _load_cases():
                         f"{error_path!r}; error_path must be a string - quote the empty "
                         f'string ("") for the document root'
                     )
-                yield schema_name, instance, expected, has_error_path, error_path
+                yield schema_name, instance, error_path
 
 
 CASES = list(_load_cases())
 
 
 def _plain_params():
-    for schema_name, instance, expected, has_error_path, _ in CASES:
-        if has_error_path:
+    for schema_name, instance, error_path in CASES:
+        if error_path is not None:
             continue
+        expected = instance["expected"]
         yield pytest.param(
             schema_name,
             instance["file"],
@@ -83,8 +84,8 @@ def _plain_params():
 
 
 def _error_path_params():
-    for schema_name, instance, _expected, has_error_path, error_path in CASES:
-        if not has_error_path:
+    for schema_name, instance, error_path in CASES:
+        if error_path is None:
             continue
         yield pytest.param(
             schema_name,
