@@ -130,11 +130,15 @@ Reference: [SWC-7491](https://sagebionetworks.jira.com/browse/SWC-7491?focusedCo
 
 #### CI/CD Workflows
 
-**PR Validation** (`.github/workflows/main-ci.yml`)
+**PR Validation** (`.github/workflows/main-ci.yml`), triggered by changes under `modules/`, `utils/`, `tests/`, or the workflow itself
 1. Generates JSON schemas from LinkML sources
 2. Validates against Synapse API (dry-run)
-3. Reports results in PR comment
-4. Blocks merge if validation fails
+3. Runs the pytest suite (`pytest` job) against the freshly built schemas
+4. Checks the built schemas against Synapse platform limits (`check-schema-limits` job; see [Schema Limits & Validation](#schema-limits--validation))
+5. Reports results in PR comment
+6. Blocks merge if any of the above fails
+
+Each of those jobs posts its report and then exits with the underlying command's status, so a failing check fails the job rather than only labeling the PR comment.
 
 **Schema Registration**
 Typically performed on versioned releases using `register-schemas.py`.
@@ -205,9 +209,9 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/register-schemas.py \
 
 The NF Metadata Dictionary must satisfy several Synapse limits:
 
-- **Enum values:** 100 per annotation field
 - **Row size:** 64KB per file view row
 - **String lengths:** Depend on whether the target is a JSON schema or a file view
+- **Enum values:** No longer capped by Synapse; enum sizes are reported for information only
 
 #### File View Configuration (Stricter)
 
@@ -215,17 +219,20 @@ File views have the stricter limit, so we use conservative column sizes:
 
 ```
 STRING: 80 chars (covers 100% of enum values, max: 77 chars)
-LIST: 80 chars × 40 items max
+LIST: 80 chars × 20 items max
 name column: 256 chars
-Largest schema: ~52.7KB (PortalDataset, Superdataset)
+Largest FileView-backed schema: ~39.8KB (PdxGenomicsAssayTemplate)
 ```
 
 **Applied in:** `utils/json_schema_entity_view.py`, `utils/create_curation_task.py`
 
+Both the STRING/LIST character limits and the 64KB row limit come from the same file view column configuration, so both apply to the same scope: schemas whose class name ends in `Template` and which do not derive from `RecordSet`.
+Non-Template schemas (`PortalDataset`, `Superdataset`, etc.) are not used to create file views via `create_curation_task.py`, and RecordSet-backed Templates are provisioned via `create_recordset_task.py`, so neither is governed by these limits.
+
 #### JSON Schema Validation (More Permissive)
 
 Registered JSON schemas are more permissive:
-- Enum sizes: Some exceed 100 values (e.g., `CellLineModel`: 638, `Institution`: 335)
+- Enum sizes: Some are very large (e.g., `CellLineModel`: 638, `Institution`: 337)
 - String lengths: No strict character limits beyond what's semantically meaningful
 - Used for: Data validation, dropdown generation, documentation
 
@@ -239,10 +246,28 @@ python utils/check_schema_limits.py
 ```
 
 It checks:
-- **Enum sizes** against 100-value annotation limit
-- **Enum string lengths** against file view column limits (80 chars)
-- **Row sizes** against 64KB file view limit
-- Documents current bytes used per schema
+- **Enum string lengths** against file view column limits (80 chars for both STRING and LIST items)
+- **Row sizes** against the 64KB file view limit, and documents current bytes used per schema
+- **Enum sizes**, reported for information only since Synapse no longer enforces a per-enum value count
+
+The string-length and row-size checks cover FileView-backed Templates only (see [File View Configuration](#file-view-configuration-stricter) for the scope rule).
+Enum sizes are counted across all of `modules/`.
+
+**Options:**
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--modules-dir` | Directory with LinkML modules | `modules` |
+| `--schemas-dir` | Directory with JSON schemas | `registered-json-schemas` |
+| `--output` | Write the report to a file instead of stdout | stdout |
+| `--format` | `markdown` or `json` | `markdown` |
+| `--strict` | Exit non-zero when limits are exceeded | False |
+
+**Exit codes with `--strict`:** `1` when any enum value exceeds a STRING/LIST limit or any schema exceeds 64KB, `2` when a schema is only approaching the row limit, `0` otherwise.
+`main-ci.yml` fails the job on `1` and treats `2` as advisory.
+
+Regardless of `--strict`, the tool exits `1` if it is pointed at a missing or empty directory, or at a schema directory containing no FileView-backed Templates: a check that inspects nothing must not report success.
+It still writes the report in that case, so the PR comment step has a message to post.
 
 **Key distinction:** JSON schemas can be broader for validation and documentation. File views must stay within the stricter 64KB row budget.
 
@@ -356,11 +381,21 @@ Individual test files:
 
 #### JSON schema instance tests
 
-`tests/test_schema_instances.py` discovers `test_registry*.yaml` fixtures in `tests/` and validates each listed JSON instance against its registered schema. Cases marked `expected: valid` must pass; `expected: invalid` must fail and are marked `xfail(strict=True)`.
+`tests/test_schema_instances.py` discovers `test_registry*.yaml` fixtures in `tests/` and validates each listed JSON instance against its registered schema. Cases marked `expected: valid` must pass; `expected: invalid` must fail.
+
+An `expected: invalid` case is collected in one of two ways:
+
+- **Without `error_path`**: collected as `xfail(strict=True)`, so the case passes as long as the instance fails validation somewhere.
+- **With `error_path`**: collected as an ordinary test asserting that *every* validation error points at that instance location, so the case proves the rule it was written for rather than any failure at all. Strict xfail cannot do this, because it would report an `error_path` mismatch as an expected failure and silently absorb it.
+
+Prefer `error_path` for new invalid cases: it is what keeps an instance from passing for the wrong reason, such as tripping over an unrelated missing required property.
+Use the quoted empty string (`""`) for the document root, which is where whole-object errors such as a missing required property are reported.
+`error_path` must be a string and only applies to `expected: invalid`; a bare `error_path:` (YAML null) or one on a valid case is rejected at collection time rather than read as absent.
 
 **Adding and registering new test instances:**
 
 1. Create a JSON file under `tests/data/<TemplateName>/` with the instance data, e.g. `tests/data/RNASeqTemplate/valid_my_case.json`.
+   For an invalid case, make the instance otherwise complete so it fails only on the constraint under test.
 
 2. Register it in an existing `tests/test_registry*.yaml` (or a new `test_registry_<topic>.yaml`) under the matching `schema:` document:
 
@@ -375,8 +410,11 @@ Individual test files:
      - file: data/RNASeqTemplate/invalid_my_case.json
        description: What constraint this violates
        expected: invalid
+       error_path: someSlot     # optional; "" for the document root
        reason: Brief explanation of the expected validation error
    ```
+
+   `reason` labels the xfail for cases without `error_path`, and is printed in the failure message for cases with one.
 
 3. Rebuild the relevant schema locally (see below), then run `pytest tests/test_schema_instances.py -v` to confirm the result matches `expected`.
 
