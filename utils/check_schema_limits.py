@@ -31,23 +31,38 @@ CONFIG = {
 }
 
 
+class SchemaReadError(RuntimeError):
+    """A module or schema file could not be read or parsed."""
+
+
+def _load_yaml(path: Path) -> Any:
+    try:
+        return yaml.safe_load(path.read_text())
+    except (OSError, UnicodeDecodeError, yaml.YAMLError) as err:
+        raise SchemaReadError(f"Could not read LinkML module {path}: {err}") from err
+
+
+def _load_json(path: Path) -> Any:
+    try:
+        return json.loads(path.read_text())
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as err:
+        raise SchemaReadError(f"Could not read JSON schema {path}: {err}") from err
+
+
 def check_enum_sizes(modules_dir: Path) -> Dict[str, List]:
     """Count enum sizes (informational only; no limit is enforced)."""
     enum_counts = {}
 
     for yaml_file in modules_dir.rglob("*.yaml"):
-        try:
-            data = yaml.safe_load(yaml_file.read_text())
-            if data and 'enums' in data:
-                for name, enum_data in data['enums'].items():
-                    if 'permissible_values' in enum_data:
-                        count = len(enum_data['permissible_values'])
-                        enum_counts[name] = {
-                            'file': str(yaml_file.relative_to(modules_dir.parent)),
-                            'count': count,
-                        }
-        except:
-            pass
+        data = _load_yaml(yaml_file)
+        if data and 'enums' in data:
+            for name, enum_data in data['enums'].items():
+                if 'permissible_values' in enum_data:
+                    count = len(enum_data['permissible_values'])
+                    enum_counts[name] = {
+                        'file': str(yaml_file.relative_to(modules_dir.parent)),
+                        'count': count,
+                    }
 
     return {
         'total': len(enum_counts),
@@ -60,26 +75,23 @@ def check_string_lengths(schemas_dir: Path) -> Dict[str, Any]:
     list_lengths, string_lengths = [], []
 
     for schema_file in schemas_dir.glob("*.json"):
-        try:
-            schema = json.loads(schema_file.read_text())
-            for prop_def in schema.get("properties", {}).values():
-                prop_type = prop_def.get("type", "string")
-                if isinstance(prop_type, list):
-                    prop_type = next((t for t in prop_type if t != "null"), "string")
+        schema = _load_json(schema_file)
+        for prop_def in schema.get("properties", {}).values():
+            prop_type = prop_def.get("type", "string")
+            if isinstance(prop_type, list):
+                prop_type = next((t for t in prop_type if t != "null"), "string")
 
-                enum_values = []
-                if prop_type == "array" and "items" in prop_def:
-                    enum_values = prop_def["items"].get("enum", [])
-                    target = list_lengths
-                elif "enum" in prop_def:
-                    enum_values = prop_def["enum"]
-                    target = string_lengths
-                else:
-                    continue
+            enum_values = []
+            if prop_type == "array" and "items" in prop_def:
+                enum_values = prop_def["items"].get("enum", [])
+                target = list_lengths
+            elif "enum" in prop_def:
+                enum_values = prop_def["enum"]
+                target = string_lengths
+            else:
+                continue
 
-                target.extend(len(str(v)) for v in enum_values)
-        except:
-            pass
+            target.extend(len(str(v)) for v in enum_values)
 
     return {
         'list_max': max(list_lengths, default=0),
@@ -103,35 +115,32 @@ def check_row_sizes(schemas_dir: Path) -> Dict[str, Any]:
     for schema_file in schemas_dir.glob("*.json"):
         if not schema_file.stem.endswith("Template"):
             continue
-        try:
-            schema = json.loads(schema_file.read_text())
-            string_count = list_count = 0
+        schema = _load_json(schema_file)
+        string_count = list_count = 0
 
-            for prop_def in schema.get("properties", {}).values():
-                prop_type = prop_def.get("type", "string")
-                if isinstance(prop_type, list):
-                    prop_type = next((t for t in prop_type if t != "null"), "string")
+        for prop_def in schema.get("properties", {}).values():
+            prop_type = prop_def.get("type", "string")
+            if isinstance(prop_type, list):
+                prop_type = next((t for t in prop_type if t != "null"), "string")
 
-                if prop_type == "array":
-                    list_count += 1
-                elif prop_type == "string":
-                    string_count += 1
+            if prop_type == "array":
+                list_count += 1
+            elif prop_type == "string":
+                string_count += 1
 
-            row_size = (
-                (string_count * CONFIG['STRING_MAX_SIZE'] +
-                 list_count * CONFIG['LIST_MAX_SIZE'] * CONFIG['LIST_MAX_LENGTH']) * 4 +
-                CONFIG['SYSTEM_OVERHEAD']
-            )
+        row_size = (
+            (string_count * CONFIG['STRING_MAX_SIZE'] +
+             list_count * CONFIG['LIST_MAX_SIZE'] * CONFIG['LIST_MAX_LENGTH']) * 4 +
+            CONFIG['SYSTEM_OVERHEAD']
+        )
 
-            schemas.append({
-                'name': schema_file.stem,
-                'fields': f"{string_count}/{list_count}",
-                'row_size': row_size,
-                'percent': round(row_size / CONFIG['ROW_LIMIT'] * 100, 1),
-                'headroom': CONFIG['ROW_LIMIT'] - row_size,
-            })
-        except:
-            pass
+        schemas.append({
+            'name': schema_file.stem,
+            'fields': f"{string_count}/{list_count}",
+            'row_size': row_size,
+            'percent': round(row_size / CONFIG['ROW_LIMIT'] * 100, 1),
+            'headroom': CONFIG['ROW_LIMIT'] - row_size,
+        })
 
     schemas.sort(key=lambda x: x['row_size'], reverse=True)
     exceeds = [s for s in schemas if s['row_size'] > CONFIG['ROW_LIMIT']]
@@ -176,8 +185,9 @@ def format_markdown(enum_data, string_data, row_data) -> str:
         f"- String max: {string_data['string_max']} chars (limit: {CONFIG['STRING_MAX_SIZE']})",
     ])
 
-    if string_data['list_exceeds'] or string_data['string_exceeds']:
-        lines.append(f"### ⚠️  {string_data['list_exceeds'] + string_data['string_exceeds']} values exceed limits")
+    string_violations = string_data['list_exceeds'] + string_data['string_exceeds']
+    if string_violations:
+        lines.append(f"### ❌ {string_violations} values exceed limits")
     else:
         lines.append("### ✅ All values within limits")
     lines.append("")
@@ -208,9 +218,10 @@ def format_markdown(enum_data, string_data, row_data) -> str:
         "## Summary",
         f"- Enums: {enum_data['total']} total (no limit enforced)",
         f"- Schemas: {len(row_data['schemas'])} total, {len(row_data['exceeds'])} exceed, {len(row_data['approaching'])} approaching",
+        f"- Values over STRING/LIST limits: {string_violations}",
     ])
 
-    if row_data['exceeds']:
+    if row_data['exceeds'] or string_violations:
         lines.append("\n❌ **VALIDATION FAILED** - Critical issues found")
     elif row_data['approaching']:
         lines.append("\n⚠️  **WARNINGS** - Some limits approaching")
@@ -232,9 +243,16 @@ def main():
     args = parser.parse_args()
 
     # Run checks
-    enum_data = check_enum_sizes(Path(args.modules_dir))
-    string_data = check_string_lengths(Path(args.schemas_dir))
-    row_data = check_row_sizes(Path(args.schemas_dir))
+    try:
+        enum_data = check_enum_sizes(Path(args.modules_dir))
+        string_data = check_string_lengths(Path(args.schemas_dir))
+        row_data = check_row_sizes(Path(args.schemas_dir))
+    except SchemaReadError as err:
+        message = f"# Schema Limits Report\n\n❌ **VALIDATION FAILED** - {err}\n"
+        if args.output:
+            Path(args.output).write_text(message)
+        print(f"ERROR: {err}", file=sys.stderr)
+        sys.exit(1)
 
     # Format output
     if args.format == 'json':
@@ -256,7 +274,8 @@ def main():
 
     # Exit codes
     if args.strict:
-        if row_data['exceeds']:
+        string_violations = string_data['list_exceeds'] + string_data['string_exceeds']
+        if row_data['exceeds'] or string_violations:
             sys.exit(1)
         elif row_data['approaching']:
             sys.exit(2)
