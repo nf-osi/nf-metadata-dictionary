@@ -409,9 +409,14 @@
       "title": "comments"
     },
     "dataCollectionMode": {
-      "description": "Mode of data collection in tandem MS assays. Either DDA (data-dependent acquisition) or DIA (data-independent) acquisition.",
-      "type": "string",
-      "title": "dataCollectionMode"
+      "description": "Mode of data collection in tandem MS assays.",
+      "enum": [
+        "DDA",
+        "DIA",
+        "Other"
+      ],
+      "title": "dataCollectionMode",
+      "type": "string"
     },
     "dataSubtype": {
       "description": "Categorizes data based on its processing state. This is the main classification axis used for data types.  Not all data types can use this dimensions (e.g. clinical data).",

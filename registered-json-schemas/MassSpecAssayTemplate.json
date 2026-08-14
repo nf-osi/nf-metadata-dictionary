@@ -143,9 +143,14 @@
   "description": "Template for raw mass spec-based proteomics data.",
   "properties": {
     "dataCollectionMode": {
-      "description": "Mode of data collection in tandem MS assays. Either DDA (data-dependent acquisition) or DIA (data-independent) acquisition.",
-      "type": "string",
-      "title": "dataCollectionMode"
+      "description": "Mode of data collection in tandem MS assays.",
+      "enum": [
+        "DDA",
+        "DIA",
+        "Other"
+      ],
+      "title": "dataCollectionMode",
+      "type": "string"
     },
     "age": {
       "anyOf": [

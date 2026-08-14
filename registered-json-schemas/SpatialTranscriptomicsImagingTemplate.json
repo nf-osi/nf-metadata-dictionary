@@ -156,9 +156,19 @@
       "title": "aliquotID"
     },
     "captureArea": {
-      "description": "One of the either four or two active regions where tissue can be placed on a Visium slide. Each area is intended to contain only one tissue sample.  Slide areas are named consecutively from top to bottom:  A1, B1, C1, D1 for Visium slides with 6.5 mm Capture Area and A, B for CytAssist slides with 11 mm Capture Area.  Both CytAssist slides with 6.5 mm Capture Area and Gateway Slides contain only two slide areas, A1 and D1.\n",
-      "type": "string",
-      "title": "captureArea"
+      "description": "Active region on a Visium/CytAssist slide where a tissue sample can be placed.",
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "A1",
+        "B1",
+        "C1",
+        "D1"
+      ],
+      "title": "captureArea",
+      "type": "string"
     },
     "visiumslideID": {
       "description": "Unique identifier for the Visium slide used in the spatial transcriptomics experiment. Slide serial numbers begin with V1, V4, V5, or H1 (e.g., V10J25-015).",

@@ -139,9 +139,13 @@
   "description": "Template for describing either simple germline/somatic variant calls output data (VCF/MAF) as well as structural variants (e.g. CNVs).",
   "properties": {
     "isFilteredReads": {
-      "description": "Whether the reads in the processed result has been filtered by adding a 'PASS' filter or other filters as determined by the data generator",
-      "type": "string",
-      "title": "isFilteredReads"
+      "description": "Boolean data as Yes/No enums",
+      "enum": [
+        "No",
+        "Yes"
+      ],
+      "title": "isFilteredReads",
+      "type": "string"
     },
     "workflow": {
       "description": "",

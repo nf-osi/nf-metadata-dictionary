@@ -217,9 +217,16 @@
       "title": "cellType"
     },
     "recordingSource": {
-      "description": "Source of electrophysiology recording.",
-      "type": "string",
-      "title": "recordingSource"
+      "description": "Source of an electrophysiology recording.",
+      "enum": [
+        "electrode",
+        "tetrode",
+        "shank",
+        "Utah array",
+        "other electrode array"
+      ],
+      "title": "recordingSource",
+      "type": "string"
     },
     "experimentalTimepoint": {
       "description": "The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit",

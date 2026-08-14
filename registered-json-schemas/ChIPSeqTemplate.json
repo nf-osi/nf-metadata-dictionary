@@ -444,9 +444,23 @@
       "type": "string"
     },
     "peakCallingAlgorithm": {
-      "description": "A list of commonly used peak-calling algorithms for ChIP-Seq data analysis.",
-      "type": "string",
-      "title": "peakCallingAlgorithm"
+      "description": "Commonly used peak-calling algorithms for ChIP-Seq data analysis.",
+      "enum": [
+        "MACS2",
+        "SICER",
+        "HOMER",
+        "Genrich",
+        "PeakRanger",
+        "SEACR",
+        "GEM",
+        "MUSIC",
+        "BroadPeak",
+        "SWEMBL",
+        "FSeq",
+        "ZINBA"
+      ],
+      "title": "peakCallingAlgorithm",
+      "type": "string"
     },
     "assayTarget": {
       "description": "Target of the assay such as a HUGO gene symbol, cell type, or tissue region depending on the capabilities of the assay.",
@@ -1867,7 +1881,7 @@
     },
     "targetDepth": {
       "description": "The targeted read depth prior to sequencing.",
-      "type": "string",
+      "type": "integer",
       "title": "targetDepth"
     },
     "tumorType": {
