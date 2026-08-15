@@ -19,7 +19,7 @@ import traceback
 import yaml
 import sys
 from pathlib import Path
-from typing import Dict, List, Any, Set, Tuple
+from typing import Dict, List, Any, NoReturn, Set, Tuple
 
 # Configuration from json_schema_entity_view.py and create_curation_task.py
 CONFIG = {
@@ -324,7 +324,7 @@ def format_markdown(enum_data, string_data, row_data) -> str:
     return '\n'.join(lines)
 
 
-def _fail(output: str, detail: str) -> None:
+def _fail(output: str, detail: str) -> NoReturn:
     """Record the failure in the report and exit non-zero.
 
     The report is always written: the PR comment step runs with `if: always()`

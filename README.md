@@ -140,8 +140,8 @@ If the range of a slot is not explicit defined, it defaults to "string" (basical
 All slots are in the file `modules/props.yaml`. 
 
 Because of that default, give numeric slots an explicit `range` (`integer` or `float`), otherwise the generated JSON schema accepts any string for them.
-Controlled values must likewise be given as a **named** enum referenced by `range`. 
-Inline `enum_range:` lists are stripped from the model by the build (see `Makefile`), so a slot that uses one silently falls back to free-text string with no enforcement. 
+Controlled values must likewise be given as a **named** enum referenced by `range`.
+Inline `enum_range:` lists are stripped from the model by the build (see `Makefile`), so a slot that uses one silently falls back to free-text string with no enforcement.
 Define the enum in the appropriate `modules` file and point `range` at it instead.
 
 ##### Example slots
