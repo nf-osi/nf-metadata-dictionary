@@ -104,7 +104,7 @@ We get the maintainability benefit that dynamic enums promise, without the downs
 
 ### When `reachable_from` *would* be appropriate
 
-If a future value set is genuinely "every descendant of node X," is small enough to satisfy the ~100-value UI limit, needs no NF-specific descriptions/aliases, and has no community-registry or free-text feedback loop, then `reachable_from` is the right tool and should be used. None of our current large enums meet all four conditions.
+If a future value set is genuinely "every descendant of node X," is small enough that it presents as a manageable dropdown without the [contextual subsetting](#contextual-enum-subsets) described above, needs no NF-specific descriptions/aliases, and has no community-registry or free-text feedback loop, then `reachable_from` is the right tool and should be used. None of our current large enums meet all four conditions.
 
 ---
 
