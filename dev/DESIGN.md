@@ -210,7 +210,7 @@ Together these provide truth table synchronization, ontology-driven standardizat
 When the workflow creates a PR:
 1. Review `annotation_suggestions.md` for a summary of additions
 2. Evaluate each suggestion — legitimate new term, typo, or alias for existing value?
-3. Check whether adding values would approach Synapse's 100-value-per-enum limit
+3. Check the value's length rather than the enum's size — Synapse no longer caps values per enum, but each value must fit the 80-char file view column (see [Schema Limits & Validation](DEVELOPMENT.md#schema-limits--validation))
 4. Merge, revise, or close with notes
 
 ### Configuration

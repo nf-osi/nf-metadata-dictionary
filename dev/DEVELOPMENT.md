@@ -218,13 +218,16 @@ The NF Metadata Dictionary must satisfy several Synapse limits:
 File views have the stricter limit, so we use conservative column sizes:
 
 ```
-STRING: 80 chars (covers 100% of enum values, max: 77 chars)
+STRING: 80 chars
 LIST: 80 chars × 20 items max
 name column: 256 chars
-Largest FileView-backed schema: ~39.8KB (PdxGenomicsAssayTemplate)
 ```
 
 **Applied in:** `utils/json_schema_entity_view.py`, `utils/create_curation_task.py`
+
+Those are the configured column sizes. How much of each budget is actually used - the longest enum value, and the largest schema's row size - is a measurement that shifts whenever a vocabulary or template changes, so this document deliberately does not pin it: current values comfortably clear the limits, with real headroom on the 64KB row budget.
+Read the live numbers from the report `utils/check_schema_limits.py` writes on every CI run, posted as the **Validate schema limits (Synapse platform)** PR comment: `String max` / `List max` under *String Lengths*, and the *Top 10 Largest* table under *Row Sizes* for per-schema row size, percent of budget, and headroom.
+Do not quote a figure from a past run or a past report as if it describes the current repo.
 
 Both the STRING/LIST character limits and the 64KB row limit come from the same file view column configuration, so both apply to the same scope: schemas whose class name ends in `Template` and which do not derive from `RecordSet`.
 Non-Template schemas (`PortalDataset`, `Superdataset`, etc.) are not used to create file views via `create_curation_task.py`, and RecordSet-backed Templates are provisioned via `create_recordset_task.py`, so neither is governed by these limits.
@@ -232,7 +235,7 @@ Non-Template schemas (`PortalDataset`, `Superdataset`, etc.) are not used to cre
 #### JSON Schema Validation (More Permissive)
 
 Registered JSON schemas are more permissive:
-- Enum sizes: Some are very large (e.g., `CellLineModel`: 638, `Institution`: 337)
+- Enum sizes: Some run to many hundreds of values (e.g., `CellLineModel`, `Institution`); the *Enum Sizes* section of the schema-limits report lists the current top 5 with counts
 - String lengths: No strict character limits beyond what's semantically meaningful
 - Used for: Data validation, dropdown generation, documentation
 
