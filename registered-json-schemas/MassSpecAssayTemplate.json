@@ -450,14 +450,20 @@
       "type": "string"
     },
     "fileFormat": {
-      "description": "File formats for mass spectrometry data",
+      "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
+      "type": "string",
       "enum": [
         "msf",
         "mzML",
-        "raw"
+        "raw",
+        "RCC",
+        "csv",
+        "excel",
+        "parquet",
+        "tsv",
+        "txt"
       ],
-      "title": "fileFormat",
-      "type": "string"
+      "title": "fileFormat"
     },
     "geneticReagentID": {
       "anyOf": [
