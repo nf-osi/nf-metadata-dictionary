@@ -128,8 +128,7 @@ jobs:
 
       - name: Install Synapse Python client
         run: |
-          # Install from develop branch which has curation task support
-          pip install git+https://github.com/Sage-Bionetworks/synapsePythonClient.git@develop
+          pip install 'synapseclient>=4.12.0'
 
       - name: Create curation task and bind schema
         id: create_task
