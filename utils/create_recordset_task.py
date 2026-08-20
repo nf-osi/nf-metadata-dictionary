@@ -8,7 +8,8 @@ This script automatically:
 - Creates a DataGrid interface for the RecordSet
 
 Requirements:
-  pip install git+https://github.com/Sage-Bionetworks/synapsePythonClient.git@develop
+  synapseclient>=4.12.0 (the synapseclient.extensions.curator module is not available
+  in earlier releases)
 """
 
 import argparse
@@ -159,8 +160,8 @@ def create_recordset_task(
     except ImportError:
         raise ImportError(
             "The create_record_based_metadata_task function is not available. "
-            "Please ensure you have the latest develop branch of synapsePythonClient:\n"
-            "  pip install git+https://github.com/Sage-Bionetworks/synapsePythonClient.git@develop"
+            "Please upgrade synapseclient to 4.12.0 or later:\n"
+            "  pip install 'synapseclient>=4.12.0'"
         )
 
     # Create the record-based metadata task
