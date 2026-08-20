@@ -252,9 +252,9 @@ It checks:
 Synapse curation tasks support structured metadata collection with registered JSON schemas. Two task types are supported.
 
 > [!IMPORTANT]
-> Currently, this functionality requires synapsePythonClient develop branch:
+> Requires `synapseclient>=4.12.0` (both scripts rely on `synapseclient.extensions.curator`):
 > ```bash
-> pip install git+https://github.com/Sage-Bionetworks/synapsePythonClient.git@develop
+> pip install 'synapseclient>=4.12.0'
 > ```
 
 #### File-Based Curation Tasks
