@@ -41,16 +41,24 @@ def load_schema_uri(template_name_or_uri: str, schema_dir: str = "registered-jso
         # -> org.synapse.nf-datalandscape-0.2.0
         return template_name_or_uri.split('/')[-1]
 
-    # Local template name - load from file
+    # Local template name - load from file (case-insensitive: 'datalandscape'
+    # matches 'DataLandscape.json' just like the properly-cased name would)
     repo_root = Path(__file__).parent.parent
     schema_file = repo_root / schema_dir / f"{template_name_or_uri}.json"
 
     if not schema_file.exists():
-        raise FileNotFoundError(
-            f"Schema file not found: {schema_file}\n"
-            f"Available templates in {schema_dir}/:\n" +
-            "\n".join(f"  - {f.stem}" for f in sorted((repo_root / schema_dir).glob("*.json")))
+        match = next(
+            (f for f in (repo_root / schema_dir).glob("*.json")
+             if f.stem.lower() == template_name_or_uri.lower()),
+            None
         )
+        if match is None:
+            raise FileNotFoundError(
+                f"Schema file not found: {schema_file}\n"
+                f"Available templates in {schema_dir}/:\n" +
+                "\n".join(f"  - {f.stem}" for f in sorted((repo_root / schema_dir).glob("*.json")))
+            )
+        schema_file = match
 
     with open(schema_file, 'r') as f:
         schema = json.load(f)
@@ -262,7 +270,7 @@ Notes:
     parser.add_argument(
         '--template',
         required=True,
-        help='Template name (e.g., ImagingAssayTemplate) or full schema URI'
+        help='Template name, case-insensitive (e.g., ImagingAssayTemplate or imagingassaytemplate) or full schema URI'
     )
 
     parser.add_argument(

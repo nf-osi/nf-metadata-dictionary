@@ -7,7 +7,8 @@ This script automatically:
 - Creates EntityView (file view) for the upload folder
 - Creates CurationTask with specified datatype and instructions
 
-The dataType is auto-generated from the template name and folder ID.
+The task display name is enforced as "{folder name} ({folder ID})" per our
+team's task naming convention.
 The project ID is derived from the folder.
 
 Requirements:
@@ -25,12 +26,7 @@ from pathlib import Path
 def load_schema_uri(template_name_or_uri: str, schema_dir: str = "registered-json-schemas") -> tuple[str, dict]:
     """
     Load the schema URI and schema content from a registered JSON schema file or external URI.
-
-    The returned schema_uri is always normalized to the short form (e.g.
-    'org.synapse.nf-imagingassaytemplate'), matching what synapseclient's own
-    bind_schema()/create_file_based_metadata_task() examples use, even though
-    registered schema files' $id (and externally-provided URIs) are full URLs.
-
+    
     Args:
         template_name_or_uri: Template name (e.g., 'ImagingAssayTemplate') or full schema URI
         schema_dir: Directory containing schema files (only used for local templates)
@@ -48,16 +44,24 @@ def load_schema_uri(template_name_or_uri: str, schema_dir: str = "registered-jso
         # separately by the caller using the original full URI
         return template_name_or_uri.split('/')[-1], None
 
-    # Local template name - load from file
+    # Local template name - load from file (case-insensitive: 'microscopyassaytemplate'
+    # matches 'MicroscopyAssayTemplate.json' just like the properly-cased name would)
     repo_root = Path(__file__).parent.parent
     schema_file = repo_root / schema_dir / f"{template_name_or_uri}.json"
 
     if not schema_file.exists():
-        raise FileNotFoundError(
-            f"Schema file not found: {schema_file}\n"
-            f"Available templates in {schema_dir}/:\n" +
-            "\n".join(f"  - {f.stem}" for f in sorted((repo_root / schema_dir).glob("*.json")))
+        match = next(
+            (f for f in (repo_root / schema_dir).glob("*.json")
+             if f.stem.lower() == template_name_or_uri.lower()),
+            None
         )
+        if match is None:
+            raise FileNotFoundError(
+                f"Schema file not found: {schema_file}\n"
+                f"Available templates in {schema_dir}/:\n" +
+                "\n".join(f"  - {f.stem}" for f in sorted((repo_root / schema_dir).glob("*.json")))
+            )
+        schema_file = match
 
     with open(schema_file, 'r') as f:
         schema = json.load(f)
@@ -72,20 +76,21 @@ def load_schema_uri(template_name_or_uri: str, schema_dir: str = "registered-jso
     return schema_id, schema
 
 
-def generate_datatype(template_name: str, folder_id: str) -> str:
+def generate_task_name(folder_name: str, folder_id: str) -> str:
     """
-    Generate a unique dataType identifier.
+    Synapse raw API uses param `dataType` for setting task display name, which is rather confusing.
+    This generates the CurationTask's `dataType`, enforcing our current task naming convention 
+    that simply uses the dataset folder name - ultimately we should use whatever format is most understandable to folks. 
+    It is easiest to identify tasks by the folder they're curating.
 
     Args:
-        template_name: Name of the template (e.g., 'ImagingAssayTemplate')
+        folder_name: Name of the upload folder (e.g., 'RNA-seq for Cohort 1')
         folder_id: Synapse folder ID (e.g., 'syn12345678')
 
     Returns:
-        Generated dataType string (e.g., 'ImagingAssay-syn12345678')
+        Generated dataType string (e.g., 'RNA-seq for Cohort 1 (syn12345678)')
     """
-    # Remove "Template" suffix if present
-    base_name = template_name.removesuffix("Template")
-    return f"{base_name}-{folder_id}"
+    return f"{folder_name} ({folder_id})"
 
 
 def check_existing_annotations(folder_id: str, schema_fields: set, syn) -> bool:
@@ -299,6 +304,7 @@ def create_curation_task(
     """
     from synapseclient import Synapse
     from synapseclient.extensions.curator.utils import project_id_from_entity_id
+    from synapseclient.models import Folder
     from synapseclient.models.curation import (
         CurationTask,
         FileBasedMetadataTaskProperties
@@ -318,8 +324,10 @@ def create_curation_task(
     syn.login(authToken=auth_token)
 
     print(f"Getting folder information: {upload_folder_id}")
+    folder_name = Folder(id=upload_folder_id).get(synapse_client=syn).name
     project_id = project_id_from_entity_id(upload_folder_id, synapse_client=syn)
 
+    print(f"  Folder: {folder_name}")
     print(f"  Project: {project_id}")
 
     # Resolve assignee and check (but do not modify) their folder permissions
@@ -348,18 +356,8 @@ def create_curation_task(
             print(f"  ⚠ Could not fetch schema from URI (status {response.status_code})")
             json_schema = {}
 
-    # Determine template name for dataType generation
-    # If full URI provided, extract template name or use a default
-    if template.startswith('http://') or template.startswith('https://'):
-        # Extract template name from the (already short-form) schema_uri if possible
-        # e.g., sage.schemas.v2571-nf.ChIPSeqTemplate.schema-9.14.0 -> ChIPSeqTemplate
-        uri_parts = schema_uri.split('.')
-        template_name = next((part for part in uri_parts if 'Template' in part), template.replace('https://', '').replace('http://', '').split('/')[0])
-    else:
-        template_name = template
-
     # Generate dataType
-    data_type = generate_datatype(template_name, upload_folder_id)
+    data_type = generate_task_name(folder_name, upload_folder_id)
     print(f"  Generated dataType: {data_type}")
 
     # Warn early if files already have annotations matching the template fields,
@@ -481,7 +479,7 @@ Environment Variables:
 
 Notes:
   - Project ID is automatically derived from the folder
-  - DataType is auto-generated as: {template_base}-{folder_id}
+  - DataType (task name) is enforced as "{folder_name} ({folder_id})" per team convention, not configurable
   - Schema binding is enabled by default (use --no-bind-schema to skip)
   - Schema URI is loaded from registered-json-schemas/ directory
   - --assignee only checks the assignee's existing folder permissions and warns
@@ -498,7 +496,7 @@ Notes:
     parser.add_argument(
         '--template',
         required=True,
-        help='Template name (e.g., ImagingAssayTemplate) or full schema URI (e.g., https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/sage.schemas.v2571-nf.ChIPSeqTemplate.schema-9.14.0)'
+        help='Template name, case-insensitive (e.g., ImagingAssayTemplate or imagingassaytemplate) or full schema URI (e.g., https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/sage.schemas.v2571-nf.ChIPSeqTemplate.schema-9.14.0)'
     )
 
     parser.add_argument(
@@ -570,12 +568,14 @@ Notes:
                     f.write(f"fileview_id={result['fileview_id']}\n")
                     f.write(f"data_type={result['data_type']}\n")
                     f.write(f"schema_uri={result['schema_uri']}\n")
+                    f.write(f"assignee_principal_id={result['assignee_principal_id'] or ''}\n")
             else:
                 print("\nGitHub Actions outputs:")
                 print(f"task_id={result['task_id']}")
                 print(f"fileview_id={result['fileview_id']}")
                 print(f"data_type={result['data_type']}")
                 print(f"schema_uri={result['schema_uri']}")
+                print(f"assignee_principal_id={result['assignee_principal_id'] or ''}")
         else:
             # JSON output for testing
             print("\nResult:")
