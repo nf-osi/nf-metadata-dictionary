@@ -266,10 +266,10 @@ lost if these scripts were ever replaced by direct client calls.
 | What our wrapper adds | Why synapseclient doesn't cover it |
 |---|---|
 | Local, short template name → `schema_uri` resolution (reads `registered-json-schemas/{template}.json`) | The client takes a `schema_uri` only; wrapper allows convenient short-name reference by taking advantage of registered-json-schemas folder  |
-| Enforces our team's task naming convention — `dataType` is auto-generated as `{folder_name} ({folder_id})`, not left to the caller | The client's `curation_task_name` is used verbatim as `data_type`; it has no naming convention of its own, let alone ours |
+| Enforces our team's task naming convention — `dataType` is auto-generated as `{folder_name} ({folder_id})` | The client's `curation_task_name` is used verbatim as `data_type`; it has no naming convention of its own, let alone ours |
 | Pre-flight check for files that already have annotations matching the new template's fields | No equivalent — the client has no awareness of annotation state before task creation |
-| `--replace` (delete the stale task and rebind the schema when switching templates on an already-configured folder) | No equivalent, and it wouldn't know this repo's one-task-per-folder convention even if it existed |
-| `--assignee` + a permission check (warns if the assignee lacks `READ`/`CREATE`/`UPDATE` on the folder; never grants access) | The client accepts `assignee_principal_id` as task metadata but does nothing about folder ACLs — it has no notion that a curation task implies future writes by the assignee |
+| `--replace` (delete the stale task and rebind the schema when switching templates on an already-configured folder) | No equivalent, this convenience was added in #875 |
+| `--assignee` + a permission check (warns if the assignee lacks `READ`/`CREATE`/`UPDATE` on the folder; never grants access) | `assignee_principal_id` implies future writes by the assignee so permissions should be checked, and client doesn't do this |
 | Sized `STRING`/list columns (max 80 chars / 20 items) instead of unbounded `MEDIUMTEXT` | The client's own column builder doesn't account for Synapse's 64KB file-view row limit; using it as-is would reintroduce a real production incident (PR #843, `ScRNASeqTemplate` row-size breach) |
 
 What we *do* delegate to the client (as of `synapseclient>=4.12.0`):
@@ -291,10 +291,7 @@ We deliberately do **not** call `synapseclient.extensions.curator.create_file_ba
 **What it creates:**
 - EntityView (file view) with schema-derived columns
 - CurationTask bound to the folder
-- `dataType` (the task's display name in Synapse), enforced as `{folder_name} ({folder_id})` —
-  this is our team's required naming convention, not a suggestion: it lets curators identify a
-  task by the folder it curates rather than by an internal template/schema name, and the caller
-  cannot override it
+- `dataType` (the task's display name in Synapse), enforced as `{folder_name} ({folder_id})`
 
 **Usage:**
 ```bash
