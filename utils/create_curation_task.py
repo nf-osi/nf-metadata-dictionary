@@ -140,12 +140,15 @@ def check_existing_annotations(folder_id: str, schema_fields: set, syn) -> bool:
 
 def resolve_principal_id(identifier: str, syn) -> str:
     """
-    Resolve a username, email, team name, or numeric ID to a Synapse principal ID.
+    Resolve a username, team name, or numeric ID to a Synapse principal ID.
+
+    Synapse does not support looking up principals by email address, so emails
+    are not accepted.
 
     Tries a user profile lookup first, then falls back to a team lookup.
 
     Args:
-        identifier: Username, email, team name, or numeric user/team ID
+        identifier: Username, team name, or numeric user/team ID
         syn: Authenticated Synapse client
 
     Returns:
@@ -168,7 +171,8 @@ def resolve_principal_id(identifier: str, syn) -> str:
 
     raise ValueError(
         f"Could not resolve '{identifier}' to a Synapse user or team. "
-        "Provide a username, email, team name, or numeric principal ID."
+        "Provide a username, team name, or numeric principal ID "
+        "(Synapse does not support lookup by email address)."
     )
 
 
@@ -293,7 +297,7 @@ def create_curation_task(
         bind_schema: Whether to bind JSON schema to folder (default: True)
         replace: If True, delete any existing curation task for this folder and
                  rebind the schema before creating a new task (default: False)
-        assignee: Username, email, team name, or numeric principal ID to assign the
+        assignee: Username, team name, or numeric principal ID to assign the
                   task to (optional). If provided, the assignee's existing permissions
                   on the upload folder are checked and a warning is printed if they're
                   insufficient — this script never modifies folder sharing settings.
@@ -534,7 +538,8 @@ Notes:
         '--assignee',
         default=None,
         help=(
-            'Username, email, team name, or numeric principal ID to assign the task to. '
+            'Username, team name, or numeric principal ID to assign the task to '
+            '(email addresses are not supported by Synapse). '
             'Existing folder permissions for the assignee are checked and a warning is '
             'printed if insufficient; this script never modifies folder sharing settings.'
         )

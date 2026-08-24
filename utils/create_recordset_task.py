@@ -10,6 +10,8 @@ This script automatically:
 Requirements:
   synapseclient>=4.12.0 (the synapseclient.extensions.curator module is not available
   in earlier releases)
+  pandas (required by synapseclient's create_record_based_metadata_task, but not
+  installed as a synapseclient dependency)
 """
 
 import argparse
@@ -165,12 +167,19 @@ def create_recordset_task(
     # Import the helper function from synapseclient
     try:
         from synapseclient.extensions.curator import create_record_based_metadata_task
-    except ImportError:
+    except ImportError as e:
+        # create_record_based_metadata_task imports pandas, which synapseclient does not
+        # install itself, so a missing pandas looks identical to a stale synapseclient here.
+        if getattr(e, "name", None) == "pandas":
+            raise ImportError(
+                "Record-based tasks require pandas, which synapseclient does not install:\n"
+                "  pip install pandas"
+            ) from e
         raise ImportError(
             "The create_record_based_metadata_task function is not available. "
             "Please upgrade synapseclient to 4.12.0 or later:\n"
             "  pip install 'synapseclient>=4.12.0'"
-        )
+        ) from e
 
     # Create the record-based metadata task
     # Build kwargs to conditionally include upsert_keys

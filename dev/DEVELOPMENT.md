@@ -252,9 +252,16 @@ It checks:
 Synapse curation tasks support structured metadata collection with registered JSON schemas. Two task types are supported.
 
 > [!IMPORTANT]
-> Requires `synapseclient>=4.12.0` (both scripts rely on `synapseclient.extensions.curator`):
+> Requires `synapseclient>=4.12.0` (both scripts rely on `synapseclient.extensions.curator`).
+> `create_recordset_task.py` additionally requires `pandas`, which `synapseclient` does not
+> pull in: `create_record_based_metadata_task()` imports it, so a bare `synapseclient` install
+> fails with `ModuleNotFoundError: No module named 'pandas'`.
 > ```bash
+> # file-based tasks (create_curation_task.py)
 > pip install 'synapseclient>=4.12.0'
+>
+> # record-based tasks (create_recordset_task.py)
+> pip install 'synapseclient>=4.12.0' pandas
 > ```
 
 #### Wrapper vs. synapseclient
@@ -316,7 +323,7 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_curation_task.py \
 | `--instructions` | Instructions for contributors | "Please add metadata for your files" |
 | `--bind-schema` / `--no-bind-schema` | Bind schema to folder | True |
 | `--replace` | Delete any existing curation task for this folder and rebind the schema before creating a new one; use when switching templates | False |
-| `--assignee` | Username, email, team name, or numeric principal ID to assign the task to; existing folder permissions are checked (not granted) | None |
+| `--assignee` | Username, team name, or numeric principal ID to assign the task to; existing folder permissions are checked (not granted). Email addresses are *not* supported — Synapse does not allow principal lookup by email | None |
 | `--output-format` | `json` or `github` | `json` |
 
 **Output:** `task_id`, `fileview_id`, `data_type`, `schema_uri`, `project_id`, `assignee_principal_id`
