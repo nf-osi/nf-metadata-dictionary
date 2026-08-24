@@ -252,10 +252,42 @@ It checks:
 Synapse curation tasks support structured metadata collection with registered JSON schemas. Two task types are supported.
 
 > [!IMPORTANT]
-> Currently, this functionality requires synapsePythonClient develop branch:
+> Requires `synapseclient>=4.12.0` (both scripts rely on `synapseclient.extensions.curator`).
+> `create_recordset_task.py` additionally requires `pandas`, which `synapseclient` does not
+> pull in: `create_record_based_metadata_task()` imports it, so a bare `synapseclient` install
+> fails with `ModuleNotFoundError: No module named 'pandas'`.
 > ```bash
-> pip install git+https://github.com/Sage-Bionetworks/synapsePythonClient.git@develop
+> # file-based tasks (create_curation_task.py)
+> pip install 'synapseclient>=4.12.0'
+>
+> # record-based tasks (create_recordset_task.py)
+> pip install 'synapseclient>=4.12.0' pandas
 > ```
+
+#### Wrapper vs. synapseclient
+
+Both scripts build on top of `synapseclient`'s curation task support, but they are not
+thin passthroughs to it. The table below is the actual diff, so it's clear what would be
+lost if these scripts were ever replaced by direct client calls.
+
+| What our wrapper adds | Why synapseclient doesn't cover it |
+|---|---|
+| Local, short template name → `schema_uri` resolution (reads `registered-json-schemas/{template}.json`) | The client takes a `schema_uri` only; wrapper allows convenient short-name reference by taking advantage of registered-json-schemas folder  |
+| Enforces our team's task naming convention — `dataType` is auto-generated as `{folder_name} ({folder_id})` | The client's `curation_task_name` is used verbatim as `data_type`; it has no naming convention of its own, let alone ours |
+| Pre-flight check for files that already have annotations matching the new template's fields | No equivalent — the client has no awareness of annotation state before task creation |
+| `--replace` (delete the stale task and rebind the schema when switching templates on an already-configured folder) | No equivalent, this convenience was added in #875 |
+| `--assignee` + a permission check (warns if the assignee lacks `READ`/`CREATE`/`UPDATE` on the folder; never grants access) | `assignee_principal_id` implies future writes by the assignee so permissions should be checked, and client doesn't do this |
+| Sized `STRING`/list columns (max 80 chars / 20 items) instead of unbounded `MEDIUMTEXT` | The client's own column builder doesn't account for Synapse's 64KB file-view row limit; using it as-is would reintroduce a real production incident (PR #843, `ScRNASeqTemplate` row-size breach) |
+
+What we *do* delegate to the client (as of `synapseclient>=4.12.0`):
+- `project_id_from_entity_id()` for folder→project traversal (replaced a hand-rolled loop)
+- `Folder.bind_schema()` for schema binding — it's a PUT, so rebinding just overwrites; no manual unbind step needed
+- `EntityView`'s own default columns (`include_default_columns=True`) + `reorder_column()`, instead of manually constructing `id`/`name` columns (which collided with the defaults and risked corrupting `id`'s special meaning)
+- `CurationTask.store()`'s built-in non-destructive upsert (merges by `project_id` + `data_type` automatically)
+- `assignee_principal_id` on `CurationTask`, passed straight through
+
+We deliberately do **not** call `synapseclient.extensions.curator.create_file_based_metadata_task()` /
+`create_json_schema_entity_view()` wholesale — see the column-sizing row above.
 
 #### File-Based Curation Tasks
 
@@ -266,7 +298,7 @@ Synapse curation tasks support structured metadata collection with registered JS
 **What it creates:**
 - EntityView (file view) with schema-derived columns
 - CurationTask bound to the folder
-- Auto-generated dataType: `{template_base}-{folder_id}`
+- `dataType` (the task's display name in Synapse), enforced as `{folder_name} ({folder_id})`
 
 **Usage:**
 ```bash
@@ -287,12 +319,14 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_curation_task.py \
 | Option | Description | Default |
 |--------|-------------|---------|
 | `--folder-id` | Upload folder Synapse ID (required) | - |
-| `--template` | Template name or schema URI (required) | - |
+| `--template` | Template name *or* schema URI (required) | - |
 | `--instructions` | Instructions for contributors | "Please add metadata for your files" |
 | `--bind-schema` / `--no-bind-schema` | Bind schema to folder | True |
+| `--replace` | Delete any existing curation task for this folder and rebind the schema before creating a new one; use when switching templates | False |
+| `--assignee` | Username, team name, or numeric principal ID to assign the task to; existing folder permissions are checked (not granted). Email addresses are *not* supported — Synapse does not allow principal lookup by email | None |
 | `--output-format` | `json` or `github` | `json` |
 
-**Output:** `task_id`, `fileview_id`, `data_type`, `schema_uri`, `project_id`
+**Output:** `task_id`, `fileview_id`, `data_type`, `schema_uri`, `project_id`, `assignee_principal_id`
 
 #### Record-Based Curation Tasks
 

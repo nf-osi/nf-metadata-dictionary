@@ -95,6 +95,11 @@ on:
         required: false
         type: boolean
         default: false
+      assignee:
+        description: 'Username, team name, or numeric principal ID to assign the task to (optional; email lookup is not supported by Synapse). Existing folder permissions are checked, not granted.'
+        required: false
+        type: string
+        default: ''
       create_issue:
         description: 'Create mirror GitHub issue with task info'
         required: false
@@ -128,8 +133,7 @@ jobs:
 
       - name: Install Synapse Python client
         run: |
-          # Install from develop branch which has curation task support
-          pip install git+https://github.com/Sage-Bionetworks/synapsePythonClient.git@develop
+          pip install 'synapseclient>=4.12.0'
 
       - name: Create curation task and bind schema
         id: create_task
@@ -142,6 +146,7 @@ jobs:
             --instructions "${{ inputs.instructions }}" \
             --bind-schema \
             ${{ inputs.replace && '--replace' || '' }} \
+            ${{ inputs.assignee != '' && format('--assignee "{0}"', inputs.assignee) || '' }} \
             --output-format github
 
       - name: Display task summary
@@ -154,6 +159,7 @@ jobs:
           echo "- **Data Type:** ${{ steps.create_task.outputs.data_type }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Template:** ${{ inputs.template }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Schema URI:** ${{ steps.create_task.outputs.schema_uri }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Assignee (Synapse principal ID):** ${{ steps.create_task.outputs.assignee_principal_id != '' && steps.create_task.outputs.assignee_principal_id || 'Not assigned' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Resources Created" >> $GITHUB_STEP_SUMMARY
           echo "- **Project:** [${{ steps.create_task.outputs.project_id }}](https://www.synapse.org/#!Synapse:${{ steps.create_task.outputs.project_id }})" >> $GITHUB_STEP_SUMMARY
@@ -179,6 +185,7 @@ jobs:
           - **Data Type:** ${{ steps.create_task.outputs.data_type }}
           - **Template:** ${{ inputs.template }}
           - **Schema URI:** ${{ steps.create_task.outputs.schema_uri }}
+          - **Assignee (Synapse principal ID):** ${{ steps.create_task.outputs.assignee_principal_id != '' && steps.create_task.outputs.assignee_principal_id || 'Not assigned' }}
 
           ### Resources Created
           - **Project:** [${{ steps.create_task.outputs.project_id }}](https://www.synapse.org/#!Synapse:${{ steps.create_task.outputs.project_id }})

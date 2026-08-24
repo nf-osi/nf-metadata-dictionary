@@ -8,7 +8,10 @@ This script automatically:
 - Creates a DataGrid interface for the RecordSet
 
 Requirements:
-  pip install git+https://github.com/Sage-Bionetworks/synapsePythonClient.git@develop
+  synapseclient>=4.12.0 (the synapseclient.extensions.curator module is not available
+  in earlier releases)
+  pandas (required by synapseclient's create_record_based_metadata_task, but not
+  installed as a synapseclient dependency)
 """
 
 import argparse
@@ -40,16 +43,24 @@ def load_schema_uri(template_name_or_uri: str, schema_dir: str = "registered-jso
         # -> org.synapse.nf-datalandscape-0.2.0
         return template_name_or_uri.split('/')[-1]
 
-    # Local template name - load from file
+    # Local template name - load from file (case-insensitive: 'datalandscape'
+    # matches 'DataLandscape.json' just like the properly-cased name would)
     repo_root = Path(__file__).parent.parent
     schema_file = repo_root / schema_dir / f"{template_name_or_uri}.json"
 
     if not schema_file.exists():
-        raise FileNotFoundError(
-            f"Schema file not found: {schema_file}\n"
-            f"Available templates in {schema_dir}/:\n" +
-            "\n".join(f"  - {f.stem}" for f in sorted((repo_root / schema_dir).glob("*.json")))
+        match = next(
+            (f for f in (repo_root / schema_dir).glob("*.json")
+             if f.stem.lower() == template_name_or_uri.lower()),
+            None
         )
+        if match is None:
+            raise FileNotFoundError(
+                f"Schema file not found: {schema_file}\n"
+                f"Available templates in {schema_dir}/:\n" +
+                "\n".join(f"  - {f.stem}" for f in sorted((repo_root / schema_dir).glob("*.json")))
+            )
+        schema_file = match
 
     with open(schema_file, 'r') as f:
         schema = json.load(f)
@@ -156,12 +167,19 @@ def create_recordset_task(
     # Import the helper function from synapseclient
     try:
         from synapseclient.extensions.curator import create_record_based_metadata_task
-    except ImportError:
+    except ImportError as e:
+        # create_record_based_metadata_task imports pandas, which synapseclient does not
+        # install itself, so a missing pandas looks identical to a stale synapseclient here.
+        if getattr(e, "name", None) == "pandas":
+            raise ImportError(
+                "Record-based tasks require pandas, which synapseclient does not install:\n"
+                "  pip install pandas"
+            ) from e
         raise ImportError(
             "The create_record_based_metadata_task function is not available. "
-            "Please ensure you have the latest develop branch of synapsePythonClient:\n"
-            "  pip install git+https://github.com/Sage-Bionetworks/synapsePythonClient.git@develop"
-        )
+            "Please upgrade synapseclient to 4.12.0 or later:\n"
+            "  pip install 'synapseclient>=4.12.0'"
+        ) from e
 
     # Create the record-based metadata task
     # Build kwargs to conditionally include upsert_keys
@@ -261,7 +279,7 @@ Notes:
     parser.add_argument(
         '--template',
         required=True,
-        help='Template name (e.g., ImagingAssayTemplate) or full schema URI'
+        help='Template name, case-insensitive (e.g., ImagingAssayTemplate or imagingassaytemplate) or full schema URI'
     )
 
     parser.add_argument(
