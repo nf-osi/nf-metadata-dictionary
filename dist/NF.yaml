@@ -4515,6 +4515,14 @@ enums:
       abf:
         description: The Axon Binary File format (ABF) was created for the storage of binary experimental data.
         source: https://mdc.custhelp.com/euf/assets/content/ABFHelp.pdf
+      arf:
+        aliases:
+          - BioSigRZ record file
+          - Averaged Response File
+        description: BioSigRZ record file format from Tucker-Davis Technologies. Stores averaged evoked-response records, such as auditory brainstem response (ABR) and distortion product otoacoustic emission (DPOAE) waveforms, which are appended to the file during acquisition for later retrieval and analysis.
+        notes:
+          - Not in EDAM as of August 2026; EDAM has no evoked-response or electrophysiology format terms at all. Do not map to EDAM:format_3581 (arff), which is the unrelated Weka Attribute-Relation File Format.
+        source: https://www.tdt.com/docs/biosigrz/data-acquisition/
       dna:
         description: Propietary SnapGene file format.
         source: https://www.snapgene.com/guides/convert-genbank-files
@@ -10820,6 +10828,7 @@ classes:
         any_of:
           - range: TabularFileFormatEnum
           - range: DocumentFileFormatEnum
+          - range: OtherFileFormatEnum
       dataType:
         ifabsent: string(clinical)
     rules:
@@ -10852,7 +10861,9 @@ classes:
       assay:
         range: ClinicalBehavioralAssayEnum
       fileFormat:
-        range: TabularFileFormatEnum
+        any_of:
+          - range: TabularFileFormatEnum
+          - range: OtherFileFormatEnum
     rules:
       - description: If experimentalTimepoint is provided, timepointUnit must be provided
         preconditions:
