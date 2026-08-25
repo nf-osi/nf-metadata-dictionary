@@ -40,6 +40,7 @@ classes:
         any_of:
         - range: TabularFileFormatEnum
         - range: DocumentFileFormatEnum
+        - range: OtherFileFormatEnum
       dataType:
         ifabsent: string(clinical)
     rules:
@@ -92,7 +93,9 @@ classes:
       assay:
         range: ClinicalBehavioralAssayEnum
       fileFormat:
-        range: TabularFileFormatEnum
+        any_of:
+        - range: TabularFileFormatEnum
+        - range: OtherFileFormatEnum
     rules:
     - description: If experimentalTimepoint is provided, timepointUnit must be provided
       preconditions:
