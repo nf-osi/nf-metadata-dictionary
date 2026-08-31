@@ -113,6 +113,7 @@ classes:
         any_of:
         - range: MassSpecFileFormatEnum
         - range: TabularFileFormatEnum
+        - range: DocumentFileFormatEnum
 
   KinomicsAssayTemplate:
     annotations:
@@ -138,7 +139,9 @@ classes:
       platform:
         range: MassSpectrometryPlatformEnum
       fileFormat:
-        range: MassSpecFileFormatEnum
+        any_of:
+        - range: MassSpecFileFormatEnum
+        - range: TabularFileFormatEnum
 
   AffinityProteomicsTemplate:
     annotations:
@@ -171,7 +174,9 @@ classes:
       platform:
         range: ArrayPlatformEnum
       fileFormat:
-        range: ArrayFileFormatEnum
+        any_of:
+        - range: ArrayFileFormatEnum
+        - range: TabularFileFormatEnum
 
   ProteinInteractionAssayTemplate:
     annotations:

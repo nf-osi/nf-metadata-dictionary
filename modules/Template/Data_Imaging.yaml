@@ -35,6 +35,8 @@ classes:
         any_of:
         - range: ImagingFileFormatEnum
         - range: TabularFileFormatEnum
+        - range: DocumentFileFormatEnum
+        - range: OtherFileFormatEnum
       dataType:
         ifabsent: string(image)
     slots:
@@ -100,6 +102,7 @@ classes:
         any_of:
         - range: ImagingFileFormatEnum
         - range: TabularFileFormatEnum
+        - range: DocumentFileFormatEnum
       dataType:
         ifabsent: string(image)
       specimenID:
@@ -173,6 +176,7 @@ classes:
         any_of:
         - range: ImagingFileFormatEnum
         - range: TabularFileFormatEnum
+        - range: ArchiveFileFormatEnum
       dataType:
         ifabsent: string(image)
     rules:

@@ -139,7 +139,9 @@ classes:
         range: FlowCytometryPlatformEnum
         required: false
       fileFormat:
-        range: OtherFileFormatEnum
+        any_of:
+        - range: OtherFileFormatEnum
+        - range: ImagingFileFormatEnum
 
     rules:
     - description: 'Relaxed conditional validation (issue #825): the listed fields
