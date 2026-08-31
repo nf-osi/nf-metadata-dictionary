@@ -1,160 +1,174 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-analysisresulttemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Template for result files such as figures, presentations, and analysis outputs that report data results but are not primary experimental data.",
+  "title": "AnalysisResultTemplate",
   "allOf": [
     {
       "if": {
         "properties": {
-          "dataType": {}
-        },
-        "required": [
-          "dataType"
-        ]
+          "concreteType": {
+            "const": "org.sagebionetworks.repo.model.FileEntity"
+          }
+        }
       },
       "then": {
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "dataType": {}
+              },
+              "required": [
+                "dataType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "dataSubtype": {}
+              },
+              "required": [
+                "dataSubtype"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "resourceType": {
+                  "const": "experimentalData"
+                }
+              },
+              "required": [
+                "resourceType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "dataSubtype": {},
+                "dataType": {}
+              },
+              "required": [
+                "dataType",
+                "dataSubtype"
+              ]
+            }
+          }
+        ],
         "properties": {
-          "dataSubtype": {}
-        },
-        "required": [
-          "dataSubtype"
-        ]
-      }
-    },
-    {
-      "if": {
-        "properties": {
+          "dataType": {
+            "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
+            "type": "string",
+            "title": "dataType"
+          },
+          "dataSubtype": {
+            "description": "Categorizes data based on its processing state. This is the main classification axis used for data types.  Not all data types can use this dimensions (e.g. clinical data).",
+            "enum": [
+              "derived",
+              "normalized",
+              "processed",
+              "quantified",
+              "raw",
+              "synthetic"
+            ],
+            "title": "dataSubtype",
+            "type": "string"
+          },
+          "species": {
+            "description": "",
+            "enum": [
+              "Danio rerio",
+              "Drosophila melanogaster",
+              "Gallus gallus",
+              "Homo sapiens",
+              "Mus musculus",
+              "Macaca nemestrina",
+              "Mus musculus (humanized)",
+              "Oryctolagus cuniculus",
+              "Pan troglodytes",
+              "Rattus norvegicus",
+              "Rhesus macaque",
+              "Sus scrofa"
+            ],
+            "title": "species",
+            "type": "string"
+          },
+          "relatedDataset": {
+            "description": "Reference to a relevant dataset entity.",
+            "type": "string",
+            "title": "relatedDataset"
+          },
+          "comments": {
+            "description": "Brief free-text comments that may also be important to understanding the resource.",
+            "type": "string",
+            "title": "comments"
+          },
+          "fileFormat": {
+            "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
+            "type": "string",
+            "enum": [
+              "DICOM",
+              "NWB",
+              "PAR",
+              "REC",
+              "aci",
+              "avi",
+              "bmp",
+              "czi",
+              "dm3",
+              "emf",
+              "hdr",
+              "img",
+              "jpg",
+              "lif",
+              "mov",
+              "nii",
+              "ome-tiff",
+              "png",
+              "scn",
+              "svs",
+              "sws",
+              "tif",
+              "tom",
+              "ai",
+              "doc",
+              "html",
+              "hyperlink",
+              "md",
+              "pdf",
+              "powerpoint",
+              "RCC",
+              "csv",
+              "excel",
+              "parquet",
+              "tsv",
+              "txt"
+            ],
+            "title": "fileFormat"
+          },
           "resourceType": {
-            "const": "experimentalData"
+            "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
+            "enum": [
+              "experimentalData",
+              "manifest",
+              "metadata",
+              "protocol",
+              "report",
+              "result",
+              "tool",
+              "weblink",
+              "workflow report"
+            ],
+            "title": "resourceType",
+            "type": "string"
           }
         },
         "required": [
+          "fileFormat",
           "resourceType"
-        ]
-      },
-      "then": {
-        "properties": {
-          "dataSubtype": {},
-          "dataType": {}
-        },
-        "required": [
-          "dataType",
-          "dataSubtype"
-        ]
+        ],
+        "type": "object"
       }
     }
-  ],
-  "description": "Template for result files such as figures, presentations, and analysis outputs that report data results but are not primary experimental data.",
-  "properties": {
-    "dataType": {
-      "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
-      "type": "string",
-      "title": "dataType"
-    },
-    "dataSubtype": {
-      "description": "Categorizes data based on its processing state. This is the main classification axis used for data types.  Not all data types can use this dimensions (e.g. clinical data).",
-      "enum": [
-        "derived",
-        "normalized",
-        "processed",
-        "quantified",
-        "raw",
-        "synthetic"
-      ],
-      "title": "dataSubtype",
-      "type": "string"
-    },
-    "species": {
-      "description": "",
-      "enum": [
-        "Danio rerio",
-        "Drosophila melanogaster",
-        "Gallus gallus",
-        "Homo sapiens",
-        "Mus musculus",
-        "Macaca nemestrina",
-        "Mus musculus (humanized)",
-        "Oryctolagus cuniculus",
-        "Pan troglodytes",
-        "Rattus norvegicus",
-        "Rhesus macaque",
-        "Sus scrofa"
-      ],
-      "title": "species",
-      "type": "string"
-    },
-    "relatedDataset": {
-      "description": "Reference to a relevant dataset entity.",
-      "type": "string",
-      "title": "relatedDataset"
-    },
-    "comments": {
-      "description": "Brief free-text comments that may also be important to understanding the resource.",
-      "type": "string",
-      "title": "comments"
-    },
-    "fileFormat": {
-      "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
-      "type": "string",
-      "enum": [
-        "DICOM",
-        "NWB",
-        "PAR",
-        "REC",
-        "aci",
-        "avi",
-        "bmp",
-        "czi",
-        "dm3",
-        "emf",
-        "hdr",
-        "img",
-        "jpg",
-        "lif",
-        "mov",
-        "nii",
-        "ome-tiff",
-        "png",
-        "svs",
-        "sws",
-        "tif",
-        "tom",
-        "ai",
-        "doc",
-        "html",
-        "hyperlink",
-        "md",
-        "pdf",
-        "powerpoint",
-        "RCC",
-        "csv",
-        "excel",
-        "parquet",
-        "tsv",
-        "txt"
-      ],
-      "title": "fileFormat"
-    },
-    "resourceType": {
-      "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
-      "enum": [
-        "experimentalData",
-        "manifest",
-        "metadata",
-        "protocol",
-        "report",
-        "result",
-        "tool",
-        "weblink",
-        "workflow report"
-      ],
-      "title": "resourceType",
-      "type": "string"
-    }
-  },
-  "required": [
-    "fileFormat",
-    "resourceType"
-  ],
-  "title": "AnalysisResultTemplate",
-  "type": "object"
+  ]
 }

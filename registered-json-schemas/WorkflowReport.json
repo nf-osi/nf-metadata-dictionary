@@ -1,239 +1,255 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-workflowreport",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Template used for miscellaneous workflow reports and accessory files",
+  "title": "WorkflowReport",
   "allOf": [
     {
       "if": {
         "properties": {
-          "workflow": {}
-        },
-        "required": [
-          "workflow"
-        ]
+          "concreteType": {
+            "const": "org.sagebionetworks.repo.model.FileEntity"
+          }
+        }
       },
       "then": {
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "workflow": {}
+              },
+              "required": [
+                "workflow"
+              ]
+            },
+            "then": {
+              "properties": {
+                "workflowLink": {}
+              },
+              "required": [
+                "workflowLink"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "resourceType": {
+                  "const": "experimentalData"
+                }
+              },
+              "required": [
+                "resourceType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "assay": {}
+              },
+              "required": [
+                "assay"
+              ]
+            }
+          }
+        ],
         "properties": {
-          "workflowLink": {}
-        },
-        "required": [
-          "workflowLink"
-        ]
-      }
-    },
-    {
-      "if": {
-        "properties": {
+          "assay": {
+            "description": "The technology used to generate the data in this file.",
+            "type": "string",
+            "title": "assay"
+          },
+          "relatedDataset": {
+            "description": "Reference to a relevant dataset entity.",
+            "type": "string",
+            "title": "relatedDataset"
+          },
+          "workflow": {
+            "description": "",
+            "enum": [
+              "CNVkit",
+              "DESeq2",
+              "DeepVariant",
+              "FastQC",
+              "FreeBayes",
+              "GATK BaseRecalibration",
+              "GATK MarkDuplicates",
+              "MultiQC",
+              "Mutect2",
+              "STAR and Salmon",
+              "Sarek",
+              "Strelka2",
+              "StringTie",
+              "TrimGalore"
+            ],
+            "title": "workflow",
+            "type": "string"
+          },
+          "workflowLink": {
+            "description": "Workflow URL reference",
+            "type": "string",
+            "title": "workflowLink"
+          },
+          "fileFormat": {
+            "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
+            "type": "string",
+            "enum": [
+              "bai",
+              "bam",
+              "bcf",
+              "bed",
+              "bed broadPeak",
+              "bed gappedPeak",
+              "bed narrowPeak",
+              "bedgraph",
+              "bgzip",
+              "bigwig",
+              "cloupe",
+              "cnn",
+              "cnr",
+              "cns",
+              "crai",
+              "cram",
+              "csi",
+              "ctab",
+              "dup",
+              "fasta",
+              "fastq",
+              "flagstat",
+              "gct",
+              "gff3",
+              "gtf",
+              "hic",
+              "maf",
+              "mtx",
+              "plink",
+              "recal",
+              "sam",
+              "seg",
+              "sf",
+              "sra",
+              "tagAlign",
+              "tbi",
+              "tranches",
+              "vcf",
+              "wiggle",
+              "DICOM",
+              "NWB",
+              "PAR",
+              "REC",
+              "aci",
+              "avi",
+              "bmp",
+              "czi",
+              "dm3",
+              "emf",
+              "hdr",
+              "img",
+              "jpg",
+              "lif",
+              "mov",
+              "nii",
+              "ome-tiff",
+              "png",
+              "scn",
+              "svs",
+              "sws",
+              "tif",
+              "tom",
+              "Sentrix descriptor file",
+              "bpm",
+              "cel",
+              "chp",
+              "dat",
+              "idat",
+              "locs",
+              "msf",
+              "mzML",
+              "raw",
+              "RCC",
+              "csv",
+              "excel",
+              "parquet",
+              "tsv",
+              "txt",
+              "MATLAB script",
+              "Python script",
+              "R script",
+              "bash script",
+              "js",
+              "MATLAB data",
+              "RData",
+              "SDAT",
+              "SPAR",
+              "json",
+              "prism",
+              "rds",
+              "sqlite",
+              "xml",
+              "yaml",
+              "7z",
+              "docker image",
+              "gzip",
+              "tar",
+              "zip",
+              "ai",
+              "doc",
+              "html",
+              "hyperlink",
+              "md",
+              "pdf",
+              "powerpoint",
+              "MPEG-4",
+              "md5",
+              "ngchm",
+              "ab1",
+              "abf",
+              "arf",
+              "dna",
+              "edat3",
+              "fcs",
+              "fig",
+              "gb",
+              "h5",
+              "hdf5",
+              "idx",
+              "log",
+              "out",
+              "psydat",
+              "pzfx",
+              "raw",
+              "rmd",
+              "sav",
+              "sdf",
+              "sif",
+              "spk",
+              "svg"
+            ],
+            "title": "fileFormat"
+          },
           "resourceType": {
-            "const": "experimentalData"
+            "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
+            "enum": [
+              "experimentalData",
+              "manifest",
+              "metadata",
+              "protocol",
+              "report",
+              "result",
+              "tool",
+              "weblink",
+              "workflow report"
+            ],
+            "title": "resourceType",
+            "type": "string"
           }
         },
         "required": [
+          "fileFormat",
           "resourceType"
-        ]
-      },
-      "then": {
-        "properties": {
-          "assay": {}
-        },
-        "required": [
-          "assay"
-        ]
+        ],
+        "type": "object"
       }
     }
-  ],
-  "description": "Template used for miscellaneous workflow reports and accessory files",
-  "properties": {
-    "assay": {
-      "description": "The technology used to generate the data in this file.",
-      "type": "string",
-      "title": "assay"
-    },
-    "relatedDataset": {
-      "description": "Reference to a relevant dataset entity.",
-      "type": "string",
-      "title": "relatedDataset"
-    },
-    "workflow": {
-      "description": "",
-      "enum": [
-        "CNVkit",
-        "DESeq2",
-        "DeepVariant",
-        "FastQC",
-        "FreeBayes",
-        "GATK BaseRecalibration",
-        "GATK MarkDuplicates",
-        "MultiQC",
-        "Mutect2",
-        "STAR and Salmon",
-        "Sarek",
-        "Strelka2",
-        "StringTie",
-        "TrimGalore"
-      ],
-      "title": "workflow",
-      "type": "string"
-    },
-    "workflowLink": {
-      "description": "Workflow URL reference",
-      "type": "string",
-      "title": "workflowLink"
-    },
-    "fileFormat": {
-      "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
-      "type": "string",
-      "enum": [
-        "bai",
-        "bam",
-        "bcf",
-        "bed",
-        "bed broadPeak",
-        "bed gappedPeak",
-        "bed narrowPeak",
-        "bedgraph",
-        "bgzip",
-        "bigwig",
-        "cloupe",
-        "cnn",
-        "cnr",
-        "cns",
-        "crai",
-        "cram",
-        "csi",
-        "ctab",
-        "dup",
-        "fasta",
-        "fastq",
-        "flagstat",
-        "gct",
-        "gff3",
-        "gtf",
-        "hic",
-        "maf",
-        "mtx",
-        "plink",
-        "recal",
-        "sam",
-        "seg",
-        "sf",
-        "sra",
-        "tagAlign",
-        "tbi",
-        "tranches",
-        "vcf",
-        "wiggle",
-        "DICOM",
-        "NWB",
-        "PAR",
-        "REC",
-        "aci",
-        "avi",
-        "bmp",
-        "czi",
-        "dm3",
-        "emf",
-        "hdr",
-        "img",
-        "jpg",
-        "lif",
-        "mov",
-        "nii",
-        "ome-tiff",
-        "png",
-        "svs",
-        "sws",
-        "tif",
-        "tom",
-        "Sentrix descriptor file",
-        "bpm",
-        "cel",
-        "chp",
-        "dat",
-        "idat",
-        "locs",
-        "msf",
-        "mzML",
-        "raw",
-        "RCC",
-        "csv",
-        "excel",
-        "parquet",
-        "tsv",
-        "txt",
-        "MATLAB script",
-        "Python script",
-        "R script",
-        "bash script",
-        "js",
-        "MATLAB data",
-        "RData",
-        "SDAT",
-        "SPAR",
-        "json",
-        "prism",
-        "rds",
-        "sqlite",
-        "xml",
-        "yaml",
-        "7z",
-        "docker image",
-        "gzip",
-        "tar",
-        "zip",
-        "ai",
-        "doc",
-        "html",
-        "hyperlink",
-        "md",
-        "pdf",
-        "powerpoint",
-        "MPEG-4",
-        "ab1",
-        "abf",
-        "arf",
-        "dna",
-        "edat3",
-        "fcs",
-        "fig",
-        "gb",
-        "h5",
-        "hdf5",
-        "idx",
-        "log",
-        "out",
-        "psydat",
-        "pzfx",
-        "raw",
-        "rmd",
-        "sav",
-        "sdf",
-        "sif",
-        "spk",
-        "svg"
-      ],
-      "title": "fileFormat"
-    },
-    "resourceType": {
-      "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
-      "enum": [
-        "experimentalData",
-        "manifest",
-        "metadata",
-        "protocol",
-        "report",
-        "result",
-        "tool",
-        "weblink",
-        "workflow report"
-      ],
-      "title": "resourceType",
-      "type": "string"
-    }
-  },
-  "required": [
-    "fileFormat",
-    "resourceType"
-  ],
-  "title": "WorkflowReport",
-  "type": "object"
+  ]
 }

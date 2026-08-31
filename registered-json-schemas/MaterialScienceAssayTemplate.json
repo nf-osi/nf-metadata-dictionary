@@ -1,315 +1,331 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-materialscienceassaytemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "General template for describing data for a materials science assay.",
+  "title": "MaterialScienceAssayTemplate",
   "allOf": [
     {
       "if": {
         "properties": {
-          "concentrationMaterial": {}
-        },
-        "required": [
-          "concentrationMaterial"
-        ]
+          "concreteType": {
+            "const": "org.sagebionetworks.repo.model.FileEntity"
+          }
+        }
       },
       "then": {
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "concentrationMaterial": {}
+              },
+              "required": [
+                "concentrationMaterial"
+              ]
+            },
+            "then": {
+              "properties": {
+                "concentrationMaterialUnit": {}
+              },
+              "required": [
+                "concentrationMaterialUnit"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "concentrationNaCl": {}
+              },
+              "required": [
+                "concentrationNaCl"
+              ]
+            },
+            "then": {
+              "properties": {
+                "concentrationNaClUnit": {}
+              },
+              "required": [
+                "concentrationNaClUnit"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "resourceType": {
+                  "const": "experimentalData"
+                }
+              },
+              "required": [
+                "resourceType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "platform": {},
+                "specimenID": {}
+              },
+              "required": [
+                "specimenID",
+                "platform"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "resourceType": {
+                  "const": "experimentalData"
+                }
+              },
+              "required": [
+                "resourceType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "assay": {},
+                "dataSubtype": {},
+                "dataType": {}
+              },
+              "required": [
+                "dataType",
+                "dataSubtype",
+                "assay"
+              ]
+            }
+          }
+        ],
         "properties": {
-          "concentrationMaterialUnit": {}
-        },
-        "required": [
-          "concentrationMaterialUnit"
-        ]
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "concentrationNaCl": {}
-        },
-        "required": [
-          "concentrationNaCl"
-        ]
-      },
-      "then": {
-        "properties": {
-          "concentrationNaClUnit": {}
-        },
-        "required": [
-          "concentrationNaClUnit"
-        ]
-      }
-    },
-    {
-      "if": {
-        "properties": {
+          "platform": {
+            "description": "A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data. Select from the recommended list when available or enter a custom name.",
+            "type": "string",
+            "title": "platform"
+          },
+          "specimenID": {
+            "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
+            "type": "string",
+            "title": "specimenID"
+          },
+          "materialType": {
+            "description": "Type of material in the characterization",
+            "type": "string",
+            "title": "materialType"
+          },
+          "concentrationMaterial": {
+            "description": "Numeric value for concentration of the material",
+            "type": "number",
+            "title": "concentrationMaterial"
+          },
+          "concentrationMaterialUnit": {
+            "description": "",
+            "enum": [
+              "mM",
+              "mg/mL",
+              "particles/mL"
+            ],
+            "title": "concentrationNaClUnit",
+            "type": "string"
+          },
+          "concentrationNaCl": {
+            "description": "Numeric value for NaCl concentration",
+            "type": "number",
+            "title": "concentrationNaCl"
+          },
+          "concentrationNaClUnit": {
+            "description": "",
+            "enum": [
+              "mM",
+              "mg/mL",
+              "particles/mL"
+            ],
+            "title": "concentrationNaClUnit",
+            "type": "string"
+          },
+          "assay": {
+            "description": "The technology used to generate the data in this file.",
+            "type": "string",
+            "title": "assay"
+          },
+          "dataSubtype": {
+            "description": "Categorizes data based on its processing state. This is the main classification axis used for data types.  Not all data types can use this dimensions (e.g. clinical data).",
+            "enum": [
+              "derived",
+              "normalized",
+              "processed",
+              "quantified",
+              "raw",
+              "synthetic"
+            ],
+            "title": "dataSubtype",
+            "type": "string"
+          },
+          "dataType": {
+            "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
+            "type": "string",
+            "title": "dataType"
+          },
+          "fileFormat": {
+            "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
+            "type": "string",
+            "enum": [
+              "bai",
+              "bam",
+              "bcf",
+              "bed",
+              "bed broadPeak",
+              "bed gappedPeak",
+              "bed narrowPeak",
+              "bedgraph",
+              "bgzip",
+              "bigwig",
+              "cloupe",
+              "cnn",
+              "cnr",
+              "cns",
+              "crai",
+              "cram",
+              "csi",
+              "ctab",
+              "dup",
+              "fasta",
+              "fastq",
+              "flagstat",
+              "gct",
+              "gff3",
+              "gtf",
+              "hic",
+              "maf",
+              "mtx",
+              "plink",
+              "recal",
+              "sam",
+              "seg",
+              "sf",
+              "sra",
+              "tagAlign",
+              "tbi",
+              "tranches",
+              "vcf",
+              "wiggle",
+              "DICOM",
+              "NWB",
+              "PAR",
+              "REC",
+              "aci",
+              "avi",
+              "bmp",
+              "czi",
+              "dm3",
+              "emf",
+              "hdr",
+              "img",
+              "jpg",
+              "lif",
+              "mov",
+              "nii",
+              "ome-tiff",
+              "png",
+              "scn",
+              "svs",
+              "sws",
+              "tif",
+              "tom",
+              "Sentrix descriptor file",
+              "bpm",
+              "cel",
+              "chp",
+              "dat",
+              "idat",
+              "locs",
+              "msf",
+              "mzML",
+              "raw",
+              "RCC",
+              "csv",
+              "excel",
+              "parquet",
+              "tsv",
+              "txt",
+              "MATLAB script",
+              "Python script",
+              "R script",
+              "bash script",
+              "js",
+              "MATLAB data",
+              "RData",
+              "SDAT",
+              "SPAR",
+              "json",
+              "prism",
+              "rds",
+              "sqlite",
+              "xml",
+              "yaml",
+              "7z",
+              "docker image",
+              "gzip",
+              "tar",
+              "zip",
+              "ai",
+              "doc",
+              "html",
+              "hyperlink",
+              "md",
+              "pdf",
+              "powerpoint",
+              "MPEG-4",
+              "md5",
+              "ngchm",
+              "ab1",
+              "abf",
+              "arf",
+              "dna",
+              "edat3",
+              "fcs",
+              "fig",
+              "gb",
+              "h5",
+              "hdf5",
+              "idx",
+              "log",
+              "out",
+              "psydat",
+              "pzfx",
+              "raw",
+              "rmd",
+              "sav",
+              "sdf",
+              "sif",
+              "spk",
+              "svg"
+            ],
+            "title": "fileFormat"
+          },
           "resourceType": {
-            "const": "experimentalData"
+            "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
+            "enum": [
+              "experimentalData",
+              "manifest",
+              "metadata",
+              "protocol",
+              "report",
+              "result",
+              "tool",
+              "weblink",
+              "workflow report"
+            ],
+            "title": "resourceType",
+            "type": "string"
           }
         },
         "required": [
+          "fileFormat",
           "resourceType"
-        ]
-      },
-      "then": {
-        "properties": {
-          "platform": {},
-          "specimenID": {}
-        },
-        "required": [
-          "specimenID",
-          "platform"
-        ]
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "resourceType": {
-            "const": "experimentalData"
-          }
-        },
-        "required": [
-          "resourceType"
-        ]
-      },
-      "then": {
-        "properties": {
-          "assay": {},
-          "dataSubtype": {},
-          "dataType": {}
-        },
-        "required": [
-          "dataType",
-          "dataSubtype",
-          "assay"
-        ]
+        ],
+        "type": "object"
       }
     }
-  ],
-  "description": "General template for describing data for a materials science assay.",
-  "properties": {
-    "platform": {
-      "description": "A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data. Select from the recommended list when available or enter a custom name.",
-      "type": "string",
-      "title": "platform"
-    },
-    "specimenID": {
-      "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
-      "type": "string",
-      "title": "specimenID"
-    },
-    "materialType": {
-      "description": "Type of material in the characterization",
-      "type": "string",
-      "title": "materialType"
-    },
-    "concentrationMaterial": {
-      "description": "Numeric value for concentration of the material",
-      "type": "number",
-      "title": "concentrationMaterial"
-    },
-    "concentrationMaterialUnit": {
-      "description": "",
-      "enum": [
-        "mM",
-        "mg/mL",
-        "particles/mL"
-      ],
-      "title": "concentrationNaClUnit",
-      "type": "string"
-    },
-    "concentrationNaCl": {
-      "description": "Numeric value for NaCl concentration",
-      "type": "number",
-      "title": "concentrationNaCl"
-    },
-    "concentrationNaClUnit": {
-      "description": "",
-      "enum": [
-        "mM",
-        "mg/mL",
-        "particles/mL"
-      ],
-      "title": "concentrationNaClUnit",
-      "type": "string"
-    },
-    "assay": {
-      "description": "The technology used to generate the data in this file.",
-      "type": "string",
-      "title": "assay"
-    },
-    "dataSubtype": {
-      "description": "Categorizes data based on its processing state. This is the main classification axis used for data types.  Not all data types can use this dimensions (e.g. clinical data).",
-      "enum": [
-        "derived",
-        "normalized",
-        "processed",
-        "quantified",
-        "raw",
-        "synthetic"
-      ],
-      "title": "dataSubtype",
-      "type": "string"
-    },
-    "dataType": {
-      "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
-      "type": "string",
-      "title": "dataType"
-    },
-    "fileFormat": {
-      "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
-      "type": "string",
-      "enum": [
-        "bai",
-        "bam",
-        "bcf",
-        "bed",
-        "bed broadPeak",
-        "bed gappedPeak",
-        "bed narrowPeak",
-        "bedgraph",
-        "bgzip",
-        "bigwig",
-        "cloupe",
-        "cnn",
-        "cnr",
-        "cns",
-        "crai",
-        "cram",
-        "csi",
-        "ctab",
-        "dup",
-        "fasta",
-        "fastq",
-        "flagstat",
-        "gct",
-        "gff3",
-        "gtf",
-        "hic",
-        "maf",
-        "mtx",
-        "plink",
-        "recal",
-        "sam",
-        "seg",
-        "sf",
-        "sra",
-        "tagAlign",
-        "tbi",
-        "tranches",
-        "vcf",
-        "wiggle",
-        "DICOM",
-        "NWB",
-        "PAR",
-        "REC",
-        "aci",
-        "avi",
-        "bmp",
-        "czi",
-        "dm3",
-        "emf",
-        "hdr",
-        "img",
-        "jpg",
-        "lif",
-        "mov",
-        "nii",
-        "ome-tiff",
-        "png",
-        "svs",
-        "sws",
-        "tif",
-        "tom",
-        "Sentrix descriptor file",
-        "bpm",
-        "cel",
-        "chp",
-        "dat",
-        "idat",
-        "locs",
-        "msf",
-        "mzML",
-        "raw",
-        "RCC",
-        "csv",
-        "excel",
-        "parquet",
-        "tsv",
-        "txt",
-        "MATLAB script",
-        "Python script",
-        "R script",
-        "bash script",
-        "js",
-        "MATLAB data",
-        "RData",
-        "SDAT",
-        "SPAR",
-        "json",
-        "prism",
-        "rds",
-        "sqlite",
-        "xml",
-        "yaml",
-        "7z",
-        "docker image",
-        "gzip",
-        "tar",
-        "zip",
-        "ai",
-        "doc",
-        "html",
-        "hyperlink",
-        "md",
-        "pdf",
-        "powerpoint",
-        "MPEG-4",
-        "ab1",
-        "abf",
-        "arf",
-        "dna",
-        "edat3",
-        "fcs",
-        "fig",
-        "gb",
-        "h5",
-        "hdf5",
-        "idx",
-        "log",
-        "out",
-        "psydat",
-        "pzfx",
-        "raw",
-        "rmd",
-        "sav",
-        "sdf",
-        "sif",
-        "spk",
-        "svg"
-      ],
-      "title": "fileFormat"
-    },
-    "resourceType": {
-      "description": "Resource classes. Most resource entities expected to be some type of \"experimental data\" and further specified via `dataType`.",
-      "enum": [
-        "experimentalData",
-        "manifest",
-        "metadata",
-        "protocol",
-        "report",
-        "result",
-        "tool",
-        "weblink",
-        "workflow report"
-      ],
-      "title": "resourceType",
-      "type": "string"
-    }
-  },
-  "required": [
-    "fileFormat",
-    "resourceType"
-  ],
-  "title": "MaterialScienceAssayTemplate",
-  "type": "object"
+  ]
 }
