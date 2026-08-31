@@ -194,7 +194,10 @@ classes:
       platform:
         range: SequencingPlatformEnum
       fileFormat:
-        range: SequencingFileFormatEnum
+        range: string
+        any_of:
+        - range: SequencingFileFormatEnum
+        - range: ArchiveFileFormatEnum
       isXenograft:
         ifabsent: string(No)
 
@@ -347,7 +350,10 @@ classes:
       platform:
         range: SequencingPlatformEnum
       fileFormat:
-        range: SequencingFileFormatEnum
+        range: string
+        any_of:
+        - range: SequencingFileFormatEnum
+        - range: TabularFileFormatEnum
       dataType:
         ifabsent: string(gene expression)
       isPrimaryCell:
@@ -464,6 +470,7 @@ classes:
       platform:
         range: SequencingPlatformEnum
       fileFormat:
+        range: string
         any_of:
         - range: SequencingFileFormatEnum
         - range: TabularFileFormatEnum
@@ -551,7 +558,11 @@ classes:
       platform:
         range: SequencingPlatformEnum
       fileFormat:
-        range: SequencingFileFormatEnum
+        range: string
+        any_of:
+        - range: SequencingFileFormatEnum
+        - range: TabularFileFormatEnum
+        - range: DocumentFileFormatEnum
       dataType:
         ifabsent: string(genomic variants)
 

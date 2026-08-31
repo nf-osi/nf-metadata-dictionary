@@ -12,6 +12,57 @@ import jsonref
 import synapseclient
 from collections import OrderedDict
 
+
+FILE_ENTITY_CONCRETE_TYPE = "org.sagebionetworks.repo.model.FileEntity"
+
+
+def is_file_based_template(schema_yaml_path, cls_name):
+    """Return whether ``cls_name`` inherits from ``FileBasedTemplate``."""
+    if not schema_yaml_path:
+        return False
+
+    schema_data = yaml.safe_load(Path(schema_yaml_path).read_text())
+    classes = schema_data.get("classes", {})
+    current = cls_name
+    seen = set()
+
+    while current and current not in seen:
+        if current == "FileBasedTemplate":
+            return True
+        seen.add(current)
+        current = classes.get(current, {}).get("is_a")
+
+    return False
+
+
+def restrict_to_file_entities(schema):
+    """Apply file-template constraints only to Synapse FileEntity instances.
+
+    Schema bindings on a folder are also evaluated against its child folders.  A
+    folder cannot have file metadata such as ``fileFormat`` or ``resourceType``,
+    so move the generated constraints under a concreteType guard.  Non-file
+    entities are intentionally outside the scope of file-based templates.
+    """
+    validation_keywords = {
+        "type", "properties", "required", "allOf", "anyOf", "oneOf", "not",
+        "patternProperties", "additionalProperties", "minProperties", "maxProperties",
+        "dependencies", "propertyNames",
+    }
+    file_constraints = {
+        key: schema.pop(key)
+        for key in list(schema)
+        if key in validation_keywords
+    }
+
+    schema["allOf"] = [{
+        "if": {
+            "properties": {
+                "concreteType": {"const": FILE_ENTITY_CONCRETE_TYPE}
+            }
+        },
+        "then": file_constraints,
+    }]
+
 def run_cmd(cmd):
     """Run command and return output."""
     try:
@@ -196,6 +247,9 @@ def process_schema(raw_schema, cls_name, version=None, schema_yaml_path=None):
     if schema_yaml_path and "properties" in deref:
         property_order = get_class_property_order(schema_yaml_path, cls_name)
         deref["properties"] = reorder_properties(deref["properties"], property_order)
+
+    if is_file_based_template(schema_yaml_path, cls_name):
+        restrict_to_file_entities(deref)
 
     return deref
 

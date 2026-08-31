@@ -1,0 +1,150 @@
+# Each fixture validates a real fileFormat value against the template-specific
+# compiled JSON Schema. Metadata resources avoid unrelated experimental-data
+# requirements while still exercising the required fileFormat enum constraint.
+
+schema: MRIAssayTemplate
+instances:
+  - file: data/MRIAssayTemplate/valid_fileformat_zip.json
+    description: MRI template permits ZIP archives of raw DICOM series.
+    expected: valid
+  - file: data/fileformat/invalid_fileformat_unknown.json
+    description: MRI template rejects an unknown file format.
+    expected: invalid
+---
+schema: ClinicalAssayTemplate
+instances:
+  - file: data/ClinicalAssayTemplate/valid_fileformat_arf.json
+    description: Clinical template permits BioSigRZ averaged-response files.
+    expected: valid
+  - file: data/ClinicalAssayTemplate/valid_fileformat_pzfx.json
+    description: Clinical template permits legacy GraphPad Prism XML files.
+    expected: valid
+  - file: data/fileformat/invalid_fileformat_unknown.json
+    description: Clinical template rejects an unknown file format.
+    expected: invalid
+---
+schema: BehavioralAssayTemplate
+instances:
+  - file: data/BehavioralAssayTemplate/valid_fileformat_mpeg4.json
+    description: Behavioral template permits session recordings.
+    expected: valid
+  - file: data/BehavioralAssayTemplate/valid_fileformat_doc.json
+    description: Behavioral template permits accompanying write-ups.
+    expected: valid
+  - file: data/fileformat/invalid_fileformat_unknown.json
+    description: Behavioral template rejects an unknown file format.
+    expected: invalid
+---
+schema: ImagingAssayTemplate
+instances:
+  - file: data/ImagingAssayTemplate/valid_fileformat_pdf.json
+    description: Imaging template permits PDF reports.
+    expected: valid
+  - file: data/ImagingAssayTemplate/valid_fileformat_svg.json
+    description: Imaging template permits SVG figures.
+    expected: valid
+  - file: data/ImagingAssayTemplate/valid_fileformat_powerpoint.json
+    description: Imaging template permits presentation figures.
+    expected: valid
+  - file: data/fileformat/invalid_fileformat_unknown.json
+    description: Imaging template rejects an unknown file format.
+    expected: invalid
+---
+schema: GenomicsAssayTemplate
+instances:
+  - file: data/GenomicsAssayTemplate/valid_fileformat_zip.json
+    description: Genomics template permits ZIP archives of raw output.
+    expected: valid
+  - file: data/fileformat/invalid_fileformat_unknown.json
+    description: Genomics template rejects an unknown file format.
+    expected: invalid
+---
+schema: RNASeqTemplate
+instances:
+  - file: data/RNASeqTemplate/valid_fileformat_csv.json
+    description: RNA-seq template permits QC summary CSV files.
+    expected: valid
+  - file: data/RNASeqTemplate/valid_fileformat_excel.json
+    description: RNA-seq template permits QC summary Excel files.
+    expected: valid
+  - file: data/fileformat/invalid_fileformat_unknown.json
+    description: RNA-seq template rejects an unknown file format.
+    expected: invalid
+---
+schema: FlowCytometryTemplate
+instances:
+  - file: data/FlowCytometryTemplate/valid_fileformat_png.json
+    description: Flow-cytometry template permits PNG gating plots.
+    expected: valid
+  - file: data/FlowCytometryTemplate/valid_fileformat_tif.json
+    description: Flow-cytometry template permits TIFF gating plots.
+    expected: valid
+  - file: data/fileformat/invalid_fileformat_unknown.json
+    description: Flow-cytometry template rejects an unknown file format.
+    expected: invalid
+---
+schema: AffinityProteomicsTemplate
+instances:
+  - file: data/AffinityProteomicsTemplate/valid_fileformat_excel.json
+    description: Affinity-proteomics template permits result spreadsheets.
+    expected: valid
+  - file: data/AffinityProteomicsTemplate/valid_fileformat_csv.json
+    description: Affinity-proteomics template permits result CSV files.
+    expected: valid
+  - file: data/fileformat/invalid_fileformat_unknown.json
+    description: Affinity-proteomics template rejects an unknown file format.
+    expected: invalid
+---
+schema: ProteomicsAssayTemplate
+instances:
+  - file: data/ProteomicsAssayTemplate/valid_fileformat_pdf.json
+    description: Proteomics template permits reports.
+    expected: valid
+  - file: data/ProteomicsAssayTemplate/valid_fileformat_doc.json
+    description: Proteomics template permits reports.
+    expected: valid
+  - file: data/fileformat/invalid_fileformat_unknown.json
+    description: Proteomics template rejects an unknown file format.
+    expected: invalid
+---
+schema: ScRNASeqTemplate
+instances:
+  - file: data/ScRNASeqTemplate/valid_fileformat_csv.json
+    description: Single-cell RNA-seq template permits QC summary CSV files.
+    expected: valid
+  - file: data/fileformat/invalid_fileformat_unknown.json
+    description: Single-cell RNA-seq template rejects an unknown file format.
+    expected: invalid
+---
+schema: KinomicsAssayTemplate
+instances:
+  - file: data/KinomicsAssayTemplate/valid_fileformat_excel.json
+    description: Kinomics template permits assay result spreadsheets.
+    expected: valid
+  - file: data/fileformat/invalid_fileformat_unknown.json
+    description: Kinomics template rejects an unknown file format.
+    expected: invalid
+---
+schema: MicroscopyAssayTemplate
+instances:
+  - file: data/MicroscopyAssayTemplate/valid_fileformat_powerpoint.json
+    description: Microscopy template permits presentation figures.
+    expected: valid
+  - file: data/fileformat/invalid_fileformat_unknown.json
+    description: Microscopy template rejects an unknown file format.
+    expected: invalid
+---
+schema: WGSTemplate
+instances:
+  - file: data/WGSTemplate/valid_fileformat_excel.json
+    description: WGS template permits QC spreadsheets.
+    expected: valid
+  - file: data/WGSTemplate/valid_fileformat_csv.json
+    description: WGS template permits QC CSV files.
+    expected: valid
+  - file: data/WGSTemplate/valid_fileformat_html.json
+    description: WGS template permits QC HTML reports.
+    expected: valid
+  - file: data/fileformat/invalid_fileformat_unknown.json
+    description: WGS template rejects an unknown file format.
+    expected: invalid
