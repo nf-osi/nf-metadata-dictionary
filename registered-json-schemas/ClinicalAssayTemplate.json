@@ -17,7 +17,21 @@
           {
             "if": {
               "properties": {
-                "compoundDose": {}
+                "compoundDose": {
+                  "not": {
+                    "anyOf": [
+                      {
+                        "const": "Not Applicable"
+                      },
+                      {
+                        "const": "Not Available"
+                      },
+                      {
+                        "const": "Multiple Doses"
+                      }
+                    ]
+                  }
+                }
               },
               "required": [
                 "compoundDose"
@@ -169,8 +183,22 @@
             "title": "compoundName"
           },
           "compoundDose": {
-            "description": "A dose quantity for the treatment compound. To be used with compoundDoseUnit.",
-            "type": "number",
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "description": "Controlled non-numeric values for compound doses that cannot be represented by a single quantity.",
+                "enum": [
+                  "Not Applicable",
+                  "Not Available",
+                  "Multiple Doses"
+                ],
+                "title": "CompoundDoseCategoryEnum",
+                "type": "string"
+              }
+            ],
+            "description": "A dose quantity for the treatment compound. Use \"Not Applicable\" only when no compound dose applies to the described data, such as a true blank or calibration artifact or a genetic or physical intervention that does not involve a compound. Vehicle controls (for example, DMSO) are compound exposures: record the vehicle in compoundName and its concentration in compoundDose and compoundDoseUnit. Use \"Not Available\" when a dose was not recorded, and \"Multiple Doses\" when the data covers doses that cannot be represented by one value. Numeric doses should be accompanied by compoundDoseUnit.",
             "title": "compoundDose"
           },
           "compoundDoseUnit": {

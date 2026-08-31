@@ -17,26 +17,6 @@
           {
             "if": {
               "properties": {
-                "resourceType": {
-                  "const": "experimentalData"
-                }
-              },
-              "required": [
-                "resourceType"
-              ]
-            },
-            "then": {
-              "properties": {
-                "platform": {}
-              },
-              "required": [
-                "platform"
-              ]
-            }
-          },
-          {
-            "if": {
-              "properties": {
                 "age": {
                   "not": {
                     "anyOf": [
@@ -132,14 +112,24 @@
         ],
         "properties": {
           "platform": {
-            "description": "Flow cytometry platforms",
+            "description": "A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data. Select from the recommended list when available or enter a custom name.",
+            "type": "string",
             "enum": [
               "Attune Flow Cytometer",
               "BD FACS Calibur",
-              "BD FACSymphony"
+              "BD FACSymphony",
+              "2D Incucyte",
+              "Caliper",
+              "Malvern Zetasizer",
+              "NanoFCM",
+              "Not Applicable",
+              "Other Platform",
+              "Scale",
+              "XF24 Extracellular Flux Analyzer",
+              "Zeno Electronic Walkway",
+              "ZetaView"
             ],
-            "title": "platform",
-            "type": "string"
+            "title": "platform"
           },
           "cellType": {
             "description": "A cell type is a distinct morphological or functional form of cell.",
