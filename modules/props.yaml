@@ -239,7 +239,12 @@ slots:
     required: false
     title: Comments
   compoundDose:
-    description: A dose quantity for the treatment compound, or a controlled non-numeric value when no single quantity applies. To be used with compoundDoseUnit.
+    description: >-
+      A dose quantity for the treatment compound. Use "Not Applicable" when no
+      treatment compound was administered or a dose does not apply to the
+      described data. Use "Not Available" when a dose was not recorded, and
+      "Multiple Doses" when the data covers doses that cannot be represented by
+      one value. Numeric doses should be accompanied by compoundDoseUnit.
     any_of:
     - range: float
     - range: CompoundDoseCategoryEnum
