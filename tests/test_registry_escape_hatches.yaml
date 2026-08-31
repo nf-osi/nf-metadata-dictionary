@@ -1,0 +1,35 @@
+# Controlled values and conditional dependencies for issues #960 and #961.
+
+schema: ClinicalAssayTemplate
+instances:
+  - file: data/ClinicalAssayTemplate/valid_compound_dose_category.json
+    description: A controlled non-numeric compound dose does not require a unit.
+    expected: valid
+  - file: data/ClinicalAssayTemplate/valid_numeric_compound_dose.json
+    description: A numeric compound dose is valid when accompanied by its unit.
+    expected: valid
+  - file: data/ClinicalAssayTemplate/invalid_numeric_compound_dose_missing_unit.json
+    description: A numeric compound dose without a unit violates the conditional dependency.
+    expected: invalid
+    reason: numeric compoundDose requires compoundDoseUnit
+  - file: data/ClinicalAssayTemplate/invalid_compound_dose_na.json
+    description: The redundant NA dose category is not accepted.
+    expected: invalid
+    reason: NA is not a CompoundDoseCategoryEnum value
+
+---
+schema: FlowCytometryTemplate
+instances:
+  - file: data/FlowCytometryTemplate/valid_other_platform.json
+    description: Other Platform is accepted as a Flow Cytometry platform.
+    expected: valid
+  - file: data/FlowCytometryTemplate/valid_experimentaldata_without_platform.json
+    description: Experimental flow-cytometry data does not require an instrument platform.
+    expected: valid
+
+---
+schema: PlateBasedReporterAssayTemplate
+instances:
+  - file: data/PlateBasedReporterAssayTemplate/valid_multiple_doses_other_platform.json
+    description: Experimental plate-based data accepts Multiple Doses without a unit and Other Platform.
+    expected: valid

@@ -44,11 +44,15 @@ classes:
       dataType:
         ifabsent: string(clinical)
     rules:
-    - description: If compoundDose is provided, compoundDoseUnit must be provided
+    - description: If compoundDose is numeric, compoundDoseUnit must be provided
       preconditions:
         slot_conditions:
           compoundDose:
             value_presence: PRESENT
+            none_of:
+            - equals_string: Not Applicable
+            - equals_string: Not Available
+            - equals_string: Multiple Doses
       postconditions:
         slot_conditions:
           compoundDoseUnit:
@@ -107,11 +111,15 @@ classes:
         slot_conditions:
           timepointUnit:
             value_presence: PRESENT
-    - description: If compoundDose is provided, compoundDoseUnit must be provided
+    - description: If compoundDose is numeric, compoundDoseUnit must be provided
       preconditions:
         slot_conditions:
           compoundDose:
             value_presence: PRESENT
+            none_of:
+            - equals_string: Not Applicable
+            - equals_string: Not Available
+            - equals_string: Multiple Doses
       postconditions:
         slot_conditions:
           compoundDoseUnit:
