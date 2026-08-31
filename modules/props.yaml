@@ -239,8 +239,10 @@ slots:
     required: false
     title: Comments
   compoundDose:
-    description: A dose quantity for the treatment compound. To be used with compoundDoseUnit.
-    range: float
+    description: A dose quantity for the treatment compound, or a controlled non-numeric value when no single quantity applies. To be used with compoundDoseUnit.
+    any_of:
+    - range: float
+    - range: CompoundDoseCategoryEnum
     title: Compound Dose
     required: false
   compoundDoseUnit:

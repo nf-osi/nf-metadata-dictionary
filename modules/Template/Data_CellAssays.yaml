@@ -51,11 +51,15 @@ classes:
         slot_conditions:
           timepointUnit:
             value_presence: PRESENT
-    - description: If compoundDose is provided, compoundDoseUnit must be provided
+    - description: If compoundDose is numeric, compoundDoseUnit must be provided
       preconditions:
         slot_conditions:
           compoundDose:
             value_presence: PRESENT
+            none_of:
+            - equals_string: Not Applicable
+            - equals_string: Not Available
+            - equals_string: Multiple Doses
       postconditions:
         slot_conditions:
           compoundDoseUnit:
@@ -136,7 +140,9 @@ classes:
         range: CellBasedAssayEnum
         ifabsent: string(flow cytometry)
       platform:
-        range: FlowCytometryPlatformEnum
+        any_of:
+        - range: FlowCytometryPlatformEnum
+        - range: OtherPlatformEnum
         required: false
       fileFormat:
         any_of:
@@ -252,7 +258,9 @@ classes:
       assay:
         range: CellBasedAssayEnum
       platform:
-        range: PlateReaderPlatformEnum
+        any_of:
+        - range: PlateReaderPlatformEnum
+        - range: OtherPlatformEnum
         required: false
       fileFormat:
         range: TabularFileFormatEnum
@@ -276,11 +284,15 @@ classes:
         slot_conditions:
           timepointUnit:
             value_presence: PRESENT
-    - description: If compoundDose is provided, compoundDoseUnit must be provided
+    - description: If compoundDose is numeric, compoundDoseUnit must be provided
       preconditions:
         slot_conditions:
           compoundDose:
             value_presence: PRESENT
+            none_of:
+            - equals_string: Not Applicable
+            - equals_string: Not Available
+            - equals_string: Multiple Doses
       postconditions:
         slot_conditions:
           compoundDoseUnit:
@@ -299,6 +311,4 @@ classes:
           compoundName:
             value_presence: PRESENT
           compoundDose:
-            value_presence: PRESENT
-          compoundDoseUnit:
             value_presence: PRESENT

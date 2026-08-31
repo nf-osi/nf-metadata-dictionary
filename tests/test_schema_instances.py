@@ -15,6 +15,7 @@ Instances marked expected: invalid must fail schema validation.
 """
 
 import json
+import os
 from pathlib import Path
 
 import jsonschema
@@ -23,7 +24,7 @@ import yaml
 
 TESTS_DIR = Path(__file__).resolve().parent
 REPO_ROOT = TESTS_DIR.parent
-SCHEMAS_DIR = REPO_ROOT / "registered-json-schemas"
+SCHEMAS_DIR = Path(os.environ.get("SCHEMAS_DIR", REPO_ROOT / "registered-json-schemas"))
 
 
 def _load_cases():
