@@ -3,7 +3,7 @@
 #
 # When a class takes several, list them in this order so that sibling templates
 # lay out their columns the same way:
-#   SpecimenLineage, IndividualAge/HumanIndividualAge, ModelOrganismAge, GenePerturbation,
+#   SpecimenLineage, IndividualDemographics, ModelOrganismAge, GenePerturbation,
 #   TimedObservation, CompoundTreatment, DataClassification, WorkflowProvenance
 classes:
   SpecimenLineage:
@@ -34,14 +34,18 @@ classes:
           specimenID:
             value_presence: PRESENT
 
-  IndividualAge:
+  IndividualDemographics:
     mixin: true
-    description: 'Age of an individual at observation, for any species. Use
-      HumanIndividualAge instead on templates that can carry human subjects, since
-      those additionally need the HIPAA age ceiling.'
+    description: 'Characteristics of the individual an observation is about: age,
+      sex and species. Carries the HIPAA Safe Harbor age ceiling, which applies to
+      any template that can record a human age -- SpeciesEnum admits Homo sapiens
+      everywhere species is offered, so the ceiling travels with these slots rather
+      than being applied per template.'
     slots:
     - age
     - ageUnit
+    - sex
+    - species
     rules:
     - description: If age is provided and is not "Unknown", ageUnit must be provided
       preconditions:
@@ -54,17 +58,6 @@ classes:
         slot_conditions:
           ageUnit:
             value_presence: PRESENT
-
-  HumanIndividualAge:
-    mixin: true
-    mixins:
-    - IndividualAge
-    description: 'Individual age for templates that can carry human subjects. Adds
-      the HIPAA Safe Harbor ceiling on top of IndividualAge; species is declared here
-      because the rule is conditioned on it.'
-    slots:
-    - species
-    rules:
     - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value for ages at or above this threshold (HIPAA Safe Harbor)
       preconditions:
         slot_conditions:
