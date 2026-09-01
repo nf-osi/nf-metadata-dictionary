@@ -730,18 +730,14 @@ classes:
       '
     is_a: FileBasedTemplate
     mixins:
+    - DataClassification
     - WorkflowProvenance
     slots:
-    - dataType
-    - dataSubtype
     - auxiliaryAsset
     - assay
     slot_usage:
       dataSubtype:
         ifabsent: string(processed)
-        required: false
-      dataType:
-        required: false
       assay:
         required: false
     rules:
@@ -774,10 +770,9 @@ classes:
       do not apply. Use for summarized assay results such as qPCR Ct value tables.
     is_a: FileBasedTemplate
     mixins:
+    - DataClassification
     - WorkflowProvenance
     slots:
-    - dataType
-    - dataSubtype
     - assay
     - expressionUnit
     - auxiliaryAsset
@@ -786,12 +781,9 @@ classes:
     slot_usage:
       dataSubtype:
         ifabsent: string(processed)
-        required: false
       expressionUnit:
         required: false
       species:
-        required: false
-      dataType:
         required: false
       assay:
         required: false
