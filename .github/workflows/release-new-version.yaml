@@ -1,5 +1,7 @@
 # Release workflow; AI agent by default but releases can also be done manually.
-# - Scheduled: Claude reviews changes and decides whether to release
+# - Scheduled: Claude reviews changes and decides whether to release. If the
+#   API is unavailable, a deterministic MINOR-bump fallback decides instead, so
+#   an outage or exhausted credits never blocks the release cadence.
 # - Manual: provide MAJOR.MINOR version to release immediately, skipping AI
 
 name: Release
@@ -84,9 +86,18 @@ jobs:
           echo "=== Current schema versions ==="
           cat /tmp/schema_versions.txt
 
-      # ── AI evaluation (schedule only) ────────────────────────────────
+      # ── Release decision (schedule / dispatch without a version) ─────
+      # The AI evaluator is preferred, but it must never be the reason a
+      # release cannot happen. If the API is unreachable, out of credits, or
+      # returns something unparseable, this falls back to
+      # utils/decide_release.py, which applies the same versioning rules
+      # deterministically. Both paths emit the same decision JSON, so the
+      # steps below cannot tell them apart.
+      #
+      # The fallback only ever proposes a MINOR bump - MAJOR bumps need human
+      # judgement, so dispatch manually with an explicit version for those.
 
-      - name: Evaluate release with Claude
+      - name: Decide release (AI, with deterministic fallback)
         if: (github.event_name == 'schedule' || inputs.evaluation_only || (github.event_name == 'workflow_dispatch' && !inputs.version)) && steps.changes.outputs.has_changes == 'true'
         id: evaluate
         env:
@@ -143,39 +154,85 @@ jobs:
             messages: [{ role: "user", content: $prompt }]
           }')
 
+          # A curl failure (DNS, network) must not abort the step - it is just
+          # another reason to fall back, so swallow the exit code here.
           HTTP_CODE=$(curl -s -o /tmp/api_response.json -w '%{http_code}' \
             https://api.anthropic.com/v1/messages \
             -H "content-type: application/json" \
             -H "x-api-key: $ANTHROPIC_API_KEY" \
             -H "anthropic-version: 2023-06-01" \
-            -d "$PAYLOAD")
+            -d "$PAYLOAD") || HTTP_CODE="000"
 
-          if [ "$HTTP_CODE" -ne 200 ]; then
-            echo "❌ API request failed with HTTP $HTTP_CODE:"
-            cat /tmp/api_response.json
-            exit 1
+          FALLBACK_REASON=""
+
+          if [ "$HTTP_CODE" = "200" ]; then
+            # Extract text, strip markdown code fences if Claude wraps the response
+            TEXT=$(jq -r '.content[0].text // empty' /tmp/api_response.json | sed '/^```/d')
+            if echo "$TEXT" | jq -e 'has("release")' > /dev/null 2>&1; then
+              echo "Claude's evaluation:"
+              echo "$TEXT"
+              echo "$TEXT" > /tmp/decision.json
+            else
+              FALLBACK_REASON="the AI returned HTTP 200 but the body was not valid decision JSON"
+            fi
+          else
+            FALLBACK_REASON="the AI evaluation request failed with HTTP ${HTTP_CODE}"
+            echo "AI response body:"
+            cat /tmp/api_response.json || true
           fi
 
-          RESPONSE=$(cat /tmp/api_response.json)
+          if [ -n "$FALLBACK_REASON" ]; then
+            echo "⚠️  Falling back to deterministic rules: ${FALLBACK_REASON}."
+            python3 utils/decide_release.py \
+              --last-tag "$LAST_TAG" \
+              --commits-file /tmp/commits.txt \
+              > /tmp/decision.json
+          fi
 
-          # Extract text, strip markdown code fences if Claude wraps the response
-          TEXT=$(echo "$RESPONSE" | jq -r '.content[0].text' | sed '/^```/d')
-          echo "Claude's evaluation:"
-          echo "$TEXT"
+          echo "Release decision:"
+          cat /tmp/decision.json
 
-          SHOULD_RELEASE=$(echo "$TEXT" | jq -r '.release')
-          VERSION=$(echo "$TEXT" | jq -r '.version // empty')
+          SHOULD_RELEASE=$(jq -r '.release' /tmp/decision.json)
+          VERSION=$(jq -r '.version // empty' /tmp/decision.json)
+          REASONING=$(jq -r '.reasoning // empty' /tmp/decision.json)
+
+          # A release decision without a well-formed MAJOR.MINOR would tag and
+          # publish garbage. Refuse instead - this is a genuine pipeline fault
+          # and should surface as a failed run.
+          if [ "$SHOULD_RELEASE" = "true" ] \
+            && ! echo "$VERSION" | grep -qE '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'; then
+            echo "❌ Release requested but version '${VERSION}' is not MAJOR.MINOR"
+            exit 1
+          fi
 
           echo "should_release=$SHOULD_RELEASE" >> "$GITHUB_OUTPUT"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
           {
             echo "reasoning<<REASONING_EOF"
-            echo "$TEXT" | jq -r '.reasoning'
+            echo "$REASONING"
             echo "REASONING_EOF"
           } >> "$GITHUB_OUTPUT"
 
-          echo "$TEXT" | jq -r '.notes // empty' > /tmp/release_notes.md
+          jq -r '.notes // empty' /tmp/decision.json > /tmp/release_notes.md
+
+          # Record which path decided, so a fallback release is obvious on the
+          # run page instead of looking like a normal AI-approved release.
+          {
+            if [ -n "$FALLBACK_REASON" ]; then
+              echo "### ⚠️ Release decided by deterministic fallback"
+              echo ""
+              echo "The AI evaluation was skipped because ${FALLBACK_REASON}."
+              echo "\`utils/decide_release.py\` decided instead, using the same versioning rules."
+              echo "Only MINOR bumps are possible this way - for a MAJOR release, dispatch manually with an explicit version."
+            else
+              echo "### ✅ Release decided by AI evaluation"
+            fi
+            echo ""
+            echo "- **Release:** \`${SHOULD_RELEASE}\`"
+            echo "- **Version:** \`${VERSION:-n/a}\`"
+            echo "- **Reasoning:** ${REASONING}"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       # ── Resolve version ─────────────────────────────────────────────
 
