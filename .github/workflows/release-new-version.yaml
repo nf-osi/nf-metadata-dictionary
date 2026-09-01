@@ -66,6 +66,12 @@ jobs:
           git log "$LAST_TAG"..HEAD --oneline --no-merges > /tmp/commits.txt
           git diff "$LAST_TAG"..HEAD --stat > /tmp/diffstat.txt
 
+          # Per-commit paths for the deterministic fallback, which must know
+          # which files each individual commit touched - a range-wide diff
+          # cannot tell a model change from an automated rebuild.
+          git log "$LAST_TAG"..HEAD --no-merges --name-only --format='%x1e%h %s' \
+            > /tmp/commit_paths.txt
+
           echo "=== $COMMIT_COUNT commits since $LAST_TAG ==="
           cat /tmp/commits.txt
           echo "=== Files changed ==="
@@ -89,13 +95,15 @@ jobs:
       # ── Release decision (schedule / dispatch without a version) ─────
       # The AI evaluator is preferred, but it must never be the reason a
       # release cannot happen. If the API is unreachable, out of credits, or
-      # returns something unparseable, this falls back to
+      # returns something unparseable or unusable, this falls back to
       # utils/decide_release.py, which applies the same versioning rules
       # deterministically. Both paths emit the same decision JSON, so the
       # steps below cannot tell them apart.
       #
       # The fallback only ever proposes a MINOR bump - MAJOR bumps need human
       # judgement, so dispatch manually with an explicit version for those.
+      # It also only releases when the non-automated commits actually touch the
+      # data model, so docs/CI/tooling churn does not burn a schema version.
 
       - name: Decide release (AI, with deterministic fallback)
         if: (github.event_name == 'schedule' || inputs.evaluation_only || (github.event_name == 'workflow_dispatch' && !inputs.version)) && steps.changes.outputs.has_changes == 'true'
@@ -168,10 +176,22 @@ jobs:
           if [ "$HTTP_CODE" = "200" ]; then
             # Extract text, strip markdown code fences if Claude wraps the response
             TEXT=$(jq -r '.content[0].text // empty' /tmp/api_response.json | sed '/^```/d')
-            if echo "$TEXT" | jq -e 'has("release")' > /dev/null 2>&1; then
-              echo "Claude's evaluation:"
-              echo "$TEXT"
-              echo "$TEXT" > /tmp/decision.json
+            # `.release` must be a real boolean: a null or "yes" would sail past
+            # a has("release") check and then silently decline the release.
+            if echo "$TEXT" | jq -e '.release | type == "boolean"' > /dev/null 2>&1; then
+              AI_RELEASE=$(echo "$TEXT" | jq -r '.release')
+              AI_VERSION=$(echo "$TEXT" | jq -r '.version // empty')
+              # A malformed or backwards version from the AI is just another
+              # unparseable response - fall back rather than fail the run.
+              if [ "$AI_RELEASE" = "true" ] \
+                && ! VERSION_ERROR=$(python3 utils/decide_release.py check-version \
+                     --last-tag "$LAST_TAG" --version "$AI_VERSION" 2>&1); then
+                FALLBACK_REASON="the AI proposed an unusable version (${VERSION_ERROR#❌ })"
+              else
+                echo "Claude's evaluation:"
+                echo "$TEXT"
+                echo "$TEXT" > /tmp/decision.json
+              fi
             else
               FALLBACK_REASON="the AI returned HTTP 200 but the body was not valid decision JSON"
             fi
@@ -183,9 +203,9 @@ jobs:
 
           if [ -n "$FALLBACK_REASON" ]; then
             echo "⚠️  Falling back to deterministic rules: ${FALLBACK_REASON}."
-            python3 utils/decide_release.py \
+            python3 utils/decide_release.py decide \
               --last-tag "$LAST_TAG" \
-              --commits-file /tmp/commits.txt \
+              --commit-paths-file /tmp/commit_paths.txt \
               > /tmp/decision.json
           fi
 
@@ -196,13 +216,13 @@ jobs:
           VERSION=$(jq -r '.version // empty' /tmp/decision.json)
           REASONING=$(jq -r '.reasoning // empty' /tmp/decision.json)
 
-          # A release decision without a well-formed MAJOR.MINOR would tag and
-          # publish garbage. Refuse instead - this is a genuine pipeline fault
-          # and should surface as a failed run.
-          if [ "$SHOULD_RELEASE" = "true" ] \
-            && ! echo "$VERSION" | grep -qE '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'; then
-            echo "❌ Release requested but version '${VERSION}' is not MAJOR.MINOR"
-            exit 1
+          # Defence in depth. An unusable version from the AI has already been
+          # turned into a fallback above, and the fallback cannot emit one, so
+          # reaching here means the decision logic itself is broken - and
+          # tagging garbage is worse than failing the run.
+          if [ "$SHOULD_RELEASE" = "true" ]; then
+            python3 utils/decide_release.py check-version \
+              --last-tag "$LAST_TAG" --version "$VERSION"
           fi
 
           echo "should_release=$SHOULD_RELEASE" >> "$GITHUB_OUTPUT"
@@ -222,7 +242,7 @@ jobs:
             if [ -n "$FALLBACK_REASON" ]; then
               echo "### ⚠️ Release decided by deterministic fallback"
               echo ""
-              echo "The AI evaluation was skipped because ${FALLBACK_REASON}."
+              echo "The AI evaluation was not used because ${FALLBACK_REASON}."
               echo "\`utils/decide_release.py\` decided instead, using the same versioning rules."
               echo "Only MINOR bumps are possible this way - for a MAJOR release, dispatch manually with an explicit version."
             else
