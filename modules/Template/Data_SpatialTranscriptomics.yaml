@@ -65,10 +65,9 @@ classes:
       experiments, such as tissue section histology or fluorescence images (e.g.,
       from 10x Visium, NanoString CosMx, GeoMx).
     is_a: ImagingAssayTemplate
+    mixins:
+    - SpecimenFields
     slots:
-    - parentSpecimenID
-    - specimenID
-    - aliquotID
     - captureArea
     - visiumslideID
     - cytassistSample

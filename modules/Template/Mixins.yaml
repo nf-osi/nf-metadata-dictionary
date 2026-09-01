@@ -1,0 +1,183 @@
+classes:
+  AgeFields:
+    mixin: true
+    description: 'Reusable bundle for donor/individual age, for classes that need age
+      validated independently of the BiologicalAssayDataTemplate hierarchy.'
+    slots:
+    - age
+    - ageUnit
+    rules:
+    - description: If age is provided and is not "Unknown", ageUnit must be provided
+      preconditions:
+        slot_conditions:
+          age:
+            value_presence: PRESENT
+            none_of:
+              - equals_string: Unknown
+      postconditions:
+        slot_conditions:
+          ageUnit:
+            value_presence: PRESENT
+    - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value for ages at or above this threshold (HIPAA Safe Harbor)
+      preconditions:
+        slot_conditions:
+          species:
+            equals_string: Homo sapiens
+      postconditions:
+        slot_conditions:
+          age:
+            maximum_value: 89.99999
+
+  SpecimenFields:
+    mixin: true
+    description: 'Reusable bundle for specimen/aliquot lineage identifiers.'
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    rules:
+    - description: If aliquotID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          aliquotID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+    - description: If parentSpecimenID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          parentSpecimenID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+
+  GenePerturbationFields:
+    mixin: true
+    description: 'Reusable bundle for describing a single-gene perturbation applied
+      to a sample.'
+    slots:
+    - genePerturbed
+    - genePerturbationType
+    - genePerturbationTechnology
+    rules:
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be
+        provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
+
+  ExperimentalTimepointFields:
+    mixin: true
+    description: 'Reusable bundle for a timed experimental observation.'
+    slots:
+    - experimentalTimepoint
+    - timepointUnit
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
+
+  CompoundDoseFields:
+    mixin: true
+    description: 'Reusable bundle for a compound treatment and its dose.'
+    slots:
+    - compoundName
+    - compoundDose
+    - compoundDoseUnit
+    rules:
+    - description: If compoundDose is numeric, compoundDoseUnit must be provided
+      preconditions:
+        slot_conditions:
+          compoundDose:
+            value_presence: PRESENT
+            none_of:
+            - equals_string: Not Applicable
+            - equals_string: Not Available
+            - equals_string: Multiple Doses
+      postconditions:
+        slot_conditions:
+          compoundDoseUnit:
+            value_presence: PRESENT
+
+  ModelAgeFields:
+    mixin: true
+    description: 'Reusable bundle for the age of an animal/xenograft model at time
+      of experiment, distinct from donor age.'
+    slots:
+    - modelAge
+    - modelAgeUnit
+    rules:
+    - description: If modelAge is provided, modelAgeUnit must be provided
+      preconditions:
+        slot_conditions:
+          modelAge:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          modelAgeUnit:
+            value_presence: PRESENT
+
+  DataTypeFields:
+    mixin: true
+    description: 'Reusable bundle for dataType/dataSubtype, relaxed to optional and
+      cross-validated -- for templates where these are not intrinsically required.'
+    slots:
+    - dataType
+    - dataSubtype
+    slot_usage:
+      dataType:
+        required: false
+      dataSubtype:
+        required: false
+    rules:
+    - description: If dataType is provided, dataSubtype must be provided
+      preconditions:
+        slot_conditions:
+          dataType:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          dataSubtype:
+            value_presence: PRESENT
+
+  WorkflowFields:
+    mixin: true
+    description: 'Reusable bundle for the workflow that produced a processed data
+      artifact.'
+    slots:
+    - workflow
+    - workflowLink
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT

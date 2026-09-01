@@ -7,11 +7,11 @@ classes:
       dataGranularity: individual-level
     description: 'Template for non-human individual-level data. Use sex/age/species
       for the individual animal, and modelSystemName for the name of the mouse model.'
+    mixins:
+    - AgeFields
     slots:
     - individualID
     - sex
-    - age
-    - ageUnit
     - diagnosis
     - diagnosisAgeGroup
     - inheritance
@@ -33,29 +33,17 @@ classes:
     description: 'Specimen-level data, whether from human or animal. For cell line
       specimens, individualID references the cell line. For xenografts, also specify
       modelSystemName and model attributes.'
+    mixins:
+    - SpecimenFields
+    - ModelAgeFields
     slots:
     - individualID
-    - parentSpecimenID
-    - specimenID
-    - aliquotID
     - tumorType
     - bodySite
     - experimentalCondition
     - modelSystemName
     - modelSpecies
     - modelSex
-    - modelAge
-    - modelAgeUnit
-    rules:
-    - description: If modelAge is provided, modelAgeUnit must be provided
-      preconditions:
-        slot_conditions:
-          modelAge:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          modelAgeUnit:
-            value_presence: PRESENT
   HumanCohortTemplate:
     annotations:
       required: false
@@ -77,11 +65,11 @@ classes:
       optional.
     - Include attributes used for the portal but not in recommendations (nf1Genotype,
       nf1Genotype, species).
+    mixins:
+    - AgeFields
     slots:
     - individualID
     - sex
-    - age
-    - ageUnit
     - diagnosis
     - diagnosisAgeGroup
     - inheritance
@@ -135,24 +123,3 @@ classes:
     slot_usage:
       species:
         ifabsent: string(Homo sapiens)
-    rules:
-    - description: If age is provided and is not "Unknown", ageUnit must be provided
-      preconditions:
-        slot_conditions:
-          age:
-            value_presence: PRESENT
-            none_of:
-              - equals_string: Unknown
-      postconditions:
-        slot_conditions:
-          ageUnit:
-            value_presence: PRESENT
-    - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value for ages at or above this threshold (HIPAA Safe Harbor)
-      preconditions:
-        slot_conditions:
-          species:
-            equals_string: Homo sapiens
-      postconditions:
-        slot_conditions:
-          age:
-            maximum_value: 89.99999
