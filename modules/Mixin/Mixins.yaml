@@ -3,7 +3,7 @@
 #
 # When a class takes several, list them in this order so that sibling templates
 # lay out their columns the same way:
-#   SpecimenLineage, IndividualDemographics, ModelOrganismAge, GenePerturbation,
+#   SpecimenLineage, IndividualDemographics, ModelOrganismDemographics, GenePerturbation,
 #   TimedObservation, CompoundTreatment, DataClassification, WorkflowProvenance
 classes:
   SpecimenLineage:
@@ -68,13 +68,19 @@ classes:
           age:
             maximum_value: 89.99999
 
-  ModelOrganismAge:
+  ModelOrganismDemographics:
     mixin: true
-    description: 'Age of an animal or xenograft model at time of experiment,
-      distinct from donor age.'
+    description: 'Characteristics of the animal or xenograft model an experiment was
+      run in: age at time of experiment, sex and species. The counterpart of
+      IndividualDemographics for the model rather than the donor, and distinct from
+      it -- modelAge is not a human subject age, so no HIPAA ceiling applies.
+      modelSystemName identifies the model and stays on the templates, the way
+      individualID does.'
     slots:
     - modelAge
     - modelAgeUnit
+    - modelSex
+    - modelSpecies
     rules:
     - description: If modelAge is provided, modelAgeUnit must be provided
       preconditions:
