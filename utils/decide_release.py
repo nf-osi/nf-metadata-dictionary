@@ -9,8 +9,9 @@ a MINOR bump - MAJOR bumps need human judgement and must go through a manual
 `workflow_dispatch` with an explicit version.
 
 A release is proposed only when both hold: there are non-automated commits,
-and those commits touch the data model. Docs, CI and tooling churn alone must
-not push a tag and burn a Synapse schema version.
+and those commits touch the data model or the code that generates it. Docs, CI
+and unrelated tooling churn alone must not push a tag and burn a Synapse schema
+version.
 
 Emits the same JSON contract as the AI step so the rest of the pipeline does
 not care which path decided:
@@ -57,10 +58,12 @@ VERSION_PATTERN = re.compile(r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$")
 RECORD_SEPARATOR = "\x1e"
 
 # Only changes under these locations affect what gets registered in Synapse.
-# modules/ and header.yaml are the LinkML source the model is built from; the
-# other two are the generated artifacts that are actually published.
-SCHEMA_RELEVANT_DIRS = ("modules", "dist", "registered-json-schemas")
-SCHEMA_RELEVANT_FILES = ("header.yaml",)
+# modules/ and header.yaml are the LinkML source the model is built from,
+# rules/ supplies the Superdataset overlay, and gen-json-schema-class.py is the
+# generator itself - a change to any of them rewrites published schemas. dist/
+# and registered-json-schemas/ are those generated artifacts.
+SCHEMA_RELEVANT_DIRS = ("modules", "rules", "dist", "registered-json-schemas")
+SCHEMA_RELEVANT_FILES = ("header.yaml", "utils/gen-json-schema-class.py")
 
 
 @dataclass(frozen=True)

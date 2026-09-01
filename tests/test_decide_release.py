@@ -208,6 +208,10 @@ def test_blank_lines_ignored() -> None:
     "header.yaml",
     "dist/NF.yaml",
     "registered-json-schemas/RNASeqTemplate.json",
+    # The generator rewrites every published schema, and rules/ supplies the
+    # Superdataset overlay, so both are model input just like modules/.
+    "utils/gen-json-schema-class.py",
+    "rules/super_rules.json",
 ])
 def test_schema_relevant_paths_recognized(path: str) -> None:
     assert decide_release.is_schema_relevant(path) is True
@@ -285,6 +289,31 @@ def test_decide_releases_when_a_single_commit_touches_the_model() -> None:
         record("docs: fix a typo", "docs/index.md"),
         record("feat: add an enum value", "modules/DCC/DCC.yaml"),
     ])
+
+    assert decision["release"] is True
+    assert decision["version"] == "11.2"
+
+
+def test_decide_releases_on_a_generator_only_cycle() -> None:
+    """
+    A change to the generator rewrites every published schema, but the rebuilt
+    artifacts only land in the filtered-out automated commit, so the generator
+    itself has to count as a model change.
+    """
+    decision = decide_release.decide("v11.1.22", [
+        record("Add controlled schema escape hatches", "utils/gen-json-schema-class.py"),
+        record("Rebuild all artifacts [skip ci]", "registered-json-schemas/X.json"),
+    ])
+
+    assert decision["release"] is True
+    assert decision["version"] == "11.2"
+
+
+def test_decide_releases_on_a_rules_only_cycle() -> None:
+    """rules/ is the overlay `make Superdataset` merges into the published schema."""
+    decision = decide_release.decide(
+        "v11.1.22", [record("feat: relax Superdataset rules", "rules/super_rules.json")]
+    )
 
     assert decision["release"] is True
     assert decision["version"] == "11.2"

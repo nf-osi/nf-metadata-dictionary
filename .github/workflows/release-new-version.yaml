@@ -176,6 +176,11 @@ jobs:
           if [ "$HTTP_CODE" = "200" ]; then
             # Extract text, strip markdown code fences if Claude wraps the response
             TEXT=$(jq -r '.content[0].text // empty' /tmp/api_response.json | sed '/^```/d')
+            # Log the model output before judging it, so a recurring misformat
+            # (prose, full semver, a "v" prefix) is diagnosable from the run page
+            # whether the response was used or rejected.
+            echo "Claude's evaluation:"
+            echo "$TEXT"
             # `.release` must be a real boolean: a null or "yes" would sail past
             # a has("release") check and then silently decline the release.
             if echo "$TEXT" | jq -e '.release | type == "boolean"' > /dev/null 2>&1; then
@@ -188,8 +193,6 @@ jobs:
                      --last-tag "$LAST_TAG" --version "$AI_VERSION" 2>&1); then
                 FALLBACK_REASON="the AI proposed an unusable version (${VERSION_ERROR#❌ })"
               else
-                echo "Claude's evaluation:"
-                echo "$TEXT"
                 echo "$TEXT" > /tmp/decision.json
               fi
             else
