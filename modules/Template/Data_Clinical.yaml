@@ -87,14 +87,14 @@ classes:
     description: For aggregated data from defined populations or cohorts, used in/derived
       from epidemiology studies.
     is_a: FileBasedTemplate
+    mixins:
+    - DataClassification
     slots:
-    - dataType
     - populationCoverage
     - epidemiologyMetric
     slot_usage:
       dataType:
         ifabsent: string(epidemiological data)
-        required: false
       epidemiologyMetric:
         required: false
     annotations:

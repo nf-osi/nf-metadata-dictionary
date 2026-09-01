@@ -56,8 +56,9 @@ classes:
     description: Template for reference sequence files used in experimental design,
       such as guide RNAs, plasmids, primers, probes, or other construct elements.
     is_a: FileBasedTemplate
+    mixins:
+    - DataClassification
     slots:
-    - dataType
     - sequenceName
     - sequenceLength
     - species
@@ -66,9 +67,6 @@ classes:
       resourceType:
         ifabsent: string(experimentalData)
       species:
-        required: false
-
-      dataType:
         required: false
     rules:
     - description: 'Relaxed conditional validation (issue #825): the listed fields
