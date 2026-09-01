@@ -12,7 +12,7 @@ classes:
       is being developed.
     is_a: FileBasedTemplate
     mixins:
-    - DataTypeFields
+    - DataClassification
     slots:
     - assay
     - species
@@ -93,7 +93,7 @@ classes:
       outputs that report data results but are not primary experimental data.
     is_a: FileBasedTemplate
     mixins:
-    - DataTypeFields
+    - DataClassification
     slots:
     - species
     - relatedDataset
@@ -142,7 +142,7 @@ classes:
     description: Template used for miscellaneous workflow reports and accessory files
     is_a: FileBasedTemplate
     mixins:
-    - WorkflowFields
+    - WorkflowProvenance
     notes:
     - resourceType should default to "workflow report"
     - note that `dataType` and `dataSubtype` don't apply

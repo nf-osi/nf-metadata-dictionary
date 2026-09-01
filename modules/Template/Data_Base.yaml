@@ -32,8 +32,8 @@ classes:
       which includes model* attributes.'
     is_a: FileBasedTemplate
     mixins:
-    - AgeFields
-    - DataTypeFields
+    - HumanIndividualAge
+    - DataClassification
     slots:
     - assay
     - individualID
@@ -94,7 +94,7 @@ classes:
       '
     is_a: FileBasedTemplate
     mixins:
-    - DataTypeFields
+    - DataClassification
     notes:
     - Name of this base abstraction is not great, may need to revise.
     slots:

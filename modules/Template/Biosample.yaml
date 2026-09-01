@@ -8,7 +8,7 @@ classes:
     description: 'Template for non-human individual-level data. Use sex/age/species
       for the individual animal, and modelSystemName for the name of the mouse model.'
     mixins:
-    - AgeFields
+    - IndividualAge
     slots:
     - individualID
     - sex
@@ -34,8 +34,8 @@ classes:
       specimens, individualID references the cell line. For xenografts, also specify
       modelSystemName and model attributes.'
     mixins:
-    - SpecimenFields
-    - ModelAgeFields
+    - SpecimenLineage
+    - ModelOrganismAge
     slots:
     - individualID
     - tumorType
@@ -66,7 +66,7 @@ classes:
     - Include attributes used for the portal but not in recommendations (nf1Genotype,
       nf1Genotype, species).
     mixins:
-    - AgeFields
+    - HumanIndividualAge
     slots:
     - individualID
     - sex

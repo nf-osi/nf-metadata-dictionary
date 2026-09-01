@@ -14,7 +14,7 @@ classes:
       '
     is_a: BiologicalAssayDataTemplate
     mixins:
-    - SpecimenFields
+    - SpecimenLineage
     notes:
     - http://purl.obolibrary.org/obo/GECKO_0000032
     slots:
@@ -212,8 +212,8 @@ classes:
     description: Genomics assay template but with additional experiment data.
     is_a: GenomicsAssayTemplate
     mixins:
-    - GenePerturbationFields
-    - ExperimentalTimepointFields
+    - GenePerturbation
+    - TimedObservation
     slots:
     - experimentalCondition
     - comments
@@ -231,8 +231,8 @@ classes:
       with additional PDX-relevant metadata.
     is_a: GenomicsAssayTemplate
     mixins:
-    - ModelAgeFields
-    - ExperimentalTimepointFields
+    - ModelOrganismAge
+    - TimedObservation
     slots:
     - transplantationType
     - transplantationRecipientSpecies
@@ -287,7 +287,7 @@ classes:
     description: Template for describing raw data from (bulk) RNA-sequencing
     is_a: BulkSequencingAssayTemplate
     mixins:
-    - GenePerturbationFields
+    - GenePerturbation
     slots:
     - experimentalCondition
     - isCellLine
@@ -388,7 +388,7 @@ classes:
     description: Template for describing raw data from single-cell RNA-seq.
     is_a: ScSequencingAssayTemplate
     mixins:
-    - GenePerturbationFields
+    - GenePerturbation
     slots:
     - experimentalCondition
     slot_usage:
@@ -526,7 +526,7 @@ classes:
       used to identify DNA-protein interactions.
     is_a: EpigenomicsAssayTemplate
     mixins:
-    - GenePerturbationFields
+    - GenePerturbation
     slots:
     - antibodyID
     - platform
@@ -606,7 +606,7 @@ classes:
       and are the same metrics preferred by GDC."
     is_a: BiologicalAssayDataTemplate
     mixins:
-    - WorkflowFields
+    - WorkflowProvenance
     slots:
     - genomicReference
     - genomicReferenceLink
@@ -682,7 +682,7 @@ classes:
       represented as one file per sample.
     is_a: BiologicalAssayDataTemplate
     mixins:
-    - WorkflowFields
+    - WorkflowProvenance
     slots:
     - expressionUnit
     - auxiliaryAsset
@@ -730,7 +730,7 @@ classes:
       '
     is_a: FileBasedTemplate
     mixins:
-    - WorkflowFields
+    - WorkflowProvenance
     slots:
     - dataType
     - dataSubtype
@@ -774,7 +774,7 @@ classes:
       do not apply. Use for summarized assay results such as qPCR Ct value tables.
     is_a: FileBasedTemplate
     mixins:
-    - WorkflowFields
+    - WorkflowProvenance
     slots:
     - dataType
     - dataSubtype
@@ -837,7 +837,7 @@ classes:
       output data (VCF/MAF) as well as structural variants (e.g. CNVs).
     is_a: BiologicalAssayDataTemplate
     mixins:
-    - WorkflowFields
+    - WorkflowProvenance
     slots:
     - isFilteredReads
     - auxiliaryAsset

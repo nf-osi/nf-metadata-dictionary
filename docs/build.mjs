@@ -105,6 +105,12 @@ const templates = [];
 for (const q of classQuads) {
   const uri = q.subject.value;
   const name = localName(uri);
+
+  // Mixins are reusable slot bundles, not templates. Their slots are already
+  // materialized into every class that uses them, so listing them separately
+  // would show curators fields that have no template of their own.
+  if (getBool(store, q.subject, LINKML + 'mixin')) continue;
+
   const description = getString(store, q.subject, SKOS + 'definition');
   const isAbstract = getBool(store, q.subject, LINKML + 'abstract');
   const parentObj = getOne(store, q.subject, namedNode(LINKML + 'is_a'), null);

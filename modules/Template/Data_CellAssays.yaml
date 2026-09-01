@@ -26,10 +26,10 @@ classes:
       in the context of different experimental conditions'
     is_a: BiologicalAssayDataTemplate
     mixins:
-    - SpecimenFields
-    - GenePerturbationFields
-    - ExperimentalTimepointFields
-    - CompoundDoseFields
+    - SpecimenLineage
+    - GenePerturbation
+    - TimedObservation
+    - CompoundTreatment
     slots:
     - modelSystemName
     - experimentalFactor
@@ -99,7 +99,7 @@ classes:
     description: Template for raw electrophysiology data (electrical recordings).
     is_a: BiologicalAssayDataTemplate
     mixins:
-    - ExperimentalTimepointFields
+    - TimedObservation
     slots:
     - platform
     - bodySite
@@ -153,9 +153,9 @@ classes:
       assay.
     is_a: BiologicalAssayDataTemplate
     mixins:
-    - SpecimenFields
-    - ExperimentalTimepointFields
-    - CompoundDoseFields
+    - SpecimenLineage
+    - TimedObservation
+    - CompoundTreatment
     slots:
     - platform
     - assayTarget

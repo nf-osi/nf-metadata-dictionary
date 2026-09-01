@@ -1,36 +1,15 @@
+# Reusable slot bundles. A mixin owns every slot its own rules refer to, so that
+# mixing it into a class cannot produce a rule over an undeclared slot.
+#
+# When a class takes several, list them in this order so that sibling templates
+# lay out their columns the same way:
+#   SpecimenLineage, IndividualAge/HumanIndividualAge, ModelOrganismAge, GenePerturbation,
+#   TimedObservation, CompoundTreatment, DataClassification, WorkflowProvenance
 classes:
-  AgeFields:
+  SpecimenLineage:
     mixin: true
-    description: 'Reusable bundle for donor/individual age, for classes that need age
-      validated independently of the BiologicalAssayDataTemplate hierarchy.'
-    slots:
-    - age
-    - ageUnit
-    rules:
-    - description: If age is provided and is not "Unknown", ageUnit must be provided
-      preconditions:
-        slot_conditions:
-          age:
-            value_presence: PRESENT
-            none_of:
-              - equals_string: Unknown
-      postconditions:
-        slot_conditions:
-          ageUnit:
-            value_presence: PRESENT
-    - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value for ages at or above this threshold (HIPAA Safe Harbor)
-      preconditions:
-        slot_conditions:
-          species:
-            equals_string: Homo sapiens
-      postconditions:
-        slot_conditions:
-          age:
-            maximum_value: 89.99999
-
-  SpecimenFields:
-    mixin: true
-    description: 'Reusable bundle for specimen/aliquot lineage identifiers.'
+    description: 'Specimen and aliquot identifiers, and the parent specimen they
+      derive from.'
     slots:
     - parentSpecimenID
     - specimenID
@@ -55,10 +34,69 @@ classes:
           specimenID:
             value_presence: PRESENT
 
-  GenePerturbationFields:
+  IndividualAge:
     mixin: true
-    description: 'Reusable bundle for describing a single-gene perturbation applied
-      to a sample.'
+    description: 'Age of an individual at observation, for any species. Use
+      HumanIndividualAge instead on templates that can carry human subjects, since
+      those additionally need the HIPAA age ceiling.'
+    slots:
+    - age
+    - ageUnit
+    rules:
+    - description: If age is provided and is not "Unknown", ageUnit must be provided
+      preconditions:
+        slot_conditions:
+          age:
+            value_presence: PRESENT
+            none_of:
+              - equals_string: Unknown
+      postconditions:
+        slot_conditions:
+          ageUnit:
+            value_presence: PRESENT
+
+  HumanIndividualAge:
+    mixin: true
+    mixins:
+    - IndividualAge
+    description: 'Individual age for templates that can carry human subjects. Adds
+      the HIPAA Safe Harbor ceiling on top of IndividualAge; species is declared here
+      because the rule is conditioned on it.'
+    slots:
+    - species
+    rules:
+    - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value for ages at or above this threshold (HIPAA Safe Harbor)
+      preconditions:
+        slot_conditions:
+          species:
+            equals_string: Homo sapiens
+      postconditions:
+        slot_conditions:
+          age:
+            maximum_value: 89.99999
+
+  ModelOrganismAge:
+    mixin: true
+    description: 'Age of an animal or xenograft model at time of experiment,
+      distinct from donor age.'
+    slots:
+    - modelAge
+    - modelAgeUnit
+    rules:
+    - description: If modelAge is provided, modelAgeUnit must be provided
+      preconditions:
+        slot_conditions:
+          modelAge:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          modelAgeUnit:
+            value_presence: PRESENT
+
+  GenePerturbation:
+    mixin: true
+    description: 'A single-gene perturbation applied to a sample, and how it was
+      introduced.'
     slots:
     - genePerturbed
     - genePerturbationType
@@ -84,9 +122,9 @@ classes:
           genePerturbationTechnology:
             value_presence: PRESENT
 
-  ExperimentalTimepointFields:
+  TimedObservation:
     mixin: true
-    description: 'Reusable bundle for a timed experimental observation.'
+    description: 'An experimental observation taken at a stated time point.'
     slots:
     - experimentalTimepoint
     - timepointUnit
@@ -101,9 +139,9 @@ classes:
           timepointUnit:
             value_presence: PRESENT
 
-  CompoundDoseFields:
+  CompoundTreatment:
     mixin: true
-    description: 'Reusable bundle for a compound treatment and its dose.'
+    description: 'A compound applied to a sample, and the dose it was applied at.'
     slots:
     - compoundName
     - compoundDose
@@ -123,28 +161,10 @@ classes:
           compoundDoseUnit:
             value_presence: PRESENT
 
-  ModelAgeFields:
+  DataClassification:
     mixin: true
-    description: 'Reusable bundle for the age of an animal/xenograft model at time
-      of experiment, distinct from donor age.'
-    slots:
-    - modelAge
-    - modelAgeUnit
-    rules:
-    - description: If modelAge is provided, modelAgeUnit must be provided
-      preconditions:
-        slot_conditions:
-          modelAge:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          modelAgeUnit:
-            value_presence: PRESENT
-
-  DataTypeFields:
-    mixin: true
-    description: 'Reusable bundle for dataType/dataSubtype, relaxed to optional and
-      cross-validated -- for templates where these are not intrinsically required.'
+    description: 'dataType and dataSubtype as optional but cross-validated, for
+      templates where classifying the data is not intrinsically required.'
     slots:
     - dataType
     - dataSubtype
@@ -164,10 +184,9 @@ classes:
           dataSubtype:
             value_presence: PRESENT
 
-  WorkflowFields:
+  WorkflowProvenance:
     mixin: true
-    description: 'Reusable bundle for the workflow that produced a processed data
-      artifact.'
+    description: 'The workflow that produced a processed data artifact.'
     slots:
     - workflow
     - workflowLink

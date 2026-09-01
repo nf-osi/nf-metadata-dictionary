@@ -26,7 +26,7 @@ classes:
       This can include repeated measures and a drug treatment context.'
     is_a: BiologicalAssayDataTemplate
     mixins:
-    - CompoundDoseFields
+    - CompoundTreatment
     slots:
     - experimentalFactor
     - experimentalCondition
@@ -66,9 +66,9 @@ classes:
       patterns.
     is_a: BiologicalAssayDataTemplate
     mixins:
-    - ExperimentalTimepointFields
-    - CompoundDoseFields
-    - GenePerturbationFields
+    - GenePerturbation
+    - TimedObservation
+    - CompoundTreatment
     slots:
     - modelSystemName
     - experimentalFactor

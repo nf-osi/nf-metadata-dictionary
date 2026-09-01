@@ -81,7 +81,7 @@ classes:
       assays, provide antibodyID.
     is_a: ImagingAssayTemplate
     mixins:
-    - SpecimenFields
+    - SpecimenLineage
     slots:
     - objective
     - nominalMagnification
@@ -142,7 +142,7 @@ classes:
     description: Template for describing MRI data.
     is_a: ImagingAssayTemplate
     mixins:
-    - ExperimentalTimepointFields
+    - TimedObservation
     slots:
     - bodySite
     - MRISequence
