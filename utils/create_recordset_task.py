@@ -76,6 +76,44 @@ def load_schema_uri(template_name_or_uri: str, schema_dir: str = "registered-jso
     return schema_id
 
 
+def resolve_principal_id(identifier: str, syn) -> str:
+    """
+    Resolve a username, team name, or numeric ID to a Synapse principal ID.
+
+    Synapse does not support looking up principals by email address, so emails
+    are not accepted.
+
+    Tries a user profile lookup first, then falls back to a team lookup.
+
+    Args:
+        identifier: Username, team name, or numeric user/team ID
+        syn: Authenticated Synapse client
+
+    Returns:
+        The resolved principal ID as a string
+
+    Raises:
+        ValueError: If identifier does not resolve to a user or team
+    """
+    try:
+        profile = syn.getUserProfile(identifier)
+        return str(profile.ownerId)
+    except Exception:
+        pass
+
+    try:
+        team = syn.getTeam(identifier)
+        return str(team.id)
+    except Exception:
+        pass
+
+    raise ValueError(
+        f"Could not resolve '{identifier}' to a Synapse user or team. "
+        "Provide a username, team name, or numeric principal ID "
+        "(Synapse does not support lookup by email address)."
+    )
+
+
 def create_recordset_task(
     folder_id: str,
     record_set_name: str,
@@ -85,6 +123,7 @@ def create_recordset_task(
     upsert_keys: list = None,
     instructions: str = "Please add metadata records",
     bind_schema: bool = True,
+    assignee: str = None,
     auth_token: str = None
 ) -> dict:
     """
@@ -102,6 +141,8 @@ def create_recordset_task(
         upsert_keys: List of field names that uniquely identify records (default: ['id'])
         instructions: Instructions for data contributors
         bind_schema: Whether to bind JSON schema to RecordSet (default: True)
+        assignee: Username, team name, or numeric principal ID to assign the task
+                  to (optional)
         auth_token: Synapse authentication token (if None, reads from env)
 
     Returns:
@@ -144,6 +185,13 @@ def create_recordset_task(
 
     print(f"  Project: {project_id}")
 
+    # Resolve assignee, if one was given
+    assignee_principal_id = None
+    if assignee:
+        print(f"\nResolving assignee: {assignee}")
+        assignee_principal_id = resolve_principal_id(assignee, syn)
+        print(f"  Principal ID: {assignee_principal_id}")
+
     # Load schema URI
     print(f"\nLoading schema: {template}")
     schema_uri = load_schema_uri(template)
@@ -163,6 +211,7 @@ def create_recordset_task(
     print(f"  Task Name: {curation_task_name}")
     print(f"  Upsert Keys: {upsert_keys if upsert_keys else 'Not specified'}")
     print(f"  Bind Schema: {bind_schema}")
+    print(f"  Assignee: {assignee_principal_id or 'Not specified'}")
 
     # Import the helper function from synapseclient
     try:
@@ -199,6 +248,9 @@ def create_recordset_task(
     if upsert_keys is not None:
         task_kwargs['upsert_keys'] = upsert_keys
 
+    if assignee_principal_id is not None:
+        task_kwargs['assignee_principal_id'] = assignee_principal_id
+
     record_set, curation_task, data_grid = create_record_based_metadata_task(**task_kwargs)
 
     print(f"\n✓ Record-based curation task created successfully!")
@@ -213,7 +265,8 @@ def create_recordset_task(
         "schema_uri": schema_uri,
         "project_id": project_id,
         "folder_id": folder_id,
-        "record_set_name": record_set_name
+        "record_set_name": record_set_name,
+        "assignee_principal_id": assignee_principal_id
     }
 
 
@@ -238,6 +291,13 @@ Examples:
     --task-name "DataLandscape_Curation" \\
     --upsert-keys study name \\
     --instructions "Please fill out Data Landscape records"
+
+  # Assign the task to a user or team
+  python create_recordset_task.py \\
+    --folder-id syn87654321 \\
+    --recordset-name "Portal" \\
+    --template $URI \\
+    --assignee 273957
 
   # Skip schema binding
   python create_recordset_task.py \\
@@ -308,6 +368,12 @@ Notes:
     )
 
     parser.add_argument(
+        '--assignee',
+        default=None,
+        help='Username, team name, or numeric principal ID to assign the task to'
+    )
+
+    parser.add_argument(
         '--bind-schema',
         action='store_true',
         default=True,
@@ -339,7 +405,8 @@ Notes:
             curation_task_name=args.task_name,
             upsert_keys=args.upsert_keys,
             instructions=args.instructions,
-            bind_schema=args.bind_schema
+            bind_schema=args.bind_schema,
+            assignee=args.assignee
         )
 
         if args.output_format == 'github':
@@ -354,6 +421,7 @@ Notes:
                     f.write(f"project_id={result['project_id']}\n")
                     f.write(f"folder_id={result['folder_id']}\n")
                     f.write(f"record_set_name={result['record_set_name']}\n")
+                    f.write(f"assignee_principal_id={result['assignee_principal_id']}\n")
             else:
                 print("\nGitHub Actions outputs:")
                 for key, value in result.items():
