@@ -140,7 +140,7 @@ def load_allowlist(path: Path | str | None) -> Allowlist:
 # Synapse access
 # ---------------------------------------------------------------------------
 
-def login(auth_token: str | None = None):
+def login(auth_token: str | None = None, *, pool_size: int = 0):
     # Imported lazily so the classification and reporting code stays importable -
     # and therefore testable in CI - without synapseclient installed.
     import synapseclient
@@ -148,7 +148,28 @@ def login(auth_token: str | None = None):
     syn = synapseclient.Synapse()
     syn.login(authToken=auth_token or os.environ.get('SYNAPSE_AUTH_TOKEN'), silent=True)
     syn.silent = True
+    if pool_size:
+        tune_connection_pool(syn, pool_size)
     return syn
+
+
+def tune_connection_pool(syn, size: int) -> None:
+    """Size the HTTP connection pool to the worker count.
+
+    synapseclient defaults to 10 connections. Running more workers than that
+    makes requests discard and re-establish connections
+    ("Connection pool is full"), which costs more than the parallelism gains.
+    """
+    try:
+        from requests.adapters import HTTPAdapter
+    except ImportError:  # pragma: no cover - requests ships with synapseclient
+        return
+    session = getattr(syn, '_requests_session', None)
+    if session is None:
+        return
+    adapter = HTTPAdapter(pool_connections=size, pool_maxsize=size, max_retries=0)
+    session.mount('https://', adapter)
+    session.mount('http://', adapter)
 
 
 def _is_forbidden(error: Exception) -> bool:
@@ -219,39 +240,83 @@ def _run_scope_job(syn, request: dict, *, async_mode: str) -> dict:
 
 
 def _run_scope_job_rest(syn, request: dict, *, timeout: int = 300) -> dict:
-    started = syn.restPOST('/column/view/scope/async/start', body=json.dumps(request))
+    return _run_async_job(syn, '/column/view/scope/async', request, timeout=timeout,
+                          label='scope job')
+
+
+def _run_async_job(
+    syn,
+    path: str,
+    request: dict,
+    *,
+    timeout: int = 300,
+    label: str = 'async job',
+    get_path: str | None = None,
+) -> dict:
+    """Start a Synapse asynchronous job and poll until it settles.
+
+    Note the two different result surfaces: most jobs are collected from
+    ``/asynchronous/job/{token}``, but table queries are collected from
+    ``{path}/get/{token}``. Both report progress via ``jobState``, and both
+    return ``PROCESSING`` in the body rather than raising, so polling has to
+    inspect the payload rather than catch an exception.
+    """
+    started = syn.restPOST(f'{path}/start', body=json.dumps(request))
     token = started['token']
+    poll = f'{get_path}/{token}' if get_path else f'/asynchronous/job/{token}'
     deadline = time.time() + timeout
     delay = 0.5
     while True:
-        status = syn.restGET(f'/asynchronous/job/{token}')
+        status = syn.restGET(poll)
         state = status.get('jobState')
         if state == 'FAILED':
-            raise RuntimeError(status.get('errorMessage', 'scope job failed'))
+            raise RuntimeError(status.get('errorMessage', f'{label} failed'))
         if state != 'PROCESSING':
             return status
         if time.time() > deadline:
-            raise TimeoutError(f'scope job {token} still processing after {timeout}s')
+            raise TimeoutError(f'{label} {token} still processing after {timeout}s')
         time.sleep(delay)
         delay = min(delay * 1.5, 5.0)
 
 
+def query_table(syn, table_id: str, sql: str, *, timeout: int = 300) -> list[dict]:
+    """Rows from a Synapse table or view, as dicts keyed by column name.
+
+    Uses the async query service rather than ``syn.tableQuery``, which is
+    deprecated for removal in synapseclient 5.0, and avoids both a CSV download
+    and a pandas dependency.
+    """
+    request = {
+        'concreteType': 'org.sagebionetworks.repo.model.table.QueryBundleRequest',
+        'entityId': table_id,
+        'query': {'sql': sql},
+        'partMask': 1,  # query results only
+    }
+    result = _run_async_job(
+        syn, f'/entity/{table_id}/table/query/async', request, timeout=timeout,
+        label='table query', get_path=f'/entity/{table_id}/table/query/async/get',
+    )
+    query_results = (result.get('queryResult') or {}).get('queryResults') or {}
+    headers = [h['name'] for h in query_results.get('headers') or []]
+    rows = []
+    for row in query_results.get('rows') or []:
+        rows.append(dict(zip(headers, row.get('values') or [])))
+    return rows
+
+
 def list_portal_projects(syn, table_id: str) -> list[dict]:
     """Study projects from the portal studies table."""
-    query = syn.tableQuery(
-        f'SELECT studyId, studyName, studyStatus FROM {table_id}', resultsAs='csv'
-    )
     projects: dict[str, dict] = {}
-    with open(query.filepath, newline='') as handle:
-        for row in csv.DictReader(handle):
-            study_id = (row.get('studyId') or '').strip()
-            if not study_id:
-                continue
-            projects.setdefault(study_id, {
-                'project_id': study_id,
-                'project_name': (row.get('studyName') or '').strip(),
-                'status': (row.get('studyStatus') or '').strip(),
-            })
+    for row in query_table(syn, table_id,
+                           f'SELECT studyId, studyName, studyStatus FROM {table_id}'):
+        study_id = (row.get('studyId') or '').strip()
+        if not study_id:
+            continue
+        projects.setdefault(study_id, {
+            'project_id': study_id,
+            'project_name': (row.get('studyName') or '').strip(),
+            'status': (row.get('studyStatus') or '').strip(),
+        })
     return sorted(projects.values(), key=lambda p: p['project_id'])
 
 
@@ -384,6 +449,7 @@ def drill_down_project(
     index: KeyIndex,
     loose_compare: bool = False,
     limit: int | None = None,
+    workers: int = 1,
 ) -> list[dict]:
     """Resolve a flagged project down to the individual affected entities.
 
@@ -401,23 +467,23 @@ def drill_down_project(
     if not flagged:
         return []
 
-    findings = []
-    for entity_id, entity_type in _iter_project_entities(syn, audit.project_id, limit=limit):
+    def inspect(target: tuple[str, str]) -> dict | None:
+        entity_id, entity_type = target
         try:
             record = read_annotations(syn, entity_id)
         except Exception as error:  # noqa: BLE001
             LOG.warning('%s: could not read annotations: %s', entity_id, error)
-            continue
+            return None
         annotations = dict(record.values)
         if not flagged & set(annotations):
-            continue
+            return None
         decisions = [
             d for d in decide_entity(annotations, canon=canon, index=index, loose_compare=loose_compare)
             if d.action.value != 'skip'
         ]
         if not decisions:
-            continue
-        findings.append({
+            return None
+        return {
             'project_id': audit.project_id,
             'entity_id': entity_id,
             'entity_type': entity_type,
@@ -425,19 +491,58 @@ def drill_down_project(
             'annotations': _jsonable(annotations),
             'value_types': record.types,
             'decisions': [d.as_dict() for d in decisions],
-        })
-    return findings
+        }
+
+    targets = list(_iter_project_entities(syn, audit.project_id, limit=limit))
+    if workers > 1:
+        # Reads only, so these parallelise safely and turn a multi-hour walk over
+        # a large project into minutes.
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            results = pool.map(inspect, targets)
+    else:
+        results = map(inspect, targets)
+    return [finding for finding in results if finding]
+
+
+CHILD_TYPES = ('file', 'folder', 'table', 'dataset')
+
+
+def _list_children(syn, parent_id: str) -> list[dict]:
+    """One page-through of an entity's children via the stable REST endpoint.
+
+    ``syn.getChildren`` is deprecated for removal in synapseclient 5.0;
+    ``POST /entity/children`` is the underlying service and is not going away.
+    """
+    children: list[dict] = []
+    token = None
+    while True:
+        body: dict[str, Any] = {
+            'parentId': parent_id,
+            'includeTypes': list(CHILD_TYPES),
+            'sortBy': 'NAME',
+            'sortDirection': 'ASC',
+        }
+        if token:
+            body['nextPageToken'] = token
+        page = syn.restPOST('/entity/children', body=json.dumps(body))
+        children.extend(page.get('page') or [])
+        token = page.get('nextPageToken')
+        if not token:
+            return children
 
 
 def _iter_project_entities(syn, project_id: str, *, limit: int | None = None):
     """Walk files, folders, tables and datasets under a project."""
     seen = 0
     stack = [project_id]
-    types = ['file', 'folder', 'table', 'dataset']
+    visited: set[str] = set()
     while stack:
         parent = stack.pop()
+        if parent in visited:
+            continue
+        visited.add(parent)
         try:
-            children = list(syn.getChildren(parent, includeTypes=types))
+            children = _list_children(syn, parent)
         except Exception as error:  # noqa: BLE001
             LOG.warning('%s: could not list children: %s', parent, error)
             continue
@@ -730,6 +835,8 @@ def build_parser() -> argparse.ArgumentParser:
                         help='resolve affected projects to individual entities (read-only)')
     parser.add_argument('--drill-down-limit', type=int, default=None,
                         help='stop after walking N entities per project')
+    parser.add_argument('--drill-down-workers', type=int, default=8,
+                        help='parallel entity reads during drill-down (read-only)')
     parser.add_argument('--loose-compare', action='store_true',
                         help='treat values equal across types as duplicates')
     parser.add_argument('--fail-on-findings', action='store_true',
@@ -764,7 +871,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                              fail_on_unknown=args.fail_on_unknown,
                              allowlist=allowlist)
 
-    syn = login()
+    syn = login(pool_size=max(args.workers, args.drill_down_workers, 10))
 
     projects: list[dict] = [{'project_id': p, 'project_name': ''} for p in args.project]
     if not projects or args.projects_table:
@@ -823,6 +930,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 for finding in drill_down_project(
                     syn, audit, canon=canon, index=index,
                     loose_compare=args.loose_compare, limit=args.drill_down_limit,
+                    workers=args.drill_down_workers,
                 ):
                     handle.write(json.dumps(finding) + '\n')
                     total += 1

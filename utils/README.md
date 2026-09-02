@@ -124,7 +124,45 @@ Annotations are versioned. Dropping a key from the current version does not remo
 
 **Related files:**
 - `synapse_annotation_io.py` - the `/entity/{id}/annotations2` read/write layer, used instead of the `syn.get_annotations` / `syn.set_annotations` / `Annotations` trio that is deprecated for removal in synapseclient 5.0
+- `validate_annotations.py` - the `--validate-schema` preflight
 - `../tests/test_fix_annotation_keys.py` - write path, rollback and verification against a stub client
+
+### validate_annotations.py
+
+Checks whether entity annotations conform to the **current** NF JSON schemas, and whether a planned key fix would change that. Read-only.
+
+```bash
+# is the metadata on these entities clean right now?
+python utils/validate_annotations.py --findings audit/entity_findings.jsonl --include-cached
+
+# would the planned fix break conformance anywhere?
+python utils/validate_annotations.py --findings audit/entity_findings.jsonl \
+    --check-plan --report validation.csv
+```
+
+Also available as a gate on the fix tool, which is the recommended way to use it - it runs before the confirmation prompt, so a plan that would break validation is never offered for approval:
+
+```bash
+python utils/fix_annotation_keys.py --findings audit/entity_findings.jsonl \
+    --actions drop_stray,rename_stray --validate-schema --apply --verify --log-dir ...
+```
+
+Every entity is classified into one of four transitions. Only `regression` blocks:
+
+| Transition | Meaning |
+|---|---|
+| `clean` | valid before and after |
+| `repaired` | invalid now, valid after the fix - what renaming an orphan is for |
+| `still_invalid` | invalid either way; a pre-existing problem unrelated to key casing |
+| `regression` | valid now, invalid after - **blocker** |
+
+Two things this gets right that a naive implementation does not:
+
+- **It validates `GET /entity/{id}/json`, not a dict rebuilt from annotations.** Synapse's JSON presentation is schema-driven, not uniform: on `syn64420376` it renders `age` as the scalar `1.5` but `individualID` as the array `['1119']`, both single-value annotations. Rebuilding by flattening single-item lists produces spurious `is not of type 'array'` failures. Only the entity JSON endpoint matches what Synapse actually validates.
+- **It resolves the schema from the entity's binding**, falling back to the `Component` annotation, and reports version drift between the bound version and this checkout. Synapse's own cached `isValid` can be stale: `syn64420357` reports invalid against `microscopyassaytemplate-11.0.20` for missing `fileFormat`/`resourceType`, but its binding is 11.1.22, where a `concreteType` guard restricts those requirements to FileEntity - so the folder is valid under the schema actually bound to it. Prefer a fresh check over a stale cached one.
+
+**Related files:**
+- `../tests/test_validate_annotations.py` - the transition matrix and the real-instance conformance checks
 
 ## How It Works
 

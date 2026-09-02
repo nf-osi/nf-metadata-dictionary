@@ -218,7 +218,8 @@ jobs:
         id: pytest
         run: |
           pytest tests/test_schema_instances.py tests/test_template_datatypes.py tests/test_model_system_sync.py \
-            tests/test_annotation_key_policy.py tests/test_fix_annotation_keys.py -v \
+            tests/test_annotation_key_policy.py tests/test_fix_annotation_keys.py \
+            tests/test_validate_annotations.py -v \
             --tb=short 2>&1 | tee pytest_output.txt
           echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
 

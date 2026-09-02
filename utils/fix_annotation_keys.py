@@ -71,6 +71,11 @@ from synapse_annotation_io import (  # noqa: E402
     read_annotations,
     write_annotations,
 )
+from validate_annotations import (  # noqa: E402
+    SchemaRegistry,
+    check_entity,
+    repo_schema_version,
+)
 
 LOG = logging.getLogger('fix_annotation_keys')
 
@@ -265,6 +270,38 @@ def apply_entity(
     result = ApplyResult(entity_id, 'etag_conflict', error='retries exhausted')
     logs.record_progress(entity_id, result.status, {'error': result.error})
     return result
+
+
+# ---------------------------------------------------------------------------
+# Schema conformance preflight
+# ---------------------------------------------------------------------------
+
+def schema_preflight(
+    syn,
+    plans: dict[str, list[dict]],
+    *,
+    registry: SchemaRegistry,
+    repo_version: str | None = None,
+) -> list:
+    """Entities whose planned fix would break JSON schema validation.
+
+    Key-casing repair is supposed to leave metadata *more* conformant, never
+    less. This validates each entity against the schema bound to it - using this
+    checkout's ``registered-json-schemas/``, i.e. the current version of the
+    model - both as it stands and with the plan applied, and returns every
+    entity that would go from valid to invalid.
+
+    Any non-empty result must stop the run: discovering it after the write means
+    hand-repairing entities from the backup.
+    """
+    blockers = []
+    for entity_id, decisions in plans.items():
+        outcome = check_entity(
+            syn, entity_id, registry=registry, repo_version=repo_version, decisions=decisions,
+        )
+        if outcome.blocking:
+            blockers.append(outcome)
+    return blockers
 
 
 # ---------------------------------------------------------------------------
@@ -553,6 +590,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument('--max-retries', type=int, default=3)
     parser.add_argument('--loose-compare', action='store_true',
                         help='treat values equal across types as duplicates')
+    parser.add_argument('--validate-schema', action='store_true',
+                        help='before writing, confirm the plan does not break JSON schema '
+                             'validation against this checkout of registered-json-schemas/')
     parser.add_argument('--verify', action='store_true', help='verify after applying')
     parser.add_argument('--verify-only', action='store_true', help='verify a previous run and exit')
     parser.add_argument('--rollback', default=None, metavar='LOGDIR',
@@ -638,6 +678,35 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
     mode = 'DRY RUN' if dry_run else 'APPLY'
     LOG.info('%s: %d entities, actions=%s, logs=%s', mode, len(entity_ids),
              ','.join(sorted(a.value for a in allowed_actions)), log_dir)
+
+    if args.validate_schema:
+        # Build the plan without writing, then prove it does not reduce schema
+        # conformance anywhere. This runs before the confirmation prompt so a
+        # blocked plan is never offered for approval.
+        syn = _login_cached()
+        registry = SchemaRegistry.load()
+        repo_version = repo_schema_version()
+        LOG.info('schema preflight: %d entities against %d schemas (repo version %s)',
+                 len(entity_ids), len(registry.by_name), repo_version or 'unknown')
+        plans: dict[str, list[dict]] = {}
+        for entity_id in entity_ids:
+            planned = apply_entity(
+                syn, entity_id, canon=canon, index=index, logs=logs,
+                allowed_actions=allowed_actions, dry_run=True,
+                loose_compare=args.loose_compare, max_retries=args.max_retries,
+            )
+            if planned.applied:
+                plans[entity_id] = planned.applied
+        blockers = schema_preflight(syn, plans, registry=registry, repo_version=repo_version)
+        if blockers:
+            LOG.error('%d entities would fail schema validation after the fix; refusing to proceed',
+                      len(blockers))
+            for blocker in blockers[:20]:
+                detail = blocker.after_messages[0] if blocker.after_messages else ''
+                LOG.error('  %s (%s): %s', blocker.entity_id, blocker.schema_name, detail[:160])
+            return 1
+        LOG.info('schema preflight passed: %d planned changes leave every entity conformant',
+                 len(plans))
 
     if not dry_run:
         if logs.backup_path.exists() and not args.resume:

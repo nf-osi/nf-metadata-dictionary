@@ -11,6 +11,7 @@ rollback - are verified without touching Synapse.
 import json
 import os
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -501,6 +502,46 @@ def test_missing_allowlist_file_suppresses_nothing(tmp_path):
 
     allowlist = audit.load_allowlist(tmp_path / 'nope.yaml')
     assert not allowlist.suppresses('Assay', 'syn1', 'duplicates')
+
+
+def test_schema_preflight_blocks_a_plan_that_would_break_conformance(rules, logs):
+    import validate_annotations as validate
+
+    registry = validate.SchemaRegistry.load()
+    fixture = Path(__file__).parent / 'data' / 'annotation_keys' / 'syn64420376_entity_json.json'
+    valid = json.loads(fixture.read_text())
+
+    class SchemaStub:
+        """Serves the entity JSON and a binding, for the conformance check."""
+
+        def __init__(self, instance):
+            self.instance = instance
+
+        def restGET(self, path):
+            if path.endswith('/json'):
+                return json.loads(json.dumps(self.instance))
+            if path.endswith('/schema/binding'):
+                return {'jsonSchemaVersionInfo': {
+                    'schemaName': 'microscopyassaytemplate',
+                    'semanticVersion': '11.1.22',
+                    '$id': 'org.synapse.nf-microscopyassaytemplate-11.1.22',
+                }}
+            raise AssertionError(path)
+
+    syn = SchemaStub(valid)
+    # A plan that drops a schema-required key must be refused.
+    bad_plan = [{'action': 'drop_stray', 'stray_key': 'fileFormat', 'canonical_key': 'fileFormat'}]
+    blockers = fix.schema_preflight(
+        syn, {'syn64420376': bad_plan}, registry=registry, repo_version='11.1.22')
+    assert [b.entity_id for b in blockers] == ['syn64420376']
+
+    # The real plan - dropping PascalCase strays - must pass.
+    strays = [k for k in valid if k[:1].isupper()
+              and k not in ('Component', 'Filename', 'Id', 'Uuid', 'EntityId')]
+    good_plan = [{'action': 'drop_stray', 'stray_key': k, 'canonical_key': k[:1].lower() + k[1:]}
+                 for k in strays]
+    assert fix.schema_preflight(
+        syn, {'syn64420376': good_plan}, registry=registry, repo_version='11.1.22') == []
 
 
 def test_apply_requires_at_least_one_action():
