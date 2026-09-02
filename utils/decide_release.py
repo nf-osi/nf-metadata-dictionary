@@ -1,42 +1,46 @@
 #!/usr/bin/env python3
 """
-Deterministic release decision, used as a fallback when the AI evaluation in
-the Release workflow cannot be reached (API outage, exhausted credits, or a
-malformed response).
+Release decision for the Release workflow: judges the AI evaluator's answer and
+decides deterministically instead whenever that answer cannot be used (API
+outage, exhausted credits, or a malformed response).
 
-Applies the commit and path rules the AI prompt states, and only ever proposes
-a MINOR bump - MAJOR bumps need human judgement and must go through a manual
-`workflow_dispatch` with an explicit version. It deliberately does not
-reproduce the prompt's rules that depend on Synapse registration state; that
-comes from a network call the workflow tolerates failing, so the decision here
-rests on the git history alone.
+The deterministic path applies the commit and path rules the AI prompt states,
+and only ever proposes a MINOR bump - MAJOR bumps need human judgement and must
+go through a manual `workflow_dispatch` with an explicit version. It
+deliberately does not reproduce the prompt's rules that depend on Synapse
+registration state; that comes from a network call the workflow tolerates
+failing, so the decision here rests on the git history alone.
 
 A release is proposed only when both hold: there are non-automated commits,
 and those commits touch the data model or the code that generates it. Docs, CI
 and unrelated tooling churn alone must not push a tag and burn a Synapse schema
 version.
 
-Emits the same JSON contract as the AI step so the rest of the pipeline does
-not care which path decided:
+Both paths emit the same JSON contract so the rest of the pipeline does not
+care which one decided:
 
-    {"release": true, "version": "MAJOR.MINOR", "reasoning": "..."}
+    {"release": true, "version": "MAJOR.MINOR", "reasoning": "...", "notes": "..."}
     {"release": false, "reasoning": "..."}
 
-Release notes are deliberately omitted; the workflow falls back to GitHub's
---generate-notes when none are supplied.
+On the deterministic path release notes are omitted; the workflow falls back to
+GitHub's --generate-notes when none are supplied.
 
-Also validates a version proposed by either path, so a decision that would tag
-something malformed or behind the last release can be rejected before any tag
-is pushed.
+Every version that reaches the workflow is validated here, so a decision that
+would tag something malformed or behind the last release is rejected before any
+tag is pushed. An unusable version from the AI is just another reason to fall
+back; one from the deterministic path cannot happen and is a hard failure.
 
 Uses only the Python standard library - no extra pip installs required.
 
 Usage:
     git log v11.1.22..HEAD --no-merges --name-only --format='%x1e%h %s' \
       > /tmp/commit_paths.txt
+    python decide_release.py accept-ai \
+      --last-tag v11.1.22 --http-code 200 \
+      --response-file /tmp/api_response.json \
+      --commit-paths-file /tmp/commit_paths.txt
     python decide_release.py decide \
       --last-tag v11.1.22 --commit-paths-file /tmp/commit_paths.txt
-    python decide_release.py check-version --last-tag v11.1.22 --version 11.2
 """
 
 import argparse
@@ -51,10 +55,14 @@ from typing import Iterable
 AUTOMATED_MARKERS = ("rebuild all artifacts", "[skip ci]")
 
 # Matches a tag as MAJOR.MINOR with an optional leading "v" and optional PATCH.
-TAG_PATTERN = re.compile(r"^v?(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:\.(0|[1-9][0-9]*))?$")
+# `\Z` rather than `$` so a trailing newline cannot sneak through a match.
+TAG_PATTERN = re.compile(r"^v?(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:\.(0|[1-9][0-9]*))?\Z")
 
 # A decided version is MAJOR.MINOR exactly; PATCH is the workflow run number.
-VERSION_PATTERN = re.compile(r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$")
+VERSION_PATTERN = re.compile(r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\Z")
+
+# curl reports no HTTP status when the request never reached the API.
+CURL_FAILURE_CODE = "000"
 
 # `git log --format='%x1e...'` prefixes each commit with an ASCII record
 # separator, so subject lines can never be confused with `--name-only` paths.
@@ -256,6 +264,134 @@ def decide(last_tag: str, records: Iterable) -> dict:
     }
 
 
+class AiUnusable(Exception):
+    """
+    The AI evaluation cannot be used, so the deterministic path must decide.
+
+    Every rejection is this, never a hard failure: an evaluator that cannot
+    answer must not be the reason the release cadence stops.
+    """
+
+
+@dataclass(frozen=True)
+class Outcome:
+    """Which path decided, what it decided, and what the AI actually said."""
+
+    decision: dict
+    fallback_reason: str
+    ai_text: str
+
+    @property
+    def source(self) -> str:
+        return "fallback" if self.fallback_reason else "ai"
+
+
+def strip_code_fences(text: str) -> str:
+    """Drop markdown fence lines, which the model adds despite being asked not to."""
+    return "\n".join(
+        line for line in text.splitlines() if not line.strip().startswith("```")
+    )
+
+
+def ai_response_text(http_code: str, response_body: str) -> str:
+    """
+    Extract the model's answer from a raw Anthropic API response.
+
+    Raises AiUnusable for anything that is not a successful, well-formed
+    response carrying text.
+    """
+    code = (http_code or "").strip()
+    if not code or code == CURL_FAILURE_CODE:
+        raise AiUnusable(
+            "the AI evaluation request never reached the API (no HTTP status; "
+            "DNS or network failure)"
+        )
+    if code != "200":
+        raise AiUnusable(f"the AI evaluation request failed with HTTP {code}")
+
+    try:
+        payload = json.loads(response_body)
+        text = payload["content"][0]["text"]
+    except (ValueError, TypeError, KeyError, IndexError):
+        raise AiUnusable(
+            "the AI returned HTTP 200 but the response body was not a usable "
+            "API payload"
+        )
+    if not isinstance(text, str) or not text.strip():
+        raise AiUnusable("the AI returned HTTP 200 but the response carried no text")
+    return text
+
+
+def ai_decision(text: str, last_tag: str) -> dict:
+    """
+    Turn the model's answer into a decision, or raise AiUnusable.
+
+    Rebuilt field by field rather than passed through, so only validated values
+    reach the workflow. `release` must be a real boolean - a null or "yes" would
+    sail past a looser check and then silently decline the release. A version
+    that is malformed or behind the last release is the model's mistake, not a
+    pipeline fault, so it falls back like any other unusable answer.
+    """
+    try:
+        raw = json.loads(strip_code_fences(text))
+    except ValueError:
+        raise AiUnusable(
+            "the AI response was not a single valid decision JSON document"
+        )
+    if not isinstance(raw, dict) or not isinstance(raw.get("release"), bool):
+        raise AiUnusable("the AI response carried no boolean 'release' field")
+
+    reasoning = raw.get("reasoning")
+    decision = {
+        "release": raw["release"],
+        "reasoning": reasoning if isinstance(reasoning, str) else "",
+    }
+    if not raw["release"]:
+        return decision
+
+    version = raw.get("version") if isinstance(raw.get("version"), str) else ""
+    error = version_error(version, last_tag)
+    if error:
+        raise AiUnusable(f"the AI proposed an unusable version ({error})")
+
+    decision["version"] = version.strip()
+    notes = raw.get("notes")
+    if isinstance(notes, str) and notes.strip():
+        decision["notes"] = notes
+    return decision
+
+
+def resolve_decision(
+    http_code: str, response_body: str, last_tag: str, records: Iterable
+) -> Outcome:
+    """Prefer the AI's decision; fall back to the deterministic one otherwise."""
+    text = ""
+    try:
+        text = ai_response_text(http_code, response_body)
+        return Outcome(
+            decision=ai_decision(text, last_tag), fallback_reason="", ai_text=text
+        )
+    except AiUnusable as unusable:
+        return Outcome(
+            decision=decide(last_tag, records),
+            fallback_reason=str(unusable),
+            ai_text=text,
+        )
+
+
+def releasability_error(decision: dict, last_tag: str) -> str:
+    """
+    Return why a decision cannot be acted on, or "" if it can.
+
+    Defence in depth only: an unusable version from the AI has already become a
+    fallback, and the deterministic path cannot emit one, so a non-empty result
+    here means this module is broken - and tagging garbage is worse than failing.
+    """
+    if not decision.get("release"):
+        return ""
+    return version_error(decision.get("version", ""), last_tag)
+
+
 def read_commit_records(path: Path) -> list:
     """
     Read commit records from a file.
@@ -268,21 +404,26 @@ def read_commit_records(path: Path) -> list:
     return parse_commit_records(path.read_text(encoding="utf-8"))
 
 
-def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Decide whether to cut a release without calling the AI evaluator."
-    )
-    subparsers = parser.add_subparsers(dest="command", required=True)
+def read_text_or_empty(path: Path) -> str:
+    """
+    Read a file the workflow may not have produced.
 
-    decide_parser = subparsers.add_parser(
-        "decide", help="Print the release decision as JSON"
-    )
-    decide_parser.add_argument(
+    A missing or unreadable API response is one more reason to fall back, not a
+    reason to abort the release step.
+    """
+    try:
+        return path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return ""
+
+
+def add_range_arguments(subparser: argparse.ArgumentParser) -> None:
+    subparser.add_argument(
         "--last-tag",
         required=True,
         help="Most recent release tag, e.g. v11.1.22",
     )
-    decide_parser.add_argument(
+    subparser.add_argument(
         "--commit-paths-file",
         required=True,
         type=Path,
@@ -292,46 +433,91 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
 
-    check_parser = subparsers.add_parser(
-        "check-version",
-        help="Exit non-zero if a proposed MAJOR.MINOR is unusable for a release",
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Decide whether to cut a release, with or without the AI evaluator."
     )
-    check_parser.add_argument(
-        "--last-tag",
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    accept_parser = subparsers.add_parser(
+        "accept-ai",
+        help=(
+            "Print {source, fallback_reason, decision} from an AI response, "
+            "deciding deterministically if that response is unusable"
+        ),
+    )
+    add_range_arguments(accept_parser)
+    accept_parser.add_argument(
+        "--http-code",
         required=True,
-        help="Most recent release tag, e.g. v11.1.22",
+        help=f"HTTP status curl reported, or {CURL_FAILURE_CODE} if it failed",
     )
-    check_parser.add_argument(
-        "--version",
+    accept_parser.add_argument(
+        "--response-file",
         required=True,
-        help="Proposed MAJOR.MINOR version, e.g. 11.2",
+        type=Path,
+        help="File holding the raw Anthropic API response body",
     )
+
+    decide_parser = subparsers.add_parser(
+        "decide", help="Print the deterministic release decision as JSON"
+    )
+    add_range_arguments(decide_parser)
     return parser
+
+
+def report_diagnostics(outcome: Outcome, last_tag: str, response_body: str) -> None:
+    """
+    Log what the model said and how it was judged.
+
+    Everything goes to stderr so stdout stays a single machine-readable
+    document. The model's answer is logged whether it was used or rejected, so a
+    recurring misformat is diagnosable from the run page.
+    """
+    if outcome.ai_text:
+        print("Claude's evaluation:", file=sys.stderr)
+        print(outcome.ai_text, file=sys.stderr)
+    elif response_body.strip():
+        print("AI response body:", file=sys.stderr)
+        print(response_body, file=sys.stderr)
+
+    if outcome.fallback_reason:
+        print(
+            f"⚠️  Falling back to deterministic rules: {outcome.fallback_reason}.",
+            file=sys.stderr,
+        )
+        return
+
+    unusable_baseline = baseline_error(last_tag)
+    if unusable_baseline:
+        print(f"⚠️  Ordering check skipped: {unusable_baseline}", file=sys.stderr)
 
 
 def main() -> int:
     args = build_parser().parse_args()
+    records = read_commit_records(args.commit_paths_file)
 
-    try:
-        if args.command == "check-version":
-            error = version_error(args.version, args.last_tag)
-            if error:
-                print(f"❌ {error}", file=sys.stderr)
-                return 1
-            skipped = baseline_error(args.last_tag)
-            if skipped:
-                print(
-                    f"⚠️  Ordering check skipped: {skipped}",
-                    file=sys.stderr,
-                )
-            return 0
+    if args.command == "decide":
+        print(json.dumps(decide(args.last_tag, records)))
+        return 0
 
-        decision = decide(args.last_tag, read_commit_records(args.commit_paths_file))
-    except ValueError as error:
-        print(f"❌ {error}", file=sys.stderr)
+    response_body = read_text_or_empty(args.response_file)
+    outcome = resolve_decision(
+        args.http_code, response_body, args.last_tag, records
+    )
+    report_diagnostics(outcome, args.last_tag, response_body)
+
+    unreleasable = releasability_error(outcome.decision, args.last_tag)
+    if unreleasable:
+        print(f"❌ Refusing to release: {unreleasable}", file=sys.stderr)
         return 1
 
-    print(json.dumps(decision))
+    print(json.dumps({
+        "source": outcome.source,
+        "fallback_reason": outcome.fallback_reason,
+        "decision": outcome.decision,
+    }))
     return 0
 
 

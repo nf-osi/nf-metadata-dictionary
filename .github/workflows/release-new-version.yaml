@@ -171,74 +171,30 @@ jobs:
             -H "anthropic-version: 2023-06-01" \
             -d "$PAYLOAD") || HTTP_CODE="000"
 
-          FALLBACK_REASON=""
+          # Judging the response - fence stripping, the boolean gate, the
+          # version shape and ordering check, and which failure becomes a
+          # fallback - lives in decide_release.py, so every rejection reason is
+          # unit-tested in CI rather than being untestable inline bash. It
+          # prints {source, fallback_reason, decision} and only fails the run if
+          # the deterministic path itself produced something unreleasable.
+          python3 utils/decide_release.py accept-ai \
+            --last-tag "$LAST_TAG" \
+            --http-code "$HTTP_CODE" \
+            --response-file /tmp/api_response.json \
+            --commit-paths-file /tmp/commit_paths.txt \
+            > /tmp/outcome.json
 
-          if [ "$HTTP_CODE" = "200" ]; then
-            # Extract text, strip markdown code fences if Claude wraps the response
-            TEXT=$(jq -r '.content[0].text // empty' /tmp/api_response.json | sed '/^```/d')
-            # Log the model output before judging it, so a recurring misformat
-            # (prose, full semver, a "v" prefix) is diagnosable from the run page
-            # whether the response was used or rejected.
-            echo "Claude's evaluation:"
-            echo "$TEXT"
-            # `.release` must be a real boolean: a null or "yes" would sail past
-            # a has("release") check and then silently decline the release.
-            if echo "$TEXT" | jq -e '.release | type == "boolean"' > /dev/null 2>&1; then
-              AI_RELEASE=$(echo "$TEXT" | jq -r '.release')
-              AI_VERSION=$(echo "$TEXT" | jq -r '.version // empty')
-              # A malformed or backwards version from the AI is just another
-              # unparseable response - fall back rather than fail the run. An
-              # unparseable $LAST_TAG is not the model's fault, so check-version
-              # only reports that as a skipped ordering check, which is echoed
-              # here rather than swallowed by the command substitution.
-              if [ "$AI_RELEASE" != "true" ]; then
-                echo "$TEXT" > /tmp/decision.json
-              elif VERSION_CHECK=$(python3 utils/decide_release.py check-version \
-                     --last-tag "$LAST_TAG" --version "$AI_VERSION" 2>&1); then
-                if [ -n "$VERSION_CHECK" ]; then
-                  echo "$VERSION_CHECK"
-                fi
-                echo "$TEXT" > /tmp/decision.json
-              else
-                FALLBACK_REASON="the AI proposed an unusable version (${VERSION_CHECK#❌ })"
-              fi
-            else
-              FALLBACK_REASON="the AI returned HTTP 200 but the body was not valid decision JSON"
-            fi
-          else
-            FALLBACK_REASON="the AI evaluation request failed with HTTP ${HTTP_CODE}"
-            echo "AI response body:"
-            cat /tmp/api_response.json || true
-          fi
-
-          if [ -n "$FALLBACK_REASON" ]; then
-            echo "⚠️  Falling back to deterministic rules: ${FALLBACK_REASON}."
-            python3 utils/decide_release.py decide \
-              --last-tag "$LAST_TAG" \
-              --commit-paths-file /tmp/commit_paths.txt \
-              > /tmp/decision.json
-          fi
-
+          jq -c '.decision' /tmp/outcome.json > /tmp/decision.json
           echo "Release decision:"
           cat /tmp/decision.json
 
-          SHOULD_RELEASE=$(jq -r '.release' /tmp/decision.json)
-          VERSION=$(jq -r '.version // empty' /tmp/decision.json)
-          REASONING=$(jq -r '.reasoning // empty' /tmp/decision.json)
-
-          # Defence in depth. An unusable version from the AI has already been
-          # turned into a fallback above, and the fallback cannot emit one, so
-          # reaching here means the decision logic itself is broken - and
-          # tagging garbage is worse than failing the run.
-          if [ "$SHOULD_RELEASE" = "true" ]; then
-            python3 utils/decide_release.py check-version \
-              --last-tag "$LAST_TAG" --version "$VERSION"
-          else
-            # A decline carries no version, and an unvalidated one reaching
-            # $GITHUB_OUTPUT could smuggle a second `should_release=true` line
-            # on an embedded newline - GitHub keeps the last value for a key.
-            VERSION=""
-          fi
+          # Every field below comes from a validated decision: .release is a
+          # real boolean and .version is MAJOR.MINOR or absent, so neither can
+          # smuggle a second `should_release=` line into $GITHUB_OUTPUT.
+          FALLBACK_REASON=$(jq -r '.fallback_reason' /tmp/outcome.json)
+          SHOULD_RELEASE=$(jq -r '.decision.release' /tmp/outcome.json)
+          VERSION=$(jq -r '.decision.version // empty' /tmp/outcome.json)
+          REASONING=$(jq -r '.decision.reasoning // empty' /tmp/outcome.json)
 
           # $REASONING is model-controlled and commit subjects steer the model,
           # so a fixed heredoc terminator would itself be forgeable.
@@ -252,7 +208,7 @@ jobs:
             echo "${REASONING_EOF}"
           } >> "$GITHUB_OUTPUT"
 
-          jq -r '.notes // empty' /tmp/decision.json > /tmp/release_notes.md
+          jq -r '.decision.notes // empty' /tmp/outcome.json > /tmp/release_notes.md
 
           # Record which path decided, so a fallback release is obvious on the
           # run page instead of looking like a normal AI-approved release.

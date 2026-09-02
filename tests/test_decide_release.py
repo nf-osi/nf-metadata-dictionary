@@ -423,6 +423,253 @@ def test_decide_declines_on_an_unusable_baseline_without_raising(tag: str) -> No
     assert tag in decision["reasoning"]
 
 
+# ── Reading the AI's response ───────────────────────────────────────
+
+def api_body(text: str) -> str:
+    """An Anthropic /v1/messages response carrying `text`."""
+    return json.dumps({"content": [{"type": "text", "text": text}]})
+
+
+def test_ai_response_text_extracts_the_model_answer() -> None:
+    assert decide_release.ai_response_text("200", api_body("hello")) == "hello"
+
+
+@pytest.mark.parametrize("code", ["400", "401", "402", "429", "500", "529"])
+def test_ai_response_text_rejects_non_200(code: str) -> None:
+    """The credit-exhaustion error that caused #967 arrives as an HTTP status."""
+    with pytest.raises(decide_release.AiUnusable, match=f"HTTP {code}"):
+        decide_release.ai_response_text(code, api_body("ignored"))
+
+
+@pytest.mark.parametrize("code", [decide_release.CURL_FAILURE_CODE, "", "   "])
+def test_ai_response_text_rejects_an_unreachable_api(code: str) -> None:
+    """curl reports no status at all on DNS or network failure."""
+    with pytest.raises(decide_release.AiUnusable, match="never reached"):
+        decide_release.ai_response_text(code, "")
+
+
+@pytest.mark.parametrize("body", [
+    "",
+    "not json at all",
+    "<html>502 Bad Gateway</html>",
+    json.dumps({"error": {"message": "credit balance is too low"}}),
+    json.dumps({"content": []}),
+    json.dumps({"content": [{"type": "tool_use"}]}),
+])
+def test_ai_response_text_rejects_an_unusable_payload(body: str) -> None:
+    with pytest.raises(decide_release.AiUnusable):
+        decide_release.ai_response_text("200", body)
+
+
+@pytest.mark.parametrize("text", ["", "   \n  "])
+def test_ai_response_text_rejects_empty_text(text: str) -> None:
+    with pytest.raises(decide_release.AiUnusable, match="no text"):
+        decide_release.ai_response_text("200", api_body(text))
+
+
+# ── Judging the AI's decision ───────────────────────────────────────
+
+def test_ai_decision_accepts_a_well_formed_release() -> None:
+    decision = decide_release.ai_decision(
+        json.dumps({
+            "release": True,
+            "version": "11.2",
+            "reasoning": "new templates",
+            "notes": "## What's new",
+        }),
+        "v11.1.22",
+    )
+
+    assert decision == {
+        "release": True,
+        "version": "11.2",
+        "reasoning": "new templates",
+        "notes": "## What's new",
+    }
+
+
+def test_ai_decision_accepts_markdown_fenced_json() -> None:
+    """The prompt asks for bare JSON, but the model often fences it anyway."""
+    decision = decide_release.ai_decision(
+        '```json\n{"release": true, "version": "11.2", "reasoning": "ok"}\n```',
+        "v11.1.22",
+    )
+
+    assert decision["release"] is True
+    assert decision["version"] == "11.2"
+
+
+def test_ai_decision_accepts_a_decline() -> None:
+    decision = decide_release.ai_decision(
+        json.dumps({"release": False, "reasoning": "only automated rebuilds"}),
+        "v11.1.22",
+    )
+
+    assert decision == {"release": False, "reasoning": "only automated rebuilds"}
+
+
+def test_ai_decision_drops_unvalidated_extra_fields() -> None:
+    """Only rebuilt, validated fields may reach the workflow."""
+    decision = decide_release.ai_decision(
+        json.dumps({
+            "release": True,
+            "version": "11.2",
+            "reasoning": "ok",
+            "should_release": "true",
+            "notes": "   ",
+        }),
+        "v11.1.22",
+    )
+
+    assert set(decision) == {"release", "version", "reasoning"}
+
+
+@pytest.mark.parametrize("text", [
+    "I'd recommend releasing version 11.2 because the templates changed.",
+    "",
+    "```json\n```",
+    # Two JSON documents: the prompt shows two alternatives, so a model can
+    # emit both. A per-document check would pass on the last one alone.
+    '{"release": false, "reasoning": "a"}\n{"release": false, "reasoning": "b"}',
+])
+def test_ai_decision_rejects_a_non_document_response(text: str) -> None:
+    with pytest.raises(decide_release.AiUnusable, match="single valid decision JSON"):
+        decide_release.ai_decision(text, "v11.1.22")
+
+
+@pytest.mark.parametrize("raw", [
+    {"reasoning": "forgot the verdict"},
+    {"release": None, "reasoning": "null"},
+    {"release": "yes", "reasoning": "a string"},
+    {"release": "true", "reasoning": "a string"},
+    {"release": 1, "reasoning": "an int"},
+])
+def test_ai_decision_requires_a_boolean_release(raw: dict) -> None:
+    """A null or "yes" would sail past a has("release") check, then decline."""
+    with pytest.raises(decide_release.AiUnusable, match="boolean 'release'"):
+        decide_release.ai_decision(json.dumps(raw), "v11.1.22")
+
+
+@pytest.mark.parametrize("version", ["11.1.0", "v11.2", "eleven.two", "", None])
+def test_ai_decision_falls_back_on_a_malformed_version(version) -> None:
+    """
+    A malformed version is the model's mistake, not a pipeline fault, so it must
+    become a fallback rather than failing the run.
+    """
+    with pytest.raises(decide_release.AiUnusable, match="not MAJOR.MINOR"):
+        decide_release.ai_decision(
+            json.dumps({"release": True, "version": version, "reasoning": "ok"}),
+            "v11.1.22",
+        )
+
+
+def test_ai_decision_falls_back_on_a_backwards_version() -> None:
+    with pytest.raises(decide_release.AiUnusable, match="behind the last release"):
+        decide_release.ai_decision(
+            json.dumps({"release": True, "version": "10.9", "reasoning": "ok"}),
+            "v11.1.22",
+        )
+
+
+@pytest.mark.parametrize("tag", UNPARSEABLE_REAL_TAGS)
+def test_ai_decision_accepts_a_good_version_despite_an_unusable_baseline(tag: str) -> None:
+    """A tag this repo really published must not invalidate a usable version."""
+    decision = decide_release.ai_decision(
+        json.dumps({"release": True, "version": "11.2", "reasoning": "ok"}), tag
+    )
+
+    assert decision["version"] == "11.2"
+
+
+def test_ai_decision_tolerates_non_string_reasoning() -> None:
+    decision = decide_release.ai_decision(
+        json.dumps({"release": False, "reasoning": {"unexpected": "shape"}}), "v11.1.22"
+    )
+
+    assert decision == {"release": False, "reasoning": ""}
+
+
+# ── Choosing between the two paths ──────────────────────────────────
+
+MODEL_CHANGE_RECORDS = [record("fix: correct a range", "modules/props.yaml")]
+
+
+def test_resolve_decision_prefers_a_usable_ai_answer() -> None:
+    outcome = decide_release.resolve_decision(
+        "200",
+        api_body(json.dumps({"release": True, "version": "12.0", "reasoning": "ok"})),
+        "v11.1.22",
+        MODEL_CHANGE_RECORDS,
+    )
+
+    assert outcome.source == "ai"
+    assert outcome.fallback_reason == ""
+    assert outcome.decision["version"] == "12.0"
+
+
+@pytest.mark.parametrize("code,body,expected", [
+    ("402", '{"error": {"message": "credit balance is too low"}}', "HTTP 402"),
+    (decide_release.CURL_FAILURE_CODE, "", "never reached"),
+    ("200", "not json", "not a usable API payload"),
+    ("200", None, "single valid decision JSON"),
+])
+def test_resolve_decision_falls_back_on_an_unusable_answer(
+    code: str, body, expected: str
+) -> None:
+    outcome = decide_release.resolve_decision(
+        code,
+        api_body("prose, not JSON") if body is None else body,
+        "v11.1.22",
+        MODEL_CHANGE_RECORDS,
+    )
+
+    assert outcome.source == "fallback"
+    assert expected in outcome.fallback_reason
+    assert outcome.decision["release"] is True
+    assert outcome.decision["version"] == "11.2"
+
+
+def test_resolve_decision_keeps_the_model_text_for_logging() -> None:
+    """A rejected answer must still be diagnosable from the run page."""
+    outcome = decide_release.resolve_decision(
+        "200", api_body("release it, probably"), "v11.1.22", MODEL_CHANGE_RECORDS
+    )
+
+    assert outcome.ai_text == "release it, probably"
+
+
+@pytest.mark.parametrize("tag", UNPARSEABLE_REAL_TAGS)
+def test_resolve_decision_declines_when_baseline_and_ai_are_both_unusable(tag: str) -> None:
+    """No MINOR to bump and no evaluator, but the run must still not fail."""
+    outcome = decide_release.resolve_decision(
+        "500", "", tag, MODEL_CHANGE_RECORDS
+    )
+
+    assert outcome.source == "fallback"
+    assert outcome.decision["release"] is False
+    assert tag in outcome.decision["reasoning"]
+
+
+# ── Defence in depth against an unreleasable decision ───────────────
+
+@pytest.mark.parametrize("decision", [
+    {"release": False, "reasoning": "no"},
+    {"release": True, "version": "11.2", "reasoning": "ok"},
+])
+def test_releasability_error_accepts_sound_decisions(decision: dict) -> None:
+    assert decide_release.releasability_error(decision, "v11.1.22") == ""
+
+
+@pytest.mark.parametrize("decision", [
+    {"release": True, "reasoning": "no version at all"},
+    {"release": True, "version": "11.1.0", "reasoning": "full semver"},
+    {"release": True, "version": "10.9", "reasoning": "backwards"},
+])
+def test_releasability_error_rejects_an_untaggable_decision(decision: dict) -> None:
+    """Only reachable if this module is broken; tagging garbage is worse."""
+    assert decide_release.releasability_error(decision, "v11.1.22") != ""
+
+
 # ── CLI behaviour (how the workflow actually invokes it) ────────────
 
 def _run_cli(args: list) -> subprocess.CompletedProcess:
@@ -500,43 +747,169 @@ def test_cli_declines_on_an_unusable_baseline_without_failing(
     assert tag in decision["reasoning"]
 
 
-def test_cli_check_version_accepts_forward_version() -> None:
-    result = _run_cli(["check-version", "--last-tag", "v11.1.22", "--version", "11.2"])
+def _accept_ai_cli(
+    tmp_path: Path,
+    http_code: str,
+    response_body,
+    last_tag: str = "v11.1.22",
+    records_text: str = f"{RS}abc1234 fix: real\n\nmodules/props.yaml\n",
+) -> subprocess.CompletedProcess:
+    commit_paths = tmp_path / "commit_paths.txt"
+    commit_paths.write_text(records_text)
+    response_file = tmp_path / "api_response.json"
+    if response_body is not None:
+        response_file.write_text(response_body)
+    return _run_cli([
+        "accept-ai",
+        "--last-tag", last_tag,
+        "--http-code", http_code,
+        "--response-file", str(response_file),
+        "--commit-paths-file", str(commit_paths),
+    ])
 
+
+def _outcome(result: subprocess.CompletedProcess) -> dict:
     assert result.returncode == 0, result.stderr
+    # One JSON document on stdout, so the workflow's jq reads exactly one value.
+    assert result.stdout.count("\n") == 1
+    return json.loads(result.stdout)
 
 
-@pytest.mark.parametrize("version,expected", [
-    ("11.1.0", "not MAJOR.MINOR"),
-    ("v11.2", "not MAJOR.MINOR"),
-    ("10.9", "behind the last release"),
+def test_cli_accept_ai_uses_a_usable_ai_decision(tmp_path: Path) -> None:
+    result = _accept_ai_cli(
+        tmp_path,
+        "200",
+        api_body(json.dumps({
+            "release": True, "version": "12.0", "reasoning": "big", "notes": "# notes",
+        })),
+    )
+    outcome = _outcome(result)
+
+    assert outcome == {
+        "source": "ai",
+        "fallback_reason": "",
+        "decision": {
+            "release": True, "version": "12.0", "reasoning": "big", "notes": "# notes",
+        },
+    }
+    assert "Claude's evaluation:" in result.stderr
+
+
+def test_cli_accept_ai_accepts_fenced_json(tmp_path: Path) -> None:
+    result = _accept_ai_cli(
+        tmp_path,
+        "200",
+        api_body('```json\n{"release": true, "version": "11.2", "reasoning": "ok"}\n```'),
+    )
+
+    assert _outcome(result)["source"] == "ai"
+
+
+@pytest.mark.parametrize("http_code,response_body,expected", [
+    ("402", '{"error": {"message": "credit balance is too low"}}', "HTTP 402"),
+    ("500", "", "HTTP 500"),
+    ("000", None, "never reached"),
+    ("200", "<html>502</html>", "not a usable API payload"),
 ])
-def test_cli_check_version_rejects_unusable_version(version: str, expected: str) -> None:
-    result = _run_cli(["check-version", "--last-tag", "v11.1.22", "--version", version])
+def test_cli_accept_ai_falls_back_when_the_api_fails(
+    tmp_path: Path, http_code: str, response_body, expected: str
+) -> None:
+    result = _accept_ai_cli(tmp_path, http_code, response_body)
+    outcome = _outcome(result)
 
-    assert result.returncode != 0
-    assert expected in result.stderr
+    assert outcome["source"] == "fallback"
+    assert expected in outcome["fallback_reason"]
+    assert outcome["decision"] == {
+        "release": True, "version": "11.2", "reasoning": outcome["decision"]["reasoning"],
+    }
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("Probably release 11.2, I think.", "single valid decision JSON"),
+    ('{"release": false}\n{"release": false}', "single valid decision JSON"),
+    ('{"release": null, "reasoning": "?"}', "boolean 'release'"),
+    ('{"release": "yes", "reasoning": "?"}', "boolean 'release'"),
+    ('{"release": true, "version": "11.1.0", "reasoning": "?"}', "not MAJOR.MINOR"),
+    ('{"release": true, "version": "10.9", "reasoning": "?"}', "behind the last release"),
+])
+def test_cli_accept_ai_falls_back_on_an_unusable_answer(
+    tmp_path: Path, text: str, expected: str
+) -> None:
+    """Every unusable answer degrades to the deterministic path, never exit 1."""
+    result = _accept_ai_cli(tmp_path, "200", api_body(text))
+    outcome = _outcome(result)
+
+    assert outcome["source"] == "fallback"
+    assert expected in outcome["fallback_reason"]
+    assert outcome["decision"]["release"] is True
+    # The rejected answer is logged, so a recurring misformat is diagnosable.
+    assert text.splitlines()[0] in result.stderr
+
+
+def test_cli_accept_ai_relays_a_decline_without_a_version(tmp_path: Path) -> None:
+    result = _accept_ai_cli(
+        tmp_path, "200", api_body('{"release": false, "reasoning": "nothing new"}')
+    )
+    outcome = _outcome(result)
+
+    assert outcome["source"] == "ai"
+    assert outcome["decision"] == {"release": False, "reasoning": "nothing new"}
+    assert "version" not in outcome["decision"]
 
 
 @pytest.mark.parametrize("tag", UNPARSEABLE_REAL_TAGS + ("vNope",))
-def test_cli_check_version_accepts_a_good_version_despite_an_unusable_baseline(
-    tag: str,
+def test_cli_accept_ai_keeps_a_good_ai_version_despite_an_unusable_baseline(
+    tmp_path: Path, tag: str
 ) -> None:
-    """The run must not die because a past tag was named oddly."""
-    result = _run_cli(["check-version", "--last-tag", tag, "--version", "11.2"])
+    """A past tag named oddly must not cost the run its AI decision."""
+    result = _accept_ai_cli(
+        tmp_path,
+        "200",
+        api_body('{"release": true, "version": "11.2", "reasoning": "ok"}'),
+        last_tag=tag,
+    )
+    outcome = _outcome(result)
 
-    assert result.returncode == 0, result.stderr
-    assert tag in result.stderr  # the skipped ordering check is reported
+    assert outcome["source"] == "ai"
+    assert outcome["decision"]["version"] == "11.2"
+    assert tag in result.stderr  # the skipped ordering check names the tag
 
 
-@pytest.mark.parametrize("tag", UNPARSEABLE_REAL_TAGS)
-def test_cli_check_version_still_rejects_bad_shape_with_an_unusable_baseline(
-    tag: str,
+@pytest.mark.parametrize("tag", UNPARSEABLE_REAL_TAGS + ("vNope",))
+def test_cli_accept_ai_declines_without_failing_when_nothing_is_usable(
+    tmp_path: Path, tag: str
 ) -> None:
-    result = _run_cli(["check-version", "--last-tag", tag, "--version", "11.2.0"])
+    result = _accept_ai_cli(tmp_path, "402", "", last_tag=tag)
+    outcome = _outcome(result)
 
-    assert result.returncode != 0
-    assert "not MAJOR.MINOR" in result.stderr
+    assert outcome["decision"]["release"] is False
+    assert tag in outcome["decision"]["reasoning"]
+
+
+def test_cli_accept_ai_declines_when_no_commit_touches_the_model(tmp_path: Path) -> None:
+    result = _accept_ai_cli(
+        tmp_path,
+        "402",
+        "",
+        records_text=f"{RS}da004e4 Update curation task utils\n\nutils/x.py\n",
+    )
+    outcome = _outcome(result)
+
+    assert outcome["decision"]["release"] is False
+    assert "none touch the data model" in outcome["decision"]["reasoning"]
+
+
+def test_cli_accept_ai_release_flag_is_a_json_boolean(tmp_path: Path) -> None:
+    """
+    The workflow writes `should_release=$(jq -r '.decision.release')` straight to
+    $GITHUB_OUTPUT, so this must be exactly one line reading `true` or `false`.
+    """
+    for http_code, body in (
+        ("200", api_body('{"release": false, "reasoning": "no"}')),
+        ("402", ""),
+    ):
+        outcome = _outcome(_accept_ai_cli(tmp_path, http_code, body))
+        assert isinstance(outcome["decision"]["release"], bool)
 
 
 def test_cli_requires_a_subcommand() -> None:
