@@ -187,13 +187,20 @@ jobs:
               AI_RELEASE=$(echo "$TEXT" | jq -r '.release')
               AI_VERSION=$(echo "$TEXT" | jq -r '.version // empty')
               # A malformed or backwards version from the AI is just another
-              # unparseable response - fall back rather than fail the run.
-              if [ "$AI_RELEASE" = "true" ] \
-                && ! VERSION_ERROR=$(python3 utils/decide_release.py check-version \
-                     --last-tag "$LAST_TAG" --version "$AI_VERSION" 2>&1); then
-                FALLBACK_REASON="the AI proposed an unusable version (${VERSION_ERROR#❌ })"
-              else
+              # unparseable response - fall back rather than fail the run. An
+              # unparseable $LAST_TAG is not the model's fault, so check-version
+              # only reports that as a skipped ordering check, which is echoed
+              # here rather than swallowed by the command substitution.
+              if [ "$AI_RELEASE" != "true" ]; then
                 echo "$TEXT" > /tmp/decision.json
+              elif VERSION_CHECK=$(python3 utils/decide_release.py check-version \
+                     --last-tag "$LAST_TAG" --version "$AI_VERSION" 2>&1); then
+                if [ -n "$VERSION_CHECK" ]; then
+                  echo "$VERSION_CHECK"
+                fi
+                echo "$TEXT" > /tmp/decision.json
+              else
+                FALLBACK_REASON="the AI proposed an unusable version (${VERSION_CHECK#❌ })"
               fi
             else
               FALLBACK_REASON="the AI returned HTTP 200 but the body was not valid decision JSON"
@@ -226,15 +233,23 @@ jobs:
           if [ "$SHOULD_RELEASE" = "true" ]; then
             python3 utils/decide_release.py check-version \
               --last-tag "$LAST_TAG" --version "$VERSION"
+          else
+            # A decline carries no version, and an unvalidated one reaching
+            # $GITHUB_OUTPUT could smuggle a second `should_release=true` line
+            # on an embedded newline - GitHub keeps the last value for a key.
+            VERSION=""
           fi
 
-          echo "should_release=$SHOULD_RELEASE" >> "$GITHUB_OUTPUT"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          # $REASONING is model-controlled and commit subjects steer the model,
+          # so a fixed heredoc terminator would itself be forgeable.
+          REASONING_EOF="REASONING_EOF_$(openssl rand -hex 16)"
 
           {
-            echo "reasoning<<REASONING_EOF"
+            echo "should_release=$SHOULD_RELEASE"
+            echo "version=$VERSION"
+            echo "reasoning<<${REASONING_EOF}"
             echo "$REASONING"
-            echo "REASONING_EOF"
+            echo "${REASONING_EOF}"
           } >> "$GITHUB_OUTPUT"
 
           jq -r '.notes // empty' /tmp/decision.json > /tmp/release_notes.md

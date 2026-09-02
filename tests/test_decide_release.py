@@ -26,9 +26,11 @@ SCRIPT = Path(__file__).parent.parent / 'utils' / 'decide_release.py'
 RS = decide_release.RECORD_SEPARATOR
 
 # The real commit range v11.0.20..v11.1.22, as
-# `git log --no-merges --name-only --format='%x1e%h %s'` rendered it (paths
-# trimmed to the ones that matter for the decision). Used to confirm the
-# fallback reproduces the decision the AI made for that release (MINOR to 11.1).
+# `git log --no-merges --name-only --format='%x1e%h %s'` rendered it. Long path
+# lists are trimmed to a representative subset, but every path below is one the
+# named commit actually touched - `git show --name-only <sha>` is the source of
+# truth here, since the point of this fixture is that it replays real history.
+# Note the generator change in this range is 1b4817b (#964), not fc83fe9 (#965).
 REAL_RECORDS_11_1 = "".join([
     f"{RS}6448b5e Delete dca-template-config.json\n\ndca-template-config.json\n",
     f"{RS}08e9061 Rebuild all artifacts [skip ci]\n\ndist/NF.ttl\n"
@@ -37,21 +39,30 @@ REAL_RECORDS_11_1 = "".join([
     "tests/data/ChIPSeqTemplate/valid_geneperturbed_complete.json\n",
     f"{RS}a72d678 Rebuild all artifacts [skip ci]\n\ndist/NF.yaml\n",
     f"{RS}fc83fe9 Add controlled schema escape hatches (#960, #961) (#965)\n\n"
-    "modules/Template/Template.yaml\nutils/gen-json-schema-class.py\n",
+    "modules/Experiment/Factor.yaml\nmodules/Template/Data_Clinical.yaml\n"
+    "modules/props.yaml\ntests/test_schema_escape_hatches.py\n",
     f"{RS}bc9b9d8 Rebuild all artifacts [skip ci]\n\ndist/NF.yaml\n",
     f"{RS}1b4817b fix: expand file format validation (#964)\n\n"
-    "modules/Data/FileFormat.yaml\n",
+    "modules/Data/FileFormat.yaml\nmodules/Template/Data_Genomics.yaml\n"
+    "tests/test_file_entity_schema_guard.py\nutils/gen-json-schema-class.py\n",
     f"{RS}03aa77b Rebuild all artifacts [skip ci]\n\ndist/NF.yaml\n",
     f"{RS}3be8c7b Add .arf file format (hearing test / ABR data) (#956)\n\n"
-    "modules/Data/FileFormat.yaml\n",
+    "modules/Data/FileFormat.yaml\nmodules/Template/Data_Clinical.yaml\n",
     f"{RS}da004e4 Update curation task utils, building on new synapseclient "
-    "support (#953)\n\nutils/curation_task_utils.py\n",
+    "support (#953)\n\n.github/workflows/create-curation-task.yml\n"
+    "dev/DEVELOPMENT.md\nutils/create_curation_task.py\n"
+    "utils/create_recordset_task.py\n",
     f"{RS}9752beb Rebuild all artifacts [skip ci]\n\ndist/NF.yaml\n",
-    f"{RS}e83152d Address enum gap\n\nmodules/Sample/Sample.yaml\n",
+    f"{RS}e83152d Address enum gap\n\nmodules/Template/Data_Imaging.yaml\n"
+    "modules/Template/Data_Proteomics.yaml\n",
     f"{RS}cad41ba Rebuild all artifacts [skip ci]\n\ndist/NF.yaml\n",
     f"{RS}2973bc0 feat: add Sheba Medical Center to Institution enum (#949)\n\n"
-    "modules/DCC/DCC.yaml\n",
+    "modules/Other/Organization.yaml\n",
 ])
+
+# Real release tags from this repo's history that TAG_PATTERN cannot parse:
+# "10.08.0" has a leading zero in the MINOR, "v.6.2.0" has a "v." prefix.
+UNPARSEABLE_REAL_TAGS = ("10.08.0", "v.6.2.0")
 
 
 def record(subject: str, *paths: str) -> decide_release.CommitRecord:
@@ -127,6 +138,32 @@ def test_fallback_version_always_passes_its_own_check() -> None:
     for tag in ("v11.1.22", "v10.9.15", "v0.10.3", "v12.0.0"):
         version = decide_release.next_minor_version(tag)
         assert decide_release.version_error(version, tag) == ""
+
+
+# ── Unusable baseline tags ──────────────────────────────────────────
+
+@pytest.mark.parametrize("tag", UNPARSEABLE_REAL_TAGS)
+def test_baseline_error_names_an_unparseable_real_tag(tag: str) -> None:
+    assert tag in decide_release.baseline_error(tag)
+
+
+@pytest.mark.parametrize("tag", ["v11.1.22", "11.1", "v0.10.3"])
+def test_baseline_error_accepts_usable_tags(tag: str) -> None:
+    assert decide_release.baseline_error(tag) == ""
+
+
+@pytest.mark.parametrize("tag", UNPARSEABLE_REAL_TAGS)
+def test_version_error_skips_ordering_against_an_unusable_baseline(tag: str) -> None:
+    """
+    An unparseable baseline is the tag's fault, not the proposed version's, and
+    must not block a shape-valid version - that would fail the whole run.
+    """
+    assert decide_release.version_error("11.2", tag) == ""
+
+
+@pytest.mark.parametrize("tag", UNPARSEABLE_REAL_TAGS)
+def test_version_error_still_rejects_shape_against_an_unusable_baseline(tag: str) -> None:
+    assert "not MAJOR.MINOR" in decide_release.version_error("11.2.0", tag)
 
 
 # ── Commit record parsing ───────────────────────────────────────────
@@ -218,7 +255,7 @@ def test_schema_relevant_paths_recognized(path: str) -> None:
 
 
 @pytest.mark.parametrize("path", [
-    "utils/curation_task_utils.py",
+    "utils/create_curation_task.py",
     "utils/decide_release.py",
     ".github/workflows/release-new-version.yaml",
     "tests/test_decide_release.py",
@@ -272,7 +309,7 @@ def test_decide_reproduces_the_real_11_1_release() -> None:
 def test_decide_declines_when_no_commit_touches_the_model() -> None:
     """Docs/CI/tooling churn must not burn a Synapse schema version."""
     decision = decide_release.decide("v11.1.22", [
-        record("Update curation task utils (#953)", "utils/curation_task_utils.py"),
+        record("Update curation task utils (#953)", "utils/create_curation_task.py"),
         record("ci: add a pytest file", ".github/workflows/main-ci.yml"),
         record("docs: fix a typo", "docs/index.md"),
         record("Delete dca-template-config.json", "dca-template-config.json"),
@@ -371,11 +408,19 @@ def test_decide_output_matches_ai_json_contract() -> None:
     assert not decision.get("notes")
 
 
-def test_decide_rejects_malformed_tag() -> None:
-    with pytest.raises(ValueError):
-        decide_release.decide(
-            "not-a-tag", [record("fix: something real", "modules/props.yaml")]
-        )
+@pytest.mark.parametrize("tag", UNPARSEABLE_REAL_TAGS + ("not-a-tag",))
+def test_decide_declines_on_an_unusable_baseline_without_raising(tag: str) -> None:
+    """
+    There is no MINOR to bump, but raising would abort the release step under
+    `set -e` - the exact blocking the fallback exists to prevent.
+    """
+    decision = decide_release.decide(
+        tag, [record("fix: something real", "modules/props.yaml")]
+    )
+
+    assert decision["release"] is False
+    assert "version" not in decision
+    assert tag in decision["reasoning"]
 
 
 # ── CLI behaviour (how the workflow actually invokes it) ────────────
@@ -441,12 +486,18 @@ def test_cli_handles_missing_commit_paths_file_as_empty(tmp_path: Path) -> None:
     assert json.loads(result.stdout)["release"] is False
 
 
-def test_cli_fails_loudly_on_malformed_tag(tmp_path: Path) -> None:
-    result = _decide_cli(tmp_path, "vNope", f"{RS}abc1234 fix: real\n\nmodules/props.yaml\n")
+@pytest.mark.parametrize("tag", UNPARSEABLE_REAL_TAGS + ("vNope",))
+def test_cli_declines_on_an_unusable_baseline_without_failing(
+    tmp_path: Path, tag: str
+) -> None:
+    result = _decide_cli(
+        tmp_path, tag, f"{RS}abc1234 fix: real\n\nmodules/props.yaml\n"
+    )
 
-    assert result.returncode != 0
-    assert "vNope" in result.stderr
-    assert result.stdout.strip() == ""
+    assert result.returncode == 0, result.stderr
+    decision = json.loads(result.stdout)
+    assert decision["release"] is False
+    assert tag in decision["reasoning"]
 
 
 def test_cli_check_version_accepts_forward_version() -> None:
@@ -467,11 +518,25 @@ def test_cli_check_version_rejects_unusable_version(version: str, expected: str)
     assert expected in result.stderr
 
 
-def test_cli_check_version_fails_on_malformed_last_tag() -> None:
-    result = _run_cli(["check-version", "--last-tag", "vNope", "--version", "11.2"])
+@pytest.mark.parametrize("tag", UNPARSEABLE_REAL_TAGS + ("vNope",))
+def test_cli_check_version_accepts_a_good_version_despite_an_unusable_baseline(
+    tag: str,
+) -> None:
+    """The run must not die because a past tag was named oddly."""
+    result = _run_cli(["check-version", "--last-tag", tag, "--version", "11.2"])
+
+    assert result.returncode == 0, result.stderr
+    assert tag in result.stderr  # the skipped ordering check is reported
+
+
+@pytest.mark.parametrize("tag", UNPARSEABLE_REAL_TAGS)
+def test_cli_check_version_still_rejects_bad_shape_with_an_unusable_baseline(
+    tag: str,
+) -> None:
+    result = _run_cli(["check-version", "--last-tag", tag, "--version", "11.2.0"])
 
     assert result.returncode != 0
-    assert "vNope" in result.stderr
+    assert "not MAJOR.MINOR" in result.stderr
 
 
 def test_cli_requires_a_subcommand() -> None:

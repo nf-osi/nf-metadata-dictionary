@@ -4,9 +4,12 @@ Deterministic release decision, used as a fallback when the AI evaluation in
 the Release workflow cannot be reached (API outage, exhausted credits, or a
 malformed response).
 
-Applies the same versioning rules the AI prompt states, but only ever proposes
+Applies the commit and path rules the AI prompt states, and only ever proposes
 a MINOR bump - MAJOR bumps need human judgement and must go through a manual
-`workflow_dispatch` with an explicit version.
+`workflow_dispatch` with an explicit version. It deliberately does not
+reproduce the prompt's rules that depend on Synapse registration state; that
+comes from a network call the workflow tolerates failing, so the decision here
+rests on the git history alone.
 
 A release is proposed only when both hold: there are non-automated commits,
 and those commits touch the data model or the code that generates it. Docs, CI
@@ -102,6 +105,21 @@ def next_minor_version(tag: str) -> str:
     return f"{major}.{minor + 1}"
 
 
+def baseline_error(tag: str) -> str:
+    """
+    Return why `tag` is unusable as a release baseline, or "" if it is usable.
+
+    This repo has published tags like "10.08.0" and "v.6.2.0", and
+    `gh release list` returns the newest by date, so an unparseable baseline is
+    a real possibility that callers have to degrade around rather than crash on.
+    """
+    try:
+        parse_major_minor(tag)
+    except ValueError as error:
+        return str(error)
+    return ""
+
+
 def version_error(version: str, last_tag: str) -> str:
     """
     Return why `version` cannot be released after `last_tag`, or "" if it can.
@@ -109,10 +127,16 @@ def version_error(version: str, last_tag: str) -> str:
     Rejects anything that is not MAJOR.MINOR, and anything that would move the
     series backwards - `gh release list` orders by creation date, so a
     backwards release becomes the baseline for every later decision.
+
+    An unparseable `last_tag` says nothing about `version`, so the ordering half
+    of the check is skipped rather than blaming a perfectly usable version for a
+    baseline it cannot be compared against.
     """
     candidate = (version or "").strip()
     if not VERSION_PATTERN.match(candidate):
         return f"version {version!r} is not MAJOR.MINOR"
+    if baseline_error(last_tag):
+        return ""
     if parse_major_minor(candidate) < parse_major_minor(last_tag):
         return (
             f"version {candidate!r} is behind the last release {last_tag!r}; "
@@ -173,10 +197,22 @@ def decide(last_tag: str, records: Iterable) -> dict:
     """
     Decide whether to release, and at what MAJOR.MINOR.
 
-    Validates the tag before looking at commits so a malformed tag always
-    raises, even when there is nothing to release.
+    An unusable baseline tag leaves no MINOR to bump, so this declines with a
+    reason naming the tag instead of raising: this runs as the last line of
+    defence for the release cadence, and failing here would block the run the
+    fallback exists to keep going.
     """
-    parse_major_minor(last_tag)
+    unusable_baseline = baseline_error(last_tag)
+    if unusable_baseline:
+        return {
+            "release": False,
+            "reasoning": (
+                "Cannot determine the next version deterministically: "
+                f"{unusable_baseline}. Dispatch the workflow manually with an "
+                "explicit version to release."
+            ),
+        }
+
     records = list(records)
     relevant = meaningful_records(records)
 
@@ -282,6 +318,12 @@ def main() -> int:
             if error:
                 print(f"❌ {error}", file=sys.stderr)
                 return 1
+            skipped = baseline_error(args.last_tag)
+            if skipped:
+                print(
+                    f"⚠️  Ordering check skipped: {skipped}",
+                    file=sys.stderr,
+                )
             return 0
 
         decision = decide(args.last_tag, read_commit_records(args.commit_paths_file))
