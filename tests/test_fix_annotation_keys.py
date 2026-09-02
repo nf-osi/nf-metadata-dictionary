@@ -653,8 +653,43 @@ def test_schema_preflight_does_not_credit_an_unvalidatable_unbound_entity():
     report = fix.schema_preflight(
         UnboundStub(), {'syn1': plan}, registry=registry, repo_version='11.1.22')
     assert [r.status for r in report.unvalidatable] == ['unbound']
-    assert report.checked - len(report.unvalidatable) == 0
+    assert report.proven == 0
     assert not report.ok
+
+
+def test_schema_preflight_does_not_count_a_still_invalid_entity_as_proven():
+    # `still_invalid` is not a regression, so it does not block - but the entity
+    # fails validation both before and after, so reporting it as "proven to leave
+    # the entity conformant" is the same overstatement the unvalidatable gates
+    # were added to remove.
+    import validate_annotations as validate
+
+    registry = validate.SchemaRegistry.load()
+    fixture = Path(__file__).parent / 'data' / 'annotation_keys' / 'syn64420376_entity_json.json'
+    instance = json.loads(fixture.read_text())
+    instance.pop('fileFormat')
+
+    class SchemaStub:
+        def restGET(self, path):
+            if path.endswith('/json'):
+                return json.loads(json.dumps(instance))
+            if path.endswith('/schema/binding'):
+                return {'jsonSchemaVersionInfo': {
+                    'schemaName': 'microscopyassaytemplate',
+                    'semanticVersion': '11.1.22',
+                    '$id': 'org.synapse.nf-microscopyassaytemplate-11.1.22',
+                }}
+            raise AssertionError(path)
+
+    plan = [{'action': 'drop_stray', 'stray_key': 'Age', 'canonical_key': 'age'}]
+    report = fix.schema_preflight(
+        SchemaStub(), {'syn64420376': plan}, registry=registry, repo_version='11.1.22')
+    assert [r.status for r in report.still_invalid] == ['still_invalid']
+    assert report.blockers == []
+    assert report.unvalidatable == []
+    assert report.proven == 0
+    # Not a blocker: the failure predates the plan and the plan does not worsen it.
+    assert report.ok
 
 
 def test_schema_preflight_validates_an_unbound_entity_against_its_component():

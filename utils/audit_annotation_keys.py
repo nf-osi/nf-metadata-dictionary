@@ -58,7 +58,7 @@ from annotation_key_policy import (  # noqa: E402
     decide_entity,
     load_canonical_slots,
 )
-from synapse_annotation_io import read_annotations  # noqa: E402
+from synapse_annotation_io import column_type_for, read_annotations  # noqa: E402
 
 LOG = logging.getLogger('audit_annotation_keys')
 
@@ -397,9 +397,11 @@ def audit_project(
             # A view scope cannot see the project entity's own annotations. Merge
             # each key's declared type, not a placeholder: the multitype report is
             # triage input for the value-type issue, so a fabricated STRING would
-            # invent a conflict against a real LONG or DOUBLE column.
-            for key, declared in _project_entity_types(syn, audit.project_id).items():
-                key_types.setdefault(key, set()).add(declared)
+            # invent a conflict against a real INTEGER or DOUBLE column. The
+            # annotation type is translated into the view's ColumnType vocabulary
+            # first, for the same reason.
+            for key, column in _project_entity_column_types(syn, audit.project_id).items():
+                key_types.setdefault(key, set()).add(column)
     except Exception as error:  # noqa: BLE001 - the failure mode is the finding
         audit.status = 'forbidden' if _is_forbidden(error) else 'error'
         audit.error = f'{type(error).__name__}: {error}'[:300]
@@ -414,13 +416,22 @@ def audit_project(
     return audit
 
 
-def _project_entity_types(syn, project_id: str) -> dict[str, str]:
-    """The project entity's own annotation keys and their declared value types."""
+def _project_entity_column_types(syn, project_id: str) -> dict[str, str]:
+    """The project entity's own annotation keys, as view column types.
+
+    A key is reported in the vocabulary the rest of the inventory uses, so a
+    ``LONG`` project annotation matches an ``INTEGER`` column and a multi-value
+    one matches the corresponding ``*_LIST``.
+    """
     try:
-        return dict(read_annotations(syn, project_id).types)
+        record = read_annotations(syn, project_id)
     except Exception as error:  # noqa: BLE001
         LOG.warning('%s: could not read project annotations: %s', project_id, error)
         return {}
+    return {
+        key: column_type_for(declared, len(record.values.get(key) or []))
+        for key, declared in record.types.items()
+    }
 
 
 def _with_retries(call, *, max_retries: int, label: str):

@@ -29,6 +29,36 @@ VALUE_DECODERS = {
     'BOOLEAN': lambda v: str(v).strip().lower() in ('true', '1', 'yes'),
 }
 
+#: AnnotationsValueType -> the entity-view ColumnType the same annotation
+#: surfaces as. The two are different vocabularies: a view reports ``LONG`` as
+#: ``INTEGER`` and ``TIMESTAMP_MS`` as ``DATE``, and never uses either name, so
+#: comparing an annotation type against a column type directly invents
+#: conflicts that do not exist.
+COLUMN_TYPE_FOR_VALUE_TYPE = {
+    'STRING': 'STRING',
+    'DOUBLE': 'DOUBLE',
+    'BOOLEAN': 'BOOLEAN',
+    'LONG': 'INTEGER',
+    'TIMESTAMP_MS': 'DATE',
+}
+
+#: A multi-value annotation surfaces as the matching list column. ColumnType has
+#: no ``DOUBLE_LIST``, so a multi-value DOUBLE lands in ``STRING_LIST``.
+LIST_COLUMN_TYPE_FOR_VALUE_TYPE = {
+    'STRING': 'STRING_LIST',
+    'DOUBLE': 'STRING_LIST',
+    'BOOLEAN': 'BOOLEAN_LIST',
+    'LONG': 'INTEGER_LIST',
+    'TIMESTAMP_MS': 'DATE_LIST',
+}
+
+
+def column_type_for(declared: str, value_count: int) -> str:
+    """The entity-view ColumnType an annotation of this type and arity becomes."""
+    if value_count > 1:
+        return LIST_COLUMN_TYPE_FOR_VALUE_TYPE.get(declared, 'STRING_LIST')
+    return COLUMN_TYPE_FOR_VALUE_TYPE.get(declared, 'STRING')
+
 
 @dataclass(frozen=True)
 class AnnotationRecord:

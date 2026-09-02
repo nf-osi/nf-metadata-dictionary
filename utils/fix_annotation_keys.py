@@ -319,10 +319,22 @@ class PreflightReport:
     blockers: list = field(default_factory=list)
     #: entities the check could not reach a verdict on at all
     unvalidatable: list = field(default_factory=list)
+    #: entities valid before and after the plan
+    clean: list = field(default_factory=list)
+    #: entities invalid now and valid once the plan is applied
+    repaired: list = field(default_factory=list)
+    #: entities invalid both before and after - a pre-existing failure this
+    #: cleanup does not claim to fix, so not a blocker, but not proven either
+    still_invalid: list = field(default_factory=list)
 
     @property
     def ok(self) -> bool:
         return not self.blockers and not self.unvalidatable
+
+    @property
+    def proven(self) -> int:
+        """Entities the check actually vouched for."""
+        return len(self.clean) + len(self.repaired)
 
 
 def schema_preflight(
@@ -363,6 +375,12 @@ def schema_preflight(
             report.blockers.append(outcome)
         elif outcome.status in UNVALIDATABLE_STATUSES:
             report.unvalidatable.append(outcome)
+        elif outcome.status == 'still_invalid':
+            report.still_invalid.append(outcome)
+        elif outcome.status == 'repaired':
+            report.repaired.append(outcome)
+        else:
+            report.clean.append(outcome)
     return report
 
 
@@ -789,8 +807,19 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
         if preflight.unvalidatable:
             LOG.warning('%d entities could not be validated; proceeding on --allow-unvalidatable',
                         len(preflight.unvalidatable))
+        if preflight.still_invalid:
+            LOG.warning('%d entities fail validation both before and after the plan; those '
+                        'failures are pre-existing and unrelated to key casing, so the preflight '
+                        'does not vouch for them', len(preflight.still_invalid))
+            for unchanged in preflight.still_invalid[:20]:
+                detail = unchanged.after_messages[0] if unchanged.after_messages else ''
+                LOG.warning('  %s (%s): %s', unchanged.entity_id, unchanged.schema_name,
+                            detail[:160])
         LOG.info('schema preflight passed: %d of %d planned changes proven to leave the entity '
-                 'conformant', preflight.checked - len(preflight.unvalidatable), len(plans))
+                 'conformant (%d already clean, %d repaired, %d unchanged and still invalid, '
+                 '%d unvalidatable)', preflight.proven, len(plans), len(preflight.clean),
+                 len(preflight.repaired), len(preflight.still_invalid),
+                 len(preflight.unvalidatable))
 
     if not dry_run:
         if logs.backup_path.exists() and not args.resume:

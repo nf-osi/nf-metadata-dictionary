@@ -142,34 +142,82 @@ def test_the_project_entity_counts_against_the_limit():
     assert syn.calls == []
 
 
-def test_the_project_entity_contributes_its_declared_types_not_a_placeholder(monkeypatch):
-    # The multitype report is the triage input for the value-type issue, so
-    # folding the project entity in with a hardcoded STRING would invent a
-    # conflict against a real LONG column and a real conflict would be lost in
-    # the noise.
+def _audit_with_project_entity(monkeypatch, *, columns, values, types):
     import annotation_key_policy as policy
     import synapse_annotation_io as io
 
-    canon = frozenset({'age', 'specimenID', 'studyName'})
+    canon = frozenset({'age', 'specimenID', 'studyName', 'deadline', 'dspDatasetIndex'})
     index = policy.KeyIndex.build(canon)
-
-    monkeypatch.setattr(audit, 'scope_columns',
-                        lambda syn, scope, **kwargs: {'age': {'INTEGER'}})
+    monkeypatch.setattr(audit, 'scope_columns', lambda syn, scope, **kwargs: dict(columns))
     monkeypatch.setattr(audit, 'read_annotations', lambda syn, entity_id: io.AnnotationRecord(
-        entity_id, 'etag-1',
-        {'age': [5], 'studyName': ['NF study']},
-        {'age': 'LONG', 'studyName': 'STRING'},
+        entity_id, 'etag-1', values, types,
     ))
-
-    result = audit.audit_project(
+    return audit.audit_project(
         object(), {'project_id': 'syn0', 'project_name': 'p'}, canon=canon, index=index,
         view_type_mask=1, include_project_entity=True, async_mode='rest', max_retries=0,
     )
+
+
+def test_the_project_entity_contributes_its_declared_types_not_a_placeholder(monkeypatch):
+    # The multitype report is the triage input for the value-type issue, so
+    # folding the project entity in with a hardcoded STRING would invent a
+    # conflict against a real DOUBLE column and a real conflict would be lost in
+    # the noise.
+    result = _audit_with_project_entity(
+        monkeypatch,
+        columns={'age': {'DOUBLE'}},
+        values={'age': ['about five'], 'studyName': ['NF study']},
+        types={'age': 'STRING', 'studyName': 'STRING'},
+    )
     assert result.status == 'ok'
-    assert result.key_types == {'age': ['INTEGER', 'LONG'], 'studyName': ['STRING']}
+    assert result.key_types == {'age': ['DOUBLE', 'STRING'], 'studyName': ['STRING']}
     # 'age' really does carry two types here; 'studyName' exists only on the
     # project entity and must not be reported as conflicting with itself.
     assert set(result.multitype) == {'age'}
+
+
+def test_a_project_entity_annotation_type_is_translated_to_the_view_vocabulary(monkeypatch):
+    # /annotations2 and /column/view/scope/async speak different vocabularies:
+    # LONG is INTEGER on the view side and TIMESTAMP_MS is DATE, so merging the
+    # annotation type verbatim reported conflicts that do not exist.
+    result = _audit_with_project_entity(
+        monkeypatch,
+        columns={'dspDatasetIndex': {'INTEGER'}, 'deadline': {'DATE'},
+                 'specimenID': {'STRING_LIST'}},
+        values={'dspDatasetIndex': [3], 'deadline': [1700000000000],
+                'specimenID': ['s1', 's2']},
+        types={'dspDatasetIndex': 'LONG', 'deadline': 'TIMESTAMP_MS',
+               'specimenID': 'STRING'},
+    )
+    assert result.status == 'ok'
+    assert result.key_types == {
+        'dspDatasetIndex': ['INTEGER'],
+        'deadline': ['DATE'],
+        'specimenID': ['STRING_LIST'],
+    }
+    assert result.multitype == {}
+
+
+def test_the_column_type_mapping_covers_every_type_the_real_fixture_carries():
+    # Driven off the committed capture so a vocabulary change on either side
+    # fails loudly rather than silently reintroducing phantom conflicts.
+    import json
+
+    import synapse_annotation_io as io
+
+    fixture = os.path.join(os.path.dirname(__file__), 'data', 'annotation_keys',
+                           'syn25881328_scope_columns.json')
+    with open(fixture, encoding='utf-8') as handle:
+        observed = {column['columnType'] for column in json.load(handle)}
+
+    scalar = {io.column_type_for(declared, 1) for declared in io.VALUE_DECODERS}
+    listed = {io.column_type_for(declared, 2) for declared in io.VALUE_DECODERS}
+    assert scalar == {'STRING', 'DOUBLE', 'BOOLEAN', 'INTEGER', 'DATE'}
+    assert listed == {'STRING_LIST', 'BOOLEAN_LIST', 'INTEGER_LIST', 'DATE_LIST'}
+    # No annotation type may map to a name the view never uses.
+    assert 'LONG' not in scalar | listed
+    assert 'TIMESTAMP_MS' not in scalar | listed
+    assert observed <= scalar | listed
 
 
 def test_walk_is_lazy_and_does_not_read_the_whole_tree_up_front():
