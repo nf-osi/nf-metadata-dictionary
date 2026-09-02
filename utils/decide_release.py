@@ -191,6 +191,8 @@ def is_schema_relevant(path: str) -> bool:
     if not normalized:
         return False
     parts = PurePosixPath(normalized).parts
+    if not parts:
+        return False
     return parts[0] in SCHEMA_RELEVANT_DIRS or normalized in SCHEMA_RELEVANT_FILES
 
 

@@ -100,9 +100,11 @@ jobs:
       # The AI evaluator is preferred, but it must never be the reason a
       # release cannot happen. If the API is unreachable, out of credits, or
       # returns something unparseable or unusable, this falls back to
-      # utils/decide_release.py, which applies the same versioning rules
-      # deterministically. Both paths emit the same decision JSON, so the
-      # steps below cannot tell them apart.
+      # utils/decide_release.py, which decides deterministically from the
+      # prompt's commit and path rules alone - not from Synapse registration
+      # state, which comes from a network call this workflow tolerates failing.
+      # Both paths emit the same decision JSON, so the steps below cannot tell
+      # them apart.
       #
       # The fallback only ever proposes a MINOR bump - MAJOR bumps need human
       # judgement, so dispatch manually with an explicit version for those.
@@ -184,7 +186,9 @@ jobs:
           # does not cost the AI's verdict. Anthropic's 529 "overloaded" is not
           # in that set and falls through to the deterministic path by design.
           # --retry-max-time is required because --max-time restarts on each
-          # retry; together they bound the whole call at roughly 10 minutes.
+          # retry. It is only checked before a retry starts, so an attempt begun
+          # just under it still gets its full --max-time: the whole call is
+          # bounded at 600s + 300s, roughly 15 minutes.
           HTTP_CODE=$(curl -s -o /tmp/api_response.json -w '%{http_code}' \
             --connect-timeout 15 --max-time 300 \
             --retry 2 --retry-delay 5 --retry-max-time 600 \
@@ -234,7 +238,7 @@ jobs:
               echo "### ⚠️ Release decided by deterministic fallback"
               echo ""
               echo "The AI evaluation was not used because ${FALLBACK_REASON}."
-              echo "\`utils/decide_release.py\` decided instead, using the same versioning rules."
+              echo "\`utils/decide_release.py\` decided instead, from the commit and path rules alone - it does not consider which schemas are already registered in Synapse."
               echo "Only MINOR bumps are possible this way - for a MAJOR release, dispatch manually with an explicit version."
             else
               echo "### ✅ Release decided by AI evaluation"

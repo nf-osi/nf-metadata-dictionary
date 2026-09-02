@@ -35,6 +35,25 @@ WORKFLOW = (
 )
 RS = decide_release.RECORD_SEPARATOR
 
+
+def api_call_command() -> str:
+    """The curl invocation that calls the API, with the prose around it dropped.
+
+    Searching the whole workflow would match the comment above the call, which
+    names most of these flags, so the assertions would hold even with the flags
+    deleted from the command itself.
+    """
+    lines = WORKFLOW.read_text(encoding="utf-8").splitlines()
+    start = next(
+        index for index, line in enumerate(lines)
+        if "curl -s -o /tmp/api_response.json" in line
+    )
+    command = [lines[start]]
+    while command[-1].rstrip().endswith("\\"):
+        command.append(lines[start + len(command)])
+    return "\n".join(command)
+
+
 # The real commit range v11.0.20..v11.1.22, as
 # `git log --no-merges --name-only --format='%x1e%h %s'` rendered it. Long path
 # lists are trimmed to a representative subset, but every path below is one the
@@ -274,6 +293,11 @@ def test_schema_relevant_paths_recognized(path: str) -> None:
     "dca-template-config.json",
     "config.yml",
     "",
+    # These have no leading path segment at all. No git output is known to emit
+    # them, but a garbled records file must still only cost a release decision,
+    # never abort the step.
+    ".",
+    "./",
     # Not a directory prefix match: only a leading path segment counts.
     "docs/modules/overview.md",
     "retired-modules/Old.yaml",
@@ -972,7 +996,7 @@ def test_workflow_bounds_the_api_call(flag: str) -> None:
     the failure() issue step, so the release would vanish with no trace. With
     these flags curl reports 000 instead and the fallback takes over, and a
     transient rate limit is retried rather than costing the AI's verdict."""
-    assert flag in WORKFLOW.read_text(encoding="utf-8")
+    assert flag in api_call_command()
 
 
 def test_workflow_reads_paths_without_git_quoting() -> None:
