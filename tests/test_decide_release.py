@@ -21,6 +21,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import yaml
 
 utils_path = os.path.join(os.path.dirname(__file__), '..', 'utils')
 sys.path.insert(0, utils_path)
@@ -41,13 +42,17 @@ def api_call_command() -> str:
 
     Searching the whole workflow would match the comment above the call, which
     names most of these flags, so the assertions would hold even with the flags
-    deleted from the command itself.
+    deleted from the command itself. The locator is anchored on the assignment
+    that starts the command, and an ambiguous match fails loudly rather than
+    silently pointing the assertions at prose.
     """
     lines = WORKFLOW.read_text(encoding="utf-8").splitlines()
-    start = next(
+    starts = [
         index for index, line in enumerate(lines)
-        if "curl" in line and "/tmp/api_response.json" in line
-    )
+        if line.lstrip().startswith("HTTP_CODE=$(curl")
+    ]
+    assert len(starts) == 1, f"expected one API call, found {len(starts)}"
+    start = starts[0]
     command = [lines[start]]
     while command[-1].rstrip().endswith("\\"):
         command.append(lines[start + len(command)])
@@ -284,9 +289,11 @@ def test_blank_lines_ignored() -> None:
     "header.yaml",
     "dist/NF.yaml",
     "registered-json-schemas/RNASeqTemplate.json",
-    # The generator rewrites every published schema, and rules/ supplies the
-    # Superdataset overlay, so both are model input just like modules/.
+    # The generator and the Makefile are the programs that build the published
+    # schemas, and rules/ supplies the Superdataset overlay, so all three are
+    # model input just like modules/.
     "utils/gen-json-schema-class.py",
+    "Makefile",
     "rules/super_rules.json",
 ])
 def test_schema_relevant_paths_recognized(path: str) -> None:
@@ -414,6 +421,20 @@ def test_decide_releases_on_a_generator_only_cycle() -> None:
         record("Add controlled schema escape hatches", "utils/gen-json-schema-class.py"),
         record("Rebuild all artifacts [skip ci]", "registered-json-schemas/X.json"),
     ])
+
+    assert decision["release"] is True
+    assert decision["version"] == "11.2"
+
+
+def test_decide_releases_on_a_makefile_only_cycle() -> None:
+    """
+    The Makefile's yq filters decide what survives into dist/, so editing one
+    rewrites every published artifact while touching no source path. Commits
+    that change the Makefile alone are a real pattern in this repo's history.
+    """
+    decision = decide_release.decide(
+        "v11.1.22", [record("Add PortalStudy to make", "Makefile")]
+    )
 
     assert decision["release"] is True
     assert decision["version"] == "11.2"
@@ -1028,14 +1049,35 @@ def test_cli_accept_ai_falls_back_when_the_api_fails(
     ("--retry-max-time", "600"),
 ])
 def test_workflow_bounds_the_api_call(flag: str, value: str) -> None:
-    """A hung API call would cancel the job, and a cancelled job never reaches
-    the failure() issue step, so the release would vanish with no trace. With
-    these flags curl reports 000 instead and the fallback takes over, and a
+    """A hung API call would run until the job's timeout-minutes cap cancels it,
+    which files an issue but loses the release. With these flags curl reports 000
+    instead, so the fallback takes over and the release still happens, and a
     transient rate limit is retried rather than costing the AI's verdict."""
     tokens = api_call_tokens()
 
     assert flag in tokens
     assert tokens[tokens.index(flag) + 1] == value
+
+
+def test_workflow_bounds_the_release_job_and_reports_cancellation() -> None:
+    """
+    These two are a matched pair: exceeding timeout-minutes cancels the job
+    rather than failing it, and failure() is false on cancellation, so the cap
+    alone would only shorten how long a hang after the tag was pushed stays
+    invisible. Both are read off the YAML rather than the file text, so neither
+    can be satisfied by the prose that explains them.
+    """
+    workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+    job = workflow["jobs"]["release"]
+
+    assert isinstance(job["timeout-minutes"], int)
+
+    issue_step = next(
+        step for step in job["steps"]
+        if step.get("name") == "File issue for blocked release"
+    )
+
+    assert "cancelled()" in issue_step["if"]
 
 
 def test_workflow_reads_paths_without_git_quoting() -> None:

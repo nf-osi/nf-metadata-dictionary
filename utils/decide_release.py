@@ -72,12 +72,19 @@ MAX_TOKENS_STOP_REASON = "max_tokens"
 RECORD_SEPARATOR = "\x1e"
 
 # Only changes under these locations affect what gets registered in Synapse.
-# modules/ and header.yaml are the LinkML source the model is built from,
-# rules/ supplies the Superdataset overlay, and gen-json-schema-class.py is the
-# generator itself - a change to any of them rewrites published schemas. dist/
+# modules/ and header.yaml are the LinkML source the model is built from and
+# rules/ supplies the Superdataset overlay. gen-json-schema-class.py and the
+# Makefile are the programs that turn that source into published schemas - the
+# Makefile's `yq del` filters decide what survives into dist/, and its
+# Superdataset target merges rules/ into registered-json-schemas/ - so a change
+# to either rewrites published artifacts just as a source change does. dist/
 # and registered-json-schemas/ are those generated artifacts.
 SCHEMA_RELEVANT_DIRS = ("modules", "rules", "dist", "registered-json-schemas")
-SCHEMA_RELEVANT_FILES = ("header.yaml", "utils/gen-json-schema-class.py")
+SCHEMA_RELEVANT_FILES = (
+    "header.yaml",
+    "Makefile",
+    "utils/gen-json-schema-class.py",
+)
 
 
 @dataclass(frozen=True)

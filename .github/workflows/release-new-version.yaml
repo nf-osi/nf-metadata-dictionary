@@ -178,8 +178,9 @@ jobs:
           # A curl failure (DNS, network, timeout) must not abort the step - it
           # is just another reason to fall back, so swallow the exit code here.
           # Without the timeouts a stalled connection would hold the job until
-          # its 6h cap, and a cancelled job never runs the failure() issue step,
-          # so the release would vanish silently instead of falling back.
+          # the 60-minute cap below, which cancels it: cancelled() does file an
+          # issue, but the release itself is lost. A bounded call instead
+          # reports 000, degrades to the deterministic path and still releases.
           #
           # --max-time is per attempt, and generating a month of release notes
           # within the 4096-token cap can take a while, so it is set well above
