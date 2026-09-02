@@ -28,13 +28,103 @@ Analyzes file annotations from Synapse to identify free-text values that should 
 - Generates suggestions for portal search filters
 
 **Related files:**
-- `../docs/annotation-review-workflow.md` - Comprehensive documentation
 - `../.github/workflows/weekly-model-system-sync.yml` - Integrated in weekly workflow
 - See [nf-research-tools-schema](https://github.com/nf-osi/nf-research-tools-schema) for tool annotation review
 
 **individualID Exclusion:** As of 2026-02-06, only the `individualID` annotation field is excluded from this review. It is reviewed separately in the nf-research-tools-schema repository, where individualID values from file annotations (syn52702673) are analyzed and suggested as new cell lines or synonyms in the NF Research Tools Central database (syn51730943).
 
 **All other annotation fields** (including tool-related fields like animalModelID, cellLineID, antibodyID, geneticReagentID, tumorType, tissue, organ, species, etc.) are reviewed here, provided they have enums that allow custom values.
+
+### annotation_key_policy.py
+
+The rules for deciding what to do about a mis-cased annotation key ([#939](https://github.com/nf-osi/nf-metadata-dictionary/issues/939)).
+Pure logic with no `synapseclient` import, so every rule that governs a destructive write is unit tested offline.
+
+Two unrelated defects leave the same concept on an entity under two keys:
+
+- **PascalCase schematic labels.** Every attribute has a PascalCase `rdfs:label` and a camelCase `sms:displayName` - in the legacy `NF.jsonld`, `bts:Age` carries `rdfs:label: "Age"` and `sms:displayName: "age"`. A legacy schematic/DCA submission path keyed annotations off the label, so entities carry both `Age` and `age`. The stray form is exactly `canonical[:1].upper() + canonical[1:]`.
+- **Case-variant drift.** Former slot names left behind by schema renames, e.g. `timePointUnit` before it became `timepointUnit`. These are not derivable from the PascalCase rule and are only found by a case-insensitive collision against the canonical set.
+
+Canonical names come from `dist/NF.yaml` (both the top-level `slots:` and the inline `attributes:` of the five template classes that declare them).
+`NF.jsonld` is legacy and no longer built; it is useful only as evidence of what the bad writer produced.
+
+Three categories are deliberately never rewritten:
+
+- Schematic infrastructure keys (`Id`, `Uuid`, `eTag`, `EntityId`, `entityId`). `Id` is a manifest row UUID, not a variant of the `id` slot - treating it as one produced 55 false-positive projects on the first pass.
+- Canonical slots that already start uppercase (`Component`, `Filename`, `GIST`, and six more).
+- Any key whose canonical target is a Synapse reserved entity field (`description`, `name`, `id`, `type`, `contentType`, and 10 more). Dropping such a stray is safe; renaming into one is not.
+
+**Related files:**
+- `../tests/test_annotation_key_policy.py` - the decision table, one test per rule
+
+### audit_annotation_keys.py
+
+Read-only scan for mis-cased annotation keys across NF-OSI projects. Never writes to Synapse.
+
+Uses the async REST job `POST /column/view/scope/async`, which returns the complete annotation-key inventory for a scope **without creating an entity**.
+One call per project triages all ~368 portal studies in about a minute, which is what makes a weekly audit affordable.
+
+```bash
+# triage every portal study
+python utils/audit_annotation_keys.py --projects-table syn52694652 \
+    --extra-project syn35221462 --out-dir audit
+
+# resolve a flagged project down to the individual affected entities
+python utils/audit_annotation_keys.py --project syn25881328 --drill-down --out-dir audit
+
+# regenerate reports from a previous run, no network calls
+python utils/audit_annotation_keys.py --out-dir audit --report-only
+```
+
+Two things to know when reading a report:
+
+- The inventory reports **presence, not scale**. One bad file out of 6,000 looks identical to wholesale corruption. `syn25881328` flags 19 duplicate keys at the project level but only 23 of its 772 files are actually affected. Always `--drill-down` before judging scale.
+- A 403 is a **finding, not a skip**. Coverage (`scanned / not readable / failed`) is reported first, because "0 findings" is meaningless without it.
+
+Exit codes follow `check_schema_limits.py`: `0` clean, `1` repairable findings (with `--fail-on-findings`), `2` warnings.
+Unrecognised keys do not warn by default - projects legitimately carry custom annotations - but probable misspellings of a schema slot do, since those are real bugs.
+
+**Related files:**
+- `annotation_key_allowlist.yaml` - findings a human has accepted; affects the exit code only, never the report
+- `../.github/workflows/weekly-annotation-key-audit.yml` - the recurring audit
+
+### fix_annotation_keys.py
+
+Repairs what the audit finds. Consumes `entity_findings.jsonl` from `--drill-down`.
+
+```bash
+# dry run - the default; writes nothing
+python utils/fix_annotation_keys.py --findings audit/entity_findings.jsonl \
+    --actions drop_stray --log-dir annotation-fix-logs/dryrun
+
+# apply the low-risk cleanup, then verify
+python utils/fix_annotation_keys.py --findings audit/entity_findings.jsonl \
+    --actions drop_stray --apply --verify --log-dir annotation-fix-logs/drop-1
+
+# recover metadata hidden behind PascalCase keys, as a separate pass
+python utils/fix_annotation_keys.py --findings audit/entity_findings.jsonl \
+    --actions rename_stray --apply --verify --log-dir annotation-fix-logs/rename-1
+
+# undo a run
+python utils/fix_annotation_keys.py --rollback annotation-fix-logs/drop-1 --apply
+```
+
+Safety properties, in the order they matter:
+
+1. **Dry run is the default**, and `--apply` alone is not enough - `--actions` must name each destructive action, so a rename can never happen silently alongside a drop.
+2. **The backup is written and fsynced before the mutation**, so a kill mid-write still leaves a recoverable record. It stores the `/annotations2` payload including declared value types, so a rollback reproduces the original exactly rather than re-inferring types.
+3. **Decisions are recomputed from a fresh read at write time**, never from the scan. If a value changed in between, the verdict flips to a reported conflict instead of a silent delete.
+4. **Keys the run did not name are copied verbatim**, types included. That is what lets `--verify` assert that nothing else changed.
+5. **Conflicts are never written.** Values that genuinely differ, values that match only across types, and targets that are Synapse reserved fields are all reported for a human.
+
+Rollback has one non-obvious property worth knowing before relying on it: the backed-up etag is the *pre-write* etag and is stale the moment the fix wrote, so the restore reads the current etag first.
+That means the restore has no optimistic-concurrency protection and replaces the whole dict, so an entity edited by someone else since the fix is skipped unless `--force-rollback`.
+
+Annotations are versioned. Dropping a key from the current version does not remove it from earlier versions; "fixed" means "fixed on the current version".
+
+**Related files:**
+- `synapse_annotation_io.py` - the `/entity/{id}/annotations2` read/write layer, used instead of the `syn.get_annotations` / `syn.set_annotations` / `Annotations` trio that is deprecated for removal in synapseclient 5.0
+- `../tests/test_fix_annotation_keys.py` - write path, rollback and verification against a stub client
 
 ## How It Works
 
