@@ -557,6 +557,11 @@ def test_missing_allowlist_file_suppresses_nothing(tmp_path):
     assert not allowlist.suppresses('Assay', 'syn1', 'duplicates')
 
 
+def _planned(entity_id, plan, values=None):
+    """The dry-run result the preflight consumes for an entity with a plan."""
+    return fix.ApplyResult(entity_id, 'would_write', planned=values or {}, applied=plan)
+
+
 def test_schema_preflight_blocks_a_plan_that_would_break_conformance(rules, logs):
     import validate_annotations as validate
 
@@ -585,7 +590,7 @@ def test_schema_preflight_blocks_a_plan_that_would_break_conformance(rules, logs
     # A plan that drops a schema-required key must be refused.
     bad_plan = [{'action': 'drop_stray', 'stray_key': 'fileFormat', 'canonical_key': 'fileFormat'}]
     report = fix.schema_preflight(
-        syn, {'syn64420376': bad_plan}, registry=registry, repo_version='11.1.22')
+        syn, [_planned('syn64420376', bad_plan)], registry=registry, repo_version='11.1.22')
     assert [b.entity_id for b in report.blockers] == ['syn64420376']
     assert not report.ok
 
@@ -595,7 +600,7 @@ def test_schema_preflight_blocks_a_plan_that_would_break_conformance(rules, logs
     good_plan = [{'action': 'drop_stray', 'stray_key': k, 'canonical_key': k[:1].lower() + k[1:]}
                  for k in strays]
     clean = fix.schema_preflight(
-        syn, {'syn64420376': good_plan}, registry=registry, repo_version='11.1.22')
+        syn, [_planned('syn64420376', good_plan)], registry=registry, repo_version='11.1.22')
     assert clean.blockers == []
     assert clean.unvalidatable == []
     assert clean.ok
@@ -625,7 +630,8 @@ def test_schema_preflight_reports_entities_it_could_not_validate_at_all(rules, l
 
     plan = [{'action': 'drop_stray', 'stray_key': 'Age', 'canonical_key': 'age'}]
     report = fix.schema_preflight(
-        UnreachableStub(), {'syn_missing_schema': plan, 'syn_unreadable': plan},
+        UnreachableStub(),
+        [_planned('syn_missing_schema', plan), _planned('syn_unreadable', plan)],
         registry=registry, repo_version='11.1.22')
     assert report.checked == 2
     assert report.blockers == []
@@ -651,7 +657,7 @@ def test_schema_preflight_does_not_credit_an_unvalidatable_unbound_entity():
 
     plan = [{'action': 'drop_stray', 'stray_key': 'Age', 'canonical_key': 'age'}]
     report = fix.schema_preflight(
-        UnboundStub(), {'syn1': plan}, registry=registry, repo_version='11.1.22')
+        UnboundStub(), [_planned('syn1', plan)], registry=registry, repo_version='11.1.22')
     assert [r.status for r in report.unvalidatable] == ['unbound']
     assert report.proven == 0
     assert not report.ok
@@ -683,7 +689,7 @@ def test_schema_preflight_does_not_count_a_still_invalid_entity_as_proven():
 
     plan = [{'action': 'drop_stray', 'stray_key': 'Age', 'canonical_key': 'age'}]
     report = fix.schema_preflight(
-        SchemaStub(), {'syn64420376': plan}, registry=registry, repo_version='11.1.22')
+        SchemaStub(), [_planned('syn64420376', plan)], registry=registry, repo_version='11.1.22')
     assert [r.status for r in report.still_invalid] == ['still_invalid']
     assert report.blockers == []
     assert report.unvalidatable == []
@@ -712,12 +718,66 @@ def test_schema_preflight_validates_an_unbound_entity_against_its_component():
 
     plan = [{'action': 'drop_stray', 'stray_key': 'Age', 'canonical_key': 'age'}]
     report = fix.schema_preflight(
-        UnboundStub(), {'syn64420376': plan}, registry=registry, repo_version='11.1.22',
-        components={'syn64420376': instance['Component']},
+        UnboundStub(),
+        [_planned('syn64420376', plan, {'Component': [instance['Component']]})],
+        registry=registry, repo_version='11.1.22',
     )
     assert report.unvalidatable == []
     assert report.blockers == []
     assert report.ok
+
+
+def test_schema_preflight_treats_an_unplannable_dry_run_as_unvalidatable():
+    # A dry run whose read failed produces no plan. Dropping it from the gate is
+    # how an entity reached the write pass with no conformance verdict behind it
+    # at all, while the success line - counting only what it could see - still
+    # read as a clean pass.
+    import validate_annotations as validate
+
+    registry = validate.SchemaRegistry.load()
+
+    class NeverCalled:
+        def restGET(self, path):
+            raise AssertionError(f'the preflight should not have reached {path}')
+
+    failed = fix.ApplyResult('syn_unreadable', 'error', error='RuntimeError: 503')
+    report = fix.schema_preflight(NeverCalled(), [failed], registry=registry)
+    assert [r.entity_id for r in report.unvalidatable] == ['syn_unreadable']
+    assert report.unvalidatable[0].error == 'RuntimeError: 503'
+    assert report.proven == 0
+    assert report.unaccounted == []
+    assert not report.ok
+
+
+def test_schema_preflight_accounts_for_an_entity_with_nothing_to_change():
+    # A no-op is genuinely harmless - the write pass has nothing to break - but it
+    # still has to be accounted for, or the totals stop reconciling.
+    import validate_annotations as validate
+
+    report = fix.schema_preflight(
+        None, [fix.ApplyResult('syn_noop', 'noop', planned={'age': [1.5]})],
+        registry=validate.SchemaRegistry.load())
+    assert report.unchanged == ['syn_noop']
+    assert report.checked == 0
+    assert report.unaccounted == []
+    assert report.ok
+
+
+def test_an_entity_in_no_bucket_is_reported_as_unaccounted():
+    # The gate's value rests on every entity sitting in exactly one bucket, so a
+    # bucketing bug must fail loudly rather than shrink the denominator quietly.
+    report = fix.PreflightReport(considered=['syn1', 'syn2'], unchanged=['syn1'])
+    assert report.unaccounted == ['syn2']
+    assert not report.ok
+
+    report.unchanged.append('syn2')
+    assert report.unaccounted == []
+    assert report.ok
+
+    # Double-counting is the other direction and equally untrustworthy.
+    report.unchanged.append('syn2')
+    assert report.unaccounted == ['syn2']
+    assert not report.ok
 
 
 @pytest.mark.parametrize('values,expected', [
@@ -767,6 +827,100 @@ def test_the_circuit_breaker_trips_when_writes_start_failing_mid_run(
     # handful of entities of the degradation regardless of how healthy the run
     # was beforehand - nowhere near 1,000.
     assert syn.reads == healthy + 6
+
+
+def test_the_circuit_breaker_guards_a_run_shorter_than_the_full_window(monkeypatch, tmp_path):
+    # A curator applying to 30 entities by hand with a revoked token must not
+    # issue all 30 failing calls. Requiring the window to be full left every run
+    # shorter than it completely unguarded.
+    class DeadSynapse:
+        def __init__(self):
+            self.reads = 0
+
+        def restGET(self, path):
+            if path.endswith('/permissions'):
+                return {'canEdit': True}
+            self.reads += 1
+            raise RuntimeError('403 Forbidden')
+
+    syn = DeadSynapse()
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: syn)
+
+    argv = ['--actions', 'drop_stray', '--log-dir', str(tmp_path / 'run')]
+    for index in range(30):
+        argv += ['--entity', f'syn{index}']
+    assert fix.main(argv) == 1
+    assert syn.reads == fix.ERROR_FLOOR
+
+
+def test_a_run_below_the_floor_is_not_aborted_by_one_failure(monkeypatch, tmp_path):
+    # The floor is what keeps a single transient failure from aborting a
+    # three-entity run, so the breaker stays worth leaving on.
+    class OneBadEntity:
+        def __init__(self):
+            self.reads = 0
+
+        def restGET(self, path):
+            self.reads += 1
+            entity_id = path.split('/')[2]
+            if entity_id == 'syn0':
+                raise RuntimeError('503 Service Unavailable')
+            return {'id': entity_id, 'etag': 'etag-1',
+                    'annotations': to_typed({'Age': [1.5], 'age': [1.5]})}
+
+    syn = OneBadEntity()
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: syn)
+
+    argv = ['--actions', 'drop_stray', '--log-dir', str(tmp_path / 'run'),
+            '--entity', 'syn0', '--entity', 'syn1', '--entity', 'syn2']
+    assert fix.main(argv) == 1
+    assert syn.reads == 3
+
+
+def test_the_preflight_refuses_a_run_whose_dry_run_read_failed(monkeypatch, tmp_path):
+    # End to end: the entity whose read failed has no plan, so it used to be
+    # filtered out of the gate entirely and then mutated by the write pass with
+    # no conformance verdict behind it.
+    fixture = Path(__file__).parent / 'data' / 'annotation_keys' / 'syn64420376_entity_json.json'
+    instance = json.loads(fixture.read_text())
+
+    class HalfBrokenSynapse:
+        def restGET(self, path):
+            entity_id = path.split('/')[2]
+            if path.endswith('/annotations2'):
+                if entity_id == 'syn_unreadable':
+                    raise RuntimeError('503 Service Unavailable')
+                return {'id': entity_id, 'etag': 'etag-1',
+                        'annotations': to_typed({'Age': [1.5], 'age': [1.5],
+                                                 'Component': ['MicroscopyAssayTemplate']})}
+            if path.endswith('/json'):
+                return json.loads(json.dumps(instance))
+            if path.endswith('/schema/binding'):
+                return {'jsonSchemaVersionInfo': {
+                    'schemaName': 'microscopyassaytemplate',
+                    'semanticVersion': '11.1.22',
+                    '$id': 'org.synapse.nf-microscopyassaytemplate-11.1.22',
+                }}
+            raise AssertionError(path)
+
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: HalfBrokenSynapse())
+
+    blocked = tmp_path / 'run'
+    argv = ['--actions', 'drop_stray', '--validate-schema', '--log-dir', str(blocked),
+            '--entity', 'syn64420376', '--entity', 'syn_unreadable']
+    assert fix.main(argv) == 1
+    # Refused at the gate, so the run never got as far as reporting on entities.
+    assert not (blocked / 'report.csv').exists()
+
+    # The escape hatch is the same one the other unvalidatable statuses use.
+    allowed = tmp_path / 'run2'
+    monkeypatch.setattr(fix, '_SYN', None)
+    fix.main(['--actions', 'drop_stray', '--validate-schema', '--log-dir', str(allowed),
+              '--allow-unvalidatable', '--entity', 'syn64420376', '--entity', 'syn_unreadable'])
+    assert (allowed / 'report.csv').exists()
 
 
 def test_the_carry_forward_of_a_resumed_scan_does_not_double_count(tmp_path):

@@ -166,6 +166,9 @@ A plan that cannot be checked is not a plan that passed: when used as `--validat
 `--allow-unvalidatable` accepts that gap deliberately.
 `still_invalid` does not block, but it is reported separately rather than counted among the entities the preflight vouched for: the plan is proven only for `clean` and `repaired`.
 
+The gate sees every entity the run would touch, not just the ones a plan could be built for, and it reconciles its own buckets before reporting: each entity has to land in exactly one of proven, unvalidatable, blocked, or nothing-to-change, and a mismatch refuses the run rather than shrinking the denominator.
+That is what stops an entity whose read failed during plan construction from bypassing the gate and being mutated by the write pass with no verdict behind it.
+
 Three things this gets right that a naive implementation does not:
 
 - **It validates `GET /entity/{id}/json`, not a dict rebuilt from annotations.** Synapse's JSON presentation is schema-driven, not uniform: on `syn64420376` it renders `age` as the scalar `1.5` but `individualID` as the array `['1119']`, both single-value annotations. Rebuilding by flattening single-item lists produces spurious `is not of type 'array'` failures. Only the entity JSON endpoint matches what Synapse actually validates.

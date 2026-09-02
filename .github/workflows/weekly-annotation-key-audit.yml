@@ -130,6 +130,15 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # A crashed scan also exits 1 (Python's default), and it has no
+          # findings to track. Skip cleanly rather than aborting mid-heredoc on
+          # the missing report and failing this step for a second reason - the
+          # failing job is already the signal that the scan did not run.
+          if [ ! -s audit/summary.md ]; then
+            echo "No audit/summary.md: the scan did not complete, so there is no drift to track."
+            exit 0
+          fi
+
           BODY_FILE=issue_body.md
           {
             echo "The weekly annotation key audit found mis-cased annotation keys on NF-OSI Synapse projects."
@@ -164,12 +173,25 @@ jobs:
         # permanently red is the pair of escape hatches the audit already has:
         # accept a key in utils/annotation_key_allowlist.yaml, or raise
         # --max-unscanned for projects the service account genuinely cannot read.
+        #
+        # Exit 1 cannot be taken at face value: an unhandled exception anywhere in
+        # the scan also exits 1, and reporting a crash as annotation drift sends
+        # the reader looking for a problem that was never measured. The report is
+        # what tells the two apart - audit/summary.json is written before the exit
+        # code is computed, so its absence means no scan completed.
         if: always()
         run: |
           CODE="${{ steps.audit.outputs.exit_code }}"
           case "$CODE" in
             0) echo "✅ No mis-cased annotation keys found." ;;
-            1) echo "::error::Audit found mis-cased annotation keys (exit 1). See the job summary."; exit 1 ;;
+            1)
+              if [ -s audit/summary.json ]; then
+                echo "::error::Audit found mis-cased annotation keys (exit 1). See the job summary."
+              else
+                echo "::error::Audit failed to run: it exited 1 without writing audit/summary.json, so no scan completed and no drift was measured. See the step log."
+              fi
+              exit 1
+              ;;
             2) echo "::error::Audit could not vouch for its own coverage (exit 2): unreadable projects, or probable misspellings of a schema slot. Accept a key in utils/annotation_key_allowlist.yaml or raise --max-unscanned once triaged. See the job summary."; exit 1 ;;
             *) echo "::error::Audit failed to run (exit $CODE). See the job summary."; exit 1 ;;
           esac

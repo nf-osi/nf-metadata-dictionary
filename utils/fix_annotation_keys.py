@@ -52,7 +52,7 @@ import logging
 import os
 import sys
 import time
-from collections import deque
+from collections import Counter, deque
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -74,6 +74,7 @@ from synapse_annotation_io import (  # noqa: E402
     write_annotations,
 )
 from validate_annotations import (  # noqa: E402
+    EntityConformance,
     SchemaRegistry,
     check_entity,
     repo_schema_version,
@@ -91,6 +92,10 @@ SETTLED_STATUSES = frozenset({'ok', 'noop'})
 ERROR_RATE_THRESHOLD = 0.10
 #: How many of the most recent writes the rate is measured over.
 ERROR_SAMPLE = 50
+#: Fewest results the rate is judged on, so a run shorter than the full window is
+#: guarded too. Below this a single failure would be enough to clear the
+#: threshold on its own, which would abort a three-entity run spuriously.
+ERROR_FLOOR = 10
 
 
 # ---------------------------------------------------------------------------
@@ -314,7 +319,10 @@ def component_of(values: dict[str, list] | None) -> str | None:
 
 @dataclass
 class PreflightReport:
-    checked: int = 0
+    #: every entity the write pass would touch, in the order it was offered
+    considered: list[str] = field(default_factory=list)
+    #: entities with no planned change, so the write pass has nothing to break
+    unchanged: list[str] = field(default_factory=list)
     #: entities that would go from valid to invalid
     blockers: list = field(default_factory=list)
     #: entities the check could not reach a verdict on at all
@@ -328,22 +336,46 @@ class PreflightReport:
     still_invalid: list = field(default_factory=list)
 
     @property
-    def ok(self) -> bool:
-        return not self.blockers and not self.unvalidatable
+    def outcomes(self) -> list:
+        """Every entity a conformance verdict was attempted for."""
+        return [*self.clean, *self.repaired, *self.still_invalid,
+                *self.blockers, *self.unvalidatable]
+
+    @property
+    def checked(self) -> int:
+        return len(self.outcomes)
 
     @property
     def proven(self) -> int:
         """Entities the check actually vouched for."""
         return len(self.clean) + len(self.repaired)
 
+    @property
+    def unaccounted(self) -> list[str]:
+        """Entities that landed in no bucket, or in more than one.
+
+        The gate is only worth anything if every entity the write pass will touch
+        sits in exactly one bucket, so that is reconciled rather than assumed. An
+        entity missing from every bucket is the dangerous direction: it would be
+        mutated with no conformance verdict behind it while the success line,
+        counting only what it can see, still reads as a clean pass.
+        """
+        bucketed = Counter([*self.unchanged, *(o.entity_id for o in self.outcomes)])
+        offered = set(self.considered)
+        return sorted({e for e in offered if bucketed[e] != 1}
+                      | {e for e in bucketed if e not in offered})
+
+    @property
+    def ok(self) -> bool:
+        return not self.blockers and not self.unvalidatable and not self.unaccounted
+
 
 def schema_preflight(
     syn,
-    plans: dict[str, list[dict]],
+    dry_runs: Sequence[ApplyResult],
     *,
     registry: SchemaRegistry,
     repo_version: str | None = None,
-    components: dict[str, str | None] | None = None,
 ) -> PreflightReport:
     """Whether the planned fix keeps every entity JSON-schema conformant.
 
@@ -352,25 +384,39 @@ def schema_preflight(
     checkout's ``registered-json-schemas/``, i.e. the current version of the
     model - both as it stands and with the plan applied.
 
-    Two outcomes must stop the run, and they are reported separately because the
+    It takes the dry-run results for *every* entity the run would touch, not a
+    pre-filtered plan, so the caller cannot narrow what the gate sees. Anything
+    that produced no plan is bucketed here: a genuine no-op is harmless, while a
+    dry run that failed before it could build a plan is unvalidatable, because
+    the write pass will read that entity again and act on whatever it finds.
+
+    Three outcomes stop the run, and they are reported separately because the
     remedy differs. A blocker is a proven regression: discovering it after the
     write means hand-repairing entities from the backup. An unvalidatable entity
     is worse in one respect - the gate has no verdict at all, so treating it as
     a pass would make "every entity proven safe" indistinguishable from "nothing
-    could be checked".
+    could be checked". An unaccounted entity means the bucketing itself is
+    broken, and no count the report prints can be trusted.
 
-    ``components`` supplies each entity's ``Component`` annotation, so an entity
-    with no binding is still checked against the template its curator named
-    rather than counted as unvalidatable for want of a lookup.
+    An entity with no binding is checked against the template its ``Component``
+    annotation names rather than written off for want of a lookup.
     """
-    components = components or {}
-    report = PreflightReport()
-    for entity_id, decisions in plans.items():
+    report = PreflightReport(considered=[r.entity_id for r in dry_runs])
+    for result in dry_runs:
+        if not result.applied:
+            if result.status == 'noop':
+                report.unchanged.append(result.entity_id)
+            else:
+                report.unvalidatable.append(EntityConformance(
+                    entity_id=result.entity_id,
+                    status='error',
+                    error=result.error or f'dry run returned {result.status} with no plan',
+                ))
+            continue
         outcome = check_entity(
-            syn, entity_id, registry=registry, repo_version=repo_version, decisions=decisions,
-            fallback_component=components.get(entity_id),
+            syn, result.entity_id, registry=registry, repo_version=repo_version,
+            decisions=result.applied, fallback_component=component_of(result.planned),
         )
-        report.checked += 1
         if outcome.blocking:
             report.blockers.append(outcome)
         elif outcome.status in UNVALIDATABLE_STATUSES:
@@ -776,19 +822,25 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
         repo_version = repo_schema_version()
         LOG.info('schema preflight: %d entities against %d schemas (repo version %s)',
                  len(entity_ids), len(registry.by_name), repo_version or 'unknown')
-        plans: dict[str, list[dict]] = {}
-        components: dict[str, str | None] = {}
-        for entity_id in entity_ids:
-            planned = apply_entity(
+        # Every entity goes to the preflight, planned or not. Filtering here is
+        # what let a failed dry-run read skip the gate and reach the write pass
+        # with no verdict behind it.
+        dry_runs = [
+            apply_entity(
                 syn, entity_id, canon=canon, index=index, logs=logs,
                 allowed_actions=allowed_actions, dry_run=True,
                 loose_compare=args.loose_compare, max_retries=args.max_retries,
             )
-            if planned.applied:
-                plans[entity_id] = planned.applied
-                components[entity_id] = component_of(planned.planned)
-        preflight = schema_preflight(syn, plans, registry=registry, repo_version=repo_version,
-                                     components=components)
+            for entity_id in entity_ids
+        ]
+        preflight = schema_preflight(syn, dry_runs, registry=registry,
+                                     repo_version=repo_version)
+        if preflight.unaccounted:
+            LOG.error('schema preflight bucketed %d of %d entities; %d unaccounted for, so no '
+                      'count it reports can be trusted; refusing to proceed: %s',
+                      preflight.checked + len(preflight.unchanged), len(entity_ids),
+                      len(preflight.unaccounted), ', '.join(preflight.unaccounted[:20]))
+            return 1
         if preflight.blockers:
             LOG.error('%d entities would fail schema validation after the fix; refusing to proceed',
                       len(preflight.blockers))
@@ -797,10 +849,10 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
                 LOG.error('  %s (%s): %s', blocker.entity_id, blocker.schema_name, detail[:160])
             return 1
         if preflight.unvalidatable and not args.allow_unvalidatable:
-            LOG.error('%d of %d entities in the plan could not be validated at all, so the '
-                      'preflight cannot vouch for them; refusing to proceed '
+            LOG.error('%d of %d entities could not be validated at all, so the preflight cannot '
+                      'vouch for them; refusing to proceed '
                       '(--allow-unvalidatable to accept the gap, or drop --validate-schema)',
-                      len(preflight.unvalidatable), preflight.checked)
+                      len(preflight.unvalidatable), len(entity_ids))
             for skipped in preflight.unvalidatable[:20]:
                 LOG.error('  %s: %s (%s)', skipped.entity_id, skipped.status, skipped.error or '')
             return 1
@@ -817,9 +869,10 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
                             detail[:160])
         LOG.info('schema preflight passed: %d of %d planned changes proven to leave the entity '
                  'conformant (%d already clean, %d repaired, %d unchanged and still invalid, '
-                 '%d unvalidatable)', preflight.proven, len(plans), len(preflight.clean),
+                 '%d unvalidatable); %d of %d entities have nothing to change',
+                 preflight.proven, preflight.checked, len(preflight.clean),
                  len(preflight.repaired), len(preflight.still_invalid),
-                 len(preflight.unvalidatable))
+                 len(preflight.unvalidatable), len(preflight.unchanged), len(entity_ids))
 
     if not dry_run:
         if logs.backup_path.exists() and not args.resume:
@@ -849,14 +902,18 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
         recent_failures.append(result.status in ('error', 'etag_conflict'))
         # Circuit breaker: a systemic problem - a revoked token, a service
         # degradation, an ACL changed mid-run - should stop the run when it
-        # starts, whether that is at entity 50 or at entity 2,000. Hence the
-        # trailing window: the whole-run rate would take hundreds more failures
-        # to clear the threshold once a long healthy prefix has diluted it.
+        # starts, whether that is at entity 10 or at entity 2,000. Hence the
+        # trailing window, judged as soon as ERROR_FLOOR results are in rather
+        # than once it is full: the whole-run rate would take hundreds more
+        # failures to clear the threshold after a long healthy prefix, and a full
+        # window would leave every run shorter than it unguarded - which is
+        # exactly the scale a curator drives by hand with --entity.
         failures = sum(recent_failures)
-        if (len(recent_failures) == ERROR_SAMPLE
-                and failures / ERROR_SAMPLE > ERROR_RATE_THRESHOLD):
+        window = len(recent_failures)
+        if (window >= min(ERROR_SAMPLE, ERROR_FLOOR)
+                and failures / window > ERROR_RATE_THRESHOLD):
             LOG.error('aborting at entity %d: %d of the last %d failed',
-                      position, failures, ERROR_SAMPLE)
+                      position, failures, window)
             break
         if not dry_run:
             time.sleep(args.sleep)
