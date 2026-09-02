@@ -1,0 +1,25 @@
+# Annotation-key findings a human has reviewed and accepted.
+#
+# Consumed by utils/audit_annotation_keys.py. Suppression affects the EXIT CODE
+# ONLY - the CSV and markdown reports always list every finding. The point is to
+# keep the weekly audit actionable: without a way to record "we looked at this
+# and it is fine", one accepted finding leaves the job permanently red, and a
+# permanently red job gets ignored.
+#
+# Fields per entry:
+#   key             (required) the annotation key as it appears on entities
+#   scope           a project synID, or `global` for every project. Default: global
+#   classification  duplicates | orphans | case_variants | reserved | near_misses
+#                   | unknown | any. Default: any
+#   reason          (required in practice) why this is acceptable
+#   issue           the GitHub issue where it was triaged
+#   expires         ISO date. After it passes the finding resurfaces, so a
+#                   time-boxed acceptance cannot become permanent by neglect.
+#
+# Keys that are legitimate by construction do NOT belong here - they are handled
+# in utils/annotation_key_policy.py:
+#   * INFRA_KEYS         schematic manifest columns (Id, Uuid, eTag, EntityId, entityId)
+#   * SYNAPSE_VIEW_COLUMNS  Synapse's own view metadata (modifiedOn, projectId, ...)
+#   * canonical slots that already start uppercase (Component, Filename, GIST, ...)
+
+entries: []

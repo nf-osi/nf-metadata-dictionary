@@ -1,0 +1,160 @@
+name: Weekly Annotation Key Audit
+
+# Read-only audit for mis-cased annotation keys on NF-OSI Synapse projects
+# (issue #939). Two defects leave the same concept under two keys:
+#
+#   * a legacy schematic path wrote the schema's PascalCase `rdfs:label`
+#     alongside the correct camelCase `sms:displayName` (`Age` and `age`)
+#   * schema slot renames left the former name behind (`timePointUnit` after it
+#     became `timepointUnit`)
+#
+# Either way the portal fileview only reads the canonical key, so the stray one
+# is noise at best and hidden metadata at worst. This job exists so a
+# recurrence is noticed in a week rather than in three years.
+#
+# Deliberately NOT a step in weekly-model-system-sync.yml: that job's success
+# criterion is "opened a PR editing modules/", and an audit that must fail
+# loudly does not belong in a job whose failure mode is a missing PR.
+#
+# This job never writes to Synapse. Remediation is a curator-run local task via
+# utils/fix_annotation_keys.py, which is why that script is not wired into CI.
+
+on:
+  schedule:
+    # Mondays at 11:00 UTC, two hours after weekly-model-system-sync.
+    - cron: '0 11 * * 1'
+  workflow_dispatch:
+    inputs:
+      projects:
+        description: 'Comma-separated project synIDs (default: every portal study)'
+        required: false
+        type: string
+        default: ''
+      workers:
+        description: 'Parallel scan workers'
+        required: false
+        type: string
+        default: '10'
+      max_unscanned:
+        description: 'Unreadable projects tolerated before warning'
+        required: false
+        type: string
+        default: '0'
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  PROJECTS_TABLE: syn52694652
+  # Named in the issue comment as the worst-affected project but not a portal
+  # study row, so it has to be added explicitly.
+  EXTRA_PROJECT: syn35221462
+  TRACKING_ISSUE_TITLE: 'Annotation key drift detected on NF-OSI Synapse projects'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install synapseclient pyyaml
+
+      - name: Verify the data model artifact is present
+        run: |
+          # The audit derives canonical slot names from dist/NF.yaml. Without it
+          # every key looks unrecognised and the report would be nonsense.
+          test -s dist/NF.yaml || {
+            echo "::error::dist/NF.yaml is missing or empty; cannot derive canonical slot names"
+            exit 1
+          }
+
+      - name: Audit annotation keys
+        id: audit
+        env:
+          SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
+        run: |
+          set +e
+          ARGS="--out-dir audit --workers ${{ github.event.inputs.workers || '10' }}"
+          ARGS="$ARGS --max-unscanned ${{ github.event.inputs.max_unscanned || '0' }}"
+          if [ -n "${{ github.event.inputs.projects }}" ]; then
+            for PROJECT in $(echo "${{ github.event.inputs.projects }}" | tr ',' ' '); do
+              ARGS="$ARGS --project $PROJECT"
+            done
+          else
+            ARGS="$ARGS --projects-table ${{ env.PROJECTS_TABLE }} --extra-project ${{ env.EXTRA_PROJECT }}"
+          fi
+
+          echo "Running: python utils/audit_annotation_keys.py $ARGS --fail-on-findings"
+          python utils/audit_annotation_keys.py $ARGS --fail-on-findings > /dev/null
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+
+      - name: Publish the report to the job summary
+        if: always()
+        run: |
+          if [ -f audit/summary.md ]; then
+            cat audit/summary.md >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No report was produced; the scan failed before writing one." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: annotation-key-audit
+          path: audit/
+          retention-days: 90
+
+      - name: Open or update the tracking issue
+        # Exit 1 means repairable findings. A PR is the wrong artifact here -
+        # there is nothing in this repo to change, the drift is in Synapse. One
+        # issue updated in place, so a recurring failure does not spam.
+        if: always() && steps.audit.outputs.exit_code == '1'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BODY_FILE=issue_body.md
+          {
+            echo "The weekly annotation key audit found mis-cased annotation keys on NF-OSI Synapse projects."
+            echo ""
+            echo "Run: [\`${{ github.run_id }}\`](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) - the full CSV report is attached to that run as the \`annotation-key-audit\` artifact."
+            echo ""
+            echo "Remediate with \`utils/fix_annotation_keys.py\` (dry run by default). Record accepted findings in \`utils/annotation_key_allowlist.yaml\` so this issue can close."
+            echo ""
+            cat audit/summary.md
+          } > "$BODY_FILE"
+
+          EXISTING=$(gh issue list --repo "${{ github.repository }}" --state open \
+            --search "\"${{ env.TRACKING_ISSUE_TITLE }}\" in:title" \
+            --json number --jq '.[0].number')
+
+          if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
+            echo "Updating existing issue #$EXISTING"
+            gh issue edit "$EXISTING" --repo "${{ github.repository }}" --body-file "$BODY_FILE"
+          else
+            echo "Opening a new tracking issue"
+            gh issue create --repo "${{ github.repository }}" \
+              --title "${{ env.TRACKING_ISSUE_TITLE }}" \
+              --label bug \
+              --body-file "$BODY_FILE"
+          fi
+
+      - name: Fail the job on repairable findings
+        if: always()
+        run: |
+          CODE="${{ steps.audit.outputs.exit_code }}"
+          case "$CODE" in
+            0) echo "✅ No mis-cased annotation keys found." ;;
+            2) echo "::warning::Audit finished with warnings (probable typos, or unreadable projects). See the job summary." ;;
+            *) echo "::error::Audit found mis-cased annotation keys (exit $CODE). See the job summary."; exit 1 ;;
+          esac
