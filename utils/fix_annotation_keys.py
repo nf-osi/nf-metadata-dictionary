@@ -82,8 +82,11 @@ LOG = logging.getLogger('fix_annotation_keys')
 #: Statuses that mean an entity needs no further attention on a resumed run.
 SETTLED_STATUSES = frozenset({'ok', 'noop'})
 
-#: Abort if more than this fraction of the first ERROR_SAMPLE writes fail.
+#: Abort once more than this fraction of the writes so far have failed. Checked
+#: on every entity from ERROR_SAMPLE onward, not once: a run that starts healthy
+#: and degrades at entity 100 has to stop there too.
 ERROR_RATE_THRESHOLD = 0.10
+#: How many writes to see before the rate is meaningful enough to act on.
 ERROR_SAMPLE = 50
 
 
@@ -248,7 +251,11 @@ def apply_entity(
                 planned_types[decision.canonical_key] = fresh.types.get(decision.stray_key, 'STRING')
 
         try:
-            write_annotations(syn, AnnotationRecord(entity_id, fresh.etag, planned, planned_types))
+            # `fresh.raw` carries the original wire strings, so every key the
+            # plan did not name is re-emitted exactly as Synapse served it
+            # rather than re-serialised from its decoded value.
+            write_annotations(syn, AnnotationRecord(entity_id, fresh.etag, planned,
+                                                   planned_types, fresh.raw))
         except Exception as error:  # noqa: BLE001
             if _is_etag_conflict(error) and attempt < max_retries:
                 LOG.info('%s: etag conflict, re-reading (attempt %d/%d)',
@@ -276,32 +283,57 @@ def apply_entity(
 # Schema conformance preflight
 # ---------------------------------------------------------------------------
 
+#: Conformance statuses that mean the entity was never actually validated, so
+#: the preflight has no verdict for it. Mirrors what
+#: ``validate_annotations.main`` exits 2 for.
+UNVALIDATABLE_STATUSES = frozenset({'error', 'no_schema'})
+
+
+@dataclass
+class PreflightReport:
+    checked: int = 0
+    #: entities that would go from valid to invalid
+    blockers: list = field(default_factory=list)
+    #: entities the check could not reach a verdict on at all
+    unvalidatable: list = field(default_factory=list)
+
+    @property
+    def ok(self) -> bool:
+        return not self.blockers and not self.unvalidatable
+
+
 def schema_preflight(
     syn,
     plans: dict[str, list[dict]],
     *,
     registry: SchemaRegistry,
     repo_version: str | None = None,
-) -> list:
-    """Entities whose planned fix would break JSON schema validation.
+) -> PreflightReport:
+    """Whether the planned fix keeps every entity JSON-schema conformant.
 
     Key-casing repair is supposed to leave metadata *more* conformant, never
     less. This validates each entity against the schema bound to it - using this
     checkout's ``registered-json-schemas/``, i.e. the current version of the
-    model - both as it stands and with the plan applied, and returns every
-    entity that would go from valid to invalid.
+    model - both as it stands and with the plan applied.
 
-    Any non-empty result must stop the run: discovering it after the write means
-    hand-repairing entities from the backup.
+    Two outcomes must stop the run, and they are reported separately because the
+    remedy differs. A blocker is a proven regression: discovering it after the
+    write means hand-repairing entities from the backup. An unvalidatable entity
+    is worse in one respect - the gate has no verdict at all, so treating it as
+    a pass would make "every entity proven safe" indistinguishable from "nothing
+    could be checked".
     """
-    blockers = []
+    report = PreflightReport()
     for entity_id, decisions in plans.items():
         outcome = check_entity(
             syn, entity_id, registry=registry, repo_version=repo_version, decisions=decisions,
         )
+        report.checked += 1
         if outcome.blocking:
-            blockers.append(outcome)
-    return blockers
+            report.blockers.append(outcome)
+        elif outcome.status in UNVALIDATABLE_STATUSES:
+            report.unvalidatable.append(outcome)
+    return report
 
 
 # ---------------------------------------------------------------------------
@@ -593,6 +625,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument('--validate-schema', action='store_true',
                         help='before writing, confirm the plan does not break JSON schema '
                              'validation against this checkout of registered-json-schemas/')
+    parser.add_argument('--allow-unvalidatable', action='store_true',
+                        help='proceed even when --validate-schema could not reach a verdict on '
+                             'some entities (unreadable, or bound to a schema this checkout '
+                             'does not have)')
     parser.add_argument('--verify', action='store_true', help='verify after applying')
     parser.add_argument('--verify-only', action='store_true', help='verify a previous run and exit')
     parser.add_argument('--rollback', default=None, metavar='LOGDIR',
@@ -697,16 +733,27 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
             )
             if planned.applied:
                 plans[entity_id] = planned.applied
-        blockers = schema_preflight(syn, plans, registry=registry, repo_version=repo_version)
-        if blockers:
+        preflight = schema_preflight(syn, plans, registry=registry, repo_version=repo_version)
+        if preflight.blockers:
             LOG.error('%d entities would fail schema validation after the fix; refusing to proceed',
-                      len(blockers))
-            for blocker in blockers[:20]:
+                      len(preflight.blockers))
+            for blocker in preflight.blockers[:20]:
                 detail = blocker.after_messages[0] if blocker.after_messages else ''
                 LOG.error('  %s (%s): %s', blocker.entity_id, blocker.schema_name, detail[:160])
             return 1
-        LOG.info('schema preflight passed: %d planned changes leave every entity conformant',
-                 len(plans))
+        if preflight.unvalidatable and not args.allow_unvalidatable:
+            LOG.error('%d of %d entities in the plan could not be validated at all, so the '
+                      'preflight cannot vouch for them; refusing to proceed '
+                      '(--allow-unvalidatable to accept the gap, or drop --validate-schema)',
+                      len(preflight.unvalidatable), preflight.checked)
+            for skipped in preflight.unvalidatable[:20]:
+                LOG.error('  %s: %s (%s)', skipped.entity_id, skipped.status, skipped.error or '')
+            return 1
+        if preflight.unvalidatable:
+            LOG.warning('%d entities could not be validated; proceeding on --allow-unvalidatable',
+                        len(preflight.unvalidatable))
+        LOG.info('schema preflight passed: %d of %d planned changes proven to leave the entity '
+                 'conformant', preflight.checked - len(preflight.unvalidatable), len(plans))
 
     if not dry_run:
         if logs.backup_path.exists() and not args.resume:
@@ -735,10 +782,11 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
         results.append(result)
         if result.status in ('error', 'etag_conflict'):
             errors += 1
-        # Circuit breaker: a systemic problem should stop after 50 writes, not
-        # after 3,000.
-        if position == ERROR_SAMPLE and errors / ERROR_SAMPLE > ERROR_RATE_THRESHOLD:
-            LOG.error('aborting: %d of the first %d entities failed', errors, ERROR_SAMPLE)
+        # Circuit breaker: a systemic problem - a revoked token, a service
+        # degradation, an ACL changed mid-run - should stop the run when it
+        # starts, whether that is at entity 50 or at entity 2,000.
+        if position >= ERROR_SAMPLE and errors / position > ERROR_RATE_THRESHOLD:
+            LOG.error('aborting: %d of the first %d entities failed', errors, position)
             break
         if not dry_run:
             time.sleep(args.sleep)

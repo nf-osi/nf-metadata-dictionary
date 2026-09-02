@@ -107,6 +107,41 @@ def test_walk_parallelises_each_depth_level():
     assert sorted(syn.calls[1:9]) == [f'f{i}' for i in range(8)]
 
 
+@pytest.mark.parametrize('workers', [1, 4])
+def test_the_project_entity_is_walked_only_when_asked_for(workers):
+    # --include-project-entity folds the project's own annotation keys into the
+    # inventory, so the drill-down has to be able to reach them too - otherwise a
+    # project-level finding shows up in the summary with no row in
+    # entity_findings.jsonl, which is the only input the fix tool consumes.
+    tree = {'syn0': [entry('file1')]}
+    syn = TreeStub(tree)
+    with_project = list(audit._iter_project_entities(
+        syn, 'syn0', workers=workers, include_project_entity=True))
+    assert with_project[0] == ('syn0', 'Project')
+    assert ('file1', 'FileEntity') in with_project
+
+
+@pytest.mark.parametrize('workers', [1, 4])
+def test_the_project_entity_is_absent_by_default(workers):
+    # The flag is opt-in, and leaving it off has to keep the default scope
+    # exactly as it was: descendants only.
+    tree = {'syn0': [entry('f1', True), entry('file1')], 'f1': [entry('file2')]}
+    syn = TreeStub(tree)
+    found = list(audit._iter_project_entities(syn, 'syn0', workers=workers))
+    assert 'syn0' not in {entity_id for entity_id, _ in found}
+    assert sorted(entity_id for entity_id, _ in found) == ['f1', 'file1', 'file2']
+
+
+def test_the_project_entity_counts_against_the_limit():
+    tree = {'syn0': [entry('file1')]}
+    syn = TreeStub(tree)
+    found = list(audit._iter_project_entities(
+        syn, 'syn0', limit=1, workers=1, include_project_entity=True))
+    assert found == [('syn0', 'Project')]
+    # Nothing was listed, because the limit was reached before the walk began.
+    assert syn.calls == []
+
+
 def test_walk_is_lazy_and_does_not_read_the_whole_tree_up_front():
     # The caller stops after the first entity; the walk must not have expanded
     # deeper levels. This is what keeps memory bounded on a large project.

@@ -43,13 +43,20 @@ def _infer_type(value):
     return 'STRING'
 
 
+def _to_wire(value):
+    # Synapse serialises a BOOLEAN as 'true'/'false', not Python's 'True'.
+    if isinstance(value, bool):
+        return 'true' if value else 'false'
+    return str(value)
+
+
 def to_typed(plain):
     """A plain ``{key: [value]}`` dict in the /annotations2 wire format."""
     typed = {}
     for key, value in plain.items():
         items = value if isinstance(value, list) else [value]
         declared = _infer_type(items[0]) if items else 'STRING'
-        typed[key] = {'type': declared, 'value': [str(v) for v in items]}
+        typed[key] = {'type': declared, 'value': [_to_wire(v) for v in items]}
     return typed
 
 
@@ -265,6 +272,46 @@ def test_untouched_keys_keep_their_value_and_declared_type(rules, logs):
     assert written['isCellLine'] == {'type': 'BOOLEAN', 'value': ['true']}
     assert written['age'] == {'type': 'DOUBLE', 'value': ['1.5']}
     assert 'Age' not in written
+
+
+def test_untouched_keys_round_trip_their_exact_wire_representation(rules, logs):
+    # Decoding is lossy in the textual direction: the DOUBLE '1.50' decodes to
+    # 1.5 and re-encodes to '1.5', and '1e6' to '1000000.0'. verify_run compares
+    # decoded values, so it can never catch that - the run would silently rewrite
+    # the stored form of a key it was never asked to touch.
+    entities = {'syn1': ('etag-1', {})}
+    syn = StubSynapse(entities)
+    syn.entities['syn1'] = ('etag-1', {
+        'Age': {'type': 'DOUBLE', 'value': ['1.5']},
+        'age': {'type': 'DOUBLE', 'value': ['1.50']},
+        'readDepth': {'type': 'DOUBLE', 'value': ['1e6']},
+        'specimenID': {'type': 'STRING', 'value': ['0001']},
+    })
+    result = fix.apply_entity(syn, 'syn1', logs=logs,
+                              allowed_actions={policy.Action.DROP_STRAY},
+                              dry_run=False, **rules)
+    assert result.status == 'ok'
+    written = syn.typed_writes[0][1]
+    assert written == {
+        'age': {'type': 'DOUBLE', 'value': ['1.50']},
+        'readDepth': {'type': 'DOUBLE', 'value': ['1e6']},
+        'specimenID': {'type': 'STRING', 'value': ['0001']},
+    }
+    # The backup records the same wire form, so a rollback restores the original
+    # representation rather than a re-serialised one.
+    backup = json.loads(logs.backup_path.read_text().splitlines()[0])
+    assert backup['annotations']['age'] == {'type': 'DOUBLE', 'value': ['1.50']}
+
+
+def test_a_renamed_key_is_re_encoded_from_its_decoded_value(rules, logs):
+    # The counterpart: a key the plan names has no original wire form under its
+    # new name, so it is encoded from the decoded value. Only untouched keys get
+    # the verbatim treatment.
+    syn = StubSynapse({'syn1': ('etag-1', {})})
+    syn.entities['syn1'] = ('etag-1', {'ReadDepth': {'type': 'DOUBLE', 'value': ['1e6']}})
+    fix.apply_entity(syn, 'syn1', logs=logs, allowed_actions={policy.Action.RENAME_STRAY},
+                     dry_run=False, **rules)
+    assert syn.typed_writes[0][1] == {'readDepth': {'type': 'DOUBLE', 'value': ['1000000.0']}}
 
 
 def test_a_renamed_key_carries_its_original_type_across(rules, logs):
@@ -531,17 +578,122 @@ def test_schema_preflight_blocks_a_plan_that_would_break_conformance(rules, logs
     syn = SchemaStub(valid)
     # A plan that drops a schema-required key must be refused.
     bad_plan = [{'action': 'drop_stray', 'stray_key': 'fileFormat', 'canonical_key': 'fileFormat'}]
-    blockers = fix.schema_preflight(
+    report = fix.schema_preflight(
         syn, {'syn64420376': bad_plan}, registry=registry, repo_version='11.1.22')
-    assert [b.entity_id for b in blockers] == ['syn64420376']
+    assert [b.entity_id for b in report.blockers] == ['syn64420376']
+    assert not report.ok
 
     # The real plan - dropping PascalCase strays - must pass.
     strays = [k for k in valid if k[:1].isupper()
               and k not in ('Component', 'Filename', 'Id', 'Uuid', 'EntityId')]
     good_plan = [{'action': 'drop_stray', 'stray_key': k, 'canonical_key': k[:1].lower() + k[1:]}
                  for k in strays]
-    assert fix.schema_preflight(
-        syn, {'syn64420376': good_plan}, registry=registry, repo_version='11.1.22') == []
+    clean = fix.schema_preflight(
+        syn, {'syn64420376': good_plan}, registry=registry, repo_version='11.1.22')
+    assert clean.blockers == []
+    assert clean.unvalidatable == []
+    assert clean.ok
+
+
+def test_schema_preflight_reports_entities_it_could_not_validate_at_all(rules, logs):
+    # An entity the check could not reach a verdict on is not a pass. Counting it
+    # as one makes "every entity proven safe" indistinguishable from "nothing
+    # could be checked", which is the weaker of the two gates the fix tool wraps.
+    import validate_annotations as validate
+
+    registry = validate.SchemaRegistry.load()
+
+    class UnreachableStub:
+        def restGET(self, path):
+            if path.endswith('/json'):
+                if 'syn_missing_schema' in path:
+                    return {'id': 'syn_missing_schema'}
+                raise RuntimeError('503 Service Unavailable')
+            if path.endswith('/schema/binding'):
+                return {'jsonSchemaVersionInfo': {
+                    'schemaName': 'notatemplateinthischeckout',
+                    'semanticVersion': '1.0.0',
+                    '$id': 'org.synapse.nf-notatemplateinthischeckout-1.0.0',
+                }}
+            raise AssertionError(path)
+
+    plan = [{'action': 'drop_stray', 'stray_key': 'Age', 'canonical_key': 'age'}]
+    report = fix.schema_preflight(
+        UnreachableStub(), {'syn_missing_schema': plan, 'syn_unreadable': plan},
+        registry=registry, repo_version='11.1.22')
+    assert report.checked == 2
+    assert report.blockers == []
+    assert {r.status for r in report.unvalidatable} == {'no_schema', 'error'}
+    assert not report.ok
+
+
+def test_the_circuit_breaker_trips_when_writes_start_failing_mid_run(monkeypatch, tmp_path):
+    # The point of the breaker is that a systemic problem - a revoked token, a
+    # service degradation, an ACL changed mid-run - stops the run where it
+    # starts. Checking the rate only once, at entity 50, means a run that is
+    # healthy for the first 60 entities grinds through all the rest.
+    class FlakySynapse:
+        def __init__(self, healthy):
+            self.healthy = healthy
+            self.reads = 0
+
+        def restGET(self, path):
+            if path.endswith('/permissions'):
+                return {'canEdit': True}
+            self.reads += 1
+            if self.reads > self.healthy:
+                raise RuntimeError('503 Service Unavailable')
+            entity_id = path.split('/')[2]
+            return {'id': entity_id, 'etag': 'etag-1',
+                    'annotations': to_typed({'Age': [1.5], 'age': [1.5]})}
+
+    syn = FlakySynapse(healthy=60)
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: syn)
+
+    argv = ['--actions', 'drop_stray', '--log-dir', str(tmp_path / 'run')]
+    for index in range(300):
+        argv += ['--entity', f'syn{index}']
+    assert fix.main(argv) == 1
+    # 10% of 60 healthy reads is tolerated, so it aborts a handful past 60 -
+    # nowhere near 300.
+    assert 60 < syn.reads < 100
+
+
+def test_the_carry_forward_of_a_resumed_scan_does_not_double_count(tmp_path):
+    import audit_annotation_keys as audit
+
+    existing = {
+        'syn1': audit.ProjectAudit(project_id='syn1', status='ok'),
+        'syn2': audit.ProjectAudit(project_id='syn2', status='forbidden'),
+        'syn3': audit.ProjectAudit(project_id='syn3', status='error'),
+    }
+    # A resumed run rescans everything that was not 'ok'.
+    carried = audit.carry_forward(existing, ['syn2', 'syn3'])
+    assert [a.project_id for a in carried] == ['syn1']
+
+    # With the fresh results appended, the previously forbidden projects are
+    # counted once and as scanned, so the run does not still exit 2 on them.
+    fresh = [audit.ProjectAudit(project_id='syn2', status='ok'),
+             audit.ProjectAudit(project_id='syn3', status='ok')]
+    summary = audit.build_summary(carried + fresh)
+    assert summary['projects_total'] == 3
+    assert summary['projects_scanned'] == 3
+    assert summary['projects_forbidden'] == 0
+    assert summary['projects_failed'] == 0
+
+
+def test_a_project_left_out_of_a_limited_rescan_keeps_its_recorded_status(tmp_path):
+    # --limit can cut a project out of the rescan; its previous audit still has
+    # to be reported rather than vanishing from the run.
+    import audit_annotation_keys as audit
+
+    existing = {
+        'syn1': audit.ProjectAudit(project_id='syn1', status='ok'),
+        'syn2': audit.ProjectAudit(project_id='syn2', status='forbidden'),
+    }
+    carried = audit.carry_forward(existing, ['syn1'])
+    assert [(a.project_id, a.status) for a in carried] == [('syn2', 'forbidden')]
 
 
 def test_apply_requires_at_least_one_action():

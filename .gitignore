@@ -47,8 +47,11 @@ merged_no_inlined_range.yaml
 schema-validation-log*.md
 schema-registration-log*.md
 
-# Annotation key audit reports and remediation logs.
-# These contain real study metadata and entity annotations; never commit them.
+# Generated annotation key audit reports and remediation logs. A run sweeps every
+# project the credential can read, so these directories mix metadata from studies
+# of every access level; never commit them. Small, deliberately chosen fixtures
+# from public-access studies live in tests/data/annotation_keys/ - see the README
+# there.
 audit/
 annotation-fix-logs/
 

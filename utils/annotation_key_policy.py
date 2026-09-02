@@ -80,15 +80,16 @@ SYNAPSE_VIEW_COLUMNS = frozenset({
 TYPO_SIMILARITY_CUTOFF = 0.85
 
 # Historical aliases the PascalCase rule cannot derive, taken from the legacy
-# NF.jsonld label/displayName pairs. `eTag` is the important one: to_stray('etag')
-# is 'Etag', so nothing else would catch it. These five have zero hits in the
-# wild today and are kept so coverage claims stay honest.
+# NF.jsonld label/displayName pairs. These four have zero hits in the wild today
+# and are kept so coverage claims stay honest. `eTag` is deliberately absent: it
+# is an infra key, and both consumers skip infra keys before ever consulting this
+# table, so an alias for it would be dead weight that only invites someone to
+# loosen the infra guard.
 LEGACY_ALIASES = {
     'Breast Cancer': 'breastCancer',
     'Vestibular Schwannoma': 'vestibularSchwannoma',
     'CroissantFileS3Object': 'croissant_file_s3_object',
     'ResourceId': 'Resource_id',
-    'eTag': 'etag',
 }
 
 

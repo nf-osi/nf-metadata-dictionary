@@ -158,24 +158,111 @@ def validate_instance(instance: Mapping, schema: Mapping) -> ValidationOutcome:
     return ValidationOutcome(is_valid=not messages, messages=messages)
 
 
+#: Keywords whose value is a subschema, or a list of them, that can carry a
+#: property declaration. The NF templates put most declarations behind
+#: ``allOf[].then``, gated on ``concreteType``, so a top-level-only lookup sees
+#: nothing for exactly the properties that matter most.
+SUBSCHEMA_KEYWORDS = ('allOf', 'anyOf', 'oneOf', 'if', 'then', 'else', 'not')
+
+
+def _types_declared_by(subschema: Mapping) -> set[str]:
+    types: set[str] = set()
+    pending = [subschema]
+    while pending:
+        node = pending.pop()
+        if not isinstance(node, Mapping):
+            continue
+        declared = node.get('type')
+        if isinstance(declared, str):
+            types.add(declared)
+        elif isinstance(declared, list):
+            types.update(item for item in declared if isinstance(item, str))
+        for keyword in ('anyOf', 'oneOf', 'allOf'):
+            pending.extend(node.get(keyword) or [])
+    return types
+
+
+def declared_types(schema: Mapping | None, name: str) -> frozenset[str]:
+    """Every JSON type ``schema`` declares for property ``name``, anywhere in it.
+
+    The declaration is collected across conditional branches rather than
+    evaluated against an instance: a slot has one shape throughout the model, so
+    the union is enough to predict how Synapse will render it, and evaluating the
+    ``concreteType`` guards would duplicate the validator for no gain.
+
+    Empty when the schema says nothing about the property - it is absent, or
+    appears only as a bare ``{}`` stub inside an ``if``/``then`` guard, which
+    constrains presence but not type.
+    """
+    if not schema:
+        return frozenset()
+    types: set[str] = set()
+    pending: list = [schema]
+    while pending:
+        node = pending.pop()
+        if isinstance(node, (list, tuple)):
+            pending.extend(node)
+            continue
+        if not isinstance(node, Mapping):
+            continue
+        prop = (node.get('properties') or {}).get(name)
+        if isinstance(prop, Mapping):
+            types |= _types_declared_by(prop)
+        for keyword in SUBSCHEMA_KEYWORDS:
+            branch = node.get(keyword)
+            if branch is not None:
+                pending.append(branch)
+    return frozenset(types)
+
+
+def _rendered_as(value, types: frozenset[str]):
+    """A moved value in the shape Synapse will render it under its new key.
+
+    ``/entity/{id}/json`` is schema-driven: a property the bound schema declares
+    as an array comes back as an array even for a single annotation value, and a
+    scalar property comes back unwrapped. Predicting the wrong one is what made
+    the preflight report renames into array-typed slots - ``individualID``,
+    ``modelSystemName``, ``cellType`` - as regressions that cannot happen.
+
+    A multi-value annotation is left as a list even for a scalar property: that
+    genuinely does not fit the schema, and hiding it would suppress a real
+    finding.
+    """
+    if 'array' in types:
+        return value if isinstance(value, list) else [value]
+    if types and isinstance(value, list) and len(value) == 1:
+        return value[0]
+    return value
+
+
 def apply_key_changes(
     instance: Mapping,
     *,
     drop: Iterable[str],
     rename: Mapping[str, str],
+    schema: Mapping | None = None,
 ) -> dict:
     """The instance as it would look after a planned fix. Pure.
 
     Keys named by the plan but absent from the instance are ignored rather than
     raising: Synapse's schema-driven JSON can legitimately omit a key that the
     annotation plan mentions.
+
+    A renamed value is reshaped to what Synapse will render under the canonical
+    name once ``annotation_key_policy.apply_decisions`` has written it. The two
+    functions work on different shapes on purpose - that one operates on the
+    annotations dict, where every value is a list, this one on the entity JSON,
+    where a value is a scalar or an array depending on the bound schema - so
+    ``schema`` is what keeps the prediction faithful. Without it the shape is
+    left alone, which is right for a property the schema does not type.
     """
     result = dict(instance)
     for key in drop:
         result.pop(key, None)
     for stray, canonical in rename.items():
         if stray in result:
-            result[canonical] = result.pop(stray)
+            result[canonical] = _rendered_as(result.pop(stray),
+                                             declared_types(schema, canonical))
     return result
 
 
@@ -300,7 +387,8 @@ def check_entity(
         result.status = 'clean' if before.is_valid else 'still_invalid'
         return result
 
-    after = validate_instance(apply_key_changes(instance, drop=drop, rename=rename), schema)
+    after = validate_instance(
+        apply_key_changes(instance, drop=drop, rename=rename, schema=schema), schema)
     result.after_valid = after.is_valid
     result.after_messages = after.messages
     result.status = classify_transition(before.is_valid, after.is_valid)

@@ -82,16 +82,23 @@ jobs:
         id: audit
         env:
           SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
+          # Dispatch inputs go through the environment, never into the script
+          # body: an `${{ }}` expansion is substituted as text before bash parses
+          # the line, so `syn1"; curl ...` in an input would run as source in a
+          # job holding the Synapse token and `issues: write`.
+          PROJECTS: ${{ github.event.inputs.projects }}
+          WORKERS: ${{ github.event.inputs.workers || '10' }}
+          MAX_UNSCANNED: ${{ github.event.inputs.max_unscanned || '0' }}
         run: |
           set +e
-          ARGS="--out-dir audit --workers ${{ github.event.inputs.workers || '10' }}"
-          ARGS="$ARGS --max-unscanned ${{ github.event.inputs.max_unscanned || '0' }}"
-          if [ -n "${{ github.event.inputs.projects }}" ]; then
-            for PROJECT in $(echo "${{ github.event.inputs.projects }}" | tr ',' ' '); do
+          ARGS="--out-dir audit --workers $WORKERS"
+          ARGS="$ARGS --max-unscanned $MAX_UNSCANNED"
+          if [ -n "$PROJECTS" ]; then
+            for PROJECT in $(echo "$PROJECTS" | tr ',' ' '); do
               ARGS="$ARGS --project $PROJECT"
             done
           else
-            ARGS="$ARGS --projects-table ${{ env.PROJECTS_TABLE }} --extra-project ${{ env.EXTRA_PROJECT }}"
+            ARGS="$ARGS --projects-table $PROJECTS_TABLE --extra-project $EXTRA_PROJECT"
           fi
 
           echo "Running: python utils/audit_annotation_keys.py $ARGS --fail-on-findings"
@@ -149,12 +156,20 @@ jobs:
               --body-file "$BODY_FILE"
           fi
 
-      - name: Fail the job on repairable findings
+      - name: Fail the job on findings or on lost coverage
+        # Exit 2 fails the job too. A warning annotation on a green job is
+        # exactly what gets ignored, and "0 findings, 60 unreadable projects" must
+        # never read as clean. The two messages stay distinguishable so a reader
+        # can tell repairable drift from lost coverage. What keeps this from going
+        # permanently red is the pair of escape hatches the audit already has:
+        # accept a key in utils/annotation_key_allowlist.yaml, or raise
+        # --max-unscanned for projects the service account genuinely cannot read.
         if: always()
         run: |
           CODE="${{ steps.audit.outputs.exit_code }}"
           case "$CODE" in
             0) echo "✅ No mis-cased annotation keys found." ;;
-            2) echo "::warning::Audit finished with warnings (probable typos, or unreadable projects). See the job summary." ;;
-            *) echo "::error::Audit found mis-cased annotation keys (exit $CODE). See the job summary."; exit 1 ;;
+            1) echo "::error::Audit found mis-cased annotation keys (exit 1). See the job summary."; exit 1 ;;
+            2) echo "::error::Audit could not vouch for its own coverage (exit 2): unreadable projects, or probable misspellings of a schema slot. Accept a key in utils/annotation_key_allowlist.yaml or raise --max-unscanned once triaged. See the job summary."; exit 1 ;;
+            *) echo "::error::Audit failed to run (exit $CODE). See the job summary."; exit 1 ;;
           esac

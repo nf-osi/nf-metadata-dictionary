@@ -180,6 +180,132 @@ def test_apply_key_changes_ignores_keys_that_are_absent():
 
 
 # ---------------------------------------------------------------------------
+# The predicted post-rename shape has to match what Synapse will render
+# ---------------------------------------------------------------------------
+
+def animal_individual_instance():
+    """A valid AnimalIndividualTemplate instance built from the real capture.
+
+    The values come from `syn64420376`, whose entity JSON is the evidence that
+    Synapse renders `individualID` as an array and `modelSystemName` as a scalar
+    on the template bound there; this template declares both as arrays, which is
+    exactly the asymmetry the rename shape has to follow.
+    """
+    captured = json.loads((FIXTURE_DIR / 'syn64420376_entity_json.json').read_text())
+    return {
+        'Component': 'AnimalIndividualTemplate',
+        'individualID': captured['individualID'],
+        'species': captured['species'],
+        'sex': captured['sex'],
+        'diagnosis': captured['diagnosis'],
+    }, captured
+
+
+def test_a_rename_into_an_array_typed_slot_is_not_reported_as_a_regression(registry):
+    # The write path stores a renamed value as a list, and Synapse renders an
+    # array-typed property as an array. Predicting a scalar here made the
+    # preflight report a regression that cannot happen, which aborts the whole
+    # rename pass because one blocker exits 1.
+    schema = registry.load_schema('AnimalIndividualTemplate')
+    assert 'array' in validate.declared_types(schema, 'modelSystemName')
+
+    instance, captured = animal_individual_instance()
+    instance['ModelSystemName'] = captured['modelSystemName']
+    before = validate.validate_instance(instance, schema)
+    assert before.is_valid, before.messages
+
+    renamed = validate.apply_key_changes(
+        instance, drop=[], rename={'ModelSystemName': 'modelSystemName'}, schema=schema)
+    assert renamed['modelSystemName'] == [captured['modelSystemName']]
+    after = validate.validate_instance(renamed, schema)
+    assert after.is_valid, after.messages
+    assert validate.classify_transition(before.is_valid, after.is_valid) == 'clean'
+
+
+def test_a_rename_into_a_scalar_slot_unwraps_a_single_value(registry):
+    # The mirror case: `sex` is declared a string, so Synapse renders it
+    # unwrapped, and predicting a one-item array would invent a regression too.
+    schema = registry.load_schema('AnimalIndividualTemplate')
+    assert validate.declared_types(schema, 'sex') == frozenset({'string'})
+
+    instance, captured = animal_individual_instance()
+    del instance['sex']
+    instance['Sex'] = [captured['sex']]
+    renamed = validate.apply_key_changes(
+        instance, drop=[], rename={'Sex': 'sex'}, schema=schema)
+    assert renamed['sex'] == captured['sex']
+    assert validate.validate_instance(renamed, schema).is_valid
+
+
+def test_the_declared_shape_matches_how_synapse_actually_renders_the_entity(registry):
+    # The check that makes the whole prediction trustworthy: on the real
+    # syn64420376 capture, every property MicroscopyAssayTemplate types is
+    # rendered as an array exactly when the schema says `array` - `individualID`
+    # is, the other 15 are not. If that correspondence ever breaks, coercing to
+    # the declared shape is the wrong model and this must fail.
+    schema = registry.load_schema('microscopyassaytemplate')
+    instance = json.loads((FIXTURE_DIR / 'syn64420376_entity_json.json').read_text())
+    typed = {key: validate.declared_types(schema, key) for key in instance}
+    typed = {key: types for key, types in typed.items() if types}
+    assert len(typed) >= 16
+    for key, types in typed.items():
+        assert isinstance(instance[key], list) == ('array' in types), key
+
+
+def test_a_rename_target_the_schema_does_not_type_keeps_its_shape(registry):
+    # A stray PascalCase key is not in any schema, so there is nothing to coerce
+    # toward and the value must be moved verbatim.
+    schema = registry.load_schema('microscopyassaytemplate')
+    assert validate.declared_types(schema, 'FileFormat') == frozenset()
+    result = validate.apply_key_changes(
+        {'fileFormat': 'png'}, drop=[], rename={'fileFormat': 'FileFormat'}, schema=schema)
+    assert result == {'FileFormat': 'png'}
+
+
+def test_declared_types_sees_through_the_concretetype_guard(registry):
+    # MicroscopyAssayTemplate declares almost nothing at the top level: the real
+    # declarations sit under allOf[0].then, gated on concreteType == FileEntity.
+    # A top-level-only lookup would find no type for exactly the properties that
+    # matter, including the array-typed individualID.
+    schema = registry.load_schema('microscopyassaytemplate')
+    assert 'properties' not in schema
+    assert validate.declared_types(schema, 'individualID') == frozenset({'array'})
+    assert validate.declared_types(schema, 'fileFormat') == frozenset({'string'})
+
+
+def test_a_multi_value_rename_into_a_scalar_slot_stays_a_list(registry):
+    # Two values genuinely do not fit a scalar property. Silently keeping only
+    # the first would hide a real finding.
+    schema = registry.load_schema('AnimalIndividualTemplate')
+    result = validate.apply_key_changes(
+        {'Sex': ['Female', 'Male']}, drop=[], rename={'Sex': 'sex'}, schema=schema)
+    assert result == {'sex': ['Female', 'Male']}
+
+
+def test_declared_types_reads_through_anyof_branches(registry):
+    # `age` is declared as anyOf[number, AgeMask enum]; the type sits inside the
+    # branches, not on the property.
+    schema = registry.load_schema('AnimalIndividualTemplate')
+    assert validate.declared_types(schema, 'age') == frozenset({'number', 'string'})
+
+
+def test_check_entity_uses_the_bound_schema_for_the_predicted_shape(registry):
+    # End to end through check_entity: the same rename that used to come back as
+    # `regression` has to come back `clean`.
+    instance, captured = animal_individual_instance()
+    instance['ModelSystemName'] = captured['modelSystemName']
+    syn = StubSynapse({'syn1': instance},
+                      {'syn1': binding('animalindividualtemplate', '11.1.22')})
+    outcome = validate.check_entity(
+        syn, 'syn1', registry=registry,
+        decisions=[{'action': 'rename_stray', 'stray_key': 'ModelSystemName',
+                    'canonical_key': 'modelSystemName'}],
+    )
+    assert outcome.status == 'clean', outcome.after_messages
+    assert not outcome.blocking
+
+
+# ---------------------------------------------------------------------------
 # The verdict matrix
 # ---------------------------------------------------------------------------
 

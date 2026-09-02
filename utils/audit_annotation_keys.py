@@ -40,7 +40,7 @@ import random
 import sys
 import time
 from collections import Counter
-from collections.abc import Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from datetime import date, datetime, timezone
@@ -231,11 +231,10 @@ def _run_scope_job(syn, request: dict, *, async_mode: str) -> dict:
         try:
             return syn._waitForAsync('/column/view/scope/async', request=request)
         except AttributeError:
+            # Only a missing helper falls back; every other error, including a
+            # real service failure, propagates.
             if async_mode == 'client':
                 raise
-        except Exception:
-            # A real service error must surface; only a missing helper falls back.
-            raise
     return _run_scope_job_rest(syn, request)
 
 
@@ -450,6 +449,7 @@ def drill_down_project(
     loose_compare: bool = False,
     limit: int | None = None,
     workers: int = 1,
+    include_project_entity: bool = False,
 ) -> list[dict]:
     """Resolve a flagged project down to the individual affected entities.
 
@@ -493,7 +493,8 @@ def drill_down_project(
             'decisions': [d.as_dict() for d in decisions],
         }
 
-    walker = _iter_project_entities(syn, audit.project_id, limit=limit, workers=workers)
+    walker = _iter_project_entities(syn, audit.project_id, limit=limit, workers=workers,
+                                    include_project_entity=include_project_entity)
     findings: list[dict] = []
     if workers <= 1:
         return [finding for finding in map(inspect, walker) if finding]
@@ -557,6 +558,7 @@ def _iter_project_entities(
     *,
     limit: int | None = None,
     workers: int = 1,
+    include_project_entity: bool = False,
 ):
     """Walk files, folders, tables and datasets under a project.
 
@@ -565,10 +567,23 @@ def _iter_project_entities(
     over 1,300 folders, and listing them one at a time took longer than reading
     every annotation in the project. Levels are expanded lazily, so a caller
     that stops early does not pay for the rest of the tree.
+
+    ``include_project_entity`` yields the project itself first. Without it a
+    project whose only stray keys sit on the project entity is reported in the
+    summary but contributes no row to ``entity_findings.jsonl``, which is the
+    only input ``fix_annotation_keys.py --findings`` reads - the finding would be
+    visible and unfixable. It stays opt-in, matching the audit flag that folds
+    those keys into the inventory in the first place.
     """
     seen = 0
     frontier = [project_id]
     visited: set[str] = {project_id}
+
+    if include_project_entity:
+        yield project_id, 'Project'
+        seen += 1
+        if limit is not None and seen >= limit:
+            return
 
     while frontier:
         if workers > 1 and len(frontier) > 1:
@@ -617,6 +632,22 @@ def load_state(path: Path) -> dict[str, ProjectAudit]:
             audit = ProjectAudit.from_dict(json.loads(line))
             audits[audit.project_id] = audit
     return audits
+
+
+def carry_forward(
+    existing: Mapping[str, ProjectAudit],
+    rescanning: Iterable[str],
+) -> list[ProjectAudit]:
+    """State-file entries this run is not redoing, and so must carry forward.
+
+    A resumed run rescans the projects that previously came back forbidden or
+    failed. Carrying their stale audit forward as well would count them twice:
+    the same project reported as both scanned and forbidden, ``projects_total``
+    inflated, and a duplicate row in the CSV - so a resume that successfully
+    retried three 403s would still exit 2 on them.
+    """
+    pending = set(rescanning)
+    return [audit for audit in existing.values() if audit.project_id not in pending]
 
 
 def append_state(path: Path, audit: ProjectAudit) -> None:
@@ -933,7 +964,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     LOG.info('auditing %d projects with %d workers', len(projects), args.workers)
     started = time.time()
-    audits = list(existing.values())
+    audits = carry_forward(existing, (p['project_id'] for p in projects))
 
     def run(project: dict) -> ProjectAudit:
         return audit_project(
@@ -966,6 +997,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     syn, audit, canon=canon, index=index,
                     loose_compare=args.loose_compare, limit=args.drill_down_limit,
                     workers=args.drill_down_workers,
+                    include_project_entity=args.include_project_entity,
                 ):
                     handle.write(json.dumps(finding) + '\n')
                     total += 1

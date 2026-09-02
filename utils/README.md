@@ -83,6 +83,10 @@ Two things to know when reading a report:
 
 Exit codes follow `check_schema_limits.py`: `0` clean, `1` repairable findings (with `--fail-on-findings`), `2` warnings.
 Unrecognised keys do not warn by default - projects legitimately carry custom annotations - but probable misspellings of a schema slot do, since those are real bugs.
+The weekly workflow fails the job on both `1` and `2`, with different messages: a warning annotation on a green job is what gets ignored, and lost coverage has to be as visible as drift.
+Accepting a key in `annotation_key_allowlist.yaml` or raising `--max-unscanned` is how a triaged run goes green again.
+
+`--include-project-entity` folds the project entity's own annotation keys into the inventory - a view scope cannot see them - and makes `--drill-down` inspect the project entity too, so a project-level finding is reachable by `fix_annotation_keys.py --findings` rather than visible but unfixable.
 
 **Related files:**
 - `annotation_key_allowlist.yaml` - findings a human has accepted; affects the exit code only, never the report
@@ -114,7 +118,7 @@ Safety properties, in the order they matter:
 1. **Dry run is the default**, and `--apply` alone is not enough - `--actions` must name each destructive action, so a rename can never happen silently alongside a drop.
 2. **The backup is written and fsynced before the mutation**, so a kill mid-write still leaves a recoverable record. It stores the `/annotations2` payload including declared value types, so a rollback reproduces the original exactly rather than re-inferring types.
 3. **Decisions are recomputed from a fresh read at write time**, never from the scan. If a value changed in between, the verdict flips to a reported conflict instead of a silent delete.
-4. **Keys the run did not name are copied verbatim**, types included. That is what lets `--verify` assert that nothing else changed.
+4. **Keys the run did not name are copied verbatim**, types and original wire strings included. Decoding is lossy in the textual direction - a DOUBLE stored as `"1.50"` decodes to `1.5` and would re-serialise as `"1.5"` - and `--verify` compares decoded values, so it could never catch that; re-emitting the strings Synapse served is what makes "nothing else changed" true byte for byte rather than only semantically.
 5. **Conflicts are never written.** Values that genuinely differ, values that match only across types, and targets that are Synapse reserved fields are all reported for a human.
 
 Rollback has one non-obvious property worth knowing before relying on it: the backed-up etag is the *pre-write* etag and is stale the moment the fix wrote, so the restore reads the current etag first.
@@ -156,9 +160,13 @@ Every entity is classified into one of four transitions. Only `regression` block
 | `still_invalid` | invalid either way; a pre-existing problem unrelated to key casing |
 | `regression` | valid now, invalid after - **blocker** |
 
-Two things this gets right that a naive implementation does not:
+A plan that cannot be checked is not a plan that passed: when used as `--validate-schema`, entities that could not be read, or that are bound to a template this checkout does not have, block the run just as a `regression` does.
+`--allow-unvalidatable` accepts that gap deliberately.
+
+Three things this gets right that a naive implementation does not:
 
 - **It validates `GET /entity/{id}/json`, not a dict rebuilt from annotations.** Synapse's JSON presentation is schema-driven, not uniform: on `syn64420376` it renders `age` as the scalar `1.5` but `individualID` as the array `['1119']`, both single-value annotations. Rebuilding by flattening single-item lists produces spurious `is not of type 'array'` failures. Only the entity JSON endpoint matches what Synapse actually validates.
+- **It predicts a renamed value in the shape Synapse will render it**, wrapping it when the target property is declared `array` and unwrapping a single value when it is not. `individualID` is declared `array` in 41 of the 42 registered schemas that declare it at all, so moving the value verbatim reported regressions that cannot happen - and one blocker aborts the whole rename pass. Note that `apply_key_changes` and `annotation_key_policy.apply_decisions` operate on different shapes on purpose: the latter on the annotations dict, where every value is a list, the former on the entity JSON, where the bound schema decides.
 - **It resolves the schema from the entity's binding**, falling back to the `Component` annotation, and reports version drift between the bound version and this checkout. Synapse's own cached `isValid` can be stale: `syn64420357` reports invalid against `microscopyassaytemplate-11.0.20` for missing `fileFormat`/`resourceType`, but its binding is 11.1.22, where a `concreteType` guard restricts those requirements to FileEntity - so the folder is valid under the schema actually bound to it. Prefer a fresh check over a stale cached one.
 
 **Related files:**

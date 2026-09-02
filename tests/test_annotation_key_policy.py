@@ -140,17 +140,27 @@ def test_no_two_canonical_names_collide_onto_one_stray(canon):
 
 
 def test_legacy_aliases_resolve_to_current_canonical_names(index, canon):
-    # Five verified exceptions the PascalCase rule cannot derive. They have zero
+    # Four verified exceptions the PascalCase rule cannot derive. They have zero
     # hits in the wild today; they are kept so coverage claims stay honest.
     assert policy.LEGACY_ALIASES == {
         'Breast Cancer': 'breastCancer',
         'Vestibular Schwannoma': 'vestibularSchwannoma',
         'CroissantFileS3Object': 'croissant_file_s3_object',
         'ResourceId': 'Resource_id',
-        'eTag': 'etag',
     }
     for target in policy.LEGACY_ALIASES.values():
         assert target in canon
+
+
+def test_no_alias_is_written_for_an_infra_key(canon, index):
+    # An alias for an infra key would be unreachable: both consumers skip infra
+    # keys before consulting the index, so keeping one would only suggest the
+    # infra guard is what needs loosening. `Id` still reaches the index because
+    # the PascalCase rule derives it from the `id` slot, and the infra guard is
+    # what stops it there.
+    assert not set(policy.LEGACY_ALIASES) & policy.INFRA_KEYS
+    for key in policy.INFRA_KEYS:
+        assert policy.decide(key, {key: ['x']}, canon=canon, index=index).reason == 'infra_key'
 
 
 # ---------------------------------------------------------------------------
@@ -375,10 +385,14 @@ def test_orphan_case_variant_is_renamed(canon, index):
 
 
 def test_pascal_rule_alone_would_miss_etag(canon, index):
-    # to_stray('etag') is 'Etag', not 'eTag', so only the alias table catches it.
+    # to_stray('etag') is 'Etag', not 'eTag', so the PascalCase rule cannot see
+    # it; the case-variant rule is what resolves it. `decide` still skips it,
+    # because the infra guard runs first - that guard, not the absence of a
+    # mapping, is what keeps a Synapse-owned field from being rewritten.
     assert policy.to_stray('etag') == 'Etag'
-    resolved, _ = policy.resolve_canonical('eTag', canon=canon, index=index)
-    assert resolved == 'etag'
+    resolved, rule = policy.resolve_canonical('eTag', canon=canon, index=index)
+    assert (resolved, rule) == ('etag', 'case_variant')
+    assert policy.decide('eTag', {'eTag': ['x']}, canon=canon, index=index).reason == 'infra_key'
 
 
 # ---------------------------------------------------------------------------
