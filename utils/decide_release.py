@@ -47,9 +47,9 @@ import argparse
 import json
 import re
 import sys
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
-from typing import Iterable
 
 # Commits produced by automation are not, on their own, a reason to release.
 AUTOMATED_MARKERS = ("rebuild all artifacts", "[skip ci]")

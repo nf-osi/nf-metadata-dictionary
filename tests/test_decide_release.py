@@ -872,6 +872,7 @@ def _run_cli(args: list) -> subprocess.CompletedProcess:
         [sys.executable, str(SCRIPT)] + args,
         capture_output=True,
         text=True,
+        check=False,  # the exit code is what several of these tests assert on
     )
 
 
