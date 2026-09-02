@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 """
-Tests for the deterministic release decision fallback used when the AI
-evaluation in the Release workflow is unavailable (e.g. Anthropic API outage
-or exhausted credits).
+Tests for the Release workflow's decision step: both the AI-acceptance path
+and the deterministic fallback used when the AI evaluation is unavailable
+(e.g. Anthropic API outage or exhausted credits), plus the choice between them.
 
-The fallback must emit the same JSON contract the AI step produces, so the
-rest of the release pipeline stays agnostic about which path decided.
+AI acceptance covers ai_response_text (non-200, a request that never completed,
+unusable or truncated payloads, text blocks after thinking blocks), ai_decision
+(fence stripping, the boolean gate, version shape and ordering), and the
+accept-ai CLI. The deterministic side covers decide, releasability_error and
+resolve_decision.
+
+Both paths must emit the same JSON contract, so the rest of the release
+pipeline stays agnostic about which one decided.
 """
 
 import json
@@ -23,6 +29,10 @@ import decide_release  # noqa: E402  (needs utils on sys.path first)
 
 
 SCRIPT = Path(__file__).parent.parent / 'utils' / 'decide_release.py'
+WORKFLOW = (
+    Path(__file__).parent.parent
+    / '.github' / 'workflows' / 'release-new-version.yaml'
+)
 RS = decide_release.RECORD_SEPARATOR
 
 # The real commit range v11.0.20..v11.1.22, as
@@ -517,8 +527,9 @@ def test_ai_response_text_rejects_non_200(code: str) -> None:
 
 @pytest.mark.parametrize("code", [decide_release.CURL_FAILURE_CODE, "", "   "])
 def test_ai_response_text_rejects_an_unreachable_api(code: str) -> None:
-    """curl reports no status at all on DNS or network failure."""
-    with pytest.raises(decide_release.AiUnusable, match="never reached"):
+    """curl reports no status at all on DNS failure, network failure or a
+    --max-time/--connect-timeout expiry."""
+    with pytest.raises(decide_release.AiUnusable, match="never completed"):
         decide_release.ai_response_text(code, "")
 
 
@@ -683,7 +694,7 @@ def test_resolve_decision_prefers_a_usable_ai_answer() -> None:
 
 @pytest.mark.parametrize("code,body,expected", [
     ("402", '{"error": {"message": "credit balance is too low"}}', "HTTP 402"),
-    (decide_release.CURL_FAILURE_CODE, "", "never reached"),
+    (decide_release.CURL_FAILURE_CODE, "", "never completed"),
     ("200", "not json", "not a usable API payload"),
     ("200", None, "single valid decision JSON"),
 ])
@@ -903,7 +914,7 @@ def test_cli_accept_ai_accepts_fenced_json(tmp_path: Path) -> None:
 @pytest.mark.parametrize("http_code,response_body,expected", [
     ("402", '{"error": {"message": "credit balance is too low"}}', "HTTP 402"),
     ("500", "", "HTTP 500"),
-    ("000", None, "never reached"),
+    ("000", None, "never completed"),
     ("200", "<html>502</html>", "not a usable API payload"),
 ])
 def test_cli_accept_ai_falls_back_when_the_api_fails(
@@ -917,6 +928,14 @@ def test_cli_accept_ai_falls_back_when_the_api_fails(
     assert outcome["decision"] == {
         "release": True, "version": "11.2", "reasoning": outcome["decision"]["reasoning"],
     }
+
+
+@pytest.mark.parametrize("flag", ["--connect-timeout", "--max-time"])
+def test_workflow_bounds_the_api_call(flag: str) -> None:
+    """A hung API call would cancel the job, and a cancelled job never reaches
+    the failure() issue step, so the release would vanish with no trace. With
+    these flags curl reports 000 instead and the fallback takes over."""
+    assert flag in WORKFLOW.read_text(encoding="utf-8")
 
 
 @pytest.mark.parametrize("text,expected", [

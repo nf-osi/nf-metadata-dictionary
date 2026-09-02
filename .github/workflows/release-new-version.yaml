@@ -165,9 +165,13 @@ jobs:
             messages: [{ role: "user", content: $prompt }]
           }')
 
-          # A curl failure (DNS, network) must not abort the step - it is just
-          # another reason to fall back, so swallow the exit code here.
+          # A curl failure (DNS, network, timeout) must not abort the step - it
+          # is just another reason to fall back, so swallow the exit code here.
+          # Without the timeouts a stalled connection would hold the job until
+          # its 6h cap, and a cancelled job never runs the failure() issue step,
+          # so the release would vanish silently instead of falling back.
           HTTP_CODE=$(curl -s -o /tmp/api_response.json -w '%{http_code}' \
+            --connect-timeout 15 --max-time 120 \
             https://api.anthropic.com/v1/messages \
             -H "content-type: application/json" \
             -H "x-api-key: $ANTHROPIC_API_KEY" \

@@ -327,8 +327,8 @@ def ai_response_text(http_code: str, response_body: str) -> str:
     code = (http_code or "").strip()
     if not code or code == CURL_FAILURE_CODE:
         raise AiUnusable(
-            "the AI evaluation request never reached the API (no HTTP status; "
-            "DNS or network failure)"
+            "the AI evaluation request never completed (no HTTP status; DNS, "
+            "network failure or timeout)"
         )
     if code != "200":
         raise AiUnusable(f"the AI evaluation request failed with HTTP {code}")
