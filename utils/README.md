@@ -115,10 +115,12 @@ python utils/fix_annotation_keys.py --rollback annotation-fix-logs/drop-1 --appl
 
 Safety properties, in the order they matter:
 
-1. **Dry run is the default**, and `--apply` alone is not enough - `--actions` must name each destructive action, so a rename can never happen silently alongside a drop.
+1. **Dry run is the default**, and `--apply` alone is not enough - `--actions` has no default and must name each destructive action, so nothing is dropped or renamed that was not asked for by name.
 2. **The backup is written and fsynced before the mutation**, so a kill mid-write still leaves a recoverable record. It stores the `/annotations2` payload including declared value types, so a rollback reproduces the original exactly rather than re-inferring types.
 3. **Decisions are recomputed from a fresh read at write time**, never from the scan. If a value changed in between, the verdict flips to a reported conflict instead of a silent delete.
-4. **Keys the run did not name are copied verbatim**, types and original wire strings included. Decoding is lossy in the textual direction - a DOUBLE stored as `"1.50"` decodes to `1.5` and would re-serialise as `"1.5"` - and `--verify` compares decoded values, so it could never catch that; re-emitting the strings Synapse served is what makes "nothing else changed" true byte for byte rather than only semantically.
+4. **Values are never re-serialised**, types and original wire strings included - not for a key the run did not name, and not for one it only moved.
+   Decoding is lossy in the textual direction - a DOUBLE stored as `"1.50"` decodes to `1.5` and would re-serialise as `"1.5"`, `"1e6"` as `"1000000.0"` - and `--verify` compares decoded values, so it could never catch that.
+   Re-emitting the strings Synapse served is what makes "nothing else changed" true byte for byte rather than only semantically, and what makes a rename a move rather than a rewrite.
 5. **Conflicts are never written.** Values that genuinely differ, values that match only across types, and targets that are Synapse reserved fields are all reported for a human.
 
 Rollback has one non-obvious property worth knowing before relying on it: the backed-up etag is the *pre-write* etag and is stale the moment the fix wrote, so the restore reads the current etag first.

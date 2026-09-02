@@ -88,7 +88,9 @@ def encode_annotations(
     ``"1000000.0"`` - and ``verify_run`` compares decoded values, so it could
     never catch that. ``raw`` closes the gap: when a key's value still decodes to
     exactly what is being written, the original strings go back out untouched.
-    Only a key the plan actually named is re-encoded.
+    Callers supply ``raw`` under the key each value is being written to, so a
+    renamed key carries its original representation to its new name and only a
+    genuinely changed value is re-encoded.
     """
     raw = raw or {}
     encoded = {}

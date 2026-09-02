@@ -394,9 +394,12 @@ def audit_project(
             label=audit.project_id,
         )
         if include_project_entity:
-            # A view scope cannot see the project entity's own annotations.
-            for key in _project_entity_keys(syn, audit.project_id):
-                key_types.setdefault(key, set()).add('STRING')
+            # A view scope cannot see the project entity's own annotations. Merge
+            # each key's declared type, not a placeholder: the multitype report is
+            # triage input for the value-type issue, so a fabricated STRING would
+            # invent a conflict against a real LONG or DOUBLE column.
+            for key, declared in _project_entity_types(syn, audit.project_id).items():
+                key_types.setdefault(key, set()).add(declared)
     except Exception as error:  # noqa: BLE001 - the failure mode is the finding
         audit.status = 'forbidden' if _is_forbidden(error) else 'error'
         audit.error = f'{type(error).__name__}: {error}'[:300]
@@ -411,12 +414,13 @@ def audit_project(
     return audit
 
 
-def _project_entity_keys(syn, project_id: str) -> list[str]:
+def _project_entity_types(syn, project_id: str) -> dict[str, str]:
+    """The project entity's own annotation keys and their declared value types."""
     try:
-        return list(read_annotations(syn, project_id).values)
+        return dict(read_annotations(syn, project_id).types)
     except Exception as error:  # noqa: BLE001
         LOG.warning('%s: could not read project annotations: %s', project_id, error)
-        return []
+        return {}
 
 
 def _with_retries(call, *, max_retries: int, label: str):

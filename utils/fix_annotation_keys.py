@@ -7,16 +7,17 @@ by ``utils/audit_annotation_keys.py --drill-down``, or name projects directly.
 
 Safety model
 ------------
-* Dry run is the default. ``--apply`` alone is not enough: ``--actions`` must
-  name each destructive action, so a rename can never happen silently alongside
-  a drop.
+* Dry run is the default. ``--apply`` alone is not enough: ``--actions`` has no
+  default and must name each destructive action, so nothing is dropped or
+  renamed that was not asked for by name.
 * Every original annotation dict is written to a backup JSONL and fsynced
   *before* the entity is mutated, so a kill mid-write cannot lose the record.
 * Decisions are recomputed from a fresh read at write time, never from the
   scan. If a value changed in between, the verdict flips to a reported conflict
   instead of a silent delete.
-* Keys the tool was not asked to touch are copied verbatim, which is what lets
-  ``--verify`` prove nothing else changed.
+* Values are never re-serialised - not for a key the tool was not asked to
+  touch, and not for one it only moved - which is what lets ``--verify`` prove
+  nothing else changed.
 * ``--rollback`` restores from the backup, and refuses to revert an entity that
   someone else has edited since the fix ran.
 
@@ -51,6 +52,7 @@ import logging
 import os
 import sys
 import time
+from collections import deque
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -82,11 +84,12 @@ LOG = logging.getLogger('fix_annotation_keys')
 #: Statuses that mean an entity needs no further attention on a resumed run.
 SETTLED_STATUSES = frozenset({'ok', 'noop'})
 
-#: Abort once more than this fraction of the writes so far have failed. Checked
-#: on every entity from ERROR_SAMPLE onward, not once: a run that starts healthy
-#: and degrades at entity 100 has to stop there too.
+#: Abort once more than this fraction of the most recent writes have failed. The
+#: rate is measured over a trailing window rather than the whole run, so a
+#: healthy prefix cannot dilute the signal: a run that degrades at entity 2,000
+#: stops there rather than waiting for the cumulative rate to catch up.
 ERROR_RATE_THRESHOLD = 0.10
-#: How many writes to see before the rate is meaningful enough to act on.
+#: How many of the most recent writes the rate is measured over.
 ERROR_SAMPLE = 50
 
 
@@ -243,19 +246,25 @@ def apply_entity(
         # write still leaves a recoverable record.
         logs.write_backup(fresh)
 
-        # Carry each surviving key's declared type across, including for a
-        # renamed key, so nothing is silently retyped.
+        # Carry each surviving key's declared type and original wire strings
+        # across, including for a renamed key: a rename moves metadata, it does
+        # not retype or re-serialise it.
         planned_types = dict(fresh.types)
+        planned_raw = dict(fresh.raw)
         for decision in writing:
             if decision.action is Action.RENAME_STRAY and decision.canonical_key:
                 planned_types[decision.canonical_key] = fresh.types.get(decision.stray_key, 'STRING')
+                stray_raw = fresh.raw.get(decision.stray_key)
+                if stray_raw is not None:
+                    planned_raw[decision.canonical_key] = stray_raw
 
         try:
-            # `fresh.raw` carries the original wire strings, so every key the
-            # plan did not name is re-emitted exactly as Synapse served it
-            # rather than re-serialised from its decoded value.
+            # `planned_raw` carries the original wire strings, so every key the
+            # plan did not rewrite - including one it only moved - is emitted
+            # exactly as Synapse served it rather than re-serialised from its
+            # decoded value.
             write_annotations(syn, AnnotationRecord(entity_id, fresh.etag, planned,
-                                                   planned_types, fresh.raw))
+                                                   planned_types, planned_raw))
         except Exception as error:  # noqa: BLE001
             if _is_etag_conflict(error) and attempt < max_retries:
                 LOG.info('%s: etag conflict, re-reading (attempt %d/%d)',
@@ -284,9 +293,23 @@ def apply_entity(
 # ---------------------------------------------------------------------------
 
 #: Conformance statuses that mean the entity was never actually validated, so
-#: the preflight has no verdict for it. Mirrors what
-#: ``validate_annotations.main`` exits 2 for.
-UNVALIDATABLE_STATUSES = frozenset({'error', 'no_schema'})
+#: the preflight has no verdict for it. ``error`` and ``no_schema`` are what
+#: ``validate_annotations.main`` exits 2 for; ``unbound`` belongs here for the
+#: same reason - nothing was checked, so nothing was proven.
+UNVALIDATABLE_STATUSES = frozenset({'error', 'no_schema', 'unbound'})
+
+
+def component_of(values: dict[str, list] | None) -> str | None:
+    """The template an entity's ``Component`` annotation names, if any.
+
+    An entity with no schema binding can still record which template the curator
+    intended, and that is the only thing left to validate it against.
+    """
+    raw = (values or {}).get('Component') or (values or {}).get('component')
+    if isinstance(raw, (list, tuple)):
+        raw = raw[0] if raw else None
+    text = str(raw).strip() if raw is not None else ''
+    return text or None
 
 
 @dataclass
@@ -308,6 +331,7 @@ def schema_preflight(
     *,
     registry: SchemaRegistry,
     repo_version: str | None = None,
+    components: dict[str, str | None] | None = None,
 ) -> PreflightReport:
     """Whether the planned fix keeps every entity JSON-schema conformant.
 
@@ -322,11 +346,17 @@ def schema_preflight(
     is worse in one respect - the gate has no verdict at all, so treating it as
     a pass would make "every entity proven safe" indistinguishable from "nothing
     could be checked".
+
+    ``components`` supplies each entity's ``Component`` annotation, so an entity
+    with no binding is still checked against the template its curator named
+    rather than counted as unvalidatable for want of a lookup.
     """
+    components = components or {}
     report = PreflightReport()
     for entity_id, decisions in plans.items():
         outcome = check_entity(
             syn, entity_id, registry=registry, repo_version=repo_version, decisions=decisions,
+            fallback_component=components.get(entity_id),
         )
         report.checked += 1
         if outcome.blocking:
@@ -521,15 +551,19 @@ def rollback(
 # CLI
 # ---------------------------------------------------------------------------
 
-def parse_actions(spec: str) -> set[Action]:
+def parse_actions(spec: str | None) -> set[Action]:
     """Turn ``drop_stray,rename_stray`` into policy actions.
 
-    Only mutating actions may be requested; naming a report-only action is a
-    usage error rather than a silent no-op.
+    There is no default: nothing destructive happens unless the action is named,
+    so an omitted ``--actions`` is a usage error rather than an implicit drop
+    pass. Only mutating actions may be requested; naming a report-only action is
+    likewise a usage error rather than a silent no-op.
     """
-    requested = {part.strip() for part in spec.split(',') if part.strip()}
+    requested = {part.strip() for part in (spec or '').split(',') if part.strip()}
     if not requested:
-        raise SystemExit('--actions must name at least one of: drop_stray, rename_stray')
+        raise SystemExit(
+            '--actions is required and must name at least one of: drop_stray, rename_stray'
+        )
     allowed = {a.value: a for a in WRITING_ACTIONS}
     unknown = requested - set(allowed)
     if unknown:
@@ -607,8 +641,8 @@ def build_parser() -> argparse.ArgumentParser:
                         help='restrict to this project (repeatable)')
     parser.add_argument('--entity', action='append', default=[], metavar='SYNID',
                         help='fix this entity directly (repeatable)')
-    parser.add_argument('--actions', default='drop_stray',
-                        help='comma-separated: drop_stray, rename_stray')
+    parser.add_argument('--actions', default=None,
+                        help='required for a fix run; comma-separated: drop_stray, rename_stray')
     parser.add_argument('--apply', action='store_true',
                         help='actually write; omitted means dry run')
     parser.add_argument('--log-dir', default=None,
@@ -627,8 +661,8 @@ def build_parser() -> argparse.ArgumentParser:
                              'validation against this checkout of registered-json-schemas/')
     parser.add_argument('--allow-unvalidatable', action='store_true',
                         help='proceed even when --validate-schema could not reach a verdict on '
-                             'some entities (unreadable, or bound to a schema this checkout '
-                             'does not have)')
+                             'some entities (unreadable, bound to a schema this checkout does '
+                             'not have, or with neither a binding nor a Component annotation)')
     parser.add_argument('--verify', action='store_true', help='verify after applying')
     parser.add_argument('--verify-only', action='store_true', help='verify a previous run and exit')
     parser.add_argument('--rollback', default=None, metavar='LOGDIR',
@@ -725,6 +759,7 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
         LOG.info('schema preflight: %d entities against %d schemas (repo version %s)',
                  len(entity_ids), len(registry.by_name), repo_version or 'unknown')
         plans: dict[str, list[dict]] = {}
+        components: dict[str, str | None] = {}
         for entity_id in entity_ids:
             planned = apply_entity(
                 syn, entity_id, canon=canon, index=index, logs=logs,
@@ -733,7 +768,9 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
             )
             if planned.applied:
                 plans[entity_id] = planned.applied
-        preflight = schema_preflight(syn, plans, registry=registry, repo_version=repo_version)
+                components[entity_id] = component_of(planned.planned)
+        preflight = schema_preflight(syn, plans, registry=registry, repo_version=repo_version,
+                                     components=components)
         if preflight.blockers:
             LOG.error('%d entities would fail schema validation after the fix; refusing to proceed',
                       len(preflight.blockers))
@@ -772,7 +809,7 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
 
     syn = _login_cached()
     results: list[ApplyResult] = []
-    errors = 0
+    recent_failures: deque[bool] = deque(maxlen=ERROR_SAMPLE)
     for position, entity_id in enumerate(entity_ids, 1):
         result = apply_entity(
             syn, entity_id, canon=canon, index=index, logs=logs,
@@ -780,13 +817,17 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
             loose_compare=args.loose_compare, max_retries=args.max_retries,
         )
         results.append(result)
-        if result.status in ('error', 'etag_conflict'):
-            errors += 1
+        recent_failures.append(result.status in ('error', 'etag_conflict'))
         # Circuit breaker: a systemic problem - a revoked token, a service
         # degradation, an ACL changed mid-run - should stop the run when it
-        # starts, whether that is at entity 50 or at entity 2,000.
-        if position >= ERROR_SAMPLE and errors / position > ERROR_RATE_THRESHOLD:
-            LOG.error('aborting: %d of the first %d entities failed', errors, position)
+        # starts, whether that is at entity 50 or at entity 2,000. Hence the
+        # trailing window: the whole-run rate would take hundreds more failures
+        # to clear the threshold once a long healthy prefix has diluted it.
+        failures = sum(recent_failures)
+        if (len(recent_failures) == ERROR_SAMPLE
+                and failures / ERROR_SAMPLE > ERROR_RATE_THRESHOLD):
+            LOG.error('aborting at entity %d: %d of the last %d failed',
+                      position, failures, ERROR_SAMPLE)
             break
         if not dry_run:
             time.sleep(args.sleep)

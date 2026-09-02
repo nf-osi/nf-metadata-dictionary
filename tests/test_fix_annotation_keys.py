@@ -303,15 +303,21 @@ def test_untouched_keys_round_trip_their_exact_wire_representation(rules, logs):
     assert backup['annotations']['age'] == {'type': 'DOUBLE', 'value': ['1.50']}
 
 
-def test_a_renamed_key_is_re_encoded_from_its_decoded_value(rules, logs):
-    # The counterpart: a key the plan names has no original wire form under its
-    # new name, so it is encoded from the decoded value. Only untouched keys get
-    # the verbatim treatment.
+def test_a_renamed_key_carries_its_raw_wire_strings_to_its_new_name(rules, logs):
+    # A rename moves metadata; it must not rewrite it. Re-encoding from the
+    # decoded value would land '1e6' as '1000000.0' and '1.50' as '1.5', so the
+    # stray's original wire strings travel across to the canonical key.
     syn = StubSynapse({'syn1': ('etag-1', {})})
-    syn.entities['syn1'] = ('etag-1', {'ReadDepth': {'type': 'DOUBLE', 'value': ['1e6']}})
+    syn.entities['syn1'] = ('etag-1', {
+        'ReadDepth': {'type': 'DOUBLE', 'value': ['1e6']},
+        'Age': {'type': 'DOUBLE', 'value': ['1.50']},
+    })
     fix.apply_entity(syn, 'syn1', logs=logs, allowed_actions={policy.Action.RENAME_STRAY},
                      dry_run=False, **rules)
-    assert syn.typed_writes[0][1] == {'readDepth': {'type': 'DOUBLE', 'value': ['1000000.0']}}
+    assert syn.typed_writes[0][1] == {
+        'readDepth': {'type': 'DOUBLE', 'value': ['1e6']},
+        'age': {'type': 'DOUBLE', 'value': ['1.50']},
+    }
 
 
 def test_a_renamed_key_carries_its_original_type_across(rules, logs):
@@ -627,11 +633,78 @@ def test_schema_preflight_reports_entities_it_could_not_validate_at_all(rules, l
     assert not report.ok
 
 
-def test_the_circuit_breaker_trips_when_writes_start_failing_mid_run(monkeypatch, tmp_path):
+def test_schema_preflight_does_not_credit_an_unvalidatable_unbound_entity():
+    # An entity with no binding and no Component was never validated either, so
+    # crediting it toward "proven conformant" would be the same silent pass that
+    # `error` and `no_schema` used to get.
+    import validate_annotations as validate
+
+    registry = validate.SchemaRegistry.load()
+
+    class UnboundStub:
+        def restGET(self, path):
+            if path.endswith('/json'):
+                return {'id': 'syn1', 'Age': 1.5}
+            if path.endswith('/schema/binding'):
+                raise RuntimeError('404 No JSON schema found')
+            raise AssertionError(path)
+
+    plan = [{'action': 'drop_stray', 'stray_key': 'Age', 'canonical_key': 'age'}]
+    report = fix.schema_preflight(
+        UnboundStub(), {'syn1': plan}, registry=registry, repo_version='11.1.22')
+    assert [r.status for r in report.unvalidatable] == ['unbound']
+    assert report.checked - len(report.unvalidatable) == 0
+    assert not report.ok
+
+
+def test_schema_preflight_validates_an_unbound_entity_against_its_component():
+    # The Component annotation still records which template the curator intended,
+    # so an unbound-but-annotated entity is checked rather than written off - the
+    # same fallback the standalone validate_annotations tool applies.
+    import validate_annotations as validate
+
+    registry = validate.SchemaRegistry.load()
+    fixture = Path(__file__).parent / 'data' / 'annotation_keys' / 'syn64420376_entity_json.json'
+    instance = json.loads(fixture.read_text())
+
+    class UnboundStub:
+        def restGET(self, path):
+            if path.endswith('/json'):
+                return json.loads(json.dumps(instance))
+            if path.endswith('/schema/binding'):
+                raise RuntimeError('404 No JSON schema found')
+            raise AssertionError(path)
+
+    plan = [{'action': 'drop_stray', 'stray_key': 'Age', 'canonical_key': 'age'}]
+    report = fix.schema_preflight(
+        UnboundStub(), {'syn64420376': plan}, registry=registry, repo_version='11.1.22',
+        components={'syn64420376': instance['Component']},
+    )
+    assert report.unvalidatable == []
+    assert report.blockers == []
+    assert report.ok
+
+
+@pytest.mark.parametrize('values,expected', [
+    ({'Component': ['MicroscopyAssayTemplate']}, 'MicroscopyAssayTemplate'),
+    ({'component': ['GenomicsAssayTemplate']}, 'GenomicsAssayTemplate'),
+    ({'Component': []}, None),
+    ({'Component': ['  ']}, None),
+    ({}, None),
+    (None, None),
+])
+def test_component_of_reads_either_casing_and_tolerates_absence(values, expected):
+    assert fix.component_of(values) == expected
+
+
+@pytest.mark.parametrize('healthy', [60, 500])
+def test_the_circuit_breaker_trips_when_writes_start_failing_mid_run(
+        monkeypatch, tmp_path, healthy):
     # The point of the breaker is that a systemic problem - a revoked token, a
     # service degradation, an ACL changed mid-run - stops the run where it
-    # starts. Checking the rate only once, at entity 50, means a run that is
-    # healthy for the first 60 entities grinds through all the rest.
+    # starts. Hence the trailing window: a whole-run rate needs ~56 consecutive
+    # failures to clear 10% after a healthy prefix of 500, and the longer the
+    # prefix the worse it gets.
     class FlakySynapse:
         def __init__(self, healthy):
             self.healthy = healthy
@@ -647,17 +720,18 @@ def test_the_circuit_breaker_trips_when_writes_start_failing_mid_run(monkeypatch
             return {'id': entity_id, 'etag': 'etag-1',
                     'annotations': to_typed({'Age': [1.5], 'age': [1.5]})}
 
-    syn = FlakySynapse(healthy=60)
+    syn = FlakySynapse(healthy=healthy)
     monkeypatch.setattr(fix, '_SYN', None)
     monkeypatch.setattr(fix, '_login', lambda: syn)
 
     argv = ['--actions', 'drop_stray', '--log-dir', str(tmp_path / 'run')]
-    for index in range(300):
+    for index in range(1000):
         argv += ['--entity', f'syn{index}']
     assert fix.main(argv) == 1
-    # 10% of 60 healthy reads is tolerated, so it aborts a handful past 60 -
-    # nowhere near 300.
-    assert 60 < syn.reads < 100
+    # Six failures in the trailing window of 50 clears 10%, so it aborts within a
+    # handful of entities of the degradation regardless of how healthy the run
+    # was beforehand - nowhere near 1,000.
+    assert syn.reads == healthy + 6
 
 
 def test_the_carry_forward_of_a_resumed_scan_does_not_double_count(tmp_path):
@@ -701,3 +775,17 @@ def test_apply_requires_at_least_one_action():
     args = parser.parse_args(['--project', 'syn1', '--apply', '--actions', 'drop_stray'])
     assert args.apply is True
     assert args.actions == 'drop_stray'
+
+
+def test_apply_without_actions_is_refused_rather_than_defaulting_to_a_drop(monkeypatch, tmp_path):
+    # `--actions` has no default, so a scripted `--apply --yes` cannot delete
+    # stray keys across a findings file without naming the action.
+    assert fix.build_parser().parse_args(['--apply']).actions is None
+
+    def explode():
+        raise AssertionError('must not reach Synapse without --actions')
+
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', explode)
+    with pytest.raises(SystemExit):
+        fix.main(['--entity', 'syn1', '--apply', '--yes', '--log-dir', str(tmp_path / 'run')])

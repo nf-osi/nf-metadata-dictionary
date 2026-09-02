@@ -142,6 +142,36 @@ def test_the_project_entity_counts_against_the_limit():
     assert syn.calls == []
 
 
+def test_the_project_entity_contributes_its_declared_types_not_a_placeholder(monkeypatch):
+    # The multitype report is the triage input for the value-type issue, so
+    # folding the project entity in with a hardcoded STRING would invent a
+    # conflict against a real LONG column and a real conflict would be lost in
+    # the noise.
+    import annotation_key_policy as policy
+    import synapse_annotation_io as io
+
+    canon = frozenset({'age', 'specimenID', 'studyName'})
+    index = policy.KeyIndex.build(canon)
+
+    monkeypatch.setattr(audit, 'scope_columns',
+                        lambda syn, scope, **kwargs: {'age': {'INTEGER'}})
+    monkeypatch.setattr(audit, 'read_annotations', lambda syn, entity_id: io.AnnotationRecord(
+        entity_id, 'etag-1',
+        {'age': [5], 'studyName': ['NF study']},
+        {'age': 'LONG', 'studyName': 'STRING'},
+    ))
+
+    result = audit.audit_project(
+        object(), {'project_id': 'syn0', 'project_name': 'p'}, canon=canon, index=index,
+        view_type_mask=1, include_project_entity=True, async_mode='rest', max_retries=0,
+    )
+    assert result.status == 'ok'
+    assert result.key_types == {'age': ['INTEGER', 'LONG'], 'studyName': ['STRING']}
+    # 'age' really does carry two types here; 'studyName' exists only on the
+    # project entity and must not be reported as conflicting with itself.
+    assert set(result.multitype) == {'age'}
+
+
 def test_walk_is_lazy_and_does_not_read_the_whole_tree_up_front():
     # The caller stops after the first entity; the walk must not have expanded
     # deeper levels. This is what keeps memory bounded on a large project.
