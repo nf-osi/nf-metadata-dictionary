@@ -493,15 +493,25 @@ def drill_down_project(
             'decisions': [d.as_dict() for d in decisions],
         }
 
-    targets = list(_iter_project_entities(syn, audit.project_id, limit=limit))
-    if workers > 1:
-        # Reads only, so these parallelise safely and turn a multi-hour walk over
-        # a large project into minutes.
-        with ThreadPoolExecutor(max_workers=workers) as pool:
-            results = pool.map(inspect, targets)
-    else:
-        results = map(inspect, targets)
-    return [finding for finding in results if finding]
+    walker = _iter_project_entities(syn, audit.project_id, limit=limit, workers=workers)
+    findings: list[dict] = []
+    if workers <= 1:
+        return [finding for finding in map(inspect, walker) if finding]
+
+    # Reads are independent, so they parallelise safely. Chunked rather than
+    # materialised so the walk and the reads overlap and memory stays bounded on
+    # a project with tens of thousands of entities.
+    chunk_size = max(workers * 8, 64)
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        chunk: list[tuple[str, str]] = []
+        for target in walker:
+            chunk.append(target)
+            if len(chunk) >= chunk_size:
+                findings.extend(f for f in pool.map(inspect, chunk) if f)
+                chunk = []
+        if chunk:
+            findings.extend(f for f in pool.map(inspect, chunk) if f)
+    return findings
 
 
 CHILD_TYPES = ('file', 'folder', 'table', 'dataset')
@@ -531,29 +541,54 @@ def _list_children(syn, parent_id: str) -> list[dict]:
             return children
 
 
-def _iter_project_entities(syn, project_id: str, *, limit: int | None = None):
-    """Walk files, folders, tables and datasets under a project."""
+def _safe_list_children(syn, parent_id: str) -> list[dict]:
+    """Children of one entity; an unreadable folder yields nothing rather than
+    aborting a walk over thousands of siblings."""
+    try:
+        return _list_children(syn, parent_id)
+    except Exception as error:  # noqa: BLE001
+        LOG.warning('%s: could not list children: %s', parent_id, error)
+        return []
+
+
+def _iter_project_entities(
+    syn,
+    project_id: str,
+    *,
+    limit: int | None = None,
+    workers: int = 1,
+):
+    """Walk files, folders, tables and datasets under a project.
+
+    Breadth-first, listing every folder at a given depth in parallel. The walk,
+    not the annotation reads, is what dominates a large project: syn23664726 has
+    over 1,300 folders, and listing them one at a time took longer than reading
+    every annotation in the project. Levels are expanded lazily, so a caller
+    that stops early does not pay for the rest of the tree.
+    """
     seen = 0
-    stack = [project_id]
-    visited: set[str] = set()
-    while stack:
-        parent = stack.pop()
-        if parent in visited:
-            continue
-        visited.add(parent)
-        try:
-            children = _list_children(syn, parent)
-        except Exception as error:  # noqa: BLE001
-            LOG.warning('%s: could not list children: %s', parent, error)
-            continue
-        for child in children:
-            entity_type = child['type'].rsplit('.', 1)[-1]
-            if entity_type == 'Folder':
-                stack.append(child['id'])
-            yield child['id'], entity_type
-            seen += 1
-            if limit is not None and seen >= limit:
-                return
+    frontier = [project_id]
+    visited: set[str] = {project_id}
+
+    while frontier:
+        if workers > 1 and len(frontier) > 1:
+            with ThreadPoolExecutor(max_workers=min(workers, len(frontier))) as pool:
+                pages = list(pool.map(lambda p: _safe_list_children(syn, p), frontier))
+        else:
+            pages = [_safe_list_children(syn, parent) for parent in frontier]
+
+        next_frontier: list[str] = []
+        for children in pages:
+            for child in children:
+                entity_type = child['type'].rsplit('.', 1)[-1]
+                if entity_type == 'Folder' and child['id'] not in visited:
+                    visited.add(child['id'])
+                    next_frontier.append(child['id'])
+                yield child['id'], entity_type
+                seen += 1
+                if limit is not None and seen >= limit:
+                    return
+        frontier = next_frontier
 
 
 def _jsonable(value):
