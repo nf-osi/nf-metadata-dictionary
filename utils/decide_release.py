@@ -321,6 +321,27 @@ def strip_code_fences(text: str) -> str:
     )
 
 
+def decision_json(text: str):
+    """
+    Parse the decision document out of the model's answer.
+
+    The model wraps the JSON in fences and prose despite the prompt asking for
+    neither, and discarding its verdict and its notes over a preamble line
+    would silently downgrade the release to a deterministic MINOR bump. Only
+    the span from the first brace to the last is retried, so two concatenated
+    documents still fail to parse rather than being read as one.
+    """
+    stripped = strip_code_fences(text)
+    try:
+        return json.loads(stripped)
+    except ValueError:
+        start = stripped.find("{")
+        end = stripped.rfind("}")
+        if start < 0 or end <= start:
+            raise
+        return json.loads(stripped[start:end + 1])
+
+
 def content_block_text(content: Iterable) -> str:
     """
     Return the text carried by an Anthropic response's content blocks.
@@ -395,7 +416,7 @@ def ai_decision(text: str, last_tag: str) -> dict:
     pipeline fault, so it falls back like any other unusable answer.
     """
     try:
-        raw = json.loads(strip_code_fences(text))
+        raw = decision_json(text)
     except ValueError:
         raise AiUnusable(
             "the AI response was not a single valid decision JSON document"

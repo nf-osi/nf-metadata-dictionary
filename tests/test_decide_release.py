@@ -54,6 +54,16 @@ def api_call_command() -> str:
     return "\n".join(command)
 
 
+def api_call_tokens() -> list:
+    """The curl invocation split into words, line continuations dropped.
+
+    Substring assertions are satisfied by a longer flag that merely starts with
+    the one being asserted - `--retry` matches `--retry-delay` - so the flags
+    are matched as whole words, and their values with them.
+    """
+    return api_call_command().replace("\\\n", " ").split()
+
+
 # The real commit range v11.0.20..v11.1.22, as
 # `git log --no-merges --name-only --format='%x1e%h %s'` rendered it. Long path
 # lists are trimmed to a representative subset, but every path below is one the
@@ -637,6 +647,24 @@ def test_ai_decision_accepts_markdown_fenced_json() -> None:
     assert decision["version"] == "11.2"
 
 
+@pytest.mark.parametrize("text", [
+    'Here is my decision:\n```json\n{"release": true, "version": "11.2", '
+    '"reasoning": "ok"}\n```',
+    '```json\n{"release": true, "version": "11.2", "reasoning": "ok"}\n```\n'
+    "Let me know if you want different notes.",
+    'Here is my decision:\n{"release": true, "version": "11.2", '
+    '"reasoning": "ok"}\nHappy to revise it.',
+])
+def test_ai_decision_accepts_json_wrapped_in_prose(text: str) -> None:
+    """Prose around the JSON is the same non-compliance as fencing it, and
+    discarding the verdict over a preamble line would downgrade a MAJOR the
+    model asked for to a deterministic MINOR bump."""
+    decision = decide_release.ai_decision(text, "v11.1.22")
+
+    assert decision["release"] is True
+    assert decision["version"] == "11.2"
+
+
 def test_ai_decision_accepts_a_decline() -> None:
     decision = decide_release.ai_decision(
         json.dumps({"release": False, "reasoning": "only automated rebuilds"}),
@@ -983,20 +1011,23 @@ def test_cli_accept_ai_falls_back_when_the_api_fails(
     }
 
 
-@pytest.mark.parametrize("flag", [
-    "--connect-timeout",
-    "--max-time",
+@pytest.mark.parametrize("flag,value", [
+    ("--connect-timeout", "15"),
+    ("--max-time", "300"),
     # --max-time restarts on every retry, so the total call is only bounded
     # when --retry-max-time is set alongside it.
-    "--retry",
-    "--retry-max-time",
+    ("--retry", "2"),
+    ("--retry-max-time", "600"),
 ])
-def test_workflow_bounds_the_api_call(flag: str) -> None:
+def test_workflow_bounds_the_api_call(flag: str, value: str) -> None:
     """A hung API call would cancel the job, and a cancelled job never reaches
     the failure() issue step, so the release would vanish with no trace. With
     these flags curl reports 000 instead and the fallback takes over, and a
     transient rate limit is retried rather than costing the AI's verdict."""
-    assert flag in api_call_command()
+    tokens = api_call_tokens()
+
+    assert flag in tokens
+    assert tokens[tokens.index(flag) + 1] == value
 
 
 def test_workflow_reads_paths_without_git_quoting() -> None:
