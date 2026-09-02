@@ -64,6 +64,9 @@ VERSION_PATTERN = re.compile(r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\Z")
 # curl reports no HTTP status when the request never reached the API.
 CURL_FAILURE_CODE = "000"
 
+# The API reports this when a response was cut off at the token cap.
+MAX_TOKENS_STOP_REASON = "max_tokens"
+
 # `git log --format='%x1e...'` prefixes each commit with an ASCII record
 # separator, so subject lines can never be confused with `--name-only` paths.
 RECORD_SEPARATOR = "\x1e"
@@ -293,12 +296,33 @@ def strip_code_fences(text: str) -> str:
     )
 
 
+def content_block_text(content: Iterable) -> str:
+    """
+    Return the text carried by an Anthropic response's content blocks.
+
+    The answer is not necessarily the first block: a leading `thinking` or
+    server tool-use block would otherwise look like an unusable payload and
+    silently route every run to the deterministic path.
+    """
+    carrying_text = [
+        block
+        for block in content
+        if isinstance(block, dict)
+        and isinstance(block.get("text"), str)
+        and block["text"].strip()
+    ]
+    for block in carrying_text:
+        if block.get("type") == "text":
+            return block["text"]
+    return carrying_text[0]["text"] if carrying_text else ""
+
+
 def ai_response_text(http_code: str, response_body: str) -> str:
     """
     Extract the model's answer from a raw Anthropic API response.
 
     Raises AiUnusable for anything that is not a successful, well-formed
-    response carrying text.
+    response carrying a complete answer.
     """
     code = (http_code or "").strip()
     if not code or code == CURL_FAILURE_CODE:
@@ -311,13 +335,26 @@ def ai_response_text(http_code: str, response_body: str) -> str:
 
     try:
         payload = json.loads(response_body)
-        text = payload["content"][0]["text"]
-    except (ValueError, TypeError, KeyError, IndexError):
+        content = payload["content"]
+        stop_reason = payload.get("stop_reason")
+        if not isinstance(content, list):
+            raise TypeError("content is not a list of blocks")
+    except (ValueError, TypeError, KeyError, AttributeError):
         raise AiUnusable(
             "the AI returned HTTP 200 but the response body was not a usable "
             "API payload"
         )
-    if not isinstance(text, str) or not text.strip():
+
+    # A response cut off at the token cap carries a half-written decision, so
+    # name truncation rather than reporting it as a misformatted answer.
+    if stop_reason == MAX_TOKENS_STOP_REASON:
+        raise AiUnusable(
+            f"the AI response was truncated (stop_reason: {MAX_TOKENS_STOP_REASON}); "
+            "raise max_tokens in the workflow if this recurs"
+        )
+
+    text = content_block_text(content)
+    if not text.strip():
         raise AiUnusable("the AI returned HTTP 200 but the response carried no text")
     return text
 

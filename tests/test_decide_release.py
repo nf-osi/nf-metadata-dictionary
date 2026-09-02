@@ -434,6 +434,80 @@ def test_ai_response_text_extracts_the_model_answer() -> None:
     assert decide_release.ai_response_text("200", api_body("hello")) == "hello"
 
 
+def test_ai_response_text_finds_text_after_a_thinking_block() -> None:
+    """
+    The answer is not always the first content block.
+
+    Indexing block 0 would report a perfectly good decision as an unusable
+    payload the moment the API prepends a thinking or server tool-use block,
+    silently routing every scheduled run to the deterministic path.
+    """
+    body = json.dumps({
+        "content": [
+            {"type": "thinking", "thinking": "weighing the commits"},
+            {"type": "text", "text": '{"release": false}'},
+        ]
+    })
+
+    assert decide_release.ai_response_text("200", body) == '{"release": false}'
+
+
+def test_ai_response_text_prefers_a_text_block_over_another_text_field() -> None:
+    body = json.dumps({
+        "content": [
+            {"type": "server_tool_use", "text": "not the answer"},
+            {"type": "text", "text": "the answer"},
+        ]
+    })
+
+    assert decide_release.ai_response_text("200", body) == "the answer"
+
+
+def test_ai_response_text_names_truncation_explicitly() -> None:
+    """
+    A response cut off at max_tokens is truncated, not misformatted.
+
+    Reporting it as invalid JSON would leave a maintainer with no hint that
+    raising the cap is the fix.
+    """
+    body = json.dumps({
+        "stop_reason": "max_tokens",
+        "content": [{"type": "text", "text": '{"release": true, "version": "12.'}],
+    })
+
+    with pytest.raises(decide_release.AiUnusable, match="truncated"):
+        decide_release.ai_response_text("200", body)
+
+
+def test_truncated_response_degrades_instead_of_failing() -> None:
+    """Truncation is one more reason to fall back, never a reason to abort."""
+    body = json.dumps({
+        "stop_reason": "max_tokens",
+        "content": [{"type": "text", "text": '{"release": true, "version": "12.'}],
+    })
+
+    outcome = decide_release.resolve_decision(
+        "200", body, "v11.1.22", [record("feat: new template", "modules/props.yaml")]
+    )
+
+    assert outcome.source == "fallback"
+    assert "truncated" in outcome.fallback_reason
+    assert outcome.decision == {
+        "release": True,
+        "version": "11.2",
+        "reasoning": outcome.decision["reasoning"],
+    }
+
+
+def test_ai_response_text_accepts_a_normal_stop_reason() -> None:
+    body = json.dumps({
+        "stop_reason": "end_turn",
+        "content": [{"type": "text", "text": "hello"}],
+    })
+
+    assert decide_release.ai_response_text("200", body) == "hello"
+
+
 @pytest.mark.parametrize("code", ["400", "401", "402", "429", "500", "529"])
 def test_ai_response_text_rejects_non_200(code: str) -> None:
     """The credit-exhaustion error that caused #967 arrives as an HTTP status."""

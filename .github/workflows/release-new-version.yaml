@@ -156,9 +156,12 @@ jobs:
           {"release": false, "reasoning": "one sentence"}
           PROMPT
 
+          # Headroom for a month of release notes inside the JSON: a response
+          # cut off at the cap is unusable, and the cap costs nothing when the
+          # answer is short.
           PAYLOAD=$(jq -n --rawfile prompt /tmp/prompt.txt '{
             model: "claude-sonnet-4-6",
-            max_tokens: 1024,
+            max_tokens: 4096,
             messages: [{ role: "user", content: $prompt }]
           }')
 
@@ -188,24 +191,19 @@ jobs:
           echo "Release decision:"
           cat /tmp/decision.json
 
-          # Every field below comes from a validated decision: .release is a
+          # Both fields below come from a validated decision: .release is a
           # real boolean and .version is MAJOR.MINOR or absent, so neither can
-          # smuggle a second `should_release=` line into $GITHUB_OUTPUT.
+          # smuggle a second `should_release=` line into $GITHUB_OUTPUT. The
+          # model-controlled reasoning is deliberately not a step output - it
+          # only ever goes to the step summary below.
           FALLBACK_REASON=$(jq -r '.fallback_reason' /tmp/outcome.json)
           SHOULD_RELEASE=$(jq -r '.decision.release' /tmp/outcome.json)
           VERSION=$(jq -r '.decision.version // empty' /tmp/outcome.json)
           REASONING=$(jq -r '.decision.reasoning // empty' /tmp/outcome.json)
 
-          # $REASONING is model-controlled and commit subjects steer the model,
-          # so a fixed heredoc terminator would itself be forgeable.
-          REASONING_EOF="REASONING_EOF_$(openssl rand -hex 16)"
-
           {
             echo "should_release=$SHOULD_RELEASE"
             echo "version=$VERSION"
-            echo "reasoning<<${REASONING_EOF}"
-            echo "$REASONING"
-            echo "${REASONING_EOF}"
           } >> "$GITHUB_OUTPUT"
 
           jq -r '.decision.notes // empty' /tmp/outcome.json > /tmp/release_notes.md
