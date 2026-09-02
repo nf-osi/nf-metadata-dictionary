@@ -133,8 +133,15 @@ Reference: [SWC-7491](https://sagebionetworks.jira.com/browse/SWC-7491?focusedCo
 **PR Validation** (`.github/workflows/main-ci.yml`)
 1. Generates JSON schemas from LinkML sources
 2. Validates against Synapse API (dry-run)
-3. Reports results in PR comment
-4. Blocks merge if validation fails
+3. Runs the pytest files listed in the workflow's `Run pytest` step (see [Local Testing](#local-testing))
+4. Reports results in PR comment
+5. Blocks merge if validation fails
+
+**Release** (`.github/workflows/release-new-version.yaml`)
+Runs on the 1st and 15th of each month, or on manual dispatch.
+Scheduled runs ask Claude whether the commits since the last tag warrant a release and at what `MAJOR.MINOR`; if the Anthropic API is unreachable or answers with something unusable, `utils/decide_release.py` decides deterministically instead so the cadence continues.
+Both paths emit the same decision JSON, and the run's step summary records which one decided.
+See [Release Procedures](../README.md#release-procedures) for triggers and dispatch inputs.
 
 **Schema Registration**
 Typically performed on versioned releases using `register-schemas.py`.
@@ -199,6 +206,41 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/register-schemas.py \
 | `--exclude` | Exclude these files | None |
 
 **Note:** `--include` overrides `--exclude` if both provided.
+
+##### decide_release.py
+
+Decide whether the Release workflow should cut a release, and at what `MAJOR.MINOR`.
+Judges the AI evaluator's answer and decides deterministically whenever that answer cannot be used.
+Standard library only, so no extra installs are needed.
+
+**Usage:**
+```bash
+# Collect the commit range the decision is made from
+git -c core.quotePath=false log v11.1.22..HEAD --no-merges \
+  --name-only --format='%x1e%h %s' > /tmp/commit_paths.txt
+
+# Deterministic decision on its own
+python utils/decide_release.py decide \
+  --last-tag v11.1.22 --commit-paths-file /tmp/commit_paths.txt
+
+# Judge a captured API response, falling back if it is unusable
+python utils/decide_release.py accept-ai \
+  --last-tag v11.1.22 --http-code 200 \
+  --response-file /tmp/api_response.json \
+  --commit-paths-file /tmp/commit_paths.txt
+```
+
+**Subcommands:**
+
+| Subcommand | Prints on stdout |
+|---|---|
+| `decide` | The deterministic decision: `{release, reasoning}`, plus `version` when releasing |
+| `accept-ai` | `{source, fallback_reason, decision}`, where `source` is `ai` or `fallback` |
+
+`accept-ai` exits non-zero only when the resulting decision is unreleasable (e.g. a version that is not `MAJOR.MINOR` or is behind the last tag); an unusable AI response is a fallback, not a failure.
+
+The deterministic path proposes a release only when the non-automated commits (those whose subject holds neither `Rebuild all artifacts` nor `[skip ci]`) touch `modules/`, `rules/`, `dist/`, `registered-json-schemas/`, `header.yaml`, `Makefile`, or `utils/gen-json-schema-class.py`.
+It only ever proposes a MINOR bump and omits release notes, leaving the workflow to use GitHub's auto-generated notes.
 
 
 ### Schema Limits & Validation
@@ -377,16 +419,20 @@ SYNAPSE_AUTH_TOKEN="$TOKEN" python utils/create_recordset_task.py \
 Run all pytest-based tests from the repo root:
 
 ```bash
+pip install pytest jsonschema pyyaml jsonref synapseclient   # same set CI installs
 python -m pytest tests/ -v
 ```
 
-Individual test files:
+Individual test files (all of these run in `main-ci.yml`):
 
 | Test file | What it covers |
 |---|---|
 | `tests/test_schema_instances.py` | JSON instances validate correctly against registered schemas |
 | `tests/test_template_datatypes.py` | Every non-abstract template class declares valid `dataType` annotations |
 | `tests/test_model_system_sync.py` | Model system data is in sync |
+| `tests/test_schema_escape_hatches.py` | Deliberate escape hatches (e.g. `Other Platform`) stay permitted |
+| `tests/test_file_entity_schema_guard.py` | File-based template constraints stay scoped to files, not folders |
+| `tests/test_decide_release.py` | Release decision: AI acceptance, deterministic fallback, and the CLI contract |
 
 #### JSON schema instance tests
 

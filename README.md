@@ -80,7 +80,7 @@ Releases create versioned JSON schemas registered with Synapse. The [release wor
 
 Scheduled decisions are made by Claude, which reads the commits, the changed files, and the schema versions currently registered in Synapse.
 If the Anthropic API is unreachable or returns something unusable, [`utils/decide_release.py`](utils/decide_release.py) decides deterministically instead, so an outage or exhausted credits never stops the release cadence.
-The deterministic path releases only when the non-automated commits since the last tag actually touch the data model (`modules/`, `rules/`, `dist/`, `registered-json-schemas/`, `header.yaml`, or the schema generator), so docs, CI, or tooling churn alone does not burn a schema version.
+The deterministic path releases only when the non-automated commits since the last tag actually touch the data model (`modules/`, `rules/`, `dist/`, `registered-json-schemas/`, `header.yaml`, or the programs that build the schemas - the `Makefile` and `utils/gen-json-schema-class.py`), so docs, CI, or tooling churn alone does not burn a schema version.
 It only ever proposes a MINOR bump, so a MAJOR release needs a manual dispatch with an explicit version.
 There is no switch to flip: the workflow calls the API on every run and resumes using it as soon as it answers again.
 Each run's step summary records which path decided, and why.
