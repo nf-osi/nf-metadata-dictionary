@@ -429,6 +429,21 @@ def releasability_error(decision: dict, last_tag: str) -> str:
     return version_error(decision.get("version", ""), last_tag)
 
 
+def read_text_or_empty(path: Path) -> str:
+    """
+    Read a file the workflow may not have produced.
+
+    Every input this module reads is workflow-generated and outside its control:
+    a missing file, an unreadable one, or a commit subject carrying raw non-UTF-8
+    bytes is one more reason to fall back, never a reason to abort the release
+    step. So decode leniently and treat any read failure as absent content.
+    """
+    try:
+        return path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return ""
+
+
 def read_commit_records(path: Path) -> list:
     """
     Read commit records from a file.
@@ -436,22 +451,7 @@ def read_commit_records(path: Path) -> list:
     A missing file means the workflow found nothing to summarize, which is a
     "nothing to release" signal - not a reason to break the pipeline.
     """
-    if not path.exists():
-        return []
-    return parse_commit_records(path.read_text(encoding="utf-8"))
-
-
-def read_text_or_empty(path: Path) -> str:
-    """
-    Read a file the workflow may not have produced.
-
-    A missing or unreadable API response is one more reason to fall back, not a
-    reason to abort the release step.
-    """
-    try:
-        return path.read_text(encoding="utf-8", errors="replace")
-    except OSError:
-        return ""
+    return parse_commit_records(read_text_or_empty(path))
 
 
 def add_range_arguments(subparser: argparse.ArgumentParser) -> None:

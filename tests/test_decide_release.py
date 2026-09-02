@@ -807,6 +807,27 @@ def test_cli_handles_missing_commit_paths_file_as_empty(tmp_path: Path) -> None:
     assert json.loads(result.stdout)["release"] is False
 
 
+def test_cli_still_decides_when_a_commit_subject_is_not_utf8(tmp_path: Path) -> None:
+    """
+    git emits %s verbatim, so a commit authored without an encoding header can
+    put raw non-UTF-8 bytes in the records file. That must not abort the step -
+    the paths are still readable, so the release decision still stands.
+    """
+    commit_paths = tmp_path / "commit_paths.txt"
+    commit_paths.write_bytes(
+        RS.encode() + b"abc1234 fix: caf\xe9 subject\n\nmodules/props.yaml\n"
+    )
+
+    result = _run_cli([
+        "decide", "--last-tag", "v11.1.22", "--commit-paths-file", str(commit_paths),
+    ])
+
+    assert result.returncode == 0, result.stderr
+    decision = json.loads(result.stdout)
+    assert decision["release"] is True
+    assert decision["version"] == "11.2"
+
+
 @pytest.mark.parametrize("tag", UNPARSEABLE_REAL_TAGS + ("vNope",))
 def test_cli_declines_on_an_unusable_baseline_without_failing(
     tmp_path: Path, tag: str

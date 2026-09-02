@@ -187,9 +187,8 @@ jobs:
             --commit-paths-file /tmp/commit_paths.txt \
             > /tmp/outcome.json
 
-          jq -c '.decision' /tmp/outcome.json > /tmp/decision.json
           echo "Release decision:"
-          cat /tmp/decision.json
+          jq -c '.decision' /tmp/outcome.json
 
           # Both fields below come from a validated decision: .release is a
           # real boolean and .version is MAJOR.MINOR or absent, so neither can
