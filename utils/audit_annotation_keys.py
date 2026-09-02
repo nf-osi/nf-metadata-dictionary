@@ -36,7 +36,6 @@ import csv
 import json
 import logging
 import os
-import random
 import sys
 import time
 from collections import Counter
@@ -58,7 +57,12 @@ from annotation_key_policy import (  # noqa: E402
     decide_entity,
     load_canonical_slots,
 )
-from synapse_annotation_io import column_type_for, read_annotations  # noqa: E402
+from synapse_annotation_io import (  # noqa: E402
+    column_type_for,
+    is_forbidden,
+    read_annotations,
+    with_retries,
+)
 
 LOG = logging.getLogger('audit_annotation_keys')
 
@@ -69,8 +73,6 @@ DEFAULT_VIEW_TYPE_MASK = 0x01 | 0x04 | 0x08 | 0x80  # 141
 DEFAULT_PROJECTS_TABLE = 'syn52694652'  # Portal - MV Studies (Production)
 DEFAULT_ALLOWLIST = Path(__file__).resolve().parent / 'annotation_key_allowlist.yaml'
 PORTAL_FILE_VIEW = 'syn52702673'  # Portal - Files
-
-RETRYABLE_STATUS = (429, 500, 502, 503, 504)
 
 
 # ---------------------------------------------------------------------------
@@ -170,18 +172,6 @@ def tune_connection_pool(syn, size: int) -> None:
     adapter = HTTPAdapter(pool_connections=size, pool_maxsize=size, max_retries=0)
     session.mount('https://', adapter)
     session.mount('http://', adapter)
-
-
-def _is_forbidden(error: Exception) -> bool:
-    status = getattr(getattr(error, 'response', None), 'status_code', None)
-    return status in (401, 403) or 'Forbidden' in str(error) or '403' in str(error)[:8]
-
-
-def _is_retryable(error: Exception) -> bool:
-    status = getattr(getattr(error, 'response', None), 'status_code', None)
-    if status in RETRYABLE_STATUS:
-        return True
-    return isinstance(error, (TimeoutError, ConnectionError))
 
 
 def scope_columns(
@@ -386,12 +376,13 @@ def audit_project(
     audit = ProjectAudit(project_id=project['project_id'], project_name=project.get('project_name', ''))
     started = time.time()
     try:
-        key_types = _with_retries(
+        key_types = with_retries(
             lambda: scope_columns(
                 syn, audit.project_id, view_type_mask=view_type_mask, async_mode=async_mode
             ),
             max_retries=max_retries,
             label=audit.project_id,
+            logger=LOG,
         )
         if include_project_entity:
             # A view scope cannot see the project entity's own annotations. Merge
@@ -403,7 +394,7 @@ def audit_project(
             for key, column in _project_entity_column_types(syn, audit.project_id).items():
                 key_types.setdefault(key, set()).add(column)
     except Exception as error:  # noqa: BLE001 - the failure mode is the finding
-        audit.status = 'forbidden' if _is_forbidden(error) else 'error'
+        audit.status = 'forbidden' if is_forbidden(error) else 'error'
         audit.error = f'{type(error).__name__}: {error}'[:300]
         audit.elapsed_s = time.time() - started
         LOG.warning('%s: %s (%s)', audit.project_id, audit.status, audit.error)
@@ -432,23 +423,6 @@ def _project_entity_column_types(syn, project_id: str) -> dict[str, str]:
         key: column_type_for(declared, len(record.values.get(key) or []))
         for key, declared in record.types.items()
     }
-
-
-def _with_retries(call, *, max_retries: int, label: str):
-    """Retry transient failures with jittered backoff. Never retries a 403."""
-    delay = 2.0
-    for attempt in range(max_retries + 1):
-        try:
-            return call()
-        except Exception as error:  # noqa: BLE001
-            if _is_forbidden(error) or not _is_retryable(error) or attempt == max_retries:
-                raise
-            sleep_for = delay + random.uniform(0, delay / 2)
-            LOG.info('%s: retry %d/%d after %.1fs (%s)', label, attempt + 1, max_retries,
-                     sleep_for, type(error).__name__)
-            time.sleep(sleep_for)
-            delay = min(delay * 2, 30.0)
-    raise AssertionError('unreachable')
 
 
 # ---------------------------------------------------------------------------

@@ -69,6 +69,23 @@ jobs:
           python -m pip install --upgrade pip
           pip install synapseclient pyyaml
 
+      - name: Validate the dispatch inputs
+        env:
+          WORKERS: ${{ github.event.inputs.workers || '10' }}
+          MAX_UNSCANNED: ${{ github.event.inputs.max_unscanned || '0' }}
+        run: |
+          # argparse exits 2 on a bad --workers, and 2 is also how the audit
+          # reports lost coverage. Reject a non-numeric dispatch input here so a
+          # typo in a form field can never be reported as unreadable projects.
+          for PAIR in "workers=$WORKERS" "max_unscanned=$MAX_UNSCANNED"; do
+            case "${PAIR#*=}" in
+              '' | *[!0-9]*)
+                echo "::error::${PAIR%%=*} must be a non-negative integer; got '${PAIR#*=}'"
+                exit 1
+                ;;
+            esac
+          done
+
       - name: Verify the data model artifact is present
         run: |
           # The audit derives canonical slot names from dist/NF.yaml. Without it
@@ -174,24 +191,27 @@ jobs:
         # accept a key in utils/annotation_key_allowlist.yaml, or raise
         # --max-unscanned for projects the service account genuinely cannot read.
         #
-        # Exit 1 cannot be taken at face value: an unhandled exception anywhere in
-        # the scan also exits 1, and reporting a crash as annotation drift sends
+        # Neither 1 nor 2 can be taken at face value. An unhandled exception
+        # anywhere in the scan also exits 1, and argparse exits 2 on a usage
+        # error - reporting either as annotation drift or as lost coverage sends
         # the reader looking for a problem that was never measured. The report is
-        # what tells the two apart - audit/summary.json is written before the exit
-        # code is computed, so its absence means no scan completed.
+        # what tells them apart: audit/summary.json is written before the exit
+        # code is computed, so its absence means no scan completed. An empty code
+        # means the audit step never ran at all.
         if: always()
         run: |
           CODE="${{ steps.audit.outputs.exit_code }}"
+          DID_SCAN=false
+          [ -s audit/summary.json ] && DID_SCAN=true
+
+          if [ "$DID_SCAN" != true ]; then
+            echo "::error::Audit failed to run (exit ${CODE:-none}): no audit/summary.json was written, so no scan completed and nothing was measured about annotation drift or coverage. See the step log."
+            exit 1
+          fi
+
           case "$CODE" in
             0) echo "✅ No mis-cased annotation keys found." ;;
-            1)
-              if [ -s audit/summary.json ]; then
-                echo "::error::Audit found mis-cased annotation keys (exit 1). See the job summary."
-              else
-                echo "::error::Audit failed to run: it exited 1 without writing audit/summary.json, so no scan completed and no drift was measured. See the step log."
-              fi
-              exit 1
-              ;;
+            1) echo "::error::Audit found mis-cased annotation keys (exit 1). See the job summary."; exit 1 ;;
             2) echo "::error::Audit could not vouch for its own coverage (exit 2): unreadable projects, or probable misspellings of a schema slot. Accept a key in utils/annotation_key_allowlist.yaml or raise --max-unscanned once triaged. See the job summary."; exit 1 ;;
-            *) echo "::error::Audit failed to run (exit $CODE). See the job summary."; exit 1 ;;
+            *) echo "::error::Audit exited $CODE, which is not a code it defines. See the job summary."; exit 1 ;;
           esac

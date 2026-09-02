@@ -216,7 +216,11 @@ def apply_entity(
 
     for attempt in range(max_retries + 1):
         try:
-            fresh = read_annotations(syn, entity_id)
+            # The read gets the same retry budget as the write. A rate limit or a
+            # 503 on a read is not a verdict about the entity, and the preflight
+            # refuses the whole run on an entity it could not read, so one blip
+            # would otherwise abort a plan of thousands. A 403 still fails fast.
+            fresh = read_annotations(syn, entity_id, max_retries=max_retries)
         except Exception as error:  # noqa: BLE001
             result = ApplyResult(entity_id, 'error', error=f'{type(error).__name__}: {error}'[:300])
             logs.record_progress(entity_id, result.status, {'error': result.error})
@@ -390,13 +394,15 @@ def schema_preflight(
     dry run that failed before it could build a plan is unvalidatable, because
     the write pass will read that entity again and act on whatever it finds.
 
-    Three outcomes stop the run, and they are reported separately because the
+    Three outcomes stop a write run, and they are reported separately because the
     remedy differs. A blocker is a proven regression: discovering it after the
     write means hand-repairing entities from the backup. An unvalidatable entity
     is worse in one respect - the gate has no verdict at all, so treating it as
     a pass would make "every entity proven safe" indistinguishable from "nothing
-    could be checked". An unaccounted entity means the bucketing itself is
-    broken, and no count the report prints can be trusted.
+    could be checked"; a dry run reports those and carries on, since nothing will
+    be mutated and the report is what a curator triages them from. An unaccounted
+    entity means the bucketing itself is broken, and no count the report prints
+    can be trusted.
 
     An entity with no binding is checked against the template its ``Component``
     annotation names rather than written off for want of a lookup.
@@ -444,7 +450,7 @@ class VerifyReport:
         return not self.failures
 
 
-def verify_run(syn, logs: RunLogs) -> VerifyReport:
+def verify_run(syn, logs: RunLogs, *, max_retries: int = 3) -> VerifyReport:
     """Re-read every mutated entity and prove only the intended keys changed.
 
     The strong assertion is the last one: every key the run did not name must
@@ -462,7 +468,7 @@ def verify_run(syn, logs: RunLogs) -> VerifyReport:
         entity_id = entry['entity_id']
         expected = entry['result']
         try:
-            current = dict(read_annotations(syn, entity_id).values)
+            current = dict(read_annotations(syn, entity_id, max_retries=max_retries).values)
         except Exception as error:  # noqa: BLE001
             report.failures.append({'entity_id': entity_id, 'detail': f'read failed: {error}'})
             continue
@@ -552,6 +558,7 @@ def rollback(
     dry_run: bool = True,
     force: bool = False,
     sleep: float = 0.0,
+    max_retries: int = 3,
 ) -> RollbackReport:
     """Restore the annotations recorded in this run's backup.
 
@@ -573,7 +580,7 @@ def rollback(
 
     for step in steps:
         try:
-            live = read_annotations(syn, step.entity_id)
+            live = read_annotations(syn, step.entity_id, max_retries=max_retries)
         except Exception as error:  # noqa: BLE001
             report.failures.append({'entity_id': step.entity_id, 'detail': str(error)[:200]})
             continue
@@ -717,7 +724,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument('--batch-size', type=int, default=50)
     parser.add_argument('--sleep', type=float, default=0.4, help='seconds between writes')
     parser.add_argument('--batch-pause', type=float, default=2.0)
-    parser.add_argument('--max-retries', type=int, default=3)
+    parser.add_argument('--max-retries', type=int, default=3,
+                        help='attempts to ride out a transient read failure or an etag '
+                             'conflict on write; a 403 is never retried')
     parser.add_argument('--loose-compare', action='store_true',
                         help='treat values equal across types as duplicates')
     parser.add_argument('--validate-schema', action='store_true',
@@ -762,7 +771,8 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
             return 1
         syn = _login()
         report = rollback(syn, logs, dry_run=not args.apply, force=args.force_rollback,
-                          sleep=args.sleep if args.apply else 0.0)
+                          sleep=args.sleep if args.apply else 0.0,
+                          max_retries=args.max_retries)
         LOG.info('rollback: restored=%d would_restore=%d skipped=%d failures=%d',
                  report.restored, report.would_restore, report.skipped, len(report.failures))
         for failure in report.failures:
@@ -775,7 +785,7 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
 
     if args.verify_only:
         syn = _login()
-        report = verify_run(syn, logs)
+        report = verify_run(syn, logs, max_retries=args.max_retries)
         LOG.info('verify: checked=%d failures=%d', report.checked, len(report.failures))
         for failure in report.failures:
             LOG.error('%s: %s', failure['entity_id'], failure['detail'])
@@ -809,6 +819,9 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
         return 1
 
     dry_run = not args.apply
+    # Set when a dry run carried on past entities the preflight could not vouch
+    # for, so the exit code can still say the plan is not one --apply would take.
+    unvalidatable_in_dry_run = False
     mode = 'DRY RUN' if dry_run else 'APPLY'
     LOG.info('%s: %d entities, actions=%s, logs=%s', mode, len(entity_ids),
              ','.join(sorted(a.value for a in allowed_actions)), log_dir)
@@ -849,14 +862,27 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
                 LOG.error('  %s (%s): %s', blocker.entity_id, blocker.schema_name, detail[:160])
             return 1
         if preflight.unvalidatable and not args.allow_unvalidatable:
-            LOG.error('%d of %d entities could not be validated at all, so the preflight cannot '
-                      'vouch for them; refusing to proceed '
-                      '(--allow-unvalidatable to accept the gap, or drop --validate-schema)',
-                      len(preflight.unvalidatable), len(entity_ids))
+            # Only a write run is refused. In a dry run there is nothing for the
+            # gate to protect, and report.csv is the artifact a curator needs in
+            # order to triage the very entity that could not be validated - so
+            # withholding it would make the escape hatch the path of least
+            # resistance, and that habit then carries into the --apply run.
+            if not dry_run:
+                LOG.error('%d of %d entities could not be validated at all, so the preflight '
+                          'cannot vouch for them; refusing to apply '
+                          '(--allow-unvalidatable to accept the gap, or drop --validate-schema)',
+                          len(preflight.unvalidatable), len(entity_ids))
+                for skipped in preflight.unvalidatable[:20]:
+                    LOG.error('  %s: %s (%s)',
+                              skipped.entity_id, skipped.status, skipped.error or '')
+                return 1
+            unvalidatable_in_dry_run = True
+            LOG.warning('%d of %d entities could not be validated at all; --apply would refuse '
+                        'this plan. Continuing the dry run so the report lists them.',
+                        len(preflight.unvalidatable), len(entity_ids))
             for skipped in preflight.unvalidatable[:20]:
-                LOG.error('  %s: %s (%s)', skipped.entity_id, skipped.status, skipped.error or '')
-            return 1
-        if preflight.unvalidatable:
+                LOG.warning('  %s: %s (%s)', skipped.entity_id, skipped.status, skipped.error or '')
+        elif preflight.unvalidatable:
             LOG.warning('%d entities could not be validated; proceeding on --allow-unvalidatable',
                         len(preflight.unvalidatable))
         if preflight.still_invalid:
@@ -867,10 +893,11 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
                 detail = unchanged.after_messages[0] if unchanged.after_messages else ''
                 LOG.warning('  %s (%s): %s', unchanged.entity_id, unchanged.schema_name,
                             detail[:160])
-        LOG.info('schema preflight passed: %d of %d planned changes proven to leave the entity '
+        verdict = 'incomplete' if unvalidatable_in_dry_run else 'passed'
+        LOG.info('schema preflight %s: %d of %d planned changes proven to leave the entity '
                  'conformant (%d already clean, %d repaired, %d unchanged and still invalid, '
                  '%d unvalidatable); %d of %d entities have nothing to change',
-                 preflight.proven, preflight.checked, len(preflight.clean),
+                 verdict, preflight.proven, preflight.checked, len(preflight.clean),
                  len(preflight.repaired), len(preflight.still_invalid),
                  len(preflight.unvalidatable), len(preflight.unchanged), len(entity_ids))
 
@@ -929,11 +956,14 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
     exit_code = 0
     if counts.get('error') or counts.get('etag_conflict'):
         exit_code = 1
-    elif any(r.reported for r in results):
-        exit_code = 2  # conflicts that need a human
+    elif unvalidatable_in_dry_run or any(r.reported for r in results):
+        # 2 is this tool's "the report is written, a human has to look at it":
+        # value conflicts the policy will not decide, and now also a plan --apply
+        # would refuse because some entity could not be validated.
+        exit_code = 2
 
     if args.verify and not dry_run:
-        report = verify_run(syn, logs)
+        report = verify_run(syn, logs, max_retries=args.max_retries)
         LOG.info('verify: checked=%d failures=%d', report.checked, len(report.failures))
         for failure in report.failures:
             LOG.error('%s: %s', failure['entity_id'], failure['detail'])

@@ -162,7 +162,9 @@ Every entity is classified into one of four transitions. Only `regression` block
 | `still_invalid` | invalid either way; a pre-existing problem unrelated to key casing |
 | `regression` | valid now, invalid after - **blocker** |
 
-A plan that cannot be checked is not a plan that passed: when used as `--validate-schema`, three cases block the run just as a `regression` does - an entity that could not be read, one bound to a template this checkout does not have, and one with neither a schema binding nor a `Component` annotation, since there is then nothing to validate it against.
+A plan that cannot be checked is not a plan that passed: when used as `--validate-schema`, three cases refuse an `--apply` run just as a `regression` does - an entity that could not be read, one bound to a template this checkout does not have, and one with neither a schema binding nor a `Component` annotation, since there is then nothing to validate it against.
+An unreadable entity means unreadable after `--max-retries` attempts, so a rate limit or a 503 costs a pause rather than the whole run; a 403 is never retried.
+A dry run does not refuse - nothing is being mutated, and `report.csv` is what a curator triages the unvalidatable entity from - it names them, writes the report, and exits 2 to say the plan is not one `--apply` would accept.
 `--allow-unvalidatable` accepts that gap deliberately.
 `still_invalid` does not block, but it is reported separately rather than counted among the entities the preflight vouched for: the plan is proven only for `clean` and `repaired`.
 

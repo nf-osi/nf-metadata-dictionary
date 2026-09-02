@@ -16,9 +16,19 @@ value type, which the annotation-key tooling needs: the whole point of the
 from __future__ import annotations
 
 import json
+import logging
+import random
+import time
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from typing import Any
+
+LOG = logging.getLogger('synapse_annotation_io')
+
+#: HTTP statuses worth trying again. A 403 is deliberately absent: an
+#: authorisation failure does not become a success on the second attempt, and
+#: retrying it just delays a finding.
+RETRYABLE_STATUS = (429, 500, 502, 503, 504)
 
 #: Synapse AnnotationsValueType -> the Python type the policy rules compare.
 VALUE_DECODERS = {
@@ -157,8 +167,54 @@ def _encode_scalar(value: Any, declared: str) -> str:
     return str(value)
 
 
-def read_annotations(syn, entity_id: str) -> AnnotationRecord:
-    return decode_annotations(syn.restGET(f'/entity/{entity_id}/annotations2'))
+def is_forbidden(error: Exception) -> bool:
+    status = getattr(getattr(error, 'response', None), 'status_code', None)
+    return status in (401, 403) or 'Forbidden' in str(error) or '403' in str(error)[:8]
+
+
+def is_retryable(error: Exception) -> bool:
+    status = getattr(getattr(error, 'response', None), 'status_code', None)
+    if status in RETRYABLE_STATUS:
+        return True
+    return isinstance(error, (TimeoutError, ConnectionError))
+
+
+def with_retries(call, *, max_retries: int, label: str, logger: logging.Logger | None = None):
+    """Retry transient REST failures with jittered backoff. Never retries a 403.
+
+    Lives here rather than in one script so the audit and the fix tool share a
+    single policy: a rate limit must not be survivable on one code path and fatal
+    on another.
+    """
+    logger = logger or LOG
+    delay = 2.0
+    for attempt in range(max_retries + 1):
+        try:
+            return call()
+        except Exception as error:  # noqa: BLE001
+            if is_forbidden(error) or not is_retryable(error) or attempt == max_retries:
+                raise
+            sleep_for = delay + random.uniform(0, delay / 2)
+            logger.info('%s: retry %d/%d after %.1fs (%s)', label, attempt + 1, max_retries,
+                        sleep_for, type(error).__name__)
+            time.sleep(sleep_for)
+            delay = min(delay * 2, 30.0)
+    raise AssertionError('unreachable')
+
+
+def read_annotations(syn, entity_id: str, *, max_retries: int = 0) -> AnnotationRecord:
+    """Read one entity's annotations, optionally riding out a transient failure.
+
+    ``max_retries`` defaults to 0 because not every caller wants to wait; a
+    caller whose failure mode is worse than the delay - anything that would
+    otherwise turn one rate-limited read into an aborted run - should pass it.
+    """
+    def read():
+        return decode_annotations(syn.restGET(f'/entity/{entity_id}/annotations2'))
+
+    if not max_retries:
+        return read()
+    return with_retries(read, max_retries=max_retries, label=entity_id)
 
 
 def write_annotations(syn, record: AnnotationRecord) -> dict:

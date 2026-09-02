@@ -20,6 +20,7 @@ sys.path.insert(0, utils_path)
 
 import annotation_key_policy as policy  # noqa: E402
 import fix_annotation_keys as fix  # noqa: E402
+import synapse_annotation_io as io  # noqa: E402
 
 
 class StubSynapseError(Exception):
@@ -240,6 +241,79 @@ def test_persistent_etag_conflict_is_recorded_not_raised(duplicate_entity, rules
                               dry_run=False, max_retries=2, **rules)
     assert result.status == 'etag_conflict'
     assert syn.writes == []
+
+
+def test_a_transient_read_failure_is_retried_rather_than_sinking_the_run(
+    duplicate_entity, rules, logs, monkeypatch
+):
+    # A 503 on a read is not a verdict about the entity, and the schema preflight
+    # refuses the whole run on an entity it could not read - so without a retry one
+    # blip would abort a plan of thousands. --max-retries covers reads, not just
+    # etag conflicts on write.
+    monkeypatch.setattr(io.time, 'sleep', lambda _seconds: None)
+
+    class FlakyReads(StubSynapse):
+        def __init__(self, entities, *, read_failures):
+            super().__init__(entities)
+            self.read_failures = read_failures
+
+        def restGET(self, path):
+            if path.endswith('/annotations2') and self.read_failures > 0:
+                self.read_failures -= 1
+                raise StubSynapseError('Service Unavailable', 503)
+            return super().restGET(path)
+
+    syn = FlakyReads(duplicate_entity, read_failures=2)
+    result = fix.apply_entity(syn, 'syn1', logs=logs, allowed_actions={policy.Action.DROP_STRAY},
+                              dry_run=False, max_retries=3, **rules)
+    assert result.status == 'ok'
+    assert syn.plain('syn1') == {'age': ['1.5'], 'sex': ['Female']}
+
+
+def test_a_read_that_keeps_failing_is_still_reported_as_an_error(
+    duplicate_entity, rules, logs, monkeypatch
+):
+    # Retrying must not turn a real outage into a silent pass: once the budget is
+    # spent the entity is an error, which is what the preflight buckets as
+    # unvalidatable.
+    monkeypatch.setattr(io.time, 'sleep', lambda _seconds: None)
+
+    class DeadReads(StubSynapse):
+        def restGET(self, path):
+            if path.endswith('/annotations2'):
+                raise StubSynapseError('Service Unavailable', 503)
+            return super().restGET(path)
+
+    syn = DeadReads(duplicate_entity)
+    result = fix.apply_entity(syn, 'syn1', logs=logs, allowed_actions={policy.Action.DROP_STRAY},
+                              dry_run=False, max_retries=2, **rules)
+    assert result.status == 'error'
+    assert syn.writes == []
+
+
+def test_a_forbidden_read_fails_fast_without_burning_the_retry_budget(
+    duplicate_entity, rules, logs, monkeypatch
+):
+    # A 403 does not become a 200 on the second attempt; retrying it only delays
+    # the finding.
+    monkeypatch.setattr(io.time, 'sleep', lambda _seconds: pytest.fail('403 was retried'))
+
+    class ForbiddenReads(StubSynapse):
+        def __init__(self, entities):
+            super().__init__(entities)
+            self.attempts = 0
+
+        def restGET(self, path):
+            if path.endswith('/annotations2'):
+                self.attempts += 1
+                raise StubSynapseError('403 Forbidden', 403)
+            return super().restGET(path)
+
+    syn = ForbiddenReads(duplicate_entity)
+    result = fix.apply_entity(syn, 'syn1', logs=logs, allowed_actions={policy.Action.DROP_STRAY},
+                              dry_run=False, max_retries=3, **rules)
+    assert result.status == 'error'
+    assert syn.attempts == 1
 
 
 def test_conflicting_values_are_reported_and_never_written(rules, logs):
@@ -879,18 +953,21 @@ def test_a_run_below_the_floor_is_not_aborted_by_one_failure(monkeypatch, tmp_pa
     assert syn.reads == 3
 
 
-def test_the_preflight_refuses_a_run_whose_dry_run_read_failed(monkeypatch, tmp_path):
-    # End to end: the entity whose read failed has no plan, so it used to be
-    # filtered out of the gate entirely and then mutated by the write pass with
-    # no conformance verdict behind it.
+def _half_broken_synapse(unreadable='syn_unreadable', schema_name='microscopyassaytemplate'):
+    """A client that serves one healthy entity and one whose read always fails."""
     fixture = Path(__file__).parent / 'data' / 'annotation_keys' / 'syn64420376_entity_json.json'
     instance = json.loads(fixture.read_text())
 
     class HalfBrokenSynapse:
+        def __init__(self):
+            self.writes = []
+
         def restGET(self, path):
             entity_id = path.split('/')[2]
+            if path.endswith('/permissions'):
+                return {'canEdit': True, 'canCertifiedUserEdit': True}
             if path.endswith('/annotations2'):
-                if entity_id == 'syn_unreadable':
+                if entity_id == unreadable:
                     raise RuntimeError('503 Service Unavailable')
                 return {'id': entity_id, 'etag': 'etag-1',
                         'annotations': to_typed({'Age': [1.5], 'age': [1.5],
@@ -899,21 +976,34 @@ def test_the_preflight_refuses_a_run_whose_dry_run_read_failed(monkeypatch, tmp_
                 return json.loads(json.dumps(instance))
             if path.endswith('/schema/binding'):
                 return {'jsonSchemaVersionInfo': {
-                    'schemaName': 'microscopyassaytemplate',
+                    'schemaName': schema_name,
                     'semanticVersion': '11.1.22',
-                    '$id': 'org.synapse.nf-microscopyassaytemplate-11.1.22',
+                    '$id': f'org.synapse.nf-{schema_name}-11.1.22',
                 }}
             raise AssertionError(path)
 
+        def restPUT(self, path, body):
+            self.writes.append(path)
+            raise AssertionError(f'unexpected write to {path}')
+
+    return HalfBrokenSynapse()
+
+
+def test_the_preflight_refuses_an_apply_whose_dry_run_read_failed(monkeypatch, tmp_path):
+    # End to end: the entity whose read failed has no plan, so it used to be
+    # filtered out of the gate entirely and then mutated by the write pass with
+    # no conformance verdict behind it.
+    syn = _half_broken_synapse()
     monkeypatch.setattr(fix, '_SYN', None)
-    monkeypatch.setattr(fix, '_login', lambda: HalfBrokenSynapse())
+    monkeypatch.setattr(fix, '_login', lambda: syn)
 
     blocked = tmp_path / 'run'
-    argv = ['--actions', 'drop_stray', '--validate-schema', '--log-dir', str(blocked),
-            '--entity', 'syn64420376', '--entity', 'syn_unreadable']
-    assert fix.main(argv) == 1
-    # Refused at the gate, so the run never got as far as reporting on entities.
+    assert fix.main(['--actions', 'drop_stray', '--validate-schema', '--apply', '--yes',
+                     '--log-dir', str(blocked),
+                     '--entity', 'syn64420376', '--entity', 'syn_unreadable']) == 1
+    # Refused at the gate, so the write pass never ran and nothing was mutated.
     assert not (blocked / 'report.csv').exists()
+    assert syn.writes == []
 
     # The escape hatch is the same one the other unvalidatable statuses use.
     allowed = tmp_path / 'run2'
@@ -921,6 +1011,43 @@ def test_the_preflight_refuses_a_run_whose_dry_run_read_failed(monkeypatch, tmp_
     fix.main(['--actions', 'drop_stray', '--validate-schema', '--log-dir', str(allowed),
               '--allow-unvalidatable', '--entity', 'syn64420376', '--entity', 'syn_unreadable'])
     assert (allowed / 'report.csv').exists()
+
+
+def test_a_dry_run_still_writes_the_report_when_an_entity_could_not_be_validated(
+    monkeypatch, tmp_path
+):
+    # A dry run mutates nothing, so there is nothing for the gate to protect - and
+    # report.csv is exactly what a curator triages the unvalidatable entity from.
+    # Withholding it made --allow-unvalidatable the path of least resistance.
+    syn = _half_broken_synapse()
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: syn)
+
+    log_dir = tmp_path / 'dryrun'
+    exit_code = fix.main(['--actions', 'drop_stray', '--validate-schema',
+                          '--log-dir', str(log_dir),
+                          '--entity', 'syn64420376', '--entity', 'syn_unreadable'])
+    assert exit_code != 0
+    assert (log_dir / 'report.csv').exists()
+    reported = (log_dir / 'report.csv').read_text()
+    assert 'syn_unreadable' in reported
+    assert syn.writes == []
+
+
+def test_a_dry_run_blocked_only_by_an_unvalidatable_entity_exits_two(monkeypatch, tmp_path):
+    # The entity reads fine and has a plan; only its schema is absent from this
+    # checkout. Nothing failed, so exit 1 would be wrong - but the plan is not
+    # one --apply would accept, so exit 0 would be wrong too.
+    syn = _half_broken_synapse(unreadable='syn_nothing_is_unreadable',
+                               schema_name='notatemplateinthischeckout')
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: syn)
+
+    log_dir = tmp_path / 'dryrun'
+    assert fix.main(['--actions', 'drop_stray', '--validate-schema',
+                     '--log-dir', str(log_dir), '--entity', 'syn64420376']) == 2
+    assert (log_dir / 'report.csv').exists()
+    assert syn.writes == []
 
 
 def test_the_carry_forward_of_a_resumed_scan_does_not_double_count(tmp_path):
