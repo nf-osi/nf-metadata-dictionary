@@ -33,6 +33,10 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    # A successful release takes 6-8 minutes, so an hour is ample headroom and
+    # replaces the 6h default that would leave a hung post-tag step invisible
+    # for most of a day.
+    timeout-minutes: 60
 
     steps:
       - uses: actions/checkout@v4
@@ -189,7 +193,13 @@ jobs:
           # retry. It is only checked before a retry starts, so an attempt begun
           # just under it still gets its full --max-time: the whole call is
           # bounded at 600s + 300s, roughly 15 minutes.
-          HTTP_CODE=$(curl -s -o /tmp/api_response.json -w '%{http_code}' \
+          #
+          # -S keeps curl's transport error on stderr, so a 000 result says
+          # whether it was a refused connection, a DNS failure or a timeout
+          # instead of only the generic "never completed" the fallback reports.
+          # It does not restore the "Transient problem ... will retry" notices,
+          # which stay suppressed by -s.
+          HTTP_CODE=$(curl -sS -o /tmp/api_response.json -w '%{http_code}' \
             --connect-timeout 15 --max-time 300 \
             --retry 2 --retry-delay 5 --retry-max-time 600 \
             https://api.anthropic.com/v1/messages \
@@ -379,9 +389,15 @@ jobs:
       # A blocked/incomplete release (e.g. tag pushed but registration or
       # release creation failed) should never fail silently - file or update
       # an issue pointing at the run so a maintainer investigates.
+      #
+      # cancelled() is included because exceeding timeout-minutes cancels the
+      # job rather than failing it, and failure() is false on cancellation: a
+      # hang after the tag was pushed is the case where silence costs most. A
+      # manually cancelled run also files an issue, which is acceptable noise
+      # for that guarantee.
 
       - name: File issue for blocked release
-        if: failure()
+        if: failure() || cancelled()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

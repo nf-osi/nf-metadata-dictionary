@@ -46,7 +46,7 @@ def api_call_command() -> str:
     lines = WORKFLOW.read_text(encoding="utf-8").splitlines()
     start = next(
         index for index, line in enumerate(lines)
-        if "curl -s -o /tmp/api_response.json" in line
+        if "curl" in line and "/tmp/api_response.json" in line
     )
     command = [lines[start]]
     while command[-1].rstrip().endswith("\\"):
@@ -655,10 +655,11 @@ def test_ai_decision_accepts_markdown_fenced_json() -> None:
     'Here is my decision:\n{"release": true, "version": "11.2", '
     '"reasoning": "ok"}\nHappy to revise it.',
 ])
-def test_ai_decision_accepts_json_wrapped_in_prose(text: str) -> None:
-    """Prose around the JSON is the same non-compliance as fencing it, and
-    discarding the verdict over a preamble line would downgrade a MAJOR the
-    model asked for to a deterministic MINOR bump."""
+def test_ai_decision_accepts_json_wrapped_in_brace_free_prose(text: str) -> None:
+    """Brace-free prose around the JSON is the same non-compliance as fencing
+    it, and discarding the verdict over a preamble line would downgrade a MAJOR
+    the model asked for to a deterministic MINOR bump. Prose carrying braces of
+    its own is not recovered - see the rejection cases below."""
     decision = decide_release.ai_decision(text, "v11.1.22")
 
     assert decision["release"] is True
@@ -697,6 +698,13 @@ def test_ai_decision_drops_unvalidated_extra_fields() -> None:
     # Two JSON documents: the prompt shows two alternatives, so a model can
     # emit both. A per-document check would pass on the last one alone.
     '{"release": false, "reasoning": "a"}\n{"release": false, "reasoning": "b"}',
+    # Prose carrying braces of its own defeats the first-brace-to-last-brace
+    # recovery. Widening it would mean accepting text spanning two documents,
+    # so an ambiguous answer deliberately falls back instead.
+    'Format: {"release": bool}\n{"release": true, "version": "11.2", '
+    '"reasoning": "ok"}',
+    '```json\n{"release": true, "version": "11.2", "reasoning": "ok"}\n```\n'
+    "Let me know if you want {more} detail.",
 ])
 def test_ai_decision_rejects_a_non_document_response(text: str) -> None:
     with pytest.raises(decide_release.AiUnusable, match="single valid decision JSON"):
