@@ -64,13 +64,17 @@ jobs:
 
           echo "has_changes=true" >> "$GITHUB_OUTPUT"
           git log "$LAST_TAG"..HEAD --oneline --no-merges > /tmp/commits.txt
-          git diff "$LAST_TAG"..HEAD --stat > /tmp/diffstat.txt
+
+          # core.quotePath=false keeps non-ASCII paths readable instead of
+          # C-escaped, so the fallback's data model gate sees `modules/Café.yaml`
+          # rather than `"modules/Caf\303\251.yaml"`.
+          git -c core.quotePath=false diff "$LAST_TAG"..HEAD --stat > /tmp/diffstat.txt
 
           # Per-commit paths for the deterministic fallback, which must know
           # which files each individual commit touched - a range-wide diff
           # cannot tell a model change from an automated rebuild.
-          git log "$LAST_TAG"..HEAD --no-merges --name-only --format='%x1e%h %s' \
-            > /tmp/commit_paths.txt
+          git -c core.quotePath=false log "$LAST_TAG"..HEAD --no-merges \
+            --name-only --format='%x1e%h %s' > /tmp/commit_paths.txt
 
           echo "=== $COMMIT_COUNT commits since $LAST_TAG ==="
           cat /tmp/commits.txt
@@ -170,8 +174,20 @@ jobs:
           # Without the timeouts a stalled connection would hold the job until
           # its 6h cap, and a cancelled job never runs the failure() issue step,
           # so the release would vanish silently instead of falling back.
+          #
+          # --max-time is per attempt, and generating a month of release notes
+          # within the 4096-token cap can take a while, so it is set well above
+          # the expected response time: expiring it discards a good answer and
+          # silently downgrades the release to a deterministic MINOR bump.
+          # --retry rides out the transient failures curl recognises (timeouts
+          # and HTTP 408/429/500/502/503/504) so a few seconds of rate limiting
+          # does not cost the AI's verdict. Anthropic's 529 "overloaded" is not
+          # in that set and falls through to the deterministic path by design.
+          # --retry-max-time is required because --max-time restarts on each
+          # retry; together they bound the whole call at roughly 10 minutes.
           HTTP_CODE=$(curl -s -o /tmp/api_response.json -w '%{http_code}' \
-            --connect-timeout 15 --max-time 120 \
+            --connect-timeout 15 --max-time 300 \
+            --retry 2 --retry-delay 5 --retry-max-time 600 \
             https://api.anthropic.com/v1/messages \
             -H "content-type: application/json" \
             -H "x-api-key: $ANTHROPIC_API_KEY" \

@@ -282,6 +282,35 @@ def test_non_schema_paths_rejected(path: str) -> None:
     assert decide_release.is_schema_relevant(path) is False
 
 
+@pytest.mark.parametrize("quoted,unquoted", [
+    # What `git log --name-only` emits for a non-ASCII path when core.quotePath
+    # is left at its default. The workflow disables it, so this is belt and
+    # braces.
+    (r'"modules/Caf\303\251.yaml"', "modules/Café.yaml"),
+    # core.quotePath=false does not cover these: git quotes any path holding a
+    # double quote or a control character regardless of that setting.
+    (r'"modules/say\"hi.yaml"', 'modules/say"hi.yaml'),
+    (r'"modules/tab\there.yaml"', "modules/tab\there.yaml"),
+])
+def test_quoted_paths_are_unescaped_before_the_gate(
+    quoted: str, unquoted: str
+) -> None:
+    """A C-quoted path starts with `"` instead of a directory name, so leaving
+    it escaped would decline a release that really did change the model."""
+    assert decide_release.unquote_git_path(quoted) == unquoted
+    assert decide_release.is_schema_relevant(quoted) is True
+
+
+def test_quoted_non_model_path_still_rejected() -> None:
+    assert decide_release.is_schema_relevant(r'"docs/Caf\303\251.md"') is False
+
+
+def test_decide_releases_for_a_quoted_model_path() -> None:
+    records = [record("feat: add a template", r'"modules/Caf\303\251.yaml"')]
+
+    assert decide_release.decide("v11.1.22", records)["release"] is True
+
+
 def test_schema_relevant_paths_deduplicates_and_sorts() -> None:
     records = [
         record("fix: one", "modules/Data/FileFormat.yaml", "docs/index.md"),
@@ -930,12 +959,30 @@ def test_cli_accept_ai_falls_back_when_the_api_fails(
     }
 
 
-@pytest.mark.parametrize("flag", ["--connect-timeout", "--max-time"])
+@pytest.mark.parametrize("flag", [
+    "--connect-timeout",
+    "--max-time",
+    # --max-time restarts on every retry, so the total call is only bounded
+    # when --retry-max-time is set alongside it.
+    "--retry",
+    "--retry-max-time",
+])
 def test_workflow_bounds_the_api_call(flag: str) -> None:
     """A hung API call would cancel the job, and a cancelled job never reaches
     the failure() issue step, so the release would vanish with no trace. With
-    these flags curl reports 000 instead and the fallback takes over."""
+    these flags curl reports 000 instead and the fallback takes over, and a
+    transient rate limit is retried rather than costing the AI's verdict."""
     assert flag in WORKFLOW.read_text(encoding="utf-8")
+
+
+def test_workflow_reads_paths_without_git_quoting() -> None:
+    """Escaped paths would not match the data model gate, so every git
+    invocation the fallback reads paths from disables core.quotePath."""
+    workflow = WORKFLOW.read_text(encoding="utf-8")
+
+    assert "git -c core.quotePath=false diff" in workflow
+    assert "git -c core.quotePath=false log" in workflow
+    assert "--name-only" in workflow
 
 
 @pytest.mark.parametrize("text,expected", [

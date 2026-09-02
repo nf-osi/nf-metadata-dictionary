@@ -33,8 +33,8 @@ back; one from the deterministic path cannot happen and is a hard failure.
 Uses only the Python standard library - no extra pip installs required.
 
 Usage:
-    git log v11.1.22..HEAD --no-merges --name-only --format='%x1e%h %s' \
-      > /tmp/commit_paths.txt
+    git -c core.quotePath=false log v11.1.22..HEAD --no-merges \
+      --name-only --format='%x1e%h %s' > /tmp/commit_paths.txt
     python decide_release.py accept-ai \
       --last-tag v11.1.22 --http-code 200 \
       --response-file /tmp/api_response.json \
@@ -162,9 +162,32 @@ def is_automated_commit(subject: str) -> bool:
     return any(marker in lowered for marker in AUTOMATED_MARKERS)
 
 
+def unquote_git_path(path: str) -> str:
+    """
+    Undo the C-style quoting `git log --name-only` applies to awkward paths.
+
+    The workflow passes `core.quotePath=false`, which covers non-ASCII bytes,
+    but git still quotes a path holding a double quote or a control character.
+    A quoted path starts with `"` rather than a directory name, so leaving it
+    escaped would fail the data model gate and silently decline a real release.
+    """
+    if len(path) < 2 or not (path.startswith('"') and path.endswith('"')):
+        return path
+    escaped = path[1:-1]
+    try:
+        return (
+            escaped.encode("latin-1", "backslashreplace")
+            .decode("unicode_escape")
+            .encode("latin-1")
+            .decode("utf-8", "replace")
+        )
+    except (UnicodeDecodeError, UnicodeEncodeError):
+        return escaped
+
+
 def is_schema_relevant(path: str) -> bool:
     """True if a changed path can affect the published data model."""
-    normalized = path.strip()
+    normalized = unquote_git_path(path.strip())
     if not normalized:
         return False
     parts = PurePosixPath(normalized).parts
