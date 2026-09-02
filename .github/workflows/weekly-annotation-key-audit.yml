@@ -71,6 +71,7 @@ jobs:
 
       - name: Validate the dispatch inputs
         env:
+          PROJECTS: ${{ github.event.inputs.projects }}
           WORKERS: ${{ github.event.inputs.workers || '10' }}
           MAX_UNSCANNED: ${{ github.event.inputs.max_unscanned || '0' }}
         run: |
@@ -81,6 +82,29 @@ jobs:
             case "${PAIR#*=}" in
               '' | *[!0-9]*)
                 echo "::error::${PAIR%%=*} must be a non-negative integer; got '${PAIR#*=}'"
+                exit 1
+                ;;
+            esac
+          done
+
+          # The audit step word-splits `projects` into its argument list, so an
+          # element that is not a bare synID would be read as another flag - a
+          # value like `syn1 --projects-table syn999` silently redirects the scan,
+          # and a value containing a glob would undergo pathname expansion.
+          # Dispatch needs write access, so this is not a privilege boundary; it is
+          # the same "reject a malformed form field" check as the two above.
+          for PROJECT in $(echo "$PROJECTS" | tr ',' ' '); do
+            case "$PROJECT" in
+              syn[0-9]*)
+                case "${PROJECT#syn}" in
+                  '' | *[!0-9]*)
+                    echo "::error::projects must be comma-separated synIDs (synNNN); got '$PROJECT'"
+                    exit 1
+                    ;;
+                esac
+                ;;
+              *)
+                echo "::error::projects must be comma-separated synIDs (synNNN); got '$PROJECT'"
                 exit 1
                 ;;
             esac

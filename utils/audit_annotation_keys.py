@@ -27,6 +27,10 @@ Examples
 
     # regenerate the reports from a previous run, no network
     python utils/audit_annotation_keys.py --out-dir audit --report-only
+
+    # record a completed scan's findings as the accepted baseline, no network
+    python utils/audit_annotation_keys.py --state audit/state.jsonl \
+        --emit-allowlist utils/annotation_key_allowlist.yaml
 """
 
 from __future__ import annotations
@@ -42,7 +46,7 @@ from collections import Counter
 from collections.abc import Iterable, Mapping, Sequence
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -69,6 +73,13 @@ LOG = logging.getLogger('audit_annotation_keys')
 #: file | table | folder | dataset. Deliberately excludes PROJECT(2): project
 #: entity annotations are invisible to a view scope and need --include-project-entity.
 DEFAULT_VIEW_TYPE_MASK = 0x01 | 0x04 | 0x08 | 0x80  # 141
+
+#: Row cap per markdown table. ``summary.md`` is piped verbatim into a GitHub
+#: issue body by the weekly workflow, and an issue body is capped at 65,536
+#: characters - so an uncapped per-(project, key) table would eventually take the
+#: tracking step down as the data grows. The CSVs in the run artifact always hold
+#: every row.
+MAX_TABLE_ROWS = 40
 
 DEFAULT_PROJECTS_TABLE = 'syn52694652'  # Portal - MV Studies (Production)
 DEFAULT_ALLOWLIST = Path(__file__).resolve().parent / 'annotation_key_allowlist.yaml'
@@ -136,6 +147,126 @@ def load_allowlist(path: Path | str | None) -> Allowlist:
         entries.add((key, str(entry.get('scope') or 'global'),
                      str(entry.get('classification') or 'any')))
     return Allowlist(frozenset(entries))
+
+
+#: Buckets a generated baseline covers - exactly the ones that decide the exit
+#: code. ``reserved`` is reported but never gates, so an entry for it would
+#: suppress nothing and only make the baseline look larger than it is.
+BASELINE_BUCKETS = ('duplicates', 'orphans', 'case_variants', 'near_misses')
+
+#: bucket -> the GitHub issue where that family of drift is tracked. Case-variant
+#: drift from former slot names is #976; PascalCase duplicates, orphans and
+#: probable misspellings are all key hygiene under #939.
+BASELINE_ISSUES = {
+    'duplicates': 939,
+    'orphans': 939,
+    'case_variants': 976,
+    'near_misses': 939,
+}
+
+#: How far out a generated baseline is accepted for. One quarter: long enough to
+#: schedule a remediation pass, short enough that neglect makes it resurface.
+BASELINE_TTL_DAYS = 90
+
+
+def build_baseline_entries(
+    audits: Sequence[ProjectAudit],
+    *,
+    expires: date,
+    reason: str,
+) -> list[dict]:
+    """Allowlist entries for every finding a completed scan recorded.
+
+    One entry per (project, key, classification), scoped to the project synID
+    rather than ``global``: the same key elsewhere is new drift and must still
+    turn the job red, which is the entire point of recording a baseline.
+    """
+    entries: list[dict] = []
+    for audit in audits:
+        if audit.status != 'ok':
+            continue
+        for bucket in BASELINE_BUCKETS:
+            for key in sorted((audit.summary.get(bucket) or {})):
+                entries.append({
+                    'key': key,
+                    'scope': audit.project_id,
+                    'classification': bucket,
+                    'reason': reason,
+                    'issue': BASELINE_ISSUES[bucket],
+                    'expires': expires.isoformat(),
+                })
+    return sorted(entries, key=lambda e: (e['scope'], e['classification'], e['key']))
+
+
+def format_allowlist(entries: Sequence[Mapping], *, header: str) -> str:
+    """The allowlist document: a header comment plus generated entries."""
+    body = yaml.safe_dump({'entries': [dict(e) for e in entries]},
+                          sort_keys=False, default_flow_style=False, width=100)
+    return f'{header}\n{body}'
+
+
+def baseline_header(
+    audits: Sequence[ProjectAudit],
+    entries: Sequence[Mapping],
+    *,
+    state_path: Path | str,
+    expires: date,
+) -> str:
+    scanned = sum(1 for a in audits if a.status == 'ok')
+    counts = Counter(e['classification'] for e in entries)
+    tally = ', '.join(f'{counts[b]} {b}' for b in BASELINE_BUCKETS if counts[b])
+    # A state file outside the checkout is one machine's scratch directory, and
+    # naming it in a committed file would send the next reader to a path that does
+    # not exist for them.
+    state_path = Path(state_path)
+    try:
+        state_path = state_path.resolve().relative_to(Path.cwd().resolve())
+    except ValueError:
+        state_path = Path('audit/state.jsonl')
+    return '\n'.join([
+        '# Annotation-key findings a human has reviewed and accepted.',
+        '#',
+        '# Consumed by utils/audit_annotation_keys.py. Suppression affects the EXIT CODE',
+        '# ONLY - the CSV and markdown reports always list every finding. The point is to',
+        '# keep the weekly audit actionable: without a way to record "we looked at this',
+        '# and it is fine", one accepted finding leaves the job permanently red, and a',
+        '# permanently red job gets ignored.',
+        '#',
+        '# THE ENTRIES BELOW ARE GENERATED, NOT HAND-WRITTEN. They are the recorded',
+        f'# pre-remediation baseline: every finding present on {scanned} portal projects at the',
+        '# time the audit tooling landed, before any Synapse writes. Recording them is what',
+        '# lets the weekly job start green so that NEW drift - a project or key not listed',
+        '# here - is what turns it red.',
+        '#',
+        f'# Baseline: {tally}.',
+        '#',
+        '# Regenerate from a completed scan (no Synapse credentials needed):',
+        '#',
+        f'#     python utils/audit_annotation_keys.py --state {state_path} \\',
+        '#         --emit-allowlist utils/annotation_key_allowlist.yaml',
+        '#',
+        '# This file is expected to SHRINK. Every entry is drift that still exists in',
+        f'# Synapse; each remediation pass should delete the entries it fixed. The {expires.isoformat()}',
+        '# expiry is not meant to be renewed - once it passes, the findings resurface and',
+        '# the job goes red, which is the reminder that the remediation never happened.',
+        '#',
+        '# Fields per entry:',
+        '#   key             (required) the annotation key as it appears on entities',
+        '#   scope           a project synID, or `global` for every project. Default: global',
+        '#   classification  duplicates | orphans | case_variants | reserved | near_misses',
+        '#                   | unknown | any. Default: any',
+        '#   reason          (required in practice) why this is acceptable',
+        '#   issue           the GitHub issue where it was triaged',
+        '#   expires         ISO date. After it passes the finding resurfaces, so a',
+        '#                   time-boxed acceptance cannot become permanent by neglect.',
+        '#',
+        '# Keys that are legitimate by construction do NOT belong here - they are handled',
+        '# in utils/annotation_key_policy.py:',
+        '#   * INFRA_KEYS         schematic manifest columns (Id, Uuid, eTag, EntityId, entityId)',
+        '#   * SYNAPSE_VIEW_COLUMNS  Synapse\'s own view metadata (modifiedOn, projectId, ...)',
+        '#   * canonical slots that already start uppercase (Component, Filename, GIST, ...)',
+        '',
+    ])
 
 
 # ---------------------------------------------------------------------------
@@ -268,12 +399,24 @@ def _run_async_job(
         delay = min(delay * 1.5, 5.0)
 
 
-def query_table(syn, table_id: str, sql: str, *, timeout: int = 300) -> list[dict]:
+def query_table(
+    syn,
+    table_id: str,
+    sql: str,
+    *,
+    timeout: int = 300,
+    max_pages: int = 100,
+) -> list[dict]:
     """Rows from a Synapse table or view, as dicts keyed by column name.
 
     Uses the async query service rather than ``syn.tableQuery``, which is
     deprecated for removal in synapseclient 5.0, and avoids both a CSV download
     and a pandas dependency.
+
+    Results are followed to the last page. A query whose rows span pages returns
+    a ``nextPageToken``, and stopping at the first page would silently truncate
+    the caller's view of the table - for ``list_portal_projects`` that means an
+    audit reporting full coverage over a subset of the portal.
     """
     request = {
         'concreteType': 'org.sagebionetworks.repo.model.table.QueryBundleRequest',
@@ -281,16 +424,35 @@ def query_table(syn, table_id: str, sql: str, *, timeout: int = 300) -> list[dic
         'query': {'sql': sql},
         'partMask': 1,  # query results only
     }
-    result = _run_async_job(
-        syn, f'/entity/{table_id}/table/query/async', request, timeout=timeout,
-        label='table query', get_path=f'/entity/{table_id}/table/query/async/get',
-    )
-    query_results = (result.get('queryResult') or {}).get('queryResults') or {}
-    headers = [h['name'] for h in query_results.get('headers') or []]
-    rows = []
-    for row in query_results.get('rows') or []:
-        rows.append(dict(zip(headers, row.get('values') or [])))
-    return rows
+    rows: list[dict] = []
+    headers: list[str] = []
+    token = None
+    for _ in range(max_pages):
+        if token is None:
+            bundle = _run_async_job(
+                syn, f'/entity/{table_id}/table/query/async', request, timeout=timeout,
+                label='table query', get_path=f'/entity/{table_id}/table/query/async/get',
+            )
+            page = bundle.get('queryResult') or {}
+        else:
+            page = _run_async_job(
+                syn, f'/entity/{table_id}/table/query/nextPage/async',
+                {
+                    'concreteType': 'org.sagebionetworks.repo.model.table.QueryNextPageToken',
+                    'entityId': table_id,
+                    'token': token,
+                },
+                timeout=timeout, label='table query page',
+                get_path=f'/entity/{table_id}/table/query/nextPage/async/get',
+            )
+        query_results = page.get('queryResults') or {}
+        headers = headers or [h['name'] for h in query_results.get('headers') or []]
+        for row in query_results.get('rows') or []:
+            rows.append(dict(zip(headers, row.get('values') or [])))
+        token = page.get('nextPageToken')
+        if not token:
+            return rows
+    raise RuntimeError(f'{table_id}: query pagination did not terminate after {max_pages} pages')
 
 
 def list_portal_projects(syn, table_id: str) -> list[dict]:
@@ -323,6 +485,11 @@ class ProjectAudit:
     summary: dict[str, Any] = field(default_factory=dict)
     multitype: dict[str, list[str]] = field(default_factory=dict)
     elapsed_s: float = 0.0
+    #: Entities whose annotations could not be read even after the retry budget.
+    #: Carried in the reports rather than only in a log line: a missing entity is
+    #: lost coverage, and ``entity_findings.jsonl`` is the only input the fix tool
+    #: reads, so a dropped read silently makes a real finding unfixable.
+    read_failures: list[dict] = field(default_factory=list)
 
     def as_dict(self) -> dict:
         return {
@@ -334,6 +501,7 @@ class ProjectAudit:
             'summary': self.summary,
             'multitype': self.multitype,
             'elapsed_s': round(self.elapsed_s, 2),
+            'read_failures': self.read_failures,
         }
 
     @classmethod
@@ -347,6 +515,7 @@ class ProjectAudit:
             summary=payload.get('summary', {}),
             multitype=payload.get('multitype', {}),
             elapsed_s=payload.get('elapsed_s', 0.0),
+            read_failures=payload.get('read_failures') or [],
         )
 
     @property
@@ -391,7 +560,11 @@ def audit_project(
             # invent a conflict against a real INTEGER or DOUBLE column. The
             # annotation type is translated into the view's ColumnType vocabulary
             # first, for the same reason.
-            for key, column in _project_entity_column_types(syn, audit.project_id).items():
+            columns, read_error = _project_entity_column_types(
+                syn, audit.project_id, max_retries=max_retries)
+            if read_error:
+                audit.read_failures.append({'entity_id': audit.project_id, 'error': read_error})
+            for key, column in columns.items():
                 key_types.setdefault(key, set()).add(column)
     except Exception as error:  # noqa: BLE001 - the failure mode is the finding
         audit.status = 'forbidden' if is_forbidden(error) else 'error'
@@ -407,22 +580,31 @@ def audit_project(
     return audit
 
 
-def _project_entity_column_types(syn, project_id: str) -> dict[str, str]:
+def _project_entity_column_types(
+    syn,
+    project_id: str,
+    *,
+    max_retries: int = 0,
+) -> tuple[dict[str, str], str | None]:
     """The project entity's own annotation keys, as view column types.
 
     A key is reported in the vocabulary the rest of the inventory uses, so a
     ``LONG`` project annotation matches an ``INTEGER`` column and a multi-value
     one matches the corresponding ``*_LIST``.
+
+    Returns the keys and, when the read was lost, the reason - which the caller
+    records as a finding. Losing this read means the project's own annotations
+    were not audited at all, which must not read as "nothing found there".
     """
     try:
-        record = read_annotations(syn, project_id)
+        record = read_annotations(syn, project_id, max_retries=max_retries)
     except Exception as error:  # noqa: BLE001
         LOG.warning('%s: could not read project annotations: %s', project_id, error)
-        return {}
+        return {}, f'{type(error).__name__}: {error}'[:300]
     return {
         key: column_type_for(declared, len(record.values.get(key) or []))
         for key, declared in record.types.items()
-    }
+    }, None
 
 
 # ---------------------------------------------------------------------------
@@ -439,6 +621,7 @@ def drill_down_project(
     limit: int | None = None,
     workers: int = 1,
     include_project_entity: bool = False,
+    max_retries: int = 0,
 ) -> list[dict]:
     """Resolve a flagged project down to the individual affected entities.
 
@@ -448,6 +631,11 @@ def drill_down_project(
     pairs are coerced, lists do not round-trip, and views are eventually
     consistent. Deciding "these are equal, drop one" from any of that could
     destroy the only surviving copy.
+
+    Reads get ``max_retries`` attempts, and one still lost after them is appended
+    to ``audit.read_failures`` rather than merely logged: the findings file is the
+    fix tool's only input, so an entity dropped from it is a finding that can
+    never be repaired, and the reports have to say so.
     """
     flagged = set(audit.summary.get('duplicates', {})) \
         | set(audit.summary.get('orphans', {})) \
@@ -459,9 +647,14 @@ def drill_down_project(
     def inspect(target: tuple[str, str]) -> dict | None:
         entity_id, entity_type = target
         try:
-            record = read_annotations(syn, entity_id)
+            record = read_annotations(syn, entity_id, max_retries=max_retries)
         except Exception as error:  # noqa: BLE001
             LOG.warning('%s: could not read annotations: %s', entity_id, error)
+            audit.read_failures.append({
+                'entity_id': entity_id,
+                'entity_type': entity_type,
+                'error': f'{type(error).__name__}: {error}'[:300],
+            })
             return None
         annotations = dict(record.values)
         if not flagged & set(annotations):
@@ -672,7 +865,7 @@ def write_key_rows_csv(audits: Sequence[ProjectAudit], path: Path) -> None:
 def write_project_rows_csv(audits: Sequence[ProjectAudit], path: Path) -> None:
     fields = ['project_id', 'project_name', 'status', 'total_keys', 'duplicates', 'orphans',
               'case_variants', 'reserved', 'near_misses', 'unknown', 'multitype',
-              'elapsed_s', 'error']
+              'read_failures', 'elapsed_s', 'error']
     with open(path, 'w', newline='') as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)
         writer.writeheader()
@@ -690,6 +883,7 @@ def write_project_rows_csv(audits: Sequence[ProjectAudit], path: Path) -> None:
                 'near_misses': counts['near_misses'],
                 'unknown': len(audit.summary.get('unknown') or []),
                 'multitype': len(audit.multitype),
+                'read_failures': len(audit.read_failures),
                 'elapsed_s': round(audit.elapsed_s, 2),
                 'error': audit.error or '',
             })
@@ -719,7 +913,20 @@ def build_summary(audits: Sequence[ProjectAudit]) -> dict:
             {'project_id': a.project_id, 'status': a.status, 'error': a.error}
             for a in forbidden + failed
         ],
+        'entity_read_failures': sum(len(a.read_failures) for a in audits),
+        'entity_reads_lost': [
+            dict(failure, project_id=a.project_id)
+            for a in audits for failure in a.read_failures
+        ],
     }
+
+
+def _truncation_note(total: int, shown: int) -> list[str]:
+    """A line naming what a capped table left out, and where the rest lives."""
+    if total <= shown:
+        return []
+    return ['', f'_{total - shown} more rows omitted; every row is in the '
+                '`annotation-key-audit` artifact (the CSVs and `state.jsonl`)._']
 
 
 def format_markdown(audits: Sequence[ProjectAudit]) -> str:
@@ -734,10 +941,25 @@ def format_markdown(audits: Sequence[ProjectAudit]) -> str:
         f"- Scanned: **{stats['projects_scanned']}**",
         f"- Not readable (403): **{stats['projects_forbidden']}**",
         f"- Failed: **{stats['projects_failed']}**",
+        f"- Entity reads lost after retries: **{stats['entity_read_failures']}**",
         '',
     ]
     if stats['projects_forbidden'] or stats['projects_failed']:
         lines += ['> Findings below cover only the scanned projects.', '']
+    if stats['entity_read_failures']:
+        lines += [
+            ('> Some entity reads were lost, so the entity-level findings are incomplete and '
+             'the affected entities are absent from `entity_findings.jsonl`. Re-run the '
+             'drill-down for the projects listed below.'), '',
+            '| Project | Entity | Error |', '|---|---|---|',
+        ]
+        lost = stats['entity_reads_lost']
+        lines += [
+            f"| {item['project_id']} | {item['entity_id']} | {str(item.get('error') or '')[:120]} |"
+            for item in lost[:MAX_TABLE_ROWS]
+        ]
+        lines += _truncation_note(len(lost), MAX_TABLE_ROWS)
+        lines.append('')
 
     if not stats['projects_with_findings'] and not stats['projects_with_multitype']:
         lines += ['## Findings', '', 'No mis-cased annotation keys found in any scanned project.', '']
@@ -762,13 +984,14 @@ def format_markdown(audits: Sequence[ProjectAudit]) -> str:
         '| Project | Duplicates | Orphans | Case variants | Reserved | Name |',
         '|---|---|---|---|---|---|',
     ]
-    for audit in affected:
+    for audit in affected[:MAX_TABLE_ROWS]:
         counts = audit.finding_counts
         lines.append(
             f"| [{audit.project_id}](https://www.synapse.org/Synapse:{audit.project_id}) "
             f"| {counts['duplicates']} | {counts['orphans']} | {counts['case_variants']} "
             f"| {counts['reserved']} | {audit.project_name[:60]} |"
         )
+    lines += _truncation_note(len(affected), MAX_TABLE_ROWS)
     lines.append('')
 
     titles = {
@@ -783,7 +1006,8 @@ def format_markdown(audits: Sequence[ProjectAudit]) -> str:
         if not frequency:
             continue
         lines += [f'### {title}', '', '| Key | Projects |', '|---|---|']
-        lines += [f'| `{key}` | {count} |' for key, count in frequency]
+        lines += [f'| `{key}` | {count} |' for key, count in frequency[:MAX_TABLE_ROWS]]
+        lines += _truncation_note(len(frequency), MAX_TABLE_ROWS)
         lines.append('')
 
     multitype = [a for a in audits if a.multitype]
@@ -794,9 +1018,13 @@ def format_markdown(audits: Sequence[ProjectAudit]) -> str:
              'cause from key casing; tracked separately.'), '',
             '| Project | Key | Types |', '|---|---|---|',
         ]
-        for audit in sorted(multitype, key=lambda a: a.project_id):
-            for key, types in sorted(audit.multitype.items()):
-                lines.append(f"| {audit.project_id} | `{key}` | {', '.join(types)} |")
+        rows = [
+            f"| {audit.project_id} | `{key}` | {', '.join(types)} |"
+            for audit in sorted(multitype, key=lambda a: a.project_id)
+            for key, types in sorted(audit.multitype.items())
+        ]
+        lines += rows[:MAX_TABLE_ROWS]
+        lines += _truncation_note(len(rows), MAX_TABLE_ROWS)
         lines.append('')
 
     return '\n'.join(lines)
@@ -828,7 +1056,11 @@ def exit_code_for(
     """
     allowlist = allowlist or Allowlist()
     stats = build_summary(audits)
-    unscanned = stats['projects_forbidden'] + stats['projects_failed']
+    # An entity read lost after the retry budget is the same kind of problem as an
+    # unreadable project - coverage this run cannot vouch for - so it spends the
+    # same budget rather than passing silently.
+    unscanned = (stats['projects_forbidden'] + stats['projects_failed']
+                 + stats['entity_read_failures'])
 
     def unsuppressed(bucket: str) -> bool:
         for audit in audits:
@@ -857,6 +1089,38 @@ def exit_code_for(
 # CLI
 # ---------------------------------------------------------------------------
 
+def emit_allowlist(
+    audits: Sequence[ProjectAudit],
+    path: Path,
+    *,
+    state_path: Path,
+    expires: str | None = None,
+) -> int:
+    """Write a completed scan's findings out as an allowlist baseline."""
+    if expires:
+        try:
+            expiry = date.fromisoformat(expires)
+        except ValueError:
+            LOG.error('--baseline-expires must be an ISO date (YYYY-MM-DD); got %r', expires)
+            return 1
+    else:
+        expiry = datetime.now(timezone.utc).date() + timedelta(days=BASELINE_TTL_DAYS)
+
+    scanned = sum(1 for a in audits if a.status == 'ok')
+    reason = (f'Pre-remediation baseline from the {scanned}-project portal scan; '
+              'drift still present in Synapse.')
+    entries = build_baseline_entries(audits, expires=expiry, reason=reason)
+    header = baseline_header(audits, entries, state_path=state_path, expires=expiry)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(format_allowlist(entries, header=header))
+    counts = Counter(e['classification'] for e in entries)
+    LOG.info('wrote %d baseline entries to %s (%s), expiring %s',
+             len(entries), path,
+             ', '.join(f'{counts[b]} {b}' for b in BASELINE_BUCKETS if counts[b]),
+             expiry.isoformat())
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description='Audit NF-OSI Synapse projects for mis-cased annotation keys.',
@@ -880,12 +1144,19 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument('--async-mode', choices=['auto', 'client', 'rest'], default='auto')
     parser.add_argument('--max-retries', type=int, default=5)
     parser.add_argument('--max-unscanned', type=int, default=0,
-                        help='tolerate this many unreadable projects before exiting 2')
+                        help='tolerate this many unreadable projects, plus entity reads lost '
+                             'during --drill-down, before exiting 2')
     parser.add_argument('--out-dir', default='audit', help='directory for state and reports')
     parser.add_argument('--state', default=None, help='state file (default <out-dir>/state.jsonl)')
     parser.add_argument('--resume', action='store_true', help='skip projects already scanned')
     parser.add_argument('--report-only', action='store_true',
                         help='regenerate reports from the state file without any network calls')
+    parser.add_argument('--emit-allowlist', default=None, metavar='PATH',
+                        help='write the state file\'s findings out as an allowlist baseline and '
+                             'exit; reads the state file only, so no Synapse credentials needed')
+    parser.add_argument('--baseline-expires', default=None, metavar='YYYY-MM-DD',
+                        help=f'expiry for --emit-allowlist entries (default: {BASELINE_TTL_DAYS} '
+                             'days from today)')
     parser.add_argument('--drill-down', action='store_true',
                         help='resolve affected projects to individual entities (read-only)')
     parser.add_argument('--drill-down-limit', type=int, default=None,
@@ -914,11 +1185,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     index = KeyIndex.build(canon)
     allowlist = load_allowlist(args.allowlist)
 
-    if args.report_only:
+    if args.report_only or args.emit_allowlist:
         audits = list(load_state(state_path).values())
         if not audits:
             LOG.error('no state found at %s; nothing to report', state_path)
             return 1
+        if args.emit_allowlist:
+            return emit_allowlist(audits, Path(args.emit_allowlist), state_path=state_path,
+                                  expires=args.baseline_expires)
         write_reports(audits, out_dir)
         print(format_markdown(audits))
         return exit_code_for(audits, fail_on_findings=args.fail_on_findings,
@@ -987,10 +1261,22 @@ def main(argv: Sequence[str] | None = None) -> int:
                     loose_compare=args.loose_compare, limit=args.drill_down_limit,
                     workers=args.drill_down_workers,
                     include_project_entity=args.include_project_entity,
+                    max_retries=args.max_retries,
                 ):
                     handle.write(json.dumps(finding) + '\n')
                     total += 1
+        lost = sum(len(a.read_failures) for a in audits)
         LOG.info('%d affected entities written to %s', total, findings_path)
+        if lost:
+            # The project's state line was written before the drill-down, so
+            # re-append it now that reads have been lost against it. load_state
+            # keys by project, so the later line wins and --report-only sees the
+            # lost coverage rather than reporting a complete run.
+            for audit in audits:
+                if audit.read_failures:
+                    append_state(state_path, audit)
+            LOG.error('%d entity reads were lost after retries, so %s is incomplete; '
+                      'the reports list them', lost, findings_path)
 
     write_reports(audits, out_dir)
     print(format_markdown(audits))

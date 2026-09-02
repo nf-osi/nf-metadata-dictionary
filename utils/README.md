@@ -74,12 +74,19 @@ python utils/audit_annotation_keys.py --project syn25881328 --drill-down --out-d
 
 # regenerate reports from a previous run, no network calls
 python utils/audit_annotation_keys.py --out-dir audit --report-only
+
+# record a completed scan's findings as the accepted baseline, no network calls
+python utils/audit_annotation_keys.py --state audit/state.jsonl \
+    --emit-allowlist utils/annotation_key_allowlist.yaml
 ```
 
-Two things to know when reading a report:
+Three things to know when reading a report:
 
 - The inventory reports **presence, not scale**. One bad file out of 6,000 looks identical to wholesale corruption. `syn25881328` flags 19 duplicate keys at the project level but only 23 of its 772 files are actually affected. Always `--drill-down` before judging scale.
 - A 403 is a **finding, not a skip**. Coverage (`scanned / not readable / failed`) is reported first, because "0 findings" is meaningless without it.
+- An entity read lost during `--drill-down`, after its retries, is also a finding. It is counted in the coverage block, listed in `summary.md`, carried in `annotation_key_audit_projects.csv` and spends the `--max-unscanned` budget. `entity_findings.jsonl` is the only input `fix_annotation_keys.py --findings` reads, so an entity silently missing from it is a real finding that could never be repaired.
+
+Markdown tables in `summary.md` are capped at 40 rows because the weekly workflow pipes the file into a GitHub issue body, which is limited to 65,536 characters. The CSVs in the run artifact always hold every row.
 
 Exit codes follow `check_schema_limits.py`: `0` clean, `1` repairable findings (with `--fail-on-findings`), `2` warnings.
 Unrecognised keys do not warn by default - projects legitimately carry custom annotations - but probable misspellings of a schema slot do, since those are real bugs.
@@ -88,8 +95,23 @@ Accepting a key in `annotation_key_allowlist.yaml` or raising `--max-unscanned` 
 
 `--include-project-entity` folds the project entity's own annotation keys into the inventory - a view scope cannot see them - and makes `--drill-down` inspect the project entity too, so a project-level finding is reachable by `fix_annotation_keys.py --findings` rather than visible but unfixable.
 
+#### The allowlist baseline
+
+`annotation_key_allowlist.yaml` ships with the **recorded pre-remediation baseline**: every finding present on the 368 portal projects at the time this tooling landed, before any Synapse writes. Without it the weekly job would be red from the first scheduled run and stay red until the drift is remediated out of band, and a permanently red gate gets ignored - so the baseline is what lets *new* drift be the thing that turns the job red.
+
+The entries are **generated, not hand-written**. Regenerate them from any completed scan's state file, which needs no Synapse credentials:
+
+```bash
+python utils/audit_annotation_keys.py --state audit/state.jsonl \
+    --emit-allowlist utils/annotation_key_allowlist.yaml
+```
+
+Each entry is scoped to its project synID rather than `global`, so the same key on a project the baseline does not name is still a finding. Every entry carries the classification bucket, the issue it is triaged under (#939 for PascalCase duplicates, orphans and probable misspellings; #976 for case-variant drift from former slot names) and an expiry a quarter out.
+
+**The file is meant to shrink, not to be renewed.** Every entry is drift that still exists in Synapse; each remediation pass should delete the entries it fixed. When the expiry passes the findings resurface and the job goes red, which is the reminder that the remediation never happened.
+
 **Related files:**
-- `annotation_key_allowlist.yaml` - findings a human has accepted; affects the exit code only, never the report
+- `annotation_key_allowlist.yaml` - the generated pre-remediation baseline plus any hand-triaged acceptances; affects the exit code only, never the report
 - `../.github/workflows/weekly-annotation-key-audit.yml` - the recurring audit
 
 ### fix_annotation_keys.py

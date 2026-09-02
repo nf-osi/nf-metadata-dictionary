@@ -172,11 +172,41 @@ def is_forbidden(error: Exception) -> bool:
     return status in (401, 403) or 'Forbidden' in str(error) or '403' in str(error)[:8]
 
 
+_TRANSPORT_ERRORS: tuple[type[BaseException], ...] | None = None
+
+
+def transport_error_types() -> tuple[type[BaseException], ...]:
+    """Exception classes that mean the request never got an HTTP answer.
+
+    ``requests.exceptions.ConnectionError`` and ``requests.exceptions.Timeout``
+    derive from ``RequestException`` -> ``OSError``, *not* from the builtins of
+    the same name, and they carry no ``response`` - so neither a status check nor
+    an ``isinstance`` against the builtins ever matches a dropped connection or a
+    read timeout, which are the most common transient failures in a multi-hour
+    scan. ``requests`` is resolved on first use rather than imported at module
+    scope, so this module stays importable without the Synapse client stack.
+    """
+    global _TRANSPORT_ERRORS
+    if _TRANSPORT_ERRORS is None:
+        types: list[type[BaseException]] = [TimeoutError, ConnectionError]
+        try:
+            from requests.exceptions import ConnectionError as RequestsConnectionError
+            from requests.exceptions import Timeout as RequestsTimeout
+        except ImportError:  # pragma: no cover - requests ships with synapseclient
+            pass
+        else:
+            types += [RequestsConnectionError, RequestsTimeout]
+        _TRANSPORT_ERRORS = tuple(types)
+    return _TRANSPORT_ERRORS
+
+
 def is_retryable(error: Exception) -> bool:
     status = getattr(getattr(error, 'response', None), 'status_code', None)
-    if status in RETRYABLE_STATUS:
-        return True
-    return isinstance(error, (TimeoutError, ConnectionError))
+    if status is not None:
+        # A definite HTTP verdict outside the retryable set - a 404, a 400 - is
+        # not going to be a different verdict on the second attempt.
+        return status in RETRYABLE_STATUS
+    return isinstance(error, transport_error_types())
 
 
 def with_retries(call, *, max_retries: int, label: str, logger: logging.Logger | None = None):

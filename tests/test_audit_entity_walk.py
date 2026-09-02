@@ -149,9 +149,10 @@ def _audit_with_project_entity(monkeypatch, *, columns, values, types):
     canon = frozenset({'age', 'specimenID', 'studyName', 'deadline', 'dspDatasetIndex'})
     index = policy.KeyIndex.build(canon)
     monkeypatch.setattr(audit, 'scope_columns', lambda syn, scope, **kwargs: dict(columns))
-    monkeypatch.setattr(audit, 'read_annotations', lambda syn, entity_id: io.AnnotationRecord(
-        entity_id, 'etag-1', values, types,
-    ))
+    monkeypatch.setattr(audit, 'read_annotations',
+                        lambda syn, entity_id, **kwargs: io.AnnotationRecord(
+                            entity_id, 'etag-1', values, types,
+                        ))
     return audit.audit_project(
         object(), {'project_id': 'syn0', 'project_name': 'p'}, canon=canon, index=index,
         view_type_mask=1, include_project_entity=True, async_mode='rest', max_retries=0,

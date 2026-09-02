@@ -98,6 +98,45 @@ ERROR_SAMPLE = 50
 ERROR_FLOOR = 10
 
 
+class CircuitBreaker:
+    """Trailing-window failure rate, tripped by a systemic problem.
+
+    A revoked token, a service degradation or an ACL changed mid-run should stop
+    the run where it starts, whether that is at entity 10 or at entity 2,000.
+    Hence the trailing window, judged as soon as ``floor`` results are in rather
+    than once it is full: the whole-run rate would take hundreds more failures to
+    clear the threshold after a long healthy prefix, and waiting for a full window
+    would leave every run shorter than it unguarded - which is exactly the scale a
+    curator drives by hand with ``--entity``.
+
+    Shared by both per-entity loops. The schema preflight reads every entity too,
+    so leaving it unguarded meant a dead token produced one failed read and one
+    fsynced progress line per entity - up to --max-entities-per-run of them -
+    before the write loop's breaker ever got a chance to fire.
+    """
+
+    def __init__(self, *, sample: int = ERROR_SAMPLE, floor: int = ERROR_FLOOR,
+                 threshold: float = ERROR_RATE_THRESHOLD):
+        self.threshold = threshold
+        self.floor = min(sample, floor)
+        self.recent: deque[bool] = deque(maxlen=sample)
+
+    def record(self, failed: bool) -> None:
+        self.recent.append(bool(failed))
+
+    @property
+    def failures(self) -> int:
+        return sum(self.recent)
+
+    @property
+    def window(self) -> int:
+        return len(self.recent)
+
+    @property
+    def tripped(self) -> bool:
+        return self.window >= self.floor and self.failures / self.window > self.threshold
+
+
 # ---------------------------------------------------------------------------
 # Run logs
 # ---------------------------------------------------------------------------
@@ -380,6 +419,7 @@ def schema_preflight(
     *,
     registry: SchemaRegistry,
     repo_version: str | None = None,
+    max_retries: int = 3,
 ) -> PreflightReport:
     """Whether the planned fix keeps every entity JSON-schema conformant.
 
@@ -422,6 +462,7 @@ def schema_preflight(
         outcome = check_entity(
             syn, result.entity_id, registry=registry, repo_version=repo_version,
             decisions=result.applied, fallback_component=component_of(result.planned),
+            max_retries=max_retries,
         )
         if outcome.blocking:
             report.blockers.append(outcome)
@@ -822,6 +863,8 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
     # Set when a dry run carried on past entities the preflight could not vouch
     # for, so the exit code can still say the plan is not one --apply would take.
     unvalidatable_in_dry_run = False
+    #: The preflight's dry-run plans, kept so a dry run does not compute them twice.
+    dry_runs: list[ApplyResult] = []
     mode = 'DRY RUN' if dry_run else 'APPLY'
     LOG.info('%s: %d entities, actions=%s, logs=%s', mode, len(entity_ids),
              ','.join(sorted(a.value for a in allowed_actions)), log_dir)
@@ -837,17 +880,26 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
                  len(entity_ids), len(registry.by_name), repo_version or 'unknown')
         # Every entity goes to the preflight, planned or not. Filtering here is
         # what let a failed dry-run read skip the gate and reach the write pass
-        # with no verdict behind it.
-        dry_runs = [
-            apply_entity(
+        # with no verdict behind it. The breaker guards this loop as well: it is
+        # one read per entity, so a systemic failure has to stop it here rather
+        # than after it has burned through the whole run.
+        breaker = CircuitBreaker()
+        for position, entity_id in enumerate(entity_ids, 1):
+            result = apply_entity(
                 syn, entity_id, canon=canon, index=index, logs=logs,
                 allowed_actions=allowed_actions, dry_run=True,
                 loose_compare=args.loose_compare, max_retries=args.max_retries,
             )
-            for entity_id in entity_ids
-        ]
+            dry_runs.append(result)
+            breaker.record(result.status in ('error', 'etag_conflict'))
+            if breaker.tripped:
+                LOG.error('aborting the schema preflight at entity %d: %d of the last %d failed; '
+                          'no plan was validated, so nothing is offered for approval',
+                          position, breaker.failures, breaker.window)
+                return 1
         preflight = schema_preflight(syn, dry_runs, registry=registry,
-                                     repo_version=repo_version)
+                                     repo_version=repo_version,
+                                     max_retries=args.max_retries)
         if preflight.unaccounted:
             LOG.error('schema preflight bucketed %d of %d entities; %d unaccounted for, so no '
                       'count it reports can be trusted; refusing to proceed: %s',
@@ -918,35 +970,33 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
 
     syn = _login_cached()
     results: list[ApplyResult] = []
-    recent_failures: deque[bool] = deque(maxlen=ERROR_SAMPLE)
-    for position, entity_id in enumerate(entity_ids, 1):
-        result = apply_entity(
-            syn, entity_id, canon=canon, index=index, logs=logs,
-            allowed_actions=allowed_actions, dry_run=dry_run,
-            loose_compare=args.loose_compare, max_retries=args.max_retries,
-        )
-        results.append(result)
-        recent_failures.append(result.status in ('error', 'etag_conflict'))
-        # Circuit breaker: a systemic problem - a revoked token, a service
-        # degradation, an ACL changed mid-run - should stop the run when it
-        # starts, whether that is at entity 10 or at entity 2,000. Hence the
-        # trailing window, judged as soon as ERROR_FLOOR results are in rather
-        # than once it is full: the whole-run rate would take hundreds more
-        # failures to clear the threshold after a long healthy prefix, and a full
-        # window would leave every run shorter than it unguarded - which is
-        # exactly the scale a curator drives by hand with --entity.
-        failures = sum(recent_failures)
-        window = len(recent_failures)
-        if (window >= min(ERROR_SAMPLE, ERROR_FLOOR)
-                and failures / window > ERROR_RATE_THRESHOLD):
-            LOG.error('aborting at entity %d: %d of the last %d failed',
-                      position, failures, window)
-            break
-        if not dry_run:
-            time.sleep(args.sleep)
-            if position % args.batch_size == 0:
-                LOG.info('... %d/%d', position, len(entity_ids))
-                time.sleep(args.batch_pause)
+    if dry_run and dry_runs:
+        # The preflight already planned every one of these entities from a fresh
+        # read and recorded its progress line. Planning them again would double the
+        # reads and write a second progress line per unchanged entity, inflating
+        # what --resume later reads back. A write run is different: it deliberately
+        # re-reads and re-decides, because acting on the preflight's now-stale
+        # verdict is how a cleanup destroys a concurrently written value.
+        results = dry_runs
+    else:
+        breaker = CircuitBreaker()
+        for position, entity_id in enumerate(entity_ids, 1):
+            result = apply_entity(
+                syn, entity_id, canon=canon, index=index, logs=logs,
+                allowed_actions=allowed_actions, dry_run=dry_run,
+                loose_compare=args.loose_compare, max_retries=args.max_retries,
+            )
+            results.append(result)
+            breaker.record(result.status in ('error', 'etag_conflict'))
+            if breaker.tripped:
+                LOG.error('aborting at entity %d: %d of the last %d failed',
+                          position, breaker.failures, breaker.window)
+                break
+            if not dry_run:
+                time.sleep(args.sleep)
+                if position % args.batch_size == 0:
+                    LOG.info('... %d/%d', position, len(entity_ids))
+                    time.sleep(args.batch_pause)
 
     write_report(results, logs.report_path)
     counts = summarize(results)

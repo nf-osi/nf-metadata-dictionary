@@ -270,6 +270,40 @@ def test_a_transient_read_failure_is_retried_rather_than_sinking_the_run(
     assert syn.plain('syn1') == {'age': ['1.5'], 'sex': ['Female']}
 
 
+def test_a_dropped_connection_counts_as_transient_despite_not_subclassing_the_builtin():
+    # requests' ConnectionError and Timeout come from RequestException -> OSError,
+    # not from the builtins of the same name, and they carry no response - so
+    # matching only the builtins meant the two most common transient failures in a
+    # multi-hour scan were never retried by the shared policy.
+    requests = pytest.importorskip('requests')
+    assert not issubclass(requests.exceptions.ConnectionError, ConnectionError)
+    assert not issubclass(requests.exceptions.Timeout, TimeoutError)
+
+    assert io.is_retryable(requests.exceptions.ConnectionError('connection aborted'))
+    assert io.is_retryable(requests.exceptions.Timeout('read timed out'))
+    assert io.is_retryable(TimeoutError('socket timeout'))
+    assert io.is_retryable(StubSynapseError('service unavailable', 503))
+    # A definite HTTP verdict outside the retryable set, and a plain bug, are not
+    # going to come back different on the second attempt.
+    assert not io.is_retryable(StubSynapseError('not found', 404))
+    assert not io.is_retryable(ValueError('malformed payload'))
+
+
+def test_a_dropped_connection_is_actually_retried_by_the_shared_policy(monkeypatch):
+    requests = pytest.importorskip('requests')
+    monkeypatch.setattr(io.time, 'sleep', lambda _seconds: None)
+    attempts = []
+
+    def flaky():
+        attempts.append(1)
+        if len(attempts) < 3:
+            raise requests.exceptions.ConnectionError('connection aborted')
+        return 'ok'
+
+    assert io.with_retries(flaky, max_retries=3, label='syn1') == 'ok'
+    assert len(attempts) == 3
+
+
 def test_a_read_that_keeps_failing_is_still_reported_as_an_error(
     duplicate_entity, rules, logs, monkeypatch
 ):
@@ -468,8 +502,6 @@ def test_rollback_round_trips_the_original_annotations(tmp_path, rules):
     fix.apply_entity(syn, 'syn1', logs=logs,
                      allowed_actions={policy.Action.DROP_STRAY, policy.Action.RENAME_STRAY},
                      dry_run=False, **rules)
-    before_fix = syn.plain('syn1')
-    assert syn.plain('syn1') != before_fix or True
     fix.rollback(syn, logs, dry_run=False)
     assert syn.plain('syn1') == {
         'Age': ['1.5'], 'age': ['1.5'], 'Nf2Genotype': ['-/-'], 'sex': ['Female'],
@@ -961,6 +993,7 @@ def _half_broken_synapse(unreadable='syn_unreadable', schema_name='microscopyass
     class HalfBrokenSynapse:
         def __init__(self):
             self.writes = []
+            self.annotation_reads = []
 
         def restGET(self, path):
             entity_id = path.split('/')[2]
@@ -969,6 +1002,12 @@ def _half_broken_synapse(unreadable='syn_unreadable', schema_name='microscopyass
             if path.endswith('/annotations2'):
                 if entity_id == unreadable:
                     raise RuntimeError('503 Service Unavailable')
+                self.annotation_reads.append(entity_id)
+                if entity_id.startswith('syn_clean'):
+                    # Nothing to fix, so the dry run settles it as a noop and
+                    # writes a progress line.
+                    return {'id': entity_id, 'etag': 'etag-1',
+                            'annotations': to_typed({'age': [1.5]})}
                 return {'id': entity_id, 'etag': 'etag-1',
                         'annotations': to_typed({'Age': [1.5], 'age': [1.5],
                                                  'Component': ['MicroscopyAssayTemplate']})}
@@ -1048,6 +1087,66 @@ def test_a_dry_run_blocked_only_by_an_unvalidatable_entity_exits_two(monkeypatch
                      '--log-dir', str(log_dir), '--entity', 'syn64420376']) == 2
     assert (log_dir / 'report.csv').exists()
     assert syn.writes == []
+
+
+def test_the_schema_preflight_loop_is_guarded_by_the_circuit_breaker(monkeypatch, tmp_path):
+    # The preflight reads every entity too, so leaving its loop unguarded meant a
+    # revoked token produced one failing read and one fsynced progress line per
+    # entity - up to --max-entities-per-run of them - before the write loop's
+    # breaker ever got a chance to fire.
+    class DeadSynapse:
+        def __init__(self):
+            self.reads = 0
+
+        def restGET(self, path):
+            if path.endswith('/permissions'):
+                return {'canEdit': True}
+            self.reads += 1
+            raise RuntimeError('403 Forbidden')
+
+    syn = DeadSynapse()
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: syn)
+
+    argv = ['--actions', 'drop_stray', '--validate-schema', '--log-dir', str(tmp_path / 'run')]
+    for index in range(30):
+        argv += ['--entity', f'syn{index}']
+    assert fix.main(argv) == 1
+    assert syn.reads == fix.ERROR_FLOOR
+
+
+def test_a_dry_run_with_the_preflight_reads_each_entity_once(monkeypatch, tmp_path):
+    # The preflight plans every entity from a fresh read; re-planning them in the
+    # main loop doubled the /annotations2 reads and wrote a second progress line
+    # per unchanged entity, which then inflated what --resume reads back. A write
+    # run still re-reads deliberately - re-deciding on fresh data is a safety
+    # property, not redundancy.
+    syn = _half_broken_synapse(unreadable='syn_nothing_is_unreadable')
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: syn)
+
+    log_dir = tmp_path / 'dryrun'
+    assert fix.main(['--actions', 'drop_stray', '--validate-schema', '--log-dir', str(log_dir),
+                     '--entity', 'syn64420376', '--entity', 'syn_clean1']) == 0
+    assert sorted(syn.annotation_reads) == ['syn64420376', 'syn_clean1']
+
+    progress = [json.loads(line) for line
+                in (log_dir / 'progress.jsonl').read_text().splitlines() if line]
+    assert [p['entity_id'] for p in progress] == ['syn_clean1']
+    assert (log_dir / 'report.csv').exists()
+
+
+def test_an_apply_run_still_re_reads_every_entity_after_the_preflight(monkeypatch, tmp_path):
+    syn = _half_broken_synapse(unreadable='syn_nothing_is_unreadable')
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: syn)
+
+    # The stub refuses the write, so the run fails - what matters here is that the
+    # write pass read the entity again rather than reusing the preflight's plan.
+    assert fix.main(['--actions', 'drop_stray', '--validate-schema', '--apply', '--yes',
+                     '--log-dir', str(tmp_path / 'apply'), '--entity', 'syn64420376']) == 1
+    assert syn.annotation_reads == ['syn64420376', 'syn64420376']
+    assert syn.writes == ['/entity/syn64420376/annotations2']
 
 
 def test_the_carry_forward_of_a_resumed_scan_does_not_double_count(tmp_path):

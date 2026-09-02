@@ -17,6 +17,7 @@ import pytest
 utils_path = os.path.join(os.path.dirname(__file__), '..', 'utils')
 sys.path.insert(0, utils_path)
 
+import synapse_annotation_io as io  # noqa: E402
 import validate_annotations as validate  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -303,6 +304,56 @@ def test_check_entity_uses_the_bound_schema_for_the_predicted_shape(registry):
     )
     assert outcome.status == 'clean', outcome.after_messages
     assert not outcome.blocking
+
+
+class FlakySynapse(StubSynapse):
+    """Fails the first ``failures`` reads of each path with a transient error."""
+
+    def __init__(self, *args, failures=0, status=503, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.failures = failures
+        self.status = status
+        self.attempts = 0
+
+    def restGET(self, path):
+        self.attempts += 1
+        if self.failures > 0:
+            self.failures -= 1
+
+            class _Response:
+                status_code = self.status
+
+            error = RuntimeError(f'{self.status} transient')
+            error.response = _Response()
+            raise error
+        return super().restGET(path)
+
+
+def test_a_transient_read_failure_does_not_make_an_entity_unvalidatable(registry, monkeypatch):
+    # The fix tool's preflight refuses an entire --apply run over one entity it
+    # could not validate, and the only escape hatch discards the gate for every
+    # entity - so one 503 among thousands must not cost the whole write pass.
+    monkeypatch.setattr(io.time, 'sleep', lambda _seconds: None)
+    instance, _ = animal_individual_instance()
+    syn = FlakySynapse({'syn1': instance},
+                       {'syn1': binding('animalindividualtemplate', '11.1.22')},
+                       failures=2)
+
+    outcome = validate.check_entity(syn, 'syn1', registry=registry, max_retries=3)
+    assert outcome.status != 'error', outcome.error
+    assert syn.attempts == 4  # two lost, then the instance and the binding
+
+
+def test_a_forbidden_read_is_not_retried(registry, monkeypatch):
+    # A 403 does not become a 200 on the second attempt; retrying only delays the
+    # finding.
+    monkeypatch.setattr(io.time, 'sleep', lambda _seconds: pytest.fail('403 was retried'))
+    instance, _ = animal_individual_instance()
+    syn = FlakySynapse({'syn1': instance}, failures=5, status=403)
+
+    outcome = validate.check_entity(syn, 'syn1', registry=registry, max_retries=5)
+    assert outcome.status == 'error'
+    assert syn.attempts == 1
 
 
 # ---------------------------------------------------------------------------

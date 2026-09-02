@@ -56,7 +56,10 @@ def test_load_canonical_slots_includes_both_slots_and_inline_attributes(canon):
     # study/dataset/publication annotations.
     for attribute_only in ('keywords', 'funder', 'pmid', 'individualCount', 'measurementTechnique'):
         assert attribute_only in canon, f'{attribute_only} is declared via class attributes'
-    assert len(canon) == 301
+    # A lower bound, not the exact total: adding slots is this repository's whole
+    # purpose, and pinning the count would fail here - pointing at the key policy -
+    # for a change to modules/.
+    assert len(canon) >= 300
 
 
 def test_load_canonical_slots_reads_dist_not_legacy_jsonld():
@@ -482,16 +485,24 @@ def test_rename_refuses_to_overwrite_an_existing_canonical_key():
 # Real captured key inventories (offline, highest signal)
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize('project,expected_dup,expected_orphan', [
-    ('syn25881328', 19, 4),
-    ('syn35221462', 23, 20),
+@pytest.mark.parametrize('project,expected_strays,duplicate,orphan', [
+    ('syn25881328', 23, 'Age', 'Nf2Genotype'),
+    ('syn35221462', 43, 'Age', 'AgeUnit'),
 ])
-def test_captured_scope_columns_reproduce_the_measured_counts(project, expected_dup, expected_orphan, canon, index):
+def test_captured_scope_columns_reproduce_the_measured_counts(
+    project, expected_strays, duplicate, orphan, canon, index,
+):
     columns = json.loads((FIXTURE_DIR / f'{project}_scope_columns.json').read_text())
     present = {c['name'] for c in columns}
     summary = policy.classify_key_inventory(present, canon=canon, index=index)
-    assert len(summary.duplicates) == expected_dup, sorted(summary.duplicates)
-    assert len(summary.orphans) == expected_orphan, sorted(summary.orphans)
+    # The measured total of PascalCase strays, not the duplicate/orphan split: a
+    # key moves between those two buckets purely on whether its camelCase twin is
+    # also present, so pinning each side would fail here for a change to
+    # modules/ - pointing at the key policy instead of at the model change.
+    strays = set(summary.duplicates) | set(summary.orphans)
+    assert len(strays) == expected_strays, sorted(strays)
+    assert duplicate in summary.duplicates, 'the canonical twin is present, so this is droppable'
+    assert orphan in summary.orphans, 'no canonical twin, so this has to be renamed'
 
 
 def test_captured_inventory_never_flags_infra_keys(canon, index):

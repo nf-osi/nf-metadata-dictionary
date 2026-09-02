@@ -58,6 +58,8 @@ import jsonschema
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+from synapse_annotation_io import with_retries  # noqa: E402
+
 LOG = logging.getLogger('validate_annotations')
 
 SCHEMA_DIR = Path(__file__).resolve().parent.parent / 'registered-json-schemas'
@@ -341,11 +343,19 @@ def check_entity(
     project_id: str = '',
     fallback_component: str | None = None,
     include_cached: bool = False,
+    max_retries: int = 0,
 ) -> EntityConformance:
     result = EntityConformance(entity_id=entity_id, project_id=project_id)
     try:
-        instance = entity_instance(syn, entity_id)
-        binding = bound_schema(syn, entity_id)
+        # Both reads ride out a transient failure. A 503 among thousands of
+        # entities is not a verdict about the entity, and the fix tool's preflight
+        # refuses a whole write run over one entity it could not validate - so
+        # without a retry budget one blip costs the entire pass. A 403 still fails
+        # fast: with_retries never retries an authorisation failure.
+        instance = with_retries(lambda: entity_instance(syn, entity_id),
+                                max_retries=max_retries, label=entity_id, logger=LOG)
+        binding = with_retries(lambda: bound_schema(syn, entity_id),
+                               max_retries=max_retries, label=entity_id, logger=LOG)
     except Exception as error:  # noqa: BLE001
         result.status = 'error'
         result.error = f'{type(error).__name__}: {error}'[:250]
@@ -537,6 +547,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument('--include-cached', action='store_true',
                         help="also fetch Synapse's own stored verdict for comparison")
     parser.add_argument('--limit', type=int, default=None)
+    parser.add_argument('--max-retries', type=int, default=5,
+                        help='retries per entity read on a transient failure (never on a 403)')
     parser.add_argument('--report', default=None, help='CSV output path')
     parser.add_argument('--markdown', default=None, help='markdown output path')
     parser.add_argument('--log-level', default='INFO')
@@ -604,6 +616,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             syn, target['entity_id'], registry=registry, repo_version=repo_version,
             decisions=target.get('decisions') or (), project_id=target.get('project_id', ''),
             fallback_component=target.get('component'), include_cached=args.include_cached,
+            max_retries=args.max_retries,
         ))
         if position % 25 == 0:
             LOG.info('... %d/%d', position, len(targets))
