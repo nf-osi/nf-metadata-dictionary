@@ -458,6 +458,117 @@ def test_a_truncated_report_csv_names_the_entities_it_never_checked(tmp_path):
     assert 'aborted by the circuit breaker' in rows[1]['error']
 
 
+def _http_error(message, status):
+    class _Response:
+        status_code = status
+
+    error = RuntimeError(message)
+    error.response = _Response()
+    return error
+
+
+def test_a_server_error_on_an_id_containing_404_is_not_read_as_unbound(registry, monkeypatch):
+    # 'nothing is bound here' used to be a substring test over the whole message, and
+    # synapseclient puts the status, the reason and the entity id in one string - so a
+    # 5xx on syn20404567 (roughly one 8-digit id in forty contains '404') read as
+    # unbound. Every consequence ran the wrong way for a gate in front of a
+    # destructive write: the failure never reached the retry, the breaker counted it
+    # as a healthy request, and an entity carrying a Component annotation was then
+    # validated against that template rather than against the binding never read.
+    monkeypatch.setattr(io.time, 'sleep', lambda _seconds: None)
+    instance, _ = animal_individual_instance()
+    attempts = []
+
+    class UnreadableBinding(StubSynapse):
+        def restGET(self, path):
+            if path.endswith('/schema/binding'):
+                attempts.append(path)
+                raise _http_error('503 Server Error: Service Unavailable for syn20404567', 503)
+            return super().restGET(path)
+
+    syn = UnreadableBinding({'syn20404567': instance})
+    with pytest.raises(RuntimeError):
+        validate.bound_schema(syn, 'syn20404567')
+
+    outcome = validate.check_entity(syn, 'syn20404567', registry=registry,
+                                    fallback_component='AnimalIndividualTemplate',
+                                    max_retries=2)
+    assert outcome.status == 'error', 'a lost binding read is not a verdict about the entity'
+    assert outcome.breaker_sample is True
+    assert len(attempts) == 4, 'and it is retried like any other transient failure'
+
+
+def test_a_404_on_the_binding_still_means_nothing_is_bound(registry):
+    instance, _ = animal_individual_instance()
+
+    class NoBinding(StubSynapse):
+        def restGET(self, path):
+            if path.endswith('/schema/binding'):
+                raise _http_error('404 Client Error: Not Found', 404)
+            return super().restGET(path)
+
+    assert validate.bound_schema(NoBinding({'syn1': instance}), 'syn1') is None
+    assert validate.check_entity(NoBinding({'syn1': instance}), 'syn1',
+                                 registry=registry).status == 'unbound'
+
+
+class CachedVerdictSynapse(StubSynapse):
+    """Also serves /entity/{id}/schema/validation, however ``cached`` says."""
+
+    def __init__(self, *args, cached=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.cached = cached
+        self.validation_reads = 0
+
+    def restGET(self, path):
+        if path.endswith('/schema/validation'):
+            self.validation_reads += 1
+            if isinstance(self.cached, Exception):
+                raise self.cached
+            return self.cached
+        return super().restGET(path)
+
+
+def test_no_cached_verdict_is_distinguishable_from_a_cached_verdict_that_could_not_be_read(
+        registry, monkeypatch):
+    # One blank cell used to stand for two opposite things - 'Synapse has never
+    # validated this' and 'the comparison did not happen' - and the row still read as
+    # a successful comparison.
+    monkeypatch.setattr(io.time, 'sleep', lambda _seconds: None)
+    instance, _ = animal_individual_instance()
+    bindings = {'syn1': binding('animalindividualtemplate', '11.1.22')}
+
+    absent = CachedVerdictSynapse({'syn1': instance}, bindings,
+                                  cached=_http_error('404 Client Error: Not Found', 404))
+    outcome = validate.check_entity(absent, 'syn1', registry=registry, include_cached=True)
+    assert outcome.synapse_cached_valid is None and outcome.cached_error is None
+    assert outcome.breaker_sample is False
+
+    lost = CachedVerdictSynapse({'syn1': instance}, bindings,
+                                cached=_http_error('503 Service Unavailable', 503))
+    outcome = validate.check_entity(lost, 'syn1', registry=registry, include_cached=True,
+                                    max_retries=2)
+    assert outcome.synapse_cached_valid is None
+    assert '503' in outcome.cached_error
+    # The same retry budget and the same guard as the two reads above it.
+    assert lost.validation_reads == 3
+    assert outcome.breaker_sample is True
+    # The entity's own conformance verdict still stands; only the comparison is gone.
+    assert outcome.status == 'clean'
+
+
+def test_a_lost_cached_read_reaches_the_report_and_the_document(tmp_path, registry):
+    lost = validate.EntityConformance(entity_id='syn1', status='clean',
+                                      cached_error='RuntimeError: 503 Service Unavailable')
+    path = tmp_path / 'conformance.csv'
+    validate.write_report([lost], path)
+
+    rows = list(csv.DictReader(path.read_text().splitlines()))
+    assert rows[0]['synapse_cached_valid'] == ''
+    assert '503' in rows[0]['synapse_cached_error']
+    assert "cached verdict could not be read for 1" in validate.format_markdown([lost])
+
+
 def test_a_forbidden_read_is_not_retried(registry, monkeypatch):
     # A 403 does not become a 200 on the second attempt; retrying only delays the
     # finding.

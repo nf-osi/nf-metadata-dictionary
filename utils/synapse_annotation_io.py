@@ -31,6 +31,20 @@ LOG = logging.getLogger('synapse_annotation_io')
 #: retrying it just delays a finding.
 RETRYABLE_STATUS = (429, 500, 502, 503, 504)
 
+#: Statuses that answer a question about one entity, and would answer it the same
+#: way however many times it is asked: a 403 on a file behind its own ACL, a 404 or
+#: a 410 on one deleted between the audit and the fix. These are data - see
+#: :func:`breaker_verdict`.
+#:
+#: Enumerated rather than "any status that is not retryable", which swept in the two
+#: failures a run cannot survive. A 401 is not a fact about an entity but about the
+#: credential, and a 400 says this tool is building a request the service will keep
+#: rejecting; both recur on every subsequent call, so a run-wide failure of either
+#: kind has to reach the circuit breaker. Because every request then fails, the
+#: guard trips as soon as its floor is met - within ten requests of a token being
+#: revoked mid-scan - rather than grinding through thousands of entities.
+DEFINITIVE_STATUS = (403, 404, 410)
+
 #: Synapse AnnotationsValueType -> the Python type the policy rules compare.
 VALUE_DECODERS = {
     'STRING': str,
@@ -168,9 +182,22 @@ def _encode_scalar(value: Any, declared: str) -> str:
     return str(value)
 
 
+def status_of(error: Exception) -> int | None:
+    """The HTTP status behind an exception, when it carries a response at all."""
+    return getattr(getattr(error, 'response', None), 'status_code', None)
+
+
+def _reads_as_forbidden(error: Exception) -> bool:
+    """Whether an exception with no response still reads as an authorisation refusal."""
+    return 'Forbidden' in str(error) or '403' in str(error)[:8]
+
+
 def is_forbidden(error: Exception) -> bool:
-    status = getattr(getattr(error, 'response', None), 'status_code', None)
-    return status in (401, 403) or 'Forbidden' in str(error) or '403' in str(error)[:8]
+    """An authorisation refusal, which no number of retries turns into a yes."""
+    status = status_of(error)
+    if status is not None:
+        return status in (401, 403)
+    return _reads_as_forbidden(error)
 
 
 _TRANSPORT_ERRORS: tuple[type[BaseException], ...] | None = None
@@ -210,7 +237,7 @@ def transport_error_types() -> tuple[type[BaseException], ...]:
 
 
 def is_retryable(error: Exception) -> bool:
-    status = getattr(getattr(error, 'response', None), 'status_code', None)
+    status = status_of(error)
     if status is not None:
         # A definite HTTP verdict outside the retryable set - a 404, a 400 - is
         # not going to be a different verdict on the second attempt.
@@ -219,26 +246,32 @@ def is_retryable(error: Exception) -> bool:
 
 
 def is_definitive(error: Exception) -> bool:
-    """Whether the service answered, and would answer the same way on a retry.
+    """Whether the service answered about one entity, and would answer the same again.
 
-    A 403 on a file behind a per-folder ACL, and a 404 on an entity deleted between
-    the audit and the fix, are facts about those entities rather than signs that
-    Synapse is unwell. Anything else - a 429 or 5xx, a dropped connection, an
-    exception this module cannot classify at all - is treated as a possible service
-    problem, so an unrecognised systemic failure still stops a run rather than
-    being waved through as data.
+    True only for :data:`DEFINITIVE_STATUS`: a 403 on a file behind a per-folder ACL,
+    and a 404 or 410 on an entity deleted between the audit and the fix, are facts
+    about those entities rather than signs that Synapse is unwell. Everything else -
+    a 429 or 5xx, a 401 on a credential that has stopped working, a 400 on a request
+    this tool will keep building the same way, a dropped connection, an exception this
+    module cannot classify at all - is treated as a possible run-wide problem, so an
+    unrecognised systemic failure still stops a run rather than being waved through as
+    data about one entity.
     """
-    if is_forbidden(error):
-        return True
-    status = getattr(getattr(error, 'response', None), 'status_code', None)
-    return status is not None and status not in RETRYABLE_STATUS
+    status = status_of(error)
+    if status is not None:
+        return status in DEFINITIVE_STATUS
+    # No response to read - a client that did not attach one, or a stub. A 403 is
+    # still recognisable from the message; nothing else is, so nothing else is
+    # excused from the guard.
+    return _reads_as_forbidden(error)
 
 
 def breaker_verdict(error: Exception | None) -> bool | None:
     """How one request's outcome is sampled into a :class:`CircuitBreaker`.
 
     ``False`` for a request that succeeded, ``True`` for one lost to a possible
-    service problem, and ``None`` - not sampled at all - for a definitive verdict.
+    service problem, and ``None`` - not sampled at all - for a per-entity verdict the
+    service answered definitively.
 
     Sampling a definitive verdict made the guard fire on the data rather than on an
     outage. With ``ERROR_FLOOR`` at 10 and the threshold at 10%, two 403s inside one
@@ -248,6 +281,12 @@ def breaker_verdict(error: Exception | None) -> bool | None:
     since the audit, records them as the coverage gaps they already are and carries
     on. Neither is retried either, so neither costs the wall clock the guard exists
     to protect.
+
+    Only :data:`DEFINITIVE_STATUS` earns that exemption, and deliberately not "any
+    status that is not retryable": a 401 says the credential is finished and a 400
+    says the request shape is wrong, and both of those fail every remaining call, so
+    excusing them let an expired token grind through a whole plan with the guard
+    sampling nothing at all.
     """
     if error is None:
         return False

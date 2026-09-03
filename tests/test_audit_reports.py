@@ -500,6 +500,33 @@ def test_a_completed_drill_down_replaces_the_findings_file_and_says_so(tmp_path,
     assert not (tmp_path / 'entity_findings.partial.manifest.json').exists()
 
 
+def test_a_pass_that_completed_but_lost_a_read_does_not_claim_a_complete_findings_file(
+        tmp_path, monkeypatch):
+    # The manifest used to derive "complete" from the circuit breaker alone, so a
+    # drill-down that ran end to end while losing individual reads stamped
+    # complete: true over coverage the same run reported losing - and a 403 or a 404
+    # no longer trips the breaker, so nothing else marked it incomplete either. An
+    # entity whose read was lost is missing from entity_findings.jsonl exactly as if
+    # the pass had never reached it.
+    def read(_syn, entity_id, **_kwargs):
+        if entity_id == 'syn2-file7':
+            raise Forbidden()
+        return io.AnnotationRecord(entity_id, 'etag-1', {'Age': [1.5], 'age': [1.5]},
+                                   {'Age': 'DOUBLE', 'age': 'DOUBLE'})
+
+    assert _drill_down_run(tmp_path, monkeypatch, read=read) == 2
+
+    findings_path = tmp_path / 'entity_findings.jsonl'
+    manifest = audit.read_findings_manifest(findings_path)
+    assert manifest['pass_completed'] is True, 'the pass itself was not cut short'
+    assert manifest['complete'] is False
+    assert manifest['coverage_gaps'] == 1
+    assert manifest['coverage_gaps_by_project'] == {'syn2': 1}
+    # The pass still covered every flagged project, so its output is the current one.
+    assert len(findings_path.read_text().splitlines()) == 159
+    assert not (tmp_path / 'entity_findings.partial.jsonl').exists()
+
+
 def test_an_abort_is_recorded_alongside_the_project_entity_s_own_failed_read():
     # Both name the project entity, and during an outage the entity read fails
     # first. Recording them under one identity deduped the abort away, so the report

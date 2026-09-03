@@ -58,7 +58,12 @@ import jsonschema
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from synapse_annotation_io import breaker_verdict, run_guarded, with_retries  # noqa: E402
+from synapse_annotation_io import (  # noqa: E402
+    breaker_verdict,
+    run_guarded,
+    status_of,
+    with_retries,
+)
 
 LOG = logging.getLogger('validate_annotations')
 
@@ -118,11 +123,22 @@ def entity_instance(syn, entity_id: str) -> dict:
 
 
 def bound_schema(syn, entity_id: str) -> BindingInfo | None:
-    """The schema bound to this entity, or None when nothing is bound."""
+    """The schema bound to this entity, or None when nothing is bound.
+
+    "Nothing is bound" is read off the response status, not off the message. A bare
+    ``'404' in str(error)`` also matched a 5xx on an entity whose own synID contains
+    those digits - ``syn20404567``, and roughly one 8-digit id in forty -
+    because synapseclient puts the status, the reason and the entity id in the same
+    string. Every consequence of that ran the wrong way for a gate in front of a
+    destructive write: the failure never reached the surrounding retry, the circuit
+    breaker counted it as a healthy request, and an entity carrying a ``Component``
+    annotation was then validated against the template that annotation names rather
+    than against the binding this read never saw.
+    """
     try:
         payload = syn.restGET(f'/entity/{entity_id}/schema/binding')
     except Exception as error:  # noqa: BLE001 - an unbound entity is a state, not a failure
-        if '404' in str(error) or 'No JSON schema found' in str(error):
+        if status_of(error) == 404 or 'No JSON schema found' in str(error):
             return None
         raise
     info = payload.get('jsonSchemaVersionInfo') or {}
@@ -134,11 +150,20 @@ def bound_schema(syn, entity_id: str) -> BindingInfo | None:
 
 
 def synapse_validation_result(syn, entity_id: str) -> dict | None:
-    """Synapse's own cached verdict, for comparison. May be stale."""
+    """Synapse's own cached verdict, for comparison. May be stale.
+
+    ``None`` means Synapse holds no verdict for this entity; a read that failed is
+    raised, so the caller can report it. Swallowing both into ``None`` left one blank
+    cell in the CSV standing for two opposite things - "Synapse has never validated
+    this" and "the comparison did not happen" - and the row still read as a
+    successful comparison.
+    """
     try:
         return syn.restGET(f'/entity/{entity_id}/schema/validation')
-    except Exception:  # noqa: BLE001
-        return None
+    except Exception as error:  # noqa: BLE001 - no stored verdict is a state, not a failure
+        if status_of(error) == 404:
+            return None
+        raise
 
 
 # ---------------------------------------------------------------------------
@@ -316,6 +341,9 @@ class EntityConformance:
     before_messages: list[str] = field(default_factory=list)
     after_messages: list[str] = field(default_factory=list)
     synapse_cached_valid: bool | None = None
+    #: Why ``synapse_cached_valid`` is blank, when the reason is a lost read rather
+    #: than Synapse holding no verdict. The two mean opposite things when triaging.
+    cached_error: str | None = None
     error: str | None = None
     #: How the circuit breaker samples the reads behind this outcome. ``status`` alone
     #: cannot say: ``error`` covers a 503, a 403 on an entity the caller cannot see
@@ -393,9 +421,23 @@ def check_entity(
         return result
 
     if include_cached:
-        cached = synapse_validation_result(syn, entity_id)
-        if cached is not None:
-            result.synapse_cached_valid = cached.get('isValid')
+        # The same retry budget and the same guard as the two reads above: this is a
+        # per-entity request like any other, and it was the one in this loop that was
+        # neither retried nor sampled.
+        try:
+            cached = with_retries(lambda: synapse_validation_result(syn, entity_id),
+                                  max_retries=max_retries, label=entity_id, logger=LOG)
+        except Exception as error:  # noqa: BLE001 - the comparison is auxiliary
+            LOG.warning('%s: could not read the cached validation result: %s', entity_id, error)
+            result.cached_error = f'{type(error).__name__}: {error}'[:250]
+            # The entity's own conformance verdict stands; only the comparison is
+            # missing. A definitive answer leaves the two successful reads above
+            # standing as the entity's sample rather than withdrawing it.
+            if breaker_verdict(error):
+                result.breaker_sample = True
+        else:
+            if cached is not None:
+                result.synapse_cached_valid = cached.get('isValid')
 
     before = validate_instance(instance, schema)
     result.before_valid = before.is_valid
@@ -435,7 +477,7 @@ def write_report(
     """
     path.parent.mkdir(parents=True, exist_ok=True)
     fields = ['entity_id', 'project_id', 'schema_name', 'bound_version', 'drift', 'status',
-              'before_valid', 'after_valid', 'synapse_cached_valid',
+              'before_valid', 'after_valid', 'synapse_cached_valid', 'synapse_cached_error',
               'before_messages', 'after_messages', 'error']
     with open(path, 'w', newline='') as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)
@@ -451,6 +493,7 @@ def write_report(
                 'before_valid': item.before_valid,
                 'after_valid': item.after_valid,
                 'synapse_cached_valid': item.synapse_cached_valid,
+                'synapse_cached_error': item.cached_error or '',
                 'before_messages': ' | '.join(item.before_messages[:5]),
                 'after_messages': ' | '.join(item.after_messages[:5]),
                 'error': item.error or '',
@@ -540,6 +583,14 @@ def format_markdown(results: Sequence[EntityConformance], *, not_checked: int = 
         for item in stale[:40]:
             lines.append(f'| {item.entity_id} | {item.synapse_cached_valid} | {item.before_valid} |')
         lines.append('')
+
+    cached_lost = [r for r in results if r.cached_error]
+    if cached_lost:
+        # A blank cached verdict has two meanings and only one of them is benign, so
+        # the comparison above has to say how many entities it left out.
+        lines += [(f"_Synapse's cached verdict could not be read for {len(cached_lost)} "
+                   'entities, so the comparison above does not cover them; the reason is '
+                   'in the `synapse_cached_error` column._'), '']
 
     invalid = [r for r in results if r.status == 'still_invalid']
     if invalid:

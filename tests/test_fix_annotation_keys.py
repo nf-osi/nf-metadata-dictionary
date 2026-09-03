@@ -992,7 +992,7 @@ def test_a_trip_is_remembered_for_the_rest_of_the_run():
     assert breaker.tripped is True, 'the trip is a latch, not a live rate'
 
 
-@pytest.mark.parametrize('status', [403, 404, 410, 400])
+@pytest.mark.parametrize('status', [403, 404, 410])
 def test_a_window_of_definitive_verdicts_never_trips_the_breaker(status):
     # A 403 on a file behind a per-folder ACL and a 404 on an entity deleted between
     # the audit and the fix are facts about those entities, not signs that Synapse is
@@ -1007,6 +1007,32 @@ def test_a_window_of_definitive_verdicts_never_trips_the_breaker(status):
     assert breaker.sample(verdicts) is False
     assert breaker.tripped is False
     assert breaker.window == 0, 'a definitive answer is not sampled at all'
+
+
+@pytest.mark.parametrize('status', [401, 400])
+def test_a_failure_that_will_recur_for_every_call_still_trips_the_breaker(status):
+    # Exempting "any status that is not retryable" swept in the two failures a run
+    # cannot survive. A 401 is a fact about the credential rather than about an
+    # entity - a token revoked mid-scan 401s on every one of the 13,150 remaining
+    # reads - and a 400 says this tool is building a request Synapse will keep
+    # rejecting. Neither is retried, so nothing else stops either of them.
+    assert io.is_definitive(StubSynapseError(f'{status}', status)) is False
+    breaker = io.CircuitBreaker()
+    verdicts = [io.breaker_verdict(StubSynapseError(f'{status}', status))
+                for _ in range(io.ERROR_FLOOR)]
+    assert set(verdicts) == {True}
+    assert breaker.sample(verdicts) is True
+    assert breaker.tripped is True, 'the guard stops the run within ten requests'
+
+
+def test_a_403_is_data_but_a_401_is_the_credential():
+    # The same endpoint, one digit apart, and the distinction the guard turns on: one
+    # says "not this entity", the other says "not you, for anything".
+    assert io.is_definitive(StubSynapseError('403 Forbidden', 403)) is True
+    assert io.is_definitive(StubSynapseError('401 Unauthorized', 401)) is False
+    # Both are still authorisation refusals, so neither is ever retried.
+    assert io.is_forbidden(StubSynapseError('401 Unauthorized', 401)) is True
+    assert not io.is_retryable(StubSynapseError('401 Unauthorized', 401))
 
 
 @pytest.mark.parametrize('status', [429, 500, 503, 504])
@@ -1056,6 +1082,36 @@ def test_entities_the_curator_cannot_see_do_not_abort_the_planning_pass(
     report = (tmp_path / 'run' / 'report.csv').read_text()
     assert 'not_attempted' not in report
     assert report.count('error') == 30
+
+
+def test_a_credential_that_stops_working_mid_run_stops_the_run(monkeypatch, tmp_path, caplog):
+    # The counterpart of the test above, and the reason "not retryable" is the wrong
+    # line to draw: a personal access token revoked partway through 401s on every
+    # remaining entity, so excusing it from the guard let the whole plan grind through
+    # with the window empty and nothing able to stop it.
+    class ExpiringToken:
+        def __init__(self):
+            self.reads = 0
+
+        def restGET(self, path):
+            if path.endswith('/permissions'):
+                return {'canEdit': True}
+            self.reads += 1
+            raise StubSynapseError('401 Unauthorized', 401)
+
+    syn = ExpiringToken()
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: syn)
+
+    argv = ['--actions', 'drop_stray', '--log-dir', str(tmp_path / 'run')]
+    for index in range(200):
+        argv += ['--entity', f'syn{index}']
+    with caplog.at_level('ERROR'):
+        assert fix.main(argv) == 1
+
+    assert syn.reads == io.ERROR_FLOOR, 'the guard stops at its floor, not at entity 200'
+    assert 'cut short by the circuit breaker' in caplog.text
+    assert 'not_attempted' in (tmp_path / 'run' / 'report.csv').read_text()
 
 
 def test_a_run_below_the_floor_is_not_aborted_by_one_failure(monkeypatch, tmp_path):
@@ -1596,6 +1652,64 @@ def test_the_escape_hatch_lets_an_apply_run_proceed_over_an_incomplete_findings_
     notes = [json.loads(line) for line in (log_dir / 'progress.jsonl').read_text().splitlines()
              if line and json.loads(line)['status'] == 'incomplete_findings']
     assert len(notes) == 1 and 'did not complete' in notes[0]['detail']
+
+
+def _findings_with_a_lost_read(tmp_path, entity_id='syn64420376'):
+    """A drill-down that ran end to end and still lost one entity's read."""
+    import audit_annotation_keys as audit
+
+    findings = tmp_path / 'entity_findings.jsonl'
+    findings.write_text(json.dumps({'project_id': 'syn0', 'entity_id': entity_id,
+                                    'decisions': []}) + '\n')
+    audit.write_findings_manifest(
+        findings, complete=True, projects=['syn0'], entities=1,
+        gaps=[{'project_id': 'syn0', 'entity_id': 'file9',
+               'operation': audit.READ_OP_ANNOTATIONS, 'error': 'RuntimeError: 503'}])
+    return findings
+
+
+def test_a_lost_read_makes_the_findings_file_incomplete_even_on_a_completed_pass(tmp_path):
+    # "Complete" has to mean the drill-down covered everything it set out to cover.
+    # An entity whose read was lost is absent from the findings file exactly as if the
+    # pass had never reached it, so a manifest that counted only aborts told this tool
+    # the file was whole over coverage the same run had already reported losing - and
+    # since a 403 or a 404 no longer trips the breaker, it no longer marks the pass
+    # incomplete either.
+    import audit_annotation_keys as audit
+
+    manifest = audit.read_findings_manifest(_findings_with_a_lost_read(tmp_path))
+    assert manifest['complete'] is False
+    assert manifest['pass_completed'] is True
+    assert manifest['coverage_gaps'] == 1
+    assert manifest['coverage_gaps_by_project'] == {'syn0': 1}
+
+    _ids, gap = fix.entity_ids_from_findings(tmp_path / 'entity_findings.jsonl')
+    assert 'ran to completion with 1 read lost' in gap
+    assert 'syn0' in gap
+
+
+def test_an_apply_run_is_refused_when_the_findings_lost_a_read(monkeypatch, tmp_path):
+    def explode():
+        raise AssertionError('must not reach Synapse with lost coverage')
+
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', explode)
+
+    assert fix.main(['--findings', str(_findings_with_a_lost_read(tmp_path)),
+                     '--actions', 'drop_stray', '--apply', '--yes',
+                     '--log-dir', str(tmp_path / 'run')]) == 1
+
+
+def test_the_escape_hatch_covers_a_lost_read_too(monkeypatch, tmp_path):
+    syn = _half_broken_synapse(unreadable='syn_nothing_is_unreadable')
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: syn)
+
+    log_dir = tmp_path / 'run'
+    fix.main(['--findings', str(_findings_with_a_lost_read(tmp_path)), '--actions', 'drop_stray',
+              '--apply', '--yes', '--allow-incomplete-findings', '--log-dir', str(log_dir)])
+    assert syn.annotation_reads, 'the run proceeded once the gap was accepted'
+    assert '1 read lost after retries' in (log_dir / 'report.csv').read_text()
 
 
 def test_a_dry_run_over_an_incomplete_findings_file_still_reports(monkeypatch, tmp_path):

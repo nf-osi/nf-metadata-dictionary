@@ -5,10 +5,11 @@ Repair mis-cased annotation keys on NF-OSI Synapse entities (issue #939).
 Requires: synapseclient, pyyaml. Feed it the ``entity_findings.jsonl`` produced
 by ``utils/audit_annotation_keys.py --drill-down``, or name projects directly. The
 findings file is the only input, so its sidecar manifest is read too: a file left
-by a drill-down the circuit breaker cut short covers a subset of the audit, and
-repairing part of the work while believing it was all of it is exactly the mistake
-that has to be impossible. ``--apply`` refuses such a file unless
-``--allow-incomplete-findings`` accepts the gap; a dry run proceeds and reports it.
+by a drill-down the circuit breaker cut short - or one that ran to completion while
+losing reads after their retries - covers a subset of the audit, and repairing part
+of the work while believing it was all of it is exactly the mistake that has to be
+impossible. ``--apply`` refuses such a file unless ``--allow-incomplete-findings``
+accepts the gap; a dry run proceeds and reports it.
 
 Safety model
 ------------
@@ -794,16 +795,28 @@ def findings_gap(path: Path) -> str:
     file; when it says the pass did not finish, this is the sentence that says so -
     returned rather than only logged, so the gate can refuse a write run with it and
     the report and the progress log can record it.
+
+    A pass that ran end to end but lost individual reads is short of coverage in the
+    same way: an entity whose read was lost is missing from the findings file exactly
+    as if the pass had never reached it, so the manifest counts those gaps too and
+    this sentence names them.
     """
     manifest = read_findings_manifest(path)
     if manifest is None or manifest.get('complete', True):
         return ''
     missed = manifest.get('projects_not_inspected') or []
     partial = manifest.get('projects_partially_inspected') or []
+    gaps = manifest.get('coverage_gaps') or 0
+    lost = f'{gaps} read{"" if gaps == 1 else "s"} lost after retries'
+    if manifest.get('pass_completed') and not missed and not partial:
+        gapped = manifest.get('coverage_gaps_by_project') or {}
+        return (f'{path} comes from a drill-down that ran to completion with {lost}, across '
+                f'{len(gapped)} projects ({", ".join(sorted(gapped)) or "none named"}), so it '
+                'does not cover every affected entity')
     return (f'{path} comes from a drill-down that did not complete: '
             f'{len(manifest.get("projects_inspected") or [])} projects inspected, '
             f'{len(missed)} never inspected ({", ".join(missed) or "none"}), '
-            f'{len(partial)} cut short part-way ({", ".join(partial) or "none"})')
+            f'{len(partial)} cut short part-way ({", ".join(partial) or "none"}), {lost}')
 
 
 def entity_ids_from_findings(

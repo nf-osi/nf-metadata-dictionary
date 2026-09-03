@@ -945,8 +945,18 @@ FINDINGS_NAME = 'entity_findings.jsonl'
 PARTIAL_FINDINGS_NAME = 'entity_findings.partial.jsonl'
 
 
+def coverage_gaps(audits: Sequence[ProjectAudit]) -> list[dict]:
+    """Every recorded coverage gap, tagged with the project that recorded it.
+
+    One list for the reports, the exit code and the findings manifest, so those three
+    cannot disagree about how much of the scan was actually read.
+    """
+    return [dict(failure, project_id=audit.project_id)
+            for audit in audits for failure in audit.read_failures]
+
+
 def findings_manifest_path(findings_path: Path) -> Path:
-    """The sidecar that says whether a findings file covers a completed pass."""
+    """The sidecar that says how much of the audit a findings file covers."""
     return findings_path.with_suffix('.manifest.json')
 
 
@@ -958,6 +968,7 @@ def write_findings_manifest(
     entities: int,
     not_inspected: Sequence[str] = (),
     partially_inspected: Sequence[str] = (),
+    gaps: Sequence[Mapping] = (),
 ) -> Path:
     """Record what a findings file covers, next to the file itself.
 
@@ -969,15 +980,28 @@ def write_findings_manifest(
     ``partially_inspected`` names the projects the pass started and did not finish,
     which is a different gap from one it never reached: an abort inside the last -
     or only - flagged project leaves nothing in ``not_inspected`` at all.
+
+    ``gaps`` are the recorded coverage gaps - reads and listings lost after the retry
+    budget, and aborts - and any of them makes the file incomplete whatever the
+    ``complete`` argument says. "Complete" has to mean the drill-down covered
+    everything it set out to cover: an entity whose read was lost is absent from the
+    findings file exactly as if the pass had never reached it, so a manifest that
+    counted only aborts told the fix tool a file was complete over coverage the same
+    run had already reported losing. The counts are recorded here as well as in the
+    reports, because the manifest is all ``fix_annotation_keys.py`` reads.
     """
+    by_project = Counter(str(gap.get('project_id') or '') for gap in gaps)
     manifest = {
         'findings_file': findings_path.name,
-        'complete': bool(complete),
+        'complete': bool(complete) and not gaps,
+        'pass_completed': bool(complete),
         'generated_at': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
         'entities': entities,
         'projects_inspected': list(projects),
         'projects_not_inspected': list(not_inspected),
         'projects_partially_inspected': list(partially_inspected),
+        'coverage_gaps': len(gaps),
+        'coverage_gaps_by_project': dict(sorted(by_project.items())),
     }
     path = findings_manifest_path(findings_path)
     path.write_text(json.dumps(manifest, indent=2) + '\n')
@@ -1025,6 +1049,11 @@ def run_drill_down(
     skipped ones: the pre-project guard only names projects the pass never started,
     so an abort *inside* the last - or only - flagged project left that list empty
     and promoted a truncated file with ``complete: true`` stamped on it.
+
+    A pass that ran end to end still writes a manifest saying its coverage is short
+    when any read was lost after its retries: those entities are missing from the
+    findings file just as surely, and since a 403 or a 404 no longer trips the
+    breaker, an abort is no longer the only way to be short of coverage.
 
     Returns the projects whose state lines the caller has to rewrite: the ones this
     pass inspected, plus the ones it never reached, each carrying the abort as lost
@@ -1075,10 +1104,15 @@ def run_drill_down(
                 completed = False
                 partially_inspected.append(audit.project_id)
 
+    # Computed after the loop, so this pass's own lost reads are in it as well as any
+    # a previous run recorded and this one carried forward.
+    gaps = coverage_gaps(audits)
+
     if not completed:
         manifest = write_findings_manifest(partial_path, complete=False, projects=inspected,
                                            entities=total, not_inspected=not_inspected,
-                                           partially_inspected=partially_inspected)
+                                           partially_inspected=partially_inspected,
+                                           gaps=gaps)
         kept = (f'{findings_path} was left as it was' if findings_path.exists()
                 else f'no {findings_path} was written')
         LOG.error('the drill-down did not complete, so %s; the %d entities this pass did '
@@ -1086,11 +1120,21 @@ def run_drill_down(
                   'anything to fix_annotation_keys.py', kept, total, partial_path, manifest)
         return drilled
 
+    # The pass ran end to end, so its output supersedes whatever was there before even
+    # when individual reads were lost: it covers every flagged project and is the more
+    # current of the two. The manifest is what says whether the coverage is whole, and
+    # the fix tool refuses an --apply run over a file whose manifest says it is not.
     os.replace(partial_path, findings_path)
     stale = findings_manifest_path(partial_path)
     if stale.exists():
         stale.unlink()
-    write_findings_manifest(findings_path, complete=True, projects=inspected, entities=total)
+    write_findings_manifest(findings_path, complete=True, projects=inspected, entities=total,
+                            gaps=gaps)
+    if gaps:
+        LOG.error('the drill-down ran to completion but %d recorded coverage gaps mean %s does '
+                  'not cover every affected entity; its manifest says so, and '
+                  'fix_annotation_keys.py will refuse to --apply from it', len(gaps),
+                  findings_path)
     LOG.info('%d affected entities across %d projects written to %s',
              total, len(inspected), findings_path)
     return drilled
@@ -1395,10 +1439,7 @@ def build_summary(audits: Sequence[ProjectAudit], *, carried_forward: int = 0) -
             for a in forbidden + failed
         ],
         'entity_read_failures': sum(len(a.read_failures) for a in audits),
-        'entity_reads_lost': [
-            dict(failure, project_id=a.project_id)
-            for a in audits for failure in a.read_failures
-        ],
+        'entity_reads_lost': coverage_gaps(audits),
     }
 
 
@@ -1805,11 +1846,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         # reported, gaps included.
         for audit in drilled:
             append_state(state_path, audit)
-        lost = sum(len(a.read_failures) for a in audits)
+        lost = len(coverage_gaps(audits))
         if lost:
             LOG.error('%d recorded coverage gaps - this run\'s, plus any carried forward from '
-                      'the state file - so the findings file is incomplete; the reports and '
-                      'its manifest list them', lost)
+                      'the state file - so the findings file is incomplete; the reports list '
+                      'each one and its manifest counts them per project', lost)
 
     write_reports(audits, out_dir, carried_forward=carried_forward)
     print(format_markdown(audits, carried_forward=carried_forward))
