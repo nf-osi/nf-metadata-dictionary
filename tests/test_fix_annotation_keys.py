@@ -1439,3 +1439,33 @@ def test_apply_without_actions_is_refused_rather_than_defaulting_to_a_drop(monke
     monkeypatch.setattr(fix, '_login', explode)
     with pytest.raises(SystemExit):
         fix.main(['--entity', 'syn1', '--apply', '--yes', '--log-dir', str(tmp_path / 'run')])
+
+
+def test_a_findings_file_from_an_incomplete_drill_down_says_so_before_anything_is_planned(
+        tmp_path, caplog):
+    # The findings file is this tool's only input, so a file produced by a
+    # drill-down the circuit breaker cut short would otherwise plan a subset of the
+    # work while looking exactly like a complete plan.
+    import audit_annotation_keys as audit
+
+    findings = tmp_path / 'entity_findings.partial.jsonl'
+    findings.write_text(json.dumps({'project_id': 'syn0', 'entity_id': 'file1'}) + '\n')
+    audit.write_findings_manifest(findings, complete=False, projects=['syn0'],
+                                  entities=1, not_inspected=['syn1', 'syn2'])
+
+    with caplog.at_level('ERROR'):
+        assert fix.entity_ids_from_findings(findings) == ['file1']
+    assert 'did not complete' in caplog.text
+    assert 'syn1, syn2' in caplog.text
+
+
+def test_a_findings_file_from_a_completed_drill_down_plans_without_complaint(tmp_path, caplog):
+    import audit_annotation_keys as audit
+
+    findings = tmp_path / 'entity_findings.jsonl'
+    findings.write_text(json.dumps({'project_id': 'syn0', 'entity_id': 'file1'}) + '\n')
+    audit.write_findings_manifest(findings, complete=True, projects=['syn0'], entities=1)
+
+    with caplog.at_level('ERROR'):
+        assert fix.entity_ids_from_findings(findings) == ['file1']
+    assert caplog.text == ''

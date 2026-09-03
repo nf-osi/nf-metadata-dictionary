@@ -820,9 +820,11 @@ def drill_down_project(
     confined to ``/entity/{id}/annotations2`` would make each read pay the full
     jittered backoff before failing, which is over a day of grinding to reach a
     state file that is nothing but read failures. The breaker is sampled per
-    request, and the abort is itself recorded as lost coverage: entities the pass
-    never inspected are absent from ``entity_findings.jsonl`` just as surely as ones
-    whose read failed.
+    request - the walk's folder listings as well as the annotation reads, so a
+    degradation confined to one of the two endpoints cannot hide behind the other
+    one's successes - and the abort is itself recorded as lost coverage: entities the
+    pass never inspected are absent from ``entity_findings.jsonl`` just as surely as
+    ones whose read failed.
 
     ``breaker`` is supplied by the caller so one window spans the whole run. A
     breaker built here per call gave every project a fresh window, so a systemic
@@ -866,10 +868,10 @@ def drill_down_project(
             'decisions': [d.as_dict() for d in decisions],
         }, False
 
+    breaker = breaker if breaker is not None else CircuitBreaker()
     walker = _iter_project_entities(syn, audit.project_id, limit=limit, workers=workers,
                                     include_project_entity=include_project_entity,
-                                    max_retries=max_retries, audit=audit)
-    breaker = breaker if breaker is not None else CircuitBreaker()
+                                    max_retries=max_retries, audit=audit, breaker=breaker)
     findings: list[dict] = []
     aborted = False
 
@@ -901,6 +903,11 @@ def drill_down_project(
             if chunk and not aborted:
                 aborted = collect(list(pool.map(inspect, chunk)))
 
+    # The walk stops itself when a listing trips the breaker, which leaves the loop
+    # above with nothing more to consume and no verdict of its own, so the abort has
+    # to be read off the breaker rather than only off the read loop.
+    aborted = aborted or breaker.tripped
+
     if aborted:
         # Recorded as its own operation, so it cannot be deduped away behind the
         # project entity's own failed read - which during an outage fails first, and
@@ -908,11 +915,147 @@ def drill_down_project(
         # reader has to be able to tell 64 lost reads from 64 lost reads plus
         # thousands of entities never looked at.
         detail = (f'drill-down aborted after {breaker.failures} of the last {breaker.window} '
-                  'reads failed; the rest of this project was not inspected')
+                  'requests failed; the rest of this project was not inspected')
         LOG.error('%s: %s', audit.project_id, detail)
         audit.record_read_failure(audit.project_id, detail, 'Project',
                                   operation=READ_OP_DRILL_DOWN)
     return findings
+
+
+FINDINGS_NAME = 'entity_findings.jsonl'
+PARTIAL_FINDINGS_NAME = 'entity_findings.partial.jsonl'
+
+
+def findings_manifest_path(findings_path: Path) -> Path:
+    """The sidecar that says whether a findings file covers a completed pass."""
+    return findings_path.with_suffix('.manifest.json')
+
+
+def write_findings_manifest(
+    findings_path: Path,
+    *,
+    complete: bool,
+    projects: Sequence[str],
+    entities: int,
+    not_inspected: Sequence[str] = (),
+) -> Path:
+    """Record what a findings file covers, next to the file itself.
+
+    ``fix_annotation_keys.py --findings`` consumes the findings file and nothing
+    else, so the file has to be able to say for itself whether it represents a
+    completed drill-down. Without that, a plan built from a pass the circuit breaker
+    cut short looks exactly like a plan built from a complete one.
+    """
+    manifest = {
+        'findings_file': findings_path.name,
+        'complete': bool(complete),
+        'generated_at': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'entities': entities,
+        'projects_inspected': list(projects),
+        'projects_not_inspected': list(not_inspected),
+    }
+    path = findings_manifest_path(findings_path)
+    path.write_text(json.dumps(manifest, indent=2) + '\n')
+    return path
+
+
+def read_findings_manifest(findings_path: Path) -> dict | None:
+    """The manifest beside a findings file, or None when there is not one."""
+    path = findings_manifest_path(findings_path)
+    if not path.exists():
+        return None
+    try:
+        manifest = json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError):
+        return None
+    return manifest if isinstance(manifest, dict) else None
+
+
+def run_drill_down(
+    syn,
+    audits: Sequence[ProjectAudit],
+    out_dir: Path,
+    *,
+    canon: frozenset[str],
+    index: KeyIndex,
+    loose_compare: bool = False,
+    limit: int | None = None,
+    workers: int = 1,
+    include_project_entity: bool = False,
+    max_retries: int = 0,
+) -> list[ProjectAudit]:
+    """Drill every flagged project down to its affected entities.
+
+    Rows are written to a partial path first and only moved onto
+    ``entity_findings.jsonl`` when the pass ran to completion. The breaker spans the
+    run, so an abort skips every remaining flagged project; writing straight to the
+    real path would then replace a previous *complete* findings file with a subset,
+    and that file is the only input ``fix_annotation_keys.py --findings`` reads - a
+    curator who re-ran the drill-down during a transient degradation would repair
+    part of the work believing it was all of it. An abort now leaves the last good
+    file untouched and its own output at ``entity_findings.partial.jsonl``, and
+    either way a manifest beside the file names the projects it covers.
+
+    Returns the projects whose state lines the caller has to rewrite: the ones this
+    pass inspected, plus the ones it never reached, each carrying the abort as lost
+    coverage.
+    """
+    findings_path = out_dir / FINDINGS_NAME
+    partial_path = out_dir / PARTIAL_FINDINGS_NAME
+    # One breaker for the whole drill-down, not one per project: a systemic
+    # degradation has to stop the run, and a per-project window merely made it
+    # cost one breaker's worth of doomed reads per project instead.
+    breaker = CircuitBreaker()
+    flagged = [a for a in audits if a.status == 'ok' and a.has_findings]
+    drilled: list[ProjectAudit] = []
+    inspected: list[str] = []
+    not_inspected: list[str] = []
+    total = 0
+
+    with open(partial_path, 'w') as handle:
+        for position, audit in enumerate(flagged):
+            if breaker.tripped:
+                skipped = flagged[position:]
+                detail = ('drill-down stopped before this project: '
+                          f'{breaker.failures} of the last {breaker.window} requests failed')
+                LOG.error('drill-down stopped after %d of %d projects; %d not inspected',
+                          position, len(flagged), len(skipped))
+                for pending in skipped:
+                    pending.record_read_failure(pending.project_id, detail, 'Project',
+                                                operation=READ_OP_DRILL_DOWN)
+                    drilled.append(pending)
+                    not_inspected.append(pending.project_id)
+                break
+            LOG.info('drilling down %s', audit.project_id)
+            drilled.append(audit)
+            inspected.append(audit.project_id)
+            for finding in drill_down_project(
+                syn, audit, canon=canon, index=index,
+                loose_compare=loose_compare, limit=limit, workers=workers,
+                include_project_entity=include_project_entity,
+                max_retries=max_retries, breaker=breaker,
+            ):
+                handle.write(json.dumps(finding) + '\n')
+                total += 1
+
+    if not_inspected:
+        manifest = write_findings_manifest(partial_path, complete=False, projects=inspected,
+                                           entities=total, not_inspected=not_inspected)
+        kept = (f'{findings_path} was left as it was' if findings_path.exists()
+                else f'no {findings_path} was written')
+        LOG.error('the drill-down did not complete, so %s; the %d entities this pass did '
+                  'resolve are in %s, described by %s - re-run the drill-down before feeding '
+                  'anything to fix_annotation_keys.py', kept, total, partial_path, manifest)
+        return drilled
+
+    os.replace(partial_path, findings_path)
+    stale = findings_manifest_path(partial_path)
+    if stale.exists():
+        stale.unlink()
+    write_findings_manifest(findings_path, complete=True, projects=inspected, entities=total)
+    LOG.info('%d affected entities across %d projects written to %s',
+             total, len(inspected), findings_path)
+    return drilled
 
 
 CHILD_TYPES = ('file', 'folder', 'table', 'dataset')
@@ -948,9 +1091,12 @@ def _safe_list_children(
     *,
     max_retries: int = 0,
     audit: ProjectAudit | None = None,
-) -> list[dict]:
-    """Children of one entity; an unreadable folder yields nothing rather than
-    aborting a walk over thousands of siblings.
+) -> tuple[list[dict], bool]:
+    """Children of one entity, and whether the listing was lost.
+
+    An unreadable folder yields nothing rather than aborting a walk over thousands
+    of siblings, but the caller is told, because a swallowed listing is a coverage
+    gap and one lost during a systemic degradation has to reach the circuit breaker.
 
     A listing gets the same retry budget as an annotation read, and one still lost
     after them is recorded on the audit as lost coverage - under its own operation,
@@ -963,7 +1109,7 @@ def _safe_list_children(
     """
     try:
         return with_retries(lambda: _list_children(syn, parent_id),
-                            max_retries=max_retries, label=parent_id, logger=LOG)
+                            max_retries=max_retries, label=parent_id, logger=LOG), False
     except Exception as error:  # noqa: BLE001
         LOG.warning('%s: could not list children: %s', parent_id, error)
         if audit is not None:
@@ -971,7 +1117,7 @@ def _safe_list_children(
                 parent_id,
                 f'could not list children: {type(error).__name__}: {error}'[:300],
                 operation=READ_OP_LISTING)
-        return []
+        return [], True
 
 
 def _iter_project_entities(
@@ -983,6 +1129,7 @@ def _iter_project_entities(
     include_project_entity: bool = False,
     max_retries: int = 0,
     audit: ProjectAudit | None = None,
+    breaker: CircuitBreaker | None = None,
 ):
     """Walk files, folders, tables and datasets under a project.
 
@@ -1002,6 +1149,16 @@ def _iter_project_entities(
     An ``audit`` makes a lost listing part of the caller's coverage accounting;
     without one an unreadable folder is only logged, which is fine for a caller
     that is not reporting coverage at all.
+
+    A ``breaker`` samples each listing, so the walk is guarded like every other
+    per-entity network loop and stops the moment the trailing failure rate says the
+    service is systemically unwell. Without it a degradation confined to
+    ``POST /entity/children`` was invisible: the healthy annotation reads filled the
+    window with successes while every listing paid the full jittered backoff, which
+    is hours of grinding on the 1,300-folder project above. One window holds both
+    kinds of request deliberately - the ratio it measures is "requests to Synapse
+    that failed", not a per-endpoint rate, which is the right question for a guard
+    whose job is to notice that the service as a whole has stopped answering.
     """
     seen = 0
     frontier = [project_id]
@@ -1013,27 +1170,42 @@ def _iter_project_entities(
         if limit is not None and seen >= limit:
             return
 
-    def children_of(parent: str) -> list[dict]:
+    def children_of(parent: str) -> tuple[list[dict], bool]:
         return _safe_list_children(syn, parent, max_retries=max_retries, audit=audit)
 
-    while frontier:
-        if workers > 1 and len(frontier) > 1:
-            with ThreadPoolExecutor(max_workers=min(workers, len(frontier))) as pool:
-                pages = list(pool.map(children_of, frontier))
-        else:
-            pages = [children_of(parent) for parent in frontier]
+    # A level is listed in chunks rather than all at once so the breaker is judged
+    # often enough to matter: one level of the 1,300-folder project is 1,300 doomed
+    # listings during an outage, which is hours. Chunked exactly like the
+    # drill-down's reads - workers stay busy, and a degradation costs at most one
+    # chunk of extra listings.
+    chunk_size = max(workers * 8, 64) if workers > 1 else 1
 
+    while frontier:
         next_frontier: list[str] = []
-        for children in pages:
-            for child in children:
-                entity_type = child['type'].rsplit('.', 1)[-1]
-                if entity_type == 'Folder' and child['id'] not in visited:
-                    visited.add(child['id'])
-                    next_frontier.append(child['id'])
-                yield child['id'], entity_type
-                seen += 1
-                if limit is not None and seen >= limit:
-                    return
+        tripped = False
+        for start in range(0, len(frontier), chunk_size):
+            batch = frontier[start:start + chunk_size]
+            if workers > 1 and len(batch) > 1:
+                with ThreadPoolExecutor(max_workers=min(workers, len(batch))) as pool:
+                    listings = list(pool.map(children_of, batch))
+            else:
+                listings = [children_of(parent) for parent in batch]
+
+            tripped = breaker is not None and breaker.sample(lost for _c, lost in listings)
+            # Children already fetched are yielded even when this chunk tripped the
+            # breaker: they were read, so dropping them would lose coverage silently.
+            for children, _lost in listings:
+                for child in children:
+                    entity_type = child['type'].rsplit('.', 1)[-1]
+                    if entity_type == 'Folder' and child['id'] not in visited:
+                        visited.add(child['id'])
+                        next_frontier.append(child['id'])
+                    yield child['id'], entity_type
+                    seen += 1
+                    if limit is not None and seen >= limit:
+                        return
+            if tripped:
+                return
         frontier = next_frontier
 
 
@@ -1574,39 +1746,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     LOG.info('scan finished in %.0fs', time.time() - started)
 
     if args.drill_down:
-        findings_path = out_dir / 'entity_findings.jsonl'
         out_dir.mkdir(parents=True, exist_ok=True)
-        total = 0
-        drilled: list[ProjectAudit] = []
-        # One breaker for the whole drill-down, not one per project: a systemic
-        # degradation has to stop the run, and a per-project window merely made it
-        # cost one breaker's worth of doomed reads per project instead.
-        breaker = CircuitBreaker()
-        flagged = [a for a in audits if a.status == 'ok' and a.has_findings]
-        with open(findings_path, 'w') as handle:
-            for position, audit in enumerate(flagged):
-                if breaker.tripped:
-                    skipped = flagged[position:]
-                    detail = ('drill-down stopped before this project: '
-                              f'{breaker.failures} of the last {breaker.window} reads failed')
-                    LOG.error('drill-down stopped after %d of %d projects; %d not inspected',
-                              position, len(flagged), len(skipped))
-                    for pending in skipped:
-                        pending.record_read_failure(pending.project_id, detail, 'Project',
-                                                    operation=READ_OP_DRILL_DOWN)
-                        drilled.append(pending)
-                    break
-                LOG.info('drilling down %s', audit.project_id)
-                drilled.append(audit)
-                for finding in drill_down_project(
-                    syn, audit, canon=canon, index=index,
-                    loose_compare=args.loose_compare, limit=args.drill_down_limit,
-                    workers=args.drill_down_workers,
-                    include_project_entity=args.include_project_entity,
-                    max_retries=args.max_retries, breaker=breaker,
-                ):
-                    handle.write(json.dumps(finding) + '\n')
-                    total += 1
+        drilled = run_drill_down(
+            syn, audits, out_dir, canon=canon, index=index,
+            loose_compare=args.loose_compare, limit=args.drill_down_limit,
+            workers=args.drill_down_workers,
+            include_project_entity=args.include_project_entity,
+            max_retries=args.max_retries,
+        )
         # Each project's state line was written before its drill-down, so re-append
         # every project the drill-down touched now that its entity reads have
         # settled. load_state keys by project and the later line wins, so
@@ -1615,11 +1762,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         for audit in drilled:
             append_state(state_path, audit)
         lost = sum(len(a.read_failures) for a in audits)
-        LOG.info('%d affected entities written to %s', total, findings_path)
         if lost:
             LOG.error('%d recorded coverage gaps - this run\'s, plus any carried forward from '
-                      'the state file - so %s is incomplete; the reports list them',
-                      lost, findings_path)
+                      'the state file - so the findings file is incomplete; the reports and '
+                      'its manifest list them', lost)
 
     write_reports(audits, out_dir, carried_forward=carried_forward)
     print(format_markdown(audits, carried_forward=carried_forward))

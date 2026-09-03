@@ -3,7 +3,11 @@
 Repair mis-cased annotation keys on NF-OSI Synapse entities (issue #939).
 
 Requires: synapseclient, pyyaml. Feed it the ``entity_findings.jsonl`` produced
-by ``utils/audit_annotation_keys.py --drill-down``, or name projects directly.
+by ``utils/audit_annotation_keys.py --drill-down``, or name projects directly. The
+findings file is the only input, so its sidecar manifest is read too: a file left
+by a drill-down the circuit breaker cut short covers a subset of the audit, and
+saying so before anything is planned is the difference between repairing part of
+the work and believing it was all of it.
 
 Safety model
 ------------
@@ -68,6 +72,7 @@ from annotation_key_policy import (  # noqa: E402
     decide_entity,
     load_canonical_slots,
 )
+from audit_annotation_keys import read_findings_manifest  # noqa: E402
 from synapse_annotation_io import (  # noqa: E402
     AnnotationRecord,
     read_annotations,
@@ -736,6 +741,20 @@ def parse_actions(spec: str | None) -> set[Action]:
 
 
 def entity_ids_from_findings(path: Path, projects: Sequence[str] | None = None) -> list[str]:
+    """The entities to work on, and how much of the audit they actually represent.
+
+    The findings file is this tool's only input, so a file produced by a drill-down
+    the circuit breaker cut short would otherwise plan a subset of the work while
+    looking exactly like a complete plan. The audit writes a manifest beside the
+    file; when it says the pass did not finish, say so before anything is planned.
+    """
+    manifest = read_findings_manifest(path)
+    if manifest is not None and not manifest.get('complete', True):
+        LOG.error('%s comes from a drill-down that did not complete: %d projects inspected, '
+                  '%d never inspected (%s). Re-run the audit drill-down for a complete plan.',
+                  path, len(manifest.get('projects_inspected') or []),
+                  len(manifest.get('projects_not_inspected') or []),
+                  ', '.join(manifest.get('projects_not_inspected') or []) or 'unnamed')
     wanted = set(projects or [])
     ids: list[str] = []
     seen: set[str] = set()

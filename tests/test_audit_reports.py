@@ -23,6 +23,7 @@ import audit_annotation_keys as audit  # noqa: E402
 import synapse_annotation_io as io  # noqa: E402
 
 FILE_TYPE = 'org.sagebionetworks.repo.model.FileEntity'
+FOLDER_TYPE = 'org.sagebionetworks.repo.model.Folder'
 
 
 class ServiceUnavailable(Exception):
@@ -191,9 +192,11 @@ def test_the_drill_down_loop_is_guarded_by_the_circuit_breaker(monkeypatch, work
     audit.drill_down_project(ChildrenStub(tree), project, canon=canon, index=index,
                              workers=workers)
 
-    # Sequentially it stops at the floor; threaded, it stops at the end of the chunk
-    # that tripped it. Either way it is nowhere near the 400 the project holds.
-    chunk = max(workers * 8, 64) if workers > 1 else io.ERROR_FLOOR
+    # Sequentially it stops at the floor, one slot of which the project's own
+    # successful children listing occupies - listings are requests, so they are
+    # sampled too; threaded, it stops at the end of the chunk that tripped it.
+    # Either way it is nowhere near the 400 the project holds.
+    chunk = max(workers * 8, 64) if workers > 1 else io.ERROR_FLOOR - 1
     assert len(reads) == chunk
     # The entities it never inspected are absent from entity_findings.jsonl just as
     # surely as the ones whose read failed, so the abort is lost coverage too.
@@ -264,13 +267,122 @@ def test_the_drill_down_breaker_spans_the_run_rather_than_one_project(tmp_path, 
                             '--drill-down-workers', '1',
                             '--allowlist', str(tmp_path / 'none.yaml')])
 
-    # The first project trips the breaker at the floor and nothing else is read.
-    assert len(reads) == io.ERROR_FLOOR
+    # The first project trips the breaker at the floor - its successful root listing
+    # takes one slot in the window - and nothing else is read.
+    assert len(reads) == io.ERROR_FLOOR - 1
     assert {entity.split('-')[0] for entity in reads} == {'syn0'}
     # The three projects it never looked at are lost coverage of their own.
     state = audit.load_state(tmp_path / 'state.jsonl')
     assert [f['operation'] for f in state['syn3'].read_failures] == [audit.READ_OP_DRILL_DOWN]
     assert exit_code == 2
+
+
+@pytest.mark.parametrize('workers', [1, 4])
+def test_a_listing_only_degradation_trips_the_breaker(monkeypatch, workers):
+    # The children listing was the last per-entity network loop outside the guard. A
+    # degradation confined to POST /entity/children while /annotations2 stayed
+    # healthy was invisible: the successful reads filled the trailing window with
+    # successes, so the rate could never clear the threshold, while every listing
+    # paid the full retry backoff - hours of grinding on the 1,300-folder project.
+    canon = frozenset({'age'})
+    index = policy.KeyIndex.build(canon)
+    folders = [{'id': f'f{n}', 'name': f'f{n}', 'type': FOLDER_TYPE} for n in range(200)]
+
+    class UnlistableFolders:
+        def __init__(self):
+            self.listed = []
+
+        def restPOST(self, path, body=None):
+            assert path == '/entity/children'
+            parent = json.loads(body)['parentId']
+            self.listed.append(parent)
+            if parent != 'syn0':
+                raise ServiceUnavailable()
+            return {'page': folders}
+
+    monkeypatch.setattr(audit, 'read_annotations',
+                        lambda _syn, entity_id, **kwargs: io.AnnotationRecord(
+                            entity_id, 'etag-1', {'Age': [1.5], 'age': [1.5]},
+                            {'Age': 'DOUBLE', 'age': 'DOUBLE'}))
+    syn = UnlistableFolders()
+    project = _flagged_audit()
+    audit.drill_down_project(syn, project, canon=canon, index=index, workers=workers)
+
+    lost = [parent for parent in syn.listed if parent != 'syn0']
+    assert 0 < len(lost) < len(folders), 'the walk stops rather than listing every folder'
+    # And the abort is lost coverage, like any other pass that stopped early.
+    aborts = [f for f in project.read_failures if 'aborted' in f['error']]
+    assert [f['entity_id'] for f in aborts] == ['syn0']
+    assert audit.exit_code_for([project], fail_on_findings=False, max_unscanned=0) == 2
+
+
+# ---------------------------------------------------------------------------
+# The findings file is the fix tool's only input
+# ---------------------------------------------------------------------------
+
+def _drill_down_run(tmp_path, monkeypatch, *, read):
+    """A four-project --drill-down whose entity reads behave as ``read`` says."""
+    tree = {f'syn{n}': [{'id': f'syn{n}-file{i}', 'name': 'f', 'type': FILE_TYPE}
+                        for i in range(40)] for n in range(4)}
+    monkeypatch.setattr(audit, 'read_annotations', read)
+    monkeypatch.setattr(audit, 'login', lambda **kwargs: ChildrenStub(tree))
+    monkeypatch.setattr(audit, 'audit_project',
+                        lambda _syn, project, **kwargs: _flagged_audit(project['project_id']))
+    return audit.main(['--project', 'syn0', '--project', 'syn1', '--project', 'syn2',
+                       '--project', 'syn3', '--out-dir', str(tmp_path), '--drill-down',
+                       '--drill-down-workers', '1',
+                       '--allowlist', str(tmp_path / 'none.yaml')])
+
+
+def test_an_aborted_drill_down_leaves_the_last_complete_findings_file_alone(
+        tmp_path, monkeypatch):
+    # entity_findings.jsonl is the only input fix_annotation_keys.py --findings
+    # reads. The breaker spans the run, so an abort skips every remaining flagged
+    # project; rewriting the real path in place would replace a complete findings
+    # file with a subset, and a curator re-running during a transient degradation
+    # would then repair part of the work believing it was all of it.
+    findings_path = tmp_path / 'entity_findings.jsonl'
+    findings_path.write_text(json.dumps({'project_id': 'syn0', 'entity_id': 'earlier'}) + '\n')
+    audit.write_findings_manifest(findings_path, complete=True, projects=['syn0'], entities=1)
+
+    def read(_syn, entity_id, **_kwargs):
+        raise RuntimeError('503 Service Unavailable')
+
+    exit_code = _drill_down_run(tmp_path, monkeypatch, read=read)
+
+    assert exit_code == 2
+    assert [json.loads(line)['entity_id'] for line in
+            findings_path.read_text().splitlines()] == ['earlier']
+    assert audit.read_findings_manifest(findings_path)['complete'] is True
+
+    # What this pass did resolve is kept, under a name that says what it is.
+    partial = tmp_path / 'entity_findings.partial.jsonl'
+    assert partial.exists()
+    manifest = audit.read_findings_manifest(partial)
+    assert manifest['complete'] is False
+    assert manifest['projects_not_inspected'] == ['syn1', 'syn2', 'syn3']
+
+
+def test_a_completed_drill_down_replaces_the_findings_file_and_says_so(tmp_path, monkeypatch):
+    findings_path = tmp_path / 'entity_findings.jsonl'
+    findings_path.write_text(json.dumps({'project_id': 'syn0', 'entity_id': 'earlier'}) + '\n')
+
+    def read(_syn, entity_id, **_kwargs):
+        return io.AnnotationRecord(entity_id, 'etag-1', {'Age': [1.5], 'age': [1.5]},
+                                   {'Age': 'DOUBLE', 'age': 'DOUBLE'})
+
+    _drill_down_run(tmp_path, monkeypatch, read=read)
+
+    entities = [json.loads(line)['entity_id'] for line in
+                findings_path.read_text().splitlines()]
+    assert 'earlier' not in entities and len(entities) == 160
+    manifest = audit.read_findings_manifest(findings_path)
+    assert manifest['complete'] is True
+    assert manifest['projects_inspected'] == ['syn0', 'syn1', 'syn2', 'syn3']
+    assert manifest['entities'] == 160
+    # No stale partial left claiming to describe anything.
+    assert not (tmp_path / 'entity_findings.partial.jsonl').exists()
+    assert not (tmp_path / 'entity_findings.partial.manifest.json').exists()
 
 
 def test_an_abort_is_recorded_alongside_the_project_entity_s_own_failed_read():
