@@ -86,7 +86,9 @@ Three things to know when reading a report:
 - A 403 is a **finding, not a skip**. Coverage (`scanned / not readable / failed`) is reported first, because "0 findings" is meaningless without it.
 - An entity read lost during `--drill-down`, after its retries, is also a finding. It is counted in the coverage block, listed in `summary.md`, carried in `annotation_key_audit_projects.csv` and spends the `--max-unscanned` budget. `entity_findings.jsonl` is the only input `fix_annotation_keys.py --findings` reads, so an entity silently missing from it is a real finding that could never be repaired.
 
-Markdown tables in `summary.md` are capped at 40 rows because the weekly workflow pipes the file into a GitHub issue body, which is limited to 65,536 characters. The CSVs in the run artifact always hold every row.
+The markdown tables in `summary.md` that grow with the data - the per-key frequency tables and the per-(project, key) value-type table - are capped at 40 rows, because the weekly workflow pipes the file into a GitHub issue body, which is limited to 65,536 characters.
+The list of affected projects is deliberately uncapped: it is the one actionable list in the issue, and a curator should not have to download a CI artifact to learn which project to look at.
+The CSVs in the run artifact always hold every row.
 
 Exit codes follow `check_schema_limits.py`: `0` clean, `1` repairable findings (with `--fail-on-findings`), `2` warnings.
 Unrecognised keys do not warn by default - projects legitimately carry custom annotations - but probable misspellings of a schema slot do, since those are real bugs.
@@ -99,12 +101,14 @@ Accepting a key in `annotation_key_allowlist.yaml` or raising `--max-unscanned` 
 
 `annotation_key_allowlist.yaml` ships with the **recorded pre-remediation baseline**: every finding present on the 368 portal projects at the time this tooling landed, before any Synapse writes. Without it the weekly job would be red from the first scheduled run and stay red until the drift is remediated out of band, and a permanently red gate gets ignored - so the baseline is what lets *new* drift be the thing that turns the job red.
 
-The entries are **generated, not hand-written**. Regenerate them from any completed scan's state file, which needs no Synapse credentials:
+The baseline entries are **generated, not hand-written**, and each one is marked `generated: true`. Regenerate them from any completed scan's state file, which needs no Synapse credentials:
 
 ```bash
 python utils/audit_annotation_keys.py --state audit/state.jsonl \
     --emit-allowlist utils/annotation_key_allowlist.yaml
 ```
+
+Regeneration **merges**: it replaces the generated block and preserves every entry without `generated: true`, collecting them in a labelled block at the end of the file. So a hand-triaged acceptance survives a regeneration, and the two kinds of entry stay distinguishable. Add yours without that field; where a hand-added entry covers the same key, scope and classification as a generated one, the hand-added entry stands. A file that cannot be parsed is refused rather than overwritten, since the entries at risk are the ones nothing else records.
 
 Each entry is scoped to its project synID rather than `global`, so the same key on a project the baseline does not name is still a finding. Every entry carries the classification bucket, the issue it is triaged under (#939 for PascalCase duplicates, orphans and probable misspellings; #976 for case-variant drift from former slot names) and an expiry a quarter out.
 

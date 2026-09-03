@@ -283,10 +283,16 @@ def test_a_dropped_connection_counts_as_transient_despite_not_subclassing_the_bu
     assert io.is_retryable(requests.exceptions.Timeout('read timed out'))
     assert io.is_retryable(TimeoutError('socket timeout'))
     assert io.is_retryable(StubSynapseError('service unavailable', 503))
+    # A connection dropped mid-response, and urllib3's own retry budget running
+    # out, sit in the same gap: no status, and not a builtin either.
+    assert io.is_retryable(requests.exceptions.ChunkedEncodingError('truncated body'))
+    assert io.is_retryable(requests.exceptions.RetryError('too many retries'))
     # A definite HTTP verdict outside the retryable set, and a plain bug, are not
-    # going to come back different on the second attempt.
+    # going to come back different on the second attempt. In particular the policy
+    # is not widened to RequestException, which would retry a malformed URL.
     assert not io.is_retryable(StubSynapseError('not found', 404))
     assert not io.is_retryable(ValueError('malformed payload'))
+    assert not io.is_retryable(requests.exceptions.MissingSchema('no scheme'))
 
 
 def test_a_dropped_connection_is_actually_retried_by_the_shared_policy(monkeypatch):
@@ -1089,7 +1095,8 @@ def test_a_dry_run_blocked_only_by_an_unvalidatable_entity_exits_two(monkeypatch
     assert syn.writes == []
 
 
-def test_the_schema_preflight_loop_is_guarded_by_the_circuit_breaker(monkeypatch, tmp_path):
+def test_the_schema_preflight_planning_loop_is_guarded_by_the_circuit_breaker(
+        monkeypatch, tmp_path):
     # The preflight reads every entity too, so leaving its loop unguarded meant a
     # revoked token produced one failing read and one fsynced progress line per
     # entity - up to --max-entities-per-run of them - before the write loop's
@@ -1113,6 +1120,69 @@ def test_the_schema_preflight_loop_is_guarded_by_the_circuit_breaker(monkeypatch
         argv += ['--entity', f'syn{index}']
     assert fix.main(argv) == 1
     assert syn.reads == fix.ERROR_FLOOR
+
+
+def test_the_preflight_conformance_loop_is_guarded_by_the_circuit_breaker(monkeypatch, tmp_path):
+    # Every per-entity network loop is covered by the same abort guard. Planning
+    # succeeds here, so that breaker never trips; the conformance pass then fails
+    # on every entity, and each of its reads carries the retry budget - so left
+    # unguarded it would pay the full backoff on all 5,000 entities of a real run
+    # to reach the same refusal it now reaches in ten.
+    class ConformanceOutage:
+        def __init__(self):
+            self.json_reads = 0
+
+        def restGET(self, path):
+            if path.endswith('/permissions'):
+                return {'canEdit': True}
+            if path.endswith('/annotations2'):
+                entity_id = path.split('/')[2]
+                return {'id': entity_id, 'etag': 'etag-1',
+                        'annotations': to_typed({'Age': [1.5], 'age': [1.5],
+                                                 'Component': ['MicroscopyAssayTemplate']})}
+            if path.endswith('/json'):
+                self.json_reads += 1
+                raise RuntimeError('503 Service Unavailable')
+            raise AssertionError(path)
+
+        def restPUT(self, path, body):
+            raise AssertionError(f'unexpected write to {path}')
+
+    syn = ConformanceOutage()
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: syn)
+
+    argv = ['--actions', 'drop_stray', '--validate-schema', '--apply', '--yes',
+            '--log-dir', str(tmp_path / 'run')]
+    for index in range(30):
+        argv += ['--entity', f'syn{index}']
+    assert fix.main(argv) == 1
+    assert syn.json_reads == fix.ERROR_FLOOR
+
+
+def test_a_legitimate_missing_schema_does_not_trip_the_conformance_breaker():
+    # `no_schema` is a verdict about the data, not a sign the service is failing;
+    # tripping on it would abort a run whose entities are simply bound to a
+    # template this checkout does not carry.
+    import validate_annotations as validate
+
+    class Bound:
+        def restGET(self, path):
+            if path.endswith('/json'):
+                return {'id': path.split('/')[2], 'age': 1.5}
+            if path.endswith('/schema/binding'):
+                return {'jsonSchemaVersionInfo': {
+                    'schemaName': 'notatemplateinthischeckout',
+                    'semanticVersion': '11.1.22',
+                    '$id': 'org.synapse.nf-notatemplateinthischeckout-11.1.22',
+                }}
+            raise AssertionError(path)
+
+    plan = [{'action': 'drop_stray', 'stray_key': 'Age', 'canonical_key': 'age'}]
+    dry_runs = [_planned(f'syn{index}', plan) for index in range(30)]
+    report = fix.schema_preflight(Bound(), dry_runs, registry=validate.SchemaRegistry.load())
+    assert not report.aborted
+    assert len(report.unvalidatable) == 30
 
 
 def test_a_dry_run_with_the_preflight_reads_each_entity_once(monkeypatch, tmp_path):

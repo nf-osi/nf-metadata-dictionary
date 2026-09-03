@@ -151,6 +151,61 @@ def test_a_lost_entity_read_reaches_the_reports_and_the_exit_code(tmp_path):
     assert audit.exit_code_for([project], fail_on_findings=False, max_unscanned=1) == 0
 
 
+def test_a_carried_forward_project_does_not_keep_a_previous_runs_lost_read():
+    # Read failures describe the run that performed the drill-down. A read that
+    # failed once and succeeded on the retry run has to stop being reported -
+    # otherwise, because lost reads spend the --max-unscanned budget, one transient
+    # 503 pins every later --resume at exit 2 with a complete findings file.
+    stale = _flagged_audit('syn1')
+    stale.read_failures = [{'entity_id': 'file2', 'error': 'RuntimeError: 503'}]
+    carried = audit.carry_forward({'syn1': stale}, [])
+
+    assert [a.project_id for a in carried] == ['syn1']
+    assert carried[0].read_failures == []
+    assert audit.exit_code_for(carried, fail_on_findings=False, max_unscanned=0) == 0
+    # The state file entry itself is untouched, so --report-only still describes
+    # the run that recorded it.
+    assert stale.read_failures
+
+
+def test_a_lost_read_is_counted_once_per_run():
+    # The project entity is read twice in a run that includes it - once by the
+    # scan, once by the drill-down - and one gap in coverage must not spend the
+    # --max-unscanned budget twice.
+    project = _flagged_audit('syn1')
+    project.record_read_failure('syn1', 'RuntimeError: 503', 'Project')
+    project.record_read_failure('syn1', 'RuntimeError: 503 again', 'Project')
+
+    assert [f['entity_id'] for f in project.read_failures] == ['syn1']
+    assert audit.build_summary([project])['entity_read_failures'] == 1
+
+
+def test_a_resumed_drill_down_rewrites_the_state_it_re_derived(tmp_path, monkeypatch):
+    # A project's state line is written before its drill-down, so a run that
+    # re-drills it has to re-append: otherwise --report-only keeps reading back a
+    # lost read that this run's retry recovered, and stays at exit 2 forever.
+    state = tmp_path / 'state.jsonl'
+    stale = _flagged_audit('syn0')
+    stale.read_failures = [{'entity_id': 'file2', 'error': 'RuntimeError: 503'}]
+    audit.append_state(state, stale)
+
+    syn = ChildrenStub({'syn0': [{'id': 'file1', 'name': 'file1', 'type': FILE_TYPE},
+                                 {'id': 'file2', 'name': 'file2', 'type': FILE_TYPE}]})
+    monkeypatch.setattr(audit, 'login', lambda **kwargs: syn)
+    monkeypatch.setattr(audit, 'read_annotations',
+                        lambda _syn, entity_id, **kwargs: io.AnnotationRecord(
+                            entity_id, 'etag-1', {'Age': [1.5], 'age': [1.5]},
+                            {'Age': 'DOUBLE', 'age': 'DOUBLE'}))
+
+    exit_code = audit.main(['--project', 'syn0', '--out-dir', str(tmp_path),
+                            '--resume', '--drill-down', '--allowlist', str(tmp_path / 'none.yaml')])
+
+    assert exit_code == 0
+    assert audit.load_state(state)['syn0'].read_failures == []
+    findings = (tmp_path / 'entity_findings.jsonl').read_text().splitlines()
+    assert [json.loads(line)['entity_id'] for line in findings] == ['file1', 'file2']
+
+
 def test_read_failures_survive_the_state_file(tmp_path):
     project = _flagged_audit()
     project.read_failures = [{'entity_id': 'file2', 'error': 'RuntimeError: 503'}]
@@ -163,17 +218,27 @@ def test_read_failures_survive_the_state_file(tmp_path):
 # Capped markdown tables
 # ---------------------------------------------------------------------------
 
-def test_the_markdown_tables_are_capped_so_the_issue_body_cannot_run_away():
+def test_the_tables_that_grow_are_capped_so_the_issue_body_cannot_run_away():
     # summary.md is piped verbatim into a GitHub issue body, and issue bodies are
-    # capped at 65,536 characters.
+    # capped at 65,536 characters. What grows is the per-(project, key) table.
     audits = []
-    for number in range(audit.MAX_TABLE_ROWS + 10):
+    for number in range(audit.MAX_MULTITYPE_ROWS + 10):
         project = _flagged_audit(f'syn{number}')
         project.multitype = {'individualID': ['INTEGER', 'STRING']}
         audits.append(project)
     report = audit.format_markdown(audits)
-    assert report.count('| `individualID` |') == audit.MAX_TABLE_ROWS
+    assert report.count('| `individualID` |') == audit.MAX_MULTITYPE_ROWS
     assert 'more rows omitted' in report
+
+
+def test_the_list_of_affected_projects_is_never_truncated():
+    # This is the one actionable list in the issue body, and it is one short row
+    # per project: a curator must not have to download a CI artifact to learn
+    # which project to look at.
+    audits = [_flagged_audit(f'syn{number}') for number in range(audit.MAX_KEY_FREQUENCY_ROWS + 25)]
+    report = audit.format_markdown(audits)
+    for project in audits:
+        assert f'Synapse:{project.project_id})' in report
 
 
 # ---------------------------------------------------------------------------
@@ -255,9 +320,75 @@ def test_a_malformed_baseline_expiry_is_rejected(tmp_path):
                        '--baseline-expires', 'next quarter']) == 1
 
 
+def test_regenerating_the_baseline_preserves_a_hand_triaged_entry(tmp_path):
+    # The header and utils/README.md both promise this file holds the generated
+    # baseline PLUS hand-added acceptances, and tell the reader to regenerate it -
+    # so regeneration has to merge rather than overwrite.
+    state, _ = _baseline_state(tmp_path)
+    out = tmp_path / 'allowlist.yaml'
+    audit.main(['--state', str(state), '--out-dir', str(tmp_path),
+                '--emit-allowlist', str(out), '--baseline-expires', '2099-01-01'])
+    out.write_text(out.read_text() + (
+        '  - key: tissue\n'
+        '    scope: global\n'
+        '    classification: unknown\n'
+        '    reason: legitimate custom annotation\n'
+        '    expires: 2099-06-01\n'
+    ))
+
+    assert audit.main(['--state', str(state), '--out-dir', str(tmp_path),
+                       '--emit-allowlist', str(out), '--baseline-expires', '2099-02-02']) == 0
+
+    entries = yaml.safe_load(out.read_text())['entries']
+    generated = [e for e in entries if e.get('generated')]
+    hand_added = [e for e in entries if not e.get('generated')]
+    # The baseline was replaced - note the new expiry - and the curator's entry
+    # came through untouched.
+    assert len(generated) == 3 and {e['expires'] for e in generated} == {'2099-02-02'}
+    assert [e['key'] for e in hand_added] == ['tissue']
+    assert hand_added[0]['reason'] == 'legitimate custom annotation'
+    assert audit.load_allowlist(out).suppresses('tissue', 'syn9', 'unknown')
+
+
+def test_a_hand_triaged_entry_wins_over_the_generated_one_it_duplicates(tmp_path):
+    # Same (key, scope, classification): the human's reason and expiry are the
+    # decision of record, and the file must not carry the finding twice.
+    state, _ = _baseline_state(tmp_path)
+    out = tmp_path / 'allowlist.yaml'
+    out.write_text(
+        'entries:\n'
+        '  - key: Age\n'
+        '    scope: syn1\n'
+        '    classification: duplicates\n'
+        '    reason: accepted by hand\n'
+        '    expires: 2099-06-01\n'
+    )
+    audit.main(['--state', str(state), '--out-dir', str(tmp_path),
+                '--emit-allowlist', str(out), '--baseline-expires', '2099-01-01'])
+
+    entries = yaml.safe_load(out.read_text())['entries']
+    matching = [e for e in entries if (e['key'], e['scope']) == ('Age', 'syn1')]
+    assert len(matching) == 1
+    assert matching[0]['reason'] == 'accepted by hand'
+
+
+def test_an_unparseable_existing_allowlist_is_not_overwritten(tmp_path):
+    # The entries at risk are the ones nothing else records, so a file that cannot
+    # be read is refused rather than replaced.
+    state, _ = _baseline_state(tmp_path)
+    out = tmp_path / 'allowlist.yaml'
+    out.write_text('entries: [unclosed\n')
+
+    assert audit.main(['--state', str(state), '--out-dir', str(tmp_path),
+                       '--emit-allowlist', str(out)]) == 1
+    assert out.read_text() == 'entries: [unclosed\n'
+
+
 def test_the_committed_baseline_is_the_shape_the_audit_consumes():
     document = yaml.safe_load(audit.DEFAULT_ALLOWLIST.read_text())
-    entries = document['entries']
+    # Only the generated baseline is checked here; a hand-triaged entry is a
+    # curator's call and may legitimately be global or of another classification.
+    entries = [e for e in document['entries'] if e.get('generated')]
     assert entries, 'the committed baseline should record the pre-remediation findings'
     for entry in entries:
         assert entry['scope'].startswith('syn'), 'a baseline entry is scoped to its project'

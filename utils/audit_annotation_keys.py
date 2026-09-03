@@ -41,11 +41,12 @@ import json
 import logging
 import os
 import sys
+import threading
 import time
 from collections import Counter
 from collections.abc import Iterable, Mapping, Sequence
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -70,16 +71,29 @@ from synapse_annotation_io import (  # noqa: E402
 
 LOG = logging.getLogger('audit_annotation_keys')
 
+#: Guards the per-project read-failure list, which drill-down worker threads and
+#: the scan both append to.
+_READ_FAILURE_LOCK = threading.Lock()
+
 #: file | table | folder | dataset. Deliberately excludes PROJECT(2): project
 #: entity annotations are invisible to a view scope and need --include-project-entity.
 DEFAULT_VIEW_TYPE_MASK = 0x01 | 0x04 | 0x08 | 0x80  # 141
 
-#: Row cap per markdown table. ``summary.md`` is piped verbatim into a GitHub
-#: issue body by the weekly workflow, and an issue body is capped at 65,536
-#: characters - so an uncapped per-(project, key) table would eventually take the
-#: tracking step down as the data grows. The CSVs in the run artifact always hold
-#: every row.
-MAX_TABLE_ROWS = 40
+#: Row caps for the markdown tables that grow with the data. ``summary.md`` is
+#: piped verbatim into a GitHub issue body by the weekly workflow, and an issue
+#: body is capped at 65,536 characters, so a per-(project, key) table would
+#: eventually take the tracking step down. The CSVs in the run artifact always
+#: hold every row.
+#:
+#: The caps are per section, not one uniform number, because the sections are not
+#: alike. The list of affected projects is deliberately uncapped below: it is the
+#: one actionable list in the issue and it is one short row per project, so a
+#: curator must not have to download a CI artifact to learn which project to look
+#: at. What actually grows is the per-key frequency tables (one row per distinct
+#: key) and the conflicting-value-types table (one row per project *and* key).
+MAX_KEY_FREQUENCY_ROWS = 40
+MAX_MULTITYPE_ROWS = 40
+MAX_LOST_READ_ROWS = 40
 
 DEFAULT_PROJECTS_TABLE = 'syn52694652'  # Portal - MV Studies (Production)
 DEFAULT_ALLOWLIST = Path(__file__).resolve().parent / 'annotation_key_allowlist.yaml'
@@ -180,6 +194,9 @@ def build_baseline_entries(
     One entry per (project, key, classification), scoped to the project synID
     rather than ``global``: the same key elsewhere is new drift and must still
     turn the job red, which is the entire point of recording a baseline.
+
+    Every entry is marked ``generated``, which is what lets a later regeneration
+    replace the baseline while leaving a curator's hand-added entries alone.
     """
     entries: list[dict] = []
     for audit in audits:
@@ -194,15 +211,68 @@ def build_baseline_entries(
                     'reason': reason,
                     'issue': BASELINE_ISSUES[bucket],
                     'expires': expires.isoformat(),
+                    'generated': True,
                 })
     return sorted(entries, key=lambda e: (e['scope'], e['classification'], e['key']))
 
 
-def format_allowlist(entries: Sequence[Mapping], *, header: str) -> str:
-    """The allowlist document: a header comment plus generated entries."""
-    body = yaml.safe_dump({'entries': [dict(e) for e in entries]},
-                          sort_keys=False, default_flow_style=False, width=100)
-    return f'{header}\n{body}'
+def entry_identity(entry: Mapping) -> tuple[str, str, str]:
+    """The (key, scope, classification) triple suppression is keyed on."""
+    return (str(entry.get('key') or ''),
+            str(entry.get('scope') or 'global'),
+            str(entry.get('classification') or 'any'))
+
+
+def hand_added_entries(path: Path) -> list[dict]:
+    """Entries in an existing allowlist that ``--emit-allowlist`` did not write.
+
+    Regeneration merges rather than overwrites. The documented workflow is a
+    generated baseline that shrinks as remediation lands *plus* whatever a curator
+    has triaged by hand, so a regeneration that silently dropped the hand-triaged
+    half would make the documented command destructive.
+
+    Raises ``yaml.YAMLError`` rather than guessing when the existing file cannot
+    be parsed, since the entries at risk are the ones nothing else records.
+    """
+    if not path.exists():
+        return []
+    document = yaml.safe_load(path.read_text()) or {}
+    return [dict(entry) for entry in (document.get('entries') or [])
+            if isinstance(entry, Mapping) and not entry.get('generated')]
+
+
+def _entry_block(entries: Sequence[Mapping]) -> str:
+    body = yaml.safe_dump([dict(e) for e in entries], sort_keys=False,
+                          default_flow_style=False, width=100)
+    return '\n'.join(f'  {line}' if line else line
+                     for line in body.rstrip('\n').split('\n'))
+
+
+def format_allowlist(
+    generated: Sequence[Mapping],
+    hand_added: Sequence[Mapping] = (),
+    *,
+    header: str,
+) -> str:
+    """The allowlist document: header comment, generated entries, hand-added ones.
+
+    The two groups are written as separate labelled blocks and every generated
+    entry carries ``generated: true``, so both a reader and the next regeneration
+    can tell which is which.
+    """
+    if not generated and not hand_added:
+        return f"{header.rstrip()}\n\nentries: []\n"
+    lines = [header.rstrip('\n'), '', 'entries:']
+    if generated:
+        lines.append(_entry_block(generated))
+    if hand_added:
+        lines += [
+            '',
+            '  # Hand-triaged entries: added by a curator, not by --emit-allowlist.',
+            '  # Regeneration replaces everything above and preserves everything here.',
+            _entry_block(hand_added),
+        ]
+    return '\n'.join(lines) + '\n'
 
 
 def baseline_header(
@@ -232,11 +302,11 @@ def baseline_header(
         '# and it is fine", one accepted finding leaves the job permanently red, and a',
         '# permanently red job gets ignored.',
         '#',
-        '# THE ENTRIES BELOW ARE GENERATED, NOT HAND-WRITTEN. They are the recorded',
-        f'# pre-remediation baseline: every finding present on {scanned} portal projects at the',
-        '# time the audit tooling landed, before any Synapse writes. Recording them is what',
-        '# lets the weekly job start green so that NEW drift - a project or key not listed',
-        '# here - is what turns it red.',
+        '# EVERY ENTRY MARKED `generated: true` IS GENERATED, NOT HAND-WRITTEN. Those are',
+        f'# the recorded pre-remediation baseline: every finding present on {scanned} portal',
+        '# projects at the time the audit tooling landed, before any Synapse writes. Recording',
+        '# them is what lets the weekly job start green so that NEW drift - a project or key',
+        '# not listed here - is what turns it red.',
         '#',
         f'# Baseline: {tally}.',
         '#',
@@ -244,6 +314,11 @@ def baseline_header(
         '#',
         f'#     python utils/audit_annotation_keys.py --state {state_path} \\',
         '#         --emit-allowlist utils/annotation_key_allowlist.yaml',
+        '#',
+        '# Regeneration MERGES: it replaces the generated block and preserves every entry',
+        '# without `generated: true`, so hand-triaged acceptances survive it. Add yours',
+        '# without that field (the block at the end of the file is where they collect), and',
+        '# do not add it by hand to an entry you want to keep.',
         '#',
         '# This file is expected to SHRINK. Every entry is drift that still exists in',
         f'# Synapse; each remediation pass should delete the entries it fixed. The {expires.isoformat()}',
@@ -259,6 +334,8 @@ def baseline_header(
         '#   issue           the GitHub issue where it was triaged',
         '#   expires         ISO date. After it passes the finding resurfaces, so a',
         '#                   time-boxed acceptance cannot become permanent by neglect.',
+        '#   generated       set by --emit-allowlist. Regeneration replaces these entries',
+        '#                   and preserves every entry without it. Leave it off yours.',
         '#',
         '# Keys that are legitimate by construction do NOT belong here - they are handled',
         '# in utils/annotation_key_policy.py:',
@@ -518,6 +595,23 @@ class ProjectAudit:
             read_failures=payload.get('read_failures') or [],
         )
 
+    def record_read_failure(self, entity_id: str, error: str, entity_type: str = '') -> None:
+        """Note an entity whose annotations were lost, at most once per run.
+
+        An entity can be read twice in one run - the project entity is read by the
+        scan and again by a drill-down that includes it - and counting the same
+        lost read twice would spend the ``--max-unscanned`` budget twice over for
+        one gap in coverage. Reads run on a thread pool, hence the lock.
+        """
+        with _READ_FAILURE_LOCK:
+            if any(failure.get('entity_id') == entity_id for failure in self.read_failures):
+                return
+            self.read_failures.append({
+                'entity_id': entity_id,
+                'entity_type': entity_type,
+                'error': error,
+            })
+
     @property
     def finding_counts(self) -> dict[str, int]:
         return {
@@ -563,7 +657,7 @@ def audit_project(
             columns, read_error = _project_entity_column_types(
                 syn, audit.project_id, max_retries=max_retries)
             if read_error:
-                audit.read_failures.append({'entity_id': audit.project_id, 'error': read_error})
+                audit.record_read_failure(audit.project_id, read_error, 'Project')
             for key, column in columns.items():
                 key_types.setdefault(key, set()).add(column)
     except Exception as error:  # noqa: BLE001 - the failure mode is the finding
@@ -650,11 +744,8 @@ def drill_down_project(
             record = read_annotations(syn, entity_id, max_retries=max_retries)
         except Exception as error:  # noqa: BLE001
             LOG.warning('%s: could not read annotations: %s', entity_id, error)
-            audit.read_failures.append({
-                'entity_id': entity_id,
-                'entity_type': entity_type,
-                'error': f'{type(error).__name__}: {error}'[:300],
-            })
+            audit.record_read_failure(
+                entity_id, f'{type(error).__name__}: {error}'[:300], entity_type)
             return None
         annotations = dict(record.values)
         if not flagged & set(annotations):
@@ -827,9 +918,19 @@ def carry_forward(
     the same project reported as both scanned and forbidden, ``projects_total``
     inflated, and a duplicate row in the CSV - so a resume that successfully
     retried three 403s would still exit 2 on them.
+
+    Entity read failures are dropped from what is carried forward: they describe
+    the run that performed the drill-down, and this run either re-reads those
+    entities or does not look at them at all. Keeping them would report a read
+    that has since succeeded as lost forever - and because lost reads spend the
+    ``--max-unscanned`` budget, one transient 503 would pin every later resume at
+    exit 2 with a complete findings file in hand.
     """
     pending = set(rescanning)
-    return [audit for audit in existing.values() if audit.project_id not in pending]
+    return [
+        replace(audit, read_failures=[])
+        for audit in existing.values() if audit.project_id not in pending
+    ]
 
 
 def append_state(path: Path, audit: ProjectAudit) -> None:
@@ -956,9 +1057,9 @@ def format_markdown(audits: Sequence[ProjectAudit]) -> str:
         lost = stats['entity_reads_lost']
         lines += [
             f"| {item['project_id']} | {item['entity_id']} | {str(item.get('error') or '')[:120]} |"
-            for item in lost[:MAX_TABLE_ROWS]
+            for item in lost[:MAX_LOST_READ_ROWS]
         ]
-        lines += _truncation_note(len(lost), MAX_TABLE_ROWS)
+        lines += _truncation_note(len(lost), MAX_LOST_READ_ROWS)
         lines.append('')
 
     if not stats['projects_with_findings'] and not stats['projects_with_multitype']:
@@ -984,14 +1085,14 @@ def format_markdown(audits: Sequence[ProjectAudit]) -> str:
         '| Project | Duplicates | Orphans | Case variants | Reserved | Name |',
         '|---|---|---|---|---|---|',
     ]
-    for audit in affected[:MAX_TABLE_ROWS]:
+    # Uncapped on purpose: this is the list a curator acts on.
+    for audit in affected:
         counts = audit.finding_counts
         lines.append(
             f"| [{audit.project_id}](https://www.synapse.org/Synapse:{audit.project_id}) "
             f"| {counts['duplicates']} | {counts['orphans']} | {counts['case_variants']} "
             f"| {counts['reserved']} | {audit.project_name[:60]} |"
         )
-    lines += _truncation_note(len(affected), MAX_TABLE_ROWS)
     lines.append('')
 
     titles = {
@@ -1006,8 +1107,8 @@ def format_markdown(audits: Sequence[ProjectAudit]) -> str:
         if not frequency:
             continue
         lines += [f'### {title}', '', '| Key | Projects |', '|---|---|']
-        lines += [f'| `{key}` | {count} |' for key, count in frequency[:MAX_TABLE_ROWS]]
-        lines += _truncation_note(len(frequency), MAX_TABLE_ROWS)
+        lines += [f'| `{key}` | {count} |' for key, count in frequency[:MAX_KEY_FREQUENCY_ROWS]]
+        lines += _truncation_note(len(frequency), MAX_KEY_FREQUENCY_ROWS)
         lines.append('')
 
     multitype = [a for a in audits if a.multitype]
@@ -1023,8 +1124,8 @@ def format_markdown(audits: Sequence[ProjectAudit]) -> str:
             for audit in sorted(multitype, key=lambda a: a.project_id)
             for key, types in sorted(audit.multitype.items())
         ]
-        lines += rows[:MAX_TABLE_ROWS]
-        lines += _truncation_note(len(rows), MAX_TABLE_ROWS)
+        lines += rows[:MAX_MULTITYPE_ROWS]
+        lines += _truncation_note(len(rows), MAX_MULTITYPE_ROWS)
         lines.append('')
 
     return '\n'.join(lines)
@@ -1096,7 +1197,13 @@ def emit_allowlist(
     state_path: Path,
     expires: str | None = None,
 ) -> int:
-    """Write a completed scan's findings out as an allowlist baseline."""
+    """Write a completed scan's findings out as an allowlist baseline.
+
+    Merges: the generated baseline is replaced wholesale, and every entry a
+    curator added by hand is carried over untouched. Where a hand-added entry
+    covers the same (key, scope, classification) as a generated one, the
+    hand-added one stands - its reason and expiry are the human's decision.
+    """
     if expires:
         try:
             expiry = date.fromisoformat(expires)
@@ -1106,18 +1213,27 @@ def emit_allowlist(
     else:
         expiry = datetime.now(timezone.utc).date() + timedelta(days=BASELINE_TTL_DAYS)
 
+    try:
+        preserved = hand_added_entries(path)
+    except yaml.YAMLError as error:
+        LOG.error('%s exists but could not be parsed (%s); refusing to overwrite it, because '
+                  'any hand-triaged entries it holds would be lost', path, error)
+        return 1
+
     scanned = sum(1 for a in audits if a.status == 'ok')
     reason = (f'Pre-remediation baseline from the {scanned}-project portal scan; '
               'drift still present in Synapse.')
-    entries = build_baseline_entries(audits, expires=expiry, reason=reason)
+    hand_triaged = {entry_identity(e) for e in preserved}
+    entries = [e for e in build_baseline_entries(audits, expires=expiry, reason=reason)
+               if entry_identity(e) not in hand_triaged]
     header = baseline_header(audits, entries, state_path=state_path, expires=expiry)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(format_allowlist(entries, header=header))
+    path.write_text(format_allowlist(entries, preserved, header=header))
     counts = Counter(e['classification'] for e in entries)
-    LOG.info('wrote %d baseline entries to %s (%s), expiring %s',
-             len(entries), path,
+    LOG.info('wrote %d baseline entries to %s (%s), expiring %s; %d hand-triaged entries '
+             'preserved', len(entries), path,
              ', '.join(f'{counts[b]} {b}' for b in BASELINE_BUCKETS if counts[b]),
-             expiry.isoformat())
+             expiry.isoformat(), len(preserved))
     return 0
 
 
@@ -1251,11 +1367,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         findings_path = out_dir / 'entity_findings.jsonl'
         out_dir.mkdir(parents=True, exist_ok=True)
         total = 0
+        drilled: list[ProjectAudit] = []
         with open(findings_path, 'w') as handle:
             for audit in audits:
                 if audit.status != 'ok' or not audit.has_findings:
                     continue
                 LOG.info('drilling down %s', audit.project_id)
+                drilled.append(audit)
                 for finding in drill_down_project(
                     syn, audit, canon=canon, index=index,
                     loose_compare=args.loose_compare, limit=args.drill_down_limit,
@@ -1265,16 +1383,16 @@ def main(argv: Sequence[str] | None = None) -> int:
                 ):
                     handle.write(json.dumps(finding) + '\n')
                     total += 1
+        # Each project's state line was written before its drill-down, so re-append
+        # every drilled project now that its entity reads have settled. load_state
+        # keys by project and the later line wins, so --report-only reads back this
+        # run's coverage: lost reads appear, and a read that failed on an earlier
+        # run and succeeded on this one stops being reported.
+        for audit in drilled:
+            append_state(state_path, audit)
         lost = sum(len(a.read_failures) for a in audits)
         LOG.info('%d affected entities written to %s', total, findings_path)
         if lost:
-            # The project's state line was written before the drill-down, so
-            # re-append it now that reads have been lost against it. load_state
-            # keys by project, so the later line wins and --report-only sees the
-            # lost coverage rather than reporting a complete run.
-            for audit in audits:
-                if audit.read_failures:
-                    append_state(state_path, audit)
             LOG.error('%d entity reads were lost after retries, so %s is incomplete; '
                       'the reports list them', lost, findings_path)
 

@@ -109,10 +109,8 @@ class CircuitBreaker:
     would leave every run shorter than it unguarded - which is exactly the scale a
     curator drives by hand with ``--entity``.
 
-    Shared by both per-entity loops. The schema preflight reads every entity too,
-    so leaving it unguarded meant a dead token produced one failed read and one
-    fsynced progress line per entity - up to --max-entities-per-run of them -
-    before the write loop's breaker ever got a chance to fire.
+    Driven only through ``run_guarded``, which every per-entity network loop in
+    this module goes through, so no loop can be left unguarded by accident.
     """
 
     def __init__(self, *, sample: int = ERROR_SAMPLE, floor: int = ERROR_FLOOR,
@@ -135,6 +133,43 @@ class CircuitBreaker:
     @property
     def tripped(self) -> bool:
         return self.window >= self.floor and self.failures / self.window > self.threshold
+
+
+def run_guarded(
+    items: Sequence,
+    step,
+    *,
+    failed,
+    label: str,
+    logger: logging.Logger | None = None,
+) -> tuple[list, bool]:
+    """Apply ``step`` to each item, stopping the moment the breaker trips.
+
+    Every per-entity loop that issues network calls runs through here - the
+    preflight's planning pass, its conformance pass and the write pass - so a
+    systemic failure stops the run where it starts rather than grinding through
+    thousands of entities in any one of them. Retries make an unguarded loop worse
+    rather than better: with a retry budget each entity of a doomed run pays the
+    full jittered backoff before failing, which turns seconds into days.
+
+    Returns the results collected and whether the run was cut short.
+    """
+    logger = logger or LOG
+    breaker = CircuitBreaker()
+    results: list = []
+    for position, item in enumerate(items, 1):
+        result = step(position, item)
+        results.append(result)
+        breaker.record(failed(result))
+        if breaker.tripped:
+            logger.error('%s: aborting at entity %d: %d of the last %d failed',
+                         label, position, breaker.failures, breaker.window)
+            return results, True
+    return results, False
+
+
+def _is_failure(result: ApplyResult) -> bool:
+    return result.status in ('error', 'etag_conflict')
 
 
 # ---------------------------------------------------------------------------
@@ -377,6 +412,9 @@ class PreflightReport:
     #: entities invalid both before and after - a pre-existing failure this
     #: cleanup does not claim to fix, so not a blocker, but not proven either
     still_invalid: list = field(default_factory=list)
+    #: set when the conformance pass was cut short by the circuit breaker, so the
+    #: buckets describe only the entities it got through
+    aborted: bool = False
 
     @property
     def outcomes(self) -> list:
@@ -410,7 +448,8 @@ class PreflightReport:
 
     @property
     def ok(self) -> bool:
-        return not self.blockers and not self.unvalidatable and not self.unaccounted
+        return (not self.aborted and not self.blockers
+                and not self.unvalidatable and not self.unaccounted)
 
 
 def schema_preflight(
@@ -446,19 +485,27 @@ def schema_preflight(
 
     An entity with no binding is checked against the template its ``Component``
     annotation names rather than written off for want of a lookup.
+
+    This is a per-entity network loop of its own - two reads per planned entity,
+    each with the retry budget - so it is guarded by the same circuit breaker as
+    the planning and write passes. A degradation that starts after the planning
+    pass finishes stops here rather than burning the whole backoff budget on every
+    remaining entity to reach the same refusal days later.
     """
     report = PreflightReport(considered=[r.entity_id for r in dry_runs])
-    for result in dry_runs:
+
+    def check(_position: int, result: ApplyResult) -> EntityConformance | None:
         if not result.applied:
             if result.status == 'noop':
                 report.unchanged.append(result.entity_id)
-            else:
-                report.unvalidatable.append(EntityConformance(
-                    entity_id=result.entity_id,
-                    status='error',
-                    error=result.error or f'dry run returned {result.status} with no plan',
-                ))
-            continue
+                return None
+            outcome = EntityConformance(
+                entity_id=result.entity_id,
+                status='error',
+                error=result.error or f'dry run returned {result.status} with no plan',
+            )
+            report.unvalidatable.append(outcome)
+            return outcome
         outcome = check_entity(
             syn, result.entity_id, registry=registry, repo_version=repo_version,
             decisions=result.applied, fallback_component=component_of(result.planned),
@@ -474,6 +521,16 @@ def schema_preflight(
             report.repaired.append(outcome)
         else:
             report.clean.append(outcome)
+        return outcome
+
+    # Only 'error' counts against the breaker: a bound schema this checkout does
+    # not have, or an entity with no binding at all, is a verdict about the data
+    # rather than a sign that the service is failing.
+    _, report.aborted = run_guarded(
+        dry_runs, check,
+        failed=lambda outcome: outcome is not None and outcome.status == 'error',
+        label='schema preflight conformance',
+    )
     return report
 
 
@@ -880,26 +937,28 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
                  len(entity_ids), len(registry.by_name), repo_version or 'unknown')
         # Every entity goes to the preflight, planned or not. Filtering here is
         # what let a failed dry-run read skip the gate and reach the write pass
-        # with no verdict behind it. The breaker guards this loop as well: it is
-        # one read per entity, so a systemic failure has to stop it here rather
-        # than after it has burned through the whole run.
-        breaker = CircuitBreaker()
-        for position, entity_id in enumerate(entity_ids, 1):
-            result = apply_entity(
+        # with no verdict behind it.
+        dry_runs, aborted = run_guarded(
+            entity_ids,
+            lambda _position, entity_id: apply_entity(
                 syn, entity_id, canon=canon, index=index, logs=logs,
                 allowed_actions=allowed_actions, dry_run=True,
                 loose_compare=args.loose_compare, max_retries=args.max_retries,
-            )
-            dry_runs.append(result)
-            breaker.record(result.status in ('error', 'etag_conflict'))
-            if breaker.tripped:
-                LOG.error('aborting the schema preflight at entity %d: %d of the last %d failed; '
-                          'no plan was validated, so nothing is offered for approval',
-                          position, breaker.failures, breaker.window)
-                return 1
+            ),
+            failed=_is_failure,
+            label='schema preflight planning',
+        )
+        if aborted:
+            LOG.error('no plan was validated, so nothing is offered for approval')
+            return 1
         preflight = schema_preflight(syn, dry_runs, registry=registry,
                                      repo_version=repo_version,
                                      max_retries=args.max_retries)
+        if preflight.aborted:
+            LOG.error('the schema preflight could not reach a verdict on %d of %d entities before '
+                      'it was cut short; no plan was validated, so nothing is offered for approval',
+                      len(preflight.unvalidatable), len(entity_ids))
+            return 1
         if preflight.unaccounted:
             LOG.error('schema preflight bucketed %d of %d entities; %d unaccounted for, so no '
                       'count it reports can be trusted; refusing to proceed: %s',
@@ -979,24 +1038,20 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
         # verdict is how a cleanup destroys a concurrently written value.
         results = dry_runs
     else:
-        breaker = CircuitBreaker()
-        for position, entity_id in enumerate(entity_ids, 1):
+        def fix_one(position: int, entity_id: str) -> ApplyResult:
             result = apply_entity(
                 syn, entity_id, canon=canon, index=index, logs=logs,
                 allowed_actions=allowed_actions, dry_run=dry_run,
                 loose_compare=args.loose_compare, max_retries=args.max_retries,
             )
-            results.append(result)
-            breaker.record(result.status in ('error', 'etag_conflict'))
-            if breaker.tripped:
-                LOG.error('aborting at entity %d: %d of the last %d failed',
-                          position, breaker.failures, breaker.window)
-                break
             if not dry_run:
                 time.sleep(args.sleep)
                 if position % args.batch_size == 0:
                     LOG.info('... %d/%d', position, len(entity_ids))
                     time.sleep(args.batch_pause)
+            return result
+
+        results, _ = run_guarded(entity_ids, fix_one, failed=_is_failure, label=mode.lower())
 
     write_report(results, logs.report_path)
     counts = summarize(results)
