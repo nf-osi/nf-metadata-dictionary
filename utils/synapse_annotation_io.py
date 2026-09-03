@@ -218,6 +218,42 @@ def is_retryable(error: Exception) -> bool:
     return isinstance(error, transport_error_types())
 
 
+def is_definitive(error: Exception) -> bool:
+    """Whether the service answered, and would answer the same way on a retry.
+
+    A 403 on a file behind a per-folder ACL, and a 404 on an entity deleted between
+    the audit and the fix, are facts about those entities rather than signs that
+    Synapse is unwell. Anything else - a 429 or 5xx, a dropped connection, an
+    exception this module cannot classify at all - is treated as a possible service
+    problem, so an unrecognised systemic failure still stops a run rather than
+    being waved through as data.
+    """
+    if is_forbidden(error):
+        return True
+    status = getattr(getattr(error, 'response', None), 'status_code', None)
+    return status is not None and status not in RETRYABLE_STATUS
+
+
+def breaker_verdict(error: Exception | None) -> bool | None:
+    """How one request's outcome is sampled into a :class:`CircuitBreaker`.
+
+    ``False`` for a request that succeeded, ``True`` for one lost to a possible
+    service problem, and ``None`` - not sampled at all - for a definitive verdict.
+
+    Sampling a definitive verdict made the guard fire on the data rather than on an
+    outage. With ``ERROR_FLOOR`` at 10 and the threshold at 10%, two 403s inside one
+    window abort a whole pass, and the abort is deterministic: re-running produces
+    the identical abort, so the only way forward is to prune the input by hand. A run
+    that meets a handful of entities the caller cannot see, or that were deleted
+    since the audit, records them as the coverage gaps they already are and carries
+    on. Neither is retried either, so neither costs the wall clock the guard exists
+    to protect.
+    """
+    if error is None:
+        return False
+    return None if is_definitive(error) else True
+
+
 def with_retries(call, *, max_retries: int, label: str, logger: logging.Logger | None = None):
     """Retry transient REST failures with jittered backoff. Never retries a 403.
 
@@ -257,9 +293,9 @@ ERROR_FLOOR = 10
 class CircuitBreaker:
     """Trailing-window failure rate, tripped by a systemic problem.
 
-    A revoked token, a service degradation or an ACL changed mid-run should stop a
-    per-entity loop where the trouble starts, whether that is at entity 10 or at
-    entity 2,000. Hence the trailing window, judged as soon as ``floor`` results
+    A service degradation should stop a per-entity loop where the trouble starts,
+    whether that is at entity 10 or at entity 2,000. Hence the trailing window,
+    judged as soon as ``floor`` results
     are in rather than once it is full: the whole-run rate would take hundreds more
     failures to clear the threshold after a long healthy prefix, and waiting for a
     full window would leave every run shorter than it unguarded - which is exactly
@@ -273,7 +309,9 @@ class CircuitBreaker:
     sibling.
 
     The window holds one sample per *request*, never one per iteration: work that
-    issued no network call says nothing about the health of the service.
+    issued no network call says nothing about the health of the service. Nor does a
+    request the service answered definitively - see :func:`breaker_verdict` - so a
+    403 or a 404 is recorded as lost coverage without touching the window.
 
     A trip is a latch: once the rate has been over the threshold the breaker stays
     tripped for the rest of the run. The rate itself is a live trailing figure, so
@@ -342,10 +380,13 @@ def run_guarded(
     so a systemic failure stops the run where it starts rather than grinding
     through thousands of entities in any one of them.
 
-    ``failed`` returns True or False for an item that issued a request, and None
-    for one that made no network call at all. Only requests are sampled, because
-    the breaker is measuring the service rather than the loop: an item that asked
-    the service for nothing can neither trip it nor dilute it. Sampling every
+    ``failed`` returns True or False for an item that issued a request the service
+    may have failed, and None for one the window must not see at all - an item that
+    made no network call, or one the service answered definitively. Only requests
+    are sampled, because the breaker is measuring the service rather than the loop:
+    an item that asked the service for nothing can neither trip it nor dilute it,
+    and one it answered with a 403 or a 404 is data rather than a degradation. See
+    :func:`breaker_verdict`, which every call site classifies through. Sampling every
     iteration is what let unchanged entities hide an outage - at nine of them per
     planned entity the window sits at 5 failures in 50, exactly the 10% threshold
     and so never above it, while every read the loop actually issued was failing.

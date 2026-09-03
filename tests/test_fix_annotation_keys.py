@@ -948,7 +948,7 @@ def test_the_circuit_breaker_trips_when_writes_start_failing_mid_run(
 
 
 def test_the_circuit_breaker_guards_a_run_shorter_than_the_full_window(monkeypatch, tmp_path):
-    # A curator applying to 30 entities by hand with a revoked token must not
+    # A curator applying to 30 entities by hand during a service outage must not
     # issue all 30 failing calls. Requiring the window to be full left every run
     # shorter than it completely unguarded.
     class DeadSynapse:
@@ -959,7 +959,7 @@ def test_the_circuit_breaker_guards_a_run_shorter_than_the_full_window(monkeypat
             if path.endswith('/permissions'):
                 return {'canEdit': True}
             self.reads += 1
-            raise RuntimeError('403 Forbidden')
+            raise RuntimeError('503 Service Unavailable')
 
     syn = DeadSynapse()
     monkeypatch.setattr(fix, '_SYN', None)
@@ -990,6 +990,72 @@ def test_a_trip_is_remembered_for_the_rest_of_the_run():
         breaker.record(False)
     assert breaker.failures / breaker.window == 0.10, 'the live rate has recovered'
     assert breaker.tripped is True, 'the trip is a latch, not a live rate'
+
+
+@pytest.mark.parametrize('status', [403, 404, 410, 400])
+def test_a_window_of_definitive_verdicts_never_trips_the_breaker(status):
+    # A 403 on a file behind a per-folder ACL and a 404 on an entity deleted between
+    # the audit and the fix are facts about those entities, not signs that Synapse is
+    # unwell. Sampling them made the guard fire on the data: with a floor of 10 and a
+    # threshold of 10%, two of them inside one window aborted a whole pass, and the
+    # abort was deterministic - re-running reproduced it, leaving no way forward but
+    # pruning the input by hand.
+    breaker = io.CircuitBreaker()
+    verdicts = [io.breaker_verdict(StubSynapseError(f'{status}', status))
+                for _ in range(io.ERROR_SAMPLE * 2)]
+    assert set(verdicts) == {None}
+    assert breaker.sample(verdicts) is False
+    assert breaker.tripped is False
+    assert breaker.window == 0, 'a definitive answer is not sampled at all'
+
+
+@pytest.mark.parametrize('status', [429, 500, 503, 504])
+def test_a_window_of_service_failures_still_trips_the_breaker(status):
+    breaker = io.CircuitBreaker()
+    verdicts = [io.breaker_verdict(StubSynapseError(f'{status}', status))
+                for _ in range(io.ERROR_FLOOR)]
+    assert set(verdicts) == {True}
+    assert breaker.sample(verdicts) is True
+    assert breaker.tripped is True
+
+
+def test_an_unclassifiable_failure_still_counts_against_the_breaker():
+    # No response and no recognised transport class, so nothing says the service
+    # answered. Treating it as data would leave a systemic non-HTTP failure - a
+    # payload shape that stopped decoding, say - free to grind through every entity.
+    assert io.breaker_verdict(ValueError('who knows')) is True
+    assert io.breaker_verdict(None) is False
+
+
+def test_entities_the_curator_cannot_see_do_not_abort_the_planning_pass(
+        monkeypatch, tmp_path, caplog):
+    # 403 on every read, which before was two entities away from aborting the run.
+    # Each is reported as its own error and the pass works through the whole plan.
+    class ForbiddenSynapse:
+        def __init__(self):
+            self.reads = 0
+
+        def restGET(self, path):
+            if path.endswith('/permissions'):
+                return {'canEdit': True}
+            self.reads += 1
+            raise StubSynapseError('403 Forbidden', 403)
+
+    syn = ForbiddenSynapse()
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: syn)
+
+    argv = ['--actions', 'drop_stray', '--log-dir', str(tmp_path / 'run')]
+    for index in range(30):
+        argv += ['--entity', f'syn{index}']
+    with caplog.at_level('ERROR'):
+        assert fix.main(argv) == 1
+
+    assert syn.reads == 30, 'every entity is attempted rather than 10 of them'
+    assert 'cut short by the circuit breaker' not in caplog.text
+    report = (tmp_path / 'run' / 'report.csv').read_text()
+    assert 'not_attempted' not in report
+    assert report.count('error') == 30
 
 
 def test_a_run_below_the_floor_is_not_aborted_by_one_failure(monkeypatch, tmp_path):
@@ -1124,7 +1190,7 @@ def test_a_dry_run_blocked_only_by_an_unvalidatable_entity_exits_two(monkeypatch
 def test_the_schema_preflight_planning_loop_is_guarded_by_the_circuit_breaker(
         monkeypatch, tmp_path):
     # The preflight reads every entity too, so leaving its loop unguarded meant a
-    # revoked token produced one failing read and one fsynced progress line per
+    # service degradation produced one failing read and one fsynced progress line per
     # entity - up to --max-entities-per-run of them - before the write loop's
     # breaker ever got a chance to fire.
     class DeadSynapse:
@@ -1135,7 +1201,7 @@ def test_the_schema_preflight_planning_loop_is_guarded_by_the_circuit_breaker(
             if path.endswith('/permissions'):
                 return {'canEdit': True}
             self.reads += 1
-            raise RuntimeError('403 Forbidden')
+            raise RuntimeError('503 Service Unavailable')
 
     syn = DeadSynapse()
     monkeypatch.setattr(fix, '_SYN', None)
@@ -1306,7 +1372,7 @@ def test_an_aborted_write_pass_names_the_entities_it_never_attempted(
         def restGET(self, path):
             if path.endswith('/permissions'):
                 return {'canEdit': True}
-            raise RuntimeError('403 Forbidden')
+            raise RuntimeError('503 Service Unavailable')
 
     monkeypatch.setattr(fix, '_SYN', None)
     monkeypatch.setattr(fix, '_login', lambda: DeadSynapse())
@@ -1462,10 +1528,11 @@ def test_apply_without_actions_is_refused_rather_than_defaulting_to_a_drop(monke
 
 
 def test_a_findings_file_from_an_incomplete_drill_down_says_so_before_anything_is_planned(
-        tmp_path, caplog):
+        tmp_path):
     # The findings file is this tool's only input, so a file produced by a
     # drill-down the circuit breaker cut short would otherwise plan a subset of the
-    # work while looking exactly like a complete plan.
+    # work while looking exactly like a complete plan. The gap comes back with the
+    # ids, from one read of the manifest, so the caller states it exactly once.
     import audit_annotation_keys as audit
 
     findings = tmp_path / 'entity_findings.partial.jsonl'
@@ -1473,22 +1540,20 @@ def test_a_findings_file_from_an_incomplete_drill_down_says_so_before_anything_i
     audit.write_findings_manifest(findings, complete=False, projects=['syn0'],
                                   entities=1, not_inspected=['syn1', 'syn2'])
 
-    with caplog.at_level('ERROR'):
-        assert fix.entity_ids_from_findings(findings) == ['file1']
-    assert 'did not complete' in caplog.text
-    assert 'syn1, syn2' in caplog.text
+    ids, gap = fix.entity_ids_from_findings(findings)
+    assert ids == ['file1']
+    assert 'did not complete' in gap
+    assert 'syn1, syn2' in gap
 
 
-def test_a_findings_file_from_a_completed_drill_down_plans_without_complaint(tmp_path, caplog):
+def test_a_findings_file_from_a_completed_drill_down_plans_without_complaint(tmp_path):
     import audit_annotation_keys as audit
 
     findings = tmp_path / 'entity_findings.jsonl'
     findings.write_text(json.dumps({'project_id': 'syn0', 'entity_id': 'file1'}) + '\n')
     audit.write_findings_manifest(findings, complete=True, projects=['syn0'], entities=1)
 
-    with caplog.at_level('ERROR'):
-        assert fix.entity_ids_from_findings(findings) == ['file1']
-    assert caplog.text == ''
+    assert fix.entity_ids_from_findings(findings) == (['file1'], '')
 
 
 def _incomplete_findings(tmp_path, entity_id='syn64420376'):

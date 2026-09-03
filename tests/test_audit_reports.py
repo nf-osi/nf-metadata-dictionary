@@ -279,6 +279,82 @@ def test_the_drill_down_breaker_spans_the_run_rather_than_one_project(tmp_path, 
     assert exit_code == 2
 
 
+class Forbidden(Exception):
+    """A 403 as the retry policy sees it: answered, and not worth asking again."""
+
+    def __init__(self, status_code=403):
+        super().__init__(f'{status_code} Forbidden')
+
+        class _Response:
+            pass
+
+        self.response = _Response()
+        self.response.status_code = status_code
+
+
+@pytest.mark.parametrize('workers', [1, 4])
+def test_entities_the_curator_cannot_read_do_not_abort_the_drill_down(monkeypatch, workers):
+    # A project with per-folder ACLs 403s on a handful of children, and 403 is never
+    # retried - so both landed in the breaker's window immediately and two of them
+    # aborted the drill-down of every project after this one, leaving the rows in
+    # entity_findings.partial.jsonl and (since the manifest gate) refusing the
+    # following --apply. The service answered; that is data, not a degradation.
+    canon = frozenset({'age'})
+    index = policy.KeyIndex.build(canon)
+    tree = {'syn0': [{'id': f'file{n}', 'name': f'file{n}', 'type': FILE_TYPE}
+                     for n in range(40)]}
+
+    def read(_syn, entity_id, **_kwargs):
+        if entity_id in ('file3', 'file7', 'file11'):
+            raise Forbidden()
+        return io.AnnotationRecord(entity_id, 'etag-1', {'Age': [1.5], 'age': [1.5]},
+                                  {'Age': 'DOUBLE', 'age': 'DOUBLE'})
+
+    monkeypatch.setattr(audit, 'read_annotations', read)
+    project = _flagged_audit()
+    findings, aborted = audit.drill_down_project(ChildrenStub(tree), project, canon=canon,
+                                                 index=index, workers=workers)
+
+    assert aborted is False
+    assert len(findings) == 37, 'every readable entity is still inspected'
+    # The three it could not see are lost coverage all the same.
+    assert sorted(f['entity_id'] for f in project.read_failures) == ['file11', 'file3', 'file7']
+    assert audit.exit_code_for([project], fail_on_findings=False, max_unscanned=0) == 2
+
+
+def test_a_folder_the_curator_cannot_list_does_not_abort_the_walk(monkeypatch):
+    # The same distinction for the walk: a folder with its own ACL is refused
+    # outright, recorded as a listing gap, and left out of the guard's window.
+    canon = frozenset({'age'})
+    index = policy.KeyIndex.build(canon)
+    folders = [{'id': f'f{n}', 'name': f'f{n}', 'type': FOLDER_TYPE} for n in range(40)]
+
+    class PrivateFolders:
+        def __init__(self):
+            self.listed = []
+
+        def restPOST(self, path, body=None):
+            parent = json.loads(body)['parentId']
+            self.listed.append(parent)
+            if parent == 'syn0':
+                return {'page': folders}
+            raise Forbidden()
+
+    monkeypatch.setattr(audit, 'read_annotations',
+                        lambda _syn, entity_id, **kwargs: io.AnnotationRecord(
+                            entity_id, 'etag-1', {'Age': [1.5], 'age': [1.5]},
+                            {'Age': 'DOUBLE', 'age': 'DOUBLE'}))
+    syn = PrivateFolders()
+    project = _flagged_audit()
+    _findings, aborted = audit.drill_down_project(syn, project, canon=canon, index=index,
+                                                  workers=1)
+
+    assert aborted is False
+    assert len(syn.listed) == 1 + len(folders), 'every folder is still attempted'
+    assert len([f for f in project.read_failures
+                if f['operation'] == audit.READ_OP_LISTING]) == len(folders)
+
+
 @pytest.mark.parametrize('workers', [1, 4])
 def test_a_listing_only_degradation_trips_the_breaker(monkeypatch, workers):
     # The children listing was the last per-entity network loop outside the guard. A

@@ -58,7 +58,7 @@ import jsonschema
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from synapse_annotation_io import run_guarded, with_retries  # noqa: E402
+from synapse_annotation_io import breaker_verdict, run_guarded, with_retries  # noqa: E402
 
 LOG = logging.getLogger('validate_annotations')
 
@@ -317,6 +317,12 @@ class EntityConformance:
     after_messages: list[str] = field(default_factory=list)
     synapse_cached_valid: bool | None = None
     error: str | None = None
+    #: How the circuit breaker samples the reads behind this outcome. ``status`` alone
+    #: cannot say: ``error`` covers a 503, a 403 on an entity the caller cannot see
+    #: and a 404 on one deleted since the audit, and only the first is a sign that
+    #: the service is failing. ``None`` keeps a definitive answer out of the window
+    #: entirely - see ``synapse_annotation_io.breaker_verdict``.
+    breaker_sample: bool | None = False
 
     @property
     def blocking(self) -> bool:
@@ -359,6 +365,10 @@ def check_entity(
     except Exception as error:  # noqa: BLE001
         result.status = 'error'
         result.error = f'{type(error).__name__}: {error}'[:250]
+        # A 403 or a 404 here is a fact about this entity, so it is reported as one
+        # and kept out of the abort guard's window; a 503 or a dropped connection is
+        # what that guard exists to notice.
+        result.breaker_sample = breaker_verdict(error)
         return result
 
     schema_name = binding.schema_name if binding else (fallback_component or '')
@@ -409,7 +419,20 @@ def check_entity(
 # Reporting
 # ---------------------------------------------------------------------------
 
-def write_report(results: Sequence[EntityConformance], path: Path) -> None:
+def write_report(
+    results: Sequence[EntityConformance],
+    path: Path,
+    *,
+    not_checked: Sequence[str] = (),
+) -> None:
+    """The per-entity conformance table for one pass.
+
+    ``not_checked`` names the entities a pass the circuit breaker cut short never
+    reached, written out as ``not_checked`` rows so the artifact says what it does not
+    cover. A CSV that simply ended early reads as a complete pass over a smaller plan,
+    which is the reading an operator must not take before running ``--apply``. Mirrors
+    the ``not_attempted`` rows ``fix_annotation_keys.write_report`` writes.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     fields = ['entity_id', 'project_id', 'schema_name', 'bound_version', 'drift', 'status',
               'before_valid', 'after_valid', 'synapse_cached_valid',
@@ -431,6 +454,12 @@ def write_report(results: Sequence[EntityConformance], path: Path) -> None:
                 'before_messages': ' | '.join(item.before_messages[:5]),
                 'after_messages': ' | '.join(item.after_messages[:5]),
                 'error': item.error or '',
+            })
+        for entity_id in not_checked:
+            writer.writerow({
+                'entity_id': entity_id,
+                'status': 'not_checked',
+                'error': 'pass aborted by the circuit breaker before this entity',
             })
 
 
@@ -477,6 +506,14 @@ def format_markdown(results: Sequence[EntityConformance], *, not_checked: int = 
             lines.append(f'| [{item.entity_id}](https://www.synapse.org/Synapse:{item.entity_id}) '
                          f'| {item.schema_name} | {detail[:100]} |')
         lines.append('')
+    elif not_checked:
+        # The sentence below is the one an operator quotes when deciding to run
+        # --apply, so on a truncated pass it must not be said: the entities never
+        # checked could hold any number of regressions.
+        lines += ['## Blockers', '',
+                  (f'None among the {len(results)} entities checked - but {not_checked} were '
+                   'never checked, so this pass does not vouch for the whole plan. '
+                   'Re-run it to completion before applying the fix.'), '']
     else:
         lines += ['## Blockers', '', 'None. The planned fix does not break conformance anywhere.', '']
 
@@ -631,21 +668,24 @@ def main(argv: Sequence[str] | None = None) -> int:
     # Guarded by the same circuit breaker as every other per-entity network loop:
     # each read carries a retry budget, so a systemic 503 costs over a minute of
     # jittered backoff per entity, which over the 13,150-entity findings file is
-    # days of grinding to reach a report that is nothing but errors. Only a failed
-    # read is a breaker sample - an `unbound` or `no_schema` verdict is a fact about
-    # the data, which is what this pass exists to surface.
+    # days of grinding to reach a report that is nothing but errors. Only a read the
+    # service may have failed is a breaker sample - an `unbound` or `no_schema`
+    # verdict, and a 403 or 404 on one entity, are facts about the data, which is what
+    # this pass exists to surface.
     results, aborted = run_guarded(targets, check,
-                                   failed=lambda outcome: outcome.status == 'error',
+                                   failed=lambda outcome: outcome.breaker_sample,
                                    label='conformance', logger=LOG)
 
-    not_checked = len(targets) - len(results)
-    report = format_markdown(results, not_checked=not_checked)
+    # run_guarded works through targets in order, so whatever it did not return is
+    # what an abort left unchecked.
+    not_checked_ids = [target['entity_id'] for target in targets[len(results):]]
+    report = format_markdown(results, not_checked=len(not_checked_ids))
     if args.markdown:
         Path(args.markdown).write_text(report + '\n')
     else:
         print(report)
     if args.report:
-        write_report(results, Path(args.report))
+        write_report(results, Path(args.report), not_checked=not_checked_ids)
         LOG.info('CSV written to %s', args.report)
 
     counts = summarize(results)
@@ -657,7 +697,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if aborted:
         LOG.error('the conformance pass was cut short after %d of %d entities; %d were never '
                   'checked, so nothing here vouches for the whole plan - re-run it',
-                  len(results), len(targets), not_checked)
+                  len(results), len(targets), len(not_checked_ids))
         return 1
     if counts.get('error') or counts.get('no_schema'):
         return 2

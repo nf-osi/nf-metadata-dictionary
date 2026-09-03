@@ -76,6 +76,7 @@ from annotation_key_policy import (  # noqa: E402
 from audit_annotation_keys import read_findings_manifest  # noqa: E402
 from synapse_annotation_io import (  # noqa: E402
     AnnotationRecord,
+    breaker_verdict,
     read_annotations,
     run_guarded,
     write_annotations,
@@ -100,8 +101,23 @@ SETTLED_STATUSES = frozenset({'ok', 'noop'})
 # unguarded by accident.
 
 
-def _is_failure(result: ApplyResult) -> bool:
-    return result.status in ('error', 'etag_conflict')
+def _as_verdict(verdict: bool | None) -> bool | None:
+    """A step that already reports its own breaker verdict passes it through.
+
+    ``bool`` would flatten None - "do not sample this" - into False, a success, which
+    is how work the service never saw came to dilute the window.
+    """
+    return verdict
+
+
+def _request_failed(result: ApplyResult) -> bool | None:
+    """How the circuit breaker samples one entity's outcome.
+
+    Carried on the result rather than derived from its status, because ``error``
+    covers both a 503 and a 404 and only one of the two says anything about the
+    health of the service. See ``synapse_annotation_io.breaker_verdict``.
+    """
+    return result.breaker_sample
 
 
 # ---------------------------------------------------------------------------
@@ -210,6 +226,10 @@ class ApplyResult:
     applied: list[dict] = field(default_factory=list)
     reported: list[dict] = field(default_factory=list)
     error: str | None = None
+    #: How the circuit breaker samples the request behind this outcome: False for one
+    #: the service answered, True for one it may have failed, None for one it answered
+    #: definitively - a 403 or a 404 is a fact about this entity, not a degradation.
+    breaker_sample: bool | None = False
 
 
 def _is_etag_conflict(error: Exception) -> bool:
@@ -243,7 +263,8 @@ def apply_entity(
             # would otherwise abort a plan of thousands. A 403 still fails fast.
             fresh = read_annotations(syn, entity_id, max_retries=max_retries)
         except Exception as error:  # noqa: BLE001
-            result = ApplyResult(entity_id, 'error', error=f'{type(error).__name__}: {error}'[:300])
+            result = ApplyResult(entity_id, 'error', error=f'{type(error).__name__}: {error}'[:300],
+                                 breaker_sample=breaker_verdict(error))
             logs.record_progress(entity_id, result.status, {'error': result.error})
             return result
 
@@ -301,9 +322,14 @@ def apply_entity(
                          entity_id, attempt + 1, max_retries)
                 time.sleep(0.5 * (attempt + 1))
                 continue
-            status = 'etag_conflict' if _is_etag_conflict(error) else 'error'
+            conflict = _is_etag_conflict(error)
+            status = 'etag_conflict' if conflict else 'error'
+            # An etag conflict counts against the breaker even though it is a
+            # definitive answer: the loop above has already spent its re-read budget
+            # on it, so a run of them grinds exactly as an outage does.
             result = ApplyResult(entity_id, status, planned=planned, applied=applied,
-                                 reported=reported, error=f'{type(error).__name__}: {error}'[:300])
+                                 reported=reported, error=f'{type(error).__name__}: {error}'[:300],
+                                 breaker_sample=True if conflict else breaker_verdict(error))
             logs.record_progress(entity_id, status, {'error': result.error, 'applied': applied})
             return result
 
@@ -313,7 +339,8 @@ def apply_entity(
         })
         return result
 
-    result = ApplyResult(entity_id, 'etag_conflict', error='retries exhausted')
+    result = ApplyResult(entity_id, 'etag_conflict', error='retries exhausted',
+                         breaker_sample=True)
     logs.record_progress(entity_id, result.status, {'error': result.error})
     return result
 
@@ -493,12 +520,13 @@ def schema_preflight(
             report.clean.append(outcome)
         return outcome
 
-    # Only 'error' counts against the breaker: a bound schema this checkout does
-    # not have, or an entity with no binding at all, is a verdict about the data
-    # rather than a sign that the service is failing. An entity this loop issued no
-    # request for - an unchanged one, or one whose plan already failed in the
-    # planning pass, which sampled it there - is not sampled at all, so a run that
-    # is mostly no-ops cannot dilute the window away from the reads it is guarding.
+    # Only a read the service may have failed counts against the breaker. A bound
+    # schema this checkout does not have, an entity with no binding at all, and a
+    # read the service refused or answered 404 are all verdicts about the data rather
+    # than signs that the service is failing. An entity this loop issued no request
+    # for - an unchanged one, or one whose plan already failed in the planning pass,
+    # which sampled it there - is not sampled at all, so a run that is mostly no-ops
+    # cannot dilute the window away from the reads it is guarding.
     _, report.aborted = run_guarded(
         dry_runs, check, failed=_conformance_request_failed,
         label='schema preflight conformance',
@@ -507,8 +535,8 @@ def schema_preflight(
 
 
 def _conformance_request_failed(outcome: EntityConformance | None) -> bool | None:
-    """Whether a conformance read failed, or None when no read was issued."""
-    return None if outcome is None else outcome.status == 'error'
+    """How the breaker samples a conformance read, or None when none was issued."""
+    return None if outcome is None else outcome.breaker_sample
 
 
 # ---------------------------------------------------------------------------
@@ -546,12 +574,13 @@ def verify_run(syn, logs: RunLogs, *, max_retries: int = 3) -> VerifyReport:
     written = [entry for entry in logs.progress_entries()
                if entry.get('status') == 'ok' and 'result' in entry]
 
-    def check(_position: int, entry: dict) -> bool:
-        """Verify one entity, reporting whether the *read* failed.
+    def check(_position: int, entry: dict) -> bool | None:
+        """Verify one entity, reporting how the breaker samples its *read*.
 
-        Only a failed read is a breaker sample: a mismatch is a verdict about the
-        data - exactly what this pass exists to surface - and must not abort the
-        walk over the rest of the run.
+        Only a read the service may have failed is a breaker sample: a mismatch is a
+        verdict about the data - exactly what this pass exists to surface - and a
+        403 or 404 is a verdict about the entity, so neither must abort the walk over
+        the rest of the run.
         """
         entity_id = entry['entity_id']
         expected = entry['result']
@@ -559,7 +588,7 @@ def verify_run(syn, logs: RunLogs, *, max_retries: int = 3) -> VerifyReport:
             current = dict(read_annotations(syn, entity_id, max_retries=max_retries).values)
         except Exception as error:  # noqa: BLE001
             report.failures.append({'entity_id': entity_id, 'detail': f'read failed: {error}'})
-            return True
+            return breaker_verdict(error)
 
         report.checked += 1
         missing = sorted(set(expected) - set(current))
@@ -589,7 +618,7 @@ def verify_run(syn, logs: RunLogs, *, max_retries: int = 3) -> VerifyReport:
             })
         return False
 
-    attempted, report.aborted = run_guarded(written, check, failed=bool, label='verify')
+    attempted, report.aborted = run_guarded(written, check, failed=_as_verdict, label='verify')
     report.attempted = len(attempted)
     report.considered = len(written)
     return report
@@ -677,8 +706,8 @@ def rollback(
         if entry.get('status') == 'ok' and 'result' in entry
     }
 
-    def restore(_position: int, step: RollbackStep) -> bool:
-        """Restore one entity, reporting whether a request to Synapse failed.
+    def restore(_position: int, step: RollbackStep) -> bool | None:
+        """Restore one entity, reporting how the breaker samples its requests.
 
         Guarded like every other per-entity loop here: a rollback driven into a
         systemic outage should stop and say so rather than spend the retry budget
@@ -690,7 +719,7 @@ def rollback(
             live = read_annotations(syn, step.entity_id, max_retries=max_retries)
         except Exception as error:  # noqa: BLE001
             report.failures.append({'entity_id': step.entity_id, 'detail': str(error)[:200]})
-            return True
+            return breaker_verdict(error)
 
         current = dict(live.values)
         if current == step.decoded:
@@ -718,13 +747,13 @@ def rollback(
             syn.restPUT(f'/entity/{step.entity_id}/annotations2', body=body)
         except Exception as error:  # noqa: BLE001
             report.failures.append({'entity_id': step.entity_id, 'detail': str(error)[:200]})
-            return True
+            return breaker_verdict(error)
         report.restored += 1
         if sleep:
             time.sleep(sleep)
         return False
 
-    attempted, report.aborted = run_guarded(steps, restore, failed=bool, label='rollback')
+    attempted, report.aborted = run_guarded(steps, restore, failed=_as_verdict, label='rollback')
     report.attempted = len(attempted)
     report.considered = len(steps)
     return report
@@ -777,11 +806,17 @@ def findings_gap(path: Path) -> str:
             f'{len(partial)} cut short part-way ({", ".join(partial) or "none"})')
 
 
-def entity_ids_from_findings(path: Path, projects: Sequence[str] | None = None) -> list[str]:
-    """The entities to work on, as named by a drill-down's findings file."""
+def entity_ids_from_findings(
+    path: Path,
+    projects: Sequence[str] | None = None,
+) -> tuple[list[str], str]:
+    """The entities to work on and the coverage gap, from one read of the manifest.
+
+    The gap is returned rather than logged here, so the manifest is parsed once and
+    the caller states the gap once - it was being read twice and reported twice, from
+    here and again from the gate that refuses a write run over it.
+    """
     gap = findings_gap(path)
-    if gap:
-        LOG.error('%s. Re-run the audit drill-down for a complete plan.', gap)
     wanted = set(projects or [])
     ids: list[str] = []
     seen: set[str] = set()
@@ -792,7 +827,7 @@ def entity_ids_from_findings(path: Path, projects: Sequence[str] | None = None) 
         if entity_id not in seen:
             seen.add(entity_id)
             ids.append(entity_id)
-    return ids
+    return ids, gap
 
 
 def check_write_permission(syn, entity_id: str) -> bool:
@@ -988,8 +1023,8 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
     entity_ids = list(args.entity)
     coverage_gap = ''
     if args.findings:
-        coverage_gap = findings_gap(Path(args.findings))
-        entity_ids.extend(entity_ids_from_findings(Path(args.findings), args.project))
+        from_findings, coverage_gap = entity_ids_from_findings(Path(args.findings), args.project)
+        entity_ids.extend(from_findings)
     if not entity_ids:
         LOG.error('nothing to do: pass --findings and/or --entity')
         return 1
@@ -1023,6 +1058,7 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
                   coverage_gap)
         return 1
     if coverage_gap:
+        LOG.error('%s. Re-run the audit drill-down for a complete plan.', coverage_gap)
         logs.record_run_note('incomplete_findings', coverage_gap)
 
     # Set when a dry run carried on past entities the preflight could not vouch
@@ -1053,7 +1089,7 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
                 allowed_actions=allowed_actions, dry_run=True,
                 loose_compare=args.loose_compare, max_retries=args.max_retries,
             ),
-            failed=_is_failure,
+            failed=_request_failed,
             label='schema preflight planning',
         )
         if aborted:
@@ -1160,7 +1196,7 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
                     time.sleep(args.batch_pause)
             return result
 
-        results, aborted = run_guarded(entity_ids, fix_one, failed=_is_failure,
+        results, aborted = run_guarded(entity_ids, fix_one, failed=_request_failed,
                                        label=mode.lower())
 
     # An aborted pass must not read as a finished one. Without this the log said

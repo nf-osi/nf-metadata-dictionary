@@ -7,6 +7,7 @@ Offline: the Synapse REST surface is stubbed, and the schemas are the real
 break the checker fails here.
 """
 
+import csv
 import json
 import os
 import sys
@@ -363,13 +364,19 @@ def test_the_conformance_loop_stops_when_the_service_stops_answering(tmp_path, m
         json.dumps({'project_id': 'syn0', 'entity_id': f'syn{n}', 'decisions': []}) + '\n'
         for n in range(200)))
     report = tmp_path / 'conformance.md'
+    csv_path = tmp_path / 'conformance.csv'
 
     assert validate.main(['--findings', str(findings), '--max-retries', '0',
-                          '--markdown', str(report)]) == 1
+                          '--markdown', str(report), '--report', str(csv_path)]) == 1
     assert len(reads) == io.ERROR_FLOOR, 'it stops at the floor rather than reading all 200'
     # And the document says it covers part of the plan rather than reading as a
     # complete verdict over a smaller set of entities.
-    assert '190 entities were never checked' in report.read_text()
+    document = report.read_text()
+    assert '190 entities were never checked' in document
+    assert 'does not break conformance anywhere' not in document
+    # The CSV says the same, so neither artifact can be mistaken for a full pass.
+    rows = list(csv.DictReader(csv_path.read_text().splitlines()))
+    assert sum(row['status'] == 'not_checked' for row in rows) == 190
 
 
 def test_a_legitimate_verdict_about_the_data_does_not_stop_the_conformance_loop(
@@ -388,6 +395,67 @@ def test_a_legitimate_verdict_about_the_data_does_not_stop_the_conformance_loop(
 
     assert validate.main(['--findings', str(findings), '--markdown',
                           str(tmp_path / 'report.md')]) == 0
+
+
+def test_entities_the_curator_cannot_read_do_not_stop_the_conformance_loop(
+        tmp_path, monkeypatch):
+    # A 403 is never retried, so every one of them landed in the breaker's window at
+    # once and two were enough to abort the pass - deterministically, so re-running
+    # reproduced it. The service answered: that is a fact about those entities.
+    reads = []
+
+    class ForbiddenSynapse:
+        def restGET(self, path):
+            reads.append(path)
+
+            class _Response:
+                status_code = 403
+
+            error = RuntimeError('403 Forbidden')
+            error.response = _Response()
+            raise error
+
+    monkeypatch.setattr(validate, '_login', lambda: ForbiddenSynapse())
+    findings = tmp_path / 'entity_findings.jsonl'
+    findings.write_text(''.join(
+        json.dumps({'project_id': 'syn0', 'entity_id': f'syn{n}', 'decisions': []}) + '\n'
+        for n in range(40)))
+    markdown = tmp_path / 'conformance.md'
+
+    # Exit 2, not 1: every entity is an error, and none of them stopped the pass.
+    assert validate.main(['--findings', str(findings), '--max-retries', '0',
+                          '--markdown', str(markdown)]) == 2
+    assert len(reads) == 40
+    assert 'never checked' not in markdown.read_text()
+
+
+def test_a_truncated_pass_does_not_claim_the_fix_breaks_conformance_nowhere():
+    # 'None. The planned fix does not break conformance anywhere.' is the sentence an
+    # operator quotes when deciding to run --apply, and the entities a cut-short pass
+    # never checked could hold any number of regressions.
+    checked = [validate.EntityConformance(entity_id='syn1', status='clean',
+                                          before_valid=True, after_valid=True)]
+    truncated = validate.format_markdown(checked, not_checked=13_140)
+
+    assert 'does not break conformance anywhere' not in truncated
+    assert 'None among the 1 entities checked' in truncated
+    assert '13140 were never checked' in truncated
+    # A pass that finished still says so plainly.
+    assert 'None. The planned fix does not break conformance anywhere.' \
+        in validate.format_markdown(checked)
+
+
+def test_a_truncated_report_csv_names_the_entities_it_never_checked(tmp_path):
+    # Otherwise the artifact reads as a complete pass over a smaller plan, exactly as
+    # the fix tool's report.csv did before it grew not_attempted rows.
+    checked = [validate.EntityConformance(entity_id='syn1', status='clean')]
+    path = tmp_path / 'conformance.csv'
+    validate.write_report(checked, path, not_checked=['syn2', 'syn3'])
+
+    rows = list(csv.DictReader(path.read_text().splitlines()))
+    assert [(row['entity_id'], row['status']) for row in rows] == [
+        ('syn1', 'clean'), ('syn2', 'not_checked'), ('syn3', 'not_checked')]
+    assert 'aborted by the circuit breaker' in rows[1]['error']
 
 
 def test_a_forbidden_read_is_not_retried(registry, monkeypatch):

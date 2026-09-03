@@ -64,6 +64,7 @@ from annotation_key_policy import (  # noqa: E402
 )
 from synapse_annotation_io import (  # noqa: E402
     CircuitBreaker,
+    breaker_verdict,
     column_type_for,
     is_forbidden,
     read_annotations,
@@ -826,6 +827,11 @@ def drill_down_project(
     pass never inspected are absent from ``entity_findings.jsonl`` just as surely as
     ones whose read failed.
 
+    Only a request the service may have failed is sampled. A definitive answer - a
+    403 on an entity behind a per-folder ACL, a 404 on one deleted since the scan -
+    is recorded as lost coverage and skipped by the window: two such entities in a
+    project were otherwise enough to abort the drill-down of every project after it.
+
     ``breaker`` is supplied by the caller so one window spans the whole run. A
     breaker built here per call gave every project a fresh window, so a systemic
     degradation cost one breaker's worth of doomed reads *per project* - about ten
@@ -846,8 +852,14 @@ def drill_down_project(
     if not flagged:
         return [], False
 
-    def inspect(target: tuple[str, str]) -> tuple[dict | None, bool]:
-        """One entity's finding, if any, and whether its read failed."""
+    def inspect(target: tuple[str, str]) -> tuple[dict | None, bool | None]:
+        """One entity's finding, if any, and how the breaker samples its read.
+
+        A lost read is always recorded as lost coverage; only one the service may
+        have failed is sampled. A 403 on an entity behind a per-folder ACL is a fact
+        about that entity, and sampling it aborted the whole drill-down over two such
+        entities - deterministically, so re-running reproduced the abort.
+        """
         entity_id, entity_type = target
         try:
             record = read_annotations(syn, entity_id, max_retries=max_retries)
@@ -855,7 +867,7 @@ def drill_down_project(
             LOG.warning('%s: could not read annotations: %s', entity_id, error)
             audit.record_read_failure(entity_id, f'{type(error).__name__}: {error}'[:300],
                                       entity_type, operation=READ_OP_ANNOTATIONS)
-            return None, True
+            return None, breaker_verdict(error)
         annotations = dict(record.values)
         if not flagged & set(annotations):
             return None, False
@@ -882,9 +894,9 @@ def drill_down_project(
     findings: list[dict] = []
     aborted = False
 
-    def collect(batch: Sequence[tuple[dict | None, bool]]) -> bool:
-        findings.extend(finding for finding, _failed in batch if finding)
-        return breaker.sample(failed for _finding, failed in batch)
+    def collect(batch: Sequence[tuple[dict | None, bool | None]]) -> bool:
+        findings.extend(finding for finding, _verdict in batch if finding)
+        return breaker.sample(verdict for _finding, verdict in batch)
 
     if workers <= 1:
         for target in walker:
@@ -1117,12 +1129,15 @@ def _safe_list_children(
     *,
     max_retries: int = 0,
     audit: ProjectAudit | None = None,
-) -> tuple[list[dict], bool]:
-    """Children of one entity, and whether the listing was lost.
+) -> tuple[list[dict], bool | None]:
+    """Children of one entity, and how the circuit breaker samples the listing.
 
     An unreadable folder yields nothing rather than aborting a walk over thousands
     of siblings, but the caller is told, because a swallowed listing is a coverage
     gap and one lost during a systemic degradation has to reach the circuit breaker.
+    A listing the service answered definitively - a 403 on a folder with its own ACL -
+    is recorded as a gap but not sampled, so the guard fires on an outage rather than
+    on a permission the curator was never going to have.
 
     A listing gets the same retry budget as an annotation read, and one still lost
     after them is recorded on the audit as lost coverage - under its own operation,
@@ -1143,7 +1158,7 @@ def _safe_list_children(
                 parent_id,
                 f'could not list children: {type(error).__name__}: {error}'[:300],
                 operation=READ_OP_LISTING)
-        return [], True
+        return [], breaker_verdict(error)
 
 
 def _iter_project_entities(
@@ -1184,7 +1199,9 @@ def _iter_project_entities(
     is hours of grinding on the 1,300-folder project above. One window holds both
     kinds of request deliberately - the ratio it measures is "requests to Synapse
     that failed", not a per-endpoint rate, which is the right question for a guard
-    whose job is to notice that the service as a whole has stopped answering.
+    whose job is to notice that the service as a whole has stopped answering. A
+    listing the service refused outright is not one of those: it is recorded as a gap
+    and left out of the window.
     """
     seen = 0
     frontier = [project_id]
@@ -1196,7 +1213,7 @@ def _iter_project_entities(
         if limit is not None and seen >= limit:
             return
 
-    def children_of(parent: str) -> tuple[list[dict], bool]:
+    def children_of(parent: str) -> tuple[list[dict], bool | None]:
         return _safe_list_children(syn, parent, max_retries=max_retries, audit=audit)
 
     # A level is listed in chunks rather than all at once so the breaker is judged
@@ -1217,10 +1234,11 @@ def _iter_project_entities(
             else:
                 listings = [children_of(parent) for parent in batch]
 
-            tripped = breaker is not None and breaker.sample(lost for _c, lost in listings)
+            tripped = breaker is not None and \
+                breaker.sample(verdict for _children, verdict in listings)
             # Children already fetched are yielded even when this chunk tripped the
             # breaker: they were read, so dropping them would lose coverage silently.
-            for children, _lost in listings:
+            for children, _verdict in listings:
                 for child in children:
                     entity_type = child['type'].rsplit('.', 1)[-1]
                     if entity_type == 'Folder' and child['id'] not in visited:
