@@ -76,15 +76,18 @@ LOG = logging.getLogger('audit_annotation_keys')
 #: the scan both append to.
 _READ_FAILURE_LOCK = threading.Lock()
 
-#: Which pass lost a read. A recorded failure is only ever cleared by a pass that
-#: redoes the *same* operation, so the two are kept apart: the scan's inventory
-#: merge (``--include-project-entity``) and the drill-down's per-entity read both
-#: touch the project entity, but only the scan can close the inventory gap. Reading
-#: the project entity during a drill-down does not re-derive ``key_types``, so
-#: treating it as a re-verification let a ``--resume`` - which skips projects
-#: already scanned ``ok`` - report coverage it never had.
-READ_STAGE_SCAN = 'scan'
-READ_STAGE_DRILL_DOWN = 'drill_down'
+#: What was lost, so one entity can hold more than one gap. Four different
+#: operations can name the same entity - the scan's key-inventory merge
+#: (``--include-project-entity``), a drill-down annotation read, a children
+#: listing, and a drill-down the circuit breaker cut short - and each leaves a
+#: different hole in coverage. The operation is part of a failure's identity purely
+#: so recording one cannot swallow another; nothing here ever retires a failure.
+READ_OP_INVENTORY = 'key_inventory'
+READ_OP_ANNOTATIONS = 'annotations'
+READ_OP_LISTING = 'children_listing'
+READ_OP_DRILL_DOWN = 'drill_down_aborted'
+#: A state-file entry from before failures recorded which operation they lost.
+READ_OP_UNKNOWN = 'unknown'
 
 #: file | table | folder | dataset. Deliberately excludes PROJECT(2): project
 #: entity annotations are invisible to a view scope and need --include-project-entity.
@@ -613,10 +616,19 @@ class ProjectAudit:
     summary: dict[str, Any] = field(default_factory=dict)
     multitype: dict[str, list[str]] = field(default_factory=dict)
     elapsed_s: float = 0.0
-    #: Entities whose annotations could not be read even after the retry budget.
-    #: Carried in the reports rather than only in a log line: a missing entity is
+    #: Reads and listings lost even after the retry budget, plus a drill-down cut
+    #: short. Carried in the reports rather than only in a log line: each one is
     #: lost coverage, and ``entity_findings.jsonl`` is the only input the fix tool
     #: reads, so a dropped read silently makes a real finding unfixable.
+    #:
+    #: The list only ever grows. A run does not retire a gap another run recorded,
+    #: not even one whose scope it happens to re-read: deciding that took an
+    #: identity for "the same operation" that two rounds of fixes could not keep
+    #: straight - a children listing retired an annotation-read gap, an abort was
+    #: deduped away behind an entity read - and each mistake made a resumed run
+    #: claim coverage it did not have. So a resumed run's coverage figure is not
+    #: authoritative and says so in the report: it reports the gaps it inherited as
+    #: well as its own, and a full scan is what clears a recovered one.
     read_failures: list[dict] = field(default_factory=list)
 
     def as_dict(self) -> dict:
@@ -643,10 +655,9 @@ class ProjectAudit:
             summary=payload.get('summary', {}),
             multitype=payload.get('multitype', {}),
             elapsed_s=payload.get('elapsed_s', 0.0),
-            # A failure with no recorded stage is treated as the scan's, which is
-            # the conservative direction: nothing but a rescan can then clear it,
-            # so an unrecognised entry is reported rather than quietly dropped.
-            read_failures=[{'stage': READ_STAGE_SCAN, **failure}
+            # An entry that does not name what it lost still counts; it is reported
+            # under its own identity rather than being folded into a real one.
+            read_failures=[{'operation': READ_OP_UNKNOWN, **failure}
                            for failure in payload.get('read_failures') or []],
         )
 
@@ -656,61 +667,28 @@ class ProjectAudit:
         error: str,
         entity_type: str = '',
         *,
-        stage: str = READ_STAGE_SCAN,
+        operation: str,
     ) -> None:
-        """Note a read that was lost, at most once per entity per stage.
+        """Note lost coverage, at most once per entity per operation.
 
-        An entity can be read twice in one run - the project entity is read by the
-        scan and again by a drill-down that includes it - and counting one gap in
-        coverage twice would spend the ``--max-unscanned`` budget twice over for it.
-        The stage is part of the identity because the two reads are different
-        operations that different passes are able to redo. Reads run on a thread
-        pool, hence the lock.
+        One entity can be behind several operations in a run - the scan merges the
+        project entity's keys into the inventory, a drill-down reads its
+        annotations, the walk lists its children - and each is a distinct gap, so
+        recording one must never overwrite or dedupe away another. Repeating the
+        *same* operation is what is collapsed, so a recurring failure spends the
+        ``--max-unscanned`` budget once rather than once per run. Reads run on a
+        thread pool, hence the lock.
         """
         with _READ_FAILURE_LOCK:
-            if any((failure.get('entity_id'), failure.get('stage')) == (entity_id, stage)
+            if any((failure.get('entity_id'), failure.get('operation')) == (entity_id, operation)
                    for failure in self.read_failures):
                 return
             self.read_failures.append({
                 'entity_id': entity_id,
                 'entity_type': entity_type,
-                'stage': stage,
+                'operation': operation,
                 'error': error,
             })
-
-    def take_read_failures(self, stage: str) -> dict[str, dict]:
-        """Detach one stage's failures, keyed by entity, for a pass about to re-read.
-
-        Only that stage's: a failure another pass recorded is a gap this one cannot
-        speak to. Paired with :meth:`restore_read_failures`, which puts back
-        whatever the pass did not actually cover.
-        """
-        with _READ_FAILURE_LOCK:
-            taken = {failure['entity_id']: failure for failure in self.read_failures
-                     if failure.get('stage') == stage}
-            self.read_failures = [failure for failure in self.read_failures
-                                  if failure.get('stage') != stage]
-            return taken
-
-    def restore_read_failures(self, outstanding: Mapping[str, dict]) -> None:
-        """Put back the failures a pass took but never re-read.
-
-        Reported lost coverage has to describe the reads this run is responsible
-        for. A scope this run re-read has a fresh verdict either way, so its old
-        failure is stale and goes. A scope this run never touched - an entity
-        beyond ``--drill-down-limit``, a project the resume did not rescan - is
-        still a gap in coverage, and forgetting it would let a resumed run report
-        better coverage than it actually has.
-        """
-        with _READ_FAILURE_LOCK:
-            known = {(failure.get('entity_id'), failure.get('stage'))
-                     for failure in self.read_failures}
-            for failure in outstanding.values():
-                identity = (failure.get('entity_id'), failure.get('stage'))
-                if identity in known:
-                    continue
-                self.read_failures.append(failure)
-                known.add(identity)
 
     @property
     def finding_counts(self) -> dict[str, int]:
@@ -757,11 +735,11 @@ def audit_project(
             columns, read_error = _project_entity_column_types(
                 syn, audit.project_id, max_retries=max_retries)
             if read_error:
-                # Recorded against the scan stage: the gap is the *inventory* merge
-                # below, which only another scan of this project redoes. A
-                # drill-down reading the same entity does not re-derive key_types.
+                # Recorded against the inventory merge below, which is the gap: only
+                # another scan of this project redoes it. A drill-down reading the
+                # same entity does not re-derive key_types.
                 audit.record_read_failure(audit.project_id, read_error, 'Project',
-                                          stage=READ_STAGE_SCAN)
+                                          operation=READ_OP_INVENTORY)
             for key, column in columns.items():
                 key_types.setdefault(key, set()).add(column)
     except Exception as error:  # noqa: BLE001 - the failure mode is the finding
@@ -809,41 +787,6 @@ def _project_entity_column_types(
 # Entity-level drill-down
 # ---------------------------------------------------------------------------
 
-class ReadLedger:
-    """Keeps one project's recorded read failures honest across a re-reading pass.
-
-    It holds the failures an earlier run recorded for the stage this pass redoes
-    and hands back, at the end, exactly the ones this pass never covered. So a read
-    that failed once and succeeded on the retry run stops being reported - without
-    which one transient 503 pins every later ``--resume`` at exit 2 - while a gap
-    nothing re-read is still reported.
-
-    What is tracked is the outstanding failures, not the entities visited: the
-    walk is deliberately chunked so memory stays bounded on a project with tens of
-    thousands of entities, and a visited-id set would put that back.
-    """
-
-    def __init__(self, audit: ProjectAudit, stage: str):
-        self.audit = audit
-        self.stage = stage
-        self.outstanding = audit.take_read_failures(stage)
-
-    def verified(self, entity_id: str) -> None:
-        """This pass reached that scope, so any earlier failure for it is stale."""
-        with _READ_FAILURE_LOCK:
-            self.outstanding.pop(entity_id, None)
-
-    def lost(self, entity_id: str, error: str, entity_type: str = '') -> None:
-        """This pass could not read that scope either; record it against this run."""
-        self.verified(entity_id)
-        self.audit.record_read_failure(entity_id, error, entity_type, stage=self.stage)
-
-    def settle(self) -> None:
-        with _READ_FAILURE_LOCK:
-            outstanding, self.outstanding = self.outstanding, {}
-        self.audit.restore_read_failures(outstanding)
-
-
 def drill_down_project(
     syn,
     audit: ProjectAudit,
@@ -855,6 +798,7 @@ def drill_down_project(
     workers: int = 1,
     include_project_entity: bool = False,
     max_retries: int = 0,
+    breaker: CircuitBreaker | None = None,
 ) -> list[dict]:
     """Resolve a flagged project down to the individual affected entities.
 
@@ -880,13 +824,11 @@ def drill_down_project(
     never inspected are absent from ``entity_findings.jsonl`` just as surely as ones
     whose read failed.
 
-    Read failures are also *freshened* here, because this is the only place that
-    knows which entities were actually re-read - see :class:`ReadLedger`. Only the
-    drill-down's own stage is freshened: a scan-time failure means the project's key
-    inventory was never merged, which re-reading the same entity here does not
-    redo, so a ``--resume`` that skips the rescan must keep reporting it. Doing any
-    of this in ``carry_forward`` instead ran before anything knew which projects
-    would be re-read, so it dropped gaps nothing had re-verified.
+    ``breaker`` is supplied by the caller so one window spans the whole run. A
+    breaker built here per call gave every project a fresh window, so a systemic
+    degradation cost one breaker's worth of doomed reads *per project* - about ten
+    minutes each, nine hours across the 53 flagged projects on the recorded scan -
+    when the point of the guard is that one systemic failure stops the run.
     """
     flagged = set(audit.summary.get('duplicates', {})) \
         | set(audit.summary.get('orphans', {})) \
@@ -895,8 +837,6 @@ def drill_down_project(
     if not flagged:
         return []
 
-    ledger = ReadLedger(audit, READ_STAGE_DRILL_DOWN)
-
     def inspect(target: tuple[str, str]) -> tuple[dict | None, bool]:
         """One entity's finding, if any, and whether its read failed."""
         entity_id, entity_type = target
@@ -904,9 +844,9 @@ def drill_down_project(
             record = read_annotations(syn, entity_id, max_retries=max_retries)
         except Exception as error:  # noqa: BLE001
             LOG.warning('%s: could not read annotations: %s', entity_id, error)
-            ledger.lost(entity_id, f'{type(error).__name__}: {error}'[:300], entity_type)
+            audit.record_read_failure(entity_id, f'{type(error).__name__}: {error}'[:300],
+                                      entity_type, operation=READ_OP_ANNOTATIONS)
             return None, True
-        ledger.verified(entity_id)
         annotations = dict(record.values)
         if not flagged & set(annotations):
             return None, False
@@ -928,8 +868,8 @@ def drill_down_project(
 
     walker = _iter_project_entities(syn, audit.project_id, limit=limit, workers=workers,
                                     include_project_entity=include_project_entity,
-                                    max_retries=max_retries, ledger=ledger)
-    breaker = CircuitBreaker()
+                                    max_retries=max_retries, audit=audit)
+    breaker = breaker if breaker is not None else CircuitBreaker()
     findings: list[dict] = []
     aborted = False
 
@@ -962,11 +902,16 @@ def drill_down_project(
                 aborted = collect(list(pool.map(inspect, chunk)))
 
     if aborted:
+        # Recorded as its own operation, so it cannot be deduped away behind the
+        # project entity's own failed read - which during an outage fails first, and
+        # is the documented --include-project-entity --drill-down combination. A
+        # reader has to be able to tell 64 lost reads from 64 lost reads plus
+        # thousands of entities never looked at.
         detail = (f'drill-down aborted after {breaker.failures} of the last {breaker.window} '
                   'reads failed; the rest of this project was not inspected')
         LOG.error('%s: %s', audit.project_id, detail)
-        ledger.lost(audit.project_id, detail, 'Project')
-    ledger.settle()
+        audit.record_read_failure(audit.project_id, detail, 'Project',
+                                  operation=READ_OP_DRILL_DOWN)
     return findings
 
 
@@ -1002,31 +947,31 @@ def _safe_list_children(
     parent_id: str,
     *,
     max_retries: int = 0,
-    ledger: ReadLedger | None = None,
+    audit: ProjectAudit | None = None,
 ) -> list[dict]:
     """Children of one entity; an unreadable folder yields nothing rather than
     aborting a walk over thousands of siblings.
 
     A listing gets the same retry budget as an annotation read, and one still lost
-    after them is recorded on the ledger as lost coverage. Swallowing it into an
-    empty page was the one lost-read path that was not treated as a finding: a
-    single 503 on a project's root made the walk yield nothing, so the project
+    after them is recorded on the audit as lost coverage - under its own operation,
+    since an unlisted folder and an unread entity are different gaps. Swallowing it
+    into an empty page was the one lost-read path that was not treated as a finding:
+    a single 503 on a project's root made the walk yield nothing, so the project
     contributed no rows to ``entity_findings.jsonl`` - the fix tool's only input -
     while the report still said "Entity reads lost after retries: 0" for a project
     it listed as affected, and the run exited 0.
     """
     try:
-        children = with_retries(lambda: _list_children(syn, parent_id),
-                                max_retries=max_retries, label=parent_id, logger=LOG)
+        return with_retries(lambda: _list_children(syn, parent_id),
+                            max_retries=max_retries, label=parent_id, logger=LOG)
     except Exception as error:  # noqa: BLE001
         LOG.warning('%s: could not list children: %s', parent_id, error)
-        if ledger is not None:
-            ledger.lost(parent_id,
-                        f'could not list children: {type(error).__name__}: {error}'[:300])
+        if audit is not None:
+            audit.record_read_failure(
+                parent_id,
+                f'could not list children: {type(error).__name__}: {error}'[:300],
+                operation=READ_OP_LISTING)
         return []
-    if ledger is not None:
-        ledger.verified(parent_id)
-    return children
 
 
 def _iter_project_entities(
@@ -1037,7 +982,7 @@ def _iter_project_entities(
     workers: int = 1,
     include_project_entity: bool = False,
     max_retries: int = 0,
-    ledger: ReadLedger | None = None,
+    audit: ProjectAudit | None = None,
 ):
     """Walk files, folders, tables and datasets under a project.
 
@@ -1054,9 +999,9 @@ def _iter_project_entities(
     visible and unfixable. It stays opt-in, matching the audit flag that folds
     those keys into the inventory in the first place.
 
-    A ``ledger`` makes each listing's outcome part of the caller's coverage
-    accounting; without one an unreadable folder is only logged, which is fine for
-    a caller that is not reporting coverage at all.
+    An ``audit`` makes a lost listing part of the caller's coverage accounting;
+    without one an unreadable folder is only logged, which is fine for a caller
+    that is not reporting coverage at all.
     """
     seen = 0
     frontier = [project_id]
@@ -1069,7 +1014,7 @@ def _iter_project_entities(
             return
 
     def children_of(parent: str) -> list[dict]:
-        return _safe_list_children(syn, parent, max_retries=max_retries, ledger=ledger)
+        return _safe_list_children(syn, parent, max_retries=max_retries, audit=audit)
 
     while frontier:
         if workers > 1 and len(frontier) > 1:
@@ -1132,12 +1077,12 @@ def carry_forward(
     inflated, and a duplicate row in the CSV - so a resume that successfully
     retried three 403s would still exit 2 on them.
 
-    Each carried-forward audit comes through as recorded, entity read failures
-    included. Nothing here knows yet which projects this run will re-read, so
-    dropping their failures at this point would forget lost coverage nothing had
-    re-verified - a resumed run would then report better coverage than it has, and
-    disagree with the state file it was built from. ``drill_down_project`` does the
-    freshening instead, where the set of entities actually re-read is known.
+    Each carried-forward audit comes through exactly as recorded, entity read
+    failures included. A resumed run does not retire another run's coverage gaps at
+    all - see :attr:`ProjectAudit.read_failures` - so it reports the gaps it
+    inherited alongside its own and says in the report that its coverage figure is
+    not authoritative. That under-claims coverage, which is the honest direction;
+    only a full scan clears a gap a later run recovered.
     """
     pending = set(rescanning)
     return [audit for audit in existing.values() if audit.project_id not in pending]
@@ -1200,13 +1145,22 @@ def write_project_rows_csv(audits: Sequence[ProjectAudit], path: Path) -> None:
             })
 
 
-def build_summary(audits: Sequence[ProjectAudit]) -> dict:
+def build_summary(audits: Sequence[ProjectAudit], *, carried_forward: int = 0) -> dict:
+    """Run-level counts.
+
+    ``carried_forward`` is how many project audits came out of the state file
+    instead of being read by this run. Any of it makes the coverage figures
+    non-authoritative: they include reads this run did not perform, and a gap an
+    earlier run recorded is still reported because nothing here re-verified it.
+    """
     scanned = [a for a in audits if a.status == 'ok']
     forbidden = [a for a in audits if a.status == 'forbidden']
     failed = [a for a in audits if a.status == 'error']
     return {
         'projects_total': len(audits),
         'projects_scanned': len(scanned),
+        'projects_carried_forward': carried_forward,
+        'coverage_authoritative': not carried_forward,
         'projects_forbidden': len(forbidden),
         'projects_failed': len(failed),
         'projects_with_duplicates': sum(1 for a in scanned if a.finding_counts['duplicates']),
@@ -1240,8 +1194,8 @@ def _truncation_note(total: int, shown: int) -> list[str]:
                 '`annotation-key-audit` artifact (the CSVs and `state.jsonl`)._']
 
 
-def format_markdown(audits: Sequence[ProjectAudit]) -> str:
-    stats = build_summary(audits)
+def format_markdown(audits: Sequence[ProjectAudit], *, carried_forward: int = 0) -> str:
+    stats = build_summary(audits, carried_forward=carried_forward)
     lines = ['# Annotation key audit', '']
 
     # Coverage first, deliberately: "0 findings" is meaningless without knowing
@@ -1253,20 +1207,34 @@ def format_markdown(audits: Sequence[ProjectAudit]) -> str:
         f"- Not readable (403): **{stats['projects_forbidden']}**",
         f"- Failed: **{stats['projects_failed']}**",
         f"- Entity reads lost after retries: **{stats['entity_read_failures']}**",
+        f"- Carried forward from an earlier run: **{stats['projects_carried_forward']}**",
         '',
     ]
+    if not stats['coverage_authoritative']:
+        lines += [
+            (f"> **This coverage figure is not authoritative.** "
+             f"{stats['projects_carried_forward']} of {stats['projects_total']} project audits "
+             'came from the state file rather than from reads this run performed, and a lost '
+             'read another run recorded is still reported here because nothing in this run '
+             're-verified it. Re-run a full scan (without `--resume`) for an authoritative '
+             'figure.'), '',
+        ]
     if stats['projects_forbidden'] or stats['projects_failed']:
         lines += ['> Findings below cover only the scanned projects.', '']
     if stats['entity_read_failures']:
         lines += [
             ('> Some entity reads were lost, so the entity-level findings are incomplete and '
              'the affected entities are absent from `entity_findings.jsonl`. Re-run the '
-             'drill-down for the projects listed below.'), '',
-            '| Project | Entity | Error |', '|---|---|---|',
+             'drill-down for the projects listed below. The operation column says what was '
+             'lost: an unread entity, a folder whose children were never enumerated, a key '
+             'inventory that was never merged, or a drill-down that stopped early.'), '',
+            '| Project | Entity | Lost | Error |', '|---|---|---|---|',
         ]
         lost = stats['entity_reads_lost']
         lines += [
-            f"| {item['project_id']} | {item['entity_id']} | {str(item.get('error') or '')[:120]} |"
+            f"| {item['project_id']} | {item['entity_id']} "
+            f"| {item.get('operation') or READ_OP_UNKNOWN} "
+            f"| {str(item.get('error') or '')[:120]} |"
             for item in lost[:MAX_LOST_READ_ROWS]
         ]
         lines += _truncation_note(len(lost), MAX_LOST_READ_ROWS)
@@ -1341,12 +1309,19 @@ def format_markdown(audits: Sequence[ProjectAudit]) -> str:
     return '\n'.join(lines)
 
 
-def write_reports(audits: Sequence[ProjectAudit], out_dir: Path) -> None:
+def write_reports(
+    audits: Sequence[ProjectAudit],
+    out_dir: Path,
+    *,
+    carried_forward: int = 0,
+) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     write_key_rows_csv(audits, out_dir / 'annotation_key_audit.csv')
     write_project_rows_csv(audits, out_dir / 'annotation_key_audit_projects.csv')
-    (out_dir / 'summary.json').write_text(json.dumps(build_summary(audits), indent=2) + '\n')
-    (out_dir / 'summary.md').write_text(format_markdown(audits) + '\n')
+    (out_dir / 'summary.json').write_text(
+        json.dumps(build_summary(audits, carried_forward=carried_forward), indent=2) + '\n')
+    (out_dir / 'summary.md').write_text(
+        format_markdown(audits, carried_forward=carried_forward) + '\n')
 
 
 def exit_code_for(
@@ -1364,6 +1339,12 @@ def exit_code_for(
     `dspDatasetIndex`), so gating on them would leave the weekly audit
     permanently yellow - and a permanently yellow gate gets ignored. Probable
     misspellings are different: they are real bugs, so they do warn.
+
+    A resumed run cannot clear a lost read: gaps are never retired, only recorded,
+    so an inherited one keeps spending the ``--max-unscanned`` budget. Exit 0 from a
+    ``--resume`` therefore means "nothing new went wrong", and only a full scan -
+    or, for an accepted gap, ``--max-unscanned`` - turns a run that inherited a
+    transient failure green again.
     """
     allowlist = allowlist or Allowlist()
     stats = build_summary(audits)
@@ -1536,8 +1517,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.emit_allowlist:
             return emit_allowlist(audits, Path(args.emit_allowlist), state_path=state_path,
                                   expires=args.baseline_expires)
-        write_reports(audits, out_dir)
-        print(format_markdown(audits))
+        # Every audit here was read by an earlier run, so the coverage figures say so.
+        write_reports(audits, out_dir, carried_forward=len(audits))
+        print(format_markdown(audits, carried_forward=len(audits)))
         return exit_code_for(audits, fail_on_findings=args.fail_on_findings,
                              max_unscanned=args.max_unscanned,
                              fail_on_unknown=args.fail_on_unknown,
@@ -1571,6 +1553,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     LOG.info('auditing %d projects with %d workers', len(projects), args.workers)
     started = time.time()
     audits = carry_forward(existing, (p['project_id'] for p in projects))
+    carried_forward = len(audits)
 
     def run(project: dict) -> ProjectAudit:
         return audit_project(
@@ -1595,10 +1578,24 @@ def main(argv: Sequence[str] | None = None) -> int:
         out_dir.mkdir(parents=True, exist_ok=True)
         total = 0
         drilled: list[ProjectAudit] = []
+        # One breaker for the whole drill-down, not one per project: a systemic
+        # degradation has to stop the run, and a per-project window merely made it
+        # cost one breaker's worth of doomed reads per project instead.
+        breaker = CircuitBreaker()
+        flagged = [a for a in audits if a.status == 'ok' and a.has_findings]
         with open(findings_path, 'w') as handle:
-            for audit in audits:
-                if audit.status != 'ok' or not audit.has_findings:
-                    continue
+            for position, audit in enumerate(flagged):
+                if breaker.tripped:
+                    skipped = flagged[position:]
+                    detail = ('drill-down stopped before this project: '
+                              f'{breaker.failures} of the last {breaker.window} reads failed')
+                    LOG.error('drill-down stopped after %d of %d projects; %d not inspected',
+                              position, len(flagged), len(skipped))
+                    for pending in skipped:
+                        pending.record_read_failure(pending.project_id, detail, 'Project',
+                                                    operation=READ_OP_DRILL_DOWN)
+                        drilled.append(pending)
+                    break
                 LOG.info('drilling down %s', audit.project_id)
                 drilled.append(audit)
                 for finding in drill_down_project(
@@ -1606,25 +1603,26 @@ def main(argv: Sequence[str] | None = None) -> int:
                     loose_compare=args.loose_compare, limit=args.drill_down_limit,
                     workers=args.drill_down_workers,
                     include_project_entity=args.include_project_entity,
-                    max_retries=args.max_retries,
+                    max_retries=args.max_retries, breaker=breaker,
                 ):
                     handle.write(json.dumps(finding) + '\n')
                     total += 1
         # Each project's state line was written before its drill-down, so re-append
-        # every drilled project now that its entity reads have settled. load_state
-        # keys by project and the later line wins, so --report-only reads back this
-        # run's coverage: lost reads appear, and a read that failed on an earlier
-        # run and succeeded on this one stops being reported.
+        # every project the drill-down touched now that its entity reads have
+        # settled. load_state keys by project and the later line wins, so
+        # --report-only over this state file reads back the same coverage this run
+        # reported, gaps included.
         for audit in drilled:
             append_state(state_path, audit)
         lost = sum(len(a.read_failures) for a in audits)
         LOG.info('%d affected entities written to %s', total, findings_path)
         if lost:
-            LOG.error('%d entity reads were lost after retries, so %s is incomplete; '
-                      'the reports list them', lost, findings_path)
+            LOG.error('%d recorded coverage gaps - this run\'s, plus any carried forward from '
+                      'the state file - so %s is incomplete; the reports list them',
+                      lost, findings_path)
 
-    write_reports(audits, out_dir)
-    print(format_markdown(audits))
+    write_reports(audits, out_dir, carried_forward=carried_forward)
+    print(format_markdown(audits, carried_forward=carried_forward))
     LOG.info('reports written to %s', out_dir)
     return exit_code_for(audits, fail_on_findings=args.fail_on_findings,
                          max_unscanned=args.max_unscanned,

@@ -1239,6 +1239,42 @@ def test_the_recovery_passes_are_guarded_like_every_other_entity_loop(tmp_path, 
         report = fix.verify_run(syn, logs, max_retries=0)
     assert not report.ok
     assert syn.reads == io.ERROR_FLOOR
+    # And each says how much it never got to, rather than reading as a finished pass.
+    assert report.aborted
+    assert (report.attempted, report.considered) == (io.ERROR_FLOOR, 40)
+
+
+@pytest.mark.parametrize('pass_name', ['rollback', 'verify'])
+def test_an_aborted_recovery_pass_does_not_log_as_complete(
+        monkeypatch, tmp_path, caplog, pass_name):
+    # The same operator-facing understatement the write pass and the preflight were
+    # fixed for. "rollback: restored=0 ... failures=10" over a 40-entity backup, and
+    # "verify: checked=0", both read as finished passes; during an outage the
+    # operator needs to know that 30 entities are still in the state the fix left.
+    logs = fix.RunLogs(tmp_path / 'run')
+    for index in range(40):
+        entity_id = f'syn{index}'
+        logs.write_backup(io.AnnotationRecord(entity_id, 'etag-1', {'Age': [1.5]},
+                                              {'Age': 'DOUBLE'}))
+        logs.record_progress(entity_id, 'ok', {'applied': [], 'result': {'age': [1.5]}})
+
+    class DeadSynapse:
+        def restGET(self, path):
+            raise RuntimeError('503 Service Unavailable')
+
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: DeadSynapse())
+
+    argv = ['--log-dir', str(tmp_path / 'run'), '--max-retries', '0']
+    argv += ['--rollback', str(tmp_path / 'run'), '--apply'] if pass_name == 'rollback' \
+        else ['--verify-only', '--actions', 'drop_stray']
+    with caplog.at_level('ERROR'):
+        assert fix.main(argv) == 1
+
+    assert f'{pass_name} cut short by the circuit breaker' in caplog.text
+    assert f'after {io.ERROR_FLOOR} of 40 entities' in caplog.text
+    assert '30 were never attempted' in caplog.text
+    assert f'{pass_name} complete:' not in caplog.text
 
 
 def test_an_aborted_write_pass_names_the_entities_it_never_attempted(

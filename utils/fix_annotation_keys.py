@@ -498,10 +498,16 @@ def _conformance_request_failed(outcome: EntityConformance | None) -> bool | Non
 class VerifyReport:
     checked: int = 0
     failures: list[dict] = field(default_factory=list)
+    #: How many entities the pass reached, of how many it was given, and whether the
+    #: circuit breaker cut it short - so an aborted pass cannot read as a finished
+    #: one. See :func:`log_pass_summary`.
+    attempted: int = 0
+    considered: int = 0
+    aborted: bool = False
 
     @property
     def ok(self) -> bool:
-        return not self.failures
+        return not self.failures and not self.aborted
 
 
 def verify_run(syn, logs: RunLogs, *, max_retries: int = 3) -> VerifyReport:
@@ -562,7 +568,9 @@ def verify_run(syn, logs: RunLogs, *, max_retries: int = 3) -> VerifyReport:
             })
         return False
 
-    run_guarded(written, check, failed=bool, label='verify')
+    attempted, report.aborted = run_guarded(written, check, failed=bool, label='verify')
+    report.attempted = len(attempted)
+    report.considered = len(written)
     return report
 
 
@@ -585,10 +593,16 @@ class RollbackReport:
     would_restore: int = 0
     skipped: int = 0
     failures: list[dict] = field(default_factory=list)
+    #: As on :class:`VerifyReport`: an aborted rollback must say how many entities
+    #: it never reached, because those are still in the fixed state. This is the
+    #: recovery path from a bad write, so "restored=0" alone is the wrong impression.
+    attempted: int = 0
+    considered: int = 0
+    aborted: bool = False
 
     @property
     def ok(self) -> bool:
-        return not self.failures
+        return not self.failures and not self.aborted
 
 
 def plan_rollback(backup_entries: Sequence[dict]) -> list[RollbackStep]:
@@ -689,7 +703,9 @@ def rollback(
             time.sleep(sleep)
         return False
 
-    run_guarded(steps, restore, failed=bool, label='rollback')
+    attempted, report.aborted = run_guarded(steps, restore, failed=bool, label='rollback')
+    report.attempted = len(attempted)
+    report.considered = len(steps)
     return report
 
 
@@ -783,6 +799,31 @@ def write_report(
                              'reason': 'run aborted by the circuit breaker before this entity'})
 
 
+def log_pass_summary(
+    label: str,
+    detail: str,
+    *,
+    attempted: int,
+    total: int,
+    aborted: bool,
+    note: str = '',
+) -> None:
+    """The one summary line a per-entity pass ends with.
+
+    Every pass reports through here so an aborted one cannot read as a finished one
+    in any of them. Each pass had its own line and only the write pass named what it
+    never attempted, so a rollback stopped by an outage said ``restored=0`` without
+    ever mentioning that thousands of entities were still in the fixed state, and a
+    verify said ``checked=0`` as if there had been nothing to check.
+    """
+    if not aborted:
+        LOG.info('%s complete: %s', label, detail)
+        return
+    LOG.error('%s cut short by the circuit breaker after %d of %d entities (%s); '
+              '%d were never attempted%s',
+              label, attempted, total, detail, total - attempted, note)
+
+
 def summarize(results: Sequence[ApplyResult]) -> dict[str, int]:
     counts: dict[str, int] = {}
     for result in results:
@@ -863,8 +904,13 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
         report = rollback(syn, logs, dry_run=not args.apply, force=args.force_rollback,
                           sleep=args.sleep if args.apply else 0.0,
                           max_retries=args.max_retries)
-        LOG.info('rollback: restored=%d would_restore=%d skipped=%d failures=%d',
-                 report.restored, report.would_restore, report.skipped, len(report.failures))
+        log_pass_summary(
+            'rollback',
+            f'restored={report.restored} would_restore={report.would_restore} '
+            f'skipped={report.skipped} failures={len(report.failures)}',
+            attempted=report.attempted, total=report.considered, aborted=report.aborted,
+            note='; those entities are still in the state the fix left them in, and the '
+                 'backup is still on disk, so a re-run picks up where this stopped')
         for failure in report.failures:
             LOG.error('rollback failed for %s: %s', failure['entity_id'], failure['detail'])
         return 0 if report.ok else 1
@@ -876,9 +922,7 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
     if args.verify_only:
         syn = _login()
         report = verify_run(syn, logs, max_retries=args.max_retries)
-        LOG.info('verify: checked=%d failures=%d', report.checked, len(report.failures))
-        for failure in report.failures:
-            LOG.error('%s: %s', failure['entity_id'], failure['detail'])
+        _log_verify_summary(report)
         return 0 if report.ok else 1
 
     allowed_actions = parse_actions(args.actions)
@@ -1054,12 +1098,9 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
     not_attempted = [e for e in entity_ids if e not in attempted]
     write_report(results, logs.report_path, not_attempted=not_attempted)
     counts = summarize(results)
-    if aborted:
-        LOG.error('%s cut short by the circuit breaker after %d of %d entities (%s); '
-                  '%d were never attempted and report.csv covers only the truncated run',
-                  mode, len(attempted), len(entity_ids), counts, len(not_attempted))
-    else:
-        LOG.info('%s complete: %s', mode, counts)
+    log_pass_summary(mode, str(counts),
+                     attempted=len(attempted), total=len(entity_ids), aborted=aborted,
+                     note=' and report.csv covers only the truncated run')
     LOG.info('report written to %s', logs.report_path)
 
     exit_code = 0
@@ -1073,12 +1114,19 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
 
     if args.verify and not dry_run:
         report = verify_run(syn, logs, max_retries=args.max_retries)
-        LOG.info('verify: checked=%d failures=%d', report.checked, len(report.failures))
-        for failure in report.failures:
-            LOG.error('%s: %s', failure['entity_id'], failure['detail'])
+        _log_verify_summary(report)
         if not report.ok:
             exit_code = 1
     return exit_code
+
+
+def _log_verify_summary(report: VerifyReport) -> None:
+    log_pass_summary('verify', f'checked={report.checked} failures={len(report.failures)}',
+                     attempted=report.attempted, total=report.considered,
+                     aborted=report.aborted,
+                     note='; the entities it did not reach were not proven unclobbered')
+    for failure in report.failures:
+        LOG.error('%s: %s', failure['entity_id'], failure['detail'])
 
 
 _SYN = None
