@@ -44,9 +44,9 @@ import sys
 import threading
 import time
 from collections import Counter
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Container, Iterable, Mapping, Sequence
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -612,6 +612,39 @@ class ProjectAudit:
                 'error': error,
             })
 
+    def take_read_failures(self) -> list[dict]:
+        """Detach the recorded failures, for a caller about to re-read.
+
+        Paired with :meth:`restore_unverified_read_failures`: what the re-read
+        actually covered is dropped, and what it never looked at goes back.
+        """
+        with _READ_FAILURE_LOCK:
+            taken, self.read_failures = self.read_failures, []
+            return taken
+
+    def restore_unverified_read_failures(
+        self,
+        previous: Sequence[dict],
+        reread: Container[str],
+    ) -> None:
+        """Put back the earlier failures nothing in this pass re-read.
+
+        Reported lost coverage has to describe the reads this run is responsible
+        for. A scope this run re-read has a fresh verdict either way, so its old
+        failure is stale and goes. A scope this run never touched - a project the
+        resume did not rescan, an entity beyond ``--drill-down-limit`` - is still
+        a gap in coverage, and forgetting it would let a resumed run report better
+        coverage than it actually has.
+        """
+        with _READ_FAILURE_LOCK:
+            known = {failure.get('entity_id') for failure in self.read_failures}
+            for failure in previous:
+                entity_id = failure.get('entity_id')
+                if entity_id in reread or entity_id in known:
+                    continue
+                self.read_failures.append(failure)
+                known.add(entity_id)
+
     @property
     def finding_counts(self) -> dict[str, int]:
         return {
@@ -730,6 +763,15 @@ def drill_down_project(
     to ``audit.read_failures`` rather than merely logged: the findings file is the
     fix tool's only input, so an entity dropped from it is a finding that can
     never be repaired, and the reports have to say so.
+
+    Read failures are also *freshened* here, because this is the only place that
+    knows which entities were actually re-read. An earlier run's failure for an
+    entity this pass reads again is stale and goes, so a transient 503 does not pin
+    every later ``--resume`` at exit 2; one for an entity this pass never reaches -
+    beyond ``--drill-down-limit``, or the project entity when the drill-down does
+    not include it - is still lost coverage and is kept. Doing this in
+    ``carry_forward`` instead ran before anything knew which projects would be
+    re-read, so it dropped gaps nothing had re-verified.
     """
     flagged = set(audit.summary.get('duplicates', {})) \
         | set(audit.summary.get('orphans', {})) \
@@ -738,8 +780,13 @@ def drill_down_project(
     if not flagged:
         return []
 
+    previous_failures = audit.take_read_failures()
+    reread: set[str] = set()
+
     def inspect(target: tuple[str, str]) -> dict | None:
         entity_id, entity_type = target
+        with _READ_FAILURE_LOCK:
+            reread.add(entity_id)
         try:
             record = read_annotations(syn, entity_id, max_retries=max_retries)
         except Exception as error:  # noqa: BLE001
@@ -770,21 +817,22 @@ def drill_down_project(
                                     include_project_entity=include_project_entity)
     findings: list[dict] = []
     if workers <= 1:
-        return [finding for finding in map(inspect, walker) if finding]
-
-    # Reads are independent, so they parallelise safely. Chunked rather than
-    # materialised so the walk and the reads overlap and memory stays bounded on
-    # a project with tens of thousands of entities.
-    chunk_size = max(workers * 8, 64)
-    with ThreadPoolExecutor(max_workers=workers) as pool:
-        chunk: list[tuple[str, str]] = []
-        for target in walker:
-            chunk.append(target)
-            if len(chunk) >= chunk_size:
+        findings = [finding for finding in map(inspect, walker) if finding]
+    else:
+        # Reads are independent, so they parallelise safely. Chunked rather than
+        # materialised so the walk and the reads overlap and memory stays bounded
+        # on a project with tens of thousands of entities.
+        chunk_size = max(workers * 8, 64)
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            chunk: list[tuple[str, str]] = []
+            for target in walker:
+                chunk.append(target)
+                if len(chunk) >= chunk_size:
+                    findings.extend(f for f in pool.map(inspect, chunk) if f)
+                    chunk = []
+            if chunk:
                 findings.extend(f for f in pool.map(inspect, chunk) if f)
-                chunk = []
-        if chunk:
-            findings.extend(f for f in pool.map(inspect, chunk) if f)
+    audit.restore_unverified_read_failures(previous_failures, reread)
     return findings
 
 
@@ -919,18 +967,15 @@ def carry_forward(
     inflated, and a duplicate row in the CSV - so a resume that successfully
     retried three 403s would still exit 2 on them.
 
-    Entity read failures are dropped from what is carried forward: they describe
-    the run that performed the drill-down, and this run either re-reads those
-    entities or does not look at them at all. Keeping them would report a read
-    that has since succeeded as lost forever - and because lost reads spend the
-    ``--max-unscanned`` budget, one transient 503 would pin every later resume at
-    exit 2 with a complete findings file in hand.
+    Each carried-forward audit comes through as recorded, entity read failures
+    included. Nothing here knows yet which projects this run will re-read, so
+    dropping their failures at this point would forget lost coverage nothing had
+    re-verified - a resumed run would then report better coverage than it has, and
+    disagree with the state file it was built from. ``drill_down_project`` does the
+    freshening instead, where the set of entities actually re-read is known.
     """
     pending = set(rescanning)
-    return [
-        replace(audit, read_failures=[])
-        for audit in existing.values() if audit.project_id not in pending
-    ]
+    return [audit for audit in existing.values() if audit.project_id not in pending]
 
 
 def append_state(path: Path, audit: ProjectAudit) -> None:

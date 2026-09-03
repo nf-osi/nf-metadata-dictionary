@@ -674,6 +674,12 @@ def _planned(entity_id, plan, values=None):
     return fix.ApplyResult(entity_id, 'would_write', planned=values or {}, applied=plan)
 
 
+def _conformance(entity_id, status):
+    import validate_annotations as validate
+
+    return validate.EntityConformance(entity_id=entity_id, status=status)
+
+
 def test_schema_preflight_blocks_a_plan_that_would_break_conformance(rules, logs):
     import validate_annotations as validate
 
@@ -1158,6 +1164,99 @@ def test_the_preflight_conformance_loop_is_guarded_by_the_circuit_breaker(monkey
         argv += ['--entity', f'syn{index}']
     assert fix.main(argv) == 1
     assert syn.json_reads == fix.ERROR_FLOOR
+
+
+def test_unchanged_entities_cannot_dilute_the_conformance_breaker(monkeypatch, tmp_path, caplog):
+    # The breaker measures the service, not the loop. An entity with nothing to
+    # change issues no conformance read at all, so sampling it as a success held
+    # the window at 5 failures in 50 - exactly the 10% threshold and so never above
+    # it - while every read the loop actually issued was failing. A 9:1 mix of
+    # unchanged to planned entities is ordinary: re-running a findings file after a
+    # partial remediation pass leaves most entities settled.
+    class ConformanceOutage:
+        def __init__(self):
+            self.json_reads = 0
+
+        def restGET(self, path):
+            entity_id = path.split('/')[2]
+            if path.endswith('/annotations2'):
+                if entity_id.startswith('syn_clean'):
+                    return {'id': entity_id, 'etag': 'etag-1',
+                            'annotations': to_typed({'age': [1.5]})}
+                return {'id': entity_id, 'etag': 'etag-1',
+                        'annotations': to_typed({'Age': [1.5], 'age': [1.5],
+                                                 'Component': ['MicroscopyAssayTemplate']})}
+            if path.endswith('/json'):
+                self.json_reads += 1
+                raise RuntimeError('503 Service Unavailable')
+            raise AssertionError(path)
+
+    syn = ConformanceOutage()
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: syn)
+
+    argv = ['--actions', 'drop_stray', '--validate-schema', '--log-dir', str(tmp_path / 'run')]
+    for index in range(40):
+        argv += [arg for clean in range(9)
+                 for arg in ('--entity', f'syn_clean{index}_{clean}')]
+        argv += ['--entity', f'syn_planned{index}']
+
+    with caplog.at_level('ERROR', logger='fix_annotation_keys'):
+        assert fix.main(argv) == 1
+    # Ten failing reads is the floor, so the run stops there rather than paying the
+    # full retry backoff on all 40 planned entities.
+    assert syn.json_reads == fix.ERROR_FLOOR
+    # And the abort names every entity left without a verdict: the 10 it failed on
+    # plus the 300 it never reached, not just the 10 that landed in unvalidatable.
+    assert 'could not reach a verdict on 310 of 400 entities' in caplog.text
+
+
+@pytest.mark.parametrize('pass_name', ['rollback', 'verify'])
+def test_the_recovery_passes_are_guarded_like_every_other_entity_loop(tmp_path, pass_name):
+    # Rollback and verify are per-entity network loops too, so they go through the
+    # same guard: a recovery driven into a dead service must stop and say so, not
+    # spend the retry budget on thousands of entities. Stopping early is safe -
+    # backup.jsonl is on disk and a re-run skips whatever is already restored.
+    logs = fix.RunLogs(tmp_path / 'run')
+    for index in range(40):
+        entity_id = f'syn{index}'
+        logs.write_backup(io.AnnotationRecord(entity_id, 'etag-1', {'Age': [1.5]},
+                                              {'Age': 'DOUBLE'}))
+        logs.record_progress(entity_id, 'ok', {'applied': [], 'result': {'age': [1.5]}})
+
+    class DeadSynapse:
+        def __init__(self):
+            self.reads = 0
+
+        def restGET(self, path):
+            self.reads += 1
+            raise RuntimeError('503 Service Unavailable')
+
+    syn = DeadSynapse()
+    if pass_name == 'rollback':
+        report = fix.rollback(syn, logs, dry_run=False, max_retries=0)
+    else:
+        report = fix.verify_run(syn, logs, max_retries=0)
+    assert not report.ok
+    assert syn.reads == fix.ERROR_FLOOR
+
+
+def test_the_abort_reports_every_entity_left_without_a_verdict():
+    # unvalidatable holds only the entities the loop reached and failed on. The ones
+    # with no verdict are mostly the ones it never got to, and during an outage that
+    # is the number an operator needs: 'could not reach a verdict on 6 of 5000' when
+    # the truth is 4,990 is the opposite of the right impression.
+    report = fix.PreflightReport(considered=[f'syn{index}' for index in range(50)])
+    report.unchanged.append('syn0')
+    report.clean.append(_conformance('syn1', 'valid'))
+    report.unvalidatable.append(_conformance('syn2', 'error'))
+    report.aborted = True
+
+    # 50 offered, one bucketed as unchanged and one as clean: 48 have no verdict,
+    # of which only 1 is in unvalidatable.
+    assert len(report.without_verdict) == 48
+    assert report.without_verdict[:3] == ['syn2', 'syn3', 'syn4']
+    assert not report.ok
 
 
 def test_a_legitimate_missing_schema_does_not_trip_the_conformance_breaker():

@@ -85,6 +85,7 @@ Three things to know when reading a report:
 - The inventory reports **presence, not scale**. One bad file out of 6,000 looks identical to wholesale corruption. `syn25881328` flags 19 duplicate keys at the project level but only 23 of its 772 files are actually affected. Always `--drill-down` before judging scale.
 - A 403 is a **finding, not a skip**. Coverage (`scanned / not readable / failed`) is reported first, because "0 findings" is meaningless without it.
 - An entity read lost during `--drill-down`, after its retries, is also a finding. It is counted in the coverage block, listed in `summary.md`, carried in `annotation_key_audit_projects.csv` and spends the `--max-unscanned` budget. `entity_findings.jsonl` is the only input `fix_annotation_keys.py --findings` reads, so an entity silently missing from it is a real finding that could never be repaired.
+- A lost read is **dropped only by a run that re-reads it.** `--drill-down` re-inspects every flagged entity, so a read that failed once and succeeded on the retry run stops being reported and one transient 503 does not pin every later `--resume` at exit 2. A gap nothing re-read - an entity beyond `--drill-down-limit`, or a project the resume did not rescan - is still reported, so a resumed run can never claim better coverage than it has.
 
 The markdown tables in `summary.md` that grow with the data - the per-key frequency tables and the per-(project, key) value-type table - are capped at 40 rows, because the weekly workflow pipes the file into a GitHub issue body, which is limited to 65,536 characters.
 The list of affected projects is deliberately uncapped: it is the one actionable list in the issue, and a curator should not have to download a CI artifact to learn which project to look at.
@@ -148,6 +149,10 @@ Safety properties, in the order they matter:
    Decoding is lossy in the textual direction - a DOUBLE stored as `"1.50"` decodes to `1.5` and would re-serialise as `"1.5"`, `"1e6"` as `"1000000.0"` - and `--verify` compares decoded values, so it could never catch that.
    Re-emitting the strings Synapse served is what makes "nothing else changed" true byte for byte rather than only semantically, and what makes a rename a move rather than a rewrite.
 5. **Conflicts are never written.** Values that genuinely differ, values that match only across types, and targets that are Synapse reserved fields are all reported for a human.
+6. **Every per-entity loop aborts on a systemic failure**, and they all abort through the same guard: the preflight's planning pass, its conformance pass, the write pass, and the rollback and verify passes.
+   A revoked token or a degraded service stops the run where it starts rather than at entity 5,000, and the trailing window is judged from a floor of 10 results so a 30-entity run driven by hand is guarded too.
+   The window holds one sample per *request*, never one per iteration: an entity with nothing to change issues no call, so it can neither trip the guard nor dilute it.
+   That distinction matters because retries make an unguarded loop worse - each entity of a doomed run pays the full backoff before failing, which turns seconds into days.
 
 Rollback has one non-obvious property worth knowing before relying on it: the backed-up etag is the *pre-write* etag and is stale the moment the fix wrote, so the restore reads the current etag first.
 That means the restore has no optimistic-concurrency protection and replaces the whole dict, so an entity edited by someone else since the fix is skipped unless `--force-rollback`.

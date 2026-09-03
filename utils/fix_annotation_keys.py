@@ -110,7 +110,9 @@ class CircuitBreaker:
     curator drives by hand with ``--entity``.
 
     Driven only through ``run_guarded``, which every per-entity network loop in
-    this module goes through, so no loop can be left unguarded by accident.
+    this module goes through, so no loop can be left unguarded by accident. The
+    window holds one sample per *request*, never one per iteration: work that
+    issued no network call says nothing about the health of the service.
     """
 
     def __init__(self, *, sample: int = ERROR_SAMPLE, floor: int = ERROR_FLOOR,
@@ -146,11 +148,20 @@ def run_guarded(
     """Apply ``step`` to each item, stopping the moment the breaker trips.
 
     Every per-entity loop that issues network calls runs through here - the
-    preflight's planning pass, its conformance pass and the write pass - so a
-    systemic failure stops the run where it starts rather than grinding through
-    thousands of entities in any one of them. Retries make an unguarded loop worse
-    rather than better: with a retry budget each entity of a doomed run pays the
-    full jittered backoff before failing, which turns seconds into days.
+    preflight's planning pass, its conformance pass, the write pass, and the
+    rollback and verify passes - so a systemic failure stops the run where it
+    starts rather than grinding through thousands of entities in any one of them.
+    Retries make an unguarded loop worse rather than better: with a retry budget
+    each entity of a doomed run pays the full jittered backoff before failing,
+    which turns seconds into days.
+
+    ``failed`` returns True or False for an item that issued a request, and None
+    for one that made no network call at all. Only requests are sampled, because
+    the breaker is measuring the service rather than the loop: an item that asked
+    the service for nothing can neither trip it nor dilute it. Sampling every
+    iteration is what let unchanged entities hide an outage - at nine of them per
+    planned entity the window sits at 5 failures in 50, exactly the 10% threshold
+    and so never above it, while every read the loop actually issued was failing.
 
     Returns the results collected and whether the run was cut short.
     """
@@ -160,9 +171,12 @@ def run_guarded(
     for position, item in enumerate(items, 1):
         result = step(position, item)
         results.append(result)
-        breaker.record(failed(result))
+        verdict = failed(result)
+        if verdict is None:
+            continue
+        breaker.record(verdict)
         if breaker.tripped:
-            logger.error('%s: aborting at entity %d: %d of the last %d failed',
+            logger.error('%s: aborting at entity %d: %d of the last %d requests failed',
                          label, position, breaker.failures, breaker.window)
             return results, True
     return results, False
@@ -432,6 +446,22 @@ class PreflightReport:
         return len(self.clean) + len(self.repaired)
 
     @property
+    def without_verdict(self) -> list[str]:
+        """Entities the preflight reached no conformance verdict on.
+
+        Both the ones it reached and could not validate and the ones it never got
+        to, because the write pass would touch either with nothing behind it.
+        Reporting only ``unvalidatable`` understates an abort badly: a 5,000-entity
+        run cut short at the floor would claim 6 rather than 4,990, which is the
+        opposite of the impression an operator needs during an outage.
+        """
+        settled = set(self.unchanged) | {
+            o.entity_id for o in
+            (*self.clean, *self.repaired, *self.still_invalid, *self.blockers)
+        }
+        return [e for e in self.considered if e not in settled]
+
+    @property
     def unaccounted(self) -> list[str]:
         """Entities that landed in no bucket, or in more than one.
 
@@ -495,17 +525,24 @@ def schema_preflight(
     report = PreflightReport(considered=[r.entity_id for r in dry_runs])
 
     def check(_position: int, result: ApplyResult) -> EntityConformance | None:
+        """Bucket one entity, returning its outcome only if a read was issued.
+
+        Both no-plan cases are bucketed without touching the network - an
+        unchanged entity as ``unchanged``, one whose planning read already failed
+        as ``unvalidatable`` - so both come back as None and the breaker does not
+        sample them. The failed planning read was sampled by the planning pass; a
+        second sample here would count one outage twice.
+        """
         if not result.applied:
             if result.status == 'noop':
                 report.unchanged.append(result.entity_id)
-                return None
-            outcome = EntityConformance(
-                entity_id=result.entity_id,
-                status='error',
-                error=result.error or f'dry run returned {result.status} with no plan',
-            )
-            report.unvalidatable.append(outcome)
-            return outcome
+            else:
+                report.unvalidatable.append(EntityConformance(
+                    entity_id=result.entity_id,
+                    status='error',
+                    error=result.error or f'dry run returned {result.status} with no plan',
+                ))
+            return None
         outcome = check_entity(
             syn, result.entity_id, registry=registry, repo_version=repo_version,
             decisions=result.applied, fallback_component=component_of(result.planned),
@@ -525,13 +562,20 @@ def schema_preflight(
 
     # Only 'error' counts against the breaker: a bound schema this checkout does
     # not have, or an entity with no binding at all, is a verdict about the data
-    # rather than a sign that the service is failing.
+    # rather than a sign that the service is failing. An entity this loop issued no
+    # request for - an unchanged one, or one whose plan already failed in the
+    # planning pass, which sampled it there - is not sampled at all, so a run that
+    # is mostly no-ops cannot dilute the window away from the reads it is guarding.
     _, report.aborted = run_guarded(
-        dry_runs, check,
-        failed=lambda outcome: outcome is not None and outcome.status == 'error',
+        dry_runs, check, failed=_conformance_request_failed,
         label='schema preflight conformance',
     )
     return report
+
+
+def _conformance_request_failed(outcome: EntityConformance | None) -> bool | None:
+    """Whether a conformance read failed, or None when no read was issued."""
+    return None if outcome is None else outcome.status == 'error'
 
 
 # ---------------------------------------------------------------------------
@@ -560,16 +604,23 @@ def verify_run(syn, logs: RunLogs, *, max_retries: int = 3) -> VerifyReport:
     for entry in logs.backup_entries():
         backups.setdefault(entry['entity_id'], entry.get('decoded') or {})
 
-    for entry in logs.progress_entries():
-        if entry.get('status') != 'ok' or 'result' not in entry:
-            continue
+    written = [entry for entry in logs.progress_entries()
+               if entry.get('status') == 'ok' and 'result' in entry]
+
+    def check(_position: int, entry: dict) -> bool:
+        """Verify one entity, reporting whether the *read* failed.
+
+        Only a failed read is a breaker sample: a mismatch is a verdict about the
+        data - exactly what this pass exists to surface - and must not abort the
+        walk over the rest of the run.
+        """
         entity_id = entry['entity_id']
         expected = entry['result']
         try:
             current = dict(read_annotations(syn, entity_id, max_retries=max_retries).values)
         except Exception as error:  # noqa: BLE001
             report.failures.append({'entity_id': entity_id, 'detail': f'read failed: {error}'})
-            continue
+            return True
 
         report.checked += 1
         missing = sorted(set(expected) - set(current))
@@ -580,12 +631,12 @@ def verify_run(syn, logs: RunLogs, *, max_retries: int = 3) -> VerifyReport:
                 'entity_id': entity_id,
                 'detail': f'missing={missing} unexpected={extra} changed={changed}',
             })
-            continue
+            return False
 
         # Key-set algebra against the pre-run state.
         backup = backups.get(entity_id)
         if backup is None:
-            continue
+            return False
         dropped = {d['stray_key'] for d in entry.get('applied', [])
                    if d['action'] == Action.DROP_STRAY.value}
         renamed = {d['stray_key']: d['canonical_key'] for d in entry.get('applied', [])
@@ -597,6 +648,9 @@ def verify_run(syn, logs: RunLogs, *, max_retries: int = 3) -> VerifyReport:
                 'detail': f'key algebra mismatch: expected {sorted(expected_keys)}, '
                           f'found {sorted(current)}',
             })
+        return False
+
+    run_guarded(written, check, failed=bool, label='verify')
     return report
 
 
@@ -676,27 +730,35 @@ def rollback(
         if entry.get('status') == 'ok' and 'result' in entry
     }
 
-    for step in steps:
+    def restore(_position: int, step: RollbackStep) -> bool:
+        """Restore one entity, reporting whether a request to Synapse failed.
+
+        Guarded like every other per-entity loop here: a rollback driven into a
+        systemic outage should stop and say so rather than spend the retry budget
+        on thousands of entities. Stopping early is safe because the backup is
+        still on disk and a re-run skips whatever is already back at its pre-run
+        state.
+        """
         try:
             live = read_annotations(syn, step.entity_id, max_retries=max_retries)
         except Exception as error:  # noqa: BLE001
             report.failures.append({'entity_id': step.entity_id, 'detail': str(error)[:200]})
-            continue
+            return True
 
         current = dict(live.values)
         if current == step.decoded:
-            continue  # already at the pre-run state
+            return False  # already at the pre-run state
 
         expected = written_by_run.get(step.entity_id)
         if expected is not None and current != expected and not force:
             LOG.warning('%s: changed since the fix ran; skipping (use --force-rollback)',
                         step.entity_id)
             report.skipped += 1
-            continue
+            return False
 
         if dry_run:
             report.would_restore += 1
-            continue
+            return False
 
         try:
             # The backed-up etag is the pre-write etag and is stale; the restore
@@ -709,10 +771,13 @@ def rollback(
             syn.restPUT(f'/entity/{step.entity_id}/annotations2', body=body)
         except Exception as error:  # noqa: BLE001
             report.failures.append({'entity_id': step.entity_id, 'detail': str(error)[:200]})
-            continue
+            return True
         report.restored += 1
         if sleep:
             time.sleep(sleep)
+        return False
+
+    run_guarded(steps, restore, failed=bool, label='rollback')
     return report
 
 
@@ -957,7 +1022,7 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
         if preflight.aborted:
             LOG.error('the schema preflight could not reach a verdict on %d of %d entities before '
                       'it was cut short; no plan was validated, so nothing is offered for approval',
-                      len(preflight.unvalidatable), len(entity_ids))
+                      len(preflight.without_verdict), len(entity_ids))
             return 1
         if preflight.unaccounted:
             LOG.error('schema preflight bucketed %d of %d entities; %d unaccounted for, so no '

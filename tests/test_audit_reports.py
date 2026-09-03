@@ -151,21 +151,48 @@ def test_a_lost_entity_read_reaches_the_reports_and_the_exit_code(tmp_path):
     assert audit.exit_code_for([project], fail_on_findings=False, max_unscanned=1) == 0
 
 
-def test_a_carried_forward_project_does_not_keep_a_previous_runs_lost_read():
-    # Read failures describe the run that performed the drill-down. A read that
-    # failed once and succeeded on the retry run has to stop being reported -
-    # otherwise, because lost reads spend the --max-unscanned budget, one transient
-    # 503 pins every later --resume at exit 2 with a complete findings file.
+def test_carrying_a_project_forward_keeps_a_lost_read_nothing_has_re_verified():
+    # carry_forward runs before anything knows which projects this run will read,
+    # so it must not decide that a gap has been closed. Dropping the failure here
+    # let a --resume report better coverage than it had - exit 0 and "0 reads lost"
+    # with nothing having re-read the entity - while the state file it was built
+    # from still recorded the gap.
     stale = _flagged_audit('syn1')
-    stale.read_failures = [{'entity_id': 'file2', 'error': 'RuntimeError: 503'}]
+    stale.read_failures = [{'entity_id': 'syn1', 'entity_type': 'Project',
+                            'error': 'RuntimeError: 503'}]
     carried = audit.carry_forward({'syn1': stale}, [])
 
     assert [a.project_id for a in carried] == ['syn1']
-    assert carried[0].read_failures == []
-    assert audit.exit_code_for(carried, fail_on_findings=False, max_unscanned=0) == 0
-    # The state file entry itself is untouched, so --report-only still describes
-    # the run that recorded it.
-    assert stale.read_failures
+    assert [f['entity_id'] for f in carried[0].read_failures] == ['syn1']
+    assert audit.exit_code_for(carried, fail_on_findings=False, max_unscanned=0) == 2
+
+
+@pytest.mark.parametrize('workers', [1, 4])
+def test_a_drill_down_drops_the_stale_failures_it_re_read_and_keeps_the_rest(monkeypatch, workers):
+    # The other half of the same invariant: a read that failed once and succeeded
+    # on the retry run has to stop being reported, or one transient 503 pins every
+    # later --resume at exit 2 with a complete findings file in hand. The freshening
+    # lives here because this is the only place that knows what was re-read - and
+    # --drill-down-limit means that is not always everything.
+    canon = frozenset({'age'})
+    index = policy.KeyIndex.build(canon)
+    syn = ChildrenStub({'syn0': [{'id': 'file1', 'name': 'file1', 'type': FILE_TYPE},
+                                 {'id': 'file2', 'name': 'file2', 'type': FILE_TYPE}]})
+    monkeypatch.setattr(audit, 'read_annotations',
+                        lambda _syn, entity_id, **kwargs: io.AnnotationRecord(
+                            entity_id, 'etag-1', {'Age': [1.5], 'age': [1.5]},
+                            {'Age': 'DOUBLE', 'age': 'DOUBLE'}))
+
+    project = _flagged_audit()
+    project.read_failures = [
+        {'entity_id': 'file1', 'entity_type': 'FileEntity', 'error': 'RuntimeError: 503'},
+        {'entity_id': 'file2', 'entity_type': 'FileEntity', 'error': 'RuntimeError: 503'},
+    ]
+    audit.drill_down_project(syn, project, canon=canon, index=index, workers=workers, limit=1)
+
+    # file1 was re-read successfully, so its failure is stale. file2 was cut off by
+    # the limit, so nothing re-verified it and it is still lost coverage.
+    assert [f['entity_id'] for f in project.read_failures] == ['file2']
 
 
 def test_a_lost_read_is_counted_once_per_run():
@@ -204,6 +231,34 @@ def test_a_resumed_drill_down_rewrites_the_state_it_re_derived(tmp_path, monkeyp
     assert audit.load_state(state)['syn0'].read_failures == []
     findings = (tmp_path / 'entity_findings.jsonl').read_text().splitlines()
     assert [json.loads(line)['entity_id'] for line in findings] == ['file1', 'file2']
+
+
+def test_a_resumed_run_still_reports_a_project_entity_read_nothing_re_read(tmp_path, monkeypatch):
+    # --include-project-entity records its failure at scan time, and a resume skips
+    # the projects that already scanned 'ok'. So this gap is never re-read: the
+    # drill-down walks the project's children, not the project itself, unless the
+    # same flag is passed again. A resumed run must not turn that into exit 0 and
+    # "0 reads lost" - it would contradict the state file it was built from.
+    state = tmp_path / 'state.jsonl'
+    stale = _flagged_audit('syn0')
+    stale.read_failures = [{'entity_id': 'syn0', 'entity_type': 'Project',
+                            'error': 'RuntimeError: 503'}]
+    audit.append_state(state, stale)
+
+    syn = ChildrenStub({'syn0': [{'id': 'file1', 'name': 'file1', 'type': FILE_TYPE}]})
+    monkeypatch.setattr(audit, 'login', lambda **kwargs: syn)
+    monkeypatch.setattr(audit, 'read_annotations',
+                        lambda _syn, entity_id, **kwargs: io.AnnotationRecord(
+                            entity_id, 'etag-1', {'Age': [1.5], 'age': [1.5]},
+                            {'Age': 'DOUBLE', 'age': 'DOUBLE'}))
+
+    exit_code = audit.main(['--project', 'syn0', '--out-dir', str(tmp_path),
+                            '--resume', '--drill-down',
+                            '--allowlist', str(tmp_path / 'none.yaml')])
+
+    assert exit_code == 2
+    assert [f['entity_id'] for f in audit.load_state(state)['syn0'].read_failures] == ['syn0']
+    assert 'Entity reads lost after retries: **1**' in (tmp_path / 'summary.md').read_text()
 
 
 def test_read_failures_survive_the_state_file(tmp_path):
