@@ -972,6 +972,26 @@ def test_the_circuit_breaker_guards_a_run_shorter_than_the_full_window(monkeypat
     assert syn.reads == io.ERROR_FLOOR
 
 
+def test_a_trip_is_remembered_for_the_rest_of_the_run():
+    # The rate is a live trailing figure, so it recovers: 50 successes then 6
+    # failures is 6/50 and trips, and 45 further successes leave 5/50, which is not
+    # *over* 10%. Callers ask `tripped` after the fact to learn whether the pass they
+    # just ran was cut short, so a recovering rate let an abort be forgotten - the
+    # walk stopped, the caller read False, and a truncated drill-down was stamped
+    # complete.
+    breaker = io.CircuitBreaker()
+    for _ in range(io.ERROR_SAMPLE):
+        breaker.record(False)
+    for _ in range(6):
+        breaker.record(True)
+    assert breaker.tripped is True
+
+    for _ in range(45):
+        breaker.record(False)
+    assert breaker.failures / breaker.window == 0.10, 'the live rate has recovered'
+    assert breaker.tripped is True, 'the trip is a latch, not a live rate'
+
+
 def test_a_run_below_the_floor_is_not_aborted_by_one_failure(monkeypatch, tmp_path):
     # The floor is what keeps a single transient failure from aborting a
     # three-entity run, so the breaker stays worth leaving on.
@@ -1469,3 +1489,59 @@ def test_a_findings_file_from_a_completed_drill_down_plans_without_complaint(tmp
     with caplog.at_level('ERROR'):
         assert fix.entity_ids_from_findings(findings) == ['file1']
     assert caplog.text == ''
+
+
+def _incomplete_findings(tmp_path, entity_id='syn64420376'):
+    import audit_annotation_keys as audit
+
+    findings = tmp_path / 'entity_findings.partial.jsonl'
+    findings.write_text(json.dumps({'project_id': 'syn0', 'entity_id': entity_id,
+                                    'decisions': []}) + '\n')
+    audit.write_findings_manifest(findings, complete=False, projects=['syn0'], entities=1,
+                                  not_inspected=['syn1'], partially_inspected=['syn0'])
+    return findings
+
+
+def test_an_apply_run_is_refused_when_the_findings_cover_part_of_the_audit(monkeypatch, tmp_path):
+    # A scripted --apply --yes over a truncated findings file would repair a subset
+    # while reading as the whole of it, and a log line is the only trace it left.
+    # The gate mirrors --allow-unvalidatable: refuse, and name the escape.
+    def explode():
+        raise AssertionError('must not reach Synapse with an incomplete findings file')
+
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', explode)
+
+    assert fix.main(['--findings', str(_incomplete_findings(tmp_path)), '--actions', 'drop_stray',
+                     '--apply', '--yes', '--log-dir', str(tmp_path / 'run')]) == 1
+
+
+def test_the_escape_hatch_lets_an_apply_run_proceed_over_an_incomplete_findings_file(
+        monkeypatch, tmp_path):
+    syn = _half_broken_synapse(unreadable='syn_nothing_is_unreadable')
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: syn)
+
+    log_dir = tmp_path / 'run'
+    fix.main(['--findings', str(_incomplete_findings(tmp_path)), '--actions', 'drop_stray',
+              '--apply', '--yes', '--allow-incomplete-findings', '--log-dir', str(log_dir)])
+    assert syn.annotation_reads, 'the run proceeded once the gap was accepted'
+    # And the gap outlives the scrollback, in both artifacts of the run.
+    assert 'did not complete' in (log_dir / 'report.csv').read_text()
+    notes = [json.loads(line) for line in (log_dir / 'progress.jsonl').read_text().splitlines()
+             if line and json.loads(line)['status'] == 'incomplete_findings']
+    assert len(notes) == 1 and 'did not complete' in notes[0]['detail']
+
+
+def test_a_dry_run_over_an_incomplete_findings_file_still_reports(monkeypatch, tmp_path):
+    # Nothing is written, so there is nothing for the gate to protect - and the
+    # report is what a curator triages the gap from. Exit 2 says what --apply would
+    # have refused.
+    syn = _half_broken_synapse(unreadable='syn_nothing_is_unreadable')
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: syn)
+
+    log_dir = tmp_path / 'dryrun'
+    assert fix.main(['--findings', str(_incomplete_findings(tmp_path)), '--actions', 'drop_stray',
+                     '--log-dir', str(log_dir)]) == 2
+    assert 'run_note' in (log_dir / 'report.csv').read_text()

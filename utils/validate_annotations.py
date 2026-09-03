@@ -58,7 +58,7 @@ import jsonschema
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from synapse_annotation_io import with_retries  # noqa: E402
+from synapse_annotation_io import run_guarded, with_retries  # noqa: E402
 
 LOG = logging.getLogger('validate_annotations')
 
@@ -441,10 +441,16 @@ def summarize(results: Sequence[EntityConformance]) -> dict[str, int]:
     return counts
 
 
-def format_markdown(results: Sequence[EntityConformance]) -> str:
+def format_markdown(results: Sequence[EntityConformance], *, not_checked: int = 0) -> str:
     counts = summarize(results)
     lines = ['# Annotation schema conformance', '',
              f'Entities checked: **{len(results)}**', '']
+    if not_checked:
+        # A pass the circuit breaker cut short covers part of the plan, and the
+        # document has to say so: read on its own it looks like a complete verdict
+        # over a smaller set of entities.
+        lines += [f'**This pass was cut short: {not_checked} entities were never checked**, '
+                  'so this report does not vouch for the whole plan.', '']
     labels = {
         'clean': 'Valid before and after the planned fix',
         'repaired': 'Invalid now, valid after the fix',
@@ -610,18 +616,30 @@ def main(argv: Sequence[str] | None = None) -> int:
         targets = targets[:args.limit]
 
     syn = _login()
-    results = []
-    for position, target in enumerate(targets, 1):
-        results.append(check_entity(
+
+    def check(position: int, target: dict) -> EntityConformance:
+        outcome = check_entity(
             syn, target['entity_id'], registry=registry, repo_version=repo_version,
             decisions=target.get('decisions') or (), project_id=target.get('project_id', ''),
             fallback_component=target.get('component'), include_cached=args.include_cached,
             max_retries=args.max_retries,
-        ))
+        )
         if position % 25 == 0:
             LOG.info('... %d/%d', position, len(targets))
+        return outcome
 
-    report = format_markdown(results)
+    # Guarded by the same circuit breaker as every other per-entity network loop:
+    # each read carries a retry budget, so a systemic 503 costs over a minute of
+    # jittered backoff per entity, which over the 13,150-entity findings file is
+    # days of grinding to reach a report that is nothing but errors. Only a failed
+    # read is a breaker sample - an `unbound` or `no_schema` verdict is a fact about
+    # the data, which is what this pass exists to surface.
+    results, aborted = run_guarded(targets, check,
+                                   failed=lambda outcome: outcome.status == 'error',
+                                   label='conformance', logger=LOG)
+
+    not_checked = len(targets) - len(results)
+    report = format_markdown(results, not_checked=not_checked)
     if args.markdown:
         Path(args.markdown).write_text(report + '\n')
     else:
@@ -635,6 +653,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     if any(r.blocking for r in results):
         LOG.error('%d entities would REGRESS; do not apply the fix',
                   sum(1 for r in results if r.blocking))
+        return 1
+    if aborted:
+        LOG.error('the conformance pass was cut short after %d of %d entities; %d were never '
+                  'checked, so nothing here vouches for the whole plan - re-run it',
+                  len(results), len(targets), not_checked)
         return 1
     if counts.get('error') or counts.get('no_schema'):
         return 2

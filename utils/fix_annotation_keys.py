@@ -6,8 +6,9 @@ Requires: synapseclient, pyyaml. Feed it the ``entity_findings.jsonl`` produced
 by ``utils/audit_annotation_keys.py --drill-down``, or name projects directly. The
 findings file is the only input, so its sidecar manifest is read too: a file left
 by a drill-down the circuit breaker cut short covers a subset of the audit, and
-saying so before anything is planned is the difference between repairing part of
-the work and believing it was all of it.
+repairing part of the work while believing it was all of it is exactly the mistake
+that has to be impossible. ``--apply`` refuses such a file unless
+``--allow-incomplete-findings`` accepts the gap; a dry run proceeds and reports it.
 
 Safety model
 ------------
@@ -141,6 +142,21 @@ class RunLogs:
             'annotations': record.typed,
             'decoded': record.values,
             'backed_up_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+        })
+
+    def record_run_note(self, status: str, detail: str) -> None:
+        """A fact about the run rather than about one entity.
+
+        Goes in the progress log so it outlives the terminal scrollback: the log is
+        what a curator reads back when working out what a run covered, and a
+        coverage gap that only ever appeared as a log line was invisible there.
+        Carries no entity id, so it can never be read back as a settled entity.
+        """
+        self._append(self.progress_path, {
+            'entity_id': '',
+            'status': status,
+            'detail': detail,
+            'recorded_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
         })
 
     def record_progress(self, entity_id: str, status: str, payload: dict) -> None:
@@ -740,21 +756,32 @@ def parse_actions(spec: str | None) -> set[Action]:
     return {allowed[name] for name in requested}
 
 
-def entity_ids_from_findings(path: Path, projects: Sequence[str] | None = None) -> list[str]:
-    """The entities to work on, and how much of the audit they actually represent.
+def findings_gap(path: Path) -> str:
+    """How a findings file falls short of a completed drill-down, if it does.
 
     The findings file is this tool's only input, so a file produced by a drill-down
     the circuit breaker cut short would otherwise plan a subset of the work while
     looking exactly like a complete plan. The audit writes a manifest beside the
-    file; when it says the pass did not finish, say so before anything is planned.
+    file; when it says the pass did not finish, this is the sentence that says so -
+    returned rather than only logged, so the gate can refuse a write run with it and
+    the report and the progress log can record it.
     """
     manifest = read_findings_manifest(path)
-    if manifest is not None and not manifest.get('complete', True):
-        LOG.error('%s comes from a drill-down that did not complete: %d projects inspected, '
-                  '%d never inspected (%s). Re-run the audit drill-down for a complete plan.',
-                  path, len(manifest.get('projects_inspected') or []),
-                  len(manifest.get('projects_not_inspected') or []),
-                  ', '.join(manifest.get('projects_not_inspected') or []) or 'unnamed')
+    if manifest is None or manifest.get('complete', True):
+        return ''
+    missed = manifest.get('projects_not_inspected') or []
+    partial = manifest.get('projects_partially_inspected') or []
+    return (f'{path} comes from a drill-down that did not complete: '
+            f'{len(manifest.get("projects_inspected") or [])} projects inspected, '
+            f'{len(missed)} never inspected ({", ".join(missed) or "none"}), '
+            f'{len(partial)} cut short part-way ({", ".join(partial) or "none"})')
+
+
+def entity_ids_from_findings(path: Path, projects: Sequence[str] | None = None) -> list[str]:
+    """The entities to work on, as named by a drill-down's findings file."""
+    gap = findings_gap(path)
+    if gap:
+        LOG.error('%s. Re-run the audit drill-down for a complete plan.', gap)
     wanted = set(projects or [])
     ids: list[str] = []
     seen: set[str] = set()
@@ -783,6 +810,7 @@ def write_report(
     path: Path,
     *,
     not_attempted: Sequence[str] = (),
+    notes: Sequence[str] = (),
 ) -> None:
     """The per-entity outcome table for one pass.
 
@@ -790,6 +818,10 @@ def write_report(
     never reached, written out as ``not_attempted`` rows. A report that simply
     ended early reads as a complete run over a smaller plan, which is the opposite
     of what an operator needs to know during an outage.
+
+    ``notes`` are facts about the run rather than about an entity - a findings file
+    that covered only part of the audit, say - written as ``run_note`` rows so the
+    artifact carries them too and not only the terminal.
     """
     path.parent.mkdir(parents=True, exist_ok=True)
     fields = ['entity_id', 'status', 'action', 'stray_key', 'canonical_key', 'reason',
@@ -816,6 +848,8 @@ def write_report(
         for entity_id in not_attempted:
             writer.writerow({'entity_id': entity_id, 'status': 'not_attempted',
                              'reason': 'run aborted by the circuit breaker before this entity'})
+        for note in notes:
+            writer.writerow({'entity_id': '', 'status': 'run_note', 'reason': note})
 
 
 def log_pass_summary(
@@ -886,6 +920,9 @@ def build_parser() -> argparse.ArgumentParser:
                         help='proceed even when --validate-schema could not reach a verdict on '
                              'some entities (unreadable, bound to a schema this checkout does '
                              'not have, or with neither a binding nor a Component annotation)')
+    parser.add_argument('--allow-incomplete-findings', action='store_true',
+                        help='proceed even when the findings file comes from a drill-down that '
+                             'did not complete, so the plan covers only part of the audit')
     parser.add_argument('--verify', action='store_true', help='verify after applying')
     parser.add_argument('--verify-only', action='store_true', help='verify a previous run and exit')
     parser.add_argument('--rollback', default=None, metavar='LOGDIR',
@@ -949,7 +986,9 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
     index = KeyIndex.build(canon)
 
     entity_ids = list(args.entity)
+    coverage_gap = ''
     if args.findings:
+        coverage_gap = findings_gap(Path(args.findings))
         entity_ids.extend(entity_ids_from_findings(Path(args.findings), args.project))
     if not entity_ids:
         LOG.error('nothing to do: pass --findings and/or --entity')
@@ -972,6 +1011,20 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
         return 1
 
     dry_run = not args.apply
+
+    if coverage_gap and not dry_run and not args.allow_incomplete_findings:
+        # The same gate as --allow-unvalidatable, for the same reason: a write run
+        # that covers part of the audit while reading as the whole of it is not one
+        # a scripted --apply --yes should be able to take by accident. A dry run is
+        # let through - there is nothing to protect when nothing is written, and its
+        # report is what a curator triages the gap from.
+        LOG.error('%s; refusing to apply a plan built from part of the audit '
+                  '(--allow-incomplete-findings to accept the gap, or re-run the drill-down)',
+                  coverage_gap)
+        return 1
+    if coverage_gap:
+        logs.record_run_note('incomplete_findings', coverage_gap)
+
     # Set when a dry run carried on past entities the preflight could not vouch
     # for, so the exit code can still say the plan is not one --apply would take.
     unvalidatable_in_dry_run = False
@@ -1115,7 +1168,8 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
     # report.csv held 50 rows, both of which look like a clean, complete run.
     attempted = {result.entity_id for result in results}
     not_attempted = [e for e in entity_ids if e not in attempted]
-    write_report(results, logs.report_path, not_attempted=not_attempted)
+    write_report(results, logs.report_path, not_attempted=not_attempted,
+                 notes=[coverage_gap] if coverage_gap else [])
     counts = summarize(results)
     log_pass_summary(mode, str(counts),
                      attempted=len(attempted), total=len(entity_ids), aborted=aborted,
@@ -1125,10 +1179,13 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
     exit_code = 0
     if counts.get('error') or counts.get('etag_conflict'):
         exit_code = 1
-    elif unvalidatable_in_dry_run or any(r.reported for r in results):
+    elif unvalidatable_in_dry_run or any(r.reported for r in results) \
+            or (dry_run and coverage_gap and not args.allow_incomplete_findings):
         # 2 is this tool's "the report is written, a human has to look at it":
-        # value conflicts the policy will not decide, and now also a plan --apply
-        # would refuse because some entity could not be validated.
+        # value conflicts the policy will not decide, a plan --apply would refuse
+        # because some entity could not be validated, and a dry run over a findings
+        # file that covers only part of the audit - which --apply also refuses,
+        # unless the same escape hatch says the gap is accepted.
         exit_code = 2
 
     if args.verify and not dry_run:

@@ -135,8 +135,9 @@ def test_a_drill_down_read_gets_the_retry_budget_and_a_lost_one_is_recorded(monk
 
     monkeypatch.setattr(audit, 'read_annotations', read)
     project = _flagged_audit()
-    findings = audit.drill_down_project(syn, project, canon=canon, index=index,
-                                        workers=1, max_retries=4)
+    findings, aborted = audit.drill_down_project(syn, project, canon=canon, index=index,
+                                                 workers=1, max_retries=4)
+    assert aborted is False
 
     assert [f['entity_id'] for f in findings] == ['file1']
     assert {retries for _entity, retries in attempts} == {4}
@@ -160,8 +161,8 @@ def test_a_listing_lost_after_retries_is_recorded_rather_than_read_as_an_empty_p
             raise ServiceUnavailable()
 
     project = _flagged_audit()
-    findings = audit.drill_down_project(UnlistableRoot(), project, canon=canon, index=index,
-                                        workers=1, max_retries=2)
+    findings, _aborted = audit.drill_down_project(UnlistableRoot(), project, canon=canon,
+                                                  index=index, workers=1, max_retries=2)
 
     assert findings == []
     assert attempts == ['syn0'] * 3, 'a listing gets the same retry budget as a read'
@@ -189,8 +190,9 @@ def test_the_drill_down_loop_is_guarded_by_the_circuit_breaker(monkeypatch, work
 
     monkeypatch.setattr(audit, 'read_annotations', read)
     project = _flagged_audit()
-    audit.drill_down_project(ChildrenStub(tree), project, canon=canon, index=index,
-                             workers=workers)
+    _findings, aborted = audit.drill_down_project(ChildrenStub(tree), project, canon=canon,
+                                                  index=index, workers=workers)
+    assert aborted is True, 'the pass reports its own abort rather than leaving it to be inferred'
 
     # Sequentially it stops at the floor, one slot of which the project's own
     # successful children listing occupies - listings are requests, so they are
@@ -306,7 +308,9 @@ def test_a_listing_only_degradation_trips_the_breaker(monkeypatch, workers):
                             {'Age': 'DOUBLE', 'age': 'DOUBLE'}))
     syn = UnlistableFolders()
     project = _flagged_audit()
-    audit.drill_down_project(syn, project, canon=canon, index=index, workers=workers)
+    _findings, aborted = audit.drill_down_project(syn, project, canon=canon, index=index,
+                                                  workers=workers)
+    assert aborted is True
 
     lost = [parent for parent in syn.listed if parent != 'syn0']
     assert 0 < len(lost) < len(folders), 'the walk stops rather than listing every folder'
@@ -361,6 +365,41 @@ def test_an_aborted_drill_down_leaves_the_last_complete_findings_file_alone(
     manifest = audit.read_findings_manifest(partial)
     assert manifest['complete'] is False
     assert manifest['projects_not_inspected'] == ['syn1', 'syn2', 'syn3']
+    assert manifest['projects_partially_inspected'] == ['syn0']
+
+
+def test_an_abort_inside_the_only_flagged_project_is_not_a_completed_pass(tmp_path, monkeypatch):
+    # The likeliest way to lose a good findings file, because the single-project
+    # drill-down is the documented example. Completion used to be inferred from the
+    # list of projects the pass skipped *before* starting them, so an abort inside
+    # the last - or only - project left that list empty, promoted the truncated file
+    # over the complete one and stamped it complete: true.
+    findings_path = tmp_path / 'entity_findings.jsonl'
+    findings_path.write_text(json.dumps({'project_id': 'syn0', 'entity_id': 'earlier'}) + '\n')
+    audit.write_findings_manifest(findings_path, complete=True, projects=['syn0'], entities=1)
+
+    tree = {'syn0': [{'id': f'file{i}', 'name': 'f', 'type': FILE_TYPE} for i in range(40)]}
+    monkeypatch.setattr(audit, 'read_annotations',
+                        lambda _syn, entity_id, **kwargs: (_ for _ in ()).throw(
+                            RuntimeError('503 Service Unavailable')))
+    monkeypatch.setattr(audit, 'login', lambda **kwargs: ChildrenStub(tree))
+    monkeypatch.setattr(audit, 'audit_project',
+                        lambda _syn, project, **kwargs: _flagged_audit(project['project_id']))
+
+    exit_code = audit.main(['--project', 'syn0', '--out-dir', str(tmp_path), '--drill-down',
+                            '--drill-down-workers', '1',
+                            '--allowlist', str(tmp_path / 'none.yaml')])
+
+    assert exit_code == 2
+    assert [json.loads(line)['entity_id'] for line in
+            findings_path.read_text().splitlines()] == ['earlier']
+    assert audit.read_findings_manifest(findings_path)['complete'] is True
+
+    partial = audit.read_findings_manifest(tmp_path / 'entity_findings.partial.jsonl')
+    assert partial['complete'] is False
+    # Nothing was skipped before it started - the gap is the project it cut short.
+    assert partial['projects_not_inspected'] == []
+    assert partial['projects_partially_inspected'] == ['syn0']
 
 
 def test_a_completed_drill_down_replaces_the_findings_file_and_says_so(tmp_path, monkeypatch):

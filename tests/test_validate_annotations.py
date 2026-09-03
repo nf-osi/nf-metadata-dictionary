@@ -344,6 +344,52 @@ def test_a_transient_read_failure_does_not_make_an_entity_unvalidatable(registry
     assert syn.attempts == 4  # two lost, then the instance and the binding
 
 
+def test_the_conformance_loop_stops_when_the_service_stops_answering(tmp_path, monkeypatch):
+    # The last per-entity network loop without an abort guard. Each read carries a
+    # retry budget, so a systemic 503 costs over a minute of jittered backoff per
+    # entity - days of grinding over the 13,150-entity findings file to reach a
+    # report that is nothing but errors.
+    monkeypatch.setattr(io.time, 'sleep', lambda _seconds: None)
+    reads = []
+
+    class DeadSynapse:
+        def restGET(self, path):
+            reads.append(path)
+            raise RuntimeError('503 Service Unavailable')
+
+    monkeypatch.setattr(validate, '_login', lambda: DeadSynapse())
+    findings = tmp_path / 'entity_findings.jsonl'
+    findings.write_text(''.join(
+        json.dumps({'project_id': 'syn0', 'entity_id': f'syn{n}', 'decisions': []}) + '\n'
+        for n in range(200)))
+    report = tmp_path / 'conformance.md'
+
+    assert validate.main(['--findings', str(findings), '--max-retries', '0',
+                          '--markdown', str(report)]) == 1
+    assert len(reads) == io.ERROR_FLOOR, 'it stops at the floor rather than reading all 200'
+    # And the document says it covers part of the plan rather than reading as a
+    # complete verdict over a smaller set of entities.
+    assert '190 entities were never checked' in report.read_text()
+
+
+def test_a_legitimate_verdict_about_the_data_does_not_stop_the_conformance_loop(
+        tmp_path, monkeypatch, registry):
+    # `unbound` is a fact about the entity, which is exactly what this pass exists
+    # to surface; tripping on it would abort a run over entities that simply have no
+    # schema bound.
+    instance, _ = animal_individual_instance()
+    syn = StubSynapse({f'syn{n}': instance for n in range(40)},
+                      missing_binding=[f'syn{n}' for n in range(40)])
+    monkeypatch.setattr(validate, '_login', lambda: syn)
+    findings = tmp_path / 'entity_findings.jsonl'
+    findings.write_text(''.join(
+        json.dumps({'project_id': 'syn0', 'entity_id': f'syn{n}', 'decisions': []}) + '\n'
+        for n in range(40)))
+
+    assert validate.main(['--findings', str(findings), '--markdown',
+                          str(tmp_path / 'report.md')]) == 0
+
+
 def test_a_forbidden_read_is_not_retried(registry, monkeypatch):
     # A 403 does not become a 200 on the second attempt; retrying only delays the
     # finding.

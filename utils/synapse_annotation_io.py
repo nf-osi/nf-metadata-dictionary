@@ -274,6 +274,15 @@ class CircuitBreaker:
 
     The window holds one sample per *request*, never one per iteration: work that
     issued no network call says nothing about the health of the service.
+
+    A trip is a latch: once the rate has been over the threshold the breaker stays
+    tripped for the rest of the run. The rate itself is a live trailing figure, so
+    it recovers as soon as enough successes push the failures back out of the
+    window - 50 successes then 6 failures trips it, and 45 further successes leave
+    5 in 50, which is not *over* 10%. Callers ask ``tripped`` after the fact to
+    learn whether the pass they just ran was cut short, so a recovering rate meant
+    an abort could be forgotten by the time it was read: the walk stopped, the
+    caller saw ``tripped`` False, and a truncated drill-down was stamped complete.
     """
 
     def __init__(self, *, sample: int = ERROR_SAMPLE, floor: int = ERROR_FLOOR,
@@ -281,9 +290,12 @@ class CircuitBreaker:
         self.threshold = threshold
         self.floor = min(sample, floor)
         self.recent: deque[bool] = deque(maxlen=sample)
+        self._tripped = False
 
     def record(self, failed: bool) -> None:
         self.recent.append(bool(failed))
+        if self.window >= self.floor and self.failures / self.window > self.threshold:
+            self._tripped = True
 
     def sample(self, verdicts: Iterable[bool | None]) -> bool:
         """Record verdicts in order, stopping at the one that trips the breaker.
@@ -312,7 +324,8 @@ class CircuitBreaker:
 
     @property
     def tripped(self) -> bool:
-        return self.window >= self.floor and self.failures / self.window > self.threshold
+        """Whether the failure rate has been over the threshold at any point."""
+        return self._tripped
 
 
 def run_guarded(

@@ -799,7 +799,7 @@ def drill_down_project(
     include_project_entity: bool = False,
     max_retries: int = 0,
     breaker: CircuitBreaker | None = None,
-) -> list[dict]:
+) -> tuple[list[dict], bool]:
     """Resolve a flagged project down to the individual affected entities.
 
     Decisions are always made from the entity's own annotations, never from a
@@ -831,13 +831,20 @@ def drill_down_project(
     degradation cost one breaker's worth of doomed reads *per project* - about ten
     minutes each, nine hours across the 53 flagged projects on the recorded scan -
     when the point of the guard is that one systemic failure stops the run.
+
+    Returns the findings and whether this project was cut short, so a caller
+    deciding whether its pass completed does not have to infer it from a side
+    effect. Inferring it is what stamped a truncated drill-down complete: the
+    caller's own bookkeeping only recorded projects it skipped *before* starting
+    them, so an abort inside the last - or only - flagged project left that
+    bookkeeping empty and looked exactly like a clean run.
     """
     flagged = set(audit.summary.get('duplicates', {})) \
         | set(audit.summary.get('orphans', {})) \
         | set(audit.summary.get('case_variants', {})) \
         | set(audit.summary.get('reserved', {}))
     if not flagged:
-        return []
+        return [], False
 
     def inspect(target: tuple[str, str]) -> tuple[dict | None, bool]:
         """One entity's finding, if any, and whether its read failed."""
@@ -919,7 +926,7 @@ def drill_down_project(
         LOG.error('%s: %s', audit.project_id, detail)
         audit.record_read_failure(audit.project_id, detail, 'Project',
                                   operation=READ_OP_DRILL_DOWN)
-    return findings
+    return findings, aborted
 
 
 FINDINGS_NAME = 'entity_findings.jsonl'
@@ -938,6 +945,7 @@ def write_findings_manifest(
     projects: Sequence[str],
     entities: int,
     not_inspected: Sequence[str] = (),
+    partially_inspected: Sequence[str] = (),
 ) -> Path:
     """Record what a findings file covers, next to the file itself.
 
@@ -945,6 +953,10 @@ def write_findings_manifest(
     else, so the file has to be able to say for itself whether it represents a
     completed drill-down. Without that, a plan built from a pass the circuit breaker
     cut short looks exactly like a plan built from a complete one.
+
+    ``partially_inspected`` names the projects the pass started and did not finish,
+    which is a different gap from one it never reached: an abort inside the last -
+    or only - flagged project leaves nothing in ``not_inspected`` at all.
     """
     manifest = {
         'findings_file': findings_path.name,
@@ -953,6 +965,7 @@ def write_findings_manifest(
         'entities': entities,
         'projects_inspected': list(projects),
         'projects_not_inspected': list(not_inspected),
+        'projects_partially_inspected': list(partially_inspected),
     }
     path = findings_manifest_path(findings_path)
     path.write_text(json.dumps(manifest, indent=2) + '\n')
@@ -996,6 +1009,11 @@ def run_drill_down(
     file untouched and its own output at ``entity_findings.partial.jsonl``, and
     either way a manifest beside the file names the projects it covers.
 
+    Completion is the positive signal every project reports, not the absence of
+    skipped ones: the pre-project guard only names projects the pass never started,
+    so an abort *inside* the last - or only - flagged project left that list empty
+    and promoted a truncated file with ``complete: true`` stamped on it.
+
     Returns the projects whose state lines the caller has to rewrite: the ones this
     pass inspected, plus the ones it never reached, each carrying the abort as lost
     coverage.
@@ -1010,6 +1028,8 @@ def run_drill_down(
     drilled: list[ProjectAudit] = []
     inspected: list[str] = []
     not_inspected: list[str] = []
+    partially_inspected: list[str] = []
+    completed = True
     total = 0
 
     with open(partial_path, 'w') as handle:
@@ -1025,22 +1045,28 @@ def run_drill_down(
                                                 operation=READ_OP_DRILL_DOWN)
                     drilled.append(pending)
                     not_inspected.append(pending.project_id)
+                completed = False
                 break
             LOG.info('drilling down %s', audit.project_id)
             drilled.append(audit)
             inspected.append(audit.project_id)
-            for finding in drill_down_project(
+            findings, aborted = drill_down_project(
                 syn, audit, canon=canon, index=index,
                 loose_compare=loose_compare, limit=limit, workers=workers,
                 include_project_entity=include_project_entity,
                 max_retries=max_retries, breaker=breaker,
-            ):
+            )
+            for finding in findings:
                 handle.write(json.dumps(finding) + '\n')
                 total += 1
+            if aborted:
+                completed = False
+                partially_inspected.append(audit.project_id)
 
-    if not_inspected:
+    if not completed:
         manifest = write_findings_manifest(partial_path, complete=False, projects=inspected,
-                                           entities=total, not_inspected=not_inspected)
+                                           entities=total, not_inspected=not_inspected,
+                                           partially_inspected=partially_inspected)
         kept = (f'{findings_path} was left as it was' if findings_path.exists()
                 else f'no {findings_path} was written')
         LOG.error('the drill-down did not complete, so %s; the %d entities this pass did '
