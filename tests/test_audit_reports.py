@@ -10,6 +10,7 @@ without credentials.
 import json
 import os
 import sys
+from datetime import datetime, timedelta, timezone
 
 import pytest
 import yaml
@@ -22,6 +23,19 @@ import audit_annotation_keys as audit  # noqa: E402
 import synapse_annotation_io as io  # noqa: E402
 
 FILE_TYPE = 'org.sagebionetworks.repo.model.FileEntity'
+
+
+class ServiceUnavailable(Exception):
+    """A 503 as the retry policy sees it: a response carrying a retryable status."""
+
+    def __init__(self, status_code=503):
+        super().__init__(f'{status_code} Service Unavailable')
+
+        class _Response:
+            pass
+
+        self.response = _Response()
+        self.response.status_code = status_code
 
 
 # ---------------------------------------------------------------------------
@@ -128,6 +142,66 @@ def test_a_drill_down_read_gets_the_retry_budget_and_a_lost_one_is_recorded(monk
     assert [f['entity_id'] for f in project.read_failures] == ['file2']
 
 
+def test_a_listing_lost_after_retries_is_recorded_rather_than_read_as_an_empty_project(
+        monkeypatch):
+    # The worst case of the coverage invariant: a single transient 503 on a
+    # project's root made the walk yield nothing, so the project contributed no rows
+    # to entity_findings.jsonl - the fix tool's only input - while the same report
+    # listed it as affected, said "Entity reads lost after retries: 0" and exited 0.
+    monkeypatch.setattr(io.time, 'sleep', lambda _seconds: None)
+    canon = frozenset({'age'})
+    index = policy.KeyIndex.build(canon)
+    attempts = []
+
+    class UnlistableRoot:
+        def restPOST(self, path, body=None):
+            attempts.append(json.loads(body)['parentId'])
+            raise ServiceUnavailable()
+
+    project = _flagged_audit()
+    findings = audit.drill_down_project(UnlistableRoot(), project, canon=canon, index=index,
+                                        workers=1, max_retries=2)
+
+    assert findings == []
+    assert attempts == ['syn0'] * 3, 'a listing gets the same retry budget as a read'
+    assert [f['entity_id'] for f in project.read_failures] == ['syn0']
+    assert 'could not list children' in project.read_failures[0]['error']
+    assert audit.exit_code_for([project], fail_on_findings=False, max_unscanned=0) == 2
+
+
+@pytest.mark.parametrize('workers', [1, 4])
+def test_the_drill_down_loop_is_guarded_by_the_circuit_breaker(monkeypatch, workers):
+    # The largest per-entity network loop in the tooling - 13,150 entities on the
+    # recorded scan - and the last one without an abort guard. With a retry budget
+    # and no guard, a degradation confined to /annotations2 has every read pay the
+    # full jittered backoff, which is over a day of grinding to reach a state file
+    # that is nothing but read failures.
+    canon = frozenset({'age'})
+    index = policy.KeyIndex.build(canon)
+    tree = {'syn0': [{'id': f'file{n}', 'name': f'file{n}', 'type': FILE_TYPE}
+                     for n in range(400)]}
+    reads = []
+
+    def read(_syn, entity_id, **_kwargs):
+        reads.append(entity_id)
+        raise RuntimeError('503 Service Unavailable')
+
+    monkeypatch.setattr(audit, 'read_annotations', read)
+    project = _flagged_audit()
+    audit.drill_down_project(ChildrenStub(tree), project, canon=canon, index=index,
+                             workers=workers)
+
+    # Sequentially it stops at the floor; threaded, it stops at the end of the chunk
+    # that tripped it. Either way it is nowhere near the 400 the project holds.
+    chunk = max(workers * 8, 64) if workers > 1 else io.ERROR_FLOOR
+    assert len(reads) == chunk
+    # The entities it never inspected are absent from entity_findings.jsonl just as
+    # surely as the ones whose read failed, so the abort is lost coverage too.
+    aborts = [f for f in project.read_failures if 'aborted' in f['error']]
+    assert [f['entity_id'] for f in aborts] == ['syn0']
+    assert audit.exit_code_for([project], fail_on_findings=False, max_unscanned=0) == 2
+
+
 def test_a_lost_entity_read_reaches_the_reports_and_the_exit_code(tmp_path):
     project = _flagged_audit()
     project.read_failures = [{'entity_id': 'file2', 'entity_type': 'FileEntity',
@@ -185,8 +259,10 @@ def test_a_drill_down_drops_the_stale_failures_it_re_read_and_keeps_the_rest(mon
 
     project = _flagged_audit()
     project.read_failures = [
-        {'entity_id': 'file1', 'entity_type': 'FileEntity', 'error': 'RuntimeError: 503'},
-        {'entity_id': 'file2', 'entity_type': 'FileEntity', 'error': 'RuntimeError: 503'},
+        {'entity_id': 'file1', 'entity_type': 'FileEntity', 'error': 'RuntimeError: 503',
+         'stage': audit.READ_STAGE_DRILL_DOWN},
+        {'entity_id': 'file2', 'entity_type': 'FileEntity', 'error': 'RuntimeError: 503',
+         'stage': audit.READ_STAGE_DRILL_DOWN},
     ]
     audit.drill_down_project(syn, project, canon=canon, index=index, workers=workers, limit=1)
 
@@ -213,7 +289,8 @@ def test_a_resumed_drill_down_rewrites_the_state_it_re_derived(tmp_path, monkeyp
     # lost read that this run's retry recovered, and stays at exit 2 forever.
     state = tmp_path / 'state.jsonl'
     stale = _flagged_audit('syn0')
-    stale.read_failures = [{'entity_id': 'file2', 'error': 'RuntimeError: 503'}]
+    stale.read_failures = [{'entity_id': 'file2', 'error': 'RuntimeError: 503',
+                            'stage': audit.READ_STAGE_DRILL_DOWN}]
     audit.append_state(state, stale)
 
     syn = ChildrenStub({'syn0': [{'id': 'file1', 'name': 'file1', 'type': FILE_TYPE},
@@ -261,12 +338,60 @@ def test_a_resumed_run_still_reports_a_project_entity_read_nothing_re_read(tmp_p
     assert 'Entity reads lost after retries: **1**' in (tmp_path / 'summary.md').read_text()
 
 
+def test_a_drill_down_reading_the_project_entity_does_not_close_the_inventory_gap(
+        tmp_path, monkeypatch):
+    # The live --include-project-entity --drill-down path. The scan's failure is the
+    # *inventory* merge: key_types never gained the project entity's keys, and only
+    # another scan of the project redoes that. The drill-down reads the same entity
+    # but does not re-derive the inventory, so it must not count as re-verifying it -
+    # otherwise a resume (which skips projects already scanned 'ok') exits 0 and
+    # reports zero lost reads over an inventory that is still short.
+    state = tmp_path / 'state.jsonl'
+    stale = _flagged_audit('syn0')
+    stale.record_read_failure('syn0', 'RuntimeError: 503', 'Project',
+                              stage=audit.READ_STAGE_SCAN)
+    audit.append_state(state, stale)
+
+    syn = ChildrenStub({'syn0': [{'id': 'file1', 'name': 'file1', 'type': FILE_TYPE}]})
+    monkeypatch.setattr(audit, 'login', lambda **kwargs: syn)
+    monkeypatch.setattr(audit, 'read_annotations',
+                        lambda _syn, entity_id, **kwargs: io.AnnotationRecord(
+                            entity_id, 'etag-1', {'Age': [1.5], 'age': [1.5]},
+                            {'Age': 'DOUBLE', 'age': 'DOUBLE'}))
+
+    exit_code = audit.main(['--project', 'syn0', '--out-dir', str(tmp_path),
+                            '--resume', '--drill-down', '--include-project-entity',
+                            '--allowlist', str(tmp_path / 'none.yaml')])
+
+    # The project entity was walked - it contributes a finding row - and the scan's
+    # gap is still reported.
+    findings = [json.loads(line) for line in
+                (tmp_path / 'entity_findings.jsonl').read_text().splitlines()]
+    assert 'syn0' in {finding['entity_id'] for finding in findings}
+    assert exit_code == 2
+    restored = audit.load_state(state)['syn0'].read_failures
+    assert [(f['entity_id'], f['stage']) for f in restored] == [('syn0', audit.READ_STAGE_SCAN)]
+
+
 def test_read_failures_survive_the_state_file(tmp_path):
     project = _flagged_audit()
-    project.read_failures = [{'entity_id': 'file2', 'error': 'RuntimeError: 503'}]
+    project.record_read_failure('file2', 'RuntimeError: 503', 'FileEntity',
+                                stage=audit.READ_STAGE_DRILL_DOWN)
     state = tmp_path / 'state.jsonl'
     audit.append_state(state, project)
     assert audit.load_state(state)['syn0'].read_failures == project.read_failures
+
+
+def test_a_read_failure_with_no_recorded_stage_is_treated_as_the_scan_s(tmp_path):
+    # The conservative direction: only a rescan can clear a scan-stage failure, so
+    # an entry whose stage is unknown keeps being reported rather than being
+    # silently dropped by the first drill-down that happens to read the entity.
+    state = tmp_path / 'state.jsonl'
+    state.write_text(json.dumps({'project_id': 'syn0', 'status': 'ok',
+                                 'read_failures': [{'entity_id': 'file2',
+                                                    'error': 'RuntimeError: 503'}]}) + '\n')
+    restored = audit.load_state(state)['syn0']
+    assert restored.read_failures[0]['stage'] == audit.READ_STAGE_SCAN
 
 
 # ---------------------------------------------------------------------------
@@ -397,12 +522,41 @@ def test_regenerating_the_baseline_preserves_a_hand_triaged_entry(tmp_path):
     entries = yaml.safe_load(out.read_text())['entries']
     generated = [e for e in entries if e.get('generated')]
     hand_added = [e for e in entries if not e.get('generated')]
-    # The baseline was replaced - note the new expiry - and the curator's entry
-    # came through untouched.
+    # The baseline was replaced - an explicit --baseline-expires is the one thing
+    # that moves a deadline - and the curator's entry came through untouched.
     assert len(generated) == 3 and {e['expires'] for e in generated} == {'2099-02-02'}
     assert [e['key'] for e in hand_added] == ['tissue']
     assert hand_added[0]['reason'] == 'legitimate custom annotation'
     assert audit.load_allowlist(out).suppresses('tissue', 'syn9', 'unknown')
+
+
+def test_regenerating_without_an_explicit_expiry_keeps_the_recorded_deadline(tmp_path):
+    # The documented regeneration command must not renew the baseline. Defaulting to
+    # today + a quarter reset all 489 entries every time the command in the header
+    # was run, so the drift would never resurface - the opposite of what the header
+    # and utils/README.md say the file does, and of the reason the expiry exists.
+    state, _ = _baseline_state(tmp_path)
+    out = tmp_path / 'allowlist.yaml'
+    audit.main(['--state', str(state), '--out-dir', str(tmp_path),
+                '--emit-allowlist', str(out), '--baseline-expires', '2026-12-01'])
+
+    # A later scan finds drift on a project the baseline does not name yet.
+    fresh = audit.ProjectAudit(project_id='syn3', status='ok')
+    fresh.summary = {'duplicates': {'Age': 'age'}}
+    audit.append_state(state, fresh)
+
+    assert audit.main(['--state', str(state), '--out-dir', str(tmp_path),
+                       '--emit-allowlist', str(out)]) == 0
+
+    entries = {(e['scope'], e['key']): e for e in yaml.safe_load(out.read_text())['entries']}
+    assert entries[('syn1', 'Age')]['expires'] == '2026-12-01'
+    assert entries[('syn2', 'timePointUnit')]['expires'] == '2026-12-01'
+    # Newly found drift still lands with a deadline of its own, a quarter out.
+    default = (datetime.now(timezone.utc).date()
+               + timedelta(days=audit.BASELINE_TTL_DAYS)).isoformat()
+    assert entries[('syn3', 'Age')]['expires'] == default
+    # And the header points at the deadline that comes first.
+    assert '2026-12-01' in out.read_text().split('entries:')[0]
 
 
 def test_a_hand_triaged_entry_wins_over_the_generated_one_it_duplicates(tmp_path):

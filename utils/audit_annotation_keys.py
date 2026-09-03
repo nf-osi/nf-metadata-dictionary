@@ -44,7 +44,7 @@ import sys
 import threading
 import time
 from collections import Counter
-from collections.abc import Container, Iterable, Mapping, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta, timezone
@@ -63,6 +63,7 @@ from annotation_key_policy import (  # noqa: E402
     load_canonical_slots,
 )
 from synapse_annotation_io import (  # noqa: E402
+    CircuitBreaker,
     column_type_for,
     is_forbidden,
     read_annotations,
@@ -74,6 +75,16 @@ LOG = logging.getLogger('audit_annotation_keys')
 #: Guards the per-project read-failure list, which drill-down worker threads and
 #: the scan both append to.
 _READ_FAILURE_LOCK = threading.Lock()
+
+#: Which pass lost a read. A recorded failure is only ever cleared by a pass that
+#: redoes the *same* operation, so the two are kept apart: the scan's inventory
+#: merge (``--include-project-entity``) and the drill-down's per-entity read both
+#: touch the project entity, but only the scan can close the inventory gap. Reading
+#: the project entity during a drill-down does not re-derive ``key_types``, so
+#: treating it as a re-verification let a ``--resume`` - which skips projects
+#: already scanned ``ok`` - report coverage it never had.
+READ_STAGE_SCAN = 'scan'
+READ_STAGE_DRILL_DOWN = 'drill_down'
 
 #: file | table | folder | dataset. Deliberately excludes PROJECT(2): project
 #: entity annotations are invisible to a view scope and need --include-project-entity.
@@ -223,22 +234,58 @@ def entry_identity(entry: Mapping) -> tuple[str, str, str]:
             str(entry.get('classification') or 'any'))
 
 
-def hand_added_entries(path: Path) -> list[dict]:
-    """Entries in an existing allowlist that ``--emit-allowlist`` did not write.
+def existing_entries(path: Path) -> list[dict]:
+    """The entries an allowlist already holds, if it exists.
 
-    Regeneration merges rather than overwrites. The documented workflow is a
-    generated baseline that shrinks as remediation lands *plus* whatever a curator
-    has triaged by hand, so a regeneration that silently dropped the hand-triaged
-    half would make the documented command destructive.
-
-    Raises ``yaml.YAMLError`` rather than guessing when the existing file cannot
-    be parsed, since the entries at risk are the ones nothing else records.
+    Raises ``yaml.YAMLError`` rather than guessing when the file cannot be parsed,
+    since the entries at risk are the ones nothing else records.
     """
     if not path.exists():
         return []
     document = yaml.safe_load(path.read_text()) or {}
     return [dict(entry) for entry in (document.get('entries') or [])
-            if isinstance(entry, Mapping) and not entry.get('generated')]
+            if isinstance(entry, Mapping)]
+
+
+def hand_added_entries(entries: Sequence[Mapping]) -> list[dict]:
+    """The ones ``--emit-allowlist`` did not write.
+
+    Regeneration merges rather than overwrites. The documented workflow is a
+    generated baseline that shrinks as remediation lands *plus* whatever a curator
+    has triaged by hand, so a regeneration that silently dropped the hand-triaged
+    half would make the documented command destructive.
+    """
+    return [dict(entry) for entry in entries if not entry.get('generated')]
+
+
+def recorded_expiries(entries: Sequence[Mapping]) -> dict[tuple[str, str, str], str]:
+    """Each already-generated entry's expiry, keyed by identity.
+
+    Carried forward by regeneration unless ``--baseline-expires`` says otherwise:
+    the expiry is a deadline for remediating the drift, and the documented
+    regeneration command silently resetting all 489 of them for another quarter is
+    exactly how a time-boxed acceptance becomes permanent by neglect - the thing
+    the expiry was added to prevent, and the opposite of what the header and
+    utils/README.md tell the reader the file does.
+    """
+    expiries: dict[tuple[str, str, str], str] = {}
+    for entry in entries:
+        expires = entry.get('expires')
+        if not entry.get('generated') or not expires:
+            continue
+        if isinstance(expires, datetime):
+            expires = expires.date()
+        if not isinstance(expires, date):
+            try:
+                expires = date.fromisoformat(str(expires))
+            except ValueError:
+                # An unparseable expiry suppresses nothing anyway (load_allowlist
+                # drops the entry), so there is no deadline here to carry forward.
+                LOG.warning('generated entry for %s has an unparseable expires: %r; it will be '
+                            'redated', entry.get('key'), expires)
+                continue
+        expiries[entry_identity(entry)] = expires.isoformat()
+    return expiries
 
 
 def _entry_block(entries: Sequence[Mapping]) -> str:
@@ -324,6 +371,9 @@ def baseline_header(
         f'# Synapse; each remediation pass should delete the entries it fixed. The {expires.isoformat()}',
         '# expiry is not meant to be renewed - once it passes, the findings resurface and',
         '# the job goes red, which is the reminder that the remediation never happened.',
+        '# Regeneration keeps each generated entry\'s expiry, so it cannot renew the',
+        '# deadline by accident; only an explicit --baseline-expires moves one, and drift',
+        '# found since the last regeneration is dated a quarter out from the day it appears.',
         '#',
         '# Fields per entry:',
         '#   key             (required) the annotation key as it appears on entities',
@@ -334,6 +384,7 @@ def baseline_header(
         '#   issue           the GitHub issue where it was triaged',
         '#   expires         ISO date. After it passes the finding resurfaces, so a',
         '#                   time-boxed acceptance cannot become permanent by neglect.',
+        '#                   Carried forward verbatim by regeneration.',
         '#   generated       set by --emit-allowlist. Regeneration replaces these entries',
         '#                   and preserves every entry without it. Leave it off yours.',
         '#',
@@ -592,58 +643,74 @@ class ProjectAudit:
             summary=payload.get('summary', {}),
             multitype=payload.get('multitype', {}),
             elapsed_s=payload.get('elapsed_s', 0.0),
-            read_failures=payload.get('read_failures') or [],
+            # A failure with no recorded stage is treated as the scan's, which is
+            # the conservative direction: nothing but a rescan can then clear it,
+            # so an unrecognised entry is reported rather than quietly dropped.
+            read_failures=[{'stage': READ_STAGE_SCAN, **failure}
+                           for failure in payload.get('read_failures') or []],
         )
 
-    def record_read_failure(self, entity_id: str, error: str, entity_type: str = '') -> None:
-        """Note an entity whose annotations were lost, at most once per run.
+    def record_read_failure(
+        self,
+        entity_id: str,
+        error: str,
+        entity_type: str = '',
+        *,
+        stage: str = READ_STAGE_SCAN,
+    ) -> None:
+        """Note a read that was lost, at most once per entity per stage.
 
         An entity can be read twice in one run - the project entity is read by the
-        scan and again by a drill-down that includes it - and counting the same
-        lost read twice would spend the ``--max-unscanned`` budget twice over for
-        one gap in coverage. Reads run on a thread pool, hence the lock.
+        scan and again by a drill-down that includes it - and counting one gap in
+        coverage twice would spend the ``--max-unscanned`` budget twice over for it.
+        The stage is part of the identity because the two reads are different
+        operations that different passes are able to redo. Reads run on a thread
+        pool, hence the lock.
         """
         with _READ_FAILURE_LOCK:
-            if any(failure.get('entity_id') == entity_id for failure in self.read_failures):
+            if any((failure.get('entity_id'), failure.get('stage')) == (entity_id, stage)
+                   for failure in self.read_failures):
                 return
             self.read_failures.append({
                 'entity_id': entity_id,
                 'entity_type': entity_type,
+                'stage': stage,
                 'error': error,
             })
 
-    def take_read_failures(self) -> list[dict]:
-        """Detach the recorded failures, for a caller about to re-read.
+    def take_read_failures(self, stage: str) -> dict[str, dict]:
+        """Detach one stage's failures, keyed by entity, for a pass about to re-read.
 
-        Paired with :meth:`restore_unverified_read_failures`: what the re-read
-        actually covered is dropped, and what it never looked at goes back.
+        Only that stage's: a failure another pass recorded is a gap this one cannot
+        speak to. Paired with :meth:`restore_read_failures`, which puts back
+        whatever the pass did not actually cover.
         """
         with _READ_FAILURE_LOCK:
-            taken, self.read_failures = self.read_failures, []
+            taken = {failure['entity_id']: failure for failure in self.read_failures
+                     if failure.get('stage') == stage}
+            self.read_failures = [failure for failure in self.read_failures
+                                  if failure.get('stage') != stage]
             return taken
 
-    def restore_unverified_read_failures(
-        self,
-        previous: Sequence[dict],
-        reread: Container[str],
-    ) -> None:
-        """Put back the earlier failures nothing in this pass re-read.
+    def restore_read_failures(self, outstanding: Mapping[str, dict]) -> None:
+        """Put back the failures a pass took but never re-read.
 
         Reported lost coverage has to describe the reads this run is responsible
         for. A scope this run re-read has a fresh verdict either way, so its old
-        failure is stale and goes. A scope this run never touched - a project the
-        resume did not rescan, an entity beyond ``--drill-down-limit`` - is still
-        a gap in coverage, and forgetting it would let a resumed run report better
-        coverage than it actually has.
+        failure is stale and goes. A scope this run never touched - an entity
+        beyond ``--drill-down-limit``, a project the resume did not rescan - is
+        still a gap in coverage, and forgetting it would let a resumed run report
+        better coverage than it actually has.
         """
         with _READ_FAILURE_LOCK:
-            known = {failure.get('entity_id') for failure in self.read_failures}
-            for failure in previous:
-                entity_id = failure.get('entity_id')
-                if entity_id in reread or entity_id in known:
+            known = {(failure.get('entity_id'), failure.get('stage'))
+                     for failure in self.read_failures}
+            for failure in outstanding.values():
+                identity = (failure.get('entity_id'), failure.get('stage'))
+                if identity in known:
                     continue
                 self.read_failures.append(failure)
-                known.add(entity_id)
+                known.add(identity)
 
     @property
     def finding_counts(self) -> dict[str, int]:
@@ -690,7 +757,11 @@ def audit_project(
             columns, read_error = _project_entity_column_types(
                 syn, audit.project_id, max_retries=max_retries)
             if read_error:
-                audit.record_read_failure(audit.project_id, read_error, 'Project')
+                # Recorded against the scan stage: the gap is the *inventory* merge
+                # below, which only another scan of this project redoes. A
+                # drill-down reading the same entity does not re-derive key_types.
+                audit.record_read_failure(audit.project_id, read_error, 'Project',
+                                          stage=READ_STAGE_SCAN)
             for key, column in columns.items():
                 key_types.setdefault(key, set()).add(column)
     except Exception as error:  # noqa: BLE001 - the failure mode is the finding
@@ -738,6 +809,41 @@ def _project_entity_column_types(
 # Entity-level drill-down
 # ---------------------------------------------------------------------------
 
+class ReadLedger:
+    """Keeps one project's recorded read failures honest across a re-reading pass.
+
+    It holds the failures an earlier run recorded for the stage this pass redoes
+    and hands back, at the end, exactly the ones this pass never covered. So a read
+    that failed once and succeeded on the retry run stops being reported - without
+    which one transient 503 pins every later ``--resume`` at exit 2 - while a gap
+    nothing re-read is still reported.
+
+    What is tracked is the outstanding failures, not the entities visited: the
+    walk is deliberately chunked so memory stays bounded on a project with tens of
+    thousands of entities, and a visited-id set would put that back.
+    """
+
+    def __init__(self, audit: ProjectAudit, stage: str):
+        self.audit = audit
+        self.stage = stage
+        self.outstanding = audit.take_read_failures(stage)
+
+    def verified(self, entity_id: str) -> None:
+        """This pass reached that scope, so any earlier failure for it is stale."""
+        with _READ_FAILURE_LOCK:
+            self.outstanding.pop(entity_id, None)
+
+    def lost(self, entity_id: str, error: str, entity_type: str = '') -> None:
+        """This pass could not read that scope either; record it against this run."""
+        self.verified(entity_id)
+        self.audit.record_read_failure(entity_id, error, entity_type, stage=self.stage)
+
+    def settle(self) -> None:
+        with _READ_FAILURE_LOCK:
+            outstanding, self.outstanding = self.outstanding, {}
+        self.audit.restore_read_failures(outstanding)
+
+
 def drill_down_project(
     syn,
     audit: ProjectAudit,
@@ -764,14 +870,23 @@ def drill_down_project(
     fix tool's only input, so an entity dropped from it is a finding that can
     never be repaired, and the reports have to say so.
 
+    This is the largest per-entity network loop in the tooling - 13,150 entities on
+    the recorded portal scan - so it is guarded by the same circuit breaker as every
+    loop in ``fix_annotation_keys``. With a retry budget and no guard, a degradation
+    confined to ``/entity/{id}/annotations2`` would make each read pay the full
+    jittered backoff before failing, which is over a day of grinding to reach a
+    state file that is nothing but read failures. The breaker is sampled per
+    request, and the abort is itself recorded as lost coverage: entities the pass
+    never inspected are absent from ``entity_findings.jsonl`` just as surely as ones
+    whose read failed.
+
     Read failures are also *freshened* here, because this is the only place that
-    knows which entities were actually re-read. An earlier run's failure for an
-    entity this pass reads again is stale and goes, so a transient 503 does not pin
-    every later ``--resume`` at exit 2; one for an entity this pass never reaches -
-    beyond ``--drill-down-limit``, or the project entity when the drill-down does
-    not include it - is still lost coverage and is kept. Doing this in
-    ``carry_forward`` instead ran before anything knew which projects would be
-    re-read, so it dropped gaps nothing had re-verified.
+    knows which entities were actually re-read - see :class:`ReadLedger`. Only the
+    drill-down's own stage is freshened: a scan-time failure means the project's key
+    inventory was never merged, which re-reading the same entity here does not
+    redo, so a ``--resume`` that skips the rescan must keep reporting it. Doing any
+    of this in ``carry_forward`` instead ran before anything knew which projects
+    would be re-read, so it dropped gaps nothing had re-verified.
     """
     flagged = set(audit.summary.get('duplicates', {})) \
         | set(audit.summary.get('orphans', {})) \
@@ -780,29 +895,27 @@ def drill_down_project(
     if not flagged:
         return []
 
-    previous_failures = audit.take_read_failures()
-    reread: set[str] = set()
+    ledger = ReadLedger(audit, READ_STAGE_DRILL_DOWN)
 
-    def inspect(target: tuple[str, str]) -> dict | None:
+    def inspect(target: tuple[str, str]) -> tuple[dict | None, bool]:
+        """One entity's finding, if any, and whether its read failed."""
         entity_id, entity_type = target
-        with _READ_FAILURE_LOCK:
-            reread.add(entity_id)
         try:
             record = read_annotations(syn, entity_id, max_retries=max_retries)
         except Exception as error:  # noqa: BLE001
             LOG.warning('%s: could not read annotations: %s', entity_id, error)
-            audit.record_read_failure(
-                entity_id, f'{type(error).__name__}: {error}'[:300], entity_type)
-            return None
+            ledger.lost(entity_id, f'{type(error).__name__}: {error}'[:300], entity_type)
+            return None, True
+        ledger.verified(entity_id)
         annotations = dict(record.values)
         if not flagged & set(annotations):
-            return None
+            return None, False
         decisions = [
             d for d in decide_entity(annotations, canon=canon, index=index, loose_compare=loose_compare)
             if d.action.value != 'skip'
         ]
         if not decisions:
-            return None
+            return None, False
         return {
             'project_id': audit.project_id,
             'entity_id': entity_id,
@@ -811,28 +924,49 @@ def drill_down_project(
             'annotations': _jsonable(annotations),
             'value_types': record.types,
             'decisions': [d.as_dict() for d in decisions],
-        }
+        }, False
 
     walker = _iter_project_entities(syn, audit.project_id, limit=limit, workers=workers,
-                                    include_project_entity=include_project_entity)
+                                    include_project_entity=include_project_entity,
+                                    max_retries=max_retries, ledger=ledger)
+    breaker = CircuitBreaker()
     findings: list[dict] = []
+    aborted = False
+
+    def collect(batch: Sequence[tuple[dict | None, bool]]) -> bool:
+        findings.extend(finding for finding, _failed in batch if finding)
+        return breaker.sample(failed for _finding, failed in batch)
+
     if workers <= 1:
-        findings = [finding for finding in map(inspect, walker) if finding]
+        for target in walker:
+            if collect([inspect(target)]):
+                aborted = True
+                break
     else:
         # Reads are independent, so they parallelise safely. Chunked rather than
         # materialised so the walk and the reads overlap and memory stays bounded
-        # on a project with tens of thousands of entities.
+        # on a project with tens of thousands of entities. The breaker is judged at
+        # the end of each chunk, so a degradation costs at most one chunk of extra
+        # reads rather than the rest of the project.
         chunk_size = max(workers * 8, 64)
         with ThreadPoolExecutor(max_workers=workers) as pool:
             chunk: list[tuple[str, str]] = []
             for target in walker:
                 chunk.append(target)
                 if len(chunk) >= chunk_size:
-                    findings.extend(f for f in pool.map(inspect, chunk) if f)
+                    aborted = collect(list(pool.map(inspect, chunk)))
                     chunk = []
-            if chunk:
-                findings.extend(f for f in pool.map(inspect, chunk) if f)
-    audit.restore_unverified_read_failures(previous_failures, reread)
+                    if aborted:
+                        break
+            if chunk and not aborted:
+                aborted = collect(list(pool.map(inspect, chunk)))
+
+    if aborted:
+        detail = (f'drill-down aborted after {breaker.failures} of the last {breaker.window} '
+                  'reads failed; the rest of this project was not inspected')
+        LOG.error('%s: %s', audit.project_id, detail)
+        ledger.lost(audit.project_id, detail, 'Project')
+    ledger.settle()
     return findings
 
 
@@ -863,14 +997,36 @@ def _list_children(syn, parent_id: str) -> list[dict]:
             return children
 
 
-def _safe_list_children(syn, parent_id: str) -> list[dict]:
+def _safe_list_children(
+    syn,
+    parent_id: str,
+    *,
+    max_retries: int = 0,
+    ledger: ReadLedger | None = None,
+) -> list[dict]:
     """Children of one entity; an unreadable folder yields nothing rather than
-    aborting a walk over thousands of siblings."""
+    aborting a walk over thousands of siblings.
+
+    A listing gets the same retry budget as an annotation read, and one still lost
+    after them is recorded on the ledger as lost coverage. Swallowing it into an
+    empty page was the one lost-read path that was not treated as a finding: a
+    single 503 on a project's root made the walk yield nothing, so the project
+    contributed no rows to ``entity_findings.jsonl`` - the fix tool's only input -
+    while the report still said "Entity reads lost after retries: 0" for a project
+    it listed as affected, and the run exited 0.
+    """
     try:
-        return _list_children(syn, parent_id)
+        children = with_retries(lambda: _list_children(syn, parent_id),
+                                max_retries=max_retries, label=parent_id, logger=LOG)
     except Exception as error:  # noqa: BLE001
         LOG.warning('%s: could not list children: %s', parent_id, error)
+        if ledger is not None:
+            ledger.lost(parent_id,
+                        f'could not list children: {type(error).__name__}: {error}'[:300])
         return []
+    if ledger is not None:
+        ledger.verified(parent_id)
+    return children
 
 
 def _iter_project_entities(
@@ -880,6 +1036,8 @@ def _iter_project_entities(
     limit: int | None = None,
     workers: int = 1,
     include_project_entity: bool = False,
+    max_retries: int = 0,
+    ledger: ReadLedger | None = None,
 ):
     """Walk files, folders, tables and datasets under a project.
 
@@ -895,6 +1053,10 @@ def _iter_project_entities(
     only input ``fix_annotation_keys.py --findings`` reads - the finding would be
     visible and unfixable. It stays opt-in, matching the audit flag that folds
     those keys into the inventory in the first place.
+
+    A ``ledger`` makes each listing's outcome part of the caller's coverage
+    accounting; without one an unreadable folder is only logged, which is fine for
+    a caller that is not reporting coverage at all.
     """
     seen = 0
     frontier = [project_id]
@@ -906,12 +1068,15 @@ def _iter_project_entities(
         if limit is not None and seen >= limit:
             return
 
+    def children_of(parent: str) -> list[dict]:
+        return _safe_list_children(syn, parent, max_retries=max_retries, ledger=ledger)
+
     while frontier:
         if workers > 1 and len(frontier) > 1:
             with ThreadPoolExecutor(max_workers=min(workers, len(frontier))) as pool:
-                pages = list(pool.map(lambda p: _safe_list_children(syn, p), frontier))
+                pages = list(pool.map(children_of, frontier))
         else:
-            pages = [_safe_list_children(syn, parent) for parent in frontier]
+            pages = [children_of(parent) for parent in frontier]
 
         next_frontier: list[str] = []
         for children in pages:
@@ -1248,6 +1413,12 @@ def emit_allowlist(
     curator added by hand is carried over untouched. Where a hand-added entry
     covers the same (key, scope, classification) as a generated one, the
     hand-added one stands - its reason and expiry are the human's decision.
+
+    An already-generated entry also keeps its recorded expiry. Only an explicit
+    ``--baseline-expires`` moves a deadline, so the documented regeneration command
+    cannot quietly renew the whole baseline for another quarter. Drift found since
+    the last regeneration gets the default expiry, which is how a fresh finding
+    still lands with one.
     """
     if expires:
         try:
@@ -1259,26 +1430,37 @@ def emit_allowlist(
         expiry = datetime.now(timezone.utc).date() + timedelta(days=BASELINE_TTL_DAYS)
 
     try:
-        preserved = hand_added_entries(path)
+        already = existing_entries(path)
     except yaml.YAMLError as error:
         LOG.error('%s exists but could not be parsed (%s); refusing to overwrite it, because '
                   'any hand-triaged entries it holds would be lost', path, error)
         return 1
 
+    preserved = hand_added_entries(already)
+    carried = {} if expires else recorded_expiries(already)
     scanned = sum(1 for a in audits if a.status == 'ok')
     reason = (f'Pre-remediation baseline from the {scanned}-project portal scan; '
               'drift still present in Synapse.')
     hand_triaged = {entry_identity(e) for e in preserved}
-    entries = [e for e in build_baseline_entries(audits, expires=expiry, reason=reason)
-               if entry_identity(e) not in hand_triaged]
-    header = baseline_header(audits, entries, state_path=state_path, expires=expiry)
+    entries = [
+        {**entry, 'expires': carried.get(entry_identity(entry), entry['expires'])}
+        for entry in build_baseline_entries(audits, expires=expiry, reason=reason)
+        if entry_identity(entry) not in hand_triaged
+    ]
+    # The header names the deadline the reader has to act on, which once expiries
+    # are carried forward is the earliest one still in the file.
+    deadline = min((date.fromisoformat(e['expires']) for e in entries), default=expiry)
+    header = baseline_header(audits, entries, state_path=state_path, expires=deadline)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(format_allowlist(entries, preserved, header=header))
     counts = Counter(e['classification'] for e in entries)
-    LOG.info('wrote %d baseline entries to %s (%s), expiring %s; %d hand-triaged entries '
-             'preserved', len(entries), path,
+    renewed = sum(1 for e in entries if entry_identity(e) not in carried)
+    LOG.info('wrote %d baseline entries to %s (%s); %d kept their recorded expiry, %d dated %s; '
+             'earliest deadline %s; %d hand-triaged entries preserved',
+             len(entries), path,
              ', '.join(f'{counts[b]} {b}' for b in BASELINE_BUCKETS if counts[b]),
-             expiry.isoformat(), len(preserved))
+             len(entries) - renewed, renewed, expiry.isoformat(), deadline.isoformat(),
+             len(preserved))
     return 0
 
 

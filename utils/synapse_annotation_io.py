@@ -19,7 +19,8 @@ import json
 import logging
 import random
 import time
-from collections.abc import Sequence
+from collections import deque
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -238,6 +239,117 @@ def with_retries(call, *, max_retries: int, label: str, logger: logging.Logger |
             time.sleep(sleep_for)
             delay = min(delay * 2, 30.0)
     raise AssertionError('unreachable')
+
+
+#: Abort once more than this fraction of the most recent requests have failed. The
+#: rate is measured over a trailing window rather than the whole run, so a healthy
+#: prefix cannot dilute the signal: a run that degrades at entity 2,000 stops
+#: there rather than waiting for the cumulative rate to catch up.
+ERROR_RATE_THRESHOLD = 0.10
+#: How many of the most recent requests the rate is measured over.
+ERROR_SAMPLE = 50
+#: Fewest results the rate is judged on, so a run shorter than the full window is
+#: guarded too. Below this a single failure would be enough to clear the
+#: threshold on its own, which would abort a three-entity run spuriously.
+ERROR_FLOOR = 10
+
+
+class CircuitBreaker:
+    """Trailing-window failure rate, tripped by a systemic problem.
+
+    A revoked token, a service degradation or an ACL changed mid-run should stop a
+    per-entity loop where the trouble starts, whether that is at entity 10 or at
+    entity 2,000. Hence the trailing window, judged as soon as ``floor`` results
+    are in rather than once it is full: the whole-run rate would take hundreds more
+    failures to clear the threshold after a long healthy prefix, and waiting for a
+    full window would leave every run shorter than it unguarded - which is exactly
+    the scale a curator drives by hand.
+
+    Lives beside ``with_retries`` for the same reason: retries make an unguarded
+    loop worse rather than better, since each entity of a doomed run pays the full
+    jittered backoff before failing, which turns seconds into days. Every
+    per-entity network loop in the audit and the fix tool is guarded by this one
+    implementation so a guard cannot be added to one loop and forgotten on its
+    sibling.
+
+    The window holds one sample per *request*, never one per iteration: work that
+    issued no network call says nothing about the health of the service.
+    """
+
+    def __init__(self, *, sample: int = ERROR_SAMPLE, floor: int = ERROR_FLOOR,
+                 threshold: float = ERROR_RATE_THRESHOLD):
+        self.threshold = threshold
+        self.floor = min(sample, floor)
+        self.recent: deque[bool] = deque(maxlen=sample)
+
+    def record(self, failed: bool) -> None:
+        self.recent.append(bool(failed))
+
+    def sample(self, verdicts: Iterable[bool | None]) -> bool:
+        """Record verdicts in order, stopping at the one that trips the breaker.
+
+        ``None`` means the item issued no request and is not sampled at all, which
+        is what keeps work that asked the service for nothing from diluting the
+        window. Returns True once the trailing rate is over the threshold, so a
+        batched caller - the audit's threaded drill-down reads a chunk at a time -
+        can stop at the end of the batch that tripped it.
+        """
+        for verdict in verdicts:
+            if verdict is None:
+                continue
+            self.record(verdict)
+            if self.tripped:
+                return True
+        return False
+
+    @property
+    def failures(self) -> int:
+        return sum(self.recent)
+
+    @property
+    def window(self) -> int:
+        return len(self.recent)
+
+    @property
+    def tripped(self) -> bool:
+        return self.window >= self.floor and self.failures / self.window > self.threshold
+
+
+def run_guarded(
+    items: Sequence,
+    step,
+    *,
+    failed,
+    label: str,
+    logger: logging.Logger | None = None,
+) -> tuple[list, bool]:
+    """Apply ``step`` to each item, stopping the moment the breaker trips.
+
+    Every sequential per-entity loop that issues network calls runs through here,
+    so a systemic failure stops the run where it starts rather than grinding
+    through thousands of entities in any one of them.
+
+    ``failed`` returns True or False for an item that issued a request, and None
+    for one that made no network call at all. Only requests are sampled, because
+    the breaker is measuring the service rather than the loop: an item that asked
+    the service for nothing can neither trip it nor dilute it. Sampling every
+    iteration is what let unchanged entities hide an outage - at nine of them per
+    planned entity the window sits at 5 failures in 50, exactly the 10% threshold
+    and so never above it, while every read the loop actually issued was failing.
+
+    Returns the results collected and whether the run was cut short.
+    """
+    logger = logger or LOG
+    breaker = CircuitBreaker()
+    results: list = []
+    for position, item in enumerate(items, 1):
+        result = step(position, item)
+        results.append(result)
+        if breaker.sample([failed(result)]):
+            logger.error('%s: aborting at entity %d: %d of the last %d requests failed',
+                         label, position, breaker.failures, breaker.window)
+            return results, True
+    return results, False
 
 
 def read_annotations(syn, entity_id: str, *, max_retries: int = 0) -> AnnotationRecord:

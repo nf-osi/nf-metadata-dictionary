@@ -52,7 +52,7 @@ import logging
 import os
 import sys
 import time
-from collections import Counter, deque
+from collections import Counter
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -71,6 +71,7 @@ from annotation_key_policy import (  # noqa: E402
 from synapse_annotation_io import (  # noqa: E402
     AnnotationRecord,
     read_annotations,
+    run_guarded,
     write_annotations,
 )
 from validate_annotations import (  # noqa: E402
@@ -85,101 +86,12 @@ LOG = logging.getLogger('fix_annotation_keys')
 #: Statuses that mean an entity needs no further attention on a resumed run.
 SETTLED_STATUSES = frozenset({'ok', 'noop'})
 
-#: Abort once more than this fraction of the most recent writes have failed. The
-#: rate is measured over a trailing window rather than the whole run, so a
-#: healthy prefix cannot dilute the signal: a run that degrades at entity 2,000
-#: stops there rather than waiting for the cumulative rate to catch up.
-ERROR_RATE_THRESHOLD = 0.10
-#: How many of the most recent writes the rate is measured over.
-ERROR_SAMPLE = 50
-#: Fewest results the rate is judged on, so a run shorter than the full window is
-#: guarded too. Below this a single failure would be enough to clear the
-#: threshold on its own, which would abort a three-entity run spuriously.
-ERROR_FLOOR = 10
-
-
-class CircuitBreaker:
-    """Trailing-window failure rate, tripped by a systemic problem.
-
-    A revoked token, a service degradation or an ACL changed mid-run should stop
-    the run where it starts, whether that is at entity 10 or at entity 2,000.
-    Hence the trailing window, judged as soon as ``floor`` results are in rather
-    than once it is full: the whole-run rate would take hundreds more failures to
-    clear the threshold after a long healthy prefix, and waiting for a full window
-    would leave every run shorter than it unguarded - which is exactly the scale a
-    curator drives by hand with ``--entity``.
-
-    Driven only through ``run_guarded``, which every per-entity network loop in
-    this module goes through, so no loop can be left unguarded by accident. The
-    window holds one sample per *request*, never one per iteration: work that
-    issued no network call says nothing about the health of the service.
-    """
-
-    def __init__(self, *, sample: int = ERROR_SAMPLE, floor: int = ERROR_FLOOR,
-                 threshold: float = ERROR_RATE_THRESHOLD):
-        self.threshold = threshold
-        self.floor = min(sample, floor)
-        self.recent: deque[bool] = deque(maxlen=sample)
-
-    def record(self, failed: bool) -> None:
-        self.recent.append(bool(failed))
-
-    @property
-    def failures(self) -> int:
-        return sum(self.recent)
-
-    @property
-    def window(self) -> int:
-        return len(self.recent)
-
-    @property
-    def tripped(self) -> bool:
-        return self.window >= self.floor and self.failures / self.window > self.threshold
-
-
-def run_guarded(
-    items: Sequence,
-    step,
-    *,
-    failed,
-    label: str,
-    logger: logging.Logger | None = None,
-) -> tuple[list, bool]:
-    """Apply ``step`` to each item, stopping the moment the breaker trips.
-
-    Every per-entity loop that issues network calls runs through here - the
-    preflight's planning pass, its conformance pass, the write pass, and the
-    rollback and verify passes - so a systemic failure stops the run where it
-    starts rather than grinding through thousands of entities in any one of them.
-    Retries make an unguarded loop worse rather than better: with a retry budget
-    each entity of a doomed run pays the full jittered backoff before failing,
-    which turns seconds into days.
-
-    ``failed`` returns True or False for an item that issued a request, and None
-    for one that made no network call at all. Only requests are sampled, because
-    the breaker is measuring the service rather than the loop: an item that asked
-    the service for nothing can neither trip it nor dilute it. Sampling every
-    iteration is what let unchanged entities hide an outage - at nine of them per
-    planned entity the window sits at 5 failures in 50, exactly the 10% threshold
-    and so never above it, while every read the loop actually issued was failing.
-
-    Returns the results collected and whether the run was cut short.
-    """
-    logger = logger or LOG
-    breaker = CircuitBreaker()
-    results: list = []
-    for position, item in enumerate(items, 1):
-        result = step(position, item)
-        results.append(result)
-        verdict = failed(result)
-        if verdict is None:
-            continue
-        breaker.record(verdict)
-        if breaker.tripped:
-            logger.error('%s: aborting at entity %d: %d of the last %d requests failed',
-                         label, position, breaker.failures, breaker.window)
-            return results, True
-    return results, False
+# ``run_guarded`` and its circuit breaker live in synapse_annotation_io alongside
+# the retry policy, so the audit's drill-down and every loop here are guarded by
+# one implementation rather than by copies that drift apart. Every per-entity loop
+# in this module - the preflight's planning pass, its conformance pass, the write
+# pass, and the rollback and verify passes - goes through it, so none can be left
+# unguarded by accident.
 
 
 def _is_failure(result: ApplyResult) -> bool:
@@ -831,7 +743,19 @@ def check_write_permission(syn, entity_id: str) -> bool:
     return bool(permissions.get('canEdit') or permissions.get('canCertifiedUserEdit'))
 
 
-def write_report(results: Sequence[ApplyResult], path: Path) -> None:
+def write_report(
+    results: Sequence[ApplyResult],
+    path: Path,
+    *,
+    not_attempted: Sequence[str] = (),
+) -> None:
+    """The per-entity outcome table for one pass.
+
+    ``not_attempted`` names the entities a pass cut short by the circuit breaker
+    never reached, written out as ``not_attempted`` rows. A report that simply
+    ended early reads as a complete run over a smaller plan, which is the opposite
+    of what an operator needs to know during an outage.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     fields = ['entity_id', 'status', 'action', 'stray_key', 'canonical_key', 'reason',
               'stray_value', 'canonical_value']
@@ -854,6 +778,9 @@ def write_report(results: Sequence[ApplyResult], path: Path) -> None:
                     'stray_value': json.dumps(row.get('stray_value')),
                     'canonical_value': json.dumps(row.get('canonical_value')),
                 })
+        for entity_id in not_attempted:
+            writer.writerow({'entity_id': entity_id, 'status': 'not_attempted',
+                             'reason': 'run aborted by the circuit breaker before this entity'})
 
 
 def summarize(results: Sequence[ApplyResult]) -> dict[str, int]:
@@ -1094,6 +1021,7 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
 
     syn = _login_cached()
     results: list[ApplyResult] = []
+    aborted = False
     if dry_run and dry_runs:
         # The preflight already planned every one of these entities from a fresh
         # read and recorded its progress line. Planning them again would double the
@@ -1116,11 +1044,22 @@ def main(argv: Sequence[str] | None = None) -> int:  # noqa: C901 - CLI dispatch
                     time.sleep(args.batch_pause)
             return result
 
-        results, _ = run_guarded(entity_ids, fix_one, failed=_is_failure, label=mode.lower())
+        results, aborted = run_guarded(entity_ids, fix_one, failed=_is_failure,
+                                       label=mode.lower())
 
-    write_report(results, logs.report_path)
+    # An aborted pass must not read as a finished one. Without this the log said
+    # "APPLY complete: {'ok': 40, 'error': 10}" for a 5,000-entity plan and
+    # report.csv held 50 rows, both of which look like a clean, complete run.
+    attempted = {result.entity_id for result in results}
+    not_attempted = [e for e in entity_ids if e not in attempted]
+    write_report(results, logs.report_path, not_attempted=not_attempted)
     counts = summarize(results)
-    LOG.info('%s complete: %s', mode, counts)
+    if aborted:
+        LOG.error('%s cut short by the circuit breaker after %d of %d entities (%s); '
+                  '%d were never attempted and report.csv covers only the truncated run',
+                  mode, len(attempted), len(entity_ids), counts, len(not_attempted))
+    else:
+        LOG.info('%s complete: %s', mode, counts)
     LOG.info('report written to %s', logs.report_path)
 
     exit_code = 0

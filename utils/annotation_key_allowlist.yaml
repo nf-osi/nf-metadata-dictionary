@@ -28,6 +28,9 @@
 # Synapse; each remediation pass should delete the entries it fixed. The 2026-12-01
 # expiry is not meant to be renewed - once it passes, the findings resurface and
 # the job goes red, which is the reminder that the remediation never happened.
+# Regeneration keeps each generated entry's expiry, so it cannot renew the
+# deadline by accident; only an explicit --baseline-expires moves one, and drift
+# found since the last regeneration is dated a quarter out from the day it appears.
 #
 # Fields per entry:
 #   key             (required) the annotation key as it appears on entities
@@ -38,6 +41,7 @@
 #   issue           the GitHub issue where it was triaged
 #   expires         ISO date. After it passes the finding resurfaces, so a
 #                   time-boxed acceptance cannot become permanent by neglect.
+#                   Carried forward verbatim by regeneration.
 #   generated       set by --emit-allowlist. Regeneration replaces these entries
 #                   and preserves every entry without it. Leave it off yours.
 #

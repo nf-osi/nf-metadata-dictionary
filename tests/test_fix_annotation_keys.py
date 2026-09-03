@@ -969,7 +969,7 @@ def test_the_circuit_breaker_guards_a_run_shorter_than_the_full_window(monkeypat
     for index in range(30):
         argv += ['--entity', f'syn{index}']
     assert fix.main(argv) == 1
-    assert syn.reads == fix.ERROR_FLOOR
+    assert syn.reads == io.ERROR_FLOOR
 
 
 def test_a_run_below_the_floor_is_not_aborted_by_one_failure(monkeypatch, tmp_path):
@@ -1125,7 +1125,7 @@ def test_the_schema_preflight_planning_loop_is_guarded_by_the_circuit_breaker(
     for index in range(30):
         argv += ['--entity', f'syn{index}']
     assert fix.main(argv) == 1
-    assert syn.reads == fix.ERROR_FLOOR
+    assert syn.reads == io.ERROR_FLOOR
 
 
 def test_the_preflight_conformance_loop_is_guarded_by_the_circuit_breaker(monkeypatch, tmp_path):
@@ -1163,7 +1163,7 @@ def test_the_preflight_conformance_loop_is_guarded_by_the_circuit_breaker(monkey
     for index in range(30):
         argv += ['--entity', f'syn{index}']
     assert fix.main(argv) == 1
-    assert syn.json_reads == fix.ERROR_FLOOR
+    assert syn.json_reads == io.ERROR_FLOOR
 
 
 def test_unchanged_entities_cannot_dilute_the_conformance_breaker(monkeypatch, tmp_path, caplog):
@@ -1205,7 +1205,7 @@ def test_unchanged_entities_cannot_dilute_the_conformance_breaker(monkeypatch, t
         assert fix.main(argv) == 1
     # Ten failing reads is the floor, so the run stops there rather than paying the
     # full retry backoff on all 40 planned entities.
-    assert syn.json_reads == fix.ERROR_FLOOR
+    assert syn.json_reads == io.ERROR_FLOOR
     # And the abort names every entity left without a verdict: the 10 it failed on
     # plus the 300 it never reached, not just the 10 that landed in unvalidatable.
     assert 'could not reach a verdict on 310 of 400 entities' in caplog.text
@@ -1238,7 +1238,37 @@ def test_the_recovery_passes_are_guarded_like_every_other_entity_loop(tmp_path, 
     else:
         report = fix.verify_run(syn, logs, max_retries=0)
     assert not report.ok
-    assert syn.reads == fix.ERROR_FLOOR
+    assert syn.reads == io.ERROR_FLOOR
+
+
+def test_an_aborted_write_pass_names_the_entities_it_never_attempted(
+        monkeypatch, tmp_path, caplog):
+    # A pass cut short must not read as a finished one. The log said "APPLY
+    # complete: {'ok': 40, 'error': 10}" for a 5,000-entity plan and report.csv held
+    # 50 rows, which together look like a clean run over a smaller plan.
+    class DeadSynapse:
+        def restGET(self, path):
+            if path.endswith('/permissions'):
+                return {'canEdit': True}
+            raise RuntimeError('403 Forbidden')
+
+    monkeypatch.setattr(fix, '_SYN', None)
+    monkeypatch.setattr(fix, '_login', lambda: DeadSynapse())
+
+    argv = ['--actions', 'drop_stray', '--log-dir', str(tmp_path / 'run')]
+    for index in range(30):
+        argv += ['--entity', f'syn{index}']
+    with caplog.at_level('ERROR'):
+        assert fix.main(argv) == 1
+
+    assert 'cut short by the circuit breaker' in caplog.text
+    assert 'complete:' not in caplog.text
+    report = (tmp_path / 'run' / 'report.csv').read_text()
+    # Every entity in the plan is accounted for: the ones it attempted, and the
+    # 20 it never reached.
+    assert report.count('not_attempted') == 30 - io.ERROR_FLOOR
+    for index in range(30):
+        assert f'syn{index},' in report
 
 
 def test_the_abort_reports_every_entity_left_without_a_verdict():
