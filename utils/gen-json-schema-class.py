@@ -85,14 +85,39 @@ def get_class_property_order(schema_yaml_path, cls_name):
             # Load YAML while preserving key order
             schema_data = load(f, Loader=Loader)
 
-        cls_def = schema_data.get('classes', {}).get(cls_name, {})
+        classes = schema_data.get('classes', {})
+        cls_def = classes.get(cls_name, {})
 
         # Check if properties are defined in 'attributes' (PortalDataset style)
         if 'attributes' in cls_def:
             return list(cls_def['attributes'].keys())
-        # Otherwise check for 'slots' (Template style)
+        # Otherwise check for 'slots' (Template style).  Slots contributed by a
+        # mixin are not in the class's own list, so expand them explicitly --
+        # otherwise they fall through to the alphabetical tail in
+        # reorder_properties() and the curator sees them last.
         elif 'slots' in cls_def:
-            return cls_def['slots']
+            order = list(cls_def['slots'])
+            seen = set(order)
+
+            def add_mixin_slots(name, visited):
+                if name in visited:
+                    return
+                visited.add(name)
+                mixin_def = classes.get(name, {})
+                # A mixin may itself be composed of mixins; take those first so
+                # the more general fields lead.
+                for nested in mixin_def.get('mixins', []):
+                    add_mixin_slots(nested, visited)
+                for slot in mixin_def.get('slots', []):
+                    if slot not in seen:
+                        seen.add(slot)
+                        order.append(slot)
+
+            visited = set()
+            for mixin in cls_def.get('mixins', []):
+                add_mixin_slots(mixin, visited)
+
+            return order
 
         return []
     except Exception as e:
@@ -344,6 +369,14 @@ def main():
     # Get class names
     master = yaml.safe_load(SCHEMA_YAML.read_text())
     classes = master.get("classes", {})
+
+    # Mixins are reusable slot bundles, not templates -- their slots and rules are
+    # already materialized into the classes that use them.  Generating schemas for
+    # them would publish (and eventually register in Synapse) meaningless types.
+    mixins = {name for name, cls in classes.items() if cls and cls.get("mixin")}
+    if mixins:
+        classes = {k: v for k, v in classes.items() if k not in mixins}
+        print(f"⏭️  Skipping {len(mixins)} mixin class(es): {', '.join(sorted(mixins))}")
 
     # Filter to specific class if requested
     if args.class_name:

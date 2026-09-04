@@ -25,83 +25,17 @@ classes:
     description: 'Data that characterizes cell/tissue morphology or physiology often
       in the context of different experimental conditions'
     is_a: BiologicalAssayDataTemplate
+    mixins:
+    - SpecimenLineage
+    - GenePerturbation
+    - TimedObservation
+    - CompoundTreatment
     slots:
-    - parentSpecimenID
-    - specimenID
-    - aliquotID
     - modelSystemName
     - experimentalFactor
     - experimentalCondition
-    - experimentalTimepoint
-    - timepointUnit
-    - compoundName
-    - compoundDose
-    - compoundDoseUnit
-    - genePerturbed
-    - genePerturbationType
-    - genePerturbationTechnology
     - comments
     rules:
-    - description: If experimentalTimepoint is provided, timepointUnit must be provided
-      preconditions:
-        slot_conditions:
-          experimentalTimepoint:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          timepointUnit:
-            value_presence: PRESENT
-    - description: If compoundDose is numeric, compoundDoseUnit must be provided
-      preconditions:
-        slot_conditions:
-          compoundDose:
-            value_presence: PRESENT
-            none_of:
-            - equals_string: Not Applicable
-            - equals_string: Not Available
-            - equals_string: Multiple Doses
-      postconditions:
-        slot_conditions:
-          compoundDoseUnit:
-            value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationType must be provided
-      preconditions:
-        slot_conditions:
-          genePerturbed:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          genePerturbationType:
-            value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationTechnology must be
-        provided
-      preconditions:
-        slot_conditions:
-          genePerturbed:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          genePerturbationTechnology:
-            value_presence: PRESENT
-    - description: If aliquotID is provided, specimenID must be provided
-      preconditions:
-        slot_conditions:
-          aliquotID:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          specimenID:
-            value_presence: PRESENT
-    - description: If parentSpecimenID is provided, specimenID must be provided
-      preconditions:
-        slot_conditions:
-          parentSpecimenID:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          specimenID:
-            value_presence: PRESENT
-
     - description: 'Relaxed conditional validation (issue #825): the listed fields
         are required only for experimentalData. Auxiliary co-located files (manifest,
         metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
@@ -164,13 +98,13 @@ classes:
       dataGranularity: specimen-level
     description: Template for raw electrophysiology data (electrical recordings).
     is_a: BiologicalAssayDataTemplate
+    mixins:
+    - TimedObservation
     slots:
     - platform
     - bodySite
     - cellType
     - recordingSource
-    - experimentalTimepoint
-    - timepointUnit
     - experimentalCondition
     - auxiliaryAsset
     source: https://arxiv.org/pdf/1605.07673.pdf
@@ -184,16 +118,6 @@ classes:
       platform:
         required: false
     rules:
-    - description: If experimentalTimepoint is provided, timepointUnit must be provided
-      preconditions:
-        slot_conditions:
-          experimentalTimepoint:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          timepointUnit:
-            value_presence: PRESENT
-
     - description: 'Relaxed conditional validation (issue #825): the listed fields
         are required only for experimentalData. Auxiliary co-located files (manifest,
         metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
@@ -228,18 +152,14 @@ classes:
     description: Generic template for describing data from a plate-based reporter
       assay.
     is_a: BiologicalAssayDataTemplate
+    mixins:
+    - SpecimenLineage
+    - TimedObservation
+    - CompoundTreatment
     slots:
-    - parentSpecimenID
-    - specimenID
-    - aliquotID
     - platform
     - assayTarget
-    - compoundName
-    - compoundDose
-    - compoundDoseUnit
     - experimentalCondition
-    - experimentalTimepoint
-    - timepointUnit
     - reporterGene
     - reporterSubstance
     slot_usage:
@@ -263,28 +183,6 @@ classes:
       specimenID:
         required: false
     rules:
-    - description: If experimentalTimepoint is provided, timepointUnit must be provided
-      preconditions:
-        slot_conditions:
-          experimentalTimepoint:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          timepointUnit:
-            value_presence: PRESENT
-    - description: If compoundDose is numeric, compoundDoseUnit must be provided
-      preconditions:
-        slot_conditions:
-          compoundDose:
-            value_presence: PRESENT
-            none_of:
-            - equals_string: Not Applicable
-            - equals_string: Not Available
-            - equals_string: Multiple Doses
-      postconditions:
-        slot_conditions:
-          compoundDoseUnit:
-            value_presence: PRESENT
     - description: 'Relaxed conditional validation (issue #825): the listed fields
         are required only for experimentalData. Auxiliary co-located files (manifest,
         metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'

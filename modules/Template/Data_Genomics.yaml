@@ -13,12 +13,11 @@ classes:
 
       '
     is_a: BiologicalAssayDataTemplate
+    mixins:
+    - SpecimenLineage
     notes:
     - http://purl.obolibrary.org/obo/GECKO_0000032
     slots:
-    - parentSpecimenID
-    - specimenID
-    - aliquotID
     - tumorType
     - platform
     - nucleicAcidSource
@@ -212,43 +211,12 @@ classes:
       dataGranularity: specimen-level
     description: Genomics assay template but with additional experiment data.
     is_a: GenomicsAssayTemplate
+    mixins:
+    - GenePerturbation
+    - TimedObservation
     slots:
     - experimentalCondition
-    - experimentalTimepoint
-    - timepointUnit
-    - genePerturbed
-    - genePerturbationTechnology
-    - genePerturbationType
     - comments
-    rules:
-    - description: If experimentalTimepoint is provided, timepointUnit must be provided
-      preconditions:
-        slot_conditions:
-          experimentalTimepoint:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          timepointUnit:
-            value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationType must be provided
-      preconditions:
-        slot_conditions:
-          genePerturbed:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          genePerturbationType:
-            value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationTechnology must be
-        provided
-      preconditions:
-        slot_conditions:
-          genePerturbed:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          genePerturbationTechnology:
-            value_presence: PRESENT
 
   PdxGenomicsAssayTemplate:
     annotations:
@@ -262,18 +230,15 @@ classes:
     description: Raw genomics data from patient-derived xenograft (PDX) experiment,
       with additional PDX-relevant metadata.
     is_a: GenomicsAssayTemplate
+    mixins:
+    - ModelOrganismDemographics
+    - TimedObservation
     slots:
     - transplantationType
     - transplantationRecipientSpecies
     - transplantationRecipientTissue
     - modelSystemName
-    - modelSpecies
-    - modelSex
-    - modelAge
-    - modelAgeUnit
     - experimentalCondition
-    - experimentalTimepoint
-    - timepointUnit
     slot_usage:
       assay:
         range: SequencingAssayEnum
@@ -282,24 +247,6 @@ classes:
       fileFormat:
         range: SequencingFileFormatEnum
     rules:
-    - description: If modelAge is provided, modelAgeUnit must be provided
-      preconditions:
-        slot_conditions:
-          modelAge:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          modelAgeUnit:
-            value_presence: PRESENT
-    - description: If experimentalTimepoint is provided, timepointUnit must be provided
-      preconditions:
-        slot_conditions:
-          experimentalTimepoint:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          timepointUnit:
-            value_presence: PRESENT
     - description: If transplantationType is provided, transplantationRecipientSpecies
         must be provided
       preconditions:
@@ -337,10 +284,9 @@ classes:
     - htan:BulkRNA-seqLevel1
     description: Template for describing raw data from (bulk) RNA-sequencing
     is_a: BulkSequencingAssayTemplate
+    mixins:
+    - GenePerturbation
     slots:
-    - genePerturbed
-    - genePerturbationType
-    - genePerturbationTechnology
     - experimentalCondition
     - isCellLine
     - isPrimaryCell
@@ -358,26 +304,6 @@ classes:
         ifabsent: string(gene expression)
       isPrimaryCell:
         ifabsent: string(Yes)
-    rules:
-    - description: If genePerturbed is provided, genePerturbationType must be provided
-      preconditions:
-        slot_conditions:
-          genePerturbed:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          genePerturbationType:
-            value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationTechnology must be
-        provided
-      preconditions:
-        slot_conditions:
-          genePerturbed:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          genePerturbationTechnology:
-            value_presence: PRESENT
 
   ScSequencingAssayTemplate:
     annotations:
@@ -459,10 +385,9 @@ classes:
       dataGranularity: specimen-level
     description: Template for describing raw data from single-cell RNA-seq.
     is_a: ScSequencingAssayTemplate
+    mixins:
+    - GenePerturbation
     slots:
-    - genePerturbed
-    - genePerturbationType
-    - genePerturbationTechnology
     - experimentalCondition
     slot_usage:
       assay:
@@ -477,26 +402,6 @@ classes:
         - range: OtherFileFormatEnum
       dataType:
         ifabsent: string(gene expression)
-    rules:
-    - description: If genePerturbed is provided, genePerturbationType must be provided
-      preconditions:
-        slot_conditions:
-          genePerturbed:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          genePerturbationType:
-            value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationTechnology must be
-        provided
-      preconditions:
-        slot_conditions:
-          genePerturbed:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          genePerturbationTechnology:
-            value_presence: PRESENT
 
   WESTemplate:
     annotations:
@@ -618,14 +523,13 @@ classes:
     description: Template for describing raw data from ChIP-Seq assays, typically
       used to identify DNA-protein interactions.
     is_a: EpigenomicsAssayTemplate
+    mixins:
+    - GenePerturbation
     slots:
     - antibodyID
     - platform
     - peakCallingAlgorithm
     - assayTarget
-    - genePerturbationType
-    - genePerturbationTechnology
-    - genePerturbed
     slot_usage:
       assay:
         range: SequencingAssayEnum
@@ -634,25 +538,6 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
-    rules:
-    - description: If genePerturbed is provided, genePerturbationType must be provided
-      preconditions:
-        slot_conditions:
-          genePerturbed:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          genePerturbationType:
-            value_presence: PRESENT
-    - description: If genePerturbed is provided, genePerturbationTechnology must be provided
-      preconditions:
-        slot_conditions:
-          genePerturbed:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          genePerturbationTechnology:
-            value_presence: PRESENT
 
   MethylationArrayTemplate:
     annotations:
@@ -718,6 +603,8 @@ classes:
       a sequencing assay. The QC meta are extracted from samtools stats when available
       and are the same metrics preferred by GDC."
     is_a: BiologicalAssayDataTemplate
+    mixins:
+    - WorkflowProvenance
     slots:
     - genomicReference
     - genomicReferenceLink
@@ -732,8 +619,6 @@ classes:
     - proportionCoverage30x
     - readDepth
     - totalReads
-    - workflow
-    - workflowLink
     - auxiliaryAsset
     - specimenID
     slot_usage:
@@ -748,15 +633,6 @@ classes:
       specimenID:
         required: false
     rules:
-    - description: If workflow is provided, workflowLink must be provided
-      preconditions:
-        slot_conditions:
-          workflow:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          workflowLink:
-            value_presence: PRESENT
     - description: If genomicReference is provided, genomicReferenceLink must be provided
       preconditions:
         slot_conditions:
@@ -803,10 +679,10 @@ classes:
     description: Template for quantified gene/protein expression data that are still
       represented as one file per sample.
     is_a: BiologicalAssayDataTemplate
+    mixins:
+    - WorkflowProvenance
     slots:
     - expressionUnit
-    - workflow
-    - workflowLink
     - auxiliaryAsset
     - specimenID
     slot_usage:
@@ -817,16 +693,6 @@ classes:
       specimenID:
         required: false
     rules:
-    - description: If workflow is provided, workflowLink must be provided
-      preconditions:
-        slot_conditions:
-          workflow:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          workflowLink:
-            value_presence: PRESENT
-
     - description: 'Relaxed conditional validation (issue #825): the listed fields
         are required only for experimentalData. Auxiliary co-located files (manifest,
         metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
@@ -861,32 +727,18 @@ classes:
 
       '
     is_a: FileBasedTemplate
+    mixins:
+    - DataClassification
+    - WorkflowProvenance
     slots:
-    - dataType
-    - dataSubtype
-    - workflow
-    - workflowLink
     - auxiliaryAsset
     - assay
     slot_usage:
       dataSubtype:
         ifabsent: string(processed)
-        required: false
-      dataType:
-        required: false
       assay:
         required: false
     rules:
-    - description: If workflow is provided, workflowLink must be provided
-      preconditions:
-        slot_conditions:
-          workflow:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          workflowLink:
-            value_presence: PRESENT
-
     - description: 'Relaxed conditional validation (issue #825): the listed fields
         are required only for experimentalData. Auxiliary co-located files (manifest,
         metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
@@ -915,39 +767,25 @@ classes:
       into a single file, where individual-level attributes (specimenID, individualID)
       do not apply. Use for summarized assay results such as qPCR Ct value tables.
     is_a: FileBasedTemplate
+    mixins:
+    - DataClassification
+    - WorkflowProvenance
     slots:
-    - dataType
-    - dataSubtype
     - assay
     - expressionUnit
-    - workflow
-    - workflowLink
     - auxiliaryAsset
     - species
     - comments
     slot_usage:
       dataSubtype:
         ifabsent: string(processed)
-        required: false
       expressionUnit:
         required: false
       species:
         required: false
-      dataType:
-        required: false
       assay:
         required: false
     rules:
-    - description: If workflow is provided, workflowLink must be provided
-      preconditions:
-        slot_conditions:
-          workflow:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          workflowLink:
-            value_presence: PRESENT
-
     - description: 'Relaxed conditional validation (issue #825): the listed fields
         are required only for experimentalData. Auxiliary co-located files (manifest,
         metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
@@ -988,10 +826,10 @@ classes:
     description: Template for describing either simple germline/somatic variant calls
       output data (VCF/MAF) as well as structural variants (e.g. CNVs).
     is_a: BiologicalAssayDataTemplate
+    mixins:
+    - WorkflowProvenance
     slots:
     - isFilteredReads
-    - workflow
-    - workflowLink
     - auxiliaryAsset
     - specimenID
     slot_usage:
@@ -1002,15 +840,6 @@ classes:
       specimenID:
         required: false
     rules:
-    - description: If workflow is provided, workflowLink must be provided
-      preconditions:
-        slot_conditions:
-          workflow:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          workflowLink:
-            value_presence: PRESENT
     - description: 'Relaxed conditional validation (issue #825): the listed fields
         are required only for experimentalData. Auxiliary co-located files (manifest,
         metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
