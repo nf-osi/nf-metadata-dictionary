@@ -1,5 +1,7 @@
 # Release workflow; AI agent by default but releases can also be done manually.
-# - Scheduled: Claude reviews changes and decides whether to release
+# - Scheduled: Claude reviews changes and decides whether to release. If the
+#   API is unavailable, a deterministic MINOR-bump fallback decides instead, so
+#   an outage or exhausted credits never blocks the release cadence.
 # - Manual: provide MAJOR.MINOR version to release immediately, skipping AI
 
 name: Release
@@ -19,7 +21,7 @@ on:
         required: false
         type: string
       evaluation_only:
-        description: 'Run AI evaluation without creating a release. Ignores version input.'
+        description: 'Run the release decision (AI, or deterministic fallback) without creating a release. Ignores version input.'
         required: false
         type: boolean
         default: false
@@ -31,6 +33,10 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    # A successful release takes 6-8 minutes, so an hour is ample headroom and
+    # replaces the 6h default that would leave a hung post-tag step invisible
+    # for most of a day.
+    timeout-minutes: 60
 
     steps:
       - uses: actions/checkout@v4
@@ -62,7 +68,17 @@ jobs:
 
           echo "has_changes=true" >> "$GITHUB_OUTPUT"
           git log "$LAST_TAG"..HEAD --oneline --no-merges > /tmp/commits.txt
-          git diff "$LAST_TAG"..HEAD --stat > /tmp/diffstat.txt
+
+          # core.quotePath=false keeps non-ASCII paths readable instead of
+          # C-escaped, so the fallback's data model gate sees `modules/Café.yaml`
+          # rather than `"modules/Caf\303\251.yaml"`.
+          git -c core.quotePath=false diff "$LAST_TAG"..HEAD --stat > /tmp/diffstat.txt
+
+          # Per-commit paths for the deterministic fallback, which must know
+          # which files each individual commit touched - a range-wide diff
+          # cannot tell a model change from an automated rebuild.
+          git -c core.quotePath=false log "$LAST_TAG"..HEAD --no-merges \
+            --name-only --format='%x1e%h %s' > /tmp/commit_paths.txt
 
           echo "=== $COMMIT_COUNT commits since $LAST_TAG ==="
           cat /tmp/commits.txt
@@ -84,9 +100,22 @@ jobs:
           echo "=== Current schema versions ==="
           cat /tmp/schema_versions.txt
 
-      # ── AI evaluation (schedule only) ────────────────────────────────
+      # ── Release decision (schedule / dispatch without a version) ─────
+      # The AI evaluator is preferred, but it must never be the reason a
+      # release cannot happen. If the API is unreachable, out of credits, or
+      # returns something unparseable or unusable, this falls back to
+      # utils/decide_release.py, which decides deterministically from the
+      # prompt's commit and path rules alone - not from Synapse registration
+      # state, which comes from a network call this workflow tolerates failing.
+      # Both paths emit the same decision JSON, so the steps below cannot tell
+      # them apart.
+      #
+      # The fallback only ever proposes a MINOR bump - MAJOR bumps need human
+      # judgement, so dispatch manually with an explicit version for those.
+      # It also only releases when the non-automated commits actually touch the
+      # data model, so docs/CI/tooling churn does not burn a schema version.
 
-      - name: Evaluate release with Claude
+      - name: Decide release (AI, with deterministic fallback)
         if: (github.event_name == 'schedule' || inputs.evaluation_only || (github.event_name == 'workflow_dispatch' && !inputs.version)) && steps.changes.outputs.has_changes == 'true'
         id: evaluate
         env:
@@ -137,45 +166,99 @@ jobs:
           {"release": false, "reasoning": "one sentence"}
           PROMPT
 
+          # Headroom for a month of release notes inside the JSON: a response
+          # cut off at the cap is unusable, and the cap costs nothing when the
+          # answer is short.
           PAYLOAD=$(jq -n --rawfile prompt /tmp/prompt.txt '{
             model: "claude-sonnet-4-6",
-            max_tokens: 1024,
+            max_tokens: 4096,
             messages: [{ role: "user", content: $prompt }]
           }')
 
-          HTTP_CODE=$(curl -s -o /tmp/api_response.json -w '%{http_code}' \
+          # A curl failure (DNS, network, timeout) must not abort the step - it
+          # is just another reason to fall back, so swallow the exit code here.
+          # Without the timeouts a stalled connection would hold the job until
+          # the 60-minute cap below, which cancels it: cancelled() does file an
+          # issue, but the release itself is lost. A bounded call instead
+          # reports 000, degrades to the deterministic path and still releases.
+          #
+          # --max-time is per attempt, and generating a month of release notes
+          # within the 4096-token cap can take a while, so it is set well above
+          # the expected response time: expiring it discards a good answer and
+          # silently downgrades the release to a deterministic MINOR bump.
+          # --retry rides out the transient failures curl recognises (timeouts
+          # and HTTP 408/429/500/502/503/504) so a few seconds of rate limiting
+          # does not cost the AI's verdict. Anthropic's 529 "overloaded" is not
+          # in that set and falls through to the deterministic path by design.
+          # --retry-max-time is required because --max-time restarts on each
+          # retry. It is only checked before a retry starts, so an attempt begun
+          # just under it still gets its full --max-time: the whole call is
+          # bounded at 600s + 300s, roughly 15 minutes.
+          #
+          # -S keeps curl's transport error on stderr, so a 000 result says
+          # whether it was a refused connection, a DNS failure or a timeout
+          # instead of only the generic "never completed" the fallback reports.
+          # It does not restore the "Transient problem ... will retry" notices,
+          # which stay suppressed by -s.
+          HTTP_CODE=$(curl -sS -o /tmp/api_response.json -w '%{http_code}' \
+            --connect-timeout 15 --max-time 300 \
+            --retry 2 --retry-delay 5 --retry-max-time 600 \
             https://api.anthropic.com/v1/messages \
             -H "content-type: application/json" \
             -H "x-api-key: $ANTHROPIC_API_KEY" \
             -H "anthropic-version: 2023-06-01" \
-            -d "$PAYLOAD")
+            -d "$PAYLOAD") || HTTP_CODE="000"
 
-          if [ "$HTTP_CODE" -ne 200 ]; then
-            echo "❌ API request failed with HTTP $HTTP_CODE:"
-            cat /tmp/api_response.json
-            exit 1
-          fi
+          # Judging the response - fence stripping, the boolean gate, the
+          # version shape and ordering check, and which failure becomes a
+          # fallback - lives in decide_release.py, so every rejection reason is
+          # unit-tested in CI rather than being untestable inline bash. It
+          # prints {source, fallback_reason, decision} and only fails the run if
+          # the deterministic path itself produced something unreleasable.
+          python3 utils/decide_release.py accept-ai \
+            --last-tag "$LAST_TAG" \
+            --http-code "$HTTP_CODE" \
+            --response-file /tmp/api_response.json \
+            --commit-paths-file /tmp/commit_paths.txt \
+            > /tmp/outcome.json
 
-          RESPONSE=$(cat /tmp/api_response.json)
+          echo "Release decision:"
+          jq -c '.decision' /tmp/outcome.json
 
-          # Extract text, strip markdown code fences if Claude wraps the response
-          TEXT=$(echo "$RESPONSE" | jq -r '.content[0].text' | sed '/^```/d')
-          echo "Claude's evaluation:"
-          echo "$TEXT"
-
-          SHOULD_RELEASE=$(echo "$TEXT" | jq -r '.release')
-          VERSION=$(echo "$TEXT" | jq -r '.version // empty')
-
-          echo "should_release=$SHOULD_RELEASE" >> "$GITHUB_OUTPUT"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          # Both fields below come from a validated decision: .release is a
+          # real boolean and .version is MAJOR.MINOR or absent, so neither can
+          # smuggle a second `should_release=` line into $GITHUB_OUTPUT. The
+          # model-controlled reasoning is deliberately not a step output - it
+          # only ever goes to the step summary below.
+          FALLBACK_REASON=$(jq -r '.fallback_reason' /tmp/outcome.json)
+          SHOULD_RELEASE=$(jq -r '.decision.release' /tmp/outcome.json)
+          VERSION=$(jq -r '.decision.version // empty' /tmp/outcome.json)
+          REASONING=$(jq -r '.decision.reasoning // empty' /tmp/outcome.json)
 
           {
-            echo "reasoning<<REASONING_EOF"
-            echo "$TEXT" | jq -r '.reasoning'
-            echo "REASONING_EOF"
+            echo "should_release=$SHOULD_RELEASE"
+            echo "version=$VERSION"
           } >> "$GITHUB_OUTPUT"
 
-          echo "$TEXT" | jq -r '.notes // empty' > /tmp/release_notes.md
+          jq -r '.decision.notes // empty' /tmp/outcome.json > /tmp/release_notes.md
+
+          # Record which path decided, so a fallback release is obvious on the
+          # run page instead of looking like a normal AI-approved release.
+          {
+            if [ -n "$FALLBACK_REASON" ]; then
+              echo "### ⚠️ Release decided by deterministic fallback"
+              echo ""
+              echo "The AI evaluation was not used because ${FALLBACK_REASON}."
+              echo "\`utils/decide_release.py\` decided instead, from the commit and path rules alone - it does not consider which schemas are already registered in Synapse."
+              echo "Only MINOR bumps are possible this way - for a MAJOR release, dispatch manually with an explicit version."
+            else
+              echo "### ✅ Release decided by AI evaluation"
+            fi
+            echo ""
+            echo "- **Release:** \`${SHOULD_RELEASE}\`"
+            echo "- **Version:** \`${VERSION:-n/a}\`"
+            echo "- **Reasoning:** ${REASONING}"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       # ── Resolve version ─────────────────────────────────────────────
 
@@ -307,9 +390,15 @@ jobs:
       # A blocked/incomplete release (e.g. tag pushed but registration or
       # release creation failed) should never fail silently - file or update
       # an issue pointing at the run so a maintainer investigates.
+      #
+      # cancelled() is included because exceeding timeout-minutes cancels the
+      # job rather than failing it, and failure() is false on cancellation: a
+      # hang after the tag was pushed is the case where silence costs most. A
+      # manually cancelled run also files an issue, which is acceptable noise
+      # for that guarantee.
 
       - name: File issue for blocked release
-        if: failure()
+        if: failure() || cancelled()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

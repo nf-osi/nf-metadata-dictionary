@@ -70,8 +70,20 @@ We welcome contributions from community members, whether you are a professional 
 
 Releases create versioned JSON schemas registered with Synapse. The [release workflow](.github/workflows/release-new-version.yaml) can be triggered two ways:
 
-1. **Push a tag**: `git tag v1.2.3 && git push --tags` — creates a GitHub release with versioned schemas
-2. **Manual dispatch**: Run workflow from GitHub Actions UI with required `version` (e.g., `v1.2.3`) and optional `release_notes` input; when notes are omitted the workflow uses GitHub's auto-generated release notes
+1. **On a schedule**: the 1st and 15th of each month, the workflow decides for itself whether the changes since the last release warrant one, and at what `MAJOR.MINOR`.
+2. **Manual dispatch**: run the workflow from the GitHub Actions UI.
+   The `version` input is optional and takes `MAJOR.MINOR` only (e.g., `11.2`); PATCH is assigned automatically from the run number.
+   Supply it to release at that version immediately, skipping the release decision - this is the only way to cut a MAJOR release.
+   Leave it empty to have the workflow decide exactly as it does on a schedule.
+   `release_notes` is optional; when omitted, GitHub's auto-generated release notes are used.
+   Set `evaluation_only` to see the decision without creating a release.
+
+Scheduled decisions are made by Claude, which reads the commits, the changed files, and the schema versions currently registered in Synapse.
+If the Anthropic API is unreachable or returns something unusable, [`utils/decide_release.py`](utils/decide_release.py) decides deterministically instead, so an outage or exhausted credits never stops the release cadence.
+The deterministic path releases only when the non-automated commits since the last tag actually touch the data model (`modules/`, `rules/`, `dist/`, `registered-json-schemas/`, `header.yaml`, or the programs that build the schemas - the `Makefile` and `utils/gen-json-schema-class.py`), so docs, CI, or tooling churn alone does not burn a schema version.
+It only ever proposes a MINOR bump, so a MAJOR release needs a manual dispatch with an explicit version.
+There is no switch to flip: the workflow calls the API on every run and resumes using it as soon as it answers again.
+Each run's step summary records which path decided, and why.
 
 The workflow:
 - Copies schemas from `registered-json-schemas/` to a temp directory
