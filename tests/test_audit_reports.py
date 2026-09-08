@@ -848,14 +848,11 @@ def test_an_unparseable_existing_allowlist_is_not_overwritten(tmp_path):
     assert out.read_text() == 'entries: [unclosed\n'
 
 
-def test_the_committed_baseline_is_the_shape_the_audit_consumes():
-    document = yaml.safe_load(audit.DEFAULT_ALLOWLIST.read_text())
-    # Only the generated baseline is checked here; a hand-triaged entry is a
-    # curator's call and may legitimately be global or of another classification.
-    entries = [e for e in document['entries'] if e.get('generated')]
-    assert entries, 'the committed baseline should record the pre-remediation findings'
-    for entry in entries:
-        assert entry['scope'].startswith('syn'), 'a baseline entry is scoped to its project'
-        assert entry['classification'] in audit.BASELINE_BUCKETS
-        assert entry['issue'] in set(audit.BASELINE_ISSUES.values())
-        assert entry['expires'] and entry['reason']
+def test_no_baseline_is_committed_and_its_absence_suppresses_nothing():
+    # There is deliberately no checked-in allowlist. The #939 drift was remediated
+    # in Synapse rather than accepted in a file, and a committed baseline would be
+    # a standing obligation to tend expiring entries for findings that no longer
+    # exist. Generate one with --emit-allowlist if a future run needs to accept
+    # something; the shape that produces is pinned by the emit tests above.
+    assert not audit.DEFAULT_ALLOWLIST.exists()
+    assert audit.load_allowlist(audit.DEFAULT_ALLOWLIST).entries == frozenset()

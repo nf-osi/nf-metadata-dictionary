@@ -62,7 +62,7 @@ Three categories are deliberately never rewritten:
 Read-only scan for mis-cased annotation keys across NF-OSI projects. Never writes to Synapse.
 
 Uses the async REST job `POST /column/view/scope/async`, which returns the complete annotation-key inventory for a scope **without creating an entity**.
-One call per project triages all ~368 portal studies in about a minute, which is what makes a weekly audit affordable.
+One call per project triages all ~368 portal studies in about a minute, so a full re-scan is cheap enough to run on demand.
 
 ```bash
 # triage every portal study
@@ -75,7 +75,7 @@ python utils/audit_annotation_keys.py --project syn25881328 --drill-down --out-d
 # regenerate reports from a previous run, no network calls
 python utils/audit_annotation_keys.py --out-dir audit --report-only
 
-# record a completed scan's findings as the accepted baseline, no network calls
+# generate an allowlist from a completed scan, to accept known findings; no network calls
 python utils/audit_annotation_keys.py --state audit/state.jsonl \
     --emit-allowlist utils/annotation_key_allowlist.yaml
 ```
@@ -103,38 +103,27 @@ Either way an `entity_findings.manifest.json` beside the file records whether th
 A pass that finished still replaces the previous findings file - it covered every flagged project and is the more current of the two - and its manifest is what says the coverage is short.
 `fix_annotation_keys.py --findings` reads that manifest and **refuses an `--apply` run** over an incomplete file, unless `--allow-incomplete-findings` accepts the gap; a dry run proceeds, records the gap in `report.csv` and `progress.jsonl`, and exits 2.
 
-The markdown tables in `summary.md` that grow with the data - the per-key frequency tables and the per-(project, key) value-type table - are capped at 40 rows, because the weekly workflow pipes the file into a GitHub issue body, which is limited to 65,536 characters.
-The list of affected projects is deliberately uncapped: it is the one actionable list in the issue, and a curator should not have to download a CI artifact to learn which project to look at.
-The CSVs in the run artifact always hold every row.
+The markdown tables in `summary.md` that grow with the data - the per-key frequency tables and the per-(project, key) value-type table - are capped at 40 rows so the file stays pasteable into an issue body, which GitHub limits to 65,536 characters.
+The list of affected projects is deliberately uncapped: it is the one actionable list. The CSVs always hold every row.
 
 Exit codes follow `check_schema_limits.py`: `0` clean, `1` repairable findings (with `--fail-on-findings`), `2` warnings.
 Unrecognised keys do not warn by default - projects legitimately carry custom annotations - but probable misspellings of a schema slot do, since those are real bugs.
-The weekly workflow fails the job on both `1` and `2`, with different messages: a warning annotation on a green job is what gets ignored, and lost coverage has to be as visible as drift.
-Accepting a key in `annotation_key_allowlist.yaml` or raising `--max-unscanned` is how a triaged run goes green again.
+`2` covers lost coverage and probable misspellings; treat it as failing rather than advisory, since "0 findings, 60 unreadable projects" must never read as clean. Accepting a key in a generated allowlist or raising `--max-unscanned` is how a triaged run goes quiet again.
 
 `--include-project-entity` folds the project entity's own annotation keys into the inventory - a view scope cannot see them - and makes `--drill-down` inspect the project entity too, so a project-level finding is reachable by `fix_annotation_keys.py --findings` rather than visible but unfixable.
 
-#### The allowlist baseline
+#### Accepting a finding
 
-`annotation_key_allowlist.yaml` ships with the **recorded pre-remediation baseline**: every finding present on the 368 portal projects at the time this tooling landed, before any Synapse writes. Without it the weekly job would be red from the first scheduled run and stay red until the drift is remediated out of band, and a permanently red gate gets ignored - so the baseline is what lets *new* drift be the thing that turns the job red.
+There is deliberately **no checked-in allowlist**. The #939 drift was remediated in Synapse rather than accepted in a file, and a committed baseline would be a standing obligation to tend expiring entries for findings that no longer exist.
 
-The baseline entries are **generated, not hand-written**, and each one is marked `generated: true`. Regenerate them from any completed scan's state file, which needs no Synapse credentials:
+If a run needs to accept known-out-of-scope findings - triaging #976 while ignoring #977, say - generate one from any completed scan's state file, which needs no Synapse credentials:
 
 ```bash
 python utils/audit_annotation_keys.py --state audit/state.jsonl \
     --emit-allowlist utils/annotation_key_allowlist.yaml
 ```
 
-Regeneration **merges**: it replaces the generated block and preserves every entry without `generated: true`, collecting them in a labelled block at the end of the file. So a hand-triaged acceptance survives a regeneration, and the two kinds of entry stay distinguishable. Add yours without that field; where a hand-added entry covers the same key, scope and classification as a generated one, the hand-added entry stands. A file that cannot be parsed is refused rather than overwritten, since the entries at risk are the ones nothing else records.
-
-Each entry is scoped to its project synID rather than `global`, so the same key on a project the baseline does not name is still a finding. Every entry carries the classification bucket, the issue it is triaged under (#939 for PascalCase duplicates, orphans and probable misspellings; #976 for case-variant drift from former slot names) and an expiry a quarter out.
-
-**The file is meant to shrink, not to be renewed.** Every entry is drift that still exists in Synapse; each remediation pass should delete the entries it fixed. When the expiry passes the findings resurface and the job goes red, which is the reminder that the remediation never happened.
-Regeneration therefore **carries each generated entry's expiry forward verbatim**: the command above cannot renew the baseline, only `--baseline-expires` moves a deadline, and drift found since the last regeneration is dated a quarter out from the day it first appears.
-
-**Related files:**
-- `annotation_key_allowlist.yaml` - the generated pre-remediation baseline plus any hand-triaged acceptances; affects the exit code only, never the report
-- `../.github/workflows/weekly-annotation-key-audit.yml` - the recurring audit
+Entries are scoped to a project synID rather than `global`, so the same key elsewhere is still a finding, and each carries an expiry so an acceptance cannot become permanent by neglect. Regeneration merges rather than overwrites and carries existing expiries forward verbatim, so it can pick up new drift without renewing the old. Pass `--allowlist` to point the audit at the file.
 
 ### fix_annotation_keys.py
 
