@@ -1,0 +1,201 @@
+# Reusable slot bundles. A mixin owns every slot its own rules refer to, so that
+# mixing it into a class cannot produce a rule over an undeclared slot.
+#
+# When a class takes several, list them in this order so that sibling templates
+# lay out their columns the same way:
+#   SpecimenLineage, IndividualDemographics, ModelOrganismDemographics, GenePerturbation,
+#   TimedObservation, CompoundTreatment, DataClassification, WorkflowProvenance
+classes:
+  SpecimenLineage:
+    mixin: true
+    description: 'Specimen and aliquot identifiers, and the parent specimen they
+      derive from.'
+    slots:
+    - parentSpecimenID
+    - specimenID
+    - aliquotID
+    rules:
+    - description: If aliquotID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          aliquotID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+    - description: If parentSpecimenID is provided, specimenID must be provided
+      preconditions:
+        slot_conditions:
+          parentSpecimenID:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          specimenID:
+            value_presence: PRESENT
+
+  IndividualDemographics:
+    mixin: true
+    description: 'Characteristics of the individual an observation is about: age,
+      sex and species. Carries the HIPAA Safe Harbor age ceiling, which applies to
+      any template that can record a human age -- SpeciesEnum admits Homo sapiens
+      everywhere species is offered, so the ceiling travels with these slots rather
+      than being applied per template.'
+    slots:
+    - age
+    - ageUnit
+    - sex
+    - species
+    rules:
+    - description: If age is provided and is not "Unknown", ageUnit must be provided
+      preconditions:
+        slot_conditions:
+          age:
+            value_presence: PRESENT
+            none_of:
+              - equals_string: Unknown
+      postconditions:
+        slot_conditions:
+          ageUnit:
+            value_presence: PRESENT
+    - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value for ages at or above this threshold (HIPAA Safe Harbor)
+      preconditions:
+        slot_conditions:
+          species:
+            equals_string: Homo sapiens
+      postconditions:
+        slot_conditions:
+          age:
+            maximum_value: 89.99999
+
+  ModelOrganismDemographics:
+    mixin: true
+    description: 'Characteristics of the animal or xenograft model an experiment was
+      run in: age at time of experiment, sex and species. The counterpart of
+      IndividualDemographics for the model rather than the donor, and distinct from
+      it -- modelAge is not a human subject age, so no HIPAA ceiling applies.
+      modelSystemName identifies the model and stays on the templates, the way
+      individualID does.'
+    slots:
+    - modelAge
+    - modelAgeUnit
+    - modelSex
+    - modelSpecies
+    rules:
+    - description: If modelAge is provided, modelAgeUnit must be provided
+      preconditions:
+        slot_conditions:
+          modelAge:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          modelAgeUnit:
+            value_presence: PRESENT
+
+  GenePerturbation:
+    mixin: true
+    description: 'A single-gene perturbation applied to a sample, and how it was
+      introduced.'
+    slots:
+    - genePerturbed
+    - genePerturbationType
+    - genePerturbationTechnology
+    rules:
+    - description: If genePerturbed is provided, genePerturbationType must be provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationType:
+            value_presence: PRESENT
+    - description: If genePerturbed is provided, genePerturbationTechnology must be
+        provided
+      preconditions:
+        slot_conditions:
+          genePerturbed:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          genePerturbationTechnology:
+            value_presence: PRESENT
+
+  TimedObservation:
+    mixin: true
+    description: 'An experimental observation taken at a stated time point.'
+    slots:
+    - experimentalTimepoint
+    - timepointUnit
+    rules:
+    - description: If experimentalTimepoint is provided, timepointUnit must be provided
+      preconditions:
+        slot_conditions:
+          experimentalTimepoint:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          timepointUnit:
+            value_presence: PRESENT
+
+  CompoundTreatment:
+    mixin: true
+    description: 'A compound applied to a sample, and the dose it was applied at.'
+    slots:
+    - compoundName
+    - compoundDose
+    - compoundDoseUnit
+    rules:
+    - description: If compoundDose is numeric, compoundDoseUnit must be provided
+      preconditions:
+        slot_conditions:
+          compoundDose:
+            value_presence: PRESENT
+            none_of:
+            - equals_string: Not Applicable
+            - equals_string: Not Available
+            - equals_string: Multiple Doses
+      postconditions:
+        slot_conditions:
+          compoundDoseUnit:
+            value_presence: PRESENT
+
+  DataClassification:
+    mixin: true
+    description: 'dataType and dataSubtype as optional but cross-validated, for
+      templates where classifying the data is not intrinsically required.'
+    slots:
+    - dataType
+    - dataSubtype
+    slot_usage:
+      dataType:
+        required: false
+      dataSubtype:
+        required: false
+    rules:
+    - description: If dataType is provided, dataSubtype must be provided
+      preconditions:
+        slot_conditions:
+          dataType:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          dataSubtype:
+            value_presence: PRESENT
+
+  WorkflowProvenance:
+    mixin: true
+    description: 'The workflow that produced a processed data artifact.'
+    slots:
+    - workflow
+    - workflowLink
+    rules:
+    - description: If workflow is provided, workflowLink must be provided
+      preconditions:
+        slot_conditions:
+          workflow:
+            value_presence: PRESENT
+      postconditions:
+        slot_conditions:
+          workflowLink:
+            value_presence: PRESENT

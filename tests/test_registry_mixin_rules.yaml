@@ -1,0 +1,41 @@
+# Conditional (if-then) validation contributed by mixins (#928)
+#
+# These rules come from the shared mixins in modules/Mixin/Mixins.yaml rather than
+# from the templates themselves, so they are covered once here on a representative
+# template instead of on every template that mixes them in.
+#
+# SpecimenLineage (aliquotID -> specimenID, parentSpecimenID -> specimenID) applies
+# to 24 templates. GenomicsAssayTemplate is used as the representative because
+# specimenID is optional there, which is the case where the rule actually bites --
+# on templates that already require specimenID the rule cannot fail.
+#
+# TimedObservation (experimentalTimepoint -> timepointUnit) is covered on
+# ClinicalAssayTemplate, which gained experimentalTimepoint in this change; it
+# previously carried a bare timepointUnit with no way to state the timepoint.
+#
+# resourceType is "metadata" throughout so the #825 relaxed experimentalData
+# requirements do not fire and each case isolates the rule under test.
+---
+schema: GenomicsAssayTemplate
+instances:
+  - file: data/GenomicsAssayTemplate/valid_specimen_lineage.json
+    description: parentSpecimenID and aliquotID both accompanied by specimenID — satisfies both lineage rules
+    expected: valid
+  - file: data/GenomicsAssayTemplate/invalid_aliquot_missing_specimen.json
+    description: aliquotID is present but specimenID is absent
+    expected: invalid
+    reason: aliquotID is present but specimenID is missing
+  - file: data/GenomicsAssayTemplate/invalid_parentspecimen_missing_specimen.json
+    description: parentSpecimenID is present but specimenID is absent
+    expected: invalid
+    reason: parentSpecimenID is present but specimenID is missing
+---
+schema: ClinicalAssayTemplate
+instances:
+  - file: data/ClinicalAssayTemplate/valid_timepoint_with_unit.json
+    description: experimentalTimepoint and timepointUnit both provided — satisfies the conditional dependency
+    expected: valid
+  - file: data/ClinicalAssayTemplate/invalid_timepoint_missing_unit.json
+    description: experimentalTimepoint is present but timepointUnit is absent
+    expected: invalid
+    reason: experimentalTimepoint is present but timepointUnit is missing

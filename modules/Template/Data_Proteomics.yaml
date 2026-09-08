@@ -8,10 +8,9 @@ classes:
     description: Abstract template for data from some assay of protein structure and
       function. Data should be instantiated with more specific template.
     is_a: BiologicalAssayDataTemplate
+    mixins:
+    - SpecimenLineage
     slots:
-    - parentSpecimenID
-    - specimenID
-    - aliquotID
     - platform
     - proteinExtractSource
     slot_usage:
