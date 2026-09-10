@@ -12,7 +12,7 @@ If you are adding a value to an existing term:
 
 Otherwise...
 1) Create a new branch or fork to make your changes. 
-2) Edit the relevant source file under `modules/` to make your proposed addition, removal, or modification. These are the only hand-edited files; everything in `dist/` and `registered-json-schemas/` is generated.
+2) Edit the relevant source file under `modules/` to make your proposed addition, removal, or modification. `modules/` holds the term definitions; `dist/`, `registered-json-schemas/` and `NF.jsonld` are build outputs, so do not edit them by hand.
 3) Push the change to your branch. A GitHub Action will rebuild the generated artifacts and validate them, reporting back on your pull request. Do not commit rebuilt artifacts yourself - they are regenerated and committed automatically after merge. _Your change should be as atomic as possible - e.g., don't lump together many unrelated changes into a single issue or pull request. You may be requested to split them out._
 4) File a pull request with your change and request review from [someone in the nf-osi organization](https://github.com/orgs/nf-osi/people).
 5) If your pull request is accepted, we'll create a new release with your changes. 
