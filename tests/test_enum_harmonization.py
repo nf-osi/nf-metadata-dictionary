@@ -17,6 +17,11 @@ values listed in NON_NEOPLASM_EXEMPT, which have no Tumor counterpart; and value
 carrying `deprecated:`, which exist precisely because their labels diverge and are
 retained only so existing annotations stay valid until they are migrated.
 
+The contract is checked in both directions. ManifestationEnum is a curated subset rather
+than a mirror of Tumor, so the reverse direction is guarded by INTENTIONALLY_NOT_FACETED:
+every Tumor value that is not a facet option has to be listed there with a stated reason,
+which forces each new Tumor value into an explicit faceted-or-not decision.
+
 `description:` is deliberately NOT compared between the enums. ManifestationEnum omits
 descriptions on purpose, and where it does carry one it may legitimately diverge -
 Melanoma carries an NF-contextual description in Portal.yaml that differs from
@@ -45,6 +50,50 @@ NON_NEOPLASM_EXEMPT = {
     "Pain",
     "Quality of Life",
     "Vision Loss",
+}
+
+# Tumor values deliberately left out of ManifestationEnum after a value-by-value review.
+# ManifestationEnum is a curated facet vocabulary, not a strict superset of Tumor, so this
+# literal is the decision record: Tumor has 61 permissible values, ManifestationEnum
+# covers 34 of them as neoplasms (45 values minus 4 deprecated minus the 7 in
+# NON_NEOPLASM_EXEMPT), and 61 - 34 = 27 exclusions.
+INTENTIONALLY_NOT_FACETED = {
+    # sample-state descriptors, not manifestations (6)
+    "tumor",
+    "recurrent tumor",
+    "metastatic tumor",
+    "metastatic/recurrent tumor",
+    "Hemorrhagic Neoplasm",
+    "Necrotic Neoplasm",
+    # placeholders - manifestation is optional, so omit the property instead (2)
+    "Unknown",
+    "Not Applicable",
+    # redundant with the required diseaseFocus field, zero facet information (2)
+    "NF1-Associated Tumor",
+    "NF2-Associated Tumor",
+    # self-declared synonym of Cutaneous Neurofibroma (1)
+    "Localized Neurofibroma",
+    # retired as distinct entities by the WHO 2021 CNS classification (2)
+    "Glioblastoma Multiforme",
+    "Oligoastrocytoma",
+    # superseded by the non-NOS labels at both levels (2)
+    "High-Grade Glioma NOS",
+    "Low-Grade Glioma NOS",
+    # subsumed by the coarser Breast Cancer for facet purposes (1)
+    "Invasive Breast Carcinoma",
+    # not NF-spectrum; a one-file signal does not earn a facet option (3)
+    "Colorectal Carcinoma",
+    "Colorectal Adenocarcinoma",
+    "Teratoma",
+    # zero usage on either side today; add on demand (8)
+    "Anaplastic Ganglioglioma",
+    "Ganglioglioma",
+    "Anaplastic Pilocytic Astrocytoma",
+    "Anaplastic Pleomorphic Xanthoastrocytoma",
+    "Cellular Neurofibroma",
+    "Fibrosarcoma",
+    "Massive Soft Tissue Neurofibroma",
+    "Neurofibroma with Degenerative Atypia",
 }
 
 # Mirrors LIST_MAX_SIZE in utils/check_schema_limits.py. manifestation is a multivalued
@@ -105,6 +154,28 @@ def test_exempt_values_are_still_present_in_manifestation(manifestation):
     assert not stale, (
         f"NON_NEOPLASM_EXEMPT lists values absent from ManifestationEnum: {stale}. "
         "Remove them from the exemption set."
+    )
+
+
+def test_every_tumor_value_is_faceted_or_explicitly_excluded(manifestation, tumor):
+    """The reverse direction: a neoplasm added to Tumor but not to ManifestationEnum
+    silently never becomes a dataset facet, so every exclusion must be a stated choice."""
+    excluded = set(tumor) - set(manifestation)
+
+    unreviewed = sorted(excluded - INTENTIONALLY_NOT_FACETED)
+    assert not unreviewed, (
+        f"Tumor values absent from ManifestationEnum with no recorded decision: "
+        f"{unreviewed}. A new Tumor value must either be added to ManifestationEnum so "
+        "it can become a dataset facet, or be added to INTENTIONALLY_NOT_FACETED in "
+        "this test under a group comment stating why it is not faceted. Making that "
+        "choice explicit is the point of this check."
+    )
+
+    stale = sorted(INTENTIONALLY_NOT_FACETED - excluded)
+    assert not stale, (
+        f"INTENTIONALLY_NOT_FACETED lists values that are no longer excluded: {stale}. "
+        "They are either now present in ManifestationEnum or gone from Tumor - remove "
+        "them from the exclusion set."
     )
 
 
