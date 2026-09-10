@@ -31,11 +31,18 @@ Tumor.yaml's raw NCIT text, and that difference is correct. Only `meaning:` CURI
 required to agree.
 """
 
+import os
 import re
+import sys
 from pathlib import Path
 
 import pytest
 import yaml
+
+utils_path = os.path.join(os.path.dirname(__file__), '..', 'utils')
+sys.path.insert(0, utils_path)
+
+import check_schema_limits  # noqa: E402  (needs utils on sys.path first)
 
 MODULES_DIR = Path(__file__).parent.parent / "modules"
 PORTAL_YAML = MODULES_DIR / "DCC" / "Portal.yaml"
@@ -101,12 +108,12 @@ INTENTIONALLY_NOT_FACETED = {
     "Neurofibroma with Degenerative Atypia",
 }
 
-# Mirrors LIST_MAX_SIZE in utils/check_schema_limits.py, this repo's own column config:
-# utils/json_schema_entity_view.py sets maximum_size = 80 on list columns to keep entity
-# view rows under Synapse's 64KB row limit. A Synapse column rejects a value wider than
-# its maximum_size, so keeping labels within it leaves the value usable in any entity
-# view this tooling builds.
-MANIFESTATION_MAX_LABEL_LENGTH = 80
+# Read from LIST_MAX_SIZE rather than restated, so lowering the config cannot leave this
+# guard silently permissive. It is this repo's own column config: json_schema_entity_view
+# sets maximum_size on list columns to keep entity view rows under Synapse's 64KB row
+# limit. A Synapse column rejects a value wider than its maximum_size, so keeping labels
+# within it leaves the value usable in any entity view this tooling builds.
+MANIFESTATION_MAX_LABEL_LENGTH = check_schema_limits.CONFIG["LIST_MAX_SIZE"]
 
 # Matches a trailing parenthesized all-caps abbreviation, e.g. "... Tumor (MPNST)".
 ABBREVIATION_SUFFIX_RE = re.compile(r"\([A-Z]{2,}\)\s*$")
