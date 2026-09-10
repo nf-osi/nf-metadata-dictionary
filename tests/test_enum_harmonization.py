@@ -15,7 +15,9 @@ dist/NF.yaml, which is generated and deliberately not committed.
 Two categories are exempt from label identity: the non-neoplasm phenotype and outcome
 values listed in NON_NEOPLASM_EXEMPT, which have no Tumor counterpart; and values
 carrying `deprecated:`, which exist precisely because their labels diverge and are
-retained only so existing annotations stay valid until they are migrated.
+retained only so existing annotations stay valid until they are migrated. Deprecation
+status itself is mirrored, though: a label present in both enums carries `deprecated:`
+in both or in neither.
 
 The contract is checked in both directions. ManifestationEnum is a curated subset rather
 than a mirror of Tumor, so the reverse direction is guarded by INTENTIONALLY_NOT_FACETED:
@@ -58,7 +60,10 @@ NON_NEOPLASM_EXEMPT = {
 # covers 34 of them as neoplasms (45 values minus 4 deprecated minus the 7 in
 # NON_NEOPLASM_EXEMPT), and 61 - 34 = 27 exclusions.
 INTENTIONALLY_NOT_FACETED = {
-    # sample-state descriptors, not manifestations (6)
+    # bare state descriptors that name no tumor type, so they carry no facet information.
+    # A recurrence- or atypia-qualified value that does name a specific type is faceted
+    # instead - "Recurrent MPNST" (NCIT:C8823) and "Atypical MPNST" are in
+    # ManifestationEnum for that reason (6)
     "tumor",
     "recurrent tumor",
     "metastatic tumor",
@@ -96,8 +101,11 @@ INTENTIONALLY_NOT_FACETED = {
     "Neurofibroma with Degenerative Atypia",
 }
 
-# Mirrors LIST_MAX_SIZE in utils/check_schema_limits.py. manifestation is a multivalued
-# slot backed by a Synapse file view STRING_LIST column, which truncates past this.
+# Mirrors LIST_MAX_SIZE in utils/check_schema_limits.py, this repo's own column config:
+# utils/json_schema_entity_view.py sets maximum_size = 80 on list columns to keep entity
+# view rows under Synapse's 64KB row limit. A Synapse column rejects a value wider than
+# its maximum_size, so keeping labels within it leaves the value usable in any entity
+# view this tooling builds.
 MANIFESTATION_MAX_LABEL_LENGTH = 80
 
 # Matches a trailing parenthesized all-caps abbreviation, e.g. "... Tumor (MPNST)".
@@ -144,6 +152,26 @@ def test_non_deprecated_neoplasm_labels_match_tumor(manifestation, tumor):
         f"{sorted(missing)}. Either add the same label to the Tumor enum in "
         f"{TUMOR_YAML.name}, or - if the term is a non-neoplasm phenotype - add it to "
         "NON_NEOPLASM_EXEMPT in this test after review."
+    )
+
+
+def test_shared_labels_agree_on_deprecation(manifestation, tumor):
+    """A label present in both enums must carry `deprecated:` in both or in neither.
+    Otherwise the portal facet keeps advertising as canonical a label the file level
+    already tells curators not to use."""
+    divergent = {
+        label: {
+            "ManifestationEnum": "deprecated" in metadata,
+            "Tumor": "deprecated" in tumor[label],
+        }
+        for label, metadata in manifestation.items()
+        if label in tumor and ("deprecated" in metadata) != ("deprecated" in tumor[label])
+    }
+    assert not divergent, (
+        "Shared labels disagree on deprecation status: "
+        f"{divergent}. Deprecating a value at one level requires deprecating - or "
+        "removing - its counterpart at the other, so both levels steer curators to the "
+        "same canonical label."
     )
 
 
@@ -235,9 +263,9 @@ def test_deprecated_values_name_a_valid_replacement(enums, enum_name):
     )
 
 
-def test_manifestation_labels_fit_synapse_list_column(manifestation):
-    """manifestation is stored in a Synapse STRING_LIST file view column, so a label
-    longer than the column width would be truncated."""
+def test_manifestation_labels_fit_configured_list_column_width(manifestation):
+    """Entity views built by this repo's tooling configure list columns with an item
+    width of LIST_MAX_SIZE, and a Synapse column rejects a wider value."""
     too_long = {
         label: len(label)
         for label in manifestation
@@ -245,6 +273,7 @@ def test_manifestation_labels_fit_synapse_list_column(manifestation):
     }
     assert not too_long, (
         "ManifestationEnum labels exceed the "
-        f"{MANIFESTATION_MAX_LABEL_LENGTH}-character Synapse list column limit "
+        f"{MANIFESTATION_MAX_LABEL_LENGTH}-character list column item width this repo "
+        "configures (LIST_MAX_SIZE in utils/check_schema_limits.py) "
         f"(label: length): {too_long}."
     )

@@ -12,8 +12,8 @@ If you are adding a value to an existing term:
 
 Otherwise...
 1) Create a new branch or fork to make your changes. 
-2) Edit the relevant source file under `modules/` to make your proposed addition, removal, or modification. `modules/` holds the term definitions; `dist/`, `registered-json-schemas/` and `NF.jsonld` are build outputs, so do not edit them by hand.
-3) Push the change to your branch. A GitHub Action will rebuild the generated artifacts and validate them, reporting back on your pull request. Do not commit rebuilt artifacts yourself - they are regenerated and committed automatically after merge. _Your change should be as atomic as possible - e.g., don't lump together many unrelated changes into a single issue or pull request. You may be requested to split them out._
+2) Edit the relevant source file under `modules/` to make your proposed addition, removal, or modification. `modules/` holds the term definitions. Do not hand-edit `dist/`, `registered-json-schemas/`, or `NF.jsonld`: the first two are build outputs, and `NF.jsonld` is a legacy artifact that is no longer rebuilt by the pipeline.
+3) Push the change to your branch. A GitHub Action will rebuild the generated artifacts and validate them, reporting back on your pull request. Do not commit rebuilt artifacts yourself - `dist/` and `registered-json-schemas/` are regenerated and committed automatically after merge. _Your change should be as atomic as possible - e.g., don't lump together many unrelated changes into a single issue or pull request. You may be requested to split them out._
 4) File a pull request with your change and request review from [someone in the nf-osi organization](https://github.com/orgs/nf-osi/people).
 5) If your pull request is accepted, we'll create a new release with your changes. 
 
@@ -49,8 +49,12 @@ First, `ManifestationEnum` additionally holds non-neoplasm phenotype and outcome
 Second, values carrying `deprecated:` are exempt by definition: they exist precisely because their labels diverge, and they are retained only so that existing annotations stay valid until those annotations are migrated and the values are removed at a major release.
 
 `ManifestationEnum` is deliberately narrower than `Tumor` in the other direction, because a term that carries no facet information does not earn a facet option.
-Illustrative examples of the 27 excluded values: sample-state descriptors (`tumor`, `recurrent tumor`), placeholders (`Unknown`, `Not Applicable` - `manifestation` is optional, so omit the property instead), and terms redundant with `diseaseFocus` (`NF1-Associated Tumor`, `NF2-Associated Tumor`).
+The test to apply is whether the value names a tumor **type**: a recurrence- or atypia-qualified entity that names a specific type is faceted (`Recurrent MPNST` and `Atypical MPNST` both do, and `Recurrent MPNST` carries its own `NCIT:C8823`), while a bare state descriptor that names no type at all (`tumor`, `recurrent tumor`, `metastatic tumor`, `metastatic/recurrent tumor`) is not.
+Illustrative examples of the 27 excluded values: bare sample-state descriptors (`tumor`, `recurrent tumor`), placeholders (`Unknown`, `Not Applicable` - `manifestation` is optional, so omit the property instead), and terms redundant with `diseaseFocus` (`NF1-Associated Tumor`, `NF2-Associated Tumor`).
 That list is not exhaustive; the `INTENTIONALLY_NOT_FACETED` literal in `tests/test_enum_harmonization.py` is the authoritative decision record, grouped by exclusion reason.
+
+Faceted sibling entities do not currently roll into a shared parent facet: no `is_a` relation between permissible values survives into the generated artifacts, so filtering on `Malignant Peripheral Nerve Sheath Tumor` does not match a dataset annotated only `Atypical MPNST` or `Recurrent MPNST`.
+That fragmentation is known and tracked as the `is_a` follow-up rather than solved here.
 
 The invariant, together with the exemptions above, is enforced by `tests/test_enum_harmonization.py`.
 Because the test checks both directions, adding a value to `Tumor` now requires either mirroring it into `ManifestationEnum` or adding it to `INTENTIONALLY_NOT_FACETED` with a stated reason; `test_every_tumor_value_is_faceted_or_explicitly_excluded` fails until you do one of the two.
