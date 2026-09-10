@@ -42,9 +42,15 @@ In some situations (e.g. drug names), terms are not always well-captured by the 
 ONCOTREE _names_ are the preferred tumorType values, with one exception: do not carry over an OncoTree `NOS` ("not otherwise specified") qualifier. `NOS` records only that a tumor was not subtyped, which is meaningful in a pathology report but not in a portal facet. Prefer `High-Grade Glioma` over OncoTree's `High-Grade Glioma NOS`.
 
 ### Relationship between `tumorType` and `manifestation`
-File-level `tumorType` (range: `Tumor`) is rolled up onto dataset- and study-level `manifestation` (range: `ManifestationEnum`) to populate the portal's facet search. For that rollup to work without a translation table, **every neoplasm value in `ManifestationEnum` must use a label string identical to its counterpart in `Tumor`**. When adding a neoplasm term to one enum, check whether the other needs it too, and copy the `meaning:` or `source:` verbatim rather than writing a new one.
+File-level `tumorType` (range: `Tumor`) is rolled up onto dataset- and study-level `manifestation` (range: `ManifestationEnum`) to populate the portal's facet search. For that rollup to work without a translation table, **every non-deprecated neoplasm value in `ManifestationEnum` must use a label string identical to its counterpart in `Tumor`**. When adding a neoplasm term to one enum, check whether the other needs it too, and copy the `meaning:` or `source:` verbatim rather than writing a new one.
 
-`ManifestationEnum` additionally holds non-neoplasm phenotype and outcome values (`Behavioral`, `Cognition`, `Hearing Loss`, `Memory`, `Pain`, `Quality of Life`, `Vision Loss`) which have no `Tumor` counterpart and are exempt from that rule. `ManifestationEnum` is deliberately narrower than `Tumor` in the other direction: sample-state descriptors (`tumor`, `recurrent tumor`, `Unknown`, `Not Applicable`) and terms redundant with `diseaseFocus` (`NF1-Associated Tumor`, `NF2-Associated Tumor`) are excluded, because they carry no facet information.
+Two categories are exempt from that rule.
+First, `ManifestationEnum` additionally holds non-neoplasm phenotype and outcome values (`Behavioral`, `Cognition`, `Hearing Loss`, `Memory`, `Pain`, `Quality of Life`, `Vision Loss`) which have no `Tumor` counterpart.
+Second, values carrying `deprecated:` are exempt by definition: they exist precisely because their labels diverge, and they are retained only so that existing annotations stay valid until those annotations are migrated and the values are removed at a major release.
+
+`ManifestationEnum` is deliberately narrower than `Tumor` in the other direction: sample-state descriptors (`tumor`, `recurrent tumor`, `Unknown`, `Not Applicable`) and terms redundant with `diseaseFocus` (`NF1-Associated Tumor`, `NF2-Associated Tumor`) are excluded, because they carry no facet information.
+
+The invariant, together with the exemptions above, is enforced by `tests/test_enum_harmonization.py`.
 
 ### Contribution of drug terms
 The preferred first-pass strategy for chemical name annotation is to search the EMBL-EBI ontology lookup service to find names, descriptions, and sources. Typically, the NCI Thesaurus will provide a suitable description for drugs and other biologically active molecules. In situations where the query molecule is not found in EMBL-EBI Ontology Lookup Service, a helpful secondary location to find chemical descriptions is MeSH.

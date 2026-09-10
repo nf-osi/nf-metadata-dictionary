@@ -369,10 +369,11 @@ enums:
         - restricted-access
         description: The license for the dataset is not known.
   ManifestationEnum:
-    description: 'Phenotype(s) studied, used as the dataset- and study-level facet vocabulary for the NF Data Portal. Neoplasm values MUST use label strings identical to the corresponding value in the Tumor enum, so that file-level tumorType annotations roll up to manifestation without a vocabulary crosswalk. The non-neoplasm phenotype and outcome values (Behavioral, Cognition, Hearing Loss, Memory, Pain, Quality of Life, Vision Loss) are exempt from that rule, as they have no Tumor counterpart. Values are deprecated rather than renamed or deleted, because a deprecated permissible value remains valid in the generated JSON Schema; removal is a separate major-release step gated on a zero-usage check.'
+    description: 'Phenotype(s) studied, used as the dataset- and study-level facet vocabulary for the NF Data Portal. Non-deprecated neoplasm values MUST use label strings identical to the corresponding value in the Tumor enum, so that file-level tumorType annotations roll up to manifestation without a vocabulary crosswalk. Two categories are exempt from that rule: the non-neoplasm phenotype and outcome values (Behavioral, Cognition, Hearing Loss, Memory, Pain, Quality of Life, Vision Loss), which have no Tumor counterpart; and values carrying deprecated:, which exist precisely because their labels diverge and are retained only so that existing annotations stay valid. Values are deprecated rather than renamed or deleted, because a deprecated permissible value remains valid in the generated JSON Schema; removal is a separate major-release step gated on a zero-usage check.'
     permissible_values:
       ANNUBP:
       Anaplastic Astrocytoma:
+        meaning: NCIT:C9477
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=AASTR
       Atypical MPNST:
       Atypical Neurofibroma:
@@ -392,12 +393,14 @@ enums:
         - Dermal Neurofibroma
         meaning: NCIT:C128451
       Diffuse Astrocytoma:
+        meaning: NCIT:C7173
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=DA
       Diffuse Infiltrating Neurofibroma:
         source: https://doi.org/10.1007/s00256-014-1965-8
       Fibromatosis:
         meaning: NCIT:C3042
       Glioblastoma:
+        meaning: NCIT:C3058
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GB
       Glioma:
         aliases:
@@ -422,6 +425,7 @@ enums:
       Low-Grade Glioma:
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=LGGNOS
       Malignant Peripheral Nerve Sheath Tumor:
+        meaning: NCIT:C3798
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=MPNST
       Malignant Peripheral Nerve Sheath Tumor (MPNST):
         deprecated: Use "Malignant Peripheral Nerve Sheath Tumor", which is the label shared with the file-level Tumor enum.
@@ -434,19 +438,24 @@ enums:
         meaning: NCIT:C3224
       Memory:
       Meningioma:
+        meaning: NCIT:C3230
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=MNG
       Neurofibroma:
       Nodular Neurofibroma:
       Optic Pathway Glioma:
+        meaning: MONDO:0016167
         source: https://ncit.nci.nih.gov/ncitbrowser/ConceptReport.jsp?dictionary=NCI_Thesaurus&ns=ncit&code=C4537
       Pain:
       Pheochromocytoma:
         meaning: MONDO:0008233
       Pilocytic Astrocytoma:
+        meaning: NCIT:C4047
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PAST
       Pilomyxoid Astrocytoma:
+        meaning: NCIT:C40315
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PMA
       Pleomorphic Xanthoastrocytoma:
+        meaning: NCIT:C4323
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PXA
       Plexiform Neurofibroma:
         meaning: NCIT:C3797
