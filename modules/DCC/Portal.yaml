@@ -369,7 +369,7 @@ enums:
         - restricted-access
         description: The license for the dataset is not known.
   ManifestationEnum:
-    description: 'Phenotype(s) studied, used as the dataset- and study-level facet vocabulary for the NF Data Portal. Non-deprecated neoplasm values MUST use label strings identical to the corresponding value in the Tumor enum, so that file-level tumorType annotations roll up to manifestation without a vocabulary crosswalk. Two categories are exempt from that rule: the non-neoplasm phenotype and outcome values (Behavioral, Cognition, Hearing Loss, Memory, Pain, Quality of Life, Vision Loss), which have no Tumor counterpart; and values carrying deprecated:, which exist precisely because their labels diverge and are retained only so that existing annotations stay valid. Values are deprecated rather than renamed or deleted, because a deprecated permissible value remains valid in the generated JSON Schema; removal is a separate major-release step gated on a zero-usage check.'
+    description: Phenotype(s) studied, used as the dataset- and study-level facet vocabulary for the NF Data Portal.
     permissible_values:
       ANNUBP:
       Anaplastic Astrocytoma:

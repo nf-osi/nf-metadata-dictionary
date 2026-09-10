@@ -48,9 +48,12 @@ Two categories are exempt from that rule.
 First, `ManifestationEnum` additionally holds non-neoplasm phenotype and outcome values (`Behavioral`, `Cognition`, `Hearing Loss`, `Memory`, `Pain`, `Quality of Life`, `Vision Loss`) which have no `Tumor` counterpart.
 Second, values carrying `deprecated:` are exempt by definition: they exist precisely because their labels diverge, and they are retained only so that existing annotations stay valid until those annotations are migrated and the values are removed at a major release.
 
-`ManifestationEnum` is deliberately narrower than `Tumor` in the other direction: sample-state descriptors (`tumor`, `recurrent tumor`, `Unknown`, `Not Applicable`) and terms redundant with `diseaseFocus` (`NF1-Associated Tumor`, `NF2-Associated Tumor`) are excluded, because they carry no facet information.
+`ManifestationEnum` is deliberately narrower than `Tumor` in the other direction, because a term that carries no facet information does not earn a facet option.
+Illustrative examples of the 27 excluded values: sample-state descriptors (`tumor`, `recurrent tumor`), placeholders (`Unknown`, `Not Applicable` - `manifestation` is optional, so omit the property instead), and terms redundant with `diseaseFocus` (`NF1-Associated Tumor`, `NF2-Associated Tumor`).
+That list is not exhaustive; the `INTENTIONALLY_NOT_FACETED` literal in `tests/test_enum_harmonization.py` is the authoritative decision record, grouped by exclusion reason.
 
 The invariant, together with the exemptions above, is enforced by `tests/test_enum_harmonization.py`.
+Because the test checks both directions, adding a value to `Tumor` now requires either mirroring it into `ManifestationEnum` or adding it to `INTENTIONALLY_NOT_FACETED` with a stated reason; `test_every_tumor_value_is_faceted_or_explicitly_excluded` fails until you do one of the two.
 
 ### Contribution of drug terms
 The preferred first-pass strategy for chemical name annotation is to search the EMBL-EBI ontology lookup service to find names, descriptions, and sources. Typically, the NCI Thesaurus will provide a suitable description for drugs and other biologically active molecules. In situations where the query molecule is not found in EMBL-EBI Ontology Lookup Service, a helpful secondary location to find chemical descriptions is MeSH.
