@@ -5,6 +5,7 @@ enums:
         description: 'Atypical neurofibromatous neoplasms of uncertain biologic potential is a provisional classification for lesions displaying at least two features: atypia, loss of neurofibroma architecture, high cellularity, and/or mitotic activity >1/50 but <3/10 high power fields. They can be inconsistently diagnosed as atypical neurofibroma or low-grade MPNST. See https://pubmed.ncbi.nlm.nih.gov/28551330/.'
       Anaplastic Astrocytoma:
         description: AASTR
+        meaning: NCIT:C9477
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=AASTR
       Anaplastic Ganglioglioma:
         description: AGNG
@@ -25,6 +26,9 @@ enums:
         meaning: NCIT:C41426
       Atypical Pilocytic Astrocytoma:
         description: Pilocytic astrocytoma with atypical features.
+      Breast Cancer:
+        description: A malignant neoplasm arising from the breast. Elevated breast cancer risk is a recognized manifestation of Neurofibromatosis type 1.
+        meaning: MONDO:0007254
       Cellular Neurofibroma:
         description: A neurofibroma characterized by the presence of areas with increased cellularity.
         meaning: NCIT:C41427
@@ -41,6 +45,7 @@ enums:
         meaning: NCIT:C128451
       Diffuse Astrocytoma:
         description: DA
+        meaning: NCIT:C7173
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=DA
       Diffuse Infiltrating Neurofibroma:
         description: 'Diffuse infiltrating neurofibroma can present as slow-growing, soft tissue masses with overlying skin thickening. These le-sions infiltrate the dermis and the subcutaneous tissue and  characteristically spread along the connective tissues enveloping islands of normal fat. Some of these lesions develop fatty proliferation and can mimic lipomas,  angiolipomas, or angiomyolipomas on imaging and histological evaluation '
@@ -56,8 +61,10 @@ enums:
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GNG
       Glioblastoma:
         description: GB
+        meaning: NCIT:C3058
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GB
       Glioblastoma Multiforme:
+        deprecated: Retired as a distinct entity by the WHO 2021 CNS tumor classification. Use "Glioblastoma".
         description: GBM
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=GBM
       Glioma:
@@ -75,7 +82,11 @@ enums:
         description: A neoplasm with hemorrhagic findings.
         notes:
         - This is based after the NCIT term 'Necrotic Neoplasm' to accomodate records using only 'hemorrhage' for tumor description -- it may be of limited usefulness long-term.
+      High-Grade Glioma:
+        description: A WHO grade 3 or grade 4 glioma. Preferred over the OncoTree "High-Grade Glioma NOS" label for annotation, because the NOS qualifier records only that the tumor was not subtyped and carries no information the portal consumes.
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=HGGNOS
       High-Grade Glioma NOS:
+        deprecated: Use "High-Grade Glioma", which is the label shared with the portal-level ManifestationEnum.
         description: HGGNOS
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=HGGNOS
       Hybrid Nerve Sheath Tumor:
@@ -99,14 +110,20 @@ enums:
         description: (JMML) A myelodysplastic/myeloproliferative neoplasm of childhood that is characterized by proliferation principally of the granulocytic and monocytic lineages
         meaning: NCIT:C9233
       Localized Neurofibroma:
+        deprecated: A synonym rather than a distinct entity. Use "Cutaneous Neurofibroma".
         description: Refers to Cutaneous Neurofibroma; this is a synonym used mainly for compatibility with JHU Biobank.
         notes:
         - JHU Biobank
+      Low-Grade Glioma:
+        description: A WHO grade 1 or grade 2 glioma. Preferred over the OncoTree "Low-Grade Glioma NOS" label for annotation, because the NOS qualifier records only that the tumor was not subtyped and carries no information the portal consumes.
+        source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=LGGNOS
       Low-Grade Glioma NOS:
+        deprecated: Use "Low-Grade Glioma", which is the label shared with the portal-level ManifestationEnum.
         description: LGGNOS
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=LGGNOS
       Malignant Peripheral Nerve Sheath Tumor:
         description: MPNST
+        meaning: NCIT:C3798
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=MPNST
       Massive Soft Tissue Neurofibroma:
         description: Massive soft tissue neurofibroma is characterized  by local infiltration and extension to multiple nerve branches,  as well as substantial overgrowth of adjacent soft tissue and  skin, which distinguishes it from its more benign variant, plexiform neurofibroma. With striking presentation and  severe dysmorphism, massive soft tissue neurofibroma is also labeled elephantiasis neuromatosa. Although considered benign it  shares similarities with malignant peripheral nerve sheath  tumors such as local infiltration and cell mitogenesis. Massive soft tissue neurofibroma is associated with significant morbidity and mortality and almost no response to  conventional chemotherapy and radiotherapy. Surgery is eventually pursued, although bleeding may be a life-threatening  complication as massive soft tissue neurofibromas are highly  vascularized.
@@ -120,6 +137,7 @@ enums:
         meaning: NCIT:C3224
       Meningioma:
         description: MNG
+        meaning: NCIT:C3230
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=MNG
       NF1-Associated Tumor:
         description: Unspecified NF1-associated tumor; use a more specific tumor classification if available.
@@ -146,7 +164,8 @@ enums:
         description: OAST
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=OAST
       Optic Pathway Glioma:
-        description: A glioma that affects the optic nerve. This condition can be seen in association with neurofibromatosis 1. It is most commonly seen in the pediatric age group.
+        description: A glioma arising anywhere along the optic pathway, including the optic nerve, optic chiasm, and optic tracts. This condition is commonly associated with neurofibromatosis type 1. It is most often seen in the pediatric age group.
+        meaning: MONDO:0016167
         source: https://ncit.nci.nih.gov/ncitbrowser/ConceptReport.jsp?dictionary=NCI_Thesaurus&ns=ncit&code=C4537
       Pheochromocytoma:
         aliases:
@@ -156,12 +175,15 @@ enums:
         meaning: MONDO:0008233
       Pilocytic Astrocytoma:
         description: PAST
+        meaning: NCIT:C4047
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PAST
       Pilomyxoid Astrocytoma:
         description: PMA
+        meaning: NCIT:C40315
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PMA
       Pleomorphic Xanthoastrocytoma:
         description: PXA
+        meaning: NCIT:C4323
         source: https://oncotree.mskcc.org/?version=oncotree_latest_stable&field=PXA
       Plexiform Neurofibroma:
         description: An elongated and multinodular neurofibroma, formed when the tumor involves either multiple trunks of a plexus or multiple fascicles of a large nerve, such as the sciatic. Some plexiform neurofibromas resemble a bag of worms, others produce a massive ropy enlargement of the nerve.
@@ -174,6 +196,9 @@ enums:
         meaning: NCIT:C9118
       Schwannoma:
         description: SCHW
+      Spinal Meningioma:
+        description: A meningioma arising in the spinal canal. Multiple spinal meningiomas are a recognized manifestation of NF2-related schwannomatosis.
+        meaning: MONDO:0001275
       Subcutaneous Neurofibroma:
         description: A neurofibroma that occurs along the peripheral nerves beneath the skin.
         notes:

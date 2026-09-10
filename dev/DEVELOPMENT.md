@@ -257,7 +257,7 @@ File views have the stricter limit, so we use conservative column sizes:
 
 ```
 STRING: 80 chars (covers 100% of enum values, max: 77 chars)
-LIST: 80 chars × 40 items max
+LIST: 80 chars per item × 20 items max
 name column: 256 chars
 Largest schema: ~52.7KB (PortalDataset, Superdataset)
 ```
@@ -427,12 +427,13 @@ Individual test files (all of these run in `main-ci.yml`):
 
 | Test file | What it covers |
 |---|---|
-| `tests/test_schema_instances.py` | JSON instances validate correctly against registered schemas |
+| `tests/test_schema_instances.py` | JSON instances validate correctly against registered schemas; also that `deprecated:` permissible values are still emitted into the generated enum |
 | `tests/test_template_datatypes.py` | Every non-abstract template class declares valid `dataType` annotations |
 | `tests/test_model_system_sync.py` | Model system data is in sync |
 | `tests/test_schema_escape_hatches.py` | Deliberate escape hatches (e.g. `Other Platform`) stay permitted |
 | `tests/test_file_entity_schema_guard.py` | File-based template constraints stay scoped to files, not folders |
 | `tests/test_decide_release.py` | Release decision: AI acceptance, deterministic fallback, and the CLI contract |
+| `tests/test_enum_harmonization.py` | `ManifestationEnum` and `Tumor` stay label-identical where they overlap, so file-level `tumorType` rolls up onto dataset- and study-level `manifestation` without a crosswalk (see [Duplicated enum subsets](DESIGN.md#when-the-subset-relation-cant-be-expressed-in-linkml)) |
 
 #### JSON schema instance tests
 

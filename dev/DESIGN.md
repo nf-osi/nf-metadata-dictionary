@@ -56,6 +56,25 @@ EpigenomicsAssayTemplate:
 - Apply slot_usage when templates have clear domain context (sequencing, imaging, clinical, etc.)
 - Use `any_of` for cross-domain templates or generic base templates
 
+### When the subset relation can't be expressed in LinkML
+
+`slot_usage` points a slot at a *different, separately declared* enum; it does not derive one enum's values from another's.
+That is a problem when two enums have to agree on their labels rather than merely coexist.
+
+The case that prompted recording this is `ManifestationEnum` (`modules/DCC/Portal.yaml`), the facet vocabulary for dataset- and study-level `manifestation`, which is a curated subset of the file-level `Tumor` enum (`modules/Sample/Tumor.yaml`) plus a handful of non-neoplasm phenotype values.
+`manifestation` is populated by rolling up the `tumorType` annotations of a dataset's member files, and that rollup carries no vocabulary crosswalk, so a shared concept spelled differently in the two enums simply fails to roll up.
+
+`EnumDefinition`'s `inherits`, `include`, `minus`, and `reachable_from` were each evaluated as a way to state the relation once.
+None of them is implemented by `gen-json-schema`, and an enum whose values come only from `inherits` generates a bare `{"type": "string"}` with no `enum` key at all - silently accepting any string instead of constraining the field.
+So the shared values are **duplicated by hand** in both files.
+That is a deliberate choice, not an oversight; do not refactor it into enum inheritance.
+
+Duplication trades a schema-language guarantee for a drift risk, so the relation is enforced by a test instead: [`tests/test_enum_harmonization.py`](../tests/test_enum_harmonization.py) checks label identity in both directions, plus agreement on `meaning:` and on deprecation status, and requires every `Tumor` value left out of the facet vocabulary to be listed with a stated reason.
+See [CONTRIBUTING.md](../CONTRIBUTING.md#relationship-between-tumortype-and-manifestation) for the contributor-facing version of the rule.
+
+A related limitation is worth recording: `is_a` between permissible values is accepted by LinkML and survives into `dist/NF.yaml`, but `gen-rdf` serializes it incorrectly and `sssomgen` drops it, so it is not used here.
+Faceted sibling entities therefore do not roll into a shared parent facet.
+
 ---
 
 ## Enum Value Sourcing: Curated Sync vs. Dynamic Ontology Enums
@@ -82,7 +101,7 @@ For value sets that *do* map to an ontology branch, two hard constraints still r
 
 2. **We don't want the whole branch — we want the relevant slice.** Pulling every descendant optimizes for completeness of the ontology but not usefulness/good experience to an NF curator:
    - **`Institution` / `Organization`** (`modules/Other/Organization.yaml`): ROR contains **110,000+** institutions. NF data comes from a small, known set of contributing sites. A dropdown seeded from all of ROR is worse than the curated list, not better.
-   - **`Tumor`** (`modules/Sample/Tumor.yaml`): ~57 hand-picked, NF-relevant tumor types (curated from OncoTree / NCIT / MONDO). The full NCIT/MONDO neoplasm branch is thousands of terms, the vast majority of which are irrelevant to NF and would bury the ~57 needed.
+   - **`Tumor`** (`modules/Sample/Tumor.yaml`): ~61 hand-picked, NF-relevant tumor types (curated from OncoTree / NCIT / MONDO). The full NCIT/MONDO neoplasm branch is thousands of terms, the vast majority of which are irrelevant to NF and would bury the ~61 needed.
 
 ### The value we'd lose
 

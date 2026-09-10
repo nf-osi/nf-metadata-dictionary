@@ -221,7 +221,7 @@ jobs:
         run: |
           pytest tests/test_schema_instances.py tests/test_template_datatypes.py tests/test_model_system_sync.py \
             tests/test_schema_escape_hatches.py tests/test_file_entity_schema_guard.py \
-            tests/test_decide_release.py -v \
+            tests/test_decide_release.py tests/test_enum_harmonization.py -v \
             --tb=short 2>&1 | tee pytest_output.txt
           echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
 
