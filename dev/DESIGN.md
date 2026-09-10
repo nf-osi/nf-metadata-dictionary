@@ -82,7 +82,7 @@ For value sets that *do* map to an ontology branch, two hard constraints still r
 
 2. **We don't want the whole branch — we want the relevant slice.** Pulling every descendant optimizes for completeness of the ontology but not usefulness/good experience to an NF curator:
    - **`Institution` / `Organization`** (`modules/Other/Organization.yaml`): ROR contains **110,000+** institutions. NF data comes from a small, known set of contributing sites. A dropdown seeded from all of ROR is worse than the curated list, not better.
-   - **`Tumor`** (`modules/Sample/Tumor.yaml`): ~57 hand-picked, NF-relevant tumor types (curated from OncoTree / NCIT / MONDO). The full NCIT/MONDO neoplasm branch is thousands of terms, the vast majority of which are irrelevant to NF and would bury the ~57 needed.
+   - **`Tumor`** (`modules/Sample/Tumor.yaml`): ~61 hand-picked, NF-relevant tumor types (curated from OncoTree / NCIT / MONDO). The full NCIT/MONDO neoplasm branch is thousands of terms, the vast majority of which are irrelevant to NF and would bury the ~61 needed.
 
 ### The value we'd lose
 
