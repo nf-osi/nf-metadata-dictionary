@@ -169,9 +169,10 @@ def test_shared_labels_agree_on_deprecation(manifestation, tumor):
     }
     assert not divergent, (
         "Shared labels disagree on deprecation status: "
-        f"{divergent}. Deprecating a value at one level requires deprecating - or "
-        "removing - its counterpart at the other, so both levels steer curators to the "
-        "same canonical label."
+        f"{divergent}. Deprecating a value at one level requires deprecating its "
+        "counterpart at the other, so both levels steer curators to the same canonical "
+        "label. Do not delete the value to resolve this: removal invalidates existing "
+        "annotations and is a separate major-release step gated on a zero-usage query."
     )
 
 
@@ -235,8 +236,10 @@ def test_abbreviation_suffix_only_on_deprecated_values(enums, enum_name):
     ]
     assert not offenders, (
         f"{enum_name} values end in a parenthesized abbreviation but are not "
-        f"deprecated: {sorted(offenders)}. Spell the term out and keep the label "
-        "identical across both enums."
+        f"deprecated: {sorted(offenders)}. Keeping the label identical across both enums "
+        "is the requirement; spelling the term out is the default choice for which "
+        "spelling wins. An established community acronym is an acceptable canonical "
+        'label - "ANNUBP" is canonical in both enums for that reason.'
     )
 
 
