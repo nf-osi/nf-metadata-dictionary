@@ -163,7 +163,9 @@ classes:
         title: License
       manifestation:
         description: Refers to the phenotype(s) studied in the dataset. Omit if not
-          applicable.
+          applicable. Neoplasm values are partly populated by rolling up the distinct
+          file-level tumorType annotations of the dataset's member files, so they use
+          the same label strings as the Tumor enum.
         multivalued: true
         range: ManifestationEnum
         required: false

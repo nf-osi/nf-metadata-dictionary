@@ -12,8 +12,8 @@ If you are adding a value to an existing term:
 
 Otherwise...
 1) Create a new branch or fork to make your changes. 
-2) Edit the NF.csv file to make your proposed addition, removal, or modification.
-3) Push the change to your branch. A GitHub Action will run to convert the csv file to update the NF.jsonld file with your changes. _Your change should be as atomic as possible - e.g., don't lump together many unrelated changes into a single issue or pull request. You may be requested to split them out._
+2) Edit the relevant source file under `modules/` to make your proposed addition, removal, or modification. These are the only hand-edited files; everything in `dist/` and `registered-json-schemas/` is generated.
+3) Push the change to your branch. A GitHub Action will rebuild the generated artifacts and validate them, reporting back on your pull request. Do not commit rebuilt artifacts yourself - they are regenerated and committed automatically after merge. _Your change should be as atomic as possible - e.g., don't lump together many unrelated changes into a single issue or pull request. You may be requested to split them out._
 4) File a pull request with your change and request review from [someone in the nf-osi organization](https://github.com/orgs/nf-osi/people).
 5) If your pull request is accepted, we'll create a new release with your changes. 
 
@@ -27,11 +27,24 @@ If you are proposing a new term, then we require a source for the definition. Th
     If you are a Sage Bionetworks employee and cannot find a source URL, then use "Sage Bionetworks" as the source and your own definition.
     If you are not (nor are you working with a Sage Bionetworks supported community) it is up to you for a strategy for controlling new terms to be added.
 
+## Guidelines for modifying existing terms
+
+**Deprecate; never rename or delete a permissible value.** Renaming a value is a breaking change: it invalidates every annotation in Synapse that uses the old label. Instead, add the new label and mark the old one `deprecated:` with free-text naming the replacement. A deprecated value is still emitted into the generated JSON Schema, so existing annotations stay valid and the release stays non-breaking. Actually removing it is a separate step, taken at a major release and gated on a query confirming zero remaining uses in Synapse.
+
+Use free-text `deprecated:`, not `deprecated_element_has_exact_replacement:` - the latter is typed as a URI or CURIE and fails on a plain label.
+
+Do not add explanatory YAML comments to files under `modules/`. The synonyms workflow rewrites those files with `yaml.dump()`, which discards comments. Put the explanation in `description:` or `notes:` instead, which round-trip and also render in the published docs.
+
 ## Guidelines for specific term types
 In some situations (e.g. drug names), terms are not always well-captured by the ontologies found in the Ontology Lookup Service. We've defined some best practices for contributing these terms here.
 
 ### Contribution of tumorType terms
-ONCOTREE _names_ are the preferred tumorType values. 
+ONCOTREE _names_ are the preferred tumorType values, with one exception: do not carry over an OncoTree `NOS` ("not otherwise specified") qualifier. `NOS` records only that a tumor was not subtyped, which is meaningful in a pathology report but not in a portal facet. Prefer `High-Grade Glioma` over OncoTree's `High-Grade Glioma NOS`.
+
+### Relationship between `tumorType` and `manifestation`
+File-level `tumorType` (range: `Tumor`) is rolled up onto dataset- and study-level `manifestation` (range: `ManifestationEnum`) to populate the portal's facet search. For that rollup to work without a translation table, **every neoplasm value in `ManifestationEnum` must use a label string identical to its counterpart in `Tumor`**. When adding a neoplasm term to one enum, check whether the other needs it too, and copy the `meaning:` or `source:` verbatim rather than writing a new one.
+
+`ManifestationEnum` additionally holds non-neoplasm phenotype and outcome values (`Behavioral`, `Cognition`, `Hearing Loss`, `Memory`, `Pain`, `Quality of Life`, `Vision Loss`) which have no `Tumor` counterpart and are exempt from that rule. `ManifestationEnum` is deliberately narrower than `Tumor` in the other direction: sample-state descriptors (`tumor`, `recurrent tumor`, `Unknown`, `Not Applicable`) and terms redundant with `diseaseFocus` (`NF1-Associated Tumor`, `NF2-Associated Tumor`) are excluded, because they carry no facet information.
 
 ### Contribution of drug terms
 The preferred first-pass strategy for chemical name annotation is to search the EMBL-EBI ontology lookup service to find names, descriptions, and sources. Typically, the NCI Thesaurus will provide a suitable description for drugs and other biologically active molecules. In situations where the query molecule is not found in EMBL-EBI Ontology Lookup Service, a helpful secondary location to find chemical descriptions is MeSH.
