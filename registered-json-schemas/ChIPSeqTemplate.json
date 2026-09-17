@@ -137,6 +137,74 @@
           {
             "if": {
               "properties": {
+                "aliquotID": {}
+              },
+              "required": [
+                "aliquotID"
+              ]
+            },
+            "then": {
+              "properties": {
+                "specimenID": {}
+              },
+              "required": [
+                "specimenID"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "parentSpecimenID": {}
+              },
+              "required": [
+                "parentSpecimenID"
+              ]
+            },
+            "then": {
+              "properties": {
+                "specimenID": {}
+              },
+              "required": [
+                "specimenID"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "resourceType": {
+                  "const": "experimentalData"
+                }
+              },
+              "required": [
+                "resourceType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "assay": {},
+                "dataSubtype": {},
+                "dataType": {},
+                "diagnosis": {},
+                "individualID": {},
+                "species": {},
+                "tumorType": {}
+              },
+              "required": [
+                "dataType",
+                "dataSubtype",
+                "assay",
+                "individualID",
+                "species",
+                "diagnosis",
+                "tumorType"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
                 "age": {
                   "not": {
                     "anyOf": [
@@ -194,38 +262,6 @@
               },
               "required": [
                 "dataSubtype"
-              ]
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "resourceType": {
-                  "const": "experimentalData"
-                }
-              },
-              "required": [
-                "resourceType"
-              ]
-            },
-            "then": {
-              "properties": {
-                "assay": {},
-                "dataSubtype": {},
-                "dataType": {},
-                "diagnosis": {},
-                "individualID": {},
-                "species": {},
-                "tumorType": {}
-              },
-              "required": [
-                "dataType",
-                "dataSubtype",
-                "assay",
-                "individualID",
-                "species",
-                "diagnosis",
-                "tumorType"
               ]
             }
           }
@@ -478,6 +514,11 @@
             "type": "string",
             "title": "assayTarget"
           },
+          "genePerturbed": {
+            "description": "The HUGO gene symbol for the gene that is perturbed.",
+            "type": "string",
+            "title": "genePerturbed"
+          },
           "genePerturbationType": {
             "description": "",
             "enum": [
@@ -499,11 +540,6 @@
             ],
             "title": "genePerturbationTechnology",
             "type": "string"
-          },
-          "genePerturbed": {
-            "description": "The HUGO gene symbol for the gene that is perturbed.",
-            "type": "string",
-            "title": "genePerturbed"
           },
           "age": {
             "anyOf": [

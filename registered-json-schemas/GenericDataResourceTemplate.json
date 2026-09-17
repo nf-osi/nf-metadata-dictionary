@@ -17,24 +17,6 @@
           {
             "if": {
               "properties": {
-                "dataType": {}
-              },
-              "required": [
-                "dataType"
-              ]
-            },
-            "then": {
-              "properties": {
-                "dataSubtype": {}
-              },
-              "required": [
-                "dataSubtype"
-              ]
-            }
-          },
-          {
-            "if": {
-              "properties": {
                 "resourceType": {
                   "const": "experimentalData"
                 }
@@ -55,27 +37,27 @@
                 "assay"
               ]
             }
+          },
+          {
+            "if": {
+              "properties": {
+                "dataType": {}
+              },
+              "required": [
+                "dataType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "dataSubtype": {}
+              },
+              "required": [
+                "dataSubtype"
+              ]
+            }
           }
         ],
         "properties": {
-          "dataType": {
-            "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
-            "type": "string",
-            "title": "dataType"
-          },
-          "dataSubtype": {
-            "description": "Categorizes data based on its processing state. This is the main classification axis used for data types.  Not all data types can use this dimensions (e.g. clinical data).",
-            "enum": [
-              "derived",
-              "normalized",
-              "processed",
-              "quantified",
-              "raw",
-              "synthetic"
-            ],
-            "title": "dataSubtype",
-            "type": "string"
-          },
           "assay": {
             "description": "The technology used to generate the data in this file.",
             "type": "string",
@@ -105,6 +87,24 @@
             "description": "Brief free-text comments that may also be important to understanding the resource.",
             "type": "string",
             "title": "comments"
+          },
+          "dataType": {
+            "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
+            "type": "string",
+            "title": "dataType"
+          },
+          "dataSubtype": {
+            "description": "Categorizes data based on its processing state. This is the main classification axis used for data types.  Not all data types can use this dimensions (e.g. clinical data).",
+            "enum": [
+              "derived",
+              "normalized",
+              "processed",
+              "quantified",
+              "raw",
+              "synthetic"
+            ],
+            "title": "dataSubtype",
+            "type": "string"
           },
           "fileFormat": {
             "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",

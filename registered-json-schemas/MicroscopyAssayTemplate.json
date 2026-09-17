@@ -35,6 +35,26 @@
           {
             "if": {
               "properties": {
+                "resourceType": {
+                  "const": "experimentalData"
+                }
+              },
+              "required": [
+                "resourceType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "specimenID": {}
+              },
+              "required": [
+                "specimenID"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
                 "aliquotID": {}
               },
               "required": [
@@ -81,10 +101,10 @@
             },
             "then": {
               "properties": {
-                "specimenID": {}
+                "platform": {}
               },
               "required": [
-                "specimenID"
+                "platform"
               ]
             }
           },
@@ -101,10 +121,22 @@
             },
             "then": {
               "properties": {
-                "platform": {}
+                "assay": {},
+                "dataSubtype": {},
+                "dataType": {},
+                "diagnosis": {},
+                "individualID": {},
+                "species": {},
+                "tumorType": {}
               },
               "required": [
-                "platform"
+                "dataType",
+                "dataSubtype",
+                "assay",
+                "individualID",
+                "species",
+                "diagnosis",
+                "tumorType"
               ]
             }
           },
@@ -170,56 +202,9 @@
                 "dataSubtype"
               ]
             }
-          },
-          {
-            "if": {
-              "properties": {
-                "resourceType": {
-                  "const": "experimentalData"
-                }
-              },
-              "required": [
-                "resourceType"
-              ]
-            },
-            "then": {
-              "properties": {
-                "assay": {},
-                "dataSubtype": {},
-                "dataType": {},
-                "diagnosis": {},
-                "individualID": {},
-                "species": {},
-                "tumorType": {}
-              },
-              "required": [
-                "dataType",
-                "dataSubtype",
-                "assay",
-                "individualID",
-                "species",
-                "diagnosis",
-                "tumorType"
-              ]
-            }
           }
         ],
         "properties": {
-          "parentSpecimenID": {
-            "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
-            "type": "string",
-            "title": "parentSpecimenID"
-          },
-          "specimenID": {
-            "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
-            "type": "string",
-            "title": "specimenID"
-          },
-          "aliquotID": {
-            "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
-            "type": "string",
-            "title": "aliquotID"
-          },
           "objective": {
             "description": "Microscope objective.",
             "type": "string",
@@ -454,6 +439,21 @@
             "description": "Antibody identifier. Select from the controlled vocabulary of antibodies in NF Research Tools Central (syn51730943) when available, or provide a custom identifier. Links to antibody details are available in the schema see_also field for enum values.",
             "type": "string",
             "title": "antibodyID"
+          },
+          "parentSpecimenID": {
+            "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
+            "type": "string",
+            "title": "parentSpecimenID"
+          },
+          "specimenID": {
+            "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
+            "type": "string",
+            "title": "specimenID"
+          },
+          "aliquotID": {
+            "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
+            "type": "string",
+            "title": "aliquotID"
           },
           "age": {
             "anyOf": [

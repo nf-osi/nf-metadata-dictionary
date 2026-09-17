@@ -37,6 +37,42 @@
           {
             "if": {
               "properties": {
+                "aliquotID": {}
+              },
+              "required": [
+                "aliquotID"
+              ]
+            },
+            "then": {
+              "properties": {
+                "specimenID": {}
+              },
+              "required": [
+                "specimenID"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "parentSpecimenID": {}
+              },
+              "required": [
+                "parentSpecimenID"
+              ]
+            },
+            "then": {
+              "properties": {
+                "specimenID": {}
+              },
+              "required": [
+                "specimenID"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
                 "resourceType": {
                   "const": "experimentalData"
                 }
@@ -51,6 +87,38 @@
               },
               "required": [
                 "platform"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "resourceType": {
+                  "const": "experimentalData"
+                }
+              },
+              "required": [
+                "resourceType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "assay": {},
+                "dataSubtype": {},
+                "dataType": {},
+                "diagnosis": {},
+                "individualID": {},
+                "species": {},
+                "tumorType": {}
+              },
+              "required": [
+                "dataType",
+                "dataSubtype",
+                "assay",
+                "individualID",
+                "species",
+                "diagnosis",
+                "tumorType"
               ]
             }
           },
@@ -116,56 +184,9 @@
                 "dataSubtype"
               ]
             }
-          },
-          {
-            "if": {
-              "properties": {
-                "resourceType": {
-                  "const": "experimentalData"
-                }
-              },
-              "required": [
-                "resourceType"
-              ]
-            },
-            "then": {
-              "properties": {
-                "assay": {},
-                "dataSubtype": {},
-                "dataType": {},
-                "diagnosis": {},
-                "individualID": {},
-                "species": {},
-                "tumorType": {}
-              },
-              "required": [
-                "dataType",
-                "dataSubtype",
-                "assay",
-                "individualID",
-                "species",
-                "diagnosis",
-                "tumorType"
-              ]
-            }
           }
         ],
         "properties": {
-          "parentSpecimenID": {
-            "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
-            "type": "string",
-            "title": "parentSpecimenID"
-          },
-          "specimenID": {
-            "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
-            "type": "string",
-            "title": "specimenID"
-          },
-          "aliquotID": {
-            "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
-            "type": "string",
-            "title": "aliquotID"
-          },
           "captureArea": {
             "description": "Active region on a Visium/CytAssist slide where a tissue sample can be placed.",
             "enum": [
@@ -227,6 +248,21 @@
               "urine"
             ],
             "title": "specimenType"
+          },
+          "parentSpecimenID": {
+            "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
+            "type": "string",
+            "title": "parentSpecimenID"
+          },
+          "specimenID": {
+            "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
+            "type": "string",
+            "title": "specimenID"
+          },
+          "aliquotID": {
+            "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
+            "type": "string",
+            "title": "aliquotID"
           },
           "age": {
             "anyOf": [

@@ -17,24 +17,6 @@
           {
             "if": {
               "properties": {
-                "experimentalTimepoint": {}
-              },
-              "required": [
-                "experimentalTimepoint"
-              ]
-            },
-            "then": {
-              "properties": {
-                "timepointUnit": {}
-              },
-              "required": [
-                "timepointUnit"
-              ]
-            }
-          },
-          {
-            "if": {
-              "properties": {
                 "genePerturbed": {}
               },
               "required": [
@@ -65,6 +47,24 @@
               },
               "required": [
                 "genePerturbationTechnology"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "experimentalTimepoint": {}
+              },
+              "required": [
+                "experimentalTimepoint"
+              ]
+            },
+            "then": {
+              "properties": {
+                "timepointUnit": {}
+              },
+              "required": [
+                "timepointUnit"
               ]
             }
           },
@@ -155,6 +155,74 @@
           {
             "if": {
               "properties": {
+                "aliquotID": {}
+              },
+              "required": [
+                "aliquotID"
+              ]
+            },
+            "then": {
+              "properties": {
+                "specimenID": {}
+              },
+              "required": [
+                "specimenID"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "parentSpecimenID": {}
+              },
+              "required": [
+                "parentSpecimenID"
+              ]
+            },
+            "then": {
+              "properties": {
+                "specimenID": {}
+              },
+              "required": [
+                "specimenID"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "resourceType": {
+                  "const": "experimentalData"
+                }
+              },
+              "required": [
+                "resourceType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "assay": {},
+                "dataSubtype": {},
+                "dataType": {},
+                "diagnosis": {},
+                "individualID": {},
+                "species": {},
+                "tumorType": {}
+              },
+              "required": [
+                "dataType",
+                "dataSubtype",
+                "assay",
+                "individualID",
+                "species",
+                "diagnosis",
+                "tumorType"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
                 "age": {
                   "not": {
                     "anyOf": [
@@ -214,38 +282,6 @@
                 "dataSubtype"
               ]
             }
-          },
-          {
-            "if": {
-              "properties": {
-                "resourceType": {
-                  "const": "experimentalData"
-                }
-              },
-              "required": [
-                "resourceType"
-              ]
-            },
-            "then": {
-              "properties": {
-                "assay": {},
-                "dataSubtype": {},
-                "dataType": {},
-                "diagnosis": {},
-                "individualID": {},
-                "species": {},
-                "tumorType": {}
-              },
-              "required": [
-                "dataType",
-                "dataSubtype",
-                "assay",
-                "individualID",
-                "species",
-                "diagnosis",
-                "tumorType"
-              ]
-            }
           }
         ],
         "properties": {
@@ -253,6 +289,38 @@
             "description": "A free-text description of the experimental condition (e.g. 5 mM doxorubicin).",
             "type": "string",
             "title": "experimentalCondition"
+          },
+          "comments": {
+            "description": "Brief free-text comments that may also be important to understanding the resource.",
+            "type": "string",
+            "title": "comments"
+          },
+          "genePerturbed": {
+            "description": "The HUGO gene symbol for the gene that is perturbed.",
+            "type": "string",
+            "title": "genePerturbed"
+          },
+          "genePerturbationType": {
+            "description": "",
+            "enum": [
+              "knockdown",
+              "knockout",
+              "non-targeting control",
+              "overexpression"
+            ],
+            "title": "genePerturbationType",
+            "type": "string"
+          },
+          "genePerturbationTechnology": {
+            "description": "",
+            "enum": [
+              "CRE Recombinase",
+              "CRISPR",
+              "CRISPR Assisted mRNA Fragment Trans-splicing (CRAFT)",
+              "RNAi"
+            ],
+            "title": "genePerturbationTechnology",
+            "type": "string"
           },
           "experimentalTimepoint": {
             "description": "The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit",
@@ -272,38 +340,6 @@
             ],
             "title": "timepointUnit",
             "type": "string"
-          },
-          "genePerturbed": {
-            "description": "The HUGO gene symbol for the gene that is perturbed.",
-            "type": "string",
-            "title": "genePerturbed"
-          },
-          "genePerturbationTechnology": {
-            "description": "",
-            "enum": [
-              "CRE Recombinase",
-              "CRISPR",
-              "CRISPR Assisted mRNA Fragment Trans-splicing (CRAFT)",
-              "RNAi"
-            ],
-            "title": "genePerturbationTechnology",
-            "type": "string"
-          },
-          "genePerturbationType": {
-            "description": "",
-            "enum": [
-              "knockdown",
-              "knockout",
-              "non-targeting control",
-              "overexpression"
-            ],
-            "title": "genePerturbationType",
-            "type": "string"
-          },
-          "comments": {
-            "description": "Brief free-text comments that may also be important to understanding the resource.",
-            "type": "string",
-            "title": "comments"
           },
           "age": {
             "anyOf": [

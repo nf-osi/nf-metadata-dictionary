@@ -17,6 +17,28 @@
           {
             "if": {
               "properties": {
+                "resourceType": {
+                  "const": "experimentalData"
+                }
+              },
+              "required": [
+                "resourceType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "expressionUnit": {},
+                "specimenID": {}
+              },
+              "required": [
+                "expressionUnit",
+                "specimenID"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
                 "workflow": {}
               },
               "required": [
@@ -45,12 +67,22 @@
             },
             "then": {
               "properties": {
-                "expressionUnit": {},
-                "specimenID": {}
+                "assay": {},
+                "dataSubtype": {},
+                "dataType": {},
+                "diagnosis": {},
+                "individualID": {},
+                "species": {},
+                "tumorType": {}
               },
               "required": [
-                "expressionUnit",
-                "specimenID"
+                "dataType",
+                "dataSubtype",
+                "assay",
+                "individualID",
+                "species",
+                "diagnosis",
+                "tumorType"
               ]
             }
           },
@@ -116,38 +148,6 @@
                 "dataSubtype"
               ]
             }
-          },
-          {
-            "if": {
-              "properties": {
-                "resourceType": {
-                  "const": "experimentalData"
-                }
-              },
-              "required": [
-                "resourceType"
-              ]
-            },
-            "then": {
-              "properties": {
-                "assay": {},
-                "dataSubtype": {},
-                "dataType": {},
-                "diagnosis": {},
-                "individualID": {},
-                "species": {},
-                "tumorType": {}
-              },
-              "required": [
-                "dataType",
-                "dataSubtype",
-                "assay",
-                "individualID",
-                "species",
-                "diagnosis",
-                "tumorType"
-              ]
-            }
           }
         ],
         "properties": {
@@ -169,6 +169,16 @@
             ],
             "title": "expressionUnit",
             "type": "string"
+          },
+          "auxiliaryAsset": {
+            "description": "URI to supplemental asset(s), e.g. QC reports or other auxiliary files to support the processing, analysis, or interpretation of the current entity.\n",
+            "type": "string",
+            "title": "auxiliaryAsset"
+          },
+          "specimenID": {
+            "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
+            "type": "string",
+            "title": "specimenID"
           },
           "workflow": {
             "description": "",
@@ -195,16 +205,6 @@
             "description": "Workflow URL reference",
             "type": "string",
             "title": "workflowLink"
-          },
-          "auxiliaryAsset": {
-            "description": "URI to supplemental asset(s), e.g. QC reports or other auxiliary files to support the processing, analysis, or interpretation of the current entity.\n",
-            "type": "string",
-            "title": "auxiliaryAsset"
-          },
-          "specimenID": {
-            "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
-            "type": "string",
-            "title": "specimenID"
           },
           "age": {
             "anyOf": [

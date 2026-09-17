@@ -17,6 +17,42 @@
           {
             "if": {
               "properties": {
+                "genePerturbed": {}
+              },
+              "required": [
+                "genePerturbed"
+              ]
+            },
+            "then": {
+              "properties": {
+                "genePerturbationType": {}
+              },
+              "required": [
+                "genePerturbationType"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "genePerturbed": {}
+              },
+              "required": [
+                "genePerturbed"
+              ]
+            },
+            "then": {
+              "properties": {
+                "genePerturbationTechnology": {}
+              },
+              "required": [
+                "genePerturbationTechnology"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
                 "experimentalTimepoint": {}
               },
               "required": [
@@ -67,36 +103,32 @@
           {
             "if": {
               "properties": {
-                "genePerturbed": {}
+                "resourceType": {
+                  "const": "experimentalData"
+                }
               },
               "required": [
-                "genePerturbed"
+                "resourceType"
               ]
             },
             "then": {
               "properties": {
-                "genePerturbationType": {}
+                "assay": {},
+                "dataSubtype": {},
+                "dataType": {},
+                "diagnosis": {},
+                "individualID": {},
+                "species": {},
+                "tumorType": {}
               },
               "required": [
-                "genePerturbationType"
-              ]
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "genePerturbed": {}
-              },
-              "required": [
-                "genePerturbed"
-              ]
-            },
-            "then": {
-              "properties": {
-                "genePerturbationTechnology": {}
-              },
-              "required": [
-                "genePerturbationTechnology"
+                "dataType",
+                "dataSubtype",
+                "assay",
+                "individualID",
+                "species",
+                "diagnosis",
+                "tumorType"
               ]
             }
           },
@@ -160,38 +192,6 @@
               },
               "required": [
                 "dataSubtype"
-              ]
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "resourceType": {
-                  "const": "experimentalData"
-                }
-              },
-              "required": [
-                "resourceType"
-              ]
-            },
-            "then": {
-              "properties": {
-                "assay": {},
-                "dataSubtype": {},
-                "dataType": {},
-                "diagnosis": {},
-                "individualID": {},
-                "species": {},
-                "tumorType": {}
-              },
-              "required": [
-                "dataType",
-                "dataSubtype",
-                "assay",
-                "individualID",
-                "species",
-                "diagnosis",
-                "tumorType"
               ]
             }
           }
@@ -1036,6 +1036,38 @@
             "type": "string",
             "title": "experimentalCondition"
           },
+          "comments": {
+            "description": "Brief free-text comments that may also be important to understanding the resource.",
+            "type": "string",
+            "title": "comments"
+          },
+          "genePerturbed": {
+            "description": "The HUGO gene symbol for the gene that is perturbed.",
+            "type": "string",
+            "title": "genePerturbed"
+          },
+          "genePerturbationType": {
+            "description": "",
+            "enum": [
+              "knockdown",
+              "knockout",
+              "non-targeting control",
+              "overexpression"
+            ],
+            "title": "genePerturbationType",
+            "type": "string"
+          },
+          "genePerturbationTechnology": {
+            "description": "",
+            "enum": [
+              "CRE Recombinase",
+              "CRISPR",
+              "CRISPR Assisted mRNA Fragment Trans-splicing (CRAFT)",
+              "RNAi"
+            ],
+            "title": "genePerturbationTechnology",
+            "type": "string"
+          },
           "experimentalTimepoint": {
             "description": "The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit",
             "type": "number",
@@ -1083,38 +1115,6 @@
             "description": "A unit associated with the value(s) in compoundDose.",
             "type": "string",
             "title": "compoundDoseUnit"
-          },
-          "genePerturbed": {
-            "description": "The HUGO gene symbol for the gene that is perturbed.",
-            "type": "string",
-            "title": "genePerturbed"
-          },
-          "genePerturbationType": {
-            "description": "",
-            "enum": [
-              "knockdown",
-              "knockout",
-              "non-targeting control",
-              "overexpression"
-            ],
-            "title": "genePerturbationType",
-            "type": "string"
-          },
-          "genePerturbationTechnology": {
-            "description": "",
-            "enum": [
-              "CRE Recombinase",
-              "CRISPR",
-              "CRISPR Assisted mRNA Fragment Trans-splicing (CRAFT)",
-              "RNAi"
-            ],
-            "title": "genePerturbationTechnology",
-            "type": "string"
-          },
-          "comments": {
-            "description": "Brief free-text comments that may also be important to understanding the resource.",
-            "type": "string",
-            "title": "comments"
           },
           "age": {
             "anyOf": [

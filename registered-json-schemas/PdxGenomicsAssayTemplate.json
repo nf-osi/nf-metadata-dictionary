@@ -17,42 +17,6 @@
           {
             "if": {
               "properties": {
-                "modelAge": {}
-              },
-              "required": [
-                "modelAge"
-              ]
-            },
-            "then": {
-              "properties": {
-                "modelAgeUnit": {}
-              },
-              "required": [
-                "modelAgeUnit"
-              ]
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "experimentalTimepoint": {}
-              },
-              "required": [
-                "experimentalTimepoint"
-              ]
-            },
-            "then": {
-              "properties": {
-                "timepointUnit": {}
-              },
-              "required": [
-                "timepointUnit"
-              ]
-            }
-          },
-          {
-            "if": {
-              "properties": {
                 "transplantationType": {}
               },
               "required": [
@@ -83,6 +47,42 @@
               },
               "required": [
                 "transplantationRecipientTissue"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "modelAge": {}
+              },
+              "required": [
+                "modelAge"
+              ]
+            },
+            "then": {
+              "properties": {
+                "modelAgeUnit": {}
+              },
+              "required": [
+                "modelAgeUnit"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "experimentalTimepoint": {}
+              },
+              "required": [
+                "experimentalTimepoint"
+              ]
+            },
+            "then": {
+              "properties": {
+                "timepointUnit": {}
+              },
+              "required": [
+                "timepointUnit"
               ]
             }
           },
@@ -173,6 +173,74 @@
           {
             "if": {
               "properties": {
+                "aliquotID": {}
+              },
+              "required": [
+                "aliquotID"
+              ]
+            },
+            "then": {
+              "properties": {
+                "specimenID": {}
+              },
+              "required": [
+                "specimenID"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "parentSpecimenID": {}
+              },
+              "required": [
+                "parentSpecimenID"
+              ]
+            },
+            "then": {
+              "properties": {
+                "specimenID": {}
+              },
+              "required": [
+                "specimenID"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "resourceType": {
+                  "const": "experimentalData"
+                }
+              },
+              "required": [
+                "resourceType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "assay": {},
+                "dataSubtype": {},
+                "dataType": {},
+                "diagnosis": {},
+                "individualID": {},
+                "species": {},
+                "tumorType": {}
+              },
+              "required": [
+                "dataType",
+                "dataSubtype",
+                "assay",
+                "individualID",
+                "species",
+                "diagnosis",
+                "tumorType"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
                 "age": {
                   "not": {
                     "anyOf": [
@@ -230,38 +298,6 @@
               },
               "required": [
                 "dataSubtype"
-              ]
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "resourceType": {
-                  "const": "experimentalData"
-                }
-              },
-              "required": [
-                "resourceType"
-              ]
-            },
-            "then": {
-              "properties": {
-                "assay": {},
-                "dataSubtype": {},
-                "dataType": {},
-                "diagnosis": {},
-                "individualID": {},
-                "species": {},
-                "tumorType": {}
-              },
-              "required": [
-                "dataType",
-                "dataSubtype",
-                "assay",
-                "individualID",
-                "species",
-                "diagnosis",
-                "tumorType"
               ]
             }
           }
@@ -1134,36 +1170,10 @@
             "type": "array",
             "title": "modelSystemName"
           },
-          "modelSpecies": {
-            "description": "",
-            "enum": [
-              "Callithrix jacchus",
-              "Danio rerio",
-              "Drosophila melanogaster",
-              "Gallus gallus",
-              "Homo sapiens",
-              "Mus musculus",
-              "Macaca nemestrina",
-              "Mus musculus (humanized)",
-              "Oryctolagus cuniculus",
-              "Pan troglodytes",
-              "Rattus norvegicus",
-              "Rhesus macaque",
-              "Sus scrofa"
-            ],
-            "title": "species",
-            "type": "string"
-          },
-          "modelSex": {
-            "description": "Sex of the individual animal model used in the experiment. Distinct from donor sex.",
+          "experimentalCondition": {
+            "description": "A free-text description of the experimental condition (e.g. 5 mM doxorubicin).",
             "type": "string",
-            "enum": [
-              "Female",
-              "Male",
-              "Unknown",
-              "Not Applicable"
-            ],
-            "title": "modelSex"
+            "title": "experimentalCondition"
           },
           "modelAge": {
             "description": "Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.",
@@ -1184,10 +1194,36 @@
             "title": "timepointUnit",
             "type": "string"
           },
-          "experimentalCondition": {
-            "description": "A free-text description of the experimental condition (e.g. 5 mM doxorubicin).",
+          "modelSex": {
+            "description": "Sex of the individual animal model used in the experiment. Distinct from donor sex.",
             "type": "string",
-            "title": "experimentalCondition"
+            "enum": [
+              "Female",
+              "Male",
+              "Unknown",
+              "Not Applicable"
+            ],
+            "title": "modelSex"
+          },
+          "modelSpecies": {
+            "description": "",
+            "enum": [
+              "Callithrix jacchus",
+              "Danio rerio",
+              "Drosophila melanogaster",
+              "Gallus gallus",
+              "Homo sapiens",
+              "Mus musculus",
+              "Macaca nemestrina",
+              "Mus musculus (humanized)",
+              "Oryctolagus cuniculus",
+              "Pan troglodytes",
+              "Rattus norvegicus",
+              "Rhesus macaque",
+              "Sus scrofa"
+            ],
+            "title": "species",
+            "type": "string"
           },
           "experimentalTimepoint": {
             "description": "The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit",

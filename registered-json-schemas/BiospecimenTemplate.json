@@ -1,15 +1,63 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-biospecimentemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Specimen-level data, whether from human or animal. For cell line specimens, individualID references the cell line. For xenografts, also specify modelSystemName and model attributes.",
-  "if": {
-    "properties": {
-      "modelAge": {}
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "aliquotID": {}
+        },
+        "required": [
+          "aliquotID"
+        ]
+      },
+      "then": {
+        "properties": {
+          "specimenID": {}
+        },
+        "required": [
+          "specimenID"
+        ]
+      }
     },
-    "required": [
-      "modelAge"
-    ]
-  },
+    {
+      "if": {
+        "properties": {
+          "parentSpecimenID": {}
+        },
+        "required": [
+          "parentSpecimenID"
+        ]
+      },
+      "then": {
+        "properties": {
+          "specimenID": {}
+        },
+        "required": [
+          "specimenID"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "modelAge": {}
+        },
+        "required": [
+          "modelAge"
+        ]
+      },
+      "then": {
+        "properties": {
+          "modelAgeUnit": {}
+        },
+        "required": [
+          "modelAgeUnit"
+        ]
+      }
+    }
+  ],
+  "description": "Specimen-level data, whether from human or animal. For cell line specimens, individualID references the cell line. For xenografts, also specify modelSystemName and model attributes.",
   "properties": {
     "individualID": {
       "description": "A unique identifier (non-PII) that represents the individual from which the data came. This could be a patient or animal ID.",
@@ -18,21 +66,6 @@
       },
       "type": "array",
       "title": "individualID"
-    },
-    "parentSpecimenID": {
-      "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
-      "type": "string",
-      "title": "parentSpecimenID"
-    },
-    "specimenID": {
-      "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
-      "type": "string",
-      "title": "specimenID"
-    },
-    "aliquotID": {
-      "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
-      "type": "string",
-      "title": "aliquotID"
     },
     "tumorType": {
       "description": "",
@@ -948,36 +981,20 @@
       "type": "array",
       "title": "modelSystemName"
     },
-    "modelSpecies": {
-      "description": "",
-      "enum": [
-        "Callithrix jacchus",
-        "Danio rerio",
-        "Drosophila melanogaster",
-        "Gallus gallus",
-        "Homo sapiens",
-        "Mus musculus",
-        "Macaca nemestrina",
-        "Mus musculus (humanized)",
-        "Oryctolagus cuniculus",
-        "Pan troglodytes",
-        "Rattus norvegicus",
-        "Rhesus macaque",
-        "Sus scrofa"
-      ],
-      "title": "modelSpecies",
-      "type": "string"
-    },
-    "modelSex": {
-      "description": "Sex of the individual animal model used in the experiment. Distinct from donor sex.",
+    "parentSpecimenID": {
+      "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
       "type": "string",
-      "enum": [
-        "Female",
-        "Male",
-        "Unknown",
-        "Not Applicable"
-      ],
-      "title": "modelSex"
+      "title": "parentSpecimenID"
+    },
+    "specimenID": {
+      "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
+      "type": "string",
+      "title": "specimenID"
+    },
+    "aliquotID": {
+      "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
+      "type": "string",
+      "title": "aliquotID"
     },
     "modelAge": {
       "description": "Age of the individual animal model at time of experiment. Distinct from donor age. Use with modelAgeUnit.",
@@ -997,21 +1014,44 @@
       ],
       "title": "modelAgeUnit",
       "type": "string"
+    },
+    "modelSex": {
+      "description": "Sex of the individual animal model used in the experiment. Distinct from donor sex.",
+      "type": "string",
+      "enum": [
+        "Female",
+        "Male",
+        "Unknown",
+        "Not Applicable"
+      ],
+      "title": "modelSex"
+    },
+    "modelSpecies": {
+      "description": "",
+      "enum": [
+        "Callithrix jacchus",
+        "Danio rerio",
+        "Drosophila melanogaster",
+        "Gallus gallus",
+        "Homo sapiens",
+        "Mus musculus",
+        "Macaca nemestrina",
+        "Mus musculus (humanized)",
+        "Oryctolagus cuniculus",
+        "Pan troglodytes",
+        "Rattus norvegicus",
+        "Rhesus macaque",
+        "Sus scrofa"
+      ],
+      "title": "modelSpecies",
+      "type": "string"
     }
   },
   "required": [
     "individualID",
-    "specimenID",
-    "tumorType"
+    "tumorType",
+    "specimenID"
   ],
-  "then": {
-    "properties": {
-      "modelAgeUnit": {}
-    },
-    "required": [
-      "modelAgeUnit"
-    ]
-  },
   "title": "BiospecimenTemplate",
   "type": "object"
 }

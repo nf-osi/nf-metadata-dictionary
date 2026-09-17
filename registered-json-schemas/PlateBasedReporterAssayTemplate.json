@@ -17,6 +17,66 @@
           {
             "if": {
               "properties": {
+                "resourceType": {
+                  "const": "experimentalData"
+                }
+              },
+              "required": [
+                "resourceType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "compoundDose": {},
+                "compoundName": {},
+                "specimenID": {}
+              },
+              "required": [
+                "specimenID",
+                "compoundName",
+                "compoundDose"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "aliquotID": {}
+              },
+              "required": [
+                "aliquotID"
+              ]
+            },
+            "then": {
+              "properties": {
+                "specimenID": {}
+              },
+              "required": [
+                "specimenID"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "parentSpecimenID": {}
+              },
+              "required": [
+                "parentSpecimenID"
+              ]
+            },
+            "then": {
+              "properties": {
+                "specimenID": {}
+              },
+              "required": [
+                "specimenID"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
                 "experimentalTimepoint": {}
               },
               "required": [
@@ -77,14 +137,22 @@
             },
             "then": {
               "properties": {
-                "compoundDose": {},
-                "compoundName": {},
-                "specimenID": {}
+                "assay": {},
+                "dataSubtype": {},
+                "dataType": {},
+                "diagnosis": {},
+                "individualID": {},
+                "species": {},
+                "tumorType": {}
               },
               "required": [
-                "specimenID",
-                "compoundName",
-                "compoundDose"
+                "dataType",
+                "dataSubtype",
+                "assay",
+                "individualID",
+                "species",
+                "diagnosis",
+                "tumorType"
               ]
             }
           },
@@ -150,56 +218,9 @@
                 "dataSubtype"
               ]
             }
-          },
-          {
-            "if": {
-              "properties": {
-                "resourceType": {
-                  "const": "experimentalData"
-                }
-              },
-              "required": [
-                "resourceType"
-              ]
-            },
-            "then": {
-              "properties": {
-                "assay": {},
-                "dataSubtype": {},
-                "dataType": {},
-                "diagnosis": {},
-                "individualID": {},
-                "species": {},
-                "tumorType": {}
-              },
-              "required": [
-                "dataType",
-                "dataSubtype",
-                "assay",
-                "individualID",
-                "species",
-                "diagnosis",
-                "tumorType"
-              ]
-            }
           }
         ],
         "properties": {
-          "parentSpecimenID": {
-            "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
-            "type": "string",
-            "title": "parentSpecimenID"
-          },
-          "specimenID": {
-            "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
-            "type": "string",
-            "title": "specimenID"
-          },
-          "aliquotID": {
-            "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
-            "type": "string",
-            "title": "aliquotID"
-          },
           "platform": {
             "description": "A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data. Select from the recommended list when available or enter a custom name.",
             "type": "string",
@@ -228,25 +249,35 @@
             "type": "string",
             "title": "assayTarget"
           },
-          "compoundName": {
-            "description": "Common name for a compound, e.g. \"Selumetinib\" (https://pubchem.ncbi.nlm.nih.gov/compound/10127622)",
-            "type": "string",
-            "title": "compoundName"
-          },
-          "compoundDose": {
-            "description": "A dose quantity for the treatment compound. Use \"Not Applicable\" only when no compound dose applies to the described data, such as a true blank or calibration artifact or a genetic or physical intervention that does not involve a compound. Vehicle controls (for example, DMSO) are compound exposures: record the vehicle in compoundName and its concentration in compoundDose and compoundDoseUnit. Use \"Not Available\" when a dose was not recorded, and \"Multiple Doses\" when the data covers doses that cannot be represented by one value. Numeric doses should be accompanied by compoundDoseUnit.",
-            "type": "string",
-            "title": "compoundDose"
-          },
-          "compoundDoseUnit": {
-            "description": "A unit associated with the value(s) in compoundDose.",
-            "type": "string",
-            "title": "compoundDoseUnit"
-          },
           "experimentalCondition": {
             "description": "A free-text description of the experimental condition (e.g. 5 mM doxorubicin).",
             "type": "string",
             "title": "experimentalCondition"
+          },
+          "reporterGene": {
+            "description": "A gene which produces an easily assayed phenotype. Often used for expression studies of heterologous promoters.",
+            "type": "string",
+            "title": "reporterGene"
+          },
+          "reporterSubstance": {
+            "description": "A biological material (clone, oligo, etc.) on an array which will report on some biosequence or biosequences.",
+            "type": "string",
+            "title": "reporterSubstance"
+          },
+          "parentSpecimenID": {
+            "description": "A unique identifier (non-PII) that represents the parent specimen (sample) from which the data came from, e.g. the single parent tumor that was subsectioned into several samples.  The parentSpecimenID can be the same as specimenID when there is no subsectioning.\n",
+            "type": "string",
+            "title": "parentSpecimenID"
+          },
+          "specimenID": {
+            "description": "A unique identifier (non-PII) that represents the subspecimen (subsample) from which the data came,  e.g. an ID that distinguishes between different parts of the same parent tumor specimen.\n",
+            "type": "string",
+            "title": "specimenID"
+          },
+          "aliquotID": {
+            "description": "A unique identifier (non-PII) that represents the aliquots used for e.g. replicate runs. This is linked to the specimenID.",
+            "type": "string",
+            "title": "aliquotID"
           },
           "experimentalTimepoint": {
             "description": "The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit",
@@ -267,15 +298,20 @@
             "title": "timepointUnit",
             "type": "string"
           },
-          "reporterGene": {
-            "description": "A gene which produces an easily assayed phenotype. Often used for expression studies of heterologous promoters.",
+          "compoundName": {
+            "description": "Common name for a compound, e.g. \"Selumetinib\" (https://pubchem.ncbi.nlm.nih.gov/compound/10127622)",
             "type": "string",
-            "title": "reporterGene"
+            "title": "compoundName"
           },
-          "reporterSubstance": {
-            "description": "A biological material (clone, oligo, etc.) on an array which will report on some biosequence or biosequences.",
+          "compoundDose": {
+            "description": "A dose quantity for the treatment compound. Use \"Not Applicable\" only when no compound dose applies to the described data, such as a true blank or calibration artifact or a genetic or physical intervention that does not involve a compound. Vehicle controls (for example, DMSO) are compound exposures: record the vehicle in compoundName and its concentration in compoundDose and compoundDoseUnit. Use \"Not Available\" when a dose was not recorded, and \"Multiple Doses\" when the data covers doses that cannot be represented by one value. Numeric doses should be accompanied by compoundDoseUnit.",
             "type": "string",
-            "title": "reporterSubstance"
+            "title": "compoundDose"
+          },
+          "compoundDoseUnit": {
+            "description": "A unit associated with the value(s) in compoundDose.",
+            "type": "string",
+            "title": "compoundDoseUnit"
           },
           "age": {
             "anyOf": [

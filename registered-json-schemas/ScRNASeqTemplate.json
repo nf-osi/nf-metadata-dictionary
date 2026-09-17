@@ -101,6 +101,74 @@
           {
             "if": {
               "properties": {
+                "aliquotID": {}
+              },
+              "required": [
+                "aliquotID"
+              ]
+            },
+            "then": {
+              "properties": {
+                "specimenID": {}
+              },
+              "required": [
+                "specimenID"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "parentSpecimenID": {}
+              },
+              "required": [
+                "parentSpecimenID"
+              ]
+            },
+            "then": {
+              "properties": {
+                "specimenID": {}
+              },
+              "required": [
+                "specimenID"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "resourceType": {
+                  "const": "experimentalData"
+                }
+              },
+              "required": [
+                "resourceType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "assay": {},
+                "dataSubtype": {},
+                "dataType": {},
+                "diagnosis": {},
+                "individualID": {},
+                "species": {},
+                "tumorType": {}
+              },
+              "required": [
+                "dataType",
+                "dataSubtype",
+                "assay",
+                "individualID",
+                "species",
+                "diagnosis",
+                "tumorType"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
                 "age": {
                   "not": {
                     "anyOf": [
@@ -160,41 +228,14 @@
                 "dataSubtype"
               ]
             }
-          },
-          {
-            "if": {
-              "properties": {
-                "resourceType": {
-                  "const": "experimentalData"
-                }
-              },
-              "required": [
-                "resourceType"
-              ]
-            },
-            "then": {
-              "properties": {
-                "assay": {},
-                "dataSubtype": {},
-                "dataType": {},
-                "diagnosis": {},
-                "individualID": {},
-                "species": {},
-                "tumorType": {}
-              },
-              "required": [
-                "dataType",
-                "dataSubtype",
-                "assay",
-                "individualID",
-                "species",
-                "diagnosis",
-                "tumorType"
-              ]
-            }
           }
         ],
         "properties": {
+          "experimentalCondition": {
+            "description": "A free-text description of the experimental condition (e.g. 5 mM doxorubicin).",
+            "type": "string",
+            "title": "experimentalCondition"
+          },
           "genePerturbed": {
             "description": "The HUGO gene symbol for the gene that is perturbed.",
             "type": "string",
@@ -221,11 +262,6 @@
             ],
             "title": "genePerturbationTechnology",
             "type": "string"
-          },
-          "experimentalCondition": {
-            "description": "A free-text description of the experimental condition (e.g. 5 mM doxorubicin).",
-            "type": "string",
-            "title": "experimentalCondition"
           },
           "age": {
             "anyOf": [

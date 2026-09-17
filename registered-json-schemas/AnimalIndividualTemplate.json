@@ -1,6 +1,53 @@
 {
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-animalindividualtemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "age": {
+            "not": {
+              "anyOf": [
+                {
+                  "const": "Unknown"
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "age"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ageUnit": {}
+        },
+        "required": [
+          "ageUnit"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "species": {
+            "const": "Homo sapiens"
+          }
+        },
+        "required": [
+          "species"
+        ]
+      },
+      "then": {
+        "properties": {
+          "age": {
+            "maximum": 89.99999
+          }
+        }
+      }
+    }
+  ],
   "description": "Template for non-human individual-level data. Use sex/age/species for the individual animal, and modelSystemName for the name of the mouse model.",
   "properties": {
     "individualID": {
@@ -10,49 +57,6 @@
       },
       "type": "array",
       "title": "individualID"
-    },
-    "sex": {
-      "description": "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other.",
-      "type": "string",
-      "enum": [
-        "Female",
-        "Male",
-        "Unknown",
-        "Not Applicable"
-      ],
-      "title": "sex"
-    },
-    "age": {
-      "anyOf": [
-        {
-          "type": "number"
-        },
-        {
-          "description": "Masked age values for privacy protection. Used when exact age cannot be reported due to HIPAA or other privacy regulations.",
-          "enum": [
-            ">= 90",
-            "Unknown"
-          ],
-          "title": "AgeMask",
-          "type": "string"
-        }
-      ],
-      "description": "Age of the individual. Use with `ageUnit`. IMPORTANT: For human data, HIPAA requires masking ages >= 90; use the `AgeMask` value \">= 90\" instead of the exact value to protect participant privacy.",
-      "title": "age"
-    },
-    "ageUnit": {
-      "description": "",
-      "enum": [
-        "days",
-        "hours",
-        "minutes",
-        "months",
-        "seconds",
-        "weeks",
-        "years"
-      ],
-      "title": "ageUnit",
-      "type": "string"
     },
     "diagnosis": {
       "description": "",
@@ -136,26 +140,6 @@
       "description": "The individual's actual germline mutation.",
       "type": "string",
       "title": "germlineMutation"
-    },
-    "species": {
-      "description": "",
-      "enum": [
-        "Callithrix jacchus",
-        "Danio rerio",
-        "Drosophila melanogaster",
-        "Gallus gallus",
-        "Homo sapiens",
-        "Mus musculus",
-        "Macaca nemestrina",
-        "Mus musculus (humanized)",
-        "Oryctolagus cuniculus",
-        "Pan troglodytes",
-        "Rattus norvegicus",
-        "Rhesus macaque",
-        "Sus scrofa"
-      ],
-      "title": "species",
-      "type": "string"
     },
     "modelSystemName": {
       "description": "A group of presumed common ancestry with clear-cut physiological but usually not morphological distinctions such as an animal model or cell line. EXAMPLE(S):  HEK293 (cell line), Minnesota5 (swine strain), DXL (poultry strain), RB51 (vaccine strain of Brucella abortus)",
@@ -975,6 +959,69 @@
       },
       "type": "array",
       "title": "modelSystemName"
+    },
+    "age": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "description": "Masked age values for privacy protection. Used when exact age cannot be reported due to HIPAA or other privacy regulations.",
+          "enum": [
+            ">= 90",
+            "Unknown"
+          ],
+          "title": "AgeMask",
+          "type": "string"
+        }
+      ],
+      "description": "Age of the individual. Use with `ageUnit`. IMPORTANT: For human data, HIPAA requires masking ages >= 90; use the `AgeMask` value \">= 90\" instead of the exact value to protect participant privacy.",
+      "title": "age"
+    },
+    "ageUnit": {
+      "description": "",
+      "enum": [
+        "days",
+        "hours",
+        "minutes",
+        "months",
+        "seconds",
+        "weeks",
+        "years"
+      ],
+      "title": "ageUnit",
+      "type": "string"
+    },
+    "sex": {
+      "description": "Phenotypic expression of chromosomal makeup that defines a study subject as male, female, or other.",
+      "type": "string",
+      "enum": [
+        "Female",
+        "Male",
+        "Unknown",
+        "Not Applicable"
+      ],
+      "title": "sex"
+    },
+    "species": {
+      "description": "",
+      "enum": [
+        "Callithrix jacchus",
+        "Danio rerio",
+        "Drosophila melanogaster",
+        "Gallus gallus",
+        "Homo sapiens",
+        "Mus musculus",
+        "Macaca nemestrina",
+        "Mus musculus (humanized)",
+        "Oryctolagus cuniculus",
+        "Pan troglodytes",
+        "Rattus norvegicus",
+        "Rhesus macaque",
+        "Sus scrofa"
+      ],
+      "title": "species",
+      "type": "string"
     }
   },
   "required": [

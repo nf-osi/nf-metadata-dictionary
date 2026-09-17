@@ -10230,7 +10230,187 @@ enums:
           - Tumor Tissue Sample
         description: General term for tumor sample – use when it is unknown when a more specific clinical classification is unknown, e.g. whether it is primary or secondary.
         meaning: NCIT:C18009
+# Reusable slot bundles. A mixin owns every slot its own rules refer to, so that
+# mixing it into a class cannot produce a rule over an undeclared slot.
+#
+# When a class takes several, list them in this order so that sibling templates
+# lay out their columns the same way:
+#   SpecimenLineage, IndividualDemographics, ModelOrganismDemographics, GenePerturbation,
+#   TimedObservation, CompoundTreatment, DataClassification, WorkflowProvenance
 classes:
+  SpecimenLineage:
+    mixin: true
+    description: 'Specimen and aliquot identifiers, and the parent specimen they derive from.'
+    slots:
+      - parentSpecimenID
+      - specimenID
+      - aliquotID
+    rules:
+      - description: If aliquotID is provided, specimenID must be provided
+        preconditions:
+          slot_conditions:
+            aliquotID:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            specimenID:
+              value_presence: PRESENT
+      - description: If parentSpecimenID is provided, specimenID must be provided
+        preconditions:
+          slot_conditions:
+            parentSpecimenID:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            specimenID:
+              value_presence: PRESENT
+  IndividualDemographics:
+    mixin: true
+    description: 'Characteristics of the individual an observation is about: age, sex and species. Carries the HIPAA Safe Harbor age ceiling, which applies to any template that can record a human age -- SpeciesEnum admits Homo sapiens everywhere species is offered, so the ceiling travels with these slots rather than being applied per template.'
+    slots:
+      - age
+      - ageUnit
+      - sex
+      - species
+    rules:
+      - description: If age is provided and is not "Unknown", ageUnit must be provided
+        preconditions:
+          slot_conditions:
+            age:
+              value_presence: PRESENT
+              none_of:
+                - equals_string: Unknown
+        postconditions:
+          slot_conditions:
+            ageUnit:
+              value_presence: PRESENT
+      - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value for ages at or above this threshold (HIPAA Safe Harbor)
+        preconditions:
+          slot_conditions:
+            species:
+              equals_string: Homo sapiens
+        postconditions:
+          slot_conditions:
+            age:
+              maximum_value: 89.99999
+  ModelOrganismDemographics:
+    mixin: true
+    description: 'Characteristics of the animal or xenograft model an experiment was run in: age at time of experiment, sex and species. The counterpart of IndividualDemographics for the model rather than the donor, and distinct from it -- modelAge is not a human subject age, so no HIPAA ceiling applies. modelSystemName identifies the model and stays on the templates, the way individualID does.'
+    slots:
+      - modelAge
+      - modelAgeUnit
+      - modelSex
+      - modelSpecies
+    rules:
+      - description: If modelAge is provided, modelAgeUnit must be provided
+        preconditions:
+          slot_conditions:
+            modelAge:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            modelAgeUnit:
+              value_presence: PRESENT
+  GenePerturbation:
+    mixin: true
+    description: 'A single-gene perturbation applied to a sample, and how it was introduced.'
+    slots:
+      - genePerturbed
+      - genePerturbationType
+      - genePerturbationTechnology
+    rules:
+      - description: If genePerturbed is provided, genePerturbationType must be provided
+        preconditions:
+          slot_conditions:
+            genePerturbed:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            genePerturbationType:
+              value_presence: PRESENT
+      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
+        preconditions:
+          slot_conditions:
+            genePerturbed:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            genePerturbationTechnology:
+              value_presence: PRESENT
+  TimedObservation:
+    mixin: true
+    description: 'An experimental observation taken at a stated time point.'
+    slots:
+      - experimentalTimepoint
+      - timepointUnit
+    rules:
+      - description: If experimentalTimepoint is provided, timepointUnit must be provided
+        preconditions:
+          slot_conditions:
+            experimentalTimepoint:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            timepointUnit:
+              value_presence: PRESENT
+  CompoundTreatment:
+    mixin: true
+    description: 'A compound applied to a sample, and the dose it was applied at.'
+    slots:
+      - compoundName
+      - compoundDose
+      - compoundDoseUnit
+    rules:
+      - description: If compoundDose is numeric, compoundDoseUnit must be provided
+        preconditions:
+          slot_conditions:
+            compoundDose:
+              value_presence: PRESENT
+              none_of:
+                - equals_string: Not Applicable
+                - equals_string: Not Available
+                - equals_string: Multiple Doses
+        postconditions:
+          slot_conditions:
+            compoundDoseUnit:
+              value_presence: PRESENT
+  DataClassification:
+    mixin: true
+    description: 'dataType and dataSubtype as optional but cross-validated, for templates where classifying the data is not intrinsically required.'
+    slots:
+      - dataType
+      - dataSubtype
+    slot_usage:
+      dataType:
+        required: false
+      dataSubtype:
+        required: false
+    rules:
+      - description: If dataType is provided, dataSubtype must be provided
+        preconditions:
+          slot_conditions:
+            dataType:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            dataSubtype:
+              value_presence: PRESENT
+  WorkflowProvenance:
+    mixin: true
+    description: 'The workflow that produced a processed data artifact.'
+    slots:
+      - workflow
+      - workflowLink
+    rules:
+      - description: If workflow is provided, workflowLink must be provided
+        preconditions:
+          slot_conditions:
+            workflow:
+              value_presence: PRESENT
+        postconditions:
+          slot_conditions:
+            workflowLink:
+              value_presence: PRESENT
   PartialTemplate:
     abstract: true
     description: A template for collecting a subset of contextual data; not intended to be a standalone template but rather a subdocument.
@@ -10245,11 +10425,10 @@ classes:
     description: A collection of fields representing some entity.
   AnimalIndividualTemplate:
     description: 'Template for non-human individual-level data. Use sex/age/species for the individual animal, and modelSystemName for the name of the mouse model.'
+    mixins:
+      - IndividualDemographics
     slots:
       - individualID
-      - sex
-      - age
-      - ageUnit
       - diagnosis
       - diagnosisAgeGroup
       - inheritance
@@ -10257,33 +10436,18 @@ classes:
       - nf1Genotype
       - nf2Genotype
       - germlineMutation
-      - species
       - modelSystemName
   BiospecimenTemplate:
     description: 'Specimen-level data, whether from human or animal. For cell line specimens, individualID references the cell line. For xenografts, also specify modelSystemName and model attributes.'
+    mixins:
+      - SpecimenLineage
+      - ModelOrganismDemographics
     slots:
       - individualID
-      - parentSpecimenID
-      - specimenID
-      - aliquotID
       - tumorType
       - bodySite
       - experimentalCondition
       - modelSystemName
-      - modelSpecies
-      - modelSex
-      - modelAge
-      - modelAgeUnit
-    rules:
-      - description: If modelAge is provided, modelAgeUnit must be provided
-        preconditions:
-          slot_conditions:
-            modelAge:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            modelAgeUnit:
-              value_presence: PRESENT
   HumanCohortTemplate:
     description: 'Data of biosamples from human patients. Adapted from Table 2 of http://nrs.harvard.edu/urn-3:HUL.InstRepos:32725809. This template should be used when biosamples are from NF patients to provides a more valuable characterization and make additional gene-phenotype insights possible.
 
@@ -10292,11 +10456,10 @@ classes:
       - Instead of collecting birth month/year, age is collected.
       - What has been required is still required, while all new recommendations are optional.
       - Include attributes used for the portal but not in recommendations (nf1Genotype, nf1Genotype, species).
+    mixins:
+      - IndividualDemographics
     slots:
       - individualID
-      - sex
-      - age
-      - ageUnit
       - diagnosis
       - diagnosisAgeGroup
       - inheritance
@@ -10304,7 +10467,6 @@ classes:
       - nf1Genotype
       - nf2Genotype
       - germlineMutationIndicator
-      - species
       - vitalStatus
       - WHOPerformanceStatus
       - painStatus
@@ -10350,27 +10512,6 @@ classes:
     slot_usage:
       species:
         ifabsent: string(Homo sapiens)
-    rules:
-      - description: If age is provided and is not "Unknown", ageUnit must be provided
-        preconditions:
-          slot_conditions:
-            age:
-              value_presence: PRESENT
-              none_of:
-                - equals_string: Unknown
-        postconditions:
-          slot_conditions:
-            ageUnit:
-              value_presence: PRESENT
-      - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value for ages at or above this threshold (HIPAA Safe Harbor)
-        preconditions:
-          slot_conditions:
-            species:
-              equals_string: Homo sapiens
-        postconditions:
-          slot_conditions:
-            age:
-              maximum_value: 89.99999
   DataLandscape:
     attributes:
       study:
@@ -10495,15 +10636,12 @@ classes:
     abstract: true
     description: 'A template defining basic metadata on deposited data artifacts (i.e. files) from experimental assays involving biosamples. Donor/individual attributes (species, sex, age, diagnosis) describe the original donor (e.g., human patient tumor). For cell lines, individualID references syn51730943. antibodyID and geneticReagentID reference treatments/reagents. For PDX data, use PdxGenomicsAssayTemplate which includes model* attributes.'
     is_a: FileBasedTemplate
+    mixins:
+      - IndividualDemographics
+      - DataClassification
     slots:
-      - dataType
-      - dataSubtype
       - assay
       - individualID
-      - species
-      - sex
-      - age
-      - ageUnit
       - diagnosis
       - nf1Genotype
       - nf2Genotype
@@ -10513,35 +10651,6 @@ classes:
       - geneticReagentID
       - comments
     rules:
-      - description: If age is provided and is not "Unknown", ageUnit must be provided
-        preconditions:
-          slot_conditions:
-            age:
-              value_presence: PRESENT
-              none_of:
-                - equals_string: Unknown
-        postconditions:
-          slot_conditions:
-            ageUnit:
-              value_presence: PRESENT
-      - description: For Homo sapiens, age must be < 90; use the ">= 90" AgeMask value for ages at or above this threshold (HIPAA Safe Harbor)
-        preconditions:
-          slot_conditions:
-            species:
-              equals_string: Homo sapiens
-        postconditions:
-          slot_conditions:
-            age:
-              maximum_value: 89.99999
-      - description: If dataType is provided, dataSubtype must be provided
-        preconditions:
-          slot_conditions:
-            dataType:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            dataSubtype:
-              value_presence: PRESENT
       - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
         preconditions:
           slot_conditions:
@@ -10564,10 +10673,6 @@ classes:
             tumorType:
               value_presence: PRESENT
     slot_usage:
-      dataType:
-        required: false
-      dataSubtype:
-        required: false
       assay:
         required: false
       individualID:
@@ -10584,17 +10689,13 @@ classes:
 
 '
     is_a: FileBasedTemplate
+    mixins:
+      - DataClassification
     notes:
       - Name of this base abstraction is not great, may need to revise.
     slots:
-      - dataType
-      - dataSubtype
       - assay
     slot_usage:
-      dataType:
-        required: false
-      dataSubtype:
-        required: false
       assay:
         required: false
     rules:
@@ -10614,81 +10715,17 @@ classes:
   CellTissuePhenotypingTemplate:
     description: 'Data that characterizes cell/tissue morphology or physiology often in the context of different experimental conditions'
     is_a: BiologicalAssayDataTemplate
+    mixins:
+      - SpecimenLineage
+      - GenePerturbation
+      - TimedObservation
+      - CompoundTreatment
     slots:
-      - parentSpecimenID
-      - specimenID
-      - aliquotID
       - modelSystemName
       - experimentalFactor
       - experimentalCondition
-      - experimentalTimepoint
-      - timepointUnit
-      - compoundName
-      - compoundDose
-      - compoundDoseUnit
-      - genePerturbed
-      - genePerturbationType
-      - genePerturbationTechnology
       - comments
     rules:
-      - description: If experimentalTimepoint is provided, timepointUnit must be provided
-        preconditions:
-          slot_conditions:
-            experimentalTimepoint:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            timepointUnit:
-              value_presence: PRESENT
-      - description: If compoundDose is numeric, compoundDoseUnit must be provided
-        preconditions:
-          slot_conditions:
-            compoundDose:
-              value_presence: PRESENT
-              none_of:
-                - equals_string: Not Applicable
-                - equals_string: Not Available
-                - equals_string: Multiple Doses
-        postconditions:
-          slot_conditions:
-            compoundDoseUnit:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationType must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationType:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationTechnology:
-              value_presence: PRESENT
-      - description: If aliquotID is provided, specimenID must be provided
-        preconditions:
-          slot_conditions:
-            aliquotID:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            specimenID:
-              value_presence: PRESENT
-      - description: If parentSpecimenID is provided, specimenID must be provided
-        preconditions:
-          slot_conditions:
-            parentSpecimenID:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            specimenID:
-              value_presence: PRESENT
       - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
         preconditions:
           slot_conditions:
@@ -10726,13 +10763,13 @@ classes:
   ElectrophysiologyAssayTemplate:
     description: Template for raw electrophysiology data (electrical recordings).
     is_a: BiologicalAssayDataTemplate
+    mixins:
+      - TimedObservation
     slots:
       - platform
       - bodySite
       - cellType
       - recordingSource
-      - experimentalTimepoint
-      - timepointUnit
       - experimentalCondition
       - auxiliaryAsset
     source: https://arxiv.org/pdf/1605.07673.pdf
@@ -10746,15 +10783,6 @@ classes:
       platform:
         required: false
     rules:
-      - description: If experimentalTimepoint is provided, timepointUnit must be provided
-        preconditions:
-          slot_conditions:
-            experimentalTimepoint:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            timepointUnit:
-              value_presence: PRESENT
       - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
         preconditions:
           slot_conditions:
@@ -10767,18 +10795,14 @@ classes:
   PlateBasedReporterAssayTemplate:
     description: Generic template for describing data from a plate-based reporter assay.
     is_a: BiologicalAssayDataTemplate
+    mixins:
+      - SpecimenLineage
+      - TimedObservation
+      - CompoundTreatment
     slots:
-      - parentSpecimenID
-      - specimenID
-      - aliquotID
       - platform
       - assayTarget
-      - compoundName
-      - compoundDose
-      - compoundDoseUnit
       - experimentalCondition
-      - experimentalTimepoint
-      - timepointUnit
       - reporterGene
       - reporterSubstance
     slot_usage:
@@ -10802,28 +10826,6 @@ classes:
       specimenID:
         required: false
     rules:
-      - description: If experimentalTimepoint is provided, timepointUnit must be provided
-        preconditions:
-          slot_conditions:
-            experimentalTimepoint:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            timepointUnit:
-              value_presence: PRESENT
-      - description: If compoundDose is numeric, compoundDoseUnit must be provided
-        preconditions:
-          slot_conditions:
-            compoundDose:
-              value_presence: PRESENT
-              none_of:
-                - equals_string: Not Applicable
-                - equals_string: Not Available
-                - equals_string: Multiple Doses
-        postconditions:
-          slot_conditions:
-            compoundDoseUnit:
-              value_presence: PRESENT
       - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
         preconditions:
           slot_conditions:
@@ -10840,13 +10842,12 @@ classes:
   ClinicalAssayTemplate:
     description: 'General template for typically tabular **individual-level** data. This can include repeated measures and a drug treatment context.'
     is_a: BiologicalAssayDataTemplate
+    mixins:
+      - TimedObservation
+      - CompoundTreatment
     slots:
       - experimentalFactor
       - experimentalCondition
-      - timepointUnit
-      - compoundName
-      - compoundDose
-      - compoundDoseUnit
       - comments
     slot_usage:
       assay:
@@ -10858,35 +10859,17 @@ classes:
           - range: OtherFileFormatEnum
       dataType:
         ifabsent: string(clinical)
-    rules:
-      - description: If compoundDose is numeric, compoundDoseUnit must be provided
-        preconditions:
-          slot_conditions:
-            compoundDose:
-              value_presence: PRESENT
-              none_of:
-                - equals_string: Not Applicable
-                - equals_string: Not Available
-                - equals_string: Multiple Doses
-        postconditions:
-          slot_conditions:
-            compoundDoseUnit:
-              value_presence: PRESENT
   BehavioralAssayTemplate:
     description: Template for behavioral assay data from model organisms measuring behaviors such as feeding, learning, memory, motor coordination, and activity patterns.
     is_a: BiologicalAssayDataTemplate
+    mixins:
+      - GenePerturbation
+      - TimedObservation
+      - CompoundTreatment
     slots:
       - modelSystemName
       - experimentalFactor
       - experimentalCondition
-      - experimentalTimepoint
-      - timepointUnit
-      - compoundName
-      - compoundDose
-      - compoundDoseUnit
-      - genePerturbed
-      - genePerturbationType
-      - genePerturbationTechnology
       - comments
     slot_usage:
       assay:
@@ -10896,58 +10879,17 @@ classes:
           - range: TabularFileFormatEnum
           - range: OtherFileFormatEnum
           - range: DocumentFileFormatEnum
-    rules:
-      - description: If experimentalTimepoint is provided, timepointUnit must be provided
-        preconditions:
-          slot_conditions:
-            experimentalTimepoint:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            timepointUnit:
-              value_presence: PRESENT
-      - description: If compoundDose is numeric, compoundDoseUnit must be provided
-        preconditions:
-          slot_conditions:
-            compoundDose:
-              value_presence: PRESENT
-              none_of:
-                - equals_string: Not Applicable
-                - equals_string: Not Available
-                - equals_string: Multiple Doses
-        postconditions:
-          slot_conditions:
-            compoundDoseUnit:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationType must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationType:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationTechnology:
-              value_presence: PRESENT
   EpidemiologyDataTemplate:
     description: For aggregated data from defined populations or cohorts, used in/derived from epidemiology studies.
     is_a: FileBasedTemplate
+    mixins:
+      - DataClassification
     slots:
-      - dataType
       - populationCoverage
       - epidemiologyMetric
     slot_usage:
       dataType:
         ifabsent: string(epidemiological data)
-        required: false
       epidemiologyMetric:
         required: false
     rules:
@@ -10968,12 +10910,11 @@ classes:
 
 '
     is_a: BiologicalAssayDataTemplate
+    mixins:
+      - SpecimenLineage
     notes:
       - http://purl.obolibrary.org/obo/GECKO_0000032
     slots:
-      - parentSpecimenID
-      - specimenID
-      - aliquotID
       - tumorType
       - platform
       - nucleicAcidSource
@@ -11104,57 +11045,24 @@ classes:
   GenomicsAssayTemplateExtended:
     description: Genomics assay template but with additional experiment data.
     is_a: GenomicsAssayTemplate
+    mixins:
+      - GenePerturbation
+      - TimedObservation
     slots:
       - experimentalCondition
-      - experimentalTimepoint
-      - timepointUnit
-      - genePerturbed
-      - genePerturbationTechnology
-      - genePerturbationType
       - comments
-    rules:
-      - description: If experimentalTimepoint is provided, timepointUnit must be provided
-        preconditions:
-          slot_conditions:
-            experimentalTimepoint:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            timepointUnit:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationType must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationType:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationTechnology:
-              value_presence: PRESENT
   PdxGenomicsAssayTemplate:
     description: Raw genomics data from patient-derived xenograft (PDX) experiment, with additional PDX-relevant metadata.
     is_a: GenomicsAssayTemplate
+    mixins:
+      - ModelOrganismDemographics
+      - TimedObservation
     slots:
       - transplantationType
       - transplantationRecipientSpecies
       - transplantationRecipientTissue
       - modelSystemName
-      - modelSpecies
-      - modelSex
-      - modelAge
-      - modelAgeUnit
       - experimentalCondition
-      - experimentalTimepoint
-      - timepointUnit
     slot_usage:
       assay:
         range: SequencingAssayEnum
@@ -11163,24 +11071,6 @@ classes:
       fileFormat:
         range: SequencingFileFormatEnum
     rules:
-      - description: If modelAge is provided, modelAgeUnit must be provided
-        preconditions:
-          slot_conditions:
-            modelAge:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            modelAgeUnit:
-              value_presence: PRESENT
-      - description: If experimentalTimepoint is provided, timepointUnit must be provided
-        preconditions:
-          slot_conditions:
-            experimentalTimepoint:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            timepointUnit:
-              value_presence: PRESENT
       - description: If transplantationType is provided, transplantationRecipientSpecies must be provided
         preconditions:
           slot_conditions:
@@ -11204,10 +11094,9 @@ classes:
       - htan:BulkRNA-seqLevel1
     description: Template for describing raw data from (bulk) RNA-sequencing
     is_a: BulkSequencingAssayTemplate
+    mixins:
+      - GenePerturbation
     slots:
-      - genePerturbed
-      - genePerturbationType
-      - genePerturbationTechnology
       - experimentalCondition
       - isCellLine
       - isPrimaryCell
@@ -11225,25 +11114,6 @@ classes:
         ifabsent: string(gene expression)
       isPrimaryCell:
         ifabsent: string(Yes)
-    rules:
-      - description: If genePerturbed is provided, genePerturbationType must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationType:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationTechnology:
-              value_presence: PRESENT
   ScSequencingAssayTemplate:
     description: General template for raw RNA/DNA data, i.e. sequence data from a sequencing assay.
     is_a: GeneticsAssayTemplate
@@ -11293,10 +11163,9 @@ classes:
   ScRNASeqTemplate:
     description: Template for describing raw data from single-cell RNA-seq.
     is_a: ScSequencingAssayTemplate
+    mixins:
+      - GenePerturbation
     slots:
-      - genePerturbed
-      - genePerturbationType
-      - genePerturbationTechnology
       - experimentalCondition
     slot_usage:
       assay:
@@ -11311,25 +11180,6 @@ classes:
           - range: OtherFileFormatEnum
       dataType:
         ifabsent: string(gene expression)
-    rules:
-      - description: If genePerturbed is provided, genePerturbationType must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationType:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationTechnology:
-              value_presence: PRESENT
   WESTemplate:
     close_mappings:
       - htan:BulkWESLevel1
@@ -11396,14 +11246,13 @@ classes:
   ChIPSeqTemplate:
     description: Template for describing raw data from ChIP-Seq assays, typically used to identify DNA-protein interactions.
     is_a: EpigenomicsAssayTemplate
+    mixins:
+      - GenePerturbation
     slots:
       - antibodyID
       - platform
       - peakCallingAlgorithm
       - assayTarget
-      - genePerturbationType
-      - genePerturbationTechnology
-      - genePerturbed
     slot_usage:
       assay:
         range: SequencingAssayEnum
@@ -11412,25 +11261,6 @@ classes:
         range: SequencingPlatformEnum
       fileFormat:
         range: SequencingFileFormatEnum
-    rules:
-      - description: If genePerturbed is provided, genePerturbationType must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationType:
-              value_presence: PRESENT
-      - description: If genePerturbed is provided, genePerturbationTechnology must be provided
-        preconditions:
-          slot_conditions:
-            genePerturbed:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            genePerturbationTechnology:
-              value_presence: PRESENT
   MethylationArrayTemplate:
     description: Template for raw data files (idat) from DNA methylation arrays.
     is_a: GenomicsArrayTemplate
@@ -11456,6 +11286,8 @@ classes:
       - htan:BulkWESLevel2
     description: "Template for describing aligned reads (e.g. BAM/CRAM files) from a sequencing assay. The QC meta are extracted from samtools stats when available and are the same metrics preferred by GDC."
     is_a: BiologicalAssayDataTemplate
+    mixins:
+      - WorkflowProvenance
     slots:
       - genomicReference
       - genomicReferenceLink
@@ -11470,8 +11302,6 @@ classes:
       - proportionCoverage30x
       - readDepth
       - totalReads
-      - workflow
-      - workflowLink
       - auxiliaryAsset
       - specimenID
     slot_usage:
@@ -11486,15 +11316,6 @@ classes:
       specimenID:
         required: false
     rules:
-      - description: If workflow is provided, workflowLink must be provided
-        preconditions:
-          slot_conditions:
-            workflow:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            workflowLink:
-              value_presence: PRESENT
       - description: If genomicReference is provided, genomicReferenceLink must be provided
         preconditions:
           slot_conditions:
@@ -11520,10 +11341,10 @@ classes:
       - htan:BulkRNA-seqLevel3
     description: Template for quantified gene/protein expression data that are still represented as one file per sample.
     is_a: BiologicalAssayDataTemplate
+    mixins:
+      - WorkflowProvenance
     slots:
       - expressionUnit
-      - workflow
-      - workflowLink
       - auxiliaryAsset
       - specimenID
     slot_usage:
@@ -11534,15 +11355,6 @@ classes:
       specimenID:
         required: false
     rules:
-      - description: If workflow is provided, workflowLink must be provided
-        preconditions:
-          slot_conditions:
-            workflow:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            workflowLink:
-              value_presence: PRESENT
       - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
         preconditions:
           slot_conditions:
@@ -11562,31 +11374,18 @@ classes:
 
 '
     is_a: FileBasedTemplate
+    mixins:
+      - DataClassification
+      - WorkflowProvenance
     slots:
-      - dataType
-      - dataSubtype
-      - workflow
-      - workflowLink
       - auxiliaryAsset
       - assay
     slot_usage:
       dataSubtype:
         ifabsent: string(processed)
-        required: false
-      dataType:
-        required: false
       assay:
         required: false
     rules:
-      - description: If workflow is provided, workflowLink must be provided
-        preconditions:
-          slot_conditions:
-            workflow:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            workflowLink:
-              value_presence: PRESENT
       - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
         preconditions:
           slot_conditions:
@@ -11603,38 +11402,25 @@ classes:
   ProcessedAggregatedDataTemplate:
     description: Template for processed data aggregated across multiple specimens into a single file, where individual-level attributes (specimenID, individualID) do not apply. Use for summarized assay results such as qPCR Ct value tables.
     is_a: FileBasedTemplate
+    mixins:
+      - DataClassification
+      - WorkflowProvenance
     slots:
-      - dataType
-      - dataSubtype
       - assay
       - expressionUnit
-      - workflow
-      - workflowLink
       - auxiliaryAsset
       - species
       - comments
     slot_usage:
       dataSubtype:
         ifabsent: string(processed)
-        required: false
       expressionUnit:
         required: false
       species:
         required: false
-      dataType:
-        required: false
       assay:
         required: false
     rules:
-      - description: If workflow is provided, workflowLink must be provided
-        preconditions:
-          slot_conditions:
-            workflow:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            workflowLink:
-              value_presence: PRESENT
       - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
         preconditions:
           slot_conditions:
@@ -11653,10 +11439,10 @@ classes:
       - htan:BulkWESLevel3
     description: Template for describing either simple germline/somatic variant calls output data (VCF/MAF) as well as structural variants (e.g. CNVs).
     is_a: BiologicalAssayDataTemplate
+    mixins:
+      - WorkflowProvenance
     slots:
       - isFilteredReads
-      - workflow
-      - workflowLink
       - auxiliaryAsset
       - specimenID
     slot_usage:
@@ -11667,15 +11453,6 @@ classes:
       specimenID:
         required: false
     rules:
-      - description: If workflow is provided, workflowLink must be provided
-        preconditions:
-          slot_conditions:
-            workflow:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            workflowLink:
-              value_presence: PRESENT
       - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
         preconditions:
           slot_conditions:
@@ -11725,10 +11502,9 @@ classes:
       - htan:ImagingLevel2
     description: Template for microscopy imaging data. For immunofluorescence or immunohistochemistry assays, provide antibodyID.
     is_a: ImagingAssayTemplate
+    mixins:
+      - SpecimenLineage
     slots:
-      - parentSpecimenID
-      - specimenID
-      - aliquotID
       - objective
       - nominalMagnification
       - lensAperture
@@ -11762,24 +11538,6 @@ classes:
           slot_conditions:
             workingDistanceUnit:
               value_presence: PRESENT
-      - description: If aliquotID is provided, specimenID must be provided
-        preconditions:
-          slot_conditions:
-            aliquotID:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            specimenID:
-              value_presence: PRESENT
-      - description: If parentSpecimenID is provided, specimenID must be provided
-        preconditions:
-          slot_conditions:
-            parentSpecimenID:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            specimenID:
-              value_presence: PRESENT
       - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
         preconditions:
           slot_conditions:
@@ -11792,12 +11550,12 @@ classes:
   MRIAssayTemplate:
     description: Template for describing MRI data.
     is_a: ImagingAssayTemplate
+    mixins:
+      - TimedObservation
     slots:
       - bodySite
       - MRISequence
       - experimentalCondition
-      - experimentalTimepoint
-      - timepointUnit
     slot_usage:
       assay:
         range: ImagingAssayEnum
@@ -11810,16 +11568,6 @@ classes:
           - range: ArchiveFileFormatEnum
       dataType:
         ifabsent: string(image)
-    rules:
-      - description: If experimentalTimepoint is provided, timepointUnit must be provided
-        preconditions:
-          slot_conditions:
-            experimentalTimepoint:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            timepointUnit:
-              value_presence: PRESENT
   MaterialScienceAssayTemplate:
     description: General template for describing data for a materials science assay.
     is_a: NonBiologicalAssayDataTemplate
@@ -11894,9 +11642,9 @@ classes:
   GenericDataResourceTemplate:
     description: Stand-in template for deposited data resources when a more specific template is not yet available. Use temporarily while a domain-specific template is being developed.
     is_a: FileBasedTemplate
+    mixins:
+      - DataClassification
     slots:
-      - dataType
-      - dataSubtype
       - assay
       - species
       - comments
@@ -11905,22 +11653,9 @@ classes:
         required: false
       resourceType:
         ifabsent: string(experimentalData)
-      dataType:
-        required: false
-      dataSubtype:
-        required: false
       assay:
         required: false
     rules:
-      - description: If dataType is provided, dataSubtype must be provided
-        preconditions:
-          slot_conditions:
-            dataType:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            dataSubtype:
-              value_presence: PRESENT
       - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
         preconditions:
           slot_conditions:
@@ -11937,8 +11672,9 @@ classes:
   ReferenceSequenceTemplate:
     description: Template for reference sequence files used in experimental design, such as guide RNAs, plasmids, primers, probes, or other construct elements.
     is_a: FileBasedTemplate
+    mixins:
+      - DataClassification
     slots:
-      - dataType
       - sequenceName
       - sequenceLength
       - species
@@ -11947,8 +11683,6 @@ classes:
       resourceType:
         ifabsent: string(experimentalData)
       species:
-        required: false
-      dataType:
         required: false
     rules:
       - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
@@ -11963,9 +11697,9 @@ classes:
   AnalysisResultTemplate:
     description: Template for result files such as figures, presentations, and analysis outputs that report data results but are not primary experimental data.
     is_a: FileBasedTemplate
+    mixins:
+      - DataClassification
     slots:
-      - dataType
-      - dataSubtype
       - species
       - relatedDataset
       - comments
@@ -11979,20 +11713,7 @@ classes:
           - range: ImagingFileFormatEnum
           - range: DocumentFileFormatEnum
           - range: TabularFileFormatEnum
-      dataType:
-        required: false
-      dataSubtype:
-        required: false
     rules:
-      - description: If dataType is provided, dataSubtype must be provided
-        preconditions:
-          slot_conditions:
-            dataType:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            dataSubtype:
-              value_presence: PRESENT
       - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
         preconditions:
           slot_conditions:
@@ -12014,29 +11735,20 @@ classes:
   WorkflowReport:
     description: Template used for miscellaneous workflow reports and accessory files
     is_a: FileBasedTemplate
+    mixins:
+      - WorkflowProvenance
     notes:
       - resourceType should default to "workflow report"
       - note that `dataType` and `dataSubtype` don't apply
     slots:
       - assay
       - relatedDataset
-      - workflow
-      - workflowLink
     slot_usage:
       resourceType:
         ifabsent: string(report)
       assay:
         required: false
     rules:
-      - description: If workflow is provided, workflowLink must be provided
-        preconditions:
-          slot_conditions:
-            workflow:
-              value_presence: PRESENT
-        postconditions:
-          slot_conditions:
-            workflowLink:
-              value_presence: PRESENT
       - description: 'Relaxed conditional validation (issue #825): the listed fields are required only for experimentalData. Auxiliary co-located files (manifest, metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
         preconditions:
           slot_conditions:
@@ -12067,10 +11779,9 @@ classes:
     abstract: true
     description: Abstract template for data from some assay of protein structure and function. Data should be instantiated with more specific template.
     is_a: BiologicalAssayDataTemplate
+    mixins:
+      - SpecimenLineage
     slots:
-      - parentSpecimenID
-      - specimenID
-      - aliquotID
       - platform
       - proteinExtractSource
     slot_usage:
@@ -12231,10 +11942,9 @@ classes:
   SpatialTranscriptomicsImagingTemplate:
     description: Template for describing imaging data files from spatial transcriptomics experiments, such as tissue section histology or fluorescence images (e.g., from 10x Visium, NanoString CosMx, GeoMx).
     is_a: ImagingAssayTemplate
+    mixins:
+      - SpecimenLineage
     slots:
-      - parentSpecimenID
-      - specimenID
-      - aliquotID
       - captureArea
       - visiumslideID
       - cytassistSample

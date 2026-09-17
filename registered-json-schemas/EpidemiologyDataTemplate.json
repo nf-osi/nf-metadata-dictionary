@@ -2,26 +2,6 @@
   "$id": "https://repo-prod.prod.sagebase.org/repo/v1/schema/type/registered/org.synapse.nf-epidemiologydatatemplate",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "For aggregated data from defined populations or cohorts, used in/derived from epidemiology studies.",
-  "if": {
-    "properties": {
-      "resourceType": {
-        "const": "experimentalData"
-      }
-    },
-    "required": [
-      "resourceType"
-    ]
-  },
-  "then": {
-    "properties": {
-      "dataType": {},
-      "epidemiologyMetric": {}
-    },
-    "required": [
-      "dataType",
-      "epidemiologyMetric"
-    ]
-  },
   "title": "EpidemiologyDataTemplate",
   "allOf": [
     {
@@ -33,12 +13,49 @@
         }
       },
       "then": {
-        "properties": {
-          "dataType": {
-            "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
-            "type": "string",
-            "title": "dataType"
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "resourceType": {
+                  "const": "experimentalData"
+                }
+              },
+              "required": [
+                "resourceType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "dataType": {},
+                "epidemiologyMetric": {}
+              },
+              "required": [
+                "dataType",
+                "epidemiologyMetric"
+              ]
+            }
           },
+          {
+            "if": {
+              "properties": {
+                "dataType": {}
+              },
+              "required": [
+                "dataType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "dataSubtype": {}
+              },
+              "required": [
+                "dataSubtype"
+              ]
+            }
+          }
+        ],
+        "properties": {
           "populationCoverage": {
             "description": "Describes population coverage of the present data.",
             "type": "string",
@@ -53,6 +70,24 @@
               "Standardized Mortality Ratio"
             ],
             "title": "epidemiologyMetric",
+            "type": "string"
+          },
+          "dataType": {
+            "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
+            "type": "string",
+            "title": "dataType"
+          },
+          "dataSubtype": {
+            "description": "Categorizes data based on its processing state. This is the main classification axis used for data types.  Not all data types can use this dimensions (e.g. clinical data).",
+            "enum": [
+              "derived",
+              "normalized",
+              "processed",
+              "quantified",
+              "raw",
+              "synthetic"
+            ],
+            "title": "dataSubtype",
             "type": "string"
           },
           "fileFormat": {

@@ -17,24 +17,6 @@
           {
             "if": {
               "properties": {
-                "workflow": {}
-              },
-              "required": [
-                "workflow"
-              ]
-            },
-            "then": {
-              "properties": {
-                "workflowLink": {}
-              },
-              "required": [
-                "workflowLink"
-              ]
-            }
-          },
-          {
-            "if": {
-              "properties": {
                 "resourceType": {
                   "const": "experimentalData"
                 }
@@ -55,27 +37,45 @@
                 "assay"
               ]
             }
+          },
+          {
+            "if": {
+              "properties": {
+                "dataType": {}
+              },
+              "required": [
+                "dataType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "dataSubtype": {}
+              },
+              "required": [
+                "dataSubtype"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "workflow": {}
+              },
+              "required": [
+                "workflow"
+              ]
+            },
+            "then": {
+              "properties": {
+                "workflowLink": {}
+              },
+              "required": [
+                "workflowLink"
+              ]
+            }
           }
         ],
         "properties": {
-          "dataType": {
-            "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
-            "type": "string",
-            "title": "dataType"
-          },
-          "dataSubtype": {
-            "description": "Categorizes data based on its processing state. This is the main classification axis used for data types.  Not all data types can use this dimensions (e.g. clinical data).",
-            "enum": [
-              "derived",
-              "normalized",
-              "processed",
-              "quantified",
-              "raw",
-              "synthetic"
-            ],
-            "title": "dataSubtype",
-            "type": "string"
-          },
           "assay": {
             "description": "The technology used to generate the data in this file.",
             "type": "string",
@@ -99,32 +99,6 @@
             ],
             "title": "expressionUnit",
             "type": "string"
-          },
-          "workflow": {
-            "description": "",
-            "enum": [
-              "CNVkit",
-              "DESeq2",
-              "DeepVariant",
-              "FastQC",
-              "FreeBayes",
-              "GATK BaseRecalibration",
-              "GATK MarkDuplicates",
-              "MultiQC",
-              "Mutect2",
-              "STAR and Salmon",
-              "Sarek",
-              "Strelka2",
-              "StringTie",
-              "TrimGalore"
-            ],
-            "title": "workflow",
-            "type": "string"
-          },
-          "workflowLink": {
-            "description": "Workflow URL reference",
-            "type": "string",
-            "title": "workflowLink"
           },
           "auxiliaryAsset": {
             "description": "URI to supplemental asset(s), e.g. QC reports or other auxiliary files to support the processing, analysis, or interpretation of the current entity.\n",
@@ -155,6 +129,50 @@
             "description": "Brief free-text comments that may also be important to understanding the resource.",
             "type": "string",
             "title": "comments"
+          },
+          "dataType": {
+            "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
+            "type": "string",
+            "title": "dataType"
+          },
+          "dataSubtype": {
+            "description": "Categorizes data based on its processing state. This is the main classification axis used for data types.  Not all data types can use this dimensions (e.g. clinical data).",
+            "enum": [
+              "derived",
+              "normalized",
+              "processed",
+              "quantified",
+              "raw",
+              "synthetic"
+            ],
+            "title": "dataSubtype",
+            "type": "string"
+          },
+          "workflow": {
+            "description": "",
+            "enum": [
+              "CNVkit",
+              "DESeq2",
+              "DeepVariant",
+              "FastQC",
+              "FreeBayes",
+              "GATK BaseRecalibration",
+              "GATK MarkDuplicates",
+              "MultiQC",
+              "Mutect2",
+              "STAR and Salmon",
+              "Sarek",
+              "Strelka2",
+              "StringTie",
+              "TrimGalore"
+            ],
+            "title": "workflow",
+            "type": "string"
+          },
+          "workflowLink": {
+            "description": "Workflow URL reference",
+            "type": "string",
+            "title": "workflowLink"
           },
           "fileFormat": {
             "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",

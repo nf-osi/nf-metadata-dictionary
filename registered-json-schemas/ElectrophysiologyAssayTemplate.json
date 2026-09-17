@@ -17,6 +17,26 @@
           {
             "if": {
               "properties": {
+                "resourceType": {
+                  "const": "experimentalData"
+                }
+              },
+              "required": [
+                "resourceType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "platform": {}
+              },
+              "required": [
+                "platform"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
                 "experimentalTimepoint": {}
               },
               "required": [
@@ -45,10 +65,22 @@
             },
             "then": {
               "properties": {
-                "platform": {}
+                "assay": {},
+                "dataSubtype": {},
+                "dataType": {},
+                "diagnosis": {},
+                "individualID": {},
+                "species": {},
+                "tumorType": {}
               },
               "required": [
-                "platform"
+                "dataType",
+                "dataSubtype",
+                "assay",
+                "individualID",
+                "species",
+                "diagnosis",
+                "tumorType"
               ]
             }
           },
@@ -112,38 +144,6 @@
               },
               "required": [
                 "dataSubtype"
-              ]
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "resourceType": {
-                  "const": "experimentalData"
-                }
-              },
-              "required": [
-                "resourceType"
-              ]
-            },
-            "then": {
-              "properties": {
-                "assay": {},
-                "dataSubtype": {},
-                "dataType": {},
-                "diagnosis": {},
-                "individualID": {},
-                "species": {},
-                "tumorType": {}
-              },
-              "required": [
-                "dataType",
-                "dataSubtype",
-                "assay",
-                "individualID",
-                "species",
-                "diagnosis",
-                "tumorType"
               ]
             }
           }
@@ -239,6 +239,16 @@
             "title": "recordingSource",
             "type": "string"
           },
+          "experimentalCondition": {
+            "description": "A free-text description of the experimental condition (e.g. 5 mM doxorubicin).",
+            "type": "string",
+            "title": "experimentalCondition"
+          },
+          "auxiliaryAsset": {
+            "description": "URI to supplemental asset(s), e.g. QC reports or other auxiliary files to support the processing, analysis, or interpretation of the current entity.\n",
+            "type": "string",
+            "title": "auxiliaryAsset"
+          },
           "experimentalTimepoint": {
             "description": "The numeric value indicating the time elapsed from the beginning of the experiment at which the specimen was collected. Use in tandem with timePointUnit",
             "type": "number",
@@ -257,16 +267,6 @@
             ],
             "title": "timepointUnit",
             "type": "string"
-          },
-          "experimentalCondition": {
-            "description": "A free-text description of the experimental condition (e.g. 5 mM doxorubicin).",
-            "type": "string",
-            "title": "experimentalCondition"
-          },
-          "auxiliaryAsset": {
-            "description": "URI to supplemental asset(s), e.g. QC reports or other auxiliary files to support the processing, analysis, or interpretation of the current entity.\n",
-            "type": "string",
-            "title": "auxiliaryAsset"
           },
           "age": {
             "anyOf": [

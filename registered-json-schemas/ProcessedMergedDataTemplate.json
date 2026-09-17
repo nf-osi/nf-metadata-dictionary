@@ -17,24 +17,6 @@
           {
             "if": {
               "properties": {
-                "workflow": {}
-              },
-              "required": [
-                "workflow"
-              ]
-            },
-            "then": {
-              "properties": {
-                "workflowLink": {}
-              },
-              "required": [
-                "workflowLink"
-              ]
-            }
-          },
-          {
-            "if": {
-              "properties": {
                 "resourceType": {
                   "const": "experimentalData"
                 }
@@ -55,9 +37,55 @@
                 "assay"
               ]
             }
+          },
+          {
+            "if": {
+              "properties": {
+                "dataType": {}
+              },
+              "required": [
+                "dataType"
+              ]
+            },
+            "then": {
+              "properties": {
+                "dataSubtype": {}
+              },
+              "required": [
+                "dataSubtype"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "workflow": {}
+              },
+              "required": [
+                "workflow"
+              ]
+            },
+            "then": {
+              "properties": {
+                "workflowLink": {}
+              },
+              "required": [
+                "workflowLink"
+              ]
+            }
           }
         ],
         "properties": {
+          "auxiliaryAsset": {
+            "description": "URI to supplemental asset(s), e.g. QC reports or other auxiliary files to support the processing, analysis, or interpretation of the current entity.\n",
+            "type": "string",
+            "title": "auxiliaryAsset"
+          },
+          "assay": {
+            "description": "The technology used to generate the data in this file.",
+            "type": "string",
+            "title": "assay"
+          },
           "dataType": {
             "description": "Links an entity to data types that the entity represents/contains. This is closely tied to the assay property. For example, a file of dataType `genomicVariants` might have an assay value of `whole genome sequencing`.\n",
             "type": "string",
@@ -101,16 +129,6 @@
             "description": "Workflow URL reference",
             "type": "string",
             "title": "workflowLink"
-          },
-          "auxiliaryAsset": {
-            "description": "URI to supplemental asset(s), e.g. QC reports or other auxiliary files to support the processing, analysis, or interpretation of the current entity.\n",
-            "type": "string",
-            "title": "auxiliaryAsset"
-          },
-          "assay": {
-            "description": "The technology used to generate the data in this file.",
-            "type": "string",
-            "title": "assay"
           },
           "fileFormat": {
             "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software",
