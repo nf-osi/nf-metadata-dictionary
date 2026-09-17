@@ -11,9 +11,9 @@ classes:
       template is not yet available. Use temporarily while a domain-specific template
       is being developed.
     is_a: FileBasedTemplate
+    mixins:
+    - DataClassification
     slots:
-    - dataType
-    - dataSubtype
     - assay
     - species
     - comments
@@ -23,22 +23,9 @@ classes:
       resourceType:
         ifabsent: string(experimentalData)
 
-      dataType:
-        required: false
-      dataSubtype:
-        required: false
       assay:
         required: false
     rules:
-    - description: If dataType is provided, dataSubtype must be provided
-      preconditions:
-        slot_conditions:
-          dataType:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          dataSubtype:
-            value_presence: PRESENT
     - description: 'Relaxed conditional validation (issue #825): the listed fields
         are required only for experimentalData. Auxiliary co-located files (manifest,
         metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
@@ -69,8 +56,9 @@ classes:
     description: Template for reference sequence files used in experimental design,
       such as guide RNAs, plasmids, primers, probes, or other construct elements.
     is_a: FileBasedTemplate
+    mixins:
+    - DataClassification
     slots:
-    - dataType
     - sequenceName
     - sequenceLength
     - species
@@ -79,9 +67,6 @@ classes:
       resourceType:
         ifabsent: string(experimentalData)
       species:
-        required: false
-
-      dataType:
         required: false
     rules:
     - description: 'Relaxed conditional validation (issue #825): the listed fields
@@ -105,9 +90,9 @@ classes:
     description: Template for result files such as figures, presentations, and analysis
       outputs that report data results but are not primary experimental data.
     is_a: FileBasedTemplate
+    mixins:
+    - DataClassification
     slots:
-    - dataType
-    - dataSubtype
     - species
     - relatedDataset
     - comments
@@ -121,21 +106,7 @@ classes:
         - range: ImagingFileFormatEnum
         - range: DocumentFileFormatEnum
         - range: TabularFileFormatEnum
-
-      dataType:
-        required: false
-      dataSubtype:
-        required: false
     rules:
-    - description: If dataType is provided, dataSubtype must be provided
-      preconditions:
-        slot_conditions:
-          dataType:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          dataSubtype:
-            value_presence: PRESENT
     - description: 'Relaxed conditional validation (issue #825): the listed fields
         are required only for experimentalData. Auxiliary co-located files (manifest,
         metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
@@ -168,29 +139,20 @@ classes:
   WorkflowReport:
     description: Template used for miscellaneous workflow reports and accessory files
     is_a: FileBasedTemplate
+    mixins:
+    - WorkflowProvenance
     notes:
     - resourceType should default to "workflow report"
     - note that `dataType` and `dataSubtype` don't apply
     slots:
     - assay
     - relatedDataset
-    - workflow
-    - workflowLink
     slot_usage:
       resourceType:
         ifabsent: string(report)
       assay:
         required: false
     rules:
-    - description: If workflow is provided, workflowLink must be provided
-      preconditions:
-        slot_conditions:
-          workflow:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          workflowLink:
-            value_presence: PRESENT
     - description: 'Relaxed conditional validation (issue #825): the listed fields
         are required only for experimentalData. Auxiliary co-located files (manifest,
         metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'

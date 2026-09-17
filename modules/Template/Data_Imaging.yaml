@@ -80,10 +80,9 @@ classes:
     description: Template for microscopy imaging data. For immunofluorescence or immunohistochemistry
       assays, provide antibodyID.
     is_a: ImagingAssayTemplate
+    mixins:
+    - SpecimenLineage
     slots:
-    - parentSpecimenID
-    - specimenID
-    - aliquotID
     - objective
     - nominalMagnification
     - lensAperture
@@ -117,25 +116,6 @@ classes:
         slot_conditions:
           workingDistanceUnit:
             value_presence: PRESENT
-    - description: If aliquotID is provided, specimenID must be provided
-      preconditions:
-        slot_conditions:
-          aliquotID:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          specimenID:
-            value_presence: PRESENT
-    - description: If parentSpecimenID is provided, specimenID must be provided
-      preconditions:
-        slot_conditions:
-          parentSpecimenID:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          specimenID:
-            value_presence: PRESENT
-
     - description: 'Relaxed conditional validation (issue #825): the listed fields
         are required only for experimentalData. Auxiliary co-located files (manifest,
         metadata, report, workflow report, tool, result, weblink, protocol) are exempt.'
@@ -161,12 +141,12 @@ classes:
       dataGranularity: individual-level
     description: Template for describing MRI data.
     is_a: ImagingAssayTemplate
+    mixins:
+    - TimedObservation
     slots:
     - bodySite
     - MRISequence
     - experimentalCondition
-    - experimentalTimepoint
-    - timepointUnit
     slot_usage:
       assay:
         range: ImagingAssayEnum
@@ -179,13 +159,3 @@ classes:
         - range: ArchiveFileFormatEnum
       dataType:
         ifabsent: string(image)
-    rules:
-    - description: If experimentalTimepoint is provided, timepointUnit must be provided
-      preconditions:
-        slot_conditions:
-          experimentalTimepoint:
-            value_presence: PRESENT
-      postconditions:
-        slot_conditions:
-          timepointUnit:
-            value_presence: PRESENT
