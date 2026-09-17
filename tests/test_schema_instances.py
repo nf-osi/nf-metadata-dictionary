@@ -12,6 +12,10 @@ Each fixture file contains one or more documents with the structure:
 
 Instances marked expected: valid must pass schema validation.
 Instances marked expected: invalid must fail schema validation.
+
+Every test here reads the generated artifacts in registered-json-schemas/, which CI
+rebuilds before the pytest job. Locally the committed artifacts come from main, so run
+`make -B` followed by `python utils/gen-json-schema-class.py --class <Class>` first.
 """
 
 import json
@@ -25,6 +29,7 @@ import yaml
 TESTS_DIR = Path(__file__).resolve().parent
 REPO_ROOT = TESTS_DIR.parent
 SCHEMAS_DIR = Path(os.environ.get("SCHEMAS_DIR", REPO_ROOT / "registered-json-schemas"))
+PORTAL_MODULE = REPO_ROOT / "modules" / "DCC" / "Portal.yaml"
 
 
 def _load_cases():
@@ -50,3 +55,30 @@ def test_instance(schema_name, file, expected):
     validator = jsonschema.Draft7Validator(schema)
     errors = list(validator.iter_errors(instance))
     assert not errors, "\n".join(f"  - {e.message}" for e in errors)
+
+
+def _deprecated_manifestation_labels():
+    enums = yaml.safe_load(PORTAL_MODULE.read_text())["enums"]
+    values = enums["ManifestationEnum"]["permissible_values"]
+    return sorted(label for label, meta in values.items() if (meta or {}).get("deprecated"))
+
+
+def test_deprecated_manifestation_values_are_still_emitted():
+    deprecated = _deprecated_manifestation_labels()
+    assert deprecated, (
+        f"No deprecated ManifestationEnum values found in {PORTAL_MODULE.relative_to(REPO_ROOT)}. "
+        "Deprecated labels are retained until a major release, so this guard should have values to check."
+    )
+
+    schema = json.loads((SCHEMAS_DIR / "PortalDataset.json").read_text())
+    emitted = schema["properties"]["manifestation"]["items"]["enum"]
+    missing = [label for label in deprecated if label not in emitted]
+
+    assert not missing, (
+        "Deprecated ManifestationEnum values are missing from the generated "
+        f"PortalDataset.json manifestation enum: {missing}. "
+        "Every existing dataset and study annotation using one of these labels becomes "
+        "schema-invalid the moment it stops being emitted, so this assertion is what keeps "
+        "the release non-breaking. If it starts failing after a linkml upgrade, reconsider "
+        "the upgrade rather than dropping the labels."
+    )

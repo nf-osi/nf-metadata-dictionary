@@ -257,6 +257,10 @@ Aside from meta specific to each type (class, slot, or enum) above, terms have c
 - `source`: This can be used to supplement `meaning`, but it's most often used when an ontology URI does not exist.
   It provides a reference such as a publication. For example, a very novel assay might not have a real ontology concept yet but will likely be described in a paper.
 - `notes`: Internal editor notes.
+- `deprecated`: Free text marking the term or permissible value as superseded, naming what to use instead.
+  Terms are deprecated rather than renamed or deleted, because a rename invalidates every existing annotation that uses the old label.
+  A deprecated permissible value is still emitted into the generated JSON Schema, so existing annotations stay valid; removal happens later, at a major release.
+  See [CONTRIBUTING.md](CONTRIBUTING.md#guidelines-for-modifying-existing-terms).
 
 
 ### Steps to contribute to the Metadata Dictionary: 
