@@ -35,24 +35,40 @@ def is_file_based_template(schema_yaml_path, cls_name):
     return False
 
 
+# Keywords that can *demand* something of an entity, and so must not apply to a
+# folder: `required` directly, the applicators because they carry the conditional
+# `required` blocks generated from `requiresDependency`, and the rest because they
+# constrain the object as a whole.
+GUARDED_KEYWORDS = {
+    "required", "allOf", "anyOf", "oneOf", "not",
+    "patternProperties", "additionalProperties", "minProperties", "maxProperties",
+    "dependencies", "propertyNames",
+}
+
+
 def restrict_to_file_entities(schema):
-    """Apply file-template constraints only to Synapse FileEntity instances.
+    """Apply file-template *requirements* only to Synapse FileEntity instances.
 
     Schema bindings on a folder are also evaluated against its child folders.  A
     folder cannot have file metadata such as ``fileFormat`` or ``resourceType``,
     so move the generated constraints under a concreteType guard.  Non-file
     entities are intentionally outside the scope of file-based templates.
+
+    ``type`` and ``properties`` deliberately stay at the top level.  Synapse
+    requires top-level ``properties``, and consumers that enumerate a template's
+    fields -- ``utils/json_schema_entity_view.py`` building file-view columns, the
+    curator grid -- read them there.  Neither keyword can make a folder invalid:
+    a folder is an object too, and ``properties`` constrains only the keys an
+    entity actually has.  See ``tests/test_toplevel_properties.py``.
     """
-    validation_keywords = {
-        "type", "properties", "required", "allOf", "anyOf", "oneOf", "not",
-        "patternProperties", "additionalProperties", "minProperties", "maxProperties",
-        "dependencies", "propertyNames",
-    }
     file_constraints = {
         key: schema.pop(key)
         for key in list(schema)
-        if key in validation_keywords
+        if key in GUARDED_KEYWORDS
     }
+
+    if not file_constraints:
+        return
 
     schema["allOf"] = [{
         "if": {

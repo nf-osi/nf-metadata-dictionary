@@ -13,8 +13,11 @@ SCHEMAS_DIR = Path(os.environ.get("SCHEMAS_DIR", REPO_ROOT / "registered-json-sc
 
 
 def _property_schema(template_name, property_name):
+    # Property declarations live at the top level; only `required` and the
+    # conditional rules sit under the concreteType guard. See
+    # tests/test_toplevel_properties.py.
     schema = json.loads((SCHEMAS_DIR / f"{template_name}.json").read_text())
-    return schema["allOf"][0]["then"]["properties"][property_name]
+    return schema["properties"][property_name]
 
 
 def _compound_dose_unit_rule(template_name):
