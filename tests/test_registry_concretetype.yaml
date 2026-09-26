@@ -1,0 +1,39 @@
+
+# concreteType Test Instances
+#
+# Pins the folder exemption in `exempt_folders` (utils/gen-json-schema-class.py).
+# A schema bound to a folder is evaluated against everything beneath it, so the
+# generated guard asks "is this NOT a Folder?" before applying the template's
+# requirements.
+#
+# Every other fixture in tests/data/ omits concreteType entirely, which matches the
+# guard vacuously and is therefore validated in full. That leaves the typed branches
+# untested, and the FileEntity-whitelist form of the guard these replace was
+# indistinguishable from the folder-exemption form on untyped data. These instances
+# carry the concreteType that Synapse actually sends so the branches stay covered.
+#
+# Related: #954
+
+schema: WGSTemplate
+instances:
+  - file: data/WGSTemplate/valid_concretetype_folder.json
+    description: A child folder under a bound folder holds no file metadata and is not asked for any
+    expected: valid
+
+  - file: data/WGSTemplate/valid_concretetype_fileentity_complete.json
+    description: A fully annotated FileEntity satisfies the template
+    expected: valid
+
+  - file: data/WGSTemplate/invalid_concretetype_fileentity_missing_required.json
+    description: A FileEntity is still held to the full genomics annotation set
+    expected: invalid
+    reason: experimentalData FileEntity missing specimenID/platform/library*/etc.
+
+  - file: data/WGSTemplate/valid_concretetype_link_complete.json
+    description: A Link carrying the same annotations as the file it points at satisfies the template
+    expected: valid
+
+  - file: data/WGSTemplate/invalid_concretetype_link_missing_required.json
+    description: A Link stands in for a file, so it is curated like one — only folders are exempt
+    expected: invalid
+    reason: Link is not a Folder, so the template's requirements apply
