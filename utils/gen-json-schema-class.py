@@ -14,6 +14,7 @@ from collections import OrderedDict
 
 
 FILE_ENTITY_CONCRETE_TYPE = "org.sagebionetworks.repo.model.FileEntity"
+FOLDER_CONCRETE_TYPE = "org.sagebionetworks.repo.model.Folder"
 
 
 def is_file_based_template(schema_yaml_path, cls_name):
@@ -46,13 +47,19 @@ GUARDED_KEYWORDS = {
 }
 
 
-def restrict_to_file_entities(schema):
-    """Apply file-template *requirements* only to Synapse FileEntity instances.
+def exempt_folders(schema):
+    """Exempt Synapse folders from a file-based template's *requirements*.
 
-    Schema bindings on a folder are also evaluated against its child folders.  A
-    folder does not need file metadata such as ``fileFormat`` or ``resourceType``,
-    so move the generated constraints under a concreteType guard.  Non-file
-    entities are intentionally outside the scope of file-based templates.
+    A schema bound to a folder is also evaluated against that folder's children,
+    including child folders.  A folder does not hold file metadata such as
+    ``fileFormat`` or ``resourceType``, so it should not be asked for any.  Every
+    other entity the binding reaches still has to comply -- a ``Link`` standing in
+    for a file is curated like the file it points at, so exempting it would leave
+    a hole in the validation.
+
+    The condition is stated as "not a folder" rather than "is a FileEntity" so an
+    entity that declares no ``concreteType`` -- a manifest row under test, an
+    upload in flight -- matches vacuously and stays subject to the requirements.
 
     `type` and `properties` stay at the top level because Synapse and downstream tools expect them there.
      This does not make folders invalid: folders are objects too, and properties only constrains fields that are present.
@@ -69,7 +76,7 @@ def restrict_to_file_entities(schema):
     schema["allOf"] = [{
         "if": {
             "properties": {
-                "concreteType": {"const": FILE_ENTITY_CONCRETE_TYPE}
+                "concreteType": {"not": {"const": FOLDER_CONCRETE_TYPE}}
             }
         },
         "then": file_constraints,
@@ -286,7 +293,7 @@ def process_schema(raw_schema, cls_name, version=None, schema_yaml_path=None):
         deref["properties"] = reorder_properties(deref["properties"], property_order)
 
     if is_file_based_template(schema_yaml_path, cls_name):
-        restrict_to_file_entities(deref)
+        exempt_folders(deref)
 
     return deref
 

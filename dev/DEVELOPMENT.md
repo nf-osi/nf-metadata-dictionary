@@ -431,7 +431,7 @@ Individual test files (all of these run in `main-ci.yml`):
 | `tests/test_template_datatypes.py` | Every non-abstract template class declares valid `dataType` annotations |
 | `tests/test_model_system_sync.py` | Model system data is in sync |
 | `tests/test_schema_escape_hatches.py` | Deliberate escape hatches (e.g. `Other Platform`) stay permitted |
-| `tests/test_file_entity_schema_guard.py` | File-based template constraints stay scoped to files, not folders |
+| `tests/test_folder_schema_exemption.py` | File-based template requirements exempt folders, and nothing else |
 | `tests/test_decide_release.py` | Release decision: AI acceptance, deterministic fallback, and the CLI contract |
 | `tests/test_enum_harmonization.py` | `ManifestationEnum` and `Tumor` stay label-identical where they overlap, so file-level `tumorType` rolls up onto dataset- and study-level `manifestation` without a crosswalk (see [Duplicated enum subsets](DESIGN.md#when-the-subset-relation-cant-be-expressed-in-linkml)) |
 

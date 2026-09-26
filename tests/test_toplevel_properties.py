@@ -3,7 +3,7 @@
 Synapse requires top-level `properties`, and consumers such as 
 file-view column generation and the curator grid both depend on finding them at the top level.
 
-Only `required` and the other requirement-bearing keywords need the guard; see
+Only `required` and the other requirement-bearing keywords are exempted; see
 `GUARDED_KEYWORDS` in `utils/gen-json-schema-class.py`.
 """
 
@@ -33,7 +33,7 @@ SCHEMA_FILES = sorted(SCHEMA_DIR.glob("*.json"))
 NOT_GENERATOR_OUTPUT = {"Superdataset"}
 
 # Subschema keywords that describe the same entity. `if` is excluded: its
-# `properties` are match conditions (the `concreteType` guard), not fields.
+# `properties` are match conditions (the folder exemption), not fields.
 _APPLICATOR_LISTS = ("allOf", "anyOf", "oneOf")
 _APPLICATOR_BRANCHES = ("then", "else")
 
@@ -90,11 +90,11 @@ def test_top_level_properties_present_when_schema_has_fields(schema_file):
     """A schema with any validation content must expose top-level `properties`.
 
     Catches the inverse of the above: a schema whose entire body sits under the
-    concreteType guard, leaving the top level empty.
+    folder exemption, leaving the top level empty.
     """
     schema = json.loads(schema_file.read_text())
     if not schema.get("allOf"):
-        pytest.skip("no concreteType guard to hide properties behind")
+        pytest.skip("no folder exemption to hide properties behind")
 
     guarded_required = [
         name
@@ -104,14 +104,14 @@ def test_top_level_properties_present_when_schema_has_fields(schema_file):
         pytest.skip("guard carries no properties")
 
     assert schema.get("properties"), (
-        f"{schema_file.name} has all of its properties under the concreteType guard "
-        "and none at the top level. `restrict_to_file_entities` must leave "
+        f"{schema_file.name} has all of its properties under the folder exemption "
+        "and none at the top level. `exempt_folders` must leave "
         "`properties` in place and guard only GUARDED_KEYWORDS."
     )
 
 
 def test_generator_keeps_properties_at_top_level(tmp_path):
-    """`restrict_to_file_entities` guards requirements, not field declarations."""
+    """`exempt_folders` guards requirements, not field declarations."""
     schema_yaml = tmp_path / "schema.yaml"
     schema_yaml.write_text(
         "classes:\n"
@@ -137,7 +137,7 @@ def test_generator_keeps_properties_at_top_level(tmp_path):
 
     validator = jsonschema.Draft7Validator(schema)
     assert not list(validator.iter_errors({
-        "concreteType": "org.sagebionetworks.repo.model.Folder"
+        "concreteType": GENERATOR.FOLDER_CONCRETE_TYPE
     }))
     assert any(
         error.validator == "required"

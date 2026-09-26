@@ -14,7 +14,7 @@ SCHEMAS_DIR = Path(os.environ.get("SCHEMAS_DIR", REPO_ROOT / "registered-json-sc
 
 def _property_schema(template_name, property_name):
     # Property declarations live at the top level; only `required` and the
-    # conditional rules sit under the concreteType guard. See
+    # conditional rules sit under the folder exemption. See
     # tests/test_toplevel_properties.py.
     schema = json.loads((SCHEMAS_DIR / f"{template_name}.json").read_text())
     return schema["properties"][property_name]
