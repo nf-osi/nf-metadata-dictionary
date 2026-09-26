@@ -50,16 +50,12 @@ def restrict_to_file_entities(schema):
     """Apply file-template *requirements* only to Synapse FileEntity instances.
 
     Schema bindings on a folder are also evaluated against its child folders.  A
-    folder cannot have file metadata such as ``fileFormat`` or ``resourceType``,
+    folder does not need file metadata such as ``fileFormat`` or ``resourceType``,
     so move the generated constraints under a concreteType guard.  Non-file
     entities are intentionally outside the scope of file-based templates.
 
-    ``type`` and ``properties`` deliberately stay at the top level.  Synapse
-    requires top-level ``properties``, and consumers that enumerate a template's
-    fields -- ``utils/json_schema_entity_view.py`` building file-view columns, the
-    curator grid -- read them there.  Neither keyword can make a folder invalid:
-    a folder is an object too, and ``properties`` constrains only the keys an
-    entity actually has.  See ``tests/test_toplevel_properties.py``.
+    `type` and `properties` stay at the top level because Synapse and downstream tools expect them there.
+     This does not make folders invalid: folders are objects too, and properties only constrains fields that are present.
     """
     file_constraints = {
         key: schema.pop(key)
