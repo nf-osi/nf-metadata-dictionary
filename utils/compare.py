@@ -237,6 +237,29 @@ def main():
     main_categories = categorize_entities(g_main, entities_main)
     current_categories = categorize_entities(g_current, entities_current)
 
+    # Lead with the verdict.  The report used to open with two near-identical count
+    # blocks, so the common case -- a change that moves nothing at the entity level --
+    # read as a wall of numbers the reader had to diff by eye.
+    deltas = []
+    for cat_name, cat_label in [('classes', 'class'), ('slots', 'slot'), ('enums', 'enum')]:
+        n_added = len(current_categories[cat_name] - main_categories[cat_name])
+        n_removed = len(main_categories[cat_name] - current_categories[cat_name])
+        if n_added:
+            deltas.append(f"+{n_added} {cat_label}{'es' if cat_label == 'class' and n_added != 1 else 's' if n_added != 1 else ''}")
+        if n_removed:
+            deltas.append(f"-{n_removed} {cat_label}{'es' if cat_label == 'class' and n_removed != 1 else 's' if n_removed != 1 else ''}")
+
+    entity_diff = len(entities_current) - len(entities_main)
+    if deltas:
+        headline = "**Model delta:** " + ", ".join(deltas)
+    elif entity_diff:
+        headline = (f"**Model delta:** no classes, slots or enums added or removed; "
+                    f"{entity_diff:+d} other entities")
+    else:
+        headline = ("**Model delta:** no entities added or removed. Changes, if any, are "
+                    "to existing definitions -- see the sections below.")
+    print(f"\n{headline}")
+
     # Build entity counts content
     counts_content = []
     counts_content.append(f"**Main branch:** {len(entities_main)} entities")
@@ -256,7 +279,7 @@ def main():
     diff = len(entities_current) - len(entities_main)
     counts_content.append(f"**Difference:** {diff:+d} entities")
 
-    print_section("Entity Counts", "\n".join(counts_content))
+    print_section("Entity Counts", "\n".join(counts_content), collapsible=True)
 
     # Find differences by category
     for cat_name, cat_label in [

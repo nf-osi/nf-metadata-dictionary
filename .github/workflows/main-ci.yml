@@ -121,14 +121,15 @@ jobs:
           python utils/gen-json-schema-class.py --validate-changed-only
           make Superdataset
 
-      - name: Report schema validation results as PR comment
-        uses: mshick/add-pr-comment@v2
+      - name: Publish schema validation fragment
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          message-id: schema-validation-report
-          message-path: |
-            schema-validation-log.md
-      
+          name: report-schemas
+          path: schema-validation-log.md
+          retention-days: 1
+          if-no-files-found: ignore
+
       - name: Upload artifacts for subsequent jobs
         uses: actions/upload-artifact@v4
         with:
@@ -179,11 +180,14 @@ jobs:
         run: |
           python utils/compare.py > analysis_output.md
 
-      - name: Post analysis as PR comment
-        uses: mshick/add-pr-comment@v2
+      - name: Publish analysis fragment
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          message-id: data-model-analysis
-          message-path: analysis_output.md
+          name: report-analysis
+          path: analysis_output.md
+          retention-days: 1
+          if-no-files-found: ignore
 
   docs-preview:
     name: Build and preview docs
@@ -274,23 +278,27 @@ jobs:
           # pytest -q ends with a summary line of the form "N passed, M skipped in X.XXs".
           SUMMARY=$(grep -E '(passed|failed|error|no tests ran).* in [0-9]' pytest_output.txt | tail -1)
           [ -n "$SUMMARY" ] || SUMMARY="(could not parse pytest summary; see job log)"
+          # First line starts with the status emoji so the assembled report can lift it
+          # straight into the summary table.
           if [ "$EXIT_CODE" = "0" ]; then
-            printf '## ✅ pytest\n\n%s\n' "$SUMMARY" > pytest_report.md
+            printf '✅ %s\n' "$SUMMARY" > pytest_report.md
           else
             {
-              printf '## ❌ pytest\n\n%s\n\n' "$SUMMARY"
+              printf '❌ %s\n\n' "$SUMMARY"
               echo '```'
               sed -n '/=== FAILURES ===/,$p' pytest_output.txt | head -400
               echo '```'
             } > pytest_report.md
           fi
 
-      - name: Post pytest results as PR comment
-        uses: mshick/add-pr-comment@v2
+      - name: Publish pytest fragment
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          message-id: pytest-report
-          message-path: pytest_report.md
+          name: report-pytest
+          path: pytest_report.md
+          retention-days: 1
+          if-no-files-found: ignore
 
       # `pytest | tee` makes the run step exit 0 even when tests fail, so the
       # captured exit code has to be re-asserted after the report is posted.
@@ -382,12 +390,14 @@ jobs:
           echo "exit_code=$?" >> $GITHUB_OUTPUT
           set -e
 
-      - name: Post schema limits report as PR comment
-        uses: mshick/add-pr-comment@v2
+      - name: Publish schema limits fragment
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          message-id: schema-limits-check
-          message-path: schema_limits_report.md
+          name: report-limits
+          path: schema_limits_report.md
+          retention-days: 1
+          if-no-files-found: ignore
 
       - name: Fail if schema limits check errored
         if: always() && steps.schema_check.outputs.exit_code == '1'
@@ -395,3 +405,88 @@ jobs:
           echo "::error::A schema exceeds the 64KB file-view row limit - see the schema limits comment on this PR."
           exit 1
 
+  # One comment instead of five.  Each job publishes a markdown fragment as an artifact
+  # and this assembles them, so the PR carries a short status table with the detail one
+  # click away rather than ~64KB spread across separate comments.
+  report:
+    name: Post CI report
+    needs: [changes, build, pytest, analyze, check-schema-limits]
+    if: |
+      always() && github.event_name == 'pull_request'
+      && needs.changes.outputs.build_needed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Download report fragments
+        continue-on-error: true   # nothing to merge if every producing job was skipped
+        uses: actions/download-artifact@v4
+        with:
+          pattern: report-*
+          path: fragments
+          merge-multiple: true
+
+      - name: Assemble report
+        env:
+          BUILD: ${{ needs.build.result }}
+          PYTEST: ${{ needs.pytest.result }}
+          ANALYZE: ${{ needs.analyze.result }}
+          LIMITS: ${{ needs.check-schema-limits.result }}
+        run: |
+          icon() {
+            case "$1" in
+              success)   echo "✅" ;;
+              failure)   echo "❌" ;;
+              cancelled) echo "🚫" ;;
+              skipped)   echo "⏭️ not needed" ;;
+              *)         echo "❔" ;;
+            esac
+          }
+
+          # A fragment's own headline is more informative than the job result, so prefer
+          # it where one exists.
+          summarize() {
+            [ -f "$1" ] || { echo "$2"; return; }
+            line=$(grep -m1 -E '^(✅|❌|⚠️|\*\*Model delta)' "$1" \
+                   | sed -e 's/^\*\*Model delta:\*\* //' -e 's/  */ /g')
+            [ -n "$line" ] && echo "$line" || echo "$2"
+          }
+
+          {
+            echo "## Data model CI"
+            echo ""
+            echo "| Check | Result |"
+            echo "|-------|--------|"
+            echo "| Build & schema generation | $(icon "$BUILD") |"
+            echo "| Synapse schema validation | $(summarize fragments/schema-validation-log.md "$(icon "$BUILD")") |"
+            echo "| Tests | $(summarize fragments/pytest_report.md "$(icon "$PYTEST")") |"
+            echo "| Model delta | $(summarize fragments/analysis_output.md "$(icon "$ANALYZE")") |"
+            echo "| Schema limits | $(summarize fragments/schema_limits_report.md "$(icon "$LIMITS")") |"
+            echo ""
+
+            for f in fragments/analysis_output.md:"Model changes" \
+                     fragments/schema-validation-log.md:"Schema validation" \
+                     fragments/schema_limits_report.md:"Schema limits" \
+                     fragments/pytest_report.md:"Tests"; do
+              path="${f%%:*}"; title="${f##*:}"
+              [ -s "$path" ] || continue
+              echo "<details><summary><strong>${title}</strong></summary>"
+              echo ""
+              cat "$path"
+              echo ""
+              echo "</details>"
+              echo ""
+            done
+
+            echo "_Artifacts are not committed to this PR; they are rebuilt and committed to \`main\` on merge._"
+          } > ci_report.md
+
+          echo "--- assembled report ---"
+          cat ci_report.md
+
+      - name: Post CI report
+        uses: mshick/add-pr-comment@v2
+        with:
+          message-id: ci-report
+          message-path: ci_report.md
