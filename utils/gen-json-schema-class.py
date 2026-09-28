@@ -373,6 +373,12 @@ def main():
                        dest="class_name",
                        default=None,
                        help="Generate schema for a specific class only (e.g., DataLandscape)")
+    parser.add_argument("--validate-changed-only",
+                       action="store_true",
+                       help=("Validate only schemas whose generated content differs from what "
+                             "was already on disk. Intended for PR CI, where the committed "
+                             "artifacts from main are the baseline. Full rebuilds on main "
+                             "should NOT use this."))
 
     args = parser.parse_args()
     
@@ -416,51 +422,66 @@ def main():
             str(SCHEMA_YAML)
         ])
         if not schema_str:
-            return cls_name, False
+            return cls_name, False, False
         try:
             raw_schema = json.loads(schema_str)
             final_schema = process_schema(raw_schema, cls_name, args.version, SCHEMA_YAML)
             output_file = OUT_DIR / f"{cls_name}.json"
-            output_file.write_text(json.dumps(final_schema, indent=2))
-            return cls_name, True
+            rendered = json.dumps(final_schema, indent=2)
+            # Compare against whatever was already on disk -- on a PR runner that is the
+            # copy committed from main, which makes this an exact "did this schema change"
+            # signal rather than an approximation.
+            previous = output_file.read_text() if output_file.exists() else None
+            output_file.write_text(rendered)
+            return cls_name, True, rendered != previous
         except json.JSONDecodeError:
-            return cls_name, False
+            return cls_name, False, False
 
     print(f"🔨 Generating {len(classes)} schemas in parallel...")
+    generated, changed = [], []
     with ThreadPoolExecutor(max_workers=8) as pool:
         futures = {pool.submit(_generate_one, name): name for name in classes}
         for future in as_completed(futures):
-            cls_name, ok = future.result()
-            status = "✅" if ok else "❌"
-            print(f"  {status} {cls_name}")
-    
-    # Count only the schemas we generated in this run
-    if args.class_name:
-        generated_count = 1 if (OUT_DIR / f"{args.class_name}.json").exists() else 0
-    else:
-        generated_count = len(list(OUT_DIR.glob('*.json')))
+            cls_name, ok, was_changed = future.result()
+            if ok:
+                generated.append(cls_name)
+                if was_changed:
+                    changed.append(cls_name)
+            print(f"  {'✅' if ok else '❌'}{' *' if was_changed else '  '} {cls_name}")
 
-    print(f"✅ Generated {generated_count} JSON schema{'s' if generated_count != 1 else ''}")
+    generated_count = len(generated)
+    changed.sort()
+    print(f"✅ Generated {generated_count} JSON schema{'s' if generated_count != 1 else ''}"
+          f" ({len(changed)} changed)")
 
     if args.skip_validation:
         print("\n⏭️  Skipping validation (--skip-validation flag set)")
         return
 
     # Only validate the schemas we generated in this run
-    if args.class_name:
+    if args.validate_changed_only:
+        schemas_to_validate = [OUT_DIR / f"{name}.json" for name in changed]
+        skipped = generated_count - len(schemas_to_validate)
+        print(f"\n🎯 Validating only changed schemas: {len(schemas_to_validate)} of "
+              f"{generated_count} ({skipped} unchanged, skipped)")
+        if not schemas_to_validate:
+            print("✅ No schema content changed; nothing to validate.")
+    elif args.class_name:
         schemas_to_validate = [OUT_DIR / f"{args.class_name}.json"]
     else:
         schemas_to_validate = sorted(OUT_DIR.glob('*.json'))
 
-    # Initialize Synapse client once for all validations
-    syn = synapseclient.Synapse()
-    auth_token = os.environ.get('SYNAPSE_AUTH_TOKEN')
-    if not auth_token:
-        print("❌ SYNAPSE_AUTH_TOKEN environment variable is required for validation")
-        exit(1)
-    syn.login(authToken=auth_token)
-
-    results_map = validate_schemas(schemas_to_validate, syn)
+    if schemas_to_validate:
+        # Initialize Synapse client once for all validations
+        syn = synapseclient.Synapse()
+        auth_token = os.environ.get('SYNAPSE_AUTH_TOKEN')
+        if not auth_token:
+            print("❌ SYNAPSE_AUTH_TOKEN environment variable is required for validation")
+            exit(1)
+        syn.login(authToken=auth_token)
+        results_map = validate_schemas(schemas_to_validate, syn)
+    else:
+        results_map = {}
 
     # Summary
     passed = sum(results_map.values())
@@ -468,23 +489,33 @@ def main():
 
     print(f"\n🎉 Validation complete: {passed} passed, {failed} failed")
 
-    # Log validation results to markdown file
+    # Log validation results to markdown file.  The list is the schemas that were
+    # actually submitted -- under --validate-changed-only that is the handful whose
+    # content moved, not a wall of green ticks for every schema in the directory.
+    if failed:
+        headline = f"❌ {failed} of {len(schemas_to_validate)} changed schema(s) failed validation"
+    elif not schemas_to_validate:
+        headline = "✅ No schema content changed"
+    else:
+        headline = f"✅ {passed} changed schema(s) validated against Synapse"
+
     log_content = f"""# Schema Validation Report
 
-Generated: {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}
+{headline}
 
-## Summary
-- **Generated schemas:** {generated_count}
-- **Validation passed:** {passed}
-- **Validation failed:** {failed}
+- **Schemas generated:** {generated_count}
+- **Changed:** {len(changed)}
+- **Validated:** {len(schemas_to_validate)}
 
-## Details
+_Generated {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}_
 """
 
-    for json_file in schemas_to_validate:
-        result = results_map.get(json_file, False)
-        status = "✅ PASSED" if result else "❌ FAILED"
-        log_content += f"- `{json_file.name}`: {status}\n"
+    if schemas_to_validate:
+        log_content += "\n## Details\n"
+        for json_file in schemas_to_validate:
+            result = results_map.get(json_file, False)
+            status = "✅ PASSED" if result else "❌ FAILED"
+            log_content += f"- `{json_file.stem}`: {status}\n"
 
     # Write log file
     log_file = Path(args.log_file)

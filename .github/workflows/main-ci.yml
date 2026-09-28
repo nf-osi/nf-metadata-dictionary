@@ -101,12 +101,16 @@ jobs:
             echo "</details>";
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Generate and validate JSON schemas for all templates (classes)
+      - name: Generate JSON schemas and validate the ones that changed
         env:
           SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
         run: |
-          echo "Generating JSON schemas and validating them!"
-          python utils/gen-json-schema-class.py
+          # All schemas are regenerated, but only those whose content differs from the
+          # copy committed on main are submitted to the Synapse dry-run validator.  On a
+          # typical enum addition that is a handful rather than all 69.  The full,
+          # unconditional validation still runs on merge in rebuild-artifacts-on-main.yml,
+          # which remains the authority for what gets registered.
+          python utils/gen-json-schema-class.py --validate-changed-only
           make Superdataset
 
       - name: Report schema validation results as PR comment
