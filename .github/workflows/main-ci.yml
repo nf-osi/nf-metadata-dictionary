@@ -6,18 +6,64 @@ on:
     branches: [main]
     paths:
       - 'modules/**'
+      - 'header.yaml'
+      - 'rules/**'
+      - 'docs/**'
+      - 'utils/**'
+      - 'tests/**'
+      - 'Makefile'
       - '.github/workflows/main-ci.yml'
-      - 'utils/gen-json-schema-class.py'
-      - 'utils/decide_release.py'
       - '.github/workflows/release-new-version.yaml'
-      - 'tests/test_*.py'
-      - 'tests/test_registry*.yaml'
-      - 'tests/data/**'
-  
+
   workflow_dispatch:
 
+concurrency:
+  group: main-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  # Which downstream jobs are worth running is a function of what changed.  The
+  # filters are deliberately coarse: over-running a job costs a minute, skipping one
+  # that mattered costs a missed regression.
+  changes:
+    name: Detect what changed
+    runs-on: ubuntu-latest
+    outputs:
+      model: ${{ steps.filter.outputs.model }}
+      generator: ${{ steps.filter.outputs.generator }}
+      release: ${{ steps.filter.outputs.release }}
+      docs: ${{ steps.filter.outputs.docs }}
+      build_needed: ${{ steps.filter.outputs.model == 'true' || steps.filter.outputs.generator == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            model:
+              - 'modules/**'
+              - 'header.yaml'
+              - 'rules/**'
+              - 'Makefile'
+              - 'tests/test_registry*.yaml'
+              - 'tests/data/**'
+              - '.github/workflows/main-ci.yml'
+            generator:
+              - 'utils/gen-json-schema-class.py'
+              - 'utils/check_schema_limits.py'
+              - 'utils/compare.py'
+              - 'tests/test_folder_schema_exemption.py'
+              - 'tests/test_toplevel_properties.py'
+            release:
+              - 'utils/decide_release.py'
+              - 'tests/test_decide_release.py'
+              - '.github/workflows/release-new-version.yaml'
+            docs:
+              - 'docs/**'
+
   build:
+    needs: [changes]
+    if: needs.changes.outputs.build_needed == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -25,17 +71,16 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
-          fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository
 
-      - name: Get skip flags
-        id: check_skip_flags
-        run: echo "HEAD_COMMIT_MESSAGE=$(git show -s --format=%s)" >> "$GITHUB_OUTPUT"
-      
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12'
+          cache: 'pip'
+
       - name: Setup build tools and build artifacts
         shell: bash
         run: |
           pip install linkml==v1.8.1 synapseclient jsonref
-          npm install -g json-dereference-cli
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           make -B
 
@@ -72,34 +117,6 @@ jobs:
           message-path: |
             schema-validation-log.md
       
-      - name: Check if artifacts changed
-        id: check_artifacts
-        run: |
-          if [[ $(git diff --exit-code) ]]; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "✅ Artifacts built successfully and have changes"
-          else
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "✅ Artifacts built successfully with no changes"
-          fi
-
-      - name: Report artifact build status as PR comment
-        uses: mshick/add-pr-comment@v2
-        with:
-          message-id: artifact-build-report
-          message: |
-            ## ✅ Artifact Build Status
-
-            All artifacts have been successfully built and validated from source modules.
-
-            **Artifacts validated:**
-            - `dist/NF.yaml` (LinkML YAML)
-            - `dist/NF.ttl` (Turtle RDF)
-            - `dist/NF.sssom.tsv` (SSSOM mapping set)
-            - `registered-json-schemas/*.json` (Synapse JSON schemas)
-
-            **Note:** Artifacts are not committed to this PR to avoid merge conflicts. All artifacts will be automatically rebuilt and committed to `main` after merge.
-
       - name: Upload artifacts for subsequent jobs
         uses: actions/upload-artifact@v4
         with:
@@ -113,7 +130,8 @@ jobs:
 
   analyze:
     name: Analyze data model changes
-    needs: [build]
+    needs: [changes, build]
+    if: needs.changes.outputs.model == 'true'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -157,9 +175,13 @@ jobs:
 
   docs-preview:
     name: Build and preview docs
-    needs: [build]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    needs: [changes, build]
+    # Runs after a docs-only change too, in which case `build` is skipped and the
+    # committed dist/NF.ttl from main is what the site is built from.
+    if: |
+      always() && github.event_name == 'pull_request'
+      && needs.build.result != 'failure' && needs.build.result != 'cancelled'
+      && (needs.changes.outputs.model == 'true' || needs.changes.outputs.docs == 'true')
 
     steps:
       - uses: actions/checkout@v4
@@ -173,6 +195,7 @@ jobs:
           cache-dependency-path: docs/package-lock.json
 
       - name: Download built artifacts from build job
+        if: needs.build.result == 'success'
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
@@ -191,9 +214,11 @@ jobs:
         with:
           source-dir: ./docs
 
+  # Tests that need the freshly built artifacts.  Everything that does not is in
+  # `unit-tests`, which runs without waiting for the build.
   pytest:
     name: pytest (schema instances + model integrity)
-    needs: [build]
+    needs: [changes, build]
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -213,35 +238,40 @@ jobs:
           name: build-artifacts
           path: .
 
+      # jsonref/synapseclient are needed because test_toplevel_properties.py execs
+      # utils/gen-json-schema-class.py, which imports both at module level.
       - name: Install dependencies
         run: pip install pytest jsonschema pyyaml jsonref synapseclient
 
       - name: Run pytest
         id: pytest
         run: |
-          pytest tests/test_schema_instances.py tests/test_template_datatypes.py tests/test_model_system_sync.py \
-            tests/test_schema_escape_hatches.py tests/test_folder_schema_exemption.py \
+          pytest tests/test_schema_instances.py tests/test_template_datatypes.py \
+            tests/test_schema_escape_hatches.py \
             tests/test_toplevel_properties.py \
-            tests/test_decide_release.py tests/test_enum_harmonization.py -v \
-            --tb=short 2>&1 | tee pytest_output.txt
+            tests/test_enum_harmonization.py \
+            -q --tb=short 2>&1 | tee pytest_output.txt
           echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
 
       - name: Format pytest results as PR comment
         if: always()
         run: |
+          # On success post the one-line summary only.  The full -v listing of every
+          # passing test was ~56KB of PR comment in which a real failure was invisible.
           EXIT_CODE="${{ steps.pytest.outputs.exit_code }}"
+          # pytest -q ends with a summary line of the form "N passed, M skipped in X.XXs".
+          SUMMARY=$(grep -E '(passed|failed|error|no tests ran).* in [0-9]' pytest_output.txt | tail -1)
+          [ -n "$SUMMARY" ] || SUMMARY="(could not parse pytest summary; see job log)"
           if [ "$EXIT_CODE" = "0" ]; then
-            STATUS="✅ All tests passed"
+            printf '## ✅ pytest\n\n%s\n' "$SUMMARY" > pytest_report.md
           else
-            STATUS="❌ Some tests failed"
+            {
+              printf '## ❌ pytest\n\n%s\n\n' "$SUMMARY"
+              echo '```'
+              sed -n '/=== FAILURES ===/,$p' pytest_output.txt | head -400
+              echo '```'
+            } > pytest_report.md
           fi
-          {
-            echo "## $STATUS"
-            echo ""
-            echo '```'
-            cat pytest_output.txt
-            echo '```'
-          } > pytest_report.md
 
       - name: Post pytest results as PR comment
         uses: mshick/add-pr-comment@v2
@@ -258,9 +288,53 @@ jobs:
           echo "::error::pytest exited with ${{ steps.pytest.outputs.exit_code }} - see the pytest report comment on this PR."
           exit 1
 
+  # Tests with no dependency on the built artifacts: they exercise utils/ modules
+  # directly or against synthetic fixtures.  No `needs: [build]`, so a release-logic
+  # PR no longer pays for a full LinkML build, 69 Synapse round-trips and a docs deploy
+  # in order to run unit tests that touch none of it.
+  unit-tests:
+    name: Unit tests (no artifacts needed)
+    needs: [changes]
+    if: |
+      needs.changes.outputs.release == 'true'
+      || needs.changes.outputs.generator == 'true'
+      || needs.changes.outputs.model == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12'
+          cache: 'pip'
+
+      # test_folder_schema_exemption.py execs utils/gen-json-schema-class.py, and
+      # test_model_system_sync.py imports utils/sync_model_systems.py.
+      - name: Install dependencies
+        run: pip install pytest jsonschema pyyaml jsonref synapseclient
+
+      - name: Run pytest
+        id: unit
+        run: |
+          pytest tests/test_decide_release.py tests/test_model_system_sync.py \
+            tests/test_folder_schema_exemption.py \
+            -q --tb=short 2>&1 | tee unit_output.txt
+          echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
+
+      - name: Fail if unit tests failed
+        if: always() && steps.unit.outputs.exit_code != '0'
+        run: |
+          echo "::error::unit tests exited with ${{ steps.unit.outputs.exit_code }}"
+          exit 1
+
   check-schema-limits:
     name: Validate schema limits (Synapse platform)
-    needs: [build]
+    needs: [changes, build]
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
