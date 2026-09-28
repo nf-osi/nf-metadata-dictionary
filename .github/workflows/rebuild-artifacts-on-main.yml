@@ -31,7 +31,6 @@ jobs:
         shell: bash
         run: |
           pip install linkml==v1.8.1 synapseclient jsonref
-          npm install -g json-dereference-cli
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Rebuild all artifacts
