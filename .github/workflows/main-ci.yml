@@ -101,6 +101,14 @@ jobs:
             echo "</details>";
           } >> "$GITHUB_STEP_SUMMARY"
 
+      # Runs here rather than in the pytest job because it needs both dist/NF.yaml and
+      # the pinned linkml, and because it guards the generator in the same environment
+      # that is about to use it.
+      - name: Verify in-process generation matches the CLI it replaced
+        run: |
+          pip install pytest
+          pytest tests/test_generator_equivalence.py -q --tb=short
+
       - name: Generate JSON schemas and validate the ones that changed
         env:
           SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
