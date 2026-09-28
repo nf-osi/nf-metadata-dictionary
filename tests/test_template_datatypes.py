@@ -11,6 +11,7 @@ DATA_BASE_FILE = DATA_ENUM_DIR / "Data.yaml"
 OPTIONAL_DATATYPE_TEMPLATES = {
     "AnimalIndividualTemplate",
     "PortalDataset",
+    "PortalDatasetCandidate",
     "PortalStudy",
     "PortalPublication",
     "PublicationTemplate",
