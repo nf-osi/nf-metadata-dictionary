@@ -56,13 +56,21 @@ def check_enum_sizes(modules_dir: Path) -> Dict[str, List]:
 
 
 def check_string_lengths(schemas_dir: Path) -> Dict[str, Any]:
-    """Check enum value string lengths."""
-    list_lengths, string_lengths = [], []
+    """Check enum value string lengths.
 
-    for schema_file in schemas_dir.glob("*.json"):
+    Over-limit values are a warning tier, not an error -- see the exit codes in main().
+    Because they never gate a PR, the report is the only channel by which anyone learns
+    about one, so the offenders are carried through by identity (schema, property, value)
+    rather than merely counted.  Values are de-duplicated: the same label reached from
+    three templates is one problem in the model, not three.
+    """
+    list_lengths, string_lengths = [], []
+    over_limit: Dict[str, Dict[str, Any]] = {}
+
+    for schema_file in sorted(schemas_dir.glob("*.json")):
         try:
             schema = json.loads(schema_file.read_text())
-            for prop_def in schema.get("properties", {}).values():
+            for prop_name, prop_def in schema.get("properties", {}).items():
                 prop_type = prop_def.get("type", "string")
                 if isinstance(prop_type, list):
                     prop_type = next((t for t in prop_type if t != "null"), "string")
@@ -70,15 +78,26 @@ def check_string_lengths(schemas_dir: Path) -> Dict[str, Any]:
                 enum_values = []
                 if prop_type == "array" and "items" in prop_def:
                     enum_values = prop_def["items"].get("enum", [])
-                    target = list_lengths
+                    target, kind, limit = list_lengths, "LIST", CONFIG['LIST_MAX_SIZE']
                 elif "enum" in prop_def:
                     enum_values = prop_def["enum"]
-                    target = string_lengths
+                    target, kind, limit = string_lengths, "STRING", CONFIG['STRING_MAX_SIZE']
                 else:
                     continue
 
-                target.extend(len(str(v)) for v in enum_values)
-        except:
+                for v in enum_values:
+                    value = str(v)
+                    target.append(len(value))
+                    if len(value) > limit:
+                        entry = over_limit.setdefault(value, {
+                            'value': value,
+                            'chars': len(value),
+                            'kind': kind,
+                            'limit': limit,
+                            'usages': [],
+                        })
+                        entry['usages'].append(f"{schema_file.stem}.{prop_name}")
+        except Exception:
             pass
 
     return {
@@ -86,6 +105,8 @@ def check_string_lengths(schemas_dir: Path) -> Dict[str, Any]:
         'string_max': max(string_lengths, default=0),
         'list_exceeds': sum(1 for l in list_lengths if l > CONFIG['LIST_MAX_SIZE']),
         'string_exceeds': sum(1 for l in string_lengths if l > CONFIG['STRING_MAX_SIZE']),
+        # Distinct offending values, widest overflow first.
+        'over_limit': sorted(over_limit.values(), key=lambda e: -e['chars']),
     }
 
 
@@ -176,8 +197,18 @@ def format_markdown(enum_data, string_data, row_data) -> str:
         f"- String max: {string_data['string_max']} chars (limit: {CONFIG['STRING_MAX_SIZE']})",
     ])
 
-    if string_data['list_exceeds'] or string_data['string_exceeds']:
-        lines.append(f"### ⚠️  {string_data['list_exceeds'] + string_data['string_exceeds']} values exceed limits")
+    over = string_data.get('over_limit') or []
+    if over:
+        lines.append(f"### ⚠️  {len(over)} value(s) exceed limits (warning -- does not block merge)")
+        lines.append("")
+        lines.append("| Chars | Over by | Type | Value | Used by |")
+        lines.append("|-------|---------|------|-------|---------|")
+        for e in over:
+            usages = ", ".join(f"`{u}`" for u in e['usages'])
+            lines.append(
+                f"| {e['chars']} | +{e['chars'] - e['limit']} | {e['kind']} | "
+                f"{e['value']} | {usages} |"
+            )
     else:
         lines.append("### ✅ All values within limits")
     lines.append("")
@@ -210,10 +241,18 @@ def format_markdown(enum_data, string_data, row_data) -> str:
         f"- Schemas: {len(row_data['schemas'])} total, {len(row_data['exceeds'])} exceed, {len(row_data['approaching'])} approaching",
     ])
 
+    # Warnings come from any check, not row sizes alone: a string-length overflow is a
+    # real finding even though it deliberately does not gate (see exit codes in main()).
+    warnings = []
+    if row_data['approaching']:
+        warnings.append(f"{len(row_data['approaching'])} schema(s) approaching the row-size limit")
+    if string_data['string_exceeds'] or string_data['list_exceeds']:
+        warnings.append(f"{len(string_data.get('over_limit') or [])} value(s) over the string-length limit")
+
     if row_data['exceeds']:
         lines.append("\n❌ **VALIDATION FAILED** - Critical issues found")
-    elif row_data['approaching']:
-        lines.append("\n⚠️  **WARNINGS** - Some limits approaching")
+    elif warnings:
+        lines.append("\n⚠️  **WARNINGS** - " + "; ".join(warnings))
     else:
         lines.append("\n✅ **ALL CHECKS PASSED**")
 
@@ -254,11 +293,20 @@ def main():
     else:
         print(output)
 
-    # Exit codes
+    # Exit codes under --strict:
+    #   1 = error   -- row size over the 64KB limit; a file view built on this schema breaks.
+    #   2 = warning -- surfaced in the report but deliberately does NOT gate a PR.
+    #   0 = clean.
+    # String/list length overflow is a warning by decision, not an oversight: the values
+    # that trip it are standardized vocabulary terms (e.g. WHO CNS5 diagnoses) where
+    # abbreviating to fit an 80-char column would lose fidelity.  Callers must treat
+    # exit 2 as passing.
     if args.strict:
         if row_data['exceeds']:
             sys.exit(1)
-        elif row_data['approaching']:
+        elif (row_data['approaching']
+              or string_data['string_exceeds']
+              or string_data['list_exceeds']):
             sys.exit(2)
 
     sys.exit(0)

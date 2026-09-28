@@ -287,22 +287,14 @@ jobs:
       - name: Check schema limits
         id: schema_check
         run: |
-          # Run comprehensive schema validation
-          # Exit codes: 0=pass, 1=critical failure, 2=warnings
-          set +e  # Don't exit on error, we'll handle it
+          # Exit codes: 0=pass, 1=error (row size over 64KB), 2=warning.
+          # Warnings -- including string-length overflow -- are surfaced in the report
+          # but deliberately do not gate; only exit 1 fails the job, and it is re-asserted
+          # after the report is posted so the comment always lands.
+          set +e
           python utils/check_schema_limits.py --output schema_limits_report.md --strict
-          EXIT_CODE=$?
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
           set -e
-
-          echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
-
-          if [ $EXIT_CODE -eq 1 ]; then
-            echo "status=❌ FAILED - Critical limits exceeded" >> $GITHUB_OUTPUT
-          elif [ $EXIT_CODE -eq 2 ]; then
-            echo "status=⚠️  WARNING - Some limits approaching" >> $GITHUB_OUTPUT
-          else
-            echo "status=✅ PASSED - All limits within safe bounds" >> $GITHUB_OUTPUT
-          fi
 
       - name: Post schema limits report as PR comment
         uses: mshick/add-pr-comment@v2
@@ -310,4 +302,10 @@ jobs:
         with:
           message-id: schema-limits-check
           message-path: schema_limits_report.md
+
+      - name: Fail if schema limits check errored
+        if: always() && steps.schema_check.outputs.exit_code == '1'
+        run: |
+          echo "::error::A schema exceeds the 64KB file-view row limit - see the schema limits comment on this PR."
+          exit 1
 
