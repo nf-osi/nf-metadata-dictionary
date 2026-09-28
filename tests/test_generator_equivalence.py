@@ -27,9 +27,9 @@ pytestmark = pytest.mark.skipif(
     reason="dist/NF.yaml not built; run `make -B` first",
 )
 
-# A deliberately mixed sample: a file-based template, an attributes-style portal class,
-# a mixin-composed template and an abstract base.  Generating all 63 here would make the
-# suite slower than the thing it is guarding.
+# A deliberately mixed sample: a file-based template, an attributes-style portal class
+# and a mixin-composed template.  Generating all 63 here would make the suite slower than
+# the thing it is guarding.
 SAMPLE_CLASSES = [
     "GenomicsAssayTemplate",
     "PortalDataset",
@@ -76,9 +76,13 @@ def test_shared_schema_survives_repeated_use(shared_schema):
     )
 
 
-@pytest.mark.parametrize("cls_name", SAMPLE_CLASSES[:1])
-def test_matches_cli_flags(cls_name):
-    """The kwargs must stay equivalent to `--inline --no-metadata --not-closed`."""
+def test_matches_cli_flags():
+    """The kwargs must stay equivalent to `--inline --no-metadata --not-closed`.
+
+    One class is enough: the flags are global, not per-class, and each CLI invocation
+    costs a cold linkml import.
+    """
+    cls_name = SAMPLE_CLASSES[0]
     import shutil
     import subprocess
 

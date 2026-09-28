@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import subprocess
 import yaml
 import json
 import time
@@ -12,8 +11,10 @@ import jsonref
 import synapseclient
 from collections import OrderedDict
 
-from linkml.generators.jsonschemagen import JsonSchemaGenerator
-from linkml_runtime.utils.schemaview import load_schema_wrap
+# linkml is imported lazily inside the generation helpers, NOT at module scope.
+# tests/test_toplevel_properties.py and tests/test_folder_schema_exemption.py exec this
+# file to reach process_schema(), and their CI jobs install neither linkml nor its
+# dependency tree. A module-level import makes those two jobs fail at collection.
 
 
 FILE_ENTITY_CONCRETE_TYPE = "org.sagebionetworks.repo.model.FileEntity"
@@ -85,15 +86,6 @@ def exempt_folders(schema):
         "then": file_constraints,
     }]
 
-def run_cmd(cmd):
-    """Run command and return output."""
-    try:
-        result = subprocess.run(cmd, check=True, stdout=subprocess.PIPE, text=True)
-        return result.stdout
-    except subprocess.CalledProcessError:
-        return None
-
-
 # One parsed copy of the merged model, shared by every class we generate.
 #
 # This used to shell out to the `gen-json-schema` CLI once per class, which meant 62 cold
@@ -111,6 +103,7 @@ _SHARED_YAML = None
 def _load_shared_schema(schema_yaml_path):
     global _SHARED_SCHEMA
     if _SHARED_SCHEMA is None:
+        from linkml_runtime.utils.schemaview import load_schema_wrap
         _SHARED_SCHEMA = load_schema_wrap(str(schema_yaml_path))
     return _SHARED_SCHEMA
 
@@ -167,6 +160,8 @@ def generate_raw_schema(schema_yaml_path, cls_name):
     Equivalent to:
         gen-json-schema --top-class <cls> --inline --no-metadata --not-closed <yaml>
     """
+    from linkml.generators.jsonschemagen import JsonSchemaGenerator
+
     generator = JsonSchemaGenerator(
         _load_shared_schema(schema_yaml_path),
         top_class=cls_name,
@@ -498,7 +493,7 @@ def main():
     # generation ran 2x slower than the subprocess-per-class approach it replaced;
     # processes keep the parallelism while still amortizing the schema parse, which each
     # worker does once in its initializer instead of once per class.
-    workers = min(8, os.cpu_count() or 1)
+    workers = min(8, os.cpu_count() or 1, len(classes))
     print(f"🔨 Generating {len(classes)} schemas across {workers} worker process(es)...")
     generated, changed = [], []
     with ProcessPoolExecutor(
@@ -519,9 +514,23 @@ def main():
             print(f"  {'✅' if ok else '❌'}{' *' if was_changed else '  '} {cls_name}")
 
     generated_count = len(generated)
+    failed_to_generate = sorted(set(classes) - set(generated))
     changed.sort()
     print(f"✅ Generated {generated_count} JSON schema{'s' if generated_count != 1 else ''}"
           f" ({len(changed)} changed)")
+
+    # Bail before validation. A class that failed to generate cannot show up as changed,
+    # so it would otherwise sail through --validate-changed-only and report success.
+    if failed_to_generate:
+        print(f"\n❌ {len(failed_to_generate)} class(es) failed to generate: "
+              f"{', '.join(failed_to_generate)}")
+        Path(args.log_file).write_text(
+            "# Schema Validation Report\n\n"
+            f"❌ {len(failed_to_generate)} class(es) failed to generate, so nothing was "
+            "validated\n\n"
+            + "".join(f"- `{name}`\n" for name in failed_to_generate)
+        )
+        exit(1)
 
     if args.skip_validation:
         print("\n⏭️  Skipping validation (--skip-validation flag set)")
@@ -561,12 +570,13 @@ def main():
     # Log validation results to markdown file.  The list is the schemas that were
     # actually submitted -- under --validate-changed-only that is the handful whose
     # content moved, not a wall of green ticks for every schema in the directory.
+    scope = "changed " if args.validate_changed_only else ""
     if failed:
-        headline = f"❌ {failed} of {len(schemas_to_validate)} changed schema(s) failed validation"
+        headline = f"❌ {failed} of {len(schemas_to_validate)} {scope}schema(s) failed validation"
     elif not schemas_to_validate:
         headline = "✅ No schema content changed"
     else:
-        headline = f"✅ {passed} changed schema(s) validated against Synapse"
+        headline = f"✅ {passed} {scope}schema(s) validated against Synapse"
 
     log_content = f"""# Schema Validation Report
 

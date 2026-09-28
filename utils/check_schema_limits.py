@@ -89,7 +89,7 @@ def check_string_lengths(schemas_dir: Path) -> Dict[str, Any]:
                     value = str(v)
                     target.append(len(value))
                     if len(value) > limit:
-                        entry = over_limit.setdefault(value, {
+                        entry = over_limit.setdefault((value, kind), {
                             'value': value,
                             'chars': len(value),
                             'kind': kind,
@@ -205,9 +205,10 @@ def format_markdown(enum_data, string_data, row_data) -> str:
         lines.append("|-------|---------|------|-------|---------|")
         for e in over:
             usages = ", ".join(f"`{u}`" for u in e['usages'])
+            safe_value = e['value'].replace("|", "\\|")
             lines.append(
                 f"| {e['chars']} | +{e['chars'] - e['limit']} | {e['kind']} | "
-                f"{e['value']} | {usages} |"
+                f"{safe_value} | {usages} |"
             )
     else:
         lines.append("### ✅ All values within limits")
@@ -250,7 +251,8 @@ def format_markdown(enum_data, string_data, row_data) -> str:
         warnings.append(f"{len(string_data.get('over_limit') or [])} value(s) over the string-length limit")
 
     if row_data['exceeds']:
-        lines.append("\n❌ **VALIDATION FAILED** - Critical issues found")
+        detail = f" (also: {'; '.join(warnings)})" if warnings else ""
+        lines.append(f"\n❌ **VALIDATION FAILED** - Critical issues found{detail}")
     elif warnings:
         lines.append("\n⚠️  **WARNINGS** - " + "; ".join(warnings))
     else:
