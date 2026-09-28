@@ -1,0 +1,43 @@
+# PortalDatasetCandidate: externally-indexed datasets awaiting data-manager review (#999)
+#
+# The class exists so nf-osi/nadia can drive its staged-Dataset annotations off a
+# registered schema instead of a hardcoded dict. What makes it different from its
+# PortalDataset parent is entirely in the `required` array, so that is what these
+# fixtures pin:
+#
+#   - studyId is relaxed to optional (it is assigned at provisioning). Note that
+#     LinkML cannot express this via slot_usage -- `required: false` is
+#     indistinguishable from unset when merged against the inherited attribute --
+#     so the attribute is redeclared on the subclass. valid_minimal is the only
+#     automated proof that the relaxation actually landed.
+#   - the four external-hosting fields are tightened to required, because an
+#     externally-indexed dataset by definition has all four.
+#   - resourceStatus is new, and must carry ResourceCurationStatusEnum. An inline enum
+#     would have been stripped by the `enum_range` deletion at Makefile:8 and the
+#     field would silently accept any string, so invalid_bad_resourcestatus guards
+#     against a regression to that form.
+
+schema: PortalDatasetCandidate
+instances:
+  - file: data/PortalDatasetCandidate/valid_minimal.json
+    description: The 12 required fields and nothing else; studyId is absent, which is the whole point of the subclass
+    expected: valid
+
+  - file: data/PortalDatasetCandidate/valid_with_studyid.json
+    description: studyId is optional, not forbidden — an approved candidate that has been linked to a study still validates
+    expected: valid
+
+  - file: data/PortalDatasetCandidate/invalid_missing_resourcestatus.json
+    description: resourceStatus is the field the review workflow turns on, and is required
+    expected: invalid
+    reason: resourceStatus is required
+
+  - file: data/PortalDatasetCandidate/invalid_bad_resourcestatus.json
+    description: resourceStatus is constrained to ResourceCurationStatusEnum; "inReview" is not a permissible value
+    expected: invalid
+    reason: resourceStatus must be one of pending-review / approved / rejected
+
+  - file: data/PortalDatasetCandidate/invalid_missing_hosting.json
+    description: hosting is optional on PortalDataset but tightened to required here
+    expected: invalid
+    reason: hosting is required

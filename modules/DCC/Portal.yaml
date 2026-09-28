@@ -476,6 +476,16 @@ enums:
         meaning: NCIT:C3276
       Vision Loss:
     title: Manifestation
+  ResourceCurationStatusEnum:
+    description: Curation review state of a proposed portal resource. Applies to resources that are staged for data-manager review before they are accepted into the portal.
+    permissible_values:
+      pending-review:
+        description: The resource has been staged and is awaiting data-manager review.
+      approved:
+        description: A data manager has reviewed the resource and accepted it for the portal.
+      rejected:
+        description: A data manager has reviewed the resource and declined it; it should not be surfaced in the portal.
+    title: Resource Curation Status
   StudyStatusEnum:
     permissible_values:
       Active:
