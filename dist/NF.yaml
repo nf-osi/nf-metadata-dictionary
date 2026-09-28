@@ -3919,6 +3919,16 @@ enums:
         meaning: NCIT:C3276
       Vision Loss:
     title: Manifestation
+  ResourceCurationStatusEnum:
+    description: Curation review state of a proposed portal resource. Applies to resources that are staged for data-manager review before they are accepted into the portal.
+    permissible_values:
+      pending-review:
+        description: The resource has been staged and is awaiting data-manager review.
+      approved:
+        description: A data manager has reviewed the resource and accepted it for the portal.
+      rejected:
+        description: A data manager has reviewed the resource and declined it; it should not be surfaced in the portal.
+    title: Resource Curation Status
   StudyStatusEnum:
     permissible_values:
       Active:
@@ -12260,6 +12270,44 @@ classes:
     notes:
       - The compiled JSON schema for this should be bound to [Dataset](https://rest-docs.synapse.org/rest/org/sagebionetworks/repo/model/table/Dataset.html) entities, not folders.
       - While "publisher" (repository) may seem redundant given that all Datasets are obviously on Synapse, it's for explicit compatibility with DataCite, and eventually may want to have "symbolic" datasets like Cancer Complexity Portal that list datasets hosted somewhere else.
+  PortalDatasetCandidate:
+    is_a: PortalDataset
+    description: >
+      A dataset proposed for the portal but not yet accepted into a study: its files are hosted in an external repository, and it awaits data-manager review. studyId is therefore not required here -- it is assigned at provisioning, after which the record satisfies PortalDataset in full.
+
+    attributes:
+      resourceStatus:
+        description: >
+          Curation review state. Set to pending-review on creation; transitions to approved or rejected are made by data managers.
+
+        range: ResourceCurationStatusEnum
+        required: true
+        title: Resource Status
+      # Relaxing an inherited requirement cannot be done through slot_usage: LinkML
+      # cannot distinguish `required: false` from "unset" when merging, so the parent's
+      # `required: true` wins and gen-rdf emits studyId as required on this class even
+      # though gen-json-schema drops it. Redeclaring the attribute sidesteps the merge
+      # and keeps dist/NF.ttl (which the docs site reads) agreeing with the JSON schema.
+      # Tightening a requirement has no such problem -- see slot_usage below.
+      studyId:
+        description: Identifier for the study (project) from which the dataset was derived. Not known until the candidate is accepted and provisioned.
+        range: string
+        required: false
+        title: Study ID
+    slot_usage:
+      # `required: true` survives the merge against the inherited attribute, so these
+      # four stay here and keep PortalDataset's descriptions rather than duplicating them.
+      externalRepositoryUri:
+        required: true
+      repository:
+        required: true
+      externalUrl:
+        required: true
+      hosting:
+        required: true
+    notes:
+      - Intended for datasets staged into Synapse by automated discovery (nf-osi/nadia) for data-manager review. The compiled JSON schema is bound to [Dataset](https://rest-docs.synapse.org/rest/org/sagebionetworks/repo/model/table/Dataset.html) entities, not folders.
+      - The four external-hosting fields are required here because an externally-indexed dataset by definition has a host, a repository label, a landing URL and a CURIE. Where file enumeration failed and only a landing page is known, that is recorded as hosting = external-access rather than left implicit.
   PortalPublication:
     attributes:
       diseaseFocus:
