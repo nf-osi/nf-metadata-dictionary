@@ -94,7 +94,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10.12'
-          cache: 'pip'
 
       - name: Setup build tools and build artifacts
         shell: bash
@@ -303,8 +302,8 @@ jobs:
           # passing test was ~56KB of PR comment in which a real failure was invisible.
           EXIT_CODE="${{ steps.pytest.outputs.exit_code }}"
           # pytest -q ends with a summary line of the form "N passed, M skipped in X.XXs".
-          SUMMARY=$(grep -E '(passed|failed|error|no tests ran).* in [0-9]' pytest_output.txt | tail -1)
-          [ -n "$SUMMARY" ] || SUMMARY="(could not parse pytest summary; see job log)"
+          SUMMARY=$(grep -E '(passed|failed|error|no tests ran).* in [0-9]' pytest_output.txt 2>/dev/null | tail -1)
+          [ -n "$SUMMARY" ] || SUMMARY="did not run to completion; see the job log"
           # First line starts with the status emoji so the assembled report can lift it
           # straight into the summary table.
           if [ "$EXIT_CODE" = "0" ]; then
@@ -316,12 +315,15 @@ jobs:
             # Capped in BYTES, not lines: a failing enum assertion embeds the whole
             # permissible-value list, so eight failures is ~114KB in 87 lines and a line
             # cap never fires.
+            # Only fence when there is something to fence: if the job died before
+            # pytest ran there is no output file, and an empty code block in the PR
+            # comment just looks broken.
+            DETAIL=$(sed -n -E '/^=+ (FAILURES|ERRORS) =+$/,$p' pytest_output.txt 2>/dev/null | head -c 15000)
             {
-              printf '❌ %s\n\n' "$SUMMARY"
-              echo '```'
-              sed -n -E '/^=+ (FAILURES|ERRORS) =+$/,$p' pytest_output.txt | head -c 15000
-              echo ''
-              echo '```'
+              printf '❌ %s\n' "$SUMMARY"
+              if [ -n "$DETAIL" ]; then
+                printf '\n```\n%s\n```\n' "$DETAIL"
+              fi
             } > pytest_report.md
           fi
 
@@ -365,7 +367,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10.12'
-          cache: 'pip'
 
       # test_folder_schema_exemption.py execs utils/gen-json-schema-class.py, and
       # test_model_system_sync.py imports utils/sync_model_systems.py.
@@ -383,17 +384,20 @@ jobs:
       - name: Publish unit test fragment
         if: always()
         run: |
-          SUMMARY=$(grep -E '(passed|failed|error|no tests ran).* in [0-9]' unit_output.txt | tail -1)
-          [ -n "$SUMMARY" ] || SUMMARY="(could not parse pytest summary; see job log)"
+          SUMMARY=$(grep -E '(passed|failed|error|no tests ran).* in [0-9]' unit_output.txt 2>/dev/null | tail -1)
+          [ -n "$SUMMARY" ] || SUMMARY="did not run to completion; see the job log"
           if [ "${{ steps.unit.outputs.exit_code }}" = "0" ]; then
             printf '✅ %s\n' "$SUMMARY" > unit_report.md
           else
+            # Only fence when there is something to fence: if the job died before
+            # pytest ran there is no output file, and an empty code block in the PR
+            # comment just looks broken.
+            DETAIL=$(sed -n -E '/^=+ (FAILURES|ERRORS) =+$/,$p' unit_output.txt 2>/dev/null | head -c 15000)
             {
-              printf '❌ %s\n\n' "$SUMMARY"
-              echo '```'
-              sed -n -E '/^=+ (FAILURES|ERRORS) =+$/,$p' unit_output.txt | head -c 15000
-              echo ''
-              echo '```'
+              printf '❌ %s\n' "$SUMMARY"
+              if [ -n "$DETAIL" ]; then
+                printf '\n```\n%s\n```\n' "$DETAIL"
+              fi
             } > unit_report.md
           fi
 
