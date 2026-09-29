@@ -104,3 +104,45 @@ def test_every_job_declares_a_runner(job):
     jobs = _workflow()["jobs"]
     assert job in jobs, f"job `{job}` is gone; update this test if that was deliberate"
     assert jobs[job].get("runs-on"), f"job `{job}` has no runs-on"
+
+
+def test_changes_outputs_survive_workflow_dispatch():
+    """Every `changes` output must fall back to true on a manual dispatch.
+
+    paths-filter only runs on pull_request (on any other event it shells out to git,
+    and the job has no checkout). So on workflow_dispatch every `steps.filter.outputs.*`
+    is empty, and an output without the fallback silently gates its jobs off -- a manual
+    run that appears to succeed while doing nothing.
+    """
+    outputs = _workflow()["jobs"]["changes"]["outputs"]
+    missing = [
+        name for name, expr in outputs.items()
+        if "workflow_dispatch" not in expr
+    ]
+    assert not missing, (
+        f"`changes` outputs with no workflow_dispatch fallback: {missing}. "
+        "Add `|| github.event_name == 'workflow_dispatch'` or the jobs they gate "
+        "will skip on every manual run."
+    )
+
+
+def test_paths_filter_step_is_pull_request_only():
+    """Guard the reason the fallback above is needed."""
+    step = next(
+        s for s in _workflow()["jobs"]["changes"]["steps"]
+        if s.get("id") == "filter"
+    )
+    assert "pull_request" in step.get("if", ""), (
+        "The paths-filter step must be gated to pull_request. On other events it calls "
+        "getChangedFilesFromGit -> `git branch --show-current`, and the changes job has "
+        "no actions/checkout, so the step fails and every downstream job skips."
+    )
+
+
+def test_analyze_is_pull_request_gated():
+    """`analyze` runs `git checkout "$HEAD_REF"`, which is empty on a manual dispatch."""
+    condition = str(_workflow()["jobs"]["analyze"].get("if", ""))
+    assert "pull_request" in condition, (
+        "`analyze` diffs the PR head against main and checks out the head ref, which "
+        f"does not exist on a workflow_dispatch. Current condition: {condition!r}"
+    )

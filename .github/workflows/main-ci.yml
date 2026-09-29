@@ -36,20 +36,29 @@ jobs:
   changes:
     name: Detect what changed
     runs-on: ubuntu-latest
+    # On workflow_dispatch there is no PR to diff, and a manual run means "check
+    # everything", so every output is forced true.  Keep the `|| workflow_dispatch`
+    # clause on any output added here; without it the new output is empty on a manual
+    # run and whatever it gates silently skips.
     outputs:
-      model: ${{ steps.filter.outputs.model }}
-      generator: ${{ steps.filter.outputs.generator }}
-      unit: ${{ steps.filter.outputs.unit }}
-      docs: ${{ steps.filter.outputs.docs }}
-      artifacts: ${{ steps.filter.outputs.artifacts }}
-      build_needed: ${{ steps.filter.outputs.model == 'true' || steps.filter.outputs.generator == 'true' || steps.filter.outputs.artifacts == 'true' }}
+      model: ${{ steps.filter.outputs.model == 'true' || github.event_name == 'workflow_dispatch' }}
+      generator: ${{ steps.filter.outputs.generator == 'true' || github.event_name == 'workflow_dispatch' }}
+      unit: ${{ steps.filter.outputs.unit == 'true' || github.event_name == 'workflow_dispatch' }}
+      docs: ${{ steps.filter.outputs.docs == 'true' || github.event_name == 'workflow_dispatch' }}
+      artifacts: ${{ steps.filter.outputs.artifacts == 'true' || github.event_name == 'workflow_dispatch' }}
+      build_needed: ${{ steps.filter.outputs.model == 'true' || steps.filter.outputs.generator == 'true' || steps.filter.outputs.artifacts == 'true' || github.event_name == 'workflow_dispatch' }}
     permissions:
       # paths-filter reads the PR's file list over the REST API.  Declared explicitly so
       # the job does not silently start returning empty outputs -- and therefore skip
       # every downstream job -- if the repository default is ever tightened to read-only.
       pull-requests: read
     steps:
-      - uses: dorny/paths-filter@v3
+      # Only on pull_request.  For any other event paths-filter falls back to
+      # getChangedFilesFromGit, whose first call is `git branch --show-current`, and this
+      # job has no checkout -- so the step would fail, the job would fail, and every
+      # downstream job would skip via the implicit success() on `needs`.
+      - if: github.event_name == 'pull_request'
+        uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
@@ -78,11 +87,7 @@ jobs:
 
   build:
     needs: [changes]
-    # On workflow_dispatch there is no PR to diff against, so paths-filter reports
-    # nothing changed; build unconditionally in that case or a manual run does nothing.
-    if: |
-      needs.changes.outputs.build_needed == 'true'
-      || github.event_name == 'workflow_dispatch'
+    if: needs.changes.outputs.build_needed == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -165,7 +170,9 @@ jobs:
   analyze:
     name: Analyze data model changes
     needs: [changes, build]
-    if: needs.changes.outputs.model == 'true'
+    # pull_request only: this diffs the PR head against main, and there is no head ref
+    # to check out on a manual dispatch.
+    if: needs.changes.outputs.model == 'true' && github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
