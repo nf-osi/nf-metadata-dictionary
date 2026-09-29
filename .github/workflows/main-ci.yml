@@ -4,20 +4,90 @@ on:
 
   pull_request:   # default types: opened, synchronize, reopened
     branches: [main]
+    # Keep in sync with the `changes` filters below: every path here must match at
+    # least one filter, or the workflow triggers, skips every job, and reports green.
+    # tests/test_workflow_filters.py asserts that invariant.
     paths:
       - 'modules/**'
-      - '.github/workflows/main-ci.yml'
+      - 'header.yaml'
+      - 'rules/**'
+      - 'docs/**'
+      - 'tests/**'
+      - 'Makefile'
+      - 'registered-json-schemas/**'
       - 'utils/gen-json-schema-class.py'
+      - 'utils/check_schema_limits.py'
+      - 'utils/compare.py'
       - 'utils/decide_release.py'
+      - 'utils/sync_model_systems.py'
+      - '.github/workflows/main-ci.yml'
       - '.github/workflows/release-new-version.yaml'
-      - 'tests/test_*.py'
-      - 'tests/test_registry*.yaml'
-      - 'tests/data/**'
-  
+
   workflow_dispatch:
 
+concurrency:
+  group: main-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  # Which downstream jobs are worth running is a function of what changed.  The
+  # filters are deliberately coarse: over-running a job costs a minute, skipping one
+  # that mattered costs a missed regression.
+  changes:
+    name: Detect what changed
+    runs-on: ubuntu-latest
+    # On workflow_dispatch there is no PR to diff, and a manual run means "check
+    # everything", so every output is forced true.  Keep the `|| workflow_dispatch`
+    # clause on any output added here; without it the new output is empty on a manual
+    # run and whatever it gates silently skips.
+    outputs:
+      model: ${{ steps.filter.outputs.model == 'true' || github.event_name == 'workflow_dispatch' }}
+      generator: ${{ steps.filter.outputs.generator == 'true' || github.event_name == 'workflow_dispatch' }}
+      unit: ${{ steps.filter.outputs.unit == 'true' || github.event_name == 'workflow_dispatch' }}
+      docs: ${{ steps.filter.outputs.docs == 'true' || github.event_name == 'workflow_dispatch' }}
+      artifacts: ${{ steps.filter.outputs.artifacts == 'true' || github.event_name == 'workflow_dispatch' }}
+      build_needed: ${{ steps.filter.outputs.model == 'true' || steps.filter.outputs.generator == 'true' || steps.filter.outputs.artifacts == 'true' || github.event_name == 'workflow_dispatch' }}
+    permissions:
+      # paths-filter reads the PR's file list over the REST API.  Declared explicitly so
+      # the job does not silently start returning empty outputs -- and therefore skip
+      # every downstream job -- if the repository default is ever tightened to read-only.
+      pull-requests: read
+    steps:
+      # Only on pull_request.  For any other event paths-filter falls back to
+      # getChangedFilesFromGit, whose first call is `git branch --show-current`, and this
+      # job has no checkout -- so the step would fail, the job would fail, and every
+      # downstream job would skip via the implicit success() on `needs`.
+      - if: github.event_name == 'pull_request'
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            model:
+              - 'modules/**'
+              - 'header.yaml'
+              - 'rules/**'
+              - 'Makefile'
+              - 'tests/**'
+              - '.github/workflows/main-ci.yml'
+            generator:
+              - 'utils/gen-json-schema-class.py'
+              - 'utils/check_schema_limits.py'
+              - 'utils/compare.py'
+            unit:
+              - 'utils/decide_release.py'
+              - 'utils/sync_model_systems.py'
+              - '.github/workflows/release-new-version.yaml'
+            docs:
+              - 'docs/**'
+            # A PR that commits regenerated schemas would make the on-disk baseline equal
+            # the generator's output, so nothing would look changed and nothing would be
+            # validated.  Detect that and validate everything instead.
+            artifacts:
+              - 'registered-json-schemas/**'
+
   build:
+    needs: [changes]
+    if: needs.changes.outputs.build_needed == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -25,17 +95,15 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
-          fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository
 
-      - name: Get skip flags
-        id: check_skip_flags
-        run: echo "HEAD_COMMIT_MESSAGE=$(git show -s --format=%s)" >> "$GITHUB_OUTPUT"
-      
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12'
+
       - name: Setup build tools and build artifacts
         shell: bash
         run: |
-          pip install linkml==v1.8.1 synapseclient jsonref
-          npm install -g json-dereference-cli
+          pip install linkml==v1.8.1 synapseclient jsonref pytest
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           make -B
 
@@ -56,49 +124,37 @@ jobs:
             echo "</details>";
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Generate and validate JSON schemas for all templates (classes)
+      # Runs here rather than in the pytest job because it needs both dist/NF.yaml and
+      # the pinned linkml, and because it guards the generator in the same environment
+      # that is about to use it.
+      - name: Verify in-process generation matches the CLI it replaced
+        run: pytest tests/test_generator_equivalence.py -q --tb=short
+
+      - name: Generate JSON schemas and validate the ones that changed
         env:
           SYNAPSE_AUTH_TOKEN: ${{ secrets.DATA_MODEL_SERVICE }}
         run: |
-          echo "Generating JSON schemas and validating them!"
-          python utils/gen-json-schema-class.py
+          # All schemas are regenerated, but only those whose content differs from the
+          # copy committed on main are submitted to the Synapse dry-run validator.  On a
+          # typical enum addition that is a handful rather than all 69.  The full,
+          # unconditional validation still runs on merge in rebuild-artifacts-on-main.yml,
+          # which remains the authority for what gets registered.
+          if [ "${{ needs.changes.outputs.artifacts }}" = "true" ]; then
+            echo "PR modifies registered-json-schemas/; the on-disk baseline is not main's, so validating all schemas."
+            python utils/gen-json-schema-class.py
+          else
+            python utils/gen-json-schema-class.py --validate-changed-only
+          fi
           make Superdataset
 
-      - name: Report schema validation results as PR comment
-        uses: mshick/add-pr-comment@v2
+      - name: Publish schema validation fragment
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          message-id: schema-validation-report
-          message-path: |
-            schema-validation-log.md
-      
-      - name: Check if artifacts changed
-        id: check_artifacts
-        run: |
-          if [[ $(git diff --exit-code) ]]; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "✅ Artifacts built successfully and have changes"
-          else
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "✅ Artifacts built successfully with no changes"
-          fi
-
-      - name: Report artifact build status as PR comment
-        uses: mshick/add-pr-comment@v2
-        with:
-          message-id: artifact-build-report
-          message: |
-            ## ✅ Artifact Build Status
-
-            All artifacts have been successfully built and validated from source modules.
-
-            **Artifacts validated:**
-            - `dist/NF.yaml` (LinkML YAML)
-            - `dist/NF.ttl` (Turtle RDF)
-            - `dist/NF.sssom.tsv` (SSSOM mapping set)
-            - `registered-json-schemas/*.json` (Synapse JSON schemas)
-
-            **Note:** Artifacts are not committed to this PR to avoid merge conflicts. All artifacts will be automatically rebuilt and committed to `main` after merge.
+          name: report-schemas
+          path: schema-validation-log.md
+          retention-days: 1
+          if-no-files-found: ignore
 
       - name: Upload artifacts for subsequent jobs
         uses: actions/upload-artifact@v4
@@ -113,7 +169,10 @@ jobs:
 
   analyze:
     name: Analyze data model changes
-    needs: [build]
+    needs: [changes, build]
+    # pull_request only: this diffs the PR head against main, and there is no head ref
+    # to check out on a manual dispatch.
+    if: needs.changes.outputs.model == 'true' && github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -133,11 +192,15 @@ jobs:
           pip install rdflib
 
       - name: Get main branch pre-built NF.ttl for comparison
+        env:
+          # Via the environment rather than inline: a branch name is attacker-controlled
+          # on a fork PR and would otherwise be interpolated straight into the shell.
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
           git fetch origin main:main
           git checkout main -- dist/NF.ttl
           mv dist/NF.ttl dist/NF_main.ttl
-          git checkout ${{ github.event.pull_request.head.ref }}
+          git checkout "$HEAD_REF"
 
       - name: Download built NF.ttl from build job
         uses: actions/download-artifact@v4
@@ -149,17 +212,25 @@ jobs:
         run: |
           python utils/compare.py > analysis_output.md
 
-      - name: Post analysis as PR comment
-        uses: mshick/add-pr-comment@v2
+      - name: Publish analysis fragment
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          message-id: data-model-analysis
-          message-path: analysis_output.md
+          name: report-analysis
+          path: analysis_output.md
+          retention-days: 1
+          if-no-files-found: ignore
 
   docs-preview:
     name: Build and preview docs
-    needs: [build]
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    needs: [changes, build]
+    # Runs after a docs-only change too, in which case `build` is skipped and the
+    # committed dist/NF.ttl from main is what the site is built from.
+    if: |
+      !cancelled() && github.event_name == 'pull_request'
+      && needs.build.result != 'failure' && needs.build.result != 'cancelled'
+      && (needs.changes.outputs.model == 'true' || needs.changes.outputs.docs == 'true')
 
     steps:
       - uses: actions/checkout@v4
@@ -173,6 +244,7 @@ jobs:
           cache-dependency-path: docs/package-lock.json
 
       - name: Download built artifacts from build job
+        if: needs.build.result == 'success'
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
@@ -191,9 +263,11 @@ jobs:
         with:
           source-dir: ./docs
 
+  # Tests that need the freshly built artifacts.  Everything that does not is in
+  # `unit-tests`, which runs without waiting for the build.
   pytest:
     name: pytest (schema instances + model integrity)
-    needs: [build]
+    needs: [changes, build]
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -213,42 +287,61 @@ jobs:
           name: build-artifacts
           path: .
 
+      # jsonref/synapseclient are needed because test_toplevel_properties.py execs
+      # utils/gen-json-schema-class.py, which imports both at module level.
       - name: Install dependencies
         run: pip install pytest jsonschema pyyaml jsonref synapseclient
 
       - name: Run pytest
         id: pytest
         run: |
-          pytest tests/test_schema_instances.py tests/test_template_datatypes.py tests/test_model_system_sync.py \
-            tests/test_schema_escape_hatches.py tests/test_folder_schema_exemption.py \
+          pytest tests/test_schema_instances.py tests/test_template_datatypes.py \
+            tests/test_schema_escape_hatches.py \
             tests/test_toplevel_properties.py \
-            tests/test_decide_release.py tests/test_enum_harmonization.py -v \
-            --tb=short 2>&1 | tee pytest_output.txt
+            tests/test_enum_harmonization.py \
+            -q --tb=short 2>&1 | tee pytest_output.txt
           echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
 
       - name: Format pytest results as PR comment
         if: always()
         run: |
+          # On success post the one-line summary only.  The full -v listing of every
+          # passing test was ~56KB of PR comment in which a real failure was invisible.
           EXIT_CODE="${{ steps.pytest.outputs.exit_code }}"
+          # pytest -q ends with a summary line of the form "N passed, M skipped in X.XXs".
+          SUMMARY=$(grep -E '(passed|failed|error|no tests ran).* in [0-9]' pytest_output.txt 2>/dev/null | tail -1)
+          [ -n "$SUMMARY" ] || SUMMARY="did not run to completion; see the job log"
+          # First line starts with the status emoji so the assembled report can lift it
+          # straight into the summary table.
           if [ "$EXIT_CODE" = "0" ]; then
-            STATUS="✅ All tests passed"
+            printf '✅ %s\n' "$SUMMARY" > pytest_report.md
           else
-            STATUS="❌ Some tests failed"
+            # ERRORS as well as FAILURES: a bad import in a test module produces a
+            # collection error with no FAILURES section at all, which would otherwise
+            # render as an empty code fence.
+            # Capped in BYTES, not lines: a failing enum assertion embeds the whole
+            # permissible-value list, so eight failures is ~114KB in 87 lines and a line
+            # cap never fires.
+            # Only fence when there is something to fence: if the job died before
+            # pytest ran there is no output file, and an empty code block in the PR
+            # comment just looks broken.
+            DETAIL=$(sed -n -E '/^=+ (FAILURES|ERRORS) =+$/,$p' pytest_output.txt 2>/dev/null | head -c 15000)
+            {
+              printf '❌ %s\n' "$SUMMARY"
+              if [ -n "$DETAIL" ]; then
+                printf '\n```\n%s\n```\n' "$DETAIL"
+              fi
+            } > pytest_report.md
           fi
-          {
-            echo "## $STATUS"
-            echo ""
-            echo '```'
-            cat pytest_output.txt
-            echo '```'
-          } > pytest_report.md
 
-      - name: Post pytest results as PR comment
-        uses: mshick/add-pr-comment@v2
+      - name: Publish pytest fragment
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          message-id: pytest-report
-          message-path: pytest_report.md
+          name: report-pytest
+          path: pytest_report.md
+          retention-days: 1
+          if-no-files-found: ignore
 
       # `pytest | tee` makes the run step exit 0 even when tests fail, so the
       # captured exit code has to be re-asserted after the report is posted.
@@ -258,9 +351,81 @@ jobs:
           echo "::error::pytest exited with ${{ steps.pytest.outputs.exit_code }} - see the pytest report comment on this PR."
           exit 1
 
+  # Tests with no dependency on the built artifacts: they exercise utils/ modules
+  # directly or against synthetic fixtures.  No `needs: [build]`, so a release-logic
+  # PR no longer pays for a full LinkML build, 69 Synapse round-trips and a docs deploy
+  # in order to run unit tests that touch none of it.
+  unit-tests:
+    name: Unit tests (no artifacts needed)
+    needs: [changes]
+    if: |
+      needs.changes.outputs.unit == 'true'
+      || needs.changes.outputs.generator == 'true'
+      || needs.changes.outputs.model == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.12'
+
+      # test_folder_schema_exemption.py execs utils/gen-json-schema-class.py, and
+      # test_model_system_sync.py imports utils/sync_model_systems.py.
+      - name: Install dependencies
+        run: pip install pytest jsonschema pyyaml jsonref synapseclient
+
+      - name: Run pytest
+        id: unit
+        run: |
+          pytest tests/test_decide_release.py tests/test_model_system_sync.py \
+            tests/test_folder_schema_exemption.py tests/test_workflow_filters.py \
+            -q --tb=short 2>&1 | tee unit_output.txt
+          echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
+
+      - name: Publish unit test fragment
+        if: always()
+        run: |
+          SUMMARY=$(grep -E '(passed|failed|error|no tests ran).* in [0-9]' unit_output.txt 2>/dev/null | tail -1)
+          [ -n "$SUMMARY" ] || SUMMARY="did not run to completion; see the job log"
+          if [ "${{ steps.unit.outputs.exit_code }}" = "0" ]; then
+            printf '✅ %s\n' "$SUMMARY" > unit_report.md
+          else
+            # Only fence when there is something to fence: if the job died before
+            # pytest ran there is no output file, and an empty code block in the PR
+            # comment just looks broken.
+            DETAIL=$(sed -n -E '/^=+ (FAILURES|ERRORS) =+$/,$p' unit_output.txt 2>/dev/null | head -c 15000)
+            {
+              printf '❌ %s\n' "$SUMMARY"
+              if [ -n "$DETAIL" ]; then
+                printf '\n```\n%s\n```\n' "$DETAIL"
+              fi
+            } > unit_report.md
+          fi
+
+      - name: Upload unit test fragment
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-unit
+          path: unit_report.md
+          retention-days: 1
+          if-no-files-found: ignore
+
+      - name: Fail if unit tests failed
+        if: always() && steps.unit.outputs.exit_code != '0'
+        run: |
+          echo "::error::unit tests exited with ${{ steps.unit.outputs.exit_code }}"
+          exit 1
+
   check-schema-limits:
     name: Validate schema limits (Synapse platform)
-    needs: [build]
+    needs: [changes, build]
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -287,27 +452,139 @@ jobs:
       - name: Check schema limits
         id: schema_check
         run: |
-          # Run comprehensive schema validation
-          # Exit codes: 0=pass, 1=critical failure, 2=warnings
-          set +e  # Don't exit on error, we'll handle it
+          # Exit codes: 0=pass, 1=error (row size over 64KB), 2=warning.
+          # Warnings -- including string-length overflow -- are surfaced in the report
+          # but deliberately do not gate; only exit 1 fails the job, and it is re-asserted
+          # after the report is posted so the comment always lands.
+          set +e
           python utils/check_schema_limits.py --output schema_limits_report.md --strict
-          EXIT_CODE=$?
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
           set -e
 
-          echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
+      - name: Publish schema limits fragment
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-limits
+          path: schema_limits_report.md
+          retention-days: 1
+          if-no-files-found: ignore
 
-          if [ $EXIT_CODE -eq 1 ]; then
-            echo "status=❌ FAILED - Critical limits exceeded" >> $GITHUB_OUTPUT
-          elif [ $EXIT_CODE -eq 2 ]; then
-            echo "status=⚠️  WARNING - Some limits approaching" >> $GITHUB_OUTPUT
+      - name: Fail if schema limits check errored
+        if: always() && steps.schema_check.outputs.exit_code == '1'
+        run: |
+          if [ -s schema_limits_report.md ]; then
+            echo "::error::A schema exceeds the 64KB file-view row limit - see the schema limits section of the CI report comment."
           else
-            echo "status=✅ PASSED - All limits within safe bounds" >> $GITHUB_OUTPUT
+            echo "::error::check_schema_limits.py exited 1 without writing a report; it probably crashed. See the job log."
+          fi
+          exit 1
+
+  # One comment instead of five.  Each job publishes a markdown fragment as an artifact
+  # and this assembles them, so the PR carries a short status table with the detail one
+  # click away rather than ~64KB spread across separate comments.
+  report:
+    name: Post CI report
+    needs: [changes, build, pytest, analyze, check-schema-limits, unit-tests]
+    if: |
+      !cancelled() && github.event_name == 'pull_request'
+      && needs.changes.outputs.build_needed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Download report fragments
+        continue-on-error: true   # nothing to merge if every producing job was skipped
+        uses: actions/download-artifact@v4
+        with:
+          pattern: report-*
+          path: fragments
+          merge-multiple: true
+
+      - name: Assemble report
+        env:
+          BUILD: ${{ needs.build.result }}
+          PYTEST: ${{ needs.pytest.result }}
+          ANALYZE: ${{ needs.analyze.result }}
+          LIMITS: ${{ needs.check-schema-limits.result }}
+          UNIT: ${{ needs.unit-tests.result }}
+          PER_FRAGMENT: '15000'
+          MAX_COMMENT: '60000'   # GitHub's limit is 65536; leave headroom for the trailer
+        run: |
+          # Defaults so a missing env var truncates nothing rather than silently
+          # emitting empty fragments.
+          PER_FRAGMENT="${PER_FRAGMENT:-15000}"
+          MAX_COMMENT="${MAX_COMMENT:-60000}"
+
+          icon() {
+            case "$1" in
+              success)   echo "✅" ;;
+              failure)   echo "❌" ;;
+              cancelled) echo "🚫" ;;
+              skipped)   echo "⏭️ not needed" ;;
+              *)         echo "❔" ;;
+            esac
+          }
+
+          # A fragment's own headline is more informative than the job result, so prefer
+          # it where one exists.
+          summarize() {
+            [ -f "$1" ] || { echo "$2"; return; }
+            line=$(grep -m1 -E '^(✅|❌|⚠️|\*\*Model delta|[0-9]+ (passed|failed))' "$1" \
+                   | sed -e 's/^\*\*Model delta:\*\* //' -e 's/  */ /g' -e 's/|/\\|/g')
+            [ -n "$line" ] && echo "$line" || echo "$2"
+          }
+
+          {
+            echo "## Data model CI"
+            echo ""
+            echo "| Check | Result |"
+            echo "|-------|--------|"
+            echo "| Build & schema generation | $(icon "$BUILD") |"
+            echo "| Synapse schema validation | $(summarize fragments/schema-validation-log.md "$(icon "$BUILD")") |"
+            echo "| Tests (model + schemas) | $(summarize fragments/pytest_report.md "$(icon "$PYTEST")") |"
+            echo "| Tests (units) | $(summarize fragments/unit_report.md "$(icon "$UNIT")") |"
+            echo "| Model delta | $(summarize fragments/analysis_output.md "$(icon "$ANALYZE")") |"
+            echo "| Schema limits | $(summarize fragments/schema_limits_report.md "$(icon "$LIMITS")") |"
+            echo ""
+
+            for f in fragments/analysis_output.md:"Model changes" \
+                     fragments/schema-validation-log.md:"Schema validation" \
+                     fragments/schema_limits_report.md:"Schema limits" \
+                     fragments/pytest_report.md:"Tests (model + schemas)" \
+                     fragments/unit_report.md:"Tests (units)"; do
+              path="${f%%:*}"; title="${f##*:}"
+              [ -s "$path" ] || continue
+              echo "<details><summary><strong>${title}</strong></summary>"
+              echo ""
+              # Per-fragment byte cap. compare.py output on a large refactor has been
+              # measured at 71KB on its own, and one failing enum assertion embeds an
+              # entire permissible-value list.
+              head -c "$PER_FRAGMENT" "$path"
+              if [ "$(wc -c < "$path")" -gt "$PER_FRAGMENT" ]; then
+                printf '\n\n_... truncated at %s bytes; see the job log for the rest._\n' "$PER_FRAGMENT"
+              fi
+              printf '\n\n</details>\n\n'
+            done
+
+            echo "_Artifacts are not committed to this PR; they are rebuilt and committed to \`main\` on merge._"
+          } > ci_report.md
+
+          # Hard ceiling. GitHub rejects an issue comment body over 65536 characters with
+          # a 422, which would mean no comment at all on exactly the runs that need one.
+          if [ "$(wc -c < ci_report.md)" -gt "$MAX_COMMENT" ]; then
+            head -c "$MAX_COMMENT" ci_report.md > ci_report.trimmed
+            # head -c can cut inside a <details>; close it so the rest still renders.
+            printf '\n\n</details>\n\n_Report truncated to fit the GitHub comment limit. Full output is in the job logs._\n' >> ci_report.trimmed
+            mv ci_report.trimmed ci_report.md
           fi
 
-      - name: Post schema limits report as PR comment
-        uses: mshick/add-pr-comment@v2
-        if: always()
-        with:
-          message-id: schema-limits-check
-          message-path: schema_limits_report.md
+          echo "--- assembled report ($(wc -c < ci_report.md) bytes) ---"
+          cat ci_report.md
 
+      - name: Post CI report
+        uses: mshick/add-pr-comment@v2
+        with:
+          message-id: ci-report
+          message-path: ci_report.md

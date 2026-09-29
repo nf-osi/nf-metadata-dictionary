@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
 
-import subprocess
 import yaml
 import json
 import time
 import os
 import argparse
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 from pathlib import Path
 import jsonref
 import synapseclient
 from collections import OrderedDict
+
+# linkml is imported lazily inside the generation helpers, NOT at module scope.
+# tests/test_toplevel_properties.py and tests/test_folder_schema_exemption.py exec this
+# file to reach process_schema(), and their CI jobs install neither linkml nor its
+# dependency tree. A module-level import makes those two jobs fail at collection.
 
 
 FILE_ENTITY_CONCRETE_TYPE = "org.sagebionetworks.repo.model.FileEntity"
@@ -22,7 +26,7 @@ def is_file_based_template(schema_yaml_path, cls_name):
     if not schema_yaml_path:
         return False
 
-    schema_data = yaml.safe_load(Path(schema_yaml_path).read_text())
+    schema_data = _load_shared_yaml(schema_yaml_path)
     classes = schema_data.get("classes", {})
     current = cls_name
     seen = set()
@@ -82,27 +86,97 @@ def exempt_folders(schema):
         "then": file_constraints,
     }]
 
-def run_cmd(cmd):
-    """Run command and return output."""
-    try:
-        result = subprocess.run(cmd, check=True, stdout=subprocess.PIPE, text=True)
-        return result.stdout
-    except subprocess.CalledProcessError:
-        return None
+# One parsed copy of the merged model, shared by every class we generate.
+#
+# This used to shell out to the `gen-json-schema` CLI once per class, which meant 62 cold
+# Python interpreters each re-parsing the 675KB dist/NF.yaml on a 2-vCPU runner.  Loading
+# the schema once and reusing it is ~3x faster per class locally and more than that in CI,
+# where interpreter and linkml import startup dominate.
+#
+# Reuse is safe: the generator does not mutate the SchemaDefinition it is handed.  There is
+# a test for that (tests/test_generator_equivalence.py) because it is a property of linkml,
+# not something this file controls.
+_SHARED_SCHEMA = None
+_SHARED_YAML = None
 
-def get_class_property_order(schema_yaml_path, cls_name):
-    """Get the property order from the original YAML schema."""
-    try:
-        # Use a custom YAML loader that preserves order
-        from yaml import load
+
+def _load_shared_schema(schema_yaml_path):
+    global _SHARED_SCHEMA
+    if _SHARED_SCHEMA is None:
+        from linkml_runtime.utils.schemaview import load_schema_wrap
+        _SHARED_SCHEMA = load_schema_wrap(str(schema_yaml_path))
+    return _SHARED_SCHEMA
+
+
+def _load_shared_yaml(schema_yaml_path):
+    """Parsed dist/NF.yaml, cached.
+
+    is_file_based_template() and get_class_property_order() each used to re-read and
+    re-parse the 675KB merged model for every class, so a 63-class run parsed it 126
+    times on top of the generator's own load.
+    """
+    global _SHARED_YAML
+    if _SHARED_YAML is None:
         try:
             from yaml import CLoader as Loader
         except ImportError:
             from yaml import Loader
-
         with open(schema_yaml_path, 'r') as f:
-            # Load YAML while preserving key order
-            schema_data = load(f, Loader=Loader)
+            _SHARED_YAML = yaml.load(f, Loader=Loader)
+    return _SHARED_YAML
+
+
+def _worker_init(schema_yaml_path):
+    """Warm both caches once per worker process."""
+    _load_shared_schema(schema_yaml_path)
+    _load_shared_yaml(schema_yaml_path)
+
+
+def _worker_generate(cls_name, schema_yaml_path, version, out_dir):
+    """Generate, post-process and write one class's schema. Runs in a worker process.
+
+    Returns (cls_name, ok, changed). `changed` compares against whatever was already on
+    disk, which on a PR runner is the copy committed from main.
+    """
+    try:
+        schema_str = generate_raw_schema(schema_yaml_path, cls_name)
+        if not schema_str:
+            return cls_name, False, False
+        raw_schema = json.loads(schema_str)
+        final_schema = process_schema(raw_schema, cls_name, version, schema_yaml_path)
+        output_file = Path(out_dir) / f"{cls_name}.json"
+        rendered = json.dumps(final_schema, indent=2)
+        previous = output_file.read_text() if output_file.exists() else None
+        output_file.write_text(rendered)
+        return cls_name, True, rendered != previous
+    except Exception as e:
+        print(f"  ❌ {cls_name}: {type(e).__name__}: {e}")
+        return cls_name, False, False
+
+
+def generate_raw_schema(schema_yaml_path, cls_name):
+    """Generate the raw JSON Schema for one class.
+
+    Equivalent to:
+        gen-json-schema --top-class <cls> --inline --no-metadata --not-closed <yaml>
+    """
+    from linkml.generators.jsonschemagen import JsonSchemaGenerator
+
+    generator = JsonSchemaGenerator(
+        _load_shared_schema(schema_yaml_path),
+        top_class=cls_name,
+        inline=True,
+        metadata=False,
+        not_closed=True,
+    )
+    return generator.serialize()
+
+def get_class_property_order(schema_yaml_path, cls_name):
+    """Get the property order from the original YAML schema."""
+    try:
+        # Key order is preserved: dicts are insertion-ordered and the cached parse
+        # uses the same loader.
+        schema_data = _load_shared_yaml(schema_yaml_path)
 
         classes = schema_data.get('classes', {})
         cls_def = classes.get(cls_name, {})
@@ -373,6 +447,12 @@ def main():
                        dest="class_name",
                        default=None,
                        help="Generate schema for a specific class only (e.g., DataLandscape)")
+    parser.add_argument("--validate-changed-only",
+                       action="store_true",
+                       help=("Validate only schemas whose generated content differs from what "
+                             "was already on disk. Intended for PR CI, where the committed "
+                             "artifacts from main are the baseline. Full rebuilds on main "
+                             "should NOT use this."))
 
     args = parser.parse_args()
     
@@ -408,59 +488,78 @@ def main():
     else:
         print(f"🔨 Generating JSON schemas for {len(classes)} classes...")
 
-    def _generate_one(cls_name):
-        schema_str = run_cmd([
-            "gen-json-schema",
-            "--top-class", cls_name,
-            "--inline", "--no-metadata", "--not-closed",
-            str(SCHEMA_YAML)
-        ])
-        if not schema_str:
-            return cls_name, False
-        try:
-            raw_schema = json.loads(schema_str)
-            final_schema = process_schema(raw_schema, cls_name, args.version, SCHEMA_YAML)
-            output_file = OUT_DIR / f"{cls_name}.json"
-            output_file.write_text(json.dumps(final_schema, indent=2))
-            return cls_name, True
-        except json.JSONDecodeError:
-            return cls_name, False
-
-    print(f"🔨 Generating {len(classes)} schemas in parallel...")
-    with ThreadPoolExecutor(max_workers=8) as pool:
-        futures = {pool.submit(_generate_one, name): name for name in classes}
+    # Processes, not threads: generation is CPU-bound pure Python, so a thread pool is
+    # serialized by the GIL.  Measured on the 63-class model, thread-based in-process
+    # generation ran 2x slower than the subprocess-per-class approach it replaced;
+    # processes keep the parallelism while still amortizing the schema parse, which each
+    # worker does once in its initializer instead of once per class.
+    workers = min(8, os.cpu_count() or 1, len(classes))
+    print(f"🔨 Generating {len(classes)} schemas across {workers} worker process(es)...")
+    generated, changed = [], []
+    with ProcessPoolExecutor(
+        max_workers=workers,
+        initializer=_worker_init,
+        initargs=(SCHEMA_YAML,),
+    ) as pool:
+        futures = {
+            pool.submit(_worker_generate, name, SCHEMA_YAML, args.version, OUT_DIR): name
+            for name in classes
+        }
         for future in as_completed(futures):
-            cls_name, ok = future.result()
-            status = "✅" if ok else "❌"
-            print(f"  {status} {cls_name}")
-    
-    # Count only the schemas we generated in this run
-    if args.class_name:
-        generated_count = 1 if (OUT_DIR / f"{args.class_name}.json").exists() else 0
-    else:
-        generated_count = len(list(OUT_DIR.glob('*.json')))
+            cls_name, ok, was_changed = future.result()
+            if ok:
+                generated.append(cls_name)
+                if was_changed:
+                    changed.append(cls_name)
+            print(f"  {'✅' if ok else '❌'}{' *' if was_changed else '  '} {cls_name}")
 
-    print(f"✅ Generated {generated_count} JSON schema{'s' if generated_count != 1 else ''}")
+    generated_count = len(generated)
+    failed_to_generate = sorted(set(classes) - set(generated))
+    changed.sort()
+    print(f"✅ Generated {generated_count} JSON schema{'s' if generated_count != 1 else ''}"
+          f" ({len(changed)} changed)")
+
+    # Bail before validation. A class that failed to generate cannot show up as changed,
+    # so it would otherwise sail through --validate-changed-only and report success.
+    if failed_to_generate:
+        print(f"\n❌ {len(failed_to_generate)} class(es) failed to generate: "
+              f"{', '.join(failed_to_generate)}")
+        Path(args.log_file).write_text(
+            "# Schema Validation Report\n\n"
+            f"❌ {len(failed_to_generate)} class(es) failed to generate, so nothing was "
+            "validated\n\n"
+            + "".join(f"- `{name}`\n" for name in failed_to_generate)
+        )
+        exit(1)
 
     if args.skip_validation:
         print("\n⏭️  Skipping validation (--skip-validation flag set)")
         return
 
     # Only validate the schemas we generated in this run
-    if args.class_name:
+    if args.validate_changed_only:
+        schemas_to_validate = [OUT_DIR / f"{name}.json" for name in changed]
+        skipped = generated_count - len(schemas_to_validate)
+        print(f"\n🎯 Validating only changed schemas: {len(schemas_to_validate)} of "
+              f"{generated_count} ({skipped} unchanged, skipped)")
+        if not schemas_to_validate:
+            print("✅ No schema content changed; nothing to validate.")
+    elif args.class_name:
         schemas_to_validate = [OUT_DIR / f"{args.class_name}.json"]
     else:
         schemas_to_validate = sorted(OUT_DIR.glob('*.json'))
 
-    # Initialize Synapse client once for all validations
-    syn = synapseclient.Synapse()
-    auth_token = os.environ.get('SYNAPSE_AUTH_TOKEN')
-    if not auth_token:
-        print("❌ SYNAPSE_AUTH_TOKEN environment variable is required for validation")
-        exit(1)
-    syn.login(authToken=auth_token)
-
-    results_map = validate_schemas(schemas_to_validate, syn)
+    if schemas_to_validate:
+        # Initialize Synapse client once for all validations
+        syn = synapseclient.Synapse()
+        auth_token = os.environ.get('SYNAPSE_AUTH_TOKEN')
+        if not auth_token:
+            print("❌ SYNAPSE_AUTH_TOKEN environment variable is required for validation")
+            exit(1)
+        syn.login(authToken=auth_token)
+        results_map = validate_schemas(schemas_to_validate, syn)
+    else:
+        results_map = {}
 
     # Summary
     passed = sum(results_map.values())
@@ -468,23 +567,34 @@ def main():
 
     print(f"\n🎉 Validation complete: {passed} passed, {failed} failed")
 
-    # Log validation results to markdown file
+    # Log validation results to markdown file.  The list is the schemas that were
+    # actually submitted -- under --validate-changed-only that is the handful whose
+    # content moved, not a wall of green ticks for every schema in the directory.
+    scope = "changed " if args.validate_changed_only else ""
+    if failed:
+        headline = f"❌ {failed} of {len(schemas_to_validate)} {scope}schema(s) failed validation"
+    elif not schemas_to_validate:
+        headline = "✅ No schema content changed"
+    else:
+        headline = f"✅ {passed} {scope}schema(s) validated against Synapse"
+
     log_content = f"""# Schema Validation Report
 
-Generated: {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}
+{headline}
 
-## Summary
-- **Generated schemas:** {generated_count}
-- **Validation passed:** {passed}
-- **Validation failed:** {failed}
+- **Schemas generated:** {generated_count}
+- **Changed:** {len(changed)}
+- **Validated:** {len(schemas_to_validate)}
 
-## Details
+_Generated {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}_
 """
 
-    for json_file in schemas_to_validate:
-        result = results_map.get(json_file, False)
-        status = "✅ PASSED" if result else "❌ FAILED"
-        log_content += f"- `{json_file.name}`: {status}\n"
+    if schemas_to_validate:
+        log_content += "\n## Details\n"
+        for json_file in schemas_to_validate:
+            result = results_map.get(json_file, False)
+            status = "✅ PASSED" if result else "❌ FAILED"
+            log_content += f"- `{json_file.stem}`: {status}\n"
 
     # Write log file
     log_file = Path(args.log_file)

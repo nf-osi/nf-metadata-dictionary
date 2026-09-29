@@ -237,6 +237,49 @@ def main():
     main_categories = categorize_entities(g_main, entities_main)
     current_categories = categorize_entities(g_current, entities_current)
 
+    # Permissible values are counted separately from entities.  A PV only becomes a
+    # graph *subject* if it carries a description or source, so adding a plain
+    # vocabulary term -- the most common change in this repo -- moves no entity count at
+    # all and would otherwise be reported as "nothing added or removed".
+    def permissible_values(graph):
+        return set(graph.subject_objects(LINKML.permissible_values))
+
+    pv_main = permissible_values(g_main)
+    pv_current = permissible_values(g_current)
+    pv_added = len(pv_current - pv_main)
+    pv_removed = len(pv_main - pv_current)
+
+    # Lead with the verdict.  The report used to open with two near-identical count
+    # blocks, so the common case -- a change that moves nothing at the entity level --
+    # read as a wall of numbers the reader had to diff by eye.
+    deltas = []
+    for cat_name, cat_label in [('classes', 'class'), ('slots', 'slot'), ('enums', 'enum')]:
+        n_added = len(current_categories[cat_name] - main_categories[cat_name])
+        n_removed = len(main_categories[cat_name] - current_categories[cat_name])
+        if n_added:
+            deltas.append(f"+{n_added} {cat_label}{'es' if cat_label == 'class' and n_added != 1 else 's' if n_added != 1 else ''}")
+        if n_removed:
+            deltas.append(f"-{n_removed} {cat_label}{'es' if cat_label == 'class' and n_removed != 1 else 's' if n_removed != 1 else ''}")
+
+    if pv_added:
+        deltas.append(f"+{pv_added} permissible value{'s' if pv_added != 1 else ''}")
+    if pv_removed:
+        deltas.append(f"-{pv_removed} permissible value{'s' if pv_removed != 1 else ''}")
+
+    entity_diff = len(entities_current) - len(entities_main)
+    if deltas:
+        headline = "**Model delta:** " + ", ".join(deltas)
+    elif entity_diff:
+        headline = (f"**Model delta:** no classes, slots, enums or permissible values "
+                    f"added or removed; {entity_diff:+d} other entities")
+    else:
+        # Deliberately does not claim the sections below explain it: they report
+        # added/removed entities, and an edit to an existing definition (a changed
+        # description, meaning or range) may appear in none of them.
+        headline = ("**Model delta:** nothing added or removed. Any change is to the "
+                    "content of existing definitions.")
+    print(f"\n{headline}")
+
     # Build entity counts content
     counts_content = []
     counts_content.append(f"**Main branch:** {len(entities_main)} entities")
@@ -256,7 +299,7 @@ def main():
     diff = len(entities_current) - len(entities_main)
     counts_content.append(f"**Difference:** {diff:+d} entities")
 
-    print_section("Entity Counts", "\n".join(counts_content))
+    print_section("Entity Counts", "\n".join(counts_content), collapsible=True)
 
     # Find differences by category
     for cat_name, cat_label in [
