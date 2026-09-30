@@ -64,7 +64,7 @@ NON_NEOPLASM_EXEMPT = {
 # Tumor values deliberately left out of ManifestationEnum after a value-by-value review.
 # ManifestationEnum is a curated facet vocabulary, not a strict superset of Tumor, so this
 # literal is the decision record: Tumor has 61 permissible values, ManifestationEnum
-# covers 34 of them as neoplasms (45 values minus 4 deprecated minus the 7 in
+# covers 34 of them as neoplasms (41 values minus the 7 in
 # NON_NEOPLASM_EXEMPT), and 61 - 34 = 27 exclusions.
 INTENTIONALLY_NOT_FACETED = {
     # bare state descriptors that name no tumor type, so they carry no facet information.
