@@ -9,7 +9,7 @@ Developer-oriented documentation for the NF Metadata Dictionary. For general ove
 | **Build all artifacts** | `make all` |
 | **Generate single schema** | `python utils/gen-json-schema-class.py --class DataLandscape --skip-validation` |
 | **Validate all schemas** | `python utils/gen-json-schema-class.py` |
-| **Register schemas** | `python utils/register-schemas.py` |
+| **Register schemas** | `python utils/register-schemas.py` ⚠️ normally run only by the release workflow (see below) |
 | **Create file-based task** | `python utils/create_curation_task.py --folder-id syn123 --template RNASeqTemplate` |
 | **Create record-based task** | `python utils/create_recordset_task.py --folder-id syn456 --recordset-name "Study_2025" --template DataLandscape` |
 
@@ -77,7 +77,7 @@ JSON Schema `if` / `then` / `else` is used for:
 1. **Derived annotations** - Auto-populating fields from other values
 2. **Dynamic validation** - Switching rules by field value, such as `dataType`
 
-More complex conditional rules live in `rules/`.
+Conditional rules are LinkML `rules:` blocks in the templates and mixins under `modules/`; `rules/super_rules.json` is only used to build the Superdataset schema.
 
 **Example use case:** Changing `dataType` updates the allowed assay options, file formats, and required fields.
 
@@ -181,6 +181,8 @@ python utils/gen-json-schema-class.py --version 0.2.0
 ##### register-schemas.py
 
 Register validated JSON schemas with Synapse.
+
+> ⚠️ Normally run only by the [release workflow](../.github/workflows/release-new-version.yaml), which registers versioned copies. Running it by hand publishes the repo's **unversioned** schemas to the production `org.synapse` organization.
 
 **Usage:**
 ```bash
