@@ -15,7 +15,7 @@ Otherwise...
 2) Edit the relevant source file under `modules/` to make your proposed addition, removal, or modification. `modules/` holds the term definitions. Do not hand-edit `dist/`, `registered-json-schemas/`, or `NF.jsonld`: the first two are build outputs, and `NF.jsonld` is a legacy artifact that is no longer rebuilt by the pipeline.
 3) Push the change to your branch. A GitHub Action will rebuild the generated artifacts and validate them, reporting back on your pull request. Do not commit rebuilt artifacts yourself - `dist/` and `registered-json-schemas/` are regenerated and committed automatically after merge. _Your change should be as atomic as possible - e.g., don't lump together many unrelated changes into a single issue or pull request. You may be requested to split them out._
 4) File a pull request with your change and request review from [someone in the nf-osi organization](https://github.com/orgs/nf-osi/people).
-5) If your pull request is accepted, we'll create a new release with your changes. 
+5) Once your pull request is merged, your change goes out in the next scheduled release (the 1st and 15th of each month); see [Release Procedures](README.md#release-procedures). 
 
 ## Guidelines for proposing new terms
 
