@@ -119,7 +119,7 @@ For example, `unit` can be reused across any class entities that needs to captur
 #### Classes
 
 Classes have slots (properties). 
-All classes are grouped under `modules/Template`. 
+Templates (classes) are grouped under `modules/Template`, and reusable slot bundles (mixins) live in `modules/Mixin/`. 
 Classes can be built upon, so subclasses inherit properties from a parent class. 
 
 ##### Example: Base patient class
@@ -176,22 +176,9 @@ Note: In situations where "the data meets the template", issues with a required 
 
 Validation constraints are expressed using native **LinkML rules** (preconditions/postconditions) and enforced at submission time via **JSON Schema** on the Synapse platform. See the [Conditional slot dependencies](#conditional-slot-dependencies-linkml-rules) section below for examples.
 
-Some slots also carry legacy `requiresDependency` and `validationRules` annotations inherited from the schematic era:
-
-```yaml
-age:
-    annotations:
-      requiresDependency: ageUnit  # legacy schematic annotation
-      validationRules: num         # legacy schematic annotation
-    description: A numeric value representing age of the individual. Use with `ageUnit`.
-    required: false
-```
-
-These annotations are retained for reference but are no longer the primary validation mechanism.
-
 ##### Conditional slot dependencies (LinkML rules)
 
-Some slots require other slots to be present when they have values. These dependencies are now enforced using [LinkML rules](https://linkml.io/linkml/schemas/advanced.html) with preconditions and postconditions, in addition to the legacy `requiresDependency` annotations (which are maintained for backward compatibility with schematic).
+Some slots require other slots to be present when they have values. These dependencies are now enforced using [LinkML rules](https://linkml.io/linkml/schemas/advanced.html) with preconditions and postconditions.
 
 **Example:** If `age` is provided, `ageUnit` must also be provided.
 
@@ -212,12 +199,10 @@ BiologicalAssayDataTemplate:
             value_presence: PRESENT
 ```
 
-**Note:** These rules are also represented as `requiresDependency` annotations in `modules/props.yaml`. These legacy annotations are retained until schematic-based tooling is fully deprecated and will be removed in a future cleanup.
-
 #### Enum
 
 An enumeration is a set of controlled values. 
-Enums are most of the files `modules`, everything except for what's in `Templates` and `props.yaml`.
+Enums are in most of the files under `modules`: everything except `modules/Template`, `modules/Mixin` and `props.yaml`.
 
 ##### Example: SpecimenType enumeration
 
@@ -227,10 +212,10 @@ enums:
     permissible_values:
       cerebral cortex:
         description: The outer layer of the cerebrum composed of neurons and unmyelinated nerve fibers. It is responsible for memory, attention, consciousness and other higher levels of mental function.
-        meaning: http://purl.obolibrary.org/obo/NCIT_C12443
+        meaning: BTO:0000233
       bone marrow:
         description: The soft, fatty, vascular tissue that fills most bone cavities and is the source of red blood cells and many white blood cells.
-        meaning: http://purl.obolibrary.org/obo/BTO_0000141
+        meaning: BTO:0000141
      #...more below
 ```
 
@@ -266,7 +251,7 @@ Aside from meta specific to each type (class, slot, or enum) above, terms have c
 ### Steps to contribute to the Metadata Dictionary: 
 
 1. Create a new [branch](https://github.com/nf-osi/nf-metadata-dictionary/branches) in the NF-metadata-dictionary repository. (example: `patch/add-attribute`)
-2. Find the yaml file in the new branch where the attribute belongs. The components of the data model are organized in the folder labeled [modules](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules).
+2. Find the yaml file in the new branch where the attribute belongs. The components of the data model are organized in the folder labeled [modules](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules). Edit it and commit only your `modules/` change; don't commit `dist/` or `registered-json-schemas/`, which are rebuilt automatically after merge.
 
 3. Create a [pull request (PR)](https://github.com/nf-osi/nf-metadata-dictionary/compare) to merge the branch to "main". Someone from https://github.com/orgs/nf-osi/teams/dcc-team will review. Creating the PR will:
 
