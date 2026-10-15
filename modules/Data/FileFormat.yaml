@@ -335,6 +335,26 @@ enums:
         description: Scalable Vector Graphics (SVG) is an XML-based vector image format for two-dimensional graphics with support for interactivity and animation.
         meaning: EDAM:format_3604
     title: Other File Format
+  SangerSequencingFileFormatEnum:
+    description: File formats for capillary (Sanger) sequencing output -- trace (chromatogram) files and the base-called sequence
+    permissible_values:
+      ab1:
+        description: TAB1 binary format of raw DNA sequence reads (output of Applied Biosystems' sequencing analysis software). Contains an electropherogram and the DNA base sequence.
+        meaning: EDAM:format_3000
+      fasta:
+        aliases:
+        - FASTA format
+        - FASTA sequence format
+        description: FASTA format is a text-based format for representing either nucleotide sequences or peptide sequences, in which nucleotides or amino acids are represented using single-letter codes
+        meaning: EDAM:format_1929
+      scf:
+        aliases:
+        - Staden Chromatogram Files format
+        description: Staden Chromatogram Files format (SCF) of base-called sequence reads, qualities, and other metadata.
+        meaning: EDAM:format_1632
+      seq:
+        description: Plain-text file of the base-called DNA sequence from a capillary sequencing read, without header or quality values, as exported by Applied Biosystems sequencing analysis software alongside the ab1 trace.
+    title: Sanger Sequencing File Format
   ScriptFileFormatEnum:
     description: Script and code file formats
     permissible_values:

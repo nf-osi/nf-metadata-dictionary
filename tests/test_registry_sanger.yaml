@@ -1,0 +1,31 @@
+# Sanger Sequencing Template Tests (issue #963)
+#
+# Sanger sequencing has no constructed library, so SangerSequencingTemplate must
+# accept experimentalData without libraryStrand/libraryPreparationMethod, while
+# still enforcing the inherited GeneticsAssayTemplate requirements and its own
+# capillary-specific platform and fileFormat enums.
+
+schema: SangerSequencingTemplate
+instances:
+  - file: data/SangerSequencingTemplate/valid_minimal.json
+    description: experimentalData ab1 trace with no library fields
+    expected: valid
+
+  - file: data/SangerSequencingTemplate/valid_fileformat_seq.json
+    description: Base-called seq file is a permitted file format
+    expected: valid
+
+  - file: data/SangerSequencingTemplate/invalid_missing_platform.json
+    description: platform is still required for experimentalData (inherited from GeneticsAssayTemplate)
+    expected: invalid
+    reason: platform is required
+
+  - file: data/SangerSequencingTemplate/invalid_platform_ngs.json
+    description: An NGS instrument is not a capillary sequencing platform
+    expected: invalid
+    reason: platform must be from SangerSequencingPlatformEnum
+
+  - file: data/SangerSequencingTemplate/invalid_fileformat_fastq.json
+    description: fastq is NGS read output, not a Sanger file format
+    expected: invalid
+    reason: fileFormat must be from SangerSequencingFileFormatEnum

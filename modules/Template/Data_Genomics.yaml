@@ -66,7 +66,6 @@ classes:
         - next-generation sequencing
         - ribo-seq
         - scCGI-seq
-        - Sanger sequencing
         - T cell receptor repertoire sequencing
       dataGranularity: specimen-level
     description: General template for raw (level 1) RNA/DNA data, i.e. sequence data
@@ -125,6 +124,50 @@ classes:
           libraryStrand:
             value_presence: PRESENT
           libraryPreparationMethod:
+            value_presence: PRESENT
+  SangerSequencingTemplate:
+    annotations:
+      required: false
+      requiresComponent: ''
+      templateUsage: common
+      templateFor:
+        dataType:
+        - genomic variants
+        assay:
+        - Sanger sequencing
+      dataGranularity: specimen-level
+    description: Template for raw data from capillary (Sanger) sequencing, i.e. trace
+      files and base-called sequences of individual amplicons or clones. Unlike NGS,
+      there is no constructed sequencing library, so library and read attributes do
+      not apply.
+    is_a: GeneticsAssayTemplate
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SangerSequencingPlatformEnum
+      fileFormat:
+        range: SangerSequencingFileFormatEnum
+    slots:
+    - specimenType
+    - batchID
+    - modelSystemName
+    rules:
+    - description: Organ is required when specimenType is a tissue (not an organism
+        substance like saliva)
+      preconditions:
+        slot_conditions:
+          specimenType:
+            value_presence: PRESENT
+            none_of:
+            - equals_string: mucus
+            - equals_string: saliva
+            - equals_string: stool
+            - equals_string: sweat
+            - equals_string: urine
+      postconditions:
+        slot_conditions:
+          organ:
             value_presence: PRESENT
   GenomicsArrayTemplate:
     annotations:
@@ -320,7 +363,6 @@ classes:
         - next-generation sequencing
         - ribo-seq
         - scCGI-seq
-        - Sanger sequencing
         - T cell receptor repertoire sequencing
       dataGranularity: specimen-level
     description: General template for raw RNA/DNA data, i.e. sequence data from a
