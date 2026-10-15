@@ -509,6 +509,7 @@ slots:
     description: Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software
     any_of:
     - range: SequencingFileFormatEnum
+    - range: SangerSequencingFileFormatEnum
     - range: ImagingFileFormatEnum
     - range: ArrayFileFormatEnum
     - range: MassSpecFileFormatEnum
@@ -1031,6 +1032,7 @@ slots:
     description: A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data. Select from the recommended list when available or enter a custom name.
     any_of:
     - range: SequencingPlatformEnum
+    - range: SangerSequencingPlatformEnum
     - range: ArrayPlatformEnum
     - range: MicroscopyImagingPlatformEnum
     - range: MRIPlatformEnum
