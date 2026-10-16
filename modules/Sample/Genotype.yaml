@@ -14,6 +14,15 @@ enums:
         - UNK
         - Unknown/Not Stated
         description: unknown
+  NF1GenotypeEnum:
+    description: >-
+      NF1-specific genotypes that name a recurrent variant allele. Used alongside the generic
+      Genotype enum for nf1Genotype only, so these values are not valid for other genes.
+    permissible_values:
+      R1947X/+:
+        description: >-
+          Heterozygous for the recurrent NF1 nonsense variant p.Arg1947* (R1947X, c.5839C>T)
+          with one wildtype allele.
   NF1Variant:
     permissible_values:
       R816X:
