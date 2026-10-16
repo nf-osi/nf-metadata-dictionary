@@ -1,0 +1,17 @@
+# Gene-specific genotype values (#1018)
+#
+# nf1Genotype and nf2Genotype share the generic Genotype enum (+/+, +/-, -/-).
+# nf1Genotype additionally ranges over NF1GenotypeEnum, which holds NF1-specific
+# allele combinations such as the recurrent R1947X hotspot. Those values must
+# not be accepted for nf2Genotype.
+
+schema: HumanCohortTemplate
+instances:
+  - file: data/HumanCohortTemplate/valid_nf1_genotype_r1947x.json
+    description: nf1Genotype uses the NF1-specific value R1947X/+
+    expected: valid
+
+  - file: data/HumanCohortTemplate/invalid_nf2_genotype_r1947x.json
+    description: nf2Genotype given the NF1-specific value R1947X/+
+    expected: invalid
+    reason: NF1GenotypeEnum is only in the range of nf1Genotype, not nf2Genotype
