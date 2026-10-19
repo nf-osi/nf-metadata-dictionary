@@ -262,6 +262,16 @@ slots:
     description: "Common name for a compound, e.g. \"Selumetinib\" (https://pubchem.ncbi.nlm.nih.gov/compound/10127622)"
     title: Compound Name
     required: false
+  compoundChemblID:
+    description: >-
+      ChEMBL identifier(s) for the compound(s) named in compoundName, written as
+      a CURIE, e.g. "chembl:CHEMBL1614701" for Selumetinib. Provide multiple
+      values for combination treatments.
+    title: Compound ChEMBL ID
+    range: string
+    multivalued: true
+    pattern: '^chembl:CHEMBL\d+$'
+    required: false
   concentrationMaterial:
     description: Numeric value for concentration of the material
     range: float
