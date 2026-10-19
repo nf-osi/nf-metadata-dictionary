@@ -143,6 +143,9 @@ classes:
     description: 'A compound applied to a sample, and the dose it was applied at.'
     slots:
     - compoundName
+    # compoundChemblID is not user-facing for now: it is filled in automatically
+    # by a job that resolves compoundName to ChEMBL ids (#1002).
+    # - compoundChemblID
     - compoundDose
     - compoundDoseUnit
     rules:
