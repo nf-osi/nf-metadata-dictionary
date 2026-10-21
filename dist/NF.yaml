@@ -12040,7 +12040,13 @@ classes:
         any_of:
           - range: SequencingPlatformEnum
       fileFormat:
-        range: SequencingFileFormatEnum
+        range: string
+        any_of:
+          - range: SequencingFileFormatEnum
+          - range: TabularFileFormatEnum
+          - range: DataFileFormatEnum
+          - range: ImagingFileFormatEnum
+          - range: OtherFileFormatEnum
       dataType:
         ifabsent: string(gene expression)
       libraryPreparationMethod:
@@ -12072,7 +12078,10 @@ classes:
       platform:
         range: ImagingSystemPlatformEnum
       fileFormat:
-        range: ImagingFileFormatEnum
+        any_of:
+          - range: ImagingFileFormatEnum
+          - range: TabularFileFormatEnum
+          - range: DataFileFormatEnum
       dataType:
         ifabsent: string(image)
       specimenID:
