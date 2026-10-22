@@ -521,6 +521,7 @@ slots:
       For a multi-file archive (zip, tar, tar.gz), use the archive format, e.g. zip for x.zip and tar for x.tar.gz.
     any_of:
     - range: SequencingFileFormatEnum
+    - range: SangerSequencingFileFormatEnum
     - range: ImagingFileFormatEnum
     - range: ArrayFileFormatEnum
     - range: MassSpecFileFormatEnum
@@ -1044,6 +1045,7 @@ slots:
     description: A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data. Select from the recommended list when available or enter a custom name.
     any_of:
     - range: SequencingPlatformEnum
+    - range: SangerSequencingPlatformEnum
     - range: ArrayPlatformEnum
     - range: MicroscopyImagingPlatformEnum
     - range: MRIPlatformEnum
