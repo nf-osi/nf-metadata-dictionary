@@ -521,6 +521,7 @@ slots:
     description: Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software. For a single compressed file (gzip, bgzip, bz2, xz), use the format of the content, e.g. tsv for x.tsv.gz and fastq for x.fastq.gz. For a multi-file archive (zip, tar, tar.gz), use the archive format, e.g. zip for x.zip and tar for x.tar.gz.
     any_of:
       - range: SequencingFileFormatEnum
+      - range: SangerSequencingFileFormatEnum
       - range: ImagingFileFormatEnum
       - range: ArrayFileFormatEnum
       - range: MassSpecFileFormatEnum
@@ -1025,6 +1026,7 @@ slots:
     description: A sequencing platform, microscope, spectroscope/plate reader, or other platform for collecting data. Select from the recommended list when available or enter a custom name.
     any_of:
       - range: SequencingPlatformEnum
+      - range: SangerSequencingPlatformEnum
       - range: ArrayPlatformEnum
       - range: MicroscopyImagingPlatformEnum
       - range: MRIPlatformEnum
@@ -3183,6 +3185,28 @@ enums:
         description: Microplate reader for ELISAs, etc.
         source: https://www.thermofisher.com/us/en/home/life-science/lab-equipment/microplate-instruments/plate-readers/models/varioskan.html
     title: Plate Reader Platform
+  SangerSequencingPlatformEnum:
+    description: Capillary electrophoresis instruments for Sanger (dideoxy chain-termination) sequencing
+    permissible_values:
+      Applied Biosystems 3130xl Genetic Analyzer:
+        description: 16-capillary electrophoresis system for DNA sequencing and fragment analysis.
+        source: https://documents.thermofisher.com/TFS-Assets/LSG/brochures/cms_040584.pdf
+      Applied Biosystems 3500 Genetic Analyzer:
+        description: 8-capillary electrophoresis system for DNA sequencing and fragment analysis.
+        source: https://documents.thermofisher.com/TFS-Assets/LSG/Specification-Sheets/3500-Genetic-Analyzer-Specification-Sheet.pdf
+      Applied Biosystems 3500xL Genetic Analyzer:
+        description: 24-capillary electrophoresis system for DNA sequencing and fragment analysis.
+        source: https://documents.thermofisher.com/TFS-Assets/LSG/Specification-Sheets/3500-Genetic-Analyzer-Specification-Sheet.pdf
+      Applied Biosystems 3730 DNA Analyzer:
+        description: 48-capillary electrophoresis system for DNA sequencing and fragment analysis.
+        source: https://tools.thermofisher.com/content/sfs/brochures/cms_042636.pdf
+      Applied Biosystems 3730xl DNA Analyzer:
+        description: High-throughput capillary electrophoresis system for DNA sequencing and fragment analysis.
+        source: https://www.thermofisher.com/order/catalog/product/3730XL
+      Applied Biosystems SeqStudio Genetic Analyzer:
+        description: Benchtop 4-capillary electrophoresis system for DNA sequencing and fragment analysis.
+        source: https://documents.thermofisher.com/TFS-Assets/GSD/Specification-Sheets/SeqStudio-Specification-Sheet.pdf.pdf
+    title: Sanger Sequencing Platform
   SequencingPlatformEnum:
     description: Sequencing platforms for DNA/RNA sequencing
     permissible_values:
@@ -4685,6 +4709,26 @@ enums:
         description: Scalable Vector Graphics (SVG) is an XML-based vector image format for two-dimensional graphics with support for interactivity and animation.
         meaning: EDAM:format_3604
     title: Other File Format
+  SangerSequencingFileFormatEnum:
+    description: File formats for capillary (Sanger) sequencing output -- trace (chromatogram) files and the base-called sequence
+    permissible_values:
+      ab1:
+        description: TAB1 binary format of raw DNA sequence reads (output of Applied Biosystems' sequencing analysis software). Contains an electropherogram and the DNA base sequence.
+        meaning: EDAM:format_3000
+      fasta:
+        aliases:
+          - FASTA format
+          - FASTA sequence format
+        description: FASTA format is a text-based format for representing either nucleotide sequences or peptide sequences, in which nucleotides or amino acids are represented using single-letter codes
+        meaning: EDAM:format_1929
+      scf:
+        aliases:
+          - Staden Chromatogram Files format
+        description: Staden Chromatogram Files format (SCF) of base-called sequence reads, qualities, and other metadata.
+        meaning: EDAM:format_1632
+      seq:
+        description: Plain-text file of the base-called DNA sequence from a capillary sequencing read, without header or quality values, as exported by Applied Biosystems sequencing analysis software alongside the ab1 trace.
+    title: Sanger Sequencing File Format
   ScriptFileFormatEnum:
     description: Script and code file formats
     permissible_values:
@@ -11113,6 +11157,36 @@ classes:
             libraryStrand:
               value_presence: PRESENT
             libraryPreparationMethod:
+              value_presence: PRESENT
+  SangerSequencingTemplate:
+    description: Template for raw data from capillary (Sanger) sequencing, i.e. trace files and base-called sequences of individual amplicons or clones. Unlike NGS, there is no constructed sequencing library, so library and read attributes do not apply.
+    is_a: GeneticsAssayTemplate
+    slot_usage:
+      assay:
+        range: SequencingAssayEnum
+      platform:
+        range: SangerSequencingPlatformEnum
+      fileFormat:
+        range: SangerSequencingFileFormatEnum
+    slots:
+      - specimenType
+      - batchID
+      - modelSystemName
+    rules:
+      - description: Organ is required when specimenType is a tissue (not an organism substance like saliva)
+        preconditions:
+          slot_conditions:
+            specimenType:
+              value_presence: PRESENT
+              none_of:
+                - equals_string: mucus
+                - equals_string: saliva
+                - equals_string: stool
+                - equals_string: sweat
+                - equals_string: urine
+        postconditions:
+          slot_conditions:
+            organ:
               value_presence: PRESENT
   GenomicsArrayTemplate:
     description: A template for describing raw data from array-based genomics/epigenomics, e.g. CEL files.
