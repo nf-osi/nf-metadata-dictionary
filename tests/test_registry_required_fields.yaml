@@ -34,6 +34,10 @@ instances:
     expected: invalid
     reason: readLength must be integer, not string
 
+  - file: data/GenomicsAssayTemplate/valid_targetDepth_string.json
+    description: targetDepth is a planned value conventionally written with a unit suffix like "30x"
+    expected: valid
+
 ---
 
 schema: ScRNASeqTemplate
