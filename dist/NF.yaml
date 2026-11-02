@@ -1053,8 +1053,8 @@ slots:
     title: Programming Language
     required: false
   progressReportNumber:
-    description: 'Indicates milestone the  data is associated with. Currently only required for projects funded by NTAP, GFF, and NFRI. For GFF studies, this is the ‘progress report’ timeline. Example: if submitting data for the 6-month milestone report for NTAP, progressReportNumber=1.  Also if submitting data associated with first milestone, progressReportNumber =1'
-    range: ProgressReportNumberEnum
+    description: 'Indicates milestone the  data is associated with. Currently only required for projects funded by NTAP, GFF, and NFRI. For GFF studies, this is the ‘progress report’ timeline. Example: if submitting data for the 6-month milestone report for NTAP, progressReportNumber=1.  Also if submitting data associated with first milestone, progressReportNumber =1. Leave blank when not applicable.'
+    range: integer
     title: Progress Report Number
     required: false
   proportionCoverage10x:
@@ -5826,20 +5826,6 @@ enums:
         meaning: UO:0000034
       years:
         meaning: UO:0000036
-  ProgressReportNumberEnum:
-    description: Milestone the data is associated with; used for NTAP, GFF, and NFRI funded projects.
-    permissible_values:
-      '1':
-      '2':
-      '3':
-      '4':
-      '5':
-      '6':
-      '7':
-      '8':
-      '9':
-      '10':
-      Not Applicable:
   EpidemiologyMetricEnum:
     description: Common metrics used in epidemiology studies.
     permissible_values:
