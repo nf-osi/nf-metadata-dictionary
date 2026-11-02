@@ -1,0 +1,33 @@
+# PortalDataset.doi pattern
+#
+# The pattern was written in modules/Template/PortalDataset.yaml as a plain YAML
+# scalar with doubled backslashes (^10\\.\\d...). Plain scalars do not process
+# escapes, so the registered regex required a literal backslash after "10" and
+# no DOI could validate; it also allowed only uppercase suffixes, while DataCite
+# DOIs are case-insensitive and Synapse mints lowercase ones (10.7303/syn...).
+# Found by audit-dataset-collection in nf-osi/jobs, where every dataset with a
+# doi annotation failed validation on it.
+
+schema: PortalDataset
+instances:
+  - file: data/PortalDataset/valid_doi_synapse.json
+    description: A Synapse-minted DOI, lowercase suffix
+    expected: valid
+
+  - file: data/PortalDataset/valid_doi_uppercase.json
+    description: An uppercase suffix (TCIA), which failed even before the case fix
+    expected: valid
+
+  - file: data/PortalDataset/valid_doi_figshare.json
+    description: A figshare DOI with a version suffix
+    expected: valid
+
+  - file: data/PortalDataset/invalid_doi_url.json
+    description: The doi slot holds the bare DOI, not a resolver URL
+    expected: invalid
+    reason: doi must start with 10.
+
+  - file: data/PortalDataset/invalid_doi_no_suffix.json
+    description: A prefix with no suffix is not a DOI
+    expected: invalid
+    reason: doi needs a suffix after the slash
