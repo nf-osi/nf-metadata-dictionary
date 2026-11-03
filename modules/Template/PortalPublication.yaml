@@ -5,7 +5,6 @@ classes:
       synapse_table_id: syn16857542
     attributes:
       diseaseFocus:
-        multivalued: true
         range: DiseaseFocusEnum
         required: false
         title: Disease Focus
@@ -21,6 +20,7 @@ classes:
           of the existing values.
         range: string
         required: false
+        multivalued: true
         title: Manifestation
       publicationType:
         description: 'Type of publication in relation to the linked study on the NF
@@ -31,10 +31,12 @@ classes:
         required: true
         title: Publication Type
       studyId:
+        multivalued: true
         range: string
         required: true
         title: Linked Study ID
       studyName:
+        multivalued: true
         range: string
         required: true
         title: Linked Study Name
