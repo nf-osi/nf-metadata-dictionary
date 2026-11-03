@@ -20,6 +20,7 @@ classes:
         description: Age demographic groups represented in the dataset. Use to indicate
           which age groups are included in the data.
         multivalued: true
+        maximum_cardinality: 10
         range: HumanAgeGroupEnum
         required: false
         title: Age Group Coverage
@@ -48,6 +49,7 @@ classes:
           formatted name of the organization or person (e.g. "NF-OSI" or "Robert Allaway"),
           not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/contributor/.
         multivalued: true
+        maximum_cardinality: 10
         range: string
         required: false
         title: Contributor(s)
@@ -55,6 +57,7 @@ classes:
         description: Origin of individuals from which data were generated. Omit if
           not applicable/unknown.
         multivalued: true
+        maximum_cardinality: 2
         range: string
         required: false
         title: Country of Origin
@@ -65,6 +68,7 @@ classes:
           or developer of the instrument. Expects properly formatted name of the organization
           or person (e.g. "NF-OSI" or "Robert Allaway"), not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/creator/.
         multivalued: true
+        maximum_cardinality: 10
         range: string
         required: true
         title: Creator
@@ -76,6 +80,7 @@ classes:
       dataType:
         description: Reflects the data types within the dataset.
         multivalued: true
+        maximum_cardinality: 10
         range: Data
         required: true
         title: Data Type
@@ -84,6 +89,7 @@ classes:
           which describes the allowable scope and terms for data use. Most datasets
           allow "General Research Use" unless otherwise specified.
         multivalued: true
+        maximum_cardinality: 3
         range: DuoEnum
         required: false
         title: Data Use Modifiers
@@ -152,6 +158,7 @@ classes:
         description: Typically between 1 to 5 informative terms or phrases that help
           users find the dataset.
         multivalued: true
+        maximum_cardinality: 18
         range: string
         required: false
         title: Keywords
@@ -169,6 +176,7 @@ classes:
           "Malignant Peripheral Nerve Sheath Tumor", "ANNUBP", "Juvenile Myelomonocytic
           Leukemia" and "Spinal Meningioma".
         multivalued: true
+        maximum_cardinality: 10
         range: ManifestationEnum
         required: false
         title: Manifestation(s)
@@ -177,6 +185,7 @@ classes:
           to the assay. Omit if not applicable (e.g. for curated dataset such as a
           list compounds from a database or text extracted from Wikipedia).
         multivalued: true
+        maximum_cardinality: 10
         any_of:
         - range: SequencingAssayEnum
         - range: ImagingAssayEnum
@@ -204,6 +213,7 @@ classes:
           Omit property if not applicable, such as for data like compounds or other
           non-biological data.
         multivalued: true
+        maximum_cardinality: 5
         range: SpeciesEnum
         required: false
         title: Species
@@ -223,6 +233,7 @@ classes:
         description: Applicable subject term(s) for dataset cataloging; use the Library
           of Congress Subject Headings (LCSH) scheme.
         multivalued: true
+        maximum_cardinality: 9
         range: string
         required: false
         title: Subject
@@ -234,6 +245,7 @@ classes:
         description: Link(s) to where data may be visualized in a separate application.
           Omit property if not applicable/unknown.
         multivalued: true
+        maximum_cardinality: 100
         range: string
         required: false
         title: Visualize Data On

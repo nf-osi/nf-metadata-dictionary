@@ -15,6 +15,7 @@ classes:
         required: false
       clinicalTrialID:
         multivalued: true
+        maximum_cardinality: 5
         range: string
         required: false
       dataCoordinatingCenter:
@@ -28,20 +29,24 @@ classes:
         required: true
       dataType:
         multivalued: true
+        maximum_cardinality: 15
         range: Data
         required: false
       diseaseFocus:
         multivalued: true
+        maximum_cardinality: 3
         range: DiseaseFocusEnum
         required: false
       embargoEndDate:
         range: string
       fundingAgency:
         multivalued: true
+        maximum_cardinality: 5
         range: string
         required: true
       grantDOI:
         multivalued: true
+        maximum_cardinality: 10
         range: string
         required: false
       grantEndDate:
@@ -53,6 +58,7 @@ classes:
         required: true
       institutions:
         multivalued: true
+        maximum_cardinality: 10
         range: Institution
         required: true
       manifestation:
@@ -60,6 +66,7 @@ classes:
           Use the canonical spellings "Malignant Peripheral Nerve Sheath Tumor", "ANNUBP",
           "Juvenile Myelomonocytic Leukemia" and "Spinal Meningioma".
         multivalued: true
+        maximum_cardinality: 5
         range: ManifestationEnum
         required: false
         title: Manifestation(s)
@@ -80,6 +87,7 @@ classes:
         - https://schema.org/predecessorOf
       relatedStudies:
         multivalued: true
+        maximum_cardinality: 10
         range: string
         required: false
       releasedDate:
@@ -92,6 +100,7 @@ classes:
         required: true
       studyLeads:
         multivalued: true
+        maximum_cardinality: 10
         range: string
         required: true
       studyName:

@@ -10,6 +10,7 @@ classes:
         title: Disease Focus
       fundingAgency:
         multivalued: true
+        maximum_cardinality: 8
         range: string
         required: true
         title: Linked Funder(s)
@@ -21,6 +22,7 @@ classes:
         range: string
         required: false
         multivalued: true
+        maximum_cardinality: 5
         title: Manifestation
       publicationType:
         description: 'Type of publication in relation to the linked study on the NF
@@ -32,11 +34,13 @@ classes:
         title: Publication Type
       studyId:
         multivalued: true
+        maximum_cardinality: 5
         range: string
         required: true
         title: Linked Study ID
       studyName:
         multivalued: true
+        maximum_cardinality: 5
         range: string
         required: true
         title: Linked Study Name
