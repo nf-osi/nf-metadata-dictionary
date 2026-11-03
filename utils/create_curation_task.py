@@ -297,7 +297,7 @@ def create_curation_task(
     if json_schema is None:
         print("  Fetching schema from URI...")
         import requests
-        response = requests.get(schema_uri)
+        response = requests.get(schema_uri, timeout=30)
         if response.status_code == 200:
             json_schema = response.json()
         else:

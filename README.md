@@ -60,6 +60,7 @@ One can reference the data model to understand things such as:
 
 We welcome contributions from community members, whether you are a professional data modeler, researcher, or student in the NF community.
 
+- **Visual editor (easiest for adding terms/templates):** Run the local [NF Metadata Model Editor](editor/README.md) in the `editor/` submodule — a browser-based tool that reads/writes the `modules/**` source with minimal, repo-style diffs, live-searches ontologies to fill in `meaning:`/`source:` CURIEs, and flags coverage gaps. See [`editor/README.md`](editor/README.md) and its [LinkML coverage](editor/LINKML_COVERAGE.md).
 - For those familiar with editing code source files: Learn about the data model framework below, then edit the files directly in your preferred IDE.
 - Alternatively: Create an [issue](https://github.com/nf-osi/nf-metadata-dictionary/issues) regarding terms, templates, or relationships.
 

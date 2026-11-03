@@ -46,7 +46,7 @@ def check_enum_sizes(modules_dir: Path) -> Dict[str, List]:
                             'file': str(yaml_file.relative_to(modules_dir.parent)),
                             'count': count,
                         }
-        except:
+        except Exception:
             pass
 
     return {
@@ -78,7 +78,7 @@ def check_string_lengths(schemas_dir: Path) -> Dict[str, Any]:
                     continue
 
                 target.extend(len(str(v)) for v in enum_values)
-        except:
+        except Exception:
             pass
 
     return {
@@ -130,7 +130,7 @@ def check_row_sizes(schemas_dir: Path) -> Dict[str, Any]:
                 'percent': round(row_size / CONFIG['ROW_LIMIT'] * 100, 1),
                 'headroom': CONFIG['ROW_LIMIT'] - row_size,
             })
-        except:
+        except Exception:
             pass
 
     schemas.sort(key=lambda x: x['row_size'], reverse=True)

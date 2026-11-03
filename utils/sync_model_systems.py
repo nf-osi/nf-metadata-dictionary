@@ -42,7 +42,7 @@ def fetch_tools_data(synapse_id: str = 'syn51730943', resource_types: List[str] 
             else:
                 try:
                     syn.login(silent=True)
-                except:
+                except Exception:
                     pass
         except Exception:
             pass
@@ -117,7 +117,7 @@ def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
                 # Try silent login first
                 try:
                     syn.login(silent=True)
-                except:
+                except Exception:
                     # If silent login fails, try anonymous access
                     print("Attempting anonymous access to Synapse...")
                     # For anonymous access, we don't need to login
@@ -165,7 +165,7 @@ def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
                 # Try to convert to dict
                 try:
                     row_dict = dict(row)
-                except:
+                except Exception:
                     print(f"Warning: Could not convert row to dict: {row}")
                     continue
             
@@ -220,7 +220,7 @@ def fetch_tool_links(synapse_id: str = 'syn51730943') -> Dict[str, Dict[str, str
             else:
                 try:
                     syn.login(silent=True)
-                except:
+                except Exception:
                     pass
         except Exception:
             pass
