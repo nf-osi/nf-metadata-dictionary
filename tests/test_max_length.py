@@ -125,6 +125,70 @@ def _module_max_lengths():
 MODULE_MAX_LENGTHS = _module_max_lengths()
 
 
+def _module_enums():
+    """Enum name -> permissible value names, across every module file."""
+    enums = {}
+    for path in sorted((REPO_ROOT / "modules").rglob("*.yaml")):
+        for name, enum_def in ((yaml.safe_load(path.read_text()) or {}).get("enums") or {}).items():
+            enums[name] = list(((enum_def or {}).get("permissible_values") or {}).keys())
+    return enums
+
+
+def _enum_bounded_attributes():
+    """(class, attribute, maxLength, enum names) for annotated attributes ranged on enums.
+
+    Covers a plain `range` and every `range` under `any_of` (e.g. PortalDataset
+    measurementTechnique spans several assay enums).
+    """
+    enums = _module_enums()
+    found = []
+    for path in sorted(TEMPLATE_DIR.glob("*.yaml")):
+        classes = (yaml.safe_load(path.read_text()) or {}).get("classes") or {}
+        for cls_name, cls_def in classes.items():
+            for attr, attr_def in ((cls_def or {}).get("attributes") or {}).items():
+                value = GENERATOR._annotation_value(attr_def, "maxLength")
+                if value is None:
+                    continue
+                ranges = [attr_def.get("range")] + [
+                    (option or {}).get("range") for option in attr_def.get("any_of") or []
+                ]
+                enum_names = [r for r in ranges if r in enums]
+                if enum_names:
+                    found.append((cls_name, attr, int(value), enum_names))
+    return enums, found
+
+
+MODULE_ENUMS, ENUM_BOUNDED = _enum_bounded_attributes()
+
+
+def test_model_declares_enum_bounded_max_lengths():
+    assert ENUM_BOUNDED, "expected maxLength annotations on enum-ranged attributes"
+
+
+@pytest.mark.parametrize(
+    "cls_name,attr,max_length,enum_names",
+    ENUM_BOUNDED,
+    ids=[f"{c}.{a}" for c, a, _, _ in ENUM_BOUNDED],
+)
+def test_enum_values_fit_max_length(cls_name, attr, max_length, enum_names):
+    """Every value an attribute's enum allows must fit that attribute's maxLength.
+
+    Otherwise the generated schema rejects a value its own enum permits, and the
+    Synapse column (whose size maxLength mirrors) can't store it either. Reads
+    modules/ directly, so it re-runs whenever a value is added to one of these enums.
+    Fix by raising maxLength in modules/Template and widening the column to match.
+    """
+    too_long = sorted(
+        {(len(v), v, e) for e in enum_names for v in MODULE_ENUMS[e] if len(v) > max_length},
+        reverse=True,
+    )
+    assert not too_long, (
+        f"{cls_name}.{attr} has maxLength {max_length}, but {len(too_long)} allowed value(s) "
+        f"are longer; it needs at least {too_long[0][0]}:\n"
+        + "\n".join(f"  {n} chars  {v!r}  ({e})" for n, v, e in too_long)
+    )
+
+
 def test_model_declares_max_lengths():
     assert MODULE_MAX_LENGTHS, "expected maxLength annotations in modules/Template"
 
