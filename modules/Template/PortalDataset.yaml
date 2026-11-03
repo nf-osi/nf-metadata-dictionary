@@ -178,10 +178,13 @@ classes:
         annotations:
           maxLength: 50
       includedInDataCatalog:
-        description: Whether the dataset is included in a data catalog.
-        range: boolean
+        description: Link(s) to known data catalog(s) the dataset is included in.
+        range: DataCatalogEnum
+        multivalued: true
         required: false
         title: Included In Data Catalog
+        annotations:
+          maxLength: 50
       individualCount:
         description: Number of unique individuals included in the dataset (whether
           as individual-level or as aggregate data). Omit if not applicable/unknown.
