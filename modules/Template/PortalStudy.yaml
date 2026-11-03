@@ -13,6 +13,16 @@ classes:
       externalRepositoryUri:
         range: string
         required: false
+      alternateDataRepository:
+        description: Identifier(s) for study data deposited in repositories other than
+          Synapse, given as compact URIs (CURIEs), e.g. geo:GSE145064, dbgap:phs002504.v3.p2,
+          pride.project:PXD052910.
+        multivalued: true
+        maximum_cardinality: 8
+        range: string
+        required: false
+        annotations:
+          maxLength: 60
       clinicalTrialID:
         multivalued: true
         maximum_cardinality: 5
@@ -154,3 +164,6 @@ classes:
       recorded as an annotation, which the build strips from dist/NF.yaml. Do not
       generate it into the JSON schema; the strict downstream system rejects extra
       metadata.'
+    - 'dataCoordinatingCenter, externalRepositoryUri and releasedDate are defined in this
+      PortalStudy data model schema only; they are not columns in the production view
+      (syn52694652) or its source view (syn52677631).'
