@@ -6,7 +6,8 @@ analyze:
 
 NF.yaml:
 	yq eval-all '. as $$item ireduce ({}; . * $$item )' header.yaml modules/props.yaml modules/**/*.yaml > merged.yaml
-	yq 'del(.. | select(has("annotations")).annotations)' merged.yaml > merged_no_extra_meta.yaml
+	# Strip annotations except maxLength, which utils/gen-json-schema-class.py emits as JSON Schema maxLength
+	yq '(.. | select(has("annotations")).annotations) |= with_entries(select(.key == "maxLength")) | del(.. | select(has("annotations") and (.annotations | length) == 0).annotations)' merged.yaml > merged_no_extra_meta.yaml
 	yq 'del(.. | select(has("enum_range")).enum_range)' merged_no_extra_meta.yaml > merged_no_inlined_range.yaml
 	yq 'del(.. | select(has("in_subset")).in_subset)' merged_no_inlined_range.yaml > dist/NF.yaml
 	rm -f merged*.yaml

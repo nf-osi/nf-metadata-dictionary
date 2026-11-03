@@ -2,17 +2,42 @@ classes:
   PortalPublication:
     annotations:
       templateUsage: internal
+      synapse_table_id: syn16857542
     attributes:
-      diseaseFocus:
+      author:
         multivalued: true
+        maximum_cardinality: 50
+        range: string
+        required: true
+        title: Author(s)
+        annotations:
+          maxLength: 50
+      diseaseFocus:
         range: DiseaseFocusEnum
         required: false
         title: Disease Focus
+        annotations:
+          maxLength: 50
+      doi:
+        description: Digital Object Identifier of the publication, without the https://doi.org/
+          prefix, e.g. 10.1093/neuonc/noy046.
+        range: string
+        required: true
+        title: Digital Object Identifier
       fundingAgency:
         multivalued: true
+        maximum_cardinality: 8
         range: string
         required: true
         title: Linked Funder(s)
+        annotations:
+          maxLength: 50
+      journal:
+        range: string
+        required: true
+        title: Journal
+        annotations:
+          maxLength: 500
       manifestation:
         description: Refers to the phenotype(s) described in the publication. Unlike
           the dataset- and study-level fields of the same name, this field is free
@@ -20,7 +45,18 @@ classes:
           of the existing values.
         range: string
         required: false
+        multivalued: true
+        maximum_cardinality: 5
         title: Manifestation
+        annotations:
+          maxLength: 30
+      pmid:
+        description: PubMed ID of the publication, prefixed with PMID:, e.g. PMID:29982664.
+        range: string
+        required: false
+        title: PubMed ID
+        annotations:
+          maxLength: 50
       publicationType:
         description: 'Type of publication in relation to the linked study on the NF
           Portal. A primary publication is the main publication for the study and
@@ -29,15 +65,44 @@ classes:
         range: PublicationTypeEnum
         required: true
         title: Publication Type
+        annotations:
+          maxLength: 20
       studyId:
+        multivalued: true
+        maximum_cardinality: 5
         range: string
         required: true
         title: Linked Study ID
+        annotations:
+          maxLength: 20
       studyName:
+        multivalued: true
+        maximum_cardinality: 5
         range: string
         required: true
         title: Linked Study Name
+        annotations:
+          maxLength: 200
+      title:
+        range: string
+        required: true
+        title: Title
+      year:
+        range: integer
+        required: true
+        title: Year
     description: Publication entity defined within the specific scope of the NF Portal (WIP).
+    notes:
+    - 'Synapse table alignment (see the synapse_table_id annotation): each multivalued
+      attribute''s maximum_cardinality maps to the maximumListLength of the matching
+      STRING_LIST/ENTITYID_LIST column in the production table, and is generated into
+      the JSON schema as maxItems. Each attribute''s maxLength annotation maps to the
+      column''s maximumSize (for list columns, the maximum size of each item), and is
+      generated into the JSON schema as maxLength (on items for list fields).'
+    - 'maxLength is a workaround: LinkML has no constraint for string length, so it is
+      recorded as an annotation. The Makefile keeps this one annotation in dist/NF.yaml
+      and utils/gen-json-schema-class.py emits it as JSON Schema maxLength, which
+      Synapse supports.'
 
   PublicationTemplate:
     annotations:
