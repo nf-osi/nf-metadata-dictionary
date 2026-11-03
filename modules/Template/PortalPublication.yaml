@@ -8,12 +8,16 @@ classes:
         range: DiseaseFocusEnum
         required: false
         title: Disease Focus
+        annotations:
+          maxLength: 30
       fundingAgency:
         multivalued: true
         maximum_cardinality: 8
         range: string
         required: true
         title: Linked Funder(s)
+        annotations:
+          maxLength: 50
       manifestation:
         description: Refers to the phenotype(s) described in the publication. Unlike
           the dataset- and study-level fields of the same name, this field is free
@@ -24,6 +28,8 @@ classes:
         multivalued: true
         maximum_cardinality: 5
         title: Manifestation
+        annotations:
+          maxLength: 30
       publicationType:
         description: 'Type of publication in relation to the linked study on the NF
           Portal. A primary publication is the main publication for the study and
@@ -32,18 +38,24 @@ classes:
         range: PublicationTypeEnum
         required: true
         title: Publication Type
+        annotations:
+          maxLength: 20
       studyId:
         multivalued: true
         maximum_cardinality: 5
         range: string
         required: true
         title: Linked Study ID
+        annotations:
+          maxLength: 20
       studyName:
         multivalued: true
         maximum_cardinality: 5
         range: string
         required: true
         title: Linked Study Name
+        annotations:
+          maxLength: 200
     description: Publication entity defined within the specific scope of the NF Portal (WIP).
 
   PublicationTemplate:

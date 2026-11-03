@@ -18,6 +18,8 @@ classes:
         maximum_cardinality: 5
         range: string
         required: false
+        annotations:
+          maxLength: 30
       dataCoordinatingCenter:
         range: string
         required: false
@@ -27,16 +29,22 @@ classes:
       dataStatus:
         range: DataStatusEnum
         required: true
+        annotations:
+          maxLength: 40
       dataType:
         multivalued: true
         maximum_cardinality: 15
         range: Data
         required: false
+        annotations:
+          maxLength: 100
       diseaseFocus:
         multivalued: true
         maximum_cardinality: 3
         range: DiseaseFocusEnum
         required: false
+        annotations:
+          maxLength: 50
       embargoEndDate:
         range: string
       fundingAgency:
@@ -44,11 +52,15 @@ classes:
         maximum_cardinality: 5
         range: string
         required: true
+        annotations:
+          maxLength: 49
       grantDOI:
         multivalued: true
         maximum_cardinality: 10
         range: string
         required: false
+        annotations:
+          maxLength: 80
       grantEndDate:
         range: string
       grantStartDate:
@@ -56,11 +68,15 @@ classes:
       initiative:
         range: string
         required: true
+        annotations:
+          maxLength: 100
       institutions:
         multivalued: true
         maximum_cardinality: 10
         range: Institution
         required: true
+        annotations:
+          maxLength: 242
       manifestation:
         description: Refers to the phenotype(s) studied in the study. Omit if not applicable.
           Use the canonical spellings "Malignant Peripheral Nerve Sheath Tumor", "ANNUBP",
@@ -70,6 +86,8 @@ classes:
         range: ManifestationEnum
         required: false
         title: Manifestation(s)
+        annotations:
+          maxLength: 50
       nextPhaseProject:
         range: string
         required: false
@@ -103,12 +121,18 @@ classes:
         maximum_cardinality: 10
         range: string
         required: true
+        annotations:
+          maxLength: 40
       studyName:
         range: string
         required: true
+        annotations:
+          maxLength: 256
       studyStatus:
         range: StudyStatusEnum
         required: true
+        annotations:
+          maxLength: 20
       summary:
         range: string
         required: true
