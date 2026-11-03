@@ -57,7 +57,7 @@ classes:
         description: Origin of individuals from which data were generated. Omit if
           not applicable/unknown.
         multivalued: true
-        maximum_cardinality: 2
+        maximum_cardinality: 5
         range: string
         required: false
         title: Country of Origin
@@ -107,6 +107,7 @@ classes:
         title: Description
       diseaseFocus:
         multivalued: true
+        maximum_cardinality: 5
         range: DiseaseFocusEnum
         required: true
         title: Disease Focus
@@ -132,6 +133,7 @@ classes:
         title: External URL
       funder:
         multivalued: true
+        maximum_cardinality: 10
         range: FundingAgencyEnum
         required: true
         title: Funder
