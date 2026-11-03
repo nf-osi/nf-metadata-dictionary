@@ -4,12 +4,26 @@ classes:
       templateUsage: internal
       synapse_table_id: syn16857542
     attributes:
+      author:
+        multivalued: true
+        maximum_cardinality: 50
+        range: string
+        required: true
+        title: Author(s)
+        annotations:
+          maxLength: 50
       diseaseFocus:
         range: DiseaseFocusEnum
         required: false
         title: Disease Focus
         annotations:
           maxLength: 30
+      doi:
+        description: Digital Object Identifier of the publication, without the https://doi.org/
+          prefix, e.g. 10.1093/neuonc/noy046.
+        range: string
+        required: true
+        title: Digital Object Identifier
       fundingAgency:
         multivalued: true
         maximum_cardinality: 8
@@ -18,6 +32,12 @@ classes:
         title: Linked Funder(s)
         annotations:
           maxLength: 50
+      journal:
+        range: string
+        required: true
+        title: Journal
+        annotations:
+          maxLength: 500
       manifestation:
         description: Refers to the phenotype(s) described in the publication. Unlike
           the dataset- and study-level fields of the same name, this field is free
@@ -30,6 +50,13 @@ classes:
         title: Manifestation
         annotations:
           maxLength: 30
+      pmid:
+        description: PubMed ID of the publication, prefixed with PMID:, e.g. PMID:29982664.
+        range: string
+        required: false
+        title: PubMed ID
+        annotations:
+          maxLength: 50
       publicationType:
         description: 'Type of publication in relation to the linked study on the NF
           Portal. A primary publication is the main publication for the study and
@@ -56,6 +83,14 @@ classes:
         title: Linked Study Name
         annotations:
           maxLength: 200
+      title:
+        range: string
+        required: true
+        title: Title
+      year:
+        range: integer
+        required: true
+        title: Year
     description: Publication entity defined within the specific scope of the NF Portal (WIP).
     notes:
     - 'Synapse table alignment (see the synapse_table_id annotation): each multivalued
