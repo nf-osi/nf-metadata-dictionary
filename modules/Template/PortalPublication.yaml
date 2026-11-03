@@ -57,6 +57,16 @@ classes:
         annotations:
           maxLength: 200
     description: Publication entity defined within the specific scope of the NF Portal (WIP).
+    notes:
+    - 'Synapse table alignment (see the synapse_table_id annotation): each multivalued
+      attribute''s maximum_cardinality maps to the maximumListLength of the matching
+      STRING_LIST/ENTITYID_LIST column in the production table, and is generated into
+      the JSON schema as maxItems. Each attribute''s maxLength annotation maps to the
+      column''s maximumSize (for list columns, the maximum size of each item).'
+    - 'maxLength is a workaround: LinkML has no constraint for string length, so it is
+      recorded as an annotation, which the build strips from dist/NF.yaml. Do not
+      generate it into the JSON schema; the strict downstream system rejects extra
+      metadata.'
 
   PublicationTemplate:
     annotations:
