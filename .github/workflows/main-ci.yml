@@ -299,6 +299,7 @@ jobs:
             tests/test_schema_escape_hatches.py \
             tests/test_toplevel_properties.py \
             tests/test_enum_harmonization.py \
+            tests/test_max_length.py \
             -q --tb=short 2>&1 | tee pytest_output.txt
           echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
 

@@ -325,8 +325,9 @@ classes:
       attribute''s maximum_cardinality maps to the maximumListLength of the matching
       STRING_LIST/ENTITYID_LIST column in the production table, and is generated into
       the JSON schema as maxItems. Each attribute''s maxLength annotation maps to the
-      column''s maximumSize (for list columns, the maximum size of each item).'
+      column''s maximumSize (for list columns, the maximum size of each item), and is
+      generated into the JSON schema as maxLength (on items for list fields).'
     - 'maxLength is a workaround: LinkML has no constraint for string length, so it is
-      recorded as an annotation, which the build strips from dist/NF.yaml. Do not
-      generate it into the JSON schema; the strict downstream system rejects extra
-      metadata.'
+      recorded as an annotation. The Makefile keeps this one annotation in dist/NF.yaml
+      and utils/gen-json-schema-class.py emits it as JSON Schema maxLength, which
+      Synapse supports.'

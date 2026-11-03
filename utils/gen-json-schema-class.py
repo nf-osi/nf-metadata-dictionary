@@ -217,6 +217,69 @@ def get_class_property_order(schema_yaml_path, cls_name):
         print(f"Warning: Could not determine property order for {cls_name}: {e}")
         return []
 
+def _annotation_value(slot_def, tag):
+    """Return annotation `tag` from a raw slot/attribute dict, or None.
+
+    Annotations appear in the merged YAML either as a bare scalar (`maxLength: 50`)
+    or in LinkML's expanded form (`maxLength: {tag: maxLength, value: 50}`).
+    """
+    annotations = (slot_def or {}).get('annotations') or {}
+    value = annotations.get(tag)
+    if isinstance(value, dict):
+        value = value.get('value')
+    return value
+
+
+def get_class_max_lengths(schema_yaml_path, cls_name):
+    """Map property name -> maxLength from `annotations.maxLength` in the model.
+
+    LinkML has no string-length metaslot, so the length limit is carried as an
+    annotation. The nearest definition wins: the class's own slot_usage and
+    attributes, then its mixins and is_a ancestors, then the top-level slot.
+    """
+    schema_data = _load_shared_yaml(schema_yaml_path)
+    classes = schema_data.get('classes', {}) or {}
+    slots = schema_data.get('slots', {}) or {}
+
+    lineage, visited = [], set()
+
+    def walk(name):
+        if not name or name in visited:
+            return
+        visited.add(name)
+        cls_def = classes.get(name) or {}
+        lineage.append(cls_def)
+        for mixin in cls_def.get('mixins', []) or []:
+            walk(mixin)
+        walk(cls_def.get('is_a'))
+
+    walk(cls_name)
+
+    max_lengths = {}
+    for slot_name, slot_def in slots.items():
+        value = _annotation_value(slot_def, 'maxLength')
+        if value is not None:
+            max_lengths[slot_name] = int(value)
+    # Apply farthest ancestor first so nearer definitions overwrite it.
+    for cls_def in reversed(lineage):
+        for section in ('attributes', 'slot_usage'):
+            for slot_name, slot_def in (cls_def.get(section) or {}).items():
+                value = _annotation_value(slot_def, 'maxLength')
+                if value is not None:
+                    max_lengths[slot_name] = int(value)
+    return max_lengths
+
+
+def apply_max_lengths(properties, max_lengths):
+    """Set JSON Schema maxLength on each property; on `items` for array properties."""
+    for prop_name, max_length in max_lengths.items():
+        prop_schema = properties.get(prop_name)
+        if not isinstance(prop_schema, dict):
+            continue
+        target = prop_schema.get('items') if isinstance(prop_schema.get('items'), dict) else prop_schema
+        target['maxLength'] = max_length
+
+
 def reorder_properties(properties, property_order):
     """Reorder properties dict based on specified order."""
     if not property_order or not properties:
@@ -360,6 +423,10 @@ def process_schema(raw_schema, cls_name, version=None, schema_yaml_path=None):
     # Also remove from required array if present
     if "required" in deref:
         deref["required"] = [r for r in deref["required"] if r not in ["Filename", "Component"]]
+
+    # Emit annotations.maxLength as JSON Schema maxLength
+    if schema_yaml_path and "properties" in deref:
+        apply_max_lengths(deref["properties"], get_class_max_lengths(schema_yaml_path, cls_name))
 
     # Reorder properties to match YAML order
     if schema_yaml_path and "properties" in deref:
