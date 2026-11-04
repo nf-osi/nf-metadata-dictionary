@@ -390,7 +390,10 @@ classes:
       platform:
         range: SequencingPlatformEnum
       fileFormat:
-        range: SequencingFileFormatEnum
+        range: string
+        any_of:
+        - range: SequencingFileFormatEnum
+        - range: OtherFileFormatEnum
 
       libraryStrand:
         required: false
