@@ -8,7 +8,7 @@ on:
     # Allow manual triggering
 
 env:
-  SYNAPSE_TABLE_ID: syn26450069
+  # NF Research Tools Central view (replaces the retired Resource table syn26450069)
   SYNAPSE_TOOLS_TABLE_ID: syn51730943
 
 jobs:
@@ -41,7 +41,7 @@ jobs:
       - name: Sync model system data
         # Source tables are open access; the sync runs anonymously (no login).
         run: |
-          python utils/sync_model_systems.py --synapse-id ${{ env.SYNAPSE_TABLE_ID }}
+          python utils/sync_model_systems.py --synapse-id ${{ env.SYNAPSE_TOOLS_TABLE_ID }}
 
       - name: Check for changes
         id: changes
@@ -69,9 +69,7 @@ jobs:
 
             **Sync Date:** ${{ steps.date.outputs.date }}
 
-            **Sources:**
-            - Model systems: `${{ env.SYNAPSE_TABLE_ID }}`
-            - Tool links: `${{ env.SYNAPSE_TOOLS_TABLE_ID }}`
+            **Source:** NF Research Tools Central `${{ env.SYNAPSE_TOOLS_TABLE_ID }}`
 
             Only `modules/` source files are updated here. Build artifacts (`dist/`, `NF.jsonld`, etc.) are regenerated after this PR is merged into main.
 

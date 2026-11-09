@@ -4,7 +4,7 @@ This directory contains utilities for maintaining the NF metadata dictionary, in
 
 ## Overview
 
-The modelSystemName field in the NF metadata dictionary is automatically synchronized with the authoritative data source: Synapse table `syn26450069`. This ensures that the dictionary always reflects the current set of available cell lines and animal models used in NF research.
+The modelSystemName field in the NF metadata dictionary is automatically synchronized with the authoritative data source: the NF Research Tools Central view `syn51730943` (the legacy Resource table `syn26450069` was retired). This ensures that the dictionary always reflects the current set of available cell lines and animal models used in NF research.
 
 ## Scripts
 
@@ -22,7 +22,7 @@ Main sync script that fetches model system data from Synapse and updates enum fi
 
 ## How It Works
 
-1. **Data Source**: The script fetches data from Synapse table `syn26450069` using the following columns:
+1. **Data Source**: The script fetches data from Synapse view `syn51730943` using the following columns:
    - `resourceName` - The name of the cell line or animal model
    - `rrid` - Research Resource Identifier (RRID) for linking to external databases
    - `resourceType` - Categorizes as "cell line" or "animal model"
@@ -53,7 +53,7 @@ python utils/sync_model_systems.py --synapse-id syn12345678
 
 ## Authentication
 
-None required. The source tables (`syn26450069`, `syn51730943`) are open access, so the script queries Synapse anonymously and does not log in.
+None required. The source view (`syn51730943`) is open access, so the script queries Synapse anonymously and does not log in.
 
 ## Automated Workflow
 
