@@ -91,7 +91,7 @@ The two largest synced enums are **not** "all descendants of an ontology node," 
 
 - **`CellLineModel`** (`modules/Sample/CellLineModel.yaml`) and **`AntibodyEnum`** (`modules/Experiment/Antibody.yaml`) are **auto-generated from the NF Research Tools Central truth tables in Synapse** (`syn26450069`, `syn51730943`) by `utils/sync_model_systems.py`. Their members are the specific reagents and cell lines that NF investigators have registered — each carrying a curated `source` link back to its Tools Central detail page (and, where known, an RRID / `rrid:CVCL_*` `meaning`). This is *already* a dynamic sync; it just sources from *our community's* authoritative registry rather than a public ontology branch. There is no Cellosaurus subtree that corresponds to "NF cell lines," so `reachable_from` would either under-cover (miss unregistered/community lines) or over-cover (pull in thousands of irrelevant lines).
 
-These enums also **round-trip with the annotation review workflow** (see below): free-text values contributors submit are surfaced and folded back into the registry. A build-time `reachable_from` materialization would have no place to absorb that community-driven vocabulary growth.
+New reagents and cell lines are added to the Tools Central registry and flow into these enums through the weekly sync. A build-time `reachable_from` materialization would have no place to absorb that community-driven vocabulary growth.
 
 ### Why we don't pull whole ontology branches even where one exists
 
@@ -118,7 +118,7 @@ We get the maintainability benefit that dynamic enums promise, without the downs
 
 - **Syncing from authoritative sources we control the scope of** — Tools Central truth tables via `utils/sync_model_systems.py`, ontology synonyms via `utils/extract_synonyms.py` / `inject_synonyms.py`.
 - **Curating the relevant slice by hand** where an ontology branch is too broad (`Tumor`, `Institution`), keeping `source`/`meaning` links to the ontology for provenance without inheriting the whole branch.
-- **Absorbing real-world vocabulary** through the annotation review workflow rather than a static branch snapshot.
+- **Absorbing real-world vocabulary** through registry updates (and, planned, annotation review; see [Annotation Review Workflow](#annotation-review-workflow)) rather than a static branch snapshot.
 - **Splitting large enums into [contextual subsets](#contextual-enum-subsets)** so any single dropdown stays small.
 
 ### When `reachable_from` *would* be appropriate
@@ -189,55 +189,19 @@ We use `value_presence: PRESENT` (slot must have a non-null value) rather than `
 
 ## Annotation Review Workflow
 
-### Overview
+**Status: removed (November 2026).** `utils/review_annotations.py` used to run in the weekly model system sync and add free-text annotation values (2+ uses) to enum YAML automatically. It was removed in [#904](https://github.com/nf-osi/nf-metadata-dictionary/issues/904) because it required a login token that lacked download scope, it queried a view (syn52702673) that has none of the reviewed columns, it put every new `platform` value into `SequencingPlatformEnum`, and its `antibodyID`/`geneticReagentID` additions were overwritten by the Tools Central sync.
 
-The annotation review workflow automatically analyzes file annotations from Synapse to identify free-text values that could be standardized as enum values in the metadata dictionary. It runs as part of the **weekly model system sync** (`.github/workflows/weekly-model-system-sync.yml`) every Monday at 9:00 AM UTC.
-
-Related issues: [#804](https://github.com/nf-osi/nf-metadata-dictionary/issues/804), [#805](https://github.com/nf-osi/nf-metadata-dictionary/issues/805)
-
-### Design
-
-**Custom enum values:** Some fields (e.g., `platform`) accept both predefined enum values and custom free-text via `any_of` with a `string` range. This allows users to enter new terms immediately while tracking them for potential standardization.
-
-**Automated review** (`utils/review_annotations.py`):
-1. Queries Synapse materialized view (syn52702673) for file annotations
-2. Compares values against schema enum definitions (including synonyms/aliases)
-3. Identifies free-text values not matching any enum
-4. Automatically adds values appearing 2+ times to the appropriate YAML enum files
-5. Generates summary files documenting additions
-
-**Combined workflow:** The annotation review runs sequentially after model system sync, contributing to a single PR if either operation has updates. This keeps all weekly maintenance in one place.
-
-### Tool-Related Fields
-
-Tool-related annotation fields (e.g., `individualID`) are reviewed in a **separate workflow** in [nf-research-tools-schema](https://github.com/nf-osi/nf-research-tools-schema). This co-locates tool annotation review with existing tool database sync workflows and avoids duplicate review.
-
-All other annotation fields with custom-value-capable enums are reviewed here.
+Follow-up work:
+- `platform` review (anonymous access, correct source view and target enum, report instead of auto-edit): [#1048](https://github.com/nf-osi/nf-metadata-dictionary/issues/1048)
+- `antibodyID` / `geneticReagentID` review against Tools Central: [nf-research-tools-schema#381](https://github.com/nf-osi/nf-research-tools-schema/issues/381)
+- `individualID` is already reviewed in nf-research-tools-schema (`scripts/review_tool_annotations.py`).
 
 ### Workflow Coordination
 
 | Workflow | Purpose | Frequency |
 |----------|---------|-----------|
-| **weekly-model-system-sync** | Sync model systems + review annotations | Weekly (Mon 9am UTC) |
+| **weekly-model-system-sync** | Sync model systems and tools from Tools Central (anonymous Synapse access) | Weekly (Mon 9am UTC) |
 | **synonyms** | Extract ontology synonyms → add as aliases | On release |
 | **rebuild-artifacts-on-main** | Rebuild schema artifacts | On push to main |
-
-Together these provide truth table synchronization, ontology-driven standardization, and user-driven vocabulary expansion.
-
-### Reviewing Suggestions
-
-When the workflow creates a PR:
-1. Review `annotation_suggestions.md` for a summary of additions
-2. Evaluate each suggestion — legitimate new term, typo, or alias for existing value?
-3. Check whether adding values would approach Synapse's 100-value-per-enum limit
-4. Merge, revise, or close with notes
-
-### Configuration
-
-Key settings in `utils/review_annotations.py`:
-- `MATERIALIZED_VIEW_ID` — Synapse view to query (syn52702673)
-- `CUSTOM_VALUE_FIELDS` — Fields that accept free-text (e.g., `platform`)
-- `TOOL_RELATED_FIELDS` — Fields excluded from this review (handled by tools repo)
-- `MIN_FREQUENCY` — Minimum occurrences for a suggestion (default: 2)
 
 Manual trigger: `gh workflow run weekly-model-system-sync.yml`
