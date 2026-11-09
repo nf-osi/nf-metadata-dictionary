@@ -33,19 +33,8 @@ def fetch_tools_data(synapse_id: str = 'syn51730943', resource_types: List[str] 
         import synapseclient
         from synapseclient import Synapse
 
-        syn = Synapse()
-
-        # Try to login
-        try:
-            if os.getenv('SYNAPSE_AUTH_TOKEN'):
-                syn.login(authToken=os.getenv('SYNAPSE_AUTH_TOKEN'), silent=True)
-            else:
-                try:
-                    syn.login(silent=True)
-                except:
-                    pass
-        except Exception:
-            pass
+        # Source tables are open access; query anonymously (no login).
+        syn = Synapse(skip_checks=True)
 
         results_by_type = {}
 
@@ -106,26 +95,8 @@ def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
         import synapseclient
         from synapseclient import Synapse
         
-        # Initialize Synapse client
-        syn = Synapse()
-        
-        # Try to login - first with token, then silent, then anonymous
-        try:
-            if os.getenv('SYNAPSE_AUTH_TOKEN'):
-                syn.login(authToken=os.getenv('SYNAPSE_AUTH_TOKEN'), silent=True)
-            else:
-                # Try silent login first
-                try:
-                    syn.login(silent=True)
-                except:
-                    # If silent login fails, try anonymous access
-                    print("Attempting anonymous access to Synapse...")
-                    # For anonymous access, we don't need to login
-                    pass
-        except Exception as login_error:
-            print(f"Warning: Could not login to Synapse: {login_error}")
-            print("Attempting anonymous access...")
-            # Continue without authentication for anonymous access
+        # Source tables are open access; query anonymously (no login).
+        syn = Synapse(skip_checks=True)
         
         # Query the table for resourceName, rrid, resourceType, and description columns
         query = f"SELECT resourceName, rrid, resourceType, description FROM {synapse_id}"
@@ -135,8 +106,7 @@ def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
             results = syn.tableQuery(query)
         except Exception as query_error:
             print(f"Error executing query: {query_error}")
-            print("Falling back to mock data for testing.")
-            raise ImportError("Synapse query failed")
+            raise
         
         # Convert to list of dictionaries
         data = []
@@ -211,19 +181,8 @@ def fetch_tool_links(synapse_id: str = 'syn51730943') -> Dict[str, Dict[str, str
         import synapseclient
         from synapseclient import Synapse
 
-        syn = Synapse()
-
-        # Try to login - first with token, then silent, then anonymous
-        try:
-            if os.getenv('SYNAPSE_AUTH_TOKEN'):
-                syn.login(authToken=os.getenv('SYNAPSE_AUTH_TOKEN'), silent=True)
-            else:
-                try:
-                    syn.login(silent=True)
-                except:
-                    pass
-        except Exception:
-            pass
+        # Source tables are open access; query anonymously (no login).
+        syn = Synapse(skip_checks=True)
 
         # Query for all resources with resourceId
         query = f"SELECT resourceName, resourceId, resourceType FROM {synapse_id}"

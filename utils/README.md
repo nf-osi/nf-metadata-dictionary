@@ -60,7 +60,7 @@ To manually run the sync script:
 # Dry run to see what would be changed
 python utils/sync_model_systems.py --dry-run
 
-# Actual sync (requires Synapse authentication)
+# Actual sync
 python utils/sync_model_systems.py
 
 # Sync from a different table
@@ -69,17 +69,14 @@ python utils/sync_model_systems.py --synapse-id syn12345678
 
 ## Authentication
 
-The script uses Synapse authentication through:
-1. `SYNAPSE_AUTH_TOKEN` environment variable (preferred for CI/CD)
-2. Synapse client auto-login (for local development)
+None required. The source tables (`syn26450069`, `syn51730943`) are open access, so the script queries Synapse anonymously and does not log in.
 
 ## Automated Workflow
 
 The GitHub Actions workflow runs every Monday at 9:00 AM UTC and:
 1. Fetches the latest data from Synapse
 2. Updates the enum files if changes are detected
-3. Rebuilds the data model artifacts (NF.jsonld, dist/NF.yaml)
-4. Creates a pull request with the changes
+3. Creates a pull request with the `modules/` changes only (build artifacts are regenerated after the PR is merged into main)
 
 ## Testing
 
