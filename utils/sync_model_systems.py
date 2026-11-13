@@ -2,10 +2,11 @@
 """
 Sync modelSystemName values from NFTC truth table.
 
-This script fetches data from Synapse table syn26450069 and updates
-the CellLineModel.yaml and AnimalModel.yaml enum files based on the
-resourceType column. It also fetches resource links from syn51730943
-and adds them as 'source' fields.
+This script fetches data from the NF Research Tools Central view
+syn51730943 and updates the CellLineModel.yaml and AnimalModel.yaml enum
+files based on the resourceType column, adding resource links as 'source'
+fields. (The legacy Resource table syn26450069 was retired in the
+nf-research-tools-schema LinkML migration.)
 """
 
 import os
@@ -33,19 +34,8 @@ def fetch_tools_data(synapse_id: str = 'syn51730943', resource_types: List[str] 
         import synapseclient
         from synapseclient import Synapse
 
-        syn = Synapse()
-
-        # Try to login
-        try:
-            if os.getenv('SYNAPSE_AUTH_TOKEN'):
-                syn.login(authToken=os.getenv('SYNAPSE_AUTH_TOKEN'), silent=True)
-            else:
-                try:
-                    syn.login(silent=True)
-                except:
-                    pass
-        except Exception:
-            pass
+        # Source tables are open access; query anonymously (no login).
+        syn = Synapse(skip_checks=True)
 
         results_by_type = {}
 
@@ -97,7 +87,7 @@ def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
     Fetch data from Synapse table.
     
     Args:
-        synapse_id: Synapse table ID (e.g., syn26450069)
+        synapse_id: Synapse table ID (e.g., syn51730943)
         
     Returns:
         List of dictionaries containing table data
@@ -106,26 +96,8 @@ def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
         import synapseclient
         from synapseclient import Synapse
         
-        # Initialize Synapse client
-        syn = Synapse()
-        
-        # Try to login - first with token, then silent, then anonymous
-        try:
-            if os.getenv('SYNAPSE_AUTH_TOKEN'):
-                syn.login(authToken=os.getenv('SYNAPSE_AUTH_TOKEN'), silent=True)
-            else:
-                # Try silent login first
-                try:
-                    syn.login(silent=True)
-                except:
-                    # If silent login fails, try anonymous access
-                    print("Attempting anonymous access to Synapse...")
-                    # For anonymous access, we don't need to login
-                    pass
-        except Exception as login_error:
-            print(f"Warning: Could not login to Synapse: {login_error}")
-            print("Attempting anonymous access...")
-            # Continue without authentication for anonymous access
+        # Source tables are open access; query anonymously (no login).
+        syn = Synapse(skip_checks=True)
         
         # Query the table for resourceName, rrid, resourceType, and description columns
         query = f"SELECT resourceName, rrid, resourceType, description FROM {synapse_id}"
@@ -135,8 +107,7 @@ def fetch_synapse_data(synapse_id: str) -> List[Dict[str, Any]]:
             results = syn.tableQuery(query)
         except Exception as query_error:
             print(f"Error executing query: {query_error}")
-            print("Falling back to mock data for testing.")
-            raise ImportError("Synapse query failed")
+            raise
         
         # Convert to list of dictionaries
         data = []
@@ -211,19 +182,8 @@ def fetch_tool_links(synapse_id: str = 'syn51730943') -> Dict[str, Dict[str, str
         import synapseclient
         from synapseclient import Synapse
 
-        syn = Synapse()
-
-        # Try to login - first with token, then silent, then anonymous
-        try:
-            if os.getenv('SYNAPSE_AUTH_TOKEN'):
-                syn.login(authToken=os.getenv('SYNAPSE_AUTH_TOKEN'), silent=True)
-            else:
-                try:
-                    syn.login(silent=True)
-                except:
-                    pass
-        except Exception:
-            pass
+        # Source tables are open access; query anonymously (no login).
+        syn = Synapse(skip_checks=True)
 
         # Query for all resources with resourceId
         query = f"SELECT resourceName, resourceId, resourceType FROM {synapse_id}"
@@ -459,7 +419,7 @@ def update_enum_file(file_path: str, enum_name: str, entries: List[Dict[str, Any
     # Write to file with warning comment and proper quoting
     with open(file_path, 'w', encoding='utf-8') as f:
         # Add warning comment at the top
-        f.write("# WARNING: This file is auto-generated from Synapse table syn26450069\n")
+        f.write("# WARNING: This file is auto-generated from Synapse table syn51730943\n")
         f.write("# DO NOT EDIT DIRECTLY - changes will be overwritten\n") 
         f.write("# For manual entries, use the corresponding *Manual.yaml file\n")
         f.write("# Generated by utils/sync_model_systems.py\n\n")
@@ -476,8 +436,8 @@ def update_enum_file(file_path: str, enum_name: str, entries: List[Dict[str, Any
 def main():
     """Main function to sync model system data."""
     parser = argparse.ArgumentParser(description='Sync model system names from Synapse table')
-    parser.add_argument('--synapse-id', default='syn26450069', 
-                       help='Synapse table ID (default: syn26450069)')
+    parser.add_argument('--synapse-id', default='syn51730943',
+                       help='Synapse table ID (default: syn51730943)')
     parser.add_argument('--dry-run', action='store_true',
                        help='Print what would be done without making changes')
     
