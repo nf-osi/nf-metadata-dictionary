@@ -107,6 +107,15 @@ instances:
     description: Proteomics template rejects an unknown file format.
     expected: invalid
 ---
+schema: ScSequencingAssayTemplate
+instances:
+  - file: data/ScSequencingAssayTemplate/valid_fileformat_md5.json
+    description: Single-cell sequencing template permits md5 checksum sidecar files.
+    expected: valid
+  - file: data/fileformat/invalid_fileformat_unknown.json
+    description: Single-cell sequencing template rejects an unknown file format.
+    expected: invalid
+---
 schema: ScRNASeqTemplate
 instances:
   - file: data/ScRNASeqTemplate/valid_fileformat_csv.json
