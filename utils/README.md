@@ -1,10 +1,10 @@
 # Utilities Documentation
 
-This directory contains utilities for maintaining the NF metadata dictionary, including syncing model systems from Synapse and reviewing annotations for schema improvements.
+This directory contains utilities for maintaining the NF metadata dictionary, including syncing model systems from Synapse.
 
 ## Overview
 
-The modelSystemName field in the NF metadata dictionary is automatically synchronized with the authoritative data source: Synapse table `syn26450069`. This ensures that the dictionary always reflects the current set of available cell lines and animal models used in NF research.
+The modelSystemName field in the NF metadata dictionary is automatically synchronized with the authoritative data source: the NF Research Tools Central view `syn51730943` (the legacy Resource table `syn26450069` was retired). This ensures that the dictionary always reflects the current set of available cell lines and animal models used in NF research.
 
 ## Scripts
 
@@ -16,29 +16,13 @@ Main sync script that fetches model system data from Synapse and updates enum fi
 - `../tests/test_model_system_sync.py` - Test suite for the sync functionality
 - `../.github/workflows/weekly-model-system-sync.yml` - GitHub Actions workflow for automated weekly syncing
 
-### review_annotations.py
+### Annotation review (removed)
 
-Analyzes file annotations from Synapse to identify free-text values that should be standardized as enum values.
-
-**Features:**
-- Queries Synapse materialized view for file annotations
-- Excludes individualID field (reviewed separately in nf-research-tools-schema)
-- Checks against schema enums including synonyms/aliases
-- Automatically adds frequent values to YAML enum files
-- Generates suggestions for portal search filters
-
-**Related files:**
-- `../docs/annotation-review-workflow.md` - Comprehensive documentation
-- `../.github/workflows/weekly-model-system-sync.yml` - Integrated in weekly workflow
-- See [nf-research-tools-schema](https://github.com/nf-osi/nf-research-tools-schema) for tool annotation review
-
-**individualID Exclusion:** As of 2026-02-06, only the `individualID` annotation field is excluded from this review. It is reviewed separately in the nf-research-tools-schema repository, where individualID values from file annotations (syn52702673) are analyzed and suggested as new cell lines or synonyms in the NF Research Tools Central database (syn51730943).
-
-**All other annotation fields** (including tool-related fields like animalModelID, cellLineID, antibodyID, geneticReagentID, tumorType, tissue, organ, species, etc.) are reviewed here, provided they have enums that allow custom values.
+`review_annotations.py` was removed in [#904](https://github.com/nf-osi/nf-metadata-dictionary/issues/904). Follow-up: `platform` review in [#1048](https://github.com/nf-osi/nf-metadata-dictionary/issues/1048); `antibodyID`/`geneticReagentID` review in [nf-research-tools-schema#381](https://github.com/nf-osi/nf-research-tools-schema/issues/381). `individualID` is reviewed in nf-research-tools-schema.
 
 ## How It Works
 
-1. **Data Source**: The script fetches data from Synapse table `syn26450069` using the following columns:
+1. **Data Source**: The script fetches data from Synapse view `syn51730943` using the following columns:
    - `resourceName` - The name of the cell line or animal model
    - `rrid` - Research Resource Identifier (RRID) for linking to external databases
    - `resourceType` - Categorizes as "cell line" or "animal model"
@@ -60,7 +44,7 @@ To manually run the sync script:
 # Dry run to see what would be changed
 python utils/sync_model_systems.py --dry-run
 
-# Actual sync (requires Synapse authentication)
+# Actual sync
 python utils/sync_model_systems.py
 
 # Sync from a different table
@@ -69,17 +53,14 @@ python utils/sync_model_systems.py --synapse-id syn12345678
 
 ## Authentication
 
-The script uses Synapse authentication through:
-1. `SYNAPSE_AUTH_TOKEN` environment variable (preferred for CI/CD)
-2. Synapse client auto-login (for local development)
+None required. The source view (`syn51730943`) is open access, so the script queries Synapse anonymously and does not log in.
 
 ## Automated Workflow
 
 The GitHub Actions workflow runs every Monday at 9:00 AM UTC and:
 1. Fetches the latest data from Synapse
 2. Updates the enum files if changes are detected
-3. Rebuilds the data model artifacts (NF.jsonld, dist/NF.yaml)
-4. Creates a pull request with the changes
+3. Creates a pull request with the `modules/` changes only (build artifacts are regenerated after the PR is merged into main)
 
 ## Testing
 
