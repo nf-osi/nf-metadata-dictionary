@@ -96,6 +96,7 @@
     "libraryKitID": {
       "description": "",
       "enum": [
+        "Chromium GEM-X Single Cell 3' Reagent Kit v4",
         "Chromium NextGEM Single Cell 3' Reagent Kit v3.1",
         "Chromium NextGEM Single Cell 5' Reagent Kit v1.1",
         "Chromium Single Cell 3' Reagent Kit v3",
@@ -147,12 +148,14 @@
         "Illumina TruSeq DNA Nano",
         "KAPA EvoPrep Kit",
         "KAPA HyperExome V2 Probes",
+        "KAPA HyperPrep Kit",
         "KAPA HyperPrep Kit PCR-free",
         "KAPA RNA HyperPrep Kit with RiboErase (HMR)",
         "KAPA mRNA HyperPrep Kit",
         "MGIEasy FS PCR-Free DNA Library Prep Set",
         "NEBNext Ultra II DNA Library Prep Kit (E7103) for Illumina",
         "NEBNext mRNA Library Prep Reagent Set for Illumina",
+        "Novogene Strand-Specific mRNA Library",
         "Omni-ATAC",
         "Oxford Nanopore Direct RNA Sequencing Kit",
         "QIAseq FX DNA Library Kit",
@@ -514,7 +517,8 @@
       "type": "string"
     },
     "fileFormat": {
-      "description": "File formats for sequencing data including alignments, variants, and genomic annotations",
+      "description": "Defined format of the data file, typically corresponding to extension, but sometimes indicating more general group of files produced by the same tool or software. For a single compressed file (gzip, bgzip, bz2, xz), use the format of the content, e.g. tsv for x.tsv.gz and fastq for x.fastq.gz. For a multi-file archive (zip, tar, tar.gz), use the archive format, e.g. zip for x.zip and tar for x.tar.gz.",
+      "type": "string",
       "enum": [
         "bai",
         "bam",
@@ -554,10 +558,34 @@
         "tbi",
         "tranches",
         "vcf",
-        "wiggle"
+        "wiggle",
+        "MPEG-4",
+        "md5",
+        "ngchm",
+        "ab1",
+        "abf",
+        "arf",
+        "dna",
+        "edat3",
+        "fcs",
+        "fig",
+        "gb",
+        "h5",
+        "hdf5",
+        "idx",
+        "log",
+        "out",
+        "psydat",
+        "pzfx",
+        "raw",
+        "rmd",
+        "sav",
+        "sdf",
+        "sif",
+        "spk",
+        "svg"
       ],
-      "title": "fileFormat",
-      "type": "string"
+      "title": "fileFormat"
     },
     "geneticReagentID": {
       "anyOf": [

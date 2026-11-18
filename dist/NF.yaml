@@ -1771,6 +1771,11 @@ enums:
       twin spot assay:
         description: Two individual and genetically different populations of cells that originate from the same mitotic recombination event; twin spots allow a direct and reliable comparison between mutant and wild-type clones, and the size of the wild-type twin can serve as a reference for comparison with the homozygous mutant clones.
         source: https://pubmed.ncbi.nlm.nih.gov/29378809/
+      visual evoked potential:
+        aliases:
+          - VEP
+        description: Evaluation of the visual pathway by recording the electrical responses of the visual cortex to visual stimuli (e.g. flash or pattern reversal), using electrodes over the occipital cortex.
+        meaning: MAXO:0035097
       western blot:
         description: A multistep process in which a mixture of proteins is separated by gel electrophoresis
         meaning: MMO:0000338
@@ -1910,6 +1915,9 @@ enums:
       hand-held dynamometry:
         description: A technique to assess isometric muscle strength using a hand-held dynamometer.
         meaning: NCIT:C186193
+      mechanical conflict-avoidance assay:
+        description: An operant behavioral assay of mechanical nociception in rodents, in which the animal chooses between an aversive brightly lit chamber and crossing a floor of graded probes to reach a dark chamber; escape latency or time in each chamber measures mechanical hypersensitivity. Also called the mechanical conflict system (MCS).
+        source: https://doi.org/10.1371/journal.pone.0150164
       metabolic screening:
         description: Metabolic screening is a medical assessment that involves analyzing specific markers in bodily fluids to detect and evaluate metabolic disorders or imbalances.
         source: https://bioportal.bioontology.org/ontologies/SNOMEDCT?p=classes&conceptid=395118002
@@ -1962,6 +1970,11 @@ enums:
           - electron tomog
         description: Any quantitative measurement of survival of or in an individual or study population.
         meaning: MI:0410
+      visual evoked potential:
+        aliases:
+          - VEP
+        description: Evaluation of the visual pathway by recording the electrical responses of the visual cortex to visual stimuli (e.g. flash or pattern reversal), using electrodes over the occipital cortex.
+        meaning: MAXO:0035097
       weight:
         description: An assay or measurement that quantifies the mass or weight of a subject, specimen, or sample. Commonly used in clinical assessments, biosample characterization, and longitudinal health monitoring.
         meaning: EFO:0004338
@@ -2180,6 +2193,11 @@ enums:
           - Transcranial Doppler Ultrasound
         description: A diagnostic technique that uses pulsed Doppler ultrasound to measure the velocity of blood flow through the major blood vessels of the brain.
         meaning: NCIT:C122930
+      transmission electron microscopy:
+        aliases:
+          - TEM
+        description: Microscopy technique in which a beam of electrons is transmitted through a thin sample to form a two-dimensional image of its ultrastructure.
+        meaning: MI:0020
       western blot:
         description: A multistep process in which a mixture of proteins is separated by gel electrophoresis
         meaning: MMO:0000338
@@ -2465,6 +2483,10 @@ enums:
         source: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001895.5/
   LibraryKitIDEnum:
     permissible_values:
+      Chromium GEM-X Single Cell 3' Reagent Kit v4:
+        description: 10x Genomics Chromium GEM-X Single Cell 3' Reagent Kit v4 (GEM-X Universal 3' Gene Expression v4), including the on-chip multiplexing (OCM) format.
+        meaning: EFO:0022604
+        source: https://www.10xgenomics.com/products/single-cell-gene-expression
       Chromium NextGEM Single Cell 3' Reagent Kit v3.1:
         description: 10x Genomics Chromium NextGEM Single Cell 3' Reagent Kit v3.1
         source: https://www.10xgenomics.com/products/single-cell-gene-expression
@@ -2570,6 +2592,9 @@ enums:
       KAPA HyperExome V2 Probes:
         description: KAPA HyperExome V2 Probes are expertly designed probes that effectively capture challenging genomic regions.
         source: https://sequencing.roche.com/us/en/products/group/kapa-hyperexome-v2.html
+      KAPA HyperPrep Kit:
+        description: KAPA HyperPrep Kit for Illumina platforms (KK8502/KK8504), a PCR-based DNA library preparation kit that combines enzymatic steps and reduces bead cleanups.
+        source: https://sequencing.roche.com/en/products-solutions/products/sample-preparation/dna-reagents/library-preparation/kapa-hyperprep.html
       KAPA HyperPrep Kit PCR-free:
         description: KAPA HyperPrep Kits offer a streamlined library preparation protocol that combines several enzymatic steps and eliminates bead cleanups to significantly reduce library preparation time and improve consistency.
         source: https://sequencing.roche.com/en/products-solutions/products/sample-preparation/dna-reagents/library-preparation/kapa-hyperprep/ordering.html
@@ -2588,6 +2613,9 @@ enums:
       NEBNext mRNA Library Prep Reagent Set for Illumina:
         description: NEBNext mRNA Library Prep Reagent Set for Illumina
         source: https://www.neb.com/products/e6100-nebnext-mrna-library-prep-reagent-set-for-illumina
+      Novogene Strand-Specific mRNA Library:
+        description: Novogene eukaryotic strand-specific (directional) mRNA library preparation service with poly(A) enrichment, sometimes listed on sequencing reports as "Human Strand Specific mRNA (WOBI)".
+        source: https://www.novogene.com/en/services/research-services/transcriptome-sequencing/mrna-sequencing/
       Omni-ATAC:
         description: Omni-ATAC-seq library preparation
         source: https://protocolexchange.researchsquare.com/article/nprot-6107/v1
@@ -11332,7 +11360,10 @@ classes:
       platform:
         range: SequencingPlatformEnum
       fileFormat:
-        range: SequencingFileFormatEnum
+        range: string
+        any_of:
+          - range: SequencingFileFormatEnum
+          - range: OtherFileFormatEnum
       libraryStrand:
         required: false
       libraryKitID:
@@ -12371,12 +12402,10 @@ classes:
     is_a: PortalDataset
     description: >
       A dataset proposed for the portal but not yet accepted into a study: its files are hosted in an external repository, and it awaits data-manager review. studyId is therefore not required here -- it is assigned at provisioning, after which the record satisfies PortalDataset in full.
-
     attributes:
       resourceStatus:
         description: >
           Curation review state. Set to pending-review on creation; transitions to approved or rejected are made by data managers.
-
         range: ResourceCurationStatusEnum
         required: true
         title: Resource Status
