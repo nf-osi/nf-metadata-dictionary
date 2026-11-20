@@ -2,6 +2,16 @@
 
 This directory contains automated workflows for maintaining the NF metadata dictionary.
 
+## Claude review
+
+**File:** `claude-review.yml`
+
+- **Full review:** add `nfosi-service` as a reviewer on a PR. GitHub can't list apps in the reviewers menu, so this account stands in for Claude. Re-request it for another pass.
+- **Ad hoc:** mention `@claude` in a PR comment, review, or inline comment (e.g. `@claude review`, `@claude explain this enum change`). In this mode Claude can also push commits to the PR branch if you ask.
+- Runs only for users with write access. Fork PRs are skipped (no access to secrets).
+- Review guidance lives in `.claude/CLAUDE.md` (root `CLAUDE.md` is gitignored for personal use); edit it there, not in the workflow.
+- **Required secret:** `ANTHROPIC_API_KEY`
+
 ## Update NF Tools Central Links
 
 **File:** `update-tool-links.yml`
