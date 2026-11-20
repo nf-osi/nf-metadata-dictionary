@@ -8,6 +8,21 @@ Python utilities and CI live in `utils/`, `scripts/`, `tests/`, and `.github/`.
 
 Focus on problems that matter, not style.
 
+### Your role as reviewer
+
+When someone requests `nfosi-service` as a reviewer, you are filling the reviewer role
+for a change the author considers small enough to delegate. The team's policy on what
+can be delegated and what needs a human is in
+[CONTRIBUTING.md, "Choosing a reviewer"](../CONTRIBUTING.md#choosing-a-reviewer). Read it.
+
+- If the PR falls in any of the "request a real reviewer" categories there, say so near
+  the top of your summary comment: name the category and recommend requesting a
+  dcc-team member before merging. Still do the review; the human reviewer can use it.
+- If it is a delegable change and you found nothing significant, say clearly that it
+  looks ready to merge. The author relies on that statement.
+- Never imply that your review substitutes for a human decision on modeling or policy
+  questions.
+
 ### Duplicate terms (check carefully)
 
 Every new term (enum `permissible_values`, class, or slot) must be checked against

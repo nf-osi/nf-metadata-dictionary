@@ -68,7 +68,10 @@ We welcome contributions from community members, whether you are a professional 
 
 #### Release Procedures
 
-Releases create versioned JSON schemas registered with Synapse. The [release workflow](.github/workflows/release-new-version.yaml) can be triggered two ways:
+Releases create versioned JSON schemas registered with Synapse.
+The [release workflow](.github/workflows/release-new-version.yaml) runs on a biweekly schedule, but you don't have to wait for it: **anyone on [dcc-team](https://github.com/orgs/nf-osi/teams/dcc-team) can make an ad hoc release whenever one is needed** (e.g., a contributor is blocked waiting on a new term) by dispatching the workflow manually (option 2 below).
+
+The workflow can be triggered two ways:
 
 1. **On a schedule**: the 1st and 15th of each month, the workflow decides for itself whether the changes since the last release warrant one, and at what `MAJOR.MINOR`.
 2. **Manual dispatch**: run the workflow from the GitHub Actions UI.
@@ -253,7 +256,7 @@ Aside from meta specific to each type (class, slot, or enum) above, terms have c
 1. Create a new [branch](https://github.com/nf-osi/nf-metadata-dictionary/branches) in the NF-metadata-dictionary repository. (example: `patch/add-attribute`)
 2. Find the yaml file in the new branch where the attribute belongs. The components of the data model are organized in the folder labeled [modules](https://github.com/nf-osi/nf-metadata-dictionary/tree/main/modules). Edit it and commit only your `modules/` change; don't commit `dist/` or `registered-json-schemas/`, which are rebuilt automatically after merge.
 
-3. Create a [pull request (PR)](https://github.com/nf-osi/nf-metadata-dictionary/compare) to merge the branch to "main". Someone from https://github.com/orgs/nf-osi/teams/dcc-team will review. Creating the PR will:
+3. Create a [pull request (PR)](https://github.com/nf-osi/nf-metadata-dictionary/compare) to merge the branch to "main". Request a reviewer: `nfosi-service` (Claude) for small changes, or someone from https://github.com/orgs/nf-osi/teams/dcc-team for anything substantive; see [Choosing a reviewer](CONTRIBUTING.md#choosing-a-reviewer). Creating the PR will:
 
    i. Build and validate all artifacts (JSON schemas, LinkML outputs, etc.) from the module source files.
    **Artifacts are not committed to the PR to avoid merge conflicts, but will be automatically rebuilt and committed to main after merge.**
@@ -262,7 +265,7 @@ Aside from meta specific to each type (class, slot, or enum) above, terms have c
 
 4. The reviewer might suggest changes, otherwise the changes are approved and the reviewer will merge into `main`. 
 
-5. You should see the update [in the docs](https://nf-osi.github.io/nf-metadata-dictionary) after merge, but *versioned* data model releases happen approximately at beginning and middle of the month; contributions should be mentioned in the release notes of the next release.
+5. You should see the update [in the docs](https://nf-osi.github.io/nf-metadata-dictionary) after merge, but *versioned* data model releases happen approximately at beginning and middle of the month (anyone on dcc-team can also cut an ad hoc release; see [Release Procedures](#release-procedures)); contributions should be mentioned in the release notes of the next release.
 
 
 ### Further Information

@@ -14,8 +14,29 @@ Otherwise...
 1) Create a new branch or fork to make your changes. 
 2) Edit the relevant source file under `modules/` to make your proposed addition, removal, or modification. `modules/` holds the term definitions. Do not hand-edit `dist/`, `registered-json-schemas/`, or `NF.jsonld`: the first two are build outputs, and `NF.jsonld` is a legacy artifact that is no longer rebuilt by the pipeline.
 3) Push the change to your branch. A GitHub Action will rebuild the generated artifacts and validate them, reporting back on your pull request. Do not commit rebuilt artifacts yourself - `dist/` and `registered-json-schemas/` are regenerated and committed automatically after merge. _Your change should be as atomic as possible - e.g., don't lump together many unrelated changes into a single issue or pull request. You may be requested to split them out._
-4) File a pull request with your change and request review from [someone in the nf-osi organization](https://github.com/orgs/nf-osi/people).
-5) Once your pull request is merged, your change goes out in the next scheduled release (the 1st and 15th of each month); see [Release Procedures](README.md#release-procedures). 
+4) File a pull request with your change and request a reviewer; see [Choosing a reviewer](#choosing-a-reviewer).
+5) Once your pull request is merged, your change goes out in the next scheduled release (the 1st and 15th of each month). If it can't wait, anyone on [dcc-team](https://github.com/orgs/nf-osi/teams/dcc-team) can cut an ad hoc release; see [Release Procedures](README.md#release-procedures).
+
+## Choosing a reviewer
+
+**Small changes can be delegated to Claude.** Request `nfosi-service` as the reviewer. That service account stands in for Claude, which reviews the PR, leaves inline comments, and posts a summary. If Claude finds nothing significant, or you've addressed what it raised, you can merge. Changes that typically qualify:
+
+- Fixing typos, descriptions, or other wording on existing terms
+- Adding a few enum values that have ontology mappings (`meaning:`) and no near-duplicates in the model
+- Adding `aliases` or `term_synonyms.csv` entries
+- Docs-only changes, or minor test and tooling fixes
+
+**Request a real reviewer from [dcc-team](https://github.com/orgs/nf-osi/teams/dcc-team)** (in addition to, or instead of, Claude) when the change:
+
+- Adds new classes, slots, or templates, or changes which slots a template uses
+- Changes `range`, `required`, `multivalued`, patterns, or validation `rules/`, since these can invalidate existing annotations
+- Deprecates, renames, or removes any term (see [Guidelines for modifying existing terms](#guidelines-for-modifying-existing-terms))
+- Adds terms that resemble existing ones, or adds a large batch of terms
+- Touches the release or schema-registration pipeline (`.github/workflows/release-new-version.yaml`, `Makefile`, `utils/gen-json-schema-class.py`), secrets, or permissions
+- Reflects a policy or curation decision (e.g., how a funder's or consortium's data should be annotated) rather than a mechanical fix
+- Has Claude review findings you disagree with or can't resolve
+
+When in doubt, ask a human. Claude's review is meant to take routine changes off the team's plate, not to replace judgment on modeling decisions.
 
 ## Guidelines for proposing new terms
 
