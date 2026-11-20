@@ -2,6 +2,7 @@ classes:
   PortalDataset:
     annotations:
       templateUsage: internal
+      synapse_table_id: syn50913342
     attributes:
       accessType:
         description: Access type label. Most datasets are public access or controlled
@@ -15,24 +16,33 @@ classes:
         range: AccessTypeEnum
         required: true
         title: Access Type
+        annotations:
+          maxLength: 20
       ageGroup:
         description: Age demographic groups represented in the dataset. Use to indicate
           which age groups are included in the data.
         multivalued: true
+        maximum_cardinality: 10
         range: HumanAgeGroupEnum
         required: false
         title: Age Group Coverage
+        annotations:
+          maxLength: 10
       alternateName:
         description: An altername name that can be used for search and discovery improvement.
         range: string
         required: false
         title: Alternate Name
+        annotations:
+          maxLength: 76
       citation:
         description: Academic articles that are recommended by the data provider to
           be cited in addition to the dataset doi itself.
         range: string
         required: false
         title: Citation
+        annotations:
+          maxLength: 80
       conditionsOfAccess:
         description: Additional requirements a user may need outside of Data Use Modifiers.
           This could include additional registration, updating profile information,
@@ -47,16 +57,22 @@ classes:
           formatted name of the organization or person (e.g. "NF-OSI" or "Robert Allaway"),
           not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/contributor/.
         multivalued: true
+        maximum_cardinality: 10
         range: string
         required: false
         title: Contributor(s)
+        annotations:
+          maxLength: 50
       countryOfOrigin:
         description: Origin of individuals from which data were generated. Omit if
           not applicable/unknown.
         multivalued: true
+        maximum_cardinality: 5
         range: string
         required: false
         title: Country of Origin
+        annotations:
+          maxLength: 13
       creator:
         description: Main researchers involved in producing the data, in priority
           order. Usually matches the project PI(s) and data lead(s) responsible for
@@ -64,9 +80,12 @@ classes:
           or developer of the instrument. Expects properly formatted name of the organization
           or person (e.g. "NF-OSI" or "Robert Allaway"), not an id. See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/creator/.
         multivalued: true
+        maximum_cardinality: 10
         range: string
         required: true
         title: Creator
+        annotations:
+          maxLength: 50
       croissant_file_s3_object:
         description: Link to croissant file for dataset.
         range: string
@@ -75,17 +94,23 @@ classes:
       dataType:
         description: Reflects the data types within the dataset.
         multivalued: true
+        maximum_cardinality: 10
         range: Data
         required: true
         title: Data Type
+        annotations:
+          maxLength: 50
       dataUseModifiers:
         description: List of data use ontology (DUO) terms that are true for dataset,
           which describes the allowable scope and terms for data use. Most datasets
           allow "General Research Use" unless otherwise specified.
         multivalued: true
+        maximum_cardinality: 3
         range: DuoEnum
         required: false
         title: Data Use Modifiers
+        annotations:
+          maxLength: 40
       datePublished:
         description: Date data were published/available on Synapse. This can be set
           automatically from other dates tracked in Synapse system so does not need
@@ -98,11 +123,16 @@ classes:
         range: string
         required: false
         title: Description
+        annotations:
+          maxLength: 500
       diseaseFocus:
         multivalued: true
+        maximum_cardinality: 5
         range: DiseaseFocusEnum
         required: true
         title: Disease Focus
+        annotations:
+          maxLength: 50
       doi:
         description: The Digital Object Identifier (DOI) of the dataset (if one has
           been created), used for citation and persistent identification.
@@ -110,12 +140,16 @@ classes:
         range: string
         required: false
         title: doi
+        annotations:
+          maxLength: 50
       externalRepositoryUri:
         description: "Reference to dataset in an external repository using CURIE-style
           format, e.g. zenodo:12345678."
         range: string
         required: false
         title: External Repository URI
+        annotations:
+          maxLength: 22
       externalUrl:
         description: "URL the dataset card links users to for external-access datasets
           (a repository landing page, record, or DOI). Display/link target only; optional
@@ -123,11 +157,16 @@ classes:
         range: string
         required: false
         title: External URL
+        annotations:
+          maxLength: 1000
       funder:
         multivalued: true
+        maximum_cardinality: 10
         range: FundingAgencyEnum
         required: true
         title: Funder
+        annotations:
+          maxLength: 50
       hosting:
         description: Where the dataset's files physically live and whether they are
           downloadable through Synapse. Drives the data portal card's download/access
@@ -136,12 +175,16 @@ classes:
         range: HostingEnum
         required: false
         title: Hosting
+        annotations:
+          maxLength: 50
       includedInDataCatalog:
         description: Link(s) to known data catalog(s) the dataset is included in.
         range: DataCatalogEnum
         multivalued: true
         required: false
         title: Included In Data Catalog
+        annotations:
+          maxLength: 50
       individualCount:
         description: Number of unique individuals included in the dataset (whether
           as individual-level or as aggregate data). Omit if not applicable/unknown.
@@ -152,15 +195,20 @@ classes:
         description: Typically between 1 to 5 informative terms or phrases that help
           users find the dataset.
         multivalued: true
+        maximum_cardinality: 18
         range: string
         required: false
         title: Keywords
+        annotations:
+          maxLength: 60
       license:
         description: Unless information for license is clear, this should default
           to UNKNOWN.
         range: License
         required: true
         title: License
+        annotations:
+          maxLength: 50
       manifestation:
         description: Refers to the phenotype(s) studied in the dataset. Omit if not
           applicable. Neoplasm values are intended to be populated by rolling up the
@@ -169,14 +217,18 @@ classes:
           "Malignant Peripheral Nerve Sheath Tumor", "ANNUBP", "Juvenile Myelomonocytic
           Leukemia" and "Spinal Meningioma".
         multivalued: true
+        maximum_cardinality: 10
         range: ManifestationEnum
         required: false
         title: Manifestation(s)
+        annotations:
+          maxLength: 80
       measurementTechnique:
         description: Method used to generate data in dataset, typically referring
           to the assay. Omit if not applicable (e.g. for curated dataset such as a
           list compounds from a database or text extracted from Wikipedia).
         multivalued: true
+        maximum_cardinality: 10
         any_of:
         - range: SequencingAssayEnum
         - range: ImagingAssayEnum
@@ -185,6 +237,8 @@ classes:
         - range: CellBasedAssayEnum
         - range: DrugScreenAssayEnum
         title: Measurement Technique
+        annotations:
+          maxLength: 100
       repository:
         description: Human-readable name of the external repository shown in the data
           portal card label/tooltip (e.g. "GEO", "ENA", "figshare", "Zenodo", "dbGaP",
@@ -193,20 +247,27 @@ classes:
         range: string
         required: false
         title: Repository
+        annotations:
+          maxLength: 100
       series:
         description: Datasets may belong to a curated series. Should be assigned by
           staff only; omit property if not applicable/unknown.
         range: DataSeriesEnum
         required: false
         title: Data Series
+        annotations:
+          maxLength: 50
       species:
         description: Species of the organism(s) from which the data were generated.
           Omit property if not applicable, such as for data like compounds or other
           non-biological data.
         multivalued: true
+        maximum_cardinality: 5
         range: SpeciesEnum
         required: false
         title: Species
+        annotations:
+          maxLength: 25
       specimenCount:
         description: Number of unique specimens included in the dataset. Omit if not
           applicable/unknown.
@@ -223,20 +284,28 @@ classes:
         description: Applicable subject term(s) for dataset cataloging; use the Library
           of Congress Subject Headings (LCSH) scheme.
         multivalued: true
+        maximum_cardinality: 9
         range: string
         required: false
         title: Subject
+        annotations:
+          maxLength: 48
       title:
         range: string
         required: true
         title: Title
+        annotations:
+          maxLength: 150
       visualizeDataOn:
         description: Link(s) to where data may be visualized in a separate application.
           Omit property if not applicable/unknown.
         multivalued: true
+        maximum_cardinality: 100
         range: string
         required: false
         title: Visualize Data On
+        annotations:
+          maxLength: 50
       yearProcessed:
         description: Year data were processed. Only for processed data types and when
           data series is "NF-OSI Processed Data"; omit if not applicable/unknown.
@@ -252,3 +321,13 @@ classes:
       obviously on Synapse, it's for explicit compatibility with DataCite, and eventually
       may want to have "symbolic" datasets like Cancer Complexity Portal that list
       datasets hosted somewhere else.
+    - 'Synapse table alignment (see the synapse_table_id annotation): each multivalued
+      attribute''s maximum_cardinality maps to the maximumListLength of the matching
+      STRING_LIST/ENTITYID_LIST column in the production table, and is generated into
+      the JSON schema as maxItems. Each attribute''s maxLength annotation maps to the
+      column''s maximumSize (for list columns, the maximum size of each item), and is
+      generated into the JSON schema as maxLength (on items for list fields).'
+    - 'maxLength is a workaround: LinkML has no constraint for string length, so it is
+      recorded as an annotation. The Makefile keeps this one annotation in dist/NF.yaml
+      and utils/gen-json-schema-class.py emits it as JSON Schema maxLength, which
+      Synapse supports.'
