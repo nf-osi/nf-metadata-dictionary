@@ -4658,6 +4658,11 @@ enums:
       lif:
         description: Leica Image Format (LIF) images are JPEG images with metadata that may contain depth, bokeh data, and one or more images (e.g. stereo images) known as "views".
         source: https://docs.openmicroscopy.org/bio-formats/5.8.2/formats/leica-lif.html
+      lsm:
+        aliases:
+          - Zeiss LSM
+        description: Zeiss LSM confocal microscopy image format, TIFF-based with Zeiss metadata, written by Zeiss LSM 5xx/7xx/8xx confocal systems and ZEN.
+        source: https://docs.openmicroscopy.org/bio-formats/latest/formats/zeiss-lsm.html
       mov:
         description: A video file format with the .mov extension
         source: https://synapse.org
@@ -4750,6 +4755,9 @@ enums:
       edat3:
         description: The .edat3 proprietary format is used to store experiment data that can be analyzed in E-DataAid.
         source: https://support.pstnet.com/hc/en-us/articles/229354727-INFO-E-Prime-file-extensions-18091
+      eds:
+        description: Applied Biosystems QuantStudio / 7500 real-time PCR experiment document (raw run file with plate layout, amplification and melt curve data).
+        source: https://filext.com/file-extension/EDS
       fcs:
         description: Format standard of a digital entity that is conformant with the Flow Cytometry Data File Standard
         meaning: OBI:0000327
@@ -5021,6 +5029,11 @@ enums:
         meaning: EDAM:format_3620
         notes:
           - http://edamontology.org/format_3468 is the older version of http://edamontology.org/format_3620
+      numbers:
+        aliases:
+          - Apple Numbers
+        description: Apple Numbers spreadsheet format with extension .numbers.
+        source: https://filext.com/file-extension/NUMBERS
       parquet:
         description: An open, columnar table format that stores data by column with built-in compression and schema metadata for fast analytics.
         meaning: https://parquet.apache.org/
@@ -11032,6 +11045,7 @@ classes:
         any_of:
           - range: OtherFileFormatEnum
           - range: TabularFileFormatEnum
+          - range: DocumentFileFormatEnum
       platform:
         required: false
     rules:
@@ -11809,6 +11823,7 @@ classes:
           - range: ImagingFileFormatEnum
           - range: TabularFileFormatEnum
           - range: DocumentFileFormatEnum
+          - range: OtherFileFormatEnum
       dataType:
         ifabsent: string(image)
       specimenID:
